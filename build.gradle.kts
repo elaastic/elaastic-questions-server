@@ -1,4 +1,6 @@
+import com.palantir.gradle.docker.DockerRunExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
 	kotlin("plugin.jpa") version "1.2.71"
@@ -6,6 +8,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.7.RELEASE"
 	kotlin("jvm") version "1.2.71"
 	kotlin("plugin.spring") version "1.2.71"
+	id("com.palantir.docker") version "0.22.1"
 }
 
 group = "org.elaastic.questions"
@@ -37,4 +40,22 @@ tasks.withType<KotlinCompile> {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "1.8"
 	}
+}
+
+apply(plugin = "com.palantir.docker")
+
+val bootJar: BootJar by tasks
+
+tasks.register<Copy>("unpack") {
+	dependsOn("bootJar")
+	from(zipTree(bootJar.outputs.files.singleFile))
+	into("build/dependency")
+}
+
+val unpack by tasks
+
+docker {
+	name = project.group.toString() + "/" + bootJar.archiveBaseName.get()
+	copySpec.from(unpack.outputs).into("dependency")
+	buildArgs(mapOf("DEPENDENCY" to "dependency"))
 }
