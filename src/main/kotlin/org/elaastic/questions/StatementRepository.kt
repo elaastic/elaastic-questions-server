@@ -1,4 +1,4 @@
-package org.elaastic.questions.server
+package org.elaastic.questions
 
 import org.springframework.data.jpa.repository.JpaRepository
 

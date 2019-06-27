@@ -1,4 +1,4 @@
-package org.elaastic.questions.server.persistence
+package org.elaastic.questions.persistence
 
 import org.springframework.data.util.ProxyUtils
 import java.io.Serializable

@@ -1,4 +1,4 @@
-package org.elaastic.questions.server
+package org.elaastic.questions
 
 /**
  * @author John Tranier

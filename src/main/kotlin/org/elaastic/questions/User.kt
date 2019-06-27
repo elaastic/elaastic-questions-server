@@ -1,6 +1,6 @@
-package org.elaastic.questions.server
+package org.elaastic.questions
 
-import org.elaastic.questions.server.persistence.AbstractJpaPersistable
+import org.elaastic.questions.persistence.AbstractJpaPersistable
 import javax.persistence.*
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
