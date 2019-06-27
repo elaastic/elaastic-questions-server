@@ -5,7 +5,9 @@ import javax.persistence.*
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
+import javax.validation.Payload
 import javax.validation.constraints.*
+import kotlin.reflect.KClass
 
 /**
  * @author John Tranier
@@ -69,9 +71,15 @@ class User(
     @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
     @Retention(AnnotationRetention.RUNTIME)
     @Constraint(validatedBy = arrayOf(ElaasticEmailValidator::class))
-    annotation class ElaasticEmail
+    annotation class ElaasticEmail(
+            val message: String = "",
+            val groups: Array<KClass<*>> = [],
+        val payload: Array<KClass<out Payload>> = []
+    )
 
     class ElaasticEmailValidator : ConstraintValidator<ElaasticEmail, String> {
+
+
         override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
