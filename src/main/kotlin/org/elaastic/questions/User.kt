@@ -38,6 +38,8 @@ class User(
 
     @Size(min = 4)
     var password: String? = password // TODO I don't like those 2 password fields ...
+
+    @Transient
     var plainTextPassword: String? = null
 
     var enabled: Boolean = true
@@ -58,11 +60,12 @@ class User(
     var username: String = username
         set(value) {
             field = value
-            this.normalizedUserName = value.toLowerCase()
+            this.normalizedUsername = value.toLowerCase()
         }
 
     // TODO A simple getter should be sufficient no?
-    var normalizedUserName = username.toLowerCase()
+    @Column(unique = true)
+    var normalizedUsername = username.toLowerCase()
 
     fun getFullname(): String {
         return "${this.firstName} ${this.lastName}"
