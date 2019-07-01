@@ -1,0 +1,2 @@
+INSERT INTO `user` (`id`, `account_expired`, `account_locked`, `email`, `enabled`, `first_name`, `last_name`, `normalized_username`, `password`, `password_expired`, `username`, `version`, `owner_id`, `can_be_user_owner`)
+VALUES (300,0,0,'admin2@tsaap.org',1,'Admin2','Tsaap2','admin2','7110eda4d09e062aa5e4a390b0a572ac0d2c0220',0,'admin2',0,NULL,b'1');

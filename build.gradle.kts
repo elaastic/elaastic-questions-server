@@ -1,3 +1,4 @@
+import org.flywaydb.gradle.task.FlywayMigrateTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
@@ -8,6 +9,7 @@ plugins {
 	kotlin("jvm") version "1.2.71"
 	kotlin("plugin.spring") version "1.2.71"
 	id("com.palantir.docker") version "0.22.1"
+	id("org.flywaydb.flyway") version "5.2.4"
 }
 
 group = "org.elaastic.questions"
@@ -25,12 +27,13 @@ dependencies {
 //	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-//	implementation("org.flywaydb:flyway-core")
+	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlin:kotlin-allopen")
 	implementation("org.springframework.data:spring-data-rest-hal-browser")
-	runtimeOnly("mysql:mysql-connector-java")
+	// runtimeOnly("mysql:mysql-connector-java")
+	runtime("mysql:mysql-connector-java")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 
@@ -74,4 +77,22 @@ docker {
 	name = project.group.toString() + "/" + bootJar.archiveBaseName.get()
 	copySpec.from(unpack.outputs).into("dependency")
 	buildArgs(mapOf("DEPENDENCY" to "dependency"))
+}
+
+flyway {
+	url = "jdbc:mysql://127.0.0.1:6603/elaastic-questions"
+	user = "elaastic"
+	password = "elaastic"
+}
+
+tasks.register<FlywayMigrateTask>("migrateDatabaseDevelopment") {
+	url = "jdbc:mysql://127.0.0.1:6603/elaastic-questions"
+	user = "elaastic"
+	password = "elaastic"
+}
+
+tasks.register<FlywayMigrateTask>("migrateDatabaseProduction") {
+	url = "jdbc:mysql://elaastic-questions-db:3306/elaastic-questions"
+	user = "elaastic"
+	password = "elaastic"
 }
