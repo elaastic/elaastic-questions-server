@@ -13,6 +13,7 @@ import kotlin.reflect.KClass
  * @author John Tranier
  */
 @Entity
+@User.HasEmailOrIsOwner
 class User(
         firstName: String,
         lastName: String,
@@ -22,8 +23,12 @@ class User(
 ) : AbstractJpaPersistable<Long>() {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "UserSequence")
+    @SequenceGenerator(name = "UserSequence", sequenceName = "user_owner_id_index")
     var id: Long? = null
+
+    @Version
+    var version: Int? = null
 
     @NotBlank
     var firstName: String = firstName
@@ -32,9 +37,8 @@ class User(
     var lastName: String = lastName
 
     @Column(unique = true)
-    @ElaasticEmail
-    @NotNull
-    var email: String = email
+    @Email
+    var email: String? = email
 
     @Size(min = 4)
     var password: String? = password // TODO I don't like those 2 password fields ...
@@ -71,20 +75,28 @@ class User(
         return "${this.firstName} ${this.lastName}"
     }
 
-    @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
+    fun hasEmail(): Boolean {
+        return !email.isNullOrBlank()
+    }
+
+    fun hasOwner() : Boolean {
+        return owner != null
+    }
+
+
+    @Target(AnnotationTarget.CLASS)
     @Retention(AnnotationRetention.RUNTIME)
-    @Constraint(validatedBy = arrayOf(ElaasticEmailValidator::class))
-    annotation class ElaasticEmail(
+    @Constraint(validatedBy = arrayOf(HasEmailOrIsOwnerValidator::class))
+    annotation class HasEmailOrIsOwner(
             val message: String = "",
             val groups: Array<KClass<*>> = [],
         val payload: Array<KClass<out Payload>> = []
     )
 
-    class ElaasticEmailValidator : ConstraintValidator<ElaasticEmail, String> {
+    class HasEmailOrIsOwnerValidator : ConstraintValidator<HasEmailOrIsOwner, User> {
 
-
-        override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        override fun isValid(user: User?, context: ConstraintValidatorContext?): Boolean {
+            return user?.let { it.hasEmail() || it.hasOwner() } ?: false
         }
     }
 
