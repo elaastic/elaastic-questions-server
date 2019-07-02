@@ -5,17 +5,19 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.springframework.test.context.ActiveProfiles
 
 /**
  * @author John Tranier
  */
 @SpringBootTest
+@ActiveProfiles("test")
 class UserRepositoryTests(
         @Autowired val userRepository: UserRepository
 ) {
 
     @Test
     fun foo() {
-        // assertEquals(2, userRepository.findAll().count())
+        assertEquals(2, userRepository.findAll().count())
     }
 }
