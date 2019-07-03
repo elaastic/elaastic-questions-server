@@ -1,4 +1,4 @@
-package org.elaastic.questions
+package org.elaastic.questions.directory
 
 
 import org.junit.jupiter.api.Assertions
@@ -79,5 +79,35 @@ class UserRepositoryTests(
                     )
             )
         }
+    }
+
+    @Test
+    fun `findByUsername - existing user`() {
+        val user = User(
+                "John",
+                "Tranier",
+                "jtranier",
+                "1234",
+                "john.tranier@ticetime.com"
+        )
+        userRepository.save(user)
+
+        assertEquals(
+                user.id,
+                userRepository.findByUsername("jtranier")?.id
+                )
+    }
+
+    @Test
+    fun `findByUsername - unknown username`() {
+        Assertions.assertNull(userRepository.findByUsername("foo"))
+    }
+
+    @Test
+    fun `I can retrieve user roles`() {
+        assertEquals(
+                listOf("STUDENT_ROLE"),
+                userRepository.findByUsername("john_doe___1")?.roles?.map { it -> it.name }
+        )
     }
 }

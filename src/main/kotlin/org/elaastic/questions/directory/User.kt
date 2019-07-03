@@ -1,5 +1,6 @@
-package org.elaastic.questions
+package org.elaastic.questions.directory
 
+import org.elaastic.questions.Assignment
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import javax.persistence.*
 import javax.validation.Constraint
@@ -23,8 +24,8 @@ class User(
 ) : AbstractJpaPersistable<Long>() {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "UserSequence")
-    @SequenceGenerator(name = "UserSequence", sequenceName = "user_owner_id_index")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "UserSequence") // TODO Check this
+    @SequenceGenerator(name = "UserSequence", sequenceName = "id")
     var id: Long? = null
 
     @Version
@@ -50,7 +51,6 @@ class User(
 
     @ManyToOne
     var owner: User? = null
-    // TODO Settings
 
     @NotBlank
     @Column(unique = true, length = 16)
@@ -69,6 +69,41 @@ class User(
         return owner != null
     }
 
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = arrayOf(CascadeType.ALL),
+            targetEntity = Role::class
+    )
+    @JoinTable(
+            name = "user_role",
+            joinColumns = arrayOf(JoinColumn(name = "user_id")),
+            inverseJoinColumns = arrayOf(JoinColumn(name = "role_id"))
+    )
+    var roles: Set<Role> = HashSet()
+
+    fun isLearner(): Boolean {
+        TODO("Must find out how to implement it")
+        // UserRole.get(this.id, RoleEnum.STUDENT_ROLE.id)
+    }
+
+    fun isTeacher(): Boolean {
+        TODO("Must find out how to implement it")
+        // UserRole.get(this.id, RoleEnum.TEACHER_ROLE.id)
+    }
+
+    fun isAdmin(): Boolean {
+        TODO("Must find out how to implement it")
+        // UserRole.get(this.id, RoleEnum.ADMIN_ROLE.id)
+    }
+
+    fun isRegisteredInAssignment(assignment: Assignment) {
+        TODO("Must find out how to implement it")
+        // LearnerAssignment.findByLearnerAndAssignment(this,assignment)
+    }
+
+    override fun toString(): String {
+        return username
+    }
+
     @Target(AnnotationTarget.CLASS)
     @Retention(AnnotationRetention.RUNTIME)
     @Constraint(validatedBy = arrayOf(HasEmailOrIsOwnerValidator::class))
@@ -85,6 +120,6 @@ class User(
         }
     }
 
-    // TODO Implement methods
+    // TODO Settings
 
 }
