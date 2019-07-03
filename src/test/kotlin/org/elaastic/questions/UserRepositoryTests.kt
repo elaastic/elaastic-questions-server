@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.test.context.ActiveProfiles
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
@@ -51,6 +52,31 @@ class UserRepositoryTests(
         Assertions.assertThrows(ConstraintViolationException::class.java) { ->
             userRepository.save(
                     User("John", "", "jtranier", "1234", "john.tranier@ticetime.com")
+            )
+        }
+    }
+
+    @Test
+    fun `username must be unique`() {
+        Assertions.assertThrows(DataIntegrityViolationException::class.java) { ->
+            userRepository.save(
+                    User(
+                            "John",
+                            "Tranier",
+                            "jtranier",
+                            "1234",
+                            "john.tranier@ticetime.com"
+                    )
+            )
+
+            userRepository.save(
+                    User(
+                            "J",
+                            "T",
+                            "jtranier",
+                            "1234",
+                            "john.tranier@ticetime.com"
+                    )
             )
         }
     }

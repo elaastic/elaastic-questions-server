@@ -15,8 +15,8 @@ import kotlin.reflect.KClass
 @Entity
 @User.HasEmailOrIsOwner
 class User(
-        firstName: String,
-        lastName: String,
+        @field:NotBlank var firstName: String,
+        @field:NotBlank var lastName: String,
         username: String,
         password: String,
         email: String
@@ -29,12 +29,6 @@ class User(
 
     @Version
     var version: Int? = null
-
-    @NotBlank
-    var firstName: String = firstName
-
-    @NotBlank
-    var lastName: String = lastName
 
     @Column(unique = true)
     @Email
@@ -59,17 +53,9 @@ class User(
     // TODO Settings
 
     @NotBlank
-    @Column(unique = true)
+    @Column(unique = true, length = 16)
     @Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
     var username: String = username
-        set(value) {
-            field = value
-            this.normalizedUsername = value.toLowerCase()
-        }
-
-    // TODO A simple getter should be sufficient no?
-    @Column(unique = true)
-    var normalizedUsername = username.toLowerCase()
 
     fun getFullname(): String {
         return "${this.firstName} ${this.lastName}"
@@ -82,7 +68,6 @@ class User(
     fun hasOwner() : Boolean {
         return owner != null
     }
-
 
     @Target(AnnotationTarget.CLASS)
     @Retention(AnnotationRetention.RUNTIME)
