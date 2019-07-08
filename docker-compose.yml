@@ -2,7 +2,7 @@ version: '3'
 
 services:
   elaastic-questions-db:
-    image: mysql:5
+    image: mariadb:10.4
     container_name: elaastic-questions-db
     environment:
       - MYSQL_USER=elaastic
@@ -12,7 +12,7 @@ services:
     ports:
       - 6603:3306
   elaastic-questions-db-test:
-    image: mysql:5
+    image: mariadb:10.4
     container_name: elaastic-questions-db-test
     environment:
       - MYSQL_USER=elaastic

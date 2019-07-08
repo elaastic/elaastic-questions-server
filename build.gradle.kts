@@ -32,7 +32,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlin:kotlin-allopen")
 	implementation("org.springframework.data:spring-data-rest-hal-browser")
-	runtime("mysql:mysql-connector-java")
+	runtime("org.mariadb.jdbc:mariadb-java-client")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 
@@ -79,19 +79,19 @@ docker {
 }
 
 flyway {
-	url = "jdbc:mysql://127.0.0.1:6603/elaastic-questions"
+	url = "jdbc:mariadb://127.0.0.1:6603/elaastic-questions"
 	user = "elaastic"
 	password = "elaastic"
 }
 
 tasks.register<FlywayMigrateTask>("migrateDatabaseDevelopment") {
-	url = "jdbc:mysql://127.0.0.1:6603/elaastic-questions"
+	url = "jdbc:mariadb://127.0.0.1:6603/elaastic-questions"
 	user = "elaastic"
 	password = "elaastic"
 }
 
 tasks.register<FlywayMigrateTask>("migrateDatabaseProduction") {
-	url = "jdbc:mysql://elaastic-questions-db:3306/elaastic-questions"
+	url = "jdbc:mariadb://elaastic-questions-db:3306/elaastic-questions"
 	user = "elaastic"
 	password = "elaastic"
 }
