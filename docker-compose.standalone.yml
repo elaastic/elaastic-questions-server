@@ -21,3 +21,18 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - 6604:3306
+  elaastic-questions-server-standalone:
+    build:
+      context: .
+    image: elaastic-questions-server-standalone:latest
+    container_name: elaastic-questions-server
+    depends_on:
+      - elaastic-questions-db
+    ports:
+      - 8081:8080
+    environment:
+      - DATABASE_HOST=elaastic-questions-db
+      - DATABASE_USER=elaastic
+      - DATABASE_NAME=elaastic-questions
+      - DATABASE_PASSWORD=elaastic
+      - DATABASE_PORT=3306

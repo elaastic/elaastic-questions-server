@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  elaastic-questions-db:
+    image: mariadb:10.4
+    container_name: elaastic-questions-db
+    environment:
+      - MYSQL_USER=elaastic
+      - MYSQL_DATABASE=elaastic-questions
+      - MYSQL_PASSWORD=elaastic
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 6603:3306
+  elaastic-tomcat:
+    build:
+      context: ./docker-resources/tomcat
+    image: elaastic-tomcat
+    container_name: elaastic-tomcat
+    depends_on:
+      - elaastic-questions-db
+    ports:
+      - 8088:8080
+    volumes:
+      - ./build/libs/elaastic-questions-server-0.0.1-SNAPSHOT.war:/usr/local/tomcat/webapps/elaastic-questions.war
