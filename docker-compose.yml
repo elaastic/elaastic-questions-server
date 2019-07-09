@@ -21,12 +21,13 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - 6604:3306
-  elaastic-questions-server:
-    image: org.elaastic.questions/elaastic-questions-server:latest
+  elaastic-questions-server-standalone:
+    build:
+      context: .
+    image: elaastic-questions-server-standalone:latest
     container_name: elaastic-questions-server
     depends_on:
       - elaastic-questions-db
-      - elaastic-questions-db-test
     ports:
       - 8081:8080
     environment:
@@ -38,6 +39,7 @@ services:
   elaastic-tomcat:
     build:
       context: ./docker-resources/tomcat
+    image: elaastic-tomcat
     container_name: elaastic-tomcat
     depends_on:
       - elaastic-questions-db
