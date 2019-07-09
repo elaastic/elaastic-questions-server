@@ -35,3 +35,13 @@ services:
       - DATABASE_NAME=elaastic-questions
       - DATABASE_PASSWORD=elaastic
       - DATABASE_PORT=3306
+  elaastic-tomcat:
+    build:
+      context: ./docker-resources/tomcat
+    container_name: elaastic-tomcat
+    depends_on:
+      - elaastic-questions-db
+    ports:
+      - 8088:8080
+    volumes:
+      - ./build/libs/elaastic-questions-server-0.0.1-SNAPSHOT.war:/usr/local/tomcat/webapps/elaastic-questions.war

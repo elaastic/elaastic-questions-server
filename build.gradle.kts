@@ -27,6 +27,7 @@ dependencies {
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 //	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -77,4 +78,8 @@ docker {
 	name = project.group.toString() + "/" + bootJar.archiveBaseName.get()
 	copySpec.from(unpack.outputs).into("dependency")
 	buildArgs(mapOf("DEPENDENCY" to "dependency"))
+}
+
+tasks.getByName<War>("war") {
+	enabled = true
 }
