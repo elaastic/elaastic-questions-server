@@ -6,6 +6,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.2.71"
 	id("org.springframework.boot") version "2.1.5.RELEASE"
 	id("io.spring.dependency-management") version "1.0.7.RELEASE"
+	war
 	kotlin("jvm") version "1.2.71"
 	kotlin("plugin.spring") version "1.2.71"
 	id("com.palantir.docker") version "0.22.1"
@@ -76,22 +77,4 @@ docker {
 	name = project.group.toString() + "/" + bootJar.archiveBaseName.get()
 	copySpec.from(unpack.outputs).into("dependency")
 	buildArgs(mapOf("DEPENDENCY" to "dependency"))
-}
-
-flyway {
-	url = "jdbc:mariadb://127.0.0.1:6603/elaastic-questions"
-	user = "elaastic"
-	password = "elaastic"
-}
-
-tasks.register<FlywayMigrateTask>("migrateDatabaseDevelopment") {
-	url = "jdbc:mariadb://127.0.0.1:6603/elaastic-questions"
-	user = "elaastic"
-	password = "elaastic"
-}
-
-tasks.register<FlywayMigrateTask>("migrateDatabaseProduction") {
-	url = "jdbc:mariadb://elaastic-questions-db:3306/elaastic-questions"
-	user = "elaastic"
-	password = "elaastic"
 }
