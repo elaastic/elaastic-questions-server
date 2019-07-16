@@ -1,6 +1,6 @@
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.Assignment
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import javax.persistence.*
 import javax.validation.Constraint

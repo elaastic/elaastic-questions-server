@@ -1,4 +1,4 @@
-package org.elaastic.questions
+package org.elaastic.questions.assignment
 
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import java.util.*

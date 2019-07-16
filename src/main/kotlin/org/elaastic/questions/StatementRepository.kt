@@ -1,5 +1,6 @@
 package org.elaastic.questions
 
+import org.elaastic.questions.assignment.Statement
 import org.springframework.data.jpa.repository.JpaRepository
 
 /**
