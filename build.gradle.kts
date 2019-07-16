@@ -28,6 +28,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -42,6 +43,7 @@ dependencies {
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.hamcrest:hamcrest-library")
+    testImplementation("org.exparity:hamcrest-date:1.1.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 

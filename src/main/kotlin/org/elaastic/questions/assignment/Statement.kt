@@ -1,10 +1,12 @@
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.ManyToOne
+import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -12,57 +14,73 @@ import javax.validation.constraints.NotNull
  * @author John Tranier
  */
 @Entity
+@EntityListeners(AuditingEntityListener::class)
 class Statement(
-        @NotBlank
-        val title: String,
+        @field:NotNull
+        @field:ManyToOne
+        var owner: User,
 
-        @NotBlank
-        val content: String,
+        @field:NotBlank
+        var title: String,
 
-        @Column(name = "expected_explanation")
-        val expectedExplanation: String,
+        @field:NotBlank
+        var content: String,
 
-        @Column(name = "choice_specification")
-        val choiceSpecification: String,
+        @field:NotNull
+        @Enumerated(EnumType.STRING)
+        val questionType: QuestionType,
 
-        val questionType: String,
+        @Convert(converter = ChoiceSpecificationConverter::class)
+        @field:Column(name = "choice_specification")
+        var choiceSpecification: ChoiceSpecification? = null,
 
-        @ManyToOne
-        val parentStatement: Statement?,
+        @field:ManyToOne
+        var parentStatement: Statement? = null,
 
-        @NotNull
-        @Column(name = "date_created")
-        val dateCreated: Date,
+        @field:Column(name = "expected_explanation")
+        var expectedExplanation: String? = null
 
-        @NotNull
-        @Column(name = "last_updated")
-        val lastUpdated: Date
-
-        // TODO User
         // TODO Attachments
         
 ) : AbstractJpaPersistable<Long>() {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long? = null
+
+    @Version
+    var version: Int? = null
+
+    @NotNull
+    @Column(name = "date_created")
+    @CreatedDate
+    lateinit var dateCreated: Date
+
+    @NotNull
+    @LastModifiedDate
+    @Column(name = "last_updated")
+    var lastUpdated: Date? = null
+
 
     // TODO getFakeExplanations
     // TODO getChoiceSpecificationObject
     // TODO getAttachment
 
     fun isOpenEnded(): Boolean {
-        return questionType == QuestionType.OpenEnded.toString()
+        return questionType == QuestionType.OpenEnded
     }
 
     fun isMultipleChoice(): Boolean {
-        return questionType == QuestionType.MultipleChoice.toString()
+        return questionType == QuestionType.MultipleChoice
     }
 
     fun isExclusiveChoice(): Boolean {
-        return questionType == QuestionType.ExclusiveChoice.toString()
+        return questionType == QuestionType.ExclusiveChoice
     }
 
     fun hasChoice(): Boolean {
         return isMultipleChoice() || isExclusiveChoice()
     }
-
 }
 
 
