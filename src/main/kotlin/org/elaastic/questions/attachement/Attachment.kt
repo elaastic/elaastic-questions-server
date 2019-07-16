@@ -4,19 +4,22 @@ import org.elaastic.questions.persistence.AbstractJpaPersistable
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
+import javax.persistence.AttributeConverter
 
-@Entity
+
+
+@Entity(name = "attachement")
 class Attachment(
         @field:NotBlank var path: String,
         @field:NotBlank var name: String
 ) : AbstractJpaPersistable<Long>() {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) // TODO Check this
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null
 
     @Version
-    var version: Int? = null
+    var version: Long? = null
 
     @Size(min = 1)
     var originalName: String? = null
@@ -26,16 +29,17 @@ class Attachment(
     @Column(name = "type_mime")
     var mimeType: MimeType? = null
 
+    @Embedded
     var dimension: Dimension? = null
 
     var toDelete: Boolean = false
 
 
-    fun imageIsDisplayable():Boolean {
+    fun isDisplayableImage():Boolean {
         return mimeType?.correspondsToDisplayableImage() ?: false
     }
 
-    fun textIsDisplayable():Boolean {
+    fun isDisplayableText():Boolean {
         return mimeType?.correspondsToDisplayableText() ?: false
     }
 
@@ -60,12 +64,13 @@ class MimeType(val label: String = "application/octet-stream") {
         jpeg("image/jpeg"),
         png("image/png")
     }
+
 }
 
-
+@Embeddable
 class Dimension(
-        val width: Int,
-        val height: Int
+        @field:Column(name = "dimension_width") val width: Int,
+        @field:Column(name = "dimension_height") val height: Int
 ) : Comparable<Dimension> {
 
     override fun compareTo(other: Dimension): Int {
@@ -82,5 +87,17 @@ class Dimension(
 
     override fun toString(): String {
         return "dim    h: $height     l: $width"
+    }
+}
+
+@Converter(autoApply = true)
+class MimeTypeConverter : AttributeConverter<MimeType, String> {
+
+    override fun convertToDatabaseColumn(mimeType: MimeType?): String? {
+        return mimeType?.label
+    }
+
+    override fun convertToEntityAttribute(label: String?): MimeType? {
+        return if (label != null) MimeType(label) else null
     }
 }

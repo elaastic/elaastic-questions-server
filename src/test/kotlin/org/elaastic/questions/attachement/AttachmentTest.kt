@@ -27,11 +27,11 @@ internal class AttachmentTest {
         val dimension1 = Dimension(width = 100, height = 100)
 
         // expect: comparison with another equal dimension return 0
-        assertThat(dimension1.compareTo(Dimension(width = 100, height = 100)), `is`(equalTo(0)))
+        assertThat(dimension1.compareTo(Dimension(width = 100, height = 100)), equalTo(0))
         // expect: comparison with a smaller dimension return 1
-        assertThat(dimension1.compareTo(Dimension(width = 50, height = 50)), `is`(equalTo(1)))
+        assertThat(dimension1.compareTo(Dimension(width = 50, height = 50)), equalTo(1))
         // expect: comparison with a bigger dimension return -1
-        assertThat(dimension1.compareTo(Dimension(width = 150, height = 150)), `is`(equalTo(-1)))
+        assertThat(dimension1.compareTo(Dimension(width = 150, height = 150)), equalTo(-1))
     }
 
     @Test
@@ -49,17 +49,17 @@ internal class AttachmentTest {
         val attachment = Attachment(path = "a/path", name = "myImage")
         attachment.mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.jpeg.label)
         // expect attachment is acknowledge to be displayable
-        assertThat(attachment.imageIsDisplayable(), `is`(equalTo(true)))
+        assertThat(attachment.isDisplayableImage(), equalTo(true))
 
         // given an attachment corresponding to a gif image
         attachment.mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.gif.label)
         // expect attachment is acknowledge to be displayable
-        assertThat(attachment.imageIsDisplayable(), `is`(equalTo(true)))
+        assertThat(attachment.isDisplayableImage(), equalTo(true))
 
         // given an attachment corresponding to a png image
         attachment.mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.png.label)
         // expect attachment is acknowledge to be displayable
-        assertThat(attachment.imageIsDisplayable(), `is`(equalTo(true)))
+        assertThat(attachment.isDisplayableImage(), equalTo(true))
 
     }
 
@@ -69,7 +69,7 @@ internal class AttachmentTest {
         val attachment = Attachment(path = "a/path", name = "myText")
         attachment.mimeType = MimeType("text/html")
         // expect attachment is acknowledge to be displayable
-        assertThat(attachment.textIsDisplayable(), `is`(equalTo(true)))
+        assertThat(attachment.isDisplayableText(), equalTo(true))
     }
 
     @Test
@@ -78,8 +78,8 @@ internal class AttachmentTest {
         val attachment = Attachment(path = "a/path", name = "myAttach")
         attachment.mimeType = MimeType("truc/som")
         // expect attachment is acknowledge to be not displayable
-        assertThat(attachment.textIsDisplayable(), `is`(equalTo(false)))
-        assertThat(attachment.imageIsDisplayable(), `is`(equalTo(false)))
+        assertThat(attachment.isDisplayableText(), equalTo(false))
+        assertThat(attachment.isDisplayableImage(), equalTo(false))
     }
 
     @Test
@@ -89,14 +89,14 @@ internal class AttachmentTest {
         logger.info(attachment.toString())
         logger.info(validator.validate(attachment).toString())
         // expect validation succeeds
-        assertThat(validator.validate(attachment).isEmpty(), `is`(true))
+        assertThat(validator.validate(attachment).isEmpty(), equalTo(true))
         // when setting correctly properties
         attachment.mimeType = MimeType("text/text")
         attachment.dimension = Dimension(width = 100, height = 100)
         attachment.originalName = "oldName"
         attachment.size = 125
         // then validation still succeeds
-        assertThat(validator.validate(attachment).isEmpty(), `is`(true))
+        assertThat(validator.validate(attachment).isEmpty(), equalTo(true))
     }
 
     @Test
@@ -104,12 +104,12 @@ internal class AttachmentTest {
         // given a valid attachment
         val attachment = Attachment(path = "a/path", name = "")
         // expect validation fails
-        assertThat(validator.validate(attachment).isEmpty(), `is`(false))
+        assertThat(validator.validate(attachment).isEmpty(), equalTo(false))
         // when setting incorrectly originalName
         attachment.name = "myAttach"
         attachment.originalName = ""
         // then validation still succeeds
-        assertThat(validator.validate(attachment).isEmpty(), `is`(false))
+        assertThat(validator.validate(attachment).isEmpty(), equalTo(false))
     }
 
 }
