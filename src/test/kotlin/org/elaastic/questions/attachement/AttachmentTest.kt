@@ -3,8 +3,8 @@ package org.elaastic.questions.attachement
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.`is`
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.logging.Logger
 import javax.validation.Validation
 import javax.validation.Validator
@@ -15,7 +15,7 @@ internal class AttachmentTest {
     val logger = Logger.getLogger(AttachmentTest::class.java.name)
     lateinit var validator: Validator
 
-    @Before
+    @BeforeEach
     fun setUp() {
         val factory = Validation.buildDefaultValidatorFactory()
         validator = factory.validator
