@@ -41,6 +41,7 @@ dependencies {
         exclude(module = "junit")
     }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.hamcrest:hamcrest-library")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
