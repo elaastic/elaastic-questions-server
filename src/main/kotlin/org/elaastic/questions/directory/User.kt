@@ -24,8 +24,7 @@ class User(
 ) : AbstractJpaPersistable<Long>() {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "UserSequence") // TODO Check this
-    @SequenceGenerator(name = "UserSequence", sequenceName = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null
 
     @Version
