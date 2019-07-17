@@ -34,14 +34,14 @@
 
 <!--                roles="${RoleEnum.ADMIN_ROLE.label},${RoleEnum.TEACHER_ROLE.label}">-->
 
-            <div class="item" sec:authorize="hasAnyRole('${RoleEnum.ADMIN_ROLE.label}','${RoleEnum.TEACHER_ROLE.label}')">
+            <div class="item" sec:authorize="hasAnyRole('${RoleId.ADMIN.roleName}','${RoleId.TEACHER.roleName}')">
                 <a th:href="@{/assignment}">
                     <i class="book icon"></i> <span th:text="#{assignment.my.list.label}"/>
                 </a>
             </div>
 
 
-            <div class="item" sec:authorize="hasAnyRole('${RoleEnum.ADMIN_ROLE.label}','${RoleEnum.STUDENT_ROLE.label}')">
+            <div class="item" sec:authorize="hasAnyRole('${RoleId.ADMIN.roleName}','${RoleId.STUDENT.roleName}')">
                 <a th:href="@{/player}">
                     <i class="travel icon"></i> <span th:text="#{player.my.assignment.list.label}"/>
                 </a>
@@ -49,14 +49,14 @@
 
         <div class="right menu">
 
-                <div class="item" sec:authentication="isAnonymous()">
+                <div class="item" sec:authorize="isAnonymous()">
                     <a th:href="@{/login/auth}" class="ui button">
                         ${message(code: "index.newUser.logIn.action")}
                     </a>
 
                 </div>
 
-                <div class="item" sec:authentication="isAnonymous()">
+                <div class="item" sec:authorize="isAnonymous()">
                     <a th:href="@{/userAccount/showSuscribeForm}" class="ui primary button">
                         <span th:text="#{index.newUser.signUp.action}"/>
                     </a>
@@ -65,7 +65,7 @@
 <!--            <tsaap:ifLoggedIn>
                 <g:render template="/layouts/userMenu" model="[user: user]" />
             </tsaap:ifLoggedIn>-->
-                <div sec:authentication="isAuthenticated()">
+                <div sec:authorize="isAuthenticated()">
                     TO CHANGE
                 </div>
         </div>
@@ -79,6 +79,5 @@
     </div>
 </div>
 
-<r:layoutResources/>
 </body>
 </html>

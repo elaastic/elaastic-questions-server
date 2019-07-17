@@ -1,13 +1,13 @@
-package org.elaastic
+package org.elaastic.questions
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
-class DemoController {
+class DemoController() {
 
     @GetMapping("/demo")
-    fun index(): String {
-        return "index"
+    fun demo(): String {
+        return "demo"
     }
 }
