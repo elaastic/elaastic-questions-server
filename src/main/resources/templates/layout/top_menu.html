@@ -31,17 +31,14 @@
             </a>
         </div>
 
-
-<!--                roles="${RoleEnum.ADMIN_ROLE.label},${RoleEnum.TEACHER_ROLE.label}">-->
-
-            <div class="item" sec:authorize="hasAnyRole('${RoleId.ADMIN.roleName}','${RoleId.TEACHER.roleName}')">
+            <div class="item" sec:authorize="hasAnyAuthority('${ADMIN_ROLE_NAME}','TEACHER_ROLE')">
                 <a th:href="@{/assignment}">
                     <i class="book icon"></i> <span th:text="#{assignment.my.list.label}"/>
                 </a>
             </div>
 
 
-            <div class="item" sec:authorize="hasAnyRole('${RoleId.ADMIN.roleName}','${RoleId.STUDENT.roleName}')">
+            <div class="item" sec:authorize="hasAnyAuthority('${ADMIN_ROLE_NAME}','${STUDENT_ROLE_NAME}')">
                 <a th:href="@{/player}">
                     <i class="travel icon"></i> <span th:text="#{player.my.assignment.list.label}"/>
                 </a>
