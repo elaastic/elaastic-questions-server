@@ -1,42 +1,46 @@
 package org.elaastic.questions.directory
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
+import javax.annotation.PostConstruct
 
 /**
  * @author John Tranier
  */
 @Service
-// @CacheConfig(cacheNames = arrayOf("roles"))
 class RoleService(
         @Autowired val roleRepository: RoleRepository
 ) {
 
+    // will be initialized by loadAllRoleId
+    companion object cache {
+        var STUDENT_ROLE_ID: Long = -1
+        var TEACHER_ROLE_ID: Long = -1
+        var ADMIN_ROLE_ID: Long = -1
+    }
+
+
     fun roleStudent(): Role {
-        return getAllRole()[Role.RoleId.STUDENT]!!
+        return roleRepository.getOne(STUDENT_ROLE_ID)!!
     }
 
     fun roleTeacher(): Role {
-        return getAllRole()[Role.RoleId.TEACHER]!!
+        return roleRepository.getOne(TEACHER_ROLE_ID)!!
     }
 
     fun roleAdmin(): Role {
-        return getAllRole()[Role.RoleId.ADMIN]!!
+        return roleRepository.getOne(ADMIN_ROLE_ID)!!
     }
 
-    // @Cacheable
-    fun getAllRole(): Map<Role.RoleId, Role> {
+    @PostConstruct
+    private fun loadAllRoleId() {
 
         val allRole = roleRepository.findAll().associateBy({ it.name }, { it })
 
-        return mapOf(
-                Role.RoleId.STUDENT to allRole[Role.RoleId.STUDENT.roleName]!!,
-                Role.RoleId.TEACHER to allRole[org.elaastic.questions.directory.Role.RoleId.TEACHER.roleName]!!,
-                Role.RoleId.ADMIN to allRole[org.elaastic.questions.directory.Role.RoleId.ADMIN.roleName]!!
-        )
-
+        // Load IDs
+        STUDENT_ROLE_ID = allRole[Role.RoleId.STUDENT.roleName]!!.id!!
+        TEACHER_ROLE_ID = allRole[Role.RoleId.TEACHER.roleName]!!.id!!
+        ADMIN_ROLE_ID = allRole[Role.RoleId.ADMIN.roleName]!!.id!!
 
     }
 }

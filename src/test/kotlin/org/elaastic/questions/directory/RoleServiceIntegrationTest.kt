@@ -5,6 +5,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cache.annotation.EnableCaching
 import javax.transaction.Transactional
 
 
@@ -12,6 +13,7 @@ import javax.transaction.Transactional
  * @author John Tranier
  */
 @SpringBootTest
+@EnableCaching
 @Transactional
 internal class RoleServiceIntegrationTest(
         @Autowired val roleService: RoleService
@@ -23,6 +25,6 @@ internal class RoleServiceIntegrationTest(
         assertThat(roleService.roleStudent().name, equalTo(Role.RoleId.STUDENT.roleName))
         assertThat(roleService.roleTeacher().name, equalTo(Role.RoleId.TEACHER.roleName))
         assertThat(roleService.roleAdmin().name, equalTo(Role.RoleId.ADMIN.roleName))
-
     }
+
 }

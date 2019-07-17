@@ -2,6 +2,7 @@ package org.elaastic.questions.directory
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import java.io.Serializable
 import javax.persistence.*
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
@@ -25,11 +26,7 @@ class User(
         var username: String,
         password: String,
         email: String
-) : AbstractJpaPersistable<Long>() {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null
+) : AbstractJpaPersistable<Long>(), Serializable {
 
     @Version
     var version: Long? = null
@@ -71,7 +68,6 @@ class User(
             cascade = arrayOf(CascadeType.ALL),
             targetEntity = Role::class
     )
-
     @JoinTable(
             name = "user_role",
             joinColumns = arrayOf(JoinColumn(name = "user_id")),

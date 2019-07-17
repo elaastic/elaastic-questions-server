@@ -3,6 +3,7 @@ package org.elaastic.questions.persistence
 import org.springframework.data.util.ProxyUtils
 import java.io.Serializable
 import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
@@ -17,12 +18,8 @@ abstract class AbstractJpaPersistable<T: Serializable> {
     }
 
     @Id
-    @GeneratedValue
-    private var id: T? = null
-
-    fun getId(): T? {
-        return id
-    }
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: T? = null
 
     override fun equals(other: Any?): Boolean {
         other ?: return false
@@ -33,7 +30,7 @@ abstract class AbstractJpaPersistable<T: Serializable> {
 
         other as AbstractJpaPersistable<*>
 
-        return if(null == this.getId()) false else this.getId() == other.getId()
+        return if(null == this.id) false else this.id == other.id
     }
 
     override fun hashCode(): Int {

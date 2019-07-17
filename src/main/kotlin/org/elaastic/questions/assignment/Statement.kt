@@ -44,10 +44,6 @@ class Statement(
         
 ) : AbstractJpaPersistable<Long>() {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null
-
     @Version
     var version: Long? = null
 

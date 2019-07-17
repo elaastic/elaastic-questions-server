@@ -14,10 +14,6 @@ class Attachment(
         @field:NotBlank var name: String
 ) : AbstractJpaPersistable<Long>() {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null
-
     @Version
     var version: Long? = null
 
@@ -44,7 +40,7 @@ class Attachment(
     }
 
     override fun toString(): String {
-        return "Attachment(path='$path', name='$name', id=$id, version=$version, originalName=$originalName, size=$size, mimeType=$mimeType, dimension=$dimension, toDelete=$toDelete)"
+        return "Attachment(path='$path', name='$name', id=$$id, version=$version, originalName=$originalName, size=$size, mimeType=$mimeType, dimension=$dimension, toDelete=$toDelete)"
     }
 }
 
