@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.test.context.ActiveProfiles
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
@@ -15,7 +17,6 @@ import javax.validation.ConstraintViolationException
  * @author John Tranier
  */
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 class UserRepositoryIntegrationTest(
         @Autowired val userRepository: UserRepository
@@ -23,7 +24,7 @@ class UserRepositoryIntegrationTest(
 
     @Test
     fun `check test data`() {
-        assertEquals(12, userRepository.findAll().count())
+        assertEquals(17, userRepository.findAll().count())
     }
 
     @Test
@@ -38,7 +39,7 @@ class UserRepositoryIntegrationTest(
                 )
         )
 
-        assertEquals(13, userRepository.findAll().count())
+        assertEquals(18, userRepository.findAll().count())
     }
 
     @Test
