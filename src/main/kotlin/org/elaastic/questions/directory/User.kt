@@ -71,12 +71,18 @@ class User(
             cascade = arrayOf(CascadeType.ALL),
             targetEntity = Role::class
     )
+
     @JoinTable(
             name = "user_role",
             joinColumns = arrayOf(JoinColumn(name = "user_id")),
             inverseJoinColumns = arrayOf(JoinColumn(name = "role_id"))
     )
-    var roles: Set<Role> = HashSet()
+    var roles: MutableSet<Role> = HashSet()
+
+    fun addRole(role: Role): User {
+        roles.add(role)
+        return this
+    }
 
     fun isLearner(): Boolean {
         TODO("Must find out how to implement it")
