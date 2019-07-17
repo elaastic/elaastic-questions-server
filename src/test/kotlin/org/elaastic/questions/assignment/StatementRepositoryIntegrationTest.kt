@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Assertions
 @ActiveProfiles("test")
 @Transactional
 @EnableJpaAuditing
-class StatementRepositoryTests(
+class StatementRepositoryIntegrationTest(
         @Autowired val statementRepository: StatementRepository,
         @Autowired val testingService: TestingService,
         @Autowired val entityManager: EntityManager
@@ -52,9 +52,9 @@ class StatementRepositoryTests(
 
         // Then :
         assertThat(statement.id, notNullValue())
-        assertThat(statement.version, equalTo(0))
-        assertThat(statement.dateCreated, DateMatchers.after(justBefore))
-        assertThat(statement.dateCreated, DateMatchers.before(justAfter))
+        assertThat(statement.version, equalTo(0L))
+        assertThat(statement.dateCreated, DateMatchers.sameOrAfter(justBefore))
+        assertThat(statement.dateCreated, DateMatchers.sameOrBefore(justAfter))
 
 
         // And when :
@@ -65,7 +65,7 @@ class StatementRepositoryTests(
 
         // Then :
         statementV2.let {
-            assertThat(it.version, equalTo(1))
+            assertThat(it.version, equalTo(1L))
             Assertions.assertTrue(it.dateCreated < it.lastUpdated)
         }
     }

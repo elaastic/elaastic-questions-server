@@ -8,9 +8,5 @@ import org.springframework.data.repository.CrudRepository
  */
 
 interface StatementRepository : JpaRepository<Statement, Long> {
-
-    fun save(statement: Statement) : Statement
-    fun saveAndFlush(statement: Statement) : Statement
-    override fun findAll(): List<Statement>
-
+    
 }

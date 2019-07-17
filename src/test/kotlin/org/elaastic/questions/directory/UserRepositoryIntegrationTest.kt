@@ -17,7 +17,7 @@ import javax.validation.ConstraintViolationException
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-class UserRepositoryTests(
+class UserRepositoryIntegrationTest(
         @Autowired val userRepository: UserRepository
 ) {
 

@@ -18,7 +18,11 @@ import kotlin.reflect.KClass
 class User(
         @field:NotBlank var firstName: String,
         @field:NotBlank var lastName: String,
-        username: String,
+
+        @field:NotBlank
+        @field:Column(unique = true, length = 16)
+        @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
+        var username: String,
         password: String,
         email: String
 ) : AbstractJpaPersistable<Long>() {
@@ -28,7 +32,7 @@ class User(
     var id: Long? = null
 
     @Version
-    var version: Int? = null
+    var version: Long? = null
 
     @Column(unique = true)
     @Email
@@ -50,11 +54,6 @@ class User(
 
     @ManyToOne
     var owner: User? = null
-
-    @NotBlank
-    @Column(unique = true, length = 16)
-    @Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
-    var username: String = username
 
     fun getFullname(): String {
         return "${this.firstName} ${this.lastName}"

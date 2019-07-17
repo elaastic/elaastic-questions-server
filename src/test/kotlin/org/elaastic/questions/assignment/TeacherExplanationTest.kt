@@ -10,7 +10,7 @@ import javax.validation.Validator
  * @author John Tranier
  */
 
-class TeacherExplanationTests {
+class TeacherExplanationTest {
 
     lateinit var validator: Validator
 

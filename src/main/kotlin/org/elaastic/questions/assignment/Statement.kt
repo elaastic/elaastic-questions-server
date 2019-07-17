@@ -49,7 +49,7 @@ class Statement(
     var id: Long? = null
 
     @Version
-    var version: Int? = null
+    var version: Long? = null
 
     @NotNull
     @Column(name = "date_created")
