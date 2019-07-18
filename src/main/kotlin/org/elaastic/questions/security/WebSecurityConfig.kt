@@ -28,12 +28,12 @@ class WebSecurityConfig(
     override fun configure(http: HttpSecurity?) {
         http
                 ?.authorizeRequests()
-                    ?.antMatchers("/images/**", "/css/**", "/js/**", "/", "/demo")?.permitAll()
+                    ?.antMatchers("/images/**", "/css/**", "/js/**", "/semantic/**", "/", "/demo")?.permitAll()
                     ?.anyRequest()?.authenticated()
                     ?.and()
                 ?.formLogin()
-                    ?.and()
-                ?.httpBasic()
+                    ?.loginPage("/login")
+                    ?.permitAll()
     }
 
     @Bean
