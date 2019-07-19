@@ -1,6 +1,5 @@
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.attachement.AttachmentTest
 import org.elaastic.questions.test.TestingService
 
 import org.junit.jupiter.api.BeforeEach
@@ -27,7 +26,7 @@ internal class ActivationKeyIntegrationTest(
         @Autowired val activationKeyRepository: ActivationKeyRepository
 ) {
 
-    val logger = Logger.getLogger(AttachmentTest::class.java.name)
+    val logger = Logger.getLogger(ActivationKeyIntegrationTest::class.java.name)
     lateinit var validator: Validator
 
     @BeforeEach
@@ -82,13 +81,13 @@ internal class ActivationKeyIntegrationTest(
 
     @Test
     fun `test save of a non valid activation key`() {
-        // given a valid activation key
+        // given a non valid activation key
         val actKey = ActivationKey(
                 activationKey = "",
                 user = testingService.getAnyUser()
         )
 
-        // expect an exception is thrown when saving the attachment
+        // expect an exception is thrown when saving
         assertThrows<ConstraintViolationException> { activationKeyRepository.save(actKey) }
     }
 
