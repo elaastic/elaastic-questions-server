@@ -39,8 +39,6 @@ class Statement(
 
         @field:Column(name = "expected_explanation")
         var expectedExplanation: String? = null
-
-        // TODO Attachments
         
 ) : AbstractJpaPersistable<Long>() {
 

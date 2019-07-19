@@ -1,5 +1,6 @@
 package org.elaastic.questions.attachement
 
+import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -29,6 +30,9 @@ class Attachment(
     var dimension: Dimension? = null
 
     var toDelete: Boolean = false
+
+    @ManyToOne
+    var statement: Statement? = null
 
 
     fun isDisplayableImage():Boolean {
