@@ -3,7 +3,6 @@ package org.elaastic.questions.assignment
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import org.elaastic.questions.test.TestingService
 import org.exparity.hamcrest.date.DateMatchers
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
@@ -19,10 +18,9 @@ import org.junit.jupiter.api.Assertions
  * @author John Tranier
  */
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 @EnableJpaAuditing
-class StatementRepositoryIntegrationTest(
+internal class StatementRepositoryIntegrationTest(
         @Autowired val statementRepository: StatementRepository,
         @Autowired val testingService: TestingService,
         @Autowired val entityManager: EntityManager
