@@ -14,17 +14,15 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class Sequence(
+class Interaction(
+        var interactionType: InteractionType,
         var rank: Int,
+        var specification: String, // TODO Create a type
         var owner: User,
 
         @field:OneToOne
-        var assignment: Assignment,
-
-        @field:OneToOne
-        var statement: Statement
-
-) :  AbstractJpaPersistable<Long>() {
+        var sequence: Sequence
+) : AbstractJpaPersistable<Long>() {
 
     @Version
     var version: Long? = null
@@ -39,22 +37,10 @@ class Sequence(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-    @Enumerated(EnumType.STRING)
-    var executionContext: ExecutionContext = ExecutionContext.FaceToFace
-
-    // TODO Interaction
-
-    @Enumerated(EnumType.STRING)
     var state: State = State.beforeStart
+    var results: String? = null // TODO create a type
+    var explanationRecommendationMapping: String? = null // TODO create a type
 
-    var resultsArePublished: Boolean = false
-
-    // TODO Methods...
-}
-
-enum class State {
-    beforeStart,
-    show,
-    afterStop
+    // TODO Methods
 }
 
