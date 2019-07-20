@@ -55,9 +55,7 @@ class Statement(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-
     // TODO getFakeExplanations
-    // TODO getChoiceSpecificationObject
     // TODO getAttachment
 
     fun isOpenEnded(): Boolean {
