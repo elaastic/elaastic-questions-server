@@ -1,12 +1,12 @@
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.test.directive.*
 import org.elaastic.questions.test.TestingService
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
-import org.junit.Rule
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,13 +37,13 @@ internal class FakeExplanationRepositoryIntegrationTest(
                 statement = statement
         )
                 // When saving the fake explanation
-                .let {
+                .tWhen {
                     fakeExplanationRepository.saveAndFlush(it)
                     entityManager.refresh(it)
                     it
                 }
                 // Then the fake explanation should to be properly saved
-                .let {
+                .tThen {
                     assertThat(it.id, not(nullValue()))
                     assertThat(it.author, equalTo(author))
                     assertThat(it.statement, equalTo(statement))
@@ -59,9 +59,10 @@ internal class FakeExplanationRepositoryIntegrationTest(
                 author = testingService.getAnyUser(),
                 statement = testingService.getAnyStatement()
         )
-                .let {
+                .tWhen {
                     fakeExplanationRepository.saveAndFlush(it)
                 }
+                .tNoProblem()
     }
 
     @Test
@@ -72,7 +73,7 @@ internal class FakeExplanationRepositoryIntegrationTest(
                 author = testingService.getAnyUser(),
                 statement = testingService.getAnyStatement()
         )
-                .let {
+                .tThen {
                     Assertions.assertThrows(ConstraintViolationException::class.java) {
                         fakeExplanationRepository.saveAndFlush(it)
                     }
