@@ -13,7 +13,10 @@ class ChoiceListSpecificationConverter :
     val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     override fun convertToDatabaseColumn(attribute: ChoiceListSpecification?): String? {
-        return mapper.writeValueAsString(attribute)
+        return when(attribute) {
+            null -> null
+            else -> mapper.writeValueAsString(attribute)
+        }
     }
 
     override fun convertToEntityAttribute(dbData: String?): ChoiceListSpecification? {

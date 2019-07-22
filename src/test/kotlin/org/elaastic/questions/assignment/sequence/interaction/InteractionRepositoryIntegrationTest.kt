@@ -118,11 +118,40 @@ internal class InteractionRepositoryIntegrationTest(
                             it.results,
                             equalTo(
                                     InteractionResult(
-                                            OneAttemptResult(listOf(0f,100f,0f)),
-                                            OneAttemptResult(listOf(0f,93.939f,6.061f))
+                                            OneAttemptResult(listOf(0f, 100f, 0f)),
+                                            OneAttemptResult(listOf(0f, 93.939f, 6.061f))
                                     )
                             )
                     )
+                }
+    }
+
+    @Test
+    fun `check ExplanationRecommendationMapping persistence`() {
+        // Given :
+        val explanationRecommendationMapping =
+                ExplanationRecommendationMapping(
+                        mapOf(
+                                "1" to listOf(1L,2L,3L,5L),
+                                "3" to listOf(4L, 128L)
+                        )
+                )
+        val owner = testingService.getAnyUser()
+        val sequence = testingService.getAnySequence()
+        Interaction(
+                interactionType = InteractionType.Evaluation,
+                rank = 1,
+                owner = owner,
+                sequence = sequence
+        )
+                .tWhen {
+                    it.explanationRecommendationMapping = explanationRecommendationMapping
+                    interactionRepository.saveAndFlush(it)
+                    entityManager.refresh(it)
+                    it
+                }
+                .tThen {
+                    assertThat(it.explanationRecommendationMapping, equalTo(explanationRecommendationMapping))
                 }
     }
 }

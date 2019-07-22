@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
+import org.elaastic.questions.assignment.sequence.ExplanationRecommendationMappingConverter
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.specification.InteractionSpecification
@@ -54,8 +55,8 @@ class Interaction(
     @Convert(converter = InteractionResultConverter::class)
     var results: InteractionResult? = null
 
-
-    var explanationRecommendationMapping: String? = null // TODO create a type
+    @Convert(converter = ExplanationRecommendationMappingConverter::class)
+    var explanationRecommendationMapping: ExplanationRecommendationMapping? = null
 
     // TODO Methods
 }
