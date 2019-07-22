@@ -3,6 +3,7 @@ package org.elaastic.questions.assignment
 import org.elaastic.questions.assignment.choice.ChoiceInteractionType
 import org.elaastic.questions.assignment.choice.ChoiceItemSpecification
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

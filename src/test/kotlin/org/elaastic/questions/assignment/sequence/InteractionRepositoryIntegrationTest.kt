@@ -1,5 +1,9 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.sequence.Interaction
+import org.elaastic.questions.assignment.sequence.InteractionRepository
+import org.elaastic.questions.assignment.sequence.InteractionType
+import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen

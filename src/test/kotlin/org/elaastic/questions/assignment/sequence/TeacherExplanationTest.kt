@@ -1,5 +1,6 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

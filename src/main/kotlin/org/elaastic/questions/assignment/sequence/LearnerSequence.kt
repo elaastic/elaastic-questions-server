@@ -1,5 +1,7 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.sequence.Interaction
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -14,15 +16,17 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class PeerGrading(
-        var grade: Float?,
-        var annotation: String?,
+
+class LearnerSequence(
 
         @field:ManyToOne
-        var grader: User,
+        var learner: User,
 
         @field:ManyToOne
-        var response: InteractionResponse
+        var sequence: Sequence,
+
+        @field:ManyToOne
+        var activeInteraction: Interaction?
 
 ) : AbstractJpaPersistable<Long>() {
 
@@ -38,5 +42,4 @@ class PeerGrading(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
-
 }

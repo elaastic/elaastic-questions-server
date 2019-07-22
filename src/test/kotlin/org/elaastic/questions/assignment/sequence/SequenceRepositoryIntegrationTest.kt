@@ -1,5 +1,6 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen

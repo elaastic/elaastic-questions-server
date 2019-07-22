@@ -1,5 +1,8 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -14,19 +17,22 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class Interaction(
-        @field:Enumerated(EnumType.STRING)
-        var interactionType: InteractionType,
-        
+class Sequence(
         var rank: Int,
-        var specification: String, // TODO Create a type
 
         @field:ManyToOne
         var owner: User,
 
         @field:OneToOne
-        var sequence: Sequence
-) : AbstractJpaPersistable<Long>() {
+        var assignment: Assignment,
+
+        @field:OneToOne
+        var statement: Statement,
+
+        @field:Enumerated(EnumType.STRING)
+        var executionContext: ExecutionContext = ExecutionContext.FaceToFace
+
+) :  AbstractJpaPersistable<Long>() {
 
     @Version
     var version: Long? = null
@@ -41,13 +47,19 @@ class Interaction(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
+    // TODO Interaction
+
     @Enumerated(EnumType.STRING)
     var state: State = State.beforeStart
 
+    var resultsArePublished: Boolean = false
 
-    var results: String? = null // TODO create a type
-    var explanationRecommendationMapping: String? = null // TODO create a type
+    // TODO Methods...
+}
 
-    // TODO Methods
+enum class State {
+    beforeStart,
+    show,
+    afterStop
 }
 

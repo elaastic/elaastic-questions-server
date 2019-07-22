@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -14,18 +14,18 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
+class Interaction(
+        @field:Enumerated(EnumType.STRING)
+        var interactionType: InteractionType,
 
-class LearnerSequence(
-
-        @field:ManyToOne
-        var learner: User,
-
-        @field:ManyToOne
-        var sequence: Sequence,
+        var rank: Int,
+        var specification: String, // TODO Create a type
 
         @field:ManyToOne
-        var activeInteraction: Interaction?
+        var owner: User,
 
+        @field:OneToOne
+        var sequence: Sequence
 ) : AbstractJpaPersistable<Long>() {
 
     @Version
@@ -40,4 +40,14 @@ class LearnerSequence(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
+
+    @Enumerated(EnumType.STRING)
+    var state: State = State.beforeStart
+
+
+    var results: String? = null // TODO create a type
+    var explanationRecommendationMapping: String? = null // TODO create a type
+
+    // TODO Methods
 }
+

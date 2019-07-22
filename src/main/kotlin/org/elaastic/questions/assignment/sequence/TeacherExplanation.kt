@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.sequence
 
 import org.springframework.validation.annotation.Validated
 import javax.validation.constraints.NotBlank

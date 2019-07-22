@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.test.directive.*
 import org.elaastic.questions.test.TestingService

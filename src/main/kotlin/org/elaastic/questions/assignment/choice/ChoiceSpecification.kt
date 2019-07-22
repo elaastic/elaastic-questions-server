@@ -1,6 +1,6 @@
 package org.elaastic.questions.assignment.choice
 
-import org.elaastic.questions.assignment.TeacherExplanation
+import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 
