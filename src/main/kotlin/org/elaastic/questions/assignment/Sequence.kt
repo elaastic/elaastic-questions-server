@@ -16,13 +16,18 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class Sequence(
         var rank: Int,
+
+        @field:ManyToOne
         var owner: User,
 
         @field:OneToOne
         var assignment: Assignment,
 
         @field:OneToOne
-        var statement: Statement
+        var statement: Statement,
+
+        @field:Enumerated(EnumType.STRING)
+        var executionContext: ExecutionContext = ExecutionContext.FaceToFace
 
 ) :  AbstractJpaPersistable<Long>() {
 
@@ -38,9 +43,6 @@ class Sequence(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
-
-    @Enumerated(EnumType.STRING)
-    var executionContext: ExecutionContext = ExecutionContext.FaceToFace
 
     // TODO Interaction
 
