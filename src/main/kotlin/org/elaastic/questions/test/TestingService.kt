@@ -1,7 +1,6 @@
 package org.elaastic.questions.test
 
-import org.elaastic.questions.assignment.Statement
-import org.elaastic.questions.assignment.StatementRepository
+import org.elaastic.questions.assignment.*
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,7 +12,11 @@ import org.springframework.stereotype.Service
 @Service
 class TestingService(
         @Autowired val userRepository: UserRepository,
-        @Autowired val statementRepository: StatementRepository
+        @Autowired val statementRepository: StatementRepository,
+        @Autowired val interactionRepository: InteractionRepository,
+        @Autowired val sequenceRepository: SequenceRepository,
+        @Autowired val assignmentRepository: AssignmentRepository
+
 ) {
 
     fun getAnyUser(): User {
@@ -24,4 +27,15 @@ class TestingService(
         return statementRepository.findAll().iterator().next()
     }
 
+    fun getAnyInteraction(): Interaction {
+        return interactionRepository.findAll().iterator().next()
+    }
+
+    fun getAnySequence() : Sequence {
+        return sequenceRepository.findAll().iterator().next()
+    }
+
+    fun getAnyAssignment() : Assignment {
+        return assignmentRepository.findAll().iterator().next()
+    }
 }
