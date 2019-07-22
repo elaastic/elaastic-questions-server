@@ -15,8 +15,8 @@ class TestingService(
         @Autowired val statementRepository: StatementRepository,
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val assignmentRepository: AssignmentRepository
-
+        @Autowired val assignmentRepository: AssignmentRepository,
+        @Autowired val interactionResponseRepository: InteractionResponseRepository
 ) {
 
     fun getAnyUser(): User {
@@ -37,5 +37,9 @@ class TestingService(
 
     fun getAnyAssignment() : Assignment {
         return assignmentRepository.findAll().iterator().next()
+    }
+
+    fun getAnyInteractionResponse() : InteractionResponse {
+        return interactionResponseRepository.findAll().iterator().next()
     }
 }
