@@ -2,6 +2,8 @@ package org.elaastic.questions.assignment.sequence.interaction
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.assignment.sequence.interaction.specification.InteractionSpecification
+import org.elaastic.questions.assignment.sequence.interaction.specification.InteractionSpecificationConverter
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -21,7 +23,9 @@ class Interaction(
         var interactionType: InteractionType,
 
         var rank: Int,
-        var specification: String, // TODO Create a type
+
+        @field:Convert(converter = InteractionSpecificationConverter::class)
+        var specification: InteractionSpecification? = null,
 
         @field:ManyToOne
         var owner: User,

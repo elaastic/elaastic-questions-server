@@ -8,7 +8,7 @@ import javax.persistence.AttributeConverter
  * @author John Tranier
  */
 class ChoiceListSpecificationConverter :
-        AttributeConverter<ChoiceListSpecification, String?> {
+        AttributeConverter<ChoiceListSpecification?, String?> {
 
     val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
