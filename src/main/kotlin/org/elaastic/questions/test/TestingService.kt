@@ -2,6 +2,10 @@ package org.elaastic.questions.test
 
 import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.sequence.*
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
+import org.elaastic.questions.assignment.sequence.interaction.InteractionResponse
+import org.elaastic.questions.assignment.sequence.interaction.InteractionResponseRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.springframework.beans.factory.annotation.Autowired

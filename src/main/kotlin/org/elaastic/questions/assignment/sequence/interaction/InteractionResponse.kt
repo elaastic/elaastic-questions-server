@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.questions.assignment.sequence.interaction
 
 import org.elaastic.questions.assignment.choice.ChoiceListSpecification
 import org.elaastic.questions.assignment.choice.ChoiceListSpecificationConverter

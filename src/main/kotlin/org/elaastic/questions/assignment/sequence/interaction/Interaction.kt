@@ -1,5 +1,7 @@
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.questions.assignment.sequence.interaction
 
+import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate

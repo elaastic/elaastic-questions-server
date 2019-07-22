@@ -1,8 +1,6 @@
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.questions.assignment.sequence.interaction
 
 import org.elaastic.questions.assignment.choice.ChoiceListSpecification
-import org.elaastic.questions.assignment.sequence.InteractionResponse
-import org.elaastic.questions.assignment.sequence.InteractionResponseRepository
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
