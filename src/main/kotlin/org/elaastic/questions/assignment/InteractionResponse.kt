@@ -1,5 +1,7 @@
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.assignment.choice.ChoiceListSpecification
+import org.elaastic.questions.assignment.choice.ChoiceListSpecificationConverter
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate

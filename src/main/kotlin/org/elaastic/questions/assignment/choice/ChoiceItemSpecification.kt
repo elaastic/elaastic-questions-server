@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.choice
 
 import javax.validation.constraints.Max
 

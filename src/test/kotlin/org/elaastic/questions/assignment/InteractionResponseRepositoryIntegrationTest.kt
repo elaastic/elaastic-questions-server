@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.assignment.choice.ChoiceListSpecification
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen

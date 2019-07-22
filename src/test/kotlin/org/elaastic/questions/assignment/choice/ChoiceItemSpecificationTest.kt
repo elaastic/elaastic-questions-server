@@ -1,5 +1,6 @@
-package org.elaastic.questions.assignment
+package org.elaastic.questions.assignment.choice
 
+import org.elaastic.questions.assignment.choice.ChoiceItemSpecification
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
