@@ -4,6 +4,7 @@ import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.junit.jupiter.api.Test
@@ -104,6 +105,23 @@ internal class InteractionRepositoryIntegrationTest(
                     assertThat(
                             it.specification as ResponseSubmissionSpecification,
                             equalTo(specification)
+                    )
+                }
+    }
+
+    @Test
+    fun `check retrieving interaction result from test data`() {
+        // Given
+        interactionRepository.getOne(1688)
+                .tExpect {
+                    assertThat(
+                            it.results,
+                            equalTo(
+                                    InteractionResult(
+                                            OneAttemptResult(listOf(0f,100f,0f)),
+                                            OneAttemptResult(listOf(0f,93.939f,6.061f))
+                                    )
+                            )
                     )
                 }
     }

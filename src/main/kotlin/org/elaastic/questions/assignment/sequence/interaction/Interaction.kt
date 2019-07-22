@@ -51,7 +51,10 @@ class Interaction(
     var state: State = State.beforeStart
 
 
-    var results: String? = null // TODO create a type
+    @Convert(converter = InteractionResultConverter::class)
+    var results: InteractionResult? = null
+
+
     var explanationRecommendationMapping: String? = null // TODO create a type
 
     // TODO Methods
