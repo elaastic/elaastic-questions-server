@@ -15,9 +15,13 @@ import javax.validation.constraints.NotNull
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 class Interaction(
+        @field:Enumerated(EnumType.STRING)
         var interactionType: InteractionType,
+        
         var rank: Int,
         var specification: String, // TODO Create a type
+
+        @field:ManyToOne
         var owner: User,
 
         @field:OneToOne
@@ -37,7 +41,10 @@ class Interaction(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
+    @Enumerated(EnumType.STRING)
     var state: State = State.beforeStart
+
+
     var results: String? = null // TODO create a type
     var explanationRecommendationMapping: String? = null // TODO create a type
 
