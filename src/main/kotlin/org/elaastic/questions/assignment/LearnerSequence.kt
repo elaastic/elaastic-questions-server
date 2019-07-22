@@ -14,13 +14,18 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class LearnerAssignment(
+
+class LearnerSequence(
 
         @field:ManyToOne
         var learner: User,
 
-        @field:ManyToOne(fetch = FetchType.EAGER)
-        var assignment: Assignment
+        @field:ManyToOne
+        var sequence: Sequence,
+
+        @field:ManyToOne
+        var activeInteraction: Interaction?
+
 ) : AbstractJpaPersistable<Long>() {
 
     @Version
@@ -35,5 +40,4 @@ class LearnerAssignment(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
-
 }

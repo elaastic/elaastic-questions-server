@@ -22,7 +22,7 @@ internal class AssignmentRepositoryIntegrationTest(
 ) {
 
     @Test
-    fun `save a valid assignmnt`() {
+    fun `save a valid assignment`() {
         // Given : an assignment
         Assignment(
                 "My test assignment",
