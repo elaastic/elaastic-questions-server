@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="layout/minimal :: minimalLayout(~{::title}, ~{::section}, ~{::style})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <title th:text="'elaastic: '+#{common.home}">Home</title>
+  <style type="text/css">
+    .ui.inverted.vertical.masthead.segment,
+    .ui.inverted.vertical.footer.segment {
+      background-color: #4f7691;
+    }
+
+    .ui.secondary.pointing.menu {
+      border: none;
+    }
+
+    .masthead.segment {
+      min-height: 600px;
+      padding: 1em 0em;
+    }
+
+    .masthead .logo.item img {
+      margin-right: 1em;
+    }
+
+    .masthead .ui.menu .ui.button {
+      margin-left: 0.5em;
+    }
+
+    .masthead h2 {
+      font-size: 1.7em;
+      font-weight: normal;
+    }
+
+    .masthead .introduction {
+      height: 55vh;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      min-height: 400px;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+    }
+
+    @media only screen and (max-width: 810px) {
+      .masthead .introduction {
+        min-height: 350px;
+        height: auto;
+      }
+    }
+
+    .ui.vertical.stripe {
+      padding: 8em 0em;
+    }
+
+    .ui.vertical.stripe h3 {
+      font-size: 2em;
+    }
+
+    .ui.vertical.stripe .button + h3,
+    .ui.vertical.stripe p + h3 {
+      margin-top: 3em;
+    }
+
+    .ui.vertical.stripe .floated.image {
+      clear: both;
+    }
+
+    .ui.vertical.stripe p {
+      font-size: 1.33em;
+    }
+
+    .ui.vertical.stripe .horizontal.divider {
+      margin: 3em 0em;
+    }
+
+    .quote.stripe.segment {
+      padding: 0em;
+    }
+
+    .quote.stripe.segment .grid .column {
+      padding-top: 5em;
+      padding-bottom: 5em;
+    }
+
+    .footer.segment {
+      padding: 5em 0em;
+    }
+
+    .secondary.pointing.menu .toc.item {
+      display: none;
+    }
+
+    @media only screen and (max-width: 700px) {
+      .secondary.pointing.menu .item,
+      .secondary.pointing.menu .menu {
+        display: none;
+      }
+
+      .secondary.pointing.menu .toc.item {
+        display: block;
+      }
+
+      .masthead.segment {
+        min-height: 350px;
+      }
+
+      .masthead h2 {
+        margin-top: 0.5em;
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<section>
+  <div id="elaastic-home">
+
+    <!--Page Contents-->
+    <div class="pusher">
+      <div id="section-home" class="ui inverted vertical masthead center aligned segment">
+        <div class="ui container">
+          <div class="ui large secondary inverted pointing menu">
+
+            <div class="right item">
+
+              <div sec:authorize="isAnonymous()">
+                <a href="/home"
+                   th:href="@{/home}"
+                   class="ui inverted button"
+                   th:text="#{index.newUser.logIn.action}">
+                  Login
+                </a>
+
+                <a href="/register"
+                   th:href="@{/register}"
+                   class="ui inverted button"
+                   th:text="#{index.newUser.signUp.action}">
+                  Subscribe
+                </a>
+              </div>
+
+              <div class="ui dropdown item" sec:authorize="isAuthenticated()">
+                <i class="user icon"></i> <span sec:authentication="name"></span>
+
+                <i class="dropdown icon"></i>
+
+                <div class="menu">
+                  <a href="/userAccount/edit"
+                     th:href="@{/userAccount/edit}"
+                     class="item">
+                    <i class="address card outline icon"></i> <span th:text="#{layout.main.account}"></span>
+                  </a>
+
+                  <a href="logout"
+                     th:href="@{/logout}"
+                     class="item">
+                    <i
+                      class="sign out icon"></i> <span th:text="#{layout.main.disconnect}"></span>
+                  </a>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="ui container">
+          <div class="introduction">
+            <img class="ui big centered image"
+                 th:src="@{/images/elaastic/logos/elaastic_logoRVBline_inverse.png}"/>
+          </div>
+
+          <a href="home"
+             th:href="@{/home}"
+             class="ui huge primary button">
+            Get Started<i class="right arrow icon"></i>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    $(document)
+      .ready(function () {
+        // Initialize dropdown
+        $('.ui.dropdown').dropdown();
+      });
+  </script>
+
+</section>
+
+</body>
+</html>

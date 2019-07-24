@@ -1,111 +1,112 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="layout/minimal :: minimalLayout(~{::title}, ~{::section})"
+<html lang="en" th:replace="layout/minimal :: minimalLayout(title=~{::title}, content=~{::section}, style=~{})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-<title th:text="#{springSecurity.login.page.title}">elaastic</title>
+  <title th:text="#{springSecurity.login.page.title}">elaastic</title>                                 ~
 </head>
 
 <body>
 <section>
-    <div class="ui middle aligned center aligned grid" style="padding-top: 8em;">
-        <div class="column left aligned">
-            <form th:action="@{/login}" id='loginForm' method="post" class="ui large form">
+  <div class="ui middle aligned center aligned grid" style="padding-top: 8em;">
+    <div class="column left aligned">
+      <form th:action="@{/login}" id='loginForm' method="post" class="ui large form">
 
-                <div class="ui segments">
-                    <div class="ui positive small message"
-                         th:if="${param.justRegistered == true and param.checkEmail != 'true'}">
-                        <span th:text="#{subscription.success}"></span>
-                    </div>
-                    <div class="ui positive small center message"
-                         th:if="${param.justRegistered == true and param.checkEmail == 'true'}">
-                        <span th:text="#{subscription.success.email_to_be_checked}"></span>
-                    </div>
+        <div class="ui segments">
+          <div class="ui positive small message"
+               th:if="${param.justRegistered == true and param.checkEmail != 'true'}">
+            <span th:text="#{subscription.success}"></span>
+          </div>
+          <div class="ui positive small center message"
+               th:if="${param.justRegistered == true and param.checkEmail == 'true'}">
+            <span th:text="#{subscription.success.email_to_be_checked}"></span>
+          </div>
 
-                    <div class="ui segment">
-                        <img class="ui small image" src="/images/elaastic_logo_rvb.png" th:src="@{/images/elaastic_logo_rvb.png}" alt="logo elaastic">
-                    </div>
+          <div class="ui segment">
+            <img class="ui small image" src="/images/elaastic_logo_rvb.png" th:src="@{/images/elaastic_logo_rvb.png}"
+                 alt="logo elaastic">
+          </div>
 
-                    <div class="ui segment">
+          <div class="ui segment">
 
-                        <div class="field">
-                            <div class="ui left icon input">
-                                <i class="user icon"></i>
-                                <input type="text"
-                                       th:placeholder="#{springSecurity.login.username.placeholder}"
-                                       autofocus
-                                       name="username"
-                                       id="username"/>
-                            </div>
-                        </div>
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text"
+                       th:placeholder="#{springSecurity.login.username.placeholder}"
+                       autofocus
+                       name="username"
+                       id="username"/>
+              </div>
+            </div>
 
-                        <div class="field">
-                            <div class="ui left icon input">
-                                <i class="lock icon"></i>
-                                <input type="password"
-                                       th:placeholder="#{springSecurity.login.password.placeholder}"
-                                       name="password"
-                                       id="password"/>
-                            </div>
-                        </div>
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <input type="password"
+                       th:placeholder="#{springSecurity.login.password.placeholder}"
+                       name="password"
+                       id="password"/>
+              </div>
+            </div>
 
-                        <button type="submit" id="submit" class="ui fluid large primary submit button">
-                            <span th:text="#{springSecurity.login.button}"></span>
-                        </button>
-                    </div>
+            <button type="submit" id="submit" class="ui fluid large primary submit button">
+              <span th:text="#{springSecurity.login.button}"></span>
+            </button>
+          </div>
 
-                    <div class="ui secondary segment center aligned">
-                        <div class="ui list">
-                            <div class="item">
-                                Vous n'avez pas de compte? <a th:href="@{/userAccount/showSuscribeForm}">
-                                <span th:text="#{index.newUser.signUp.action}"></span>
-                            </a>
-                            </div>
+          <div class="ui secondary segment center aligned">
+            <div class="ui list">
+              <div class="item">
+                Vous n'avez pas de compte? <a th:href="@{/userAccount/showSuscribeForm}">
+                <span th:text="#{index.newUser.signUp.action}"></span>
+              </a>
+              </div>
 
-                            <div class="item">
-                                <a th:href="@{/passwordResetKey/doForget}">
-                                    <span th:text="#{springSecurity.login.lostPassword.message}"></span>
-                                </a>
-                            </div>
-                        </div>
+              <div class="item">
+                <a th:href="@{/passwordResetKey/doForget}">
+                  <span th:text="#{springSecurity.login.lostPassword.message}"></span>
+                </a>
+              </div>
+            </div>
 
-                    </div>
-                </div>
-
-
-                <div class="ui negative message" th:if="${param.message}">
-                    <!-- TODO : Change param by "flash" equivalent -->
-                    <span th:text="${param.message}"></span>
-                </div>
-
-            </form>
+          </div>
         </div>
+
+
+        <div class="ui negative message" th:if="${param.message}">
+          <!-- TODO : Change param by "flash" equivalent -->
+          <span th:text="${param.message}"></span>
+        </div>
+
+      </form>
     </div>
+  </div>
 
-    <!-- Specific login style -->
-    <style type="text/css">
+  <!-- Specific login style -->
+  <style type="text/css">
 
-        body {
-            background-image: url('/images/elaastic_background.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
+    body {
+      background-image: url('/images/elaastic_background.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
 
-        body > .ui.grid {
-            height: 100%;
-            background-color: rgba(0, 0, 0, .45);
-            margin-top: 0;
-            margin-bottom: 0;
-        }
+    body > .ui.grid {
+      height: 100%;
+      background-color: rgba(0, 0, 0, .45);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
 
-        .column {
-            max-width: 450px;
-        }
+    .column {
+      max-width: 450px;
+    }
 
-        .ui.segments > .segment {
-            border-top: none;
-        }
+    .ui.segments > .segment {
+      border-top: none;
+    }
 
-    </style>
+  </style>
 </section>
 </body>
 </html>

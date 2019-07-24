@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" th:fragment="minimalLayout (title, content)" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" th:fragment="minimalLayout (title, content, style)" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="utf-8">
         <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
@@ -11,8 +11,10 @@
         <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
         <title th:replace="${title}">elaastic</title>
         <link th:href="@{/semantic/dist/semantic.css}" type="text/css" rel="stylesheet" media="screen, projection">
+        <link th:href="@{/css/elaastic.css}" type="text/css" rel="stylesheet" media="screen, projection">
         <script th:src="@{/js/jquery.js}"></script>
         <script th:src="@{/semantic/dist/semantic.js}"></script>
+        <style th:replace="${style}"></style>
     </head>
 
     <body>

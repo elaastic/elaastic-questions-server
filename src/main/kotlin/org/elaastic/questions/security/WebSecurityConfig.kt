@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 /**
  * @author John Tranier
@@ -27,8 +28,16 @@ class WebSecurityConfig(
 
     override fun configure(http: HttpSecurity?) {
         http
+                ?.logout()
+                    ?.logoutRequestMatcher(AntPathRequestMatcher("/logout"))
+                    ?.logoutSuccessUrl("/")
+                    ?.clearAuthentication(true)
+                    ?.deleteCookies("JSESSIONID")
+                    ?.invalidateHttpSession(true)
+                ?.and()
                 ?.authorizeRequests()
                     ?.antMatchers("/images/**", "/css/**", "/js/**", "/semantic/**", "/", "/demo")?.permitAll()
+                    ?.antMatchers("/register")?.permitAll()
                     ?.anyRequest()?.authenticated()
                     ?.and()
                 ?.formLogin()
