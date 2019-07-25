@@ -1,0 +1,64 @@
+<div th:fragment="userMenu()"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+  <div id="user-menu-dropdown"
+       class="ui dropdown item user-menu"
+       th:attr="data-tooltip=#{layout.main.account}"
+       data-tooltip="My account"
+       data-position="right center"
+       data-inverted="">
+    <i class="user icon"></i>
+
+    <div class="ui vertical menu">
+      <div class="header" style="text-align: center; text-overflow: ellipsis; overflow: hidden;">
+        <span sec:authentication="principal.fullname">John Lennon</span>
+      </div>
+
+      <a th:href="@{/userAccount/edit}"
+         href="/userAccount/edit"
+         class="item">
+        <i class="address card outline icon"></i>
+        <span th:text="#{layout.main.account}">My account</span>
+      </a>
+
+      <div th:if="${user.canBeUserOwner}">
+        <div class="ui divider"></div>
+        <a th:href="@{/userAccountBatchCreation}"
+           href="/userAccountBatchCreation"
+          class="item">
+          <i class="add user icon"></i>
+          <span th:text="#{layout.main.goUserAccountCreation}">Create accounts</span>
+        </a>
+        <div class="ui divider"></div>
+      </div>
+
+      <a th:href="@{/logout}" href="/logout" class="item">
+        <i class="sign out icon"></i>
+        <span th:text="#{layout.main.disconnect}">Disconnect</span>
+      </a>
+    </div>
+  </div>
+
+  <style>
+    .user-menu {
+      position: relative;
+    }
+
+    @media (min-height: 600px) {
+      .user-menu {
+        position: absolute !important;
+        bottom: 0 !important;
+      }
+    }
+  </style>
+
+  <script>
+    $(document)
+      .ready(function () {
+
+        // Initialize dropdown
+        $('#user-menu-dropdown').dropdown()
+      })
+  </script>
+</div>

@@ -26,6 +26,7 @@ class AssignmentController {
         return ModelAndView(
                 "/assignment/index",
                 mapOf(
+                        "user" to user,
                         "assignmentInstanceList" to listOf<Assignment>(
                                 Assignment(title = "Titre", owner = user, globalId = "123")
                         )
