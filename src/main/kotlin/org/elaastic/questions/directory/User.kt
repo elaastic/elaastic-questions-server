@@ -2,6 +2,8 @@ package org.elaastic.questions.directory
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
 import javax.persistence.*
 import javax.validation.Constraint
@@ -23,10 +25,10 @@ class User(
         @field:NotBlank
         @field:Column(unique = true, length = 16)
         @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
-        var username: String,
+        private var username: String,
         password: String,
         email: String
-) : AbstractJpaPersistable<Long>(), Serializable {
+) : AbstractJpaPersistable<Long>(), Serializable, UserDetails {
 
     @Version
     var version: Long? = null
@@ -36,7 +38,7 @@ class User(
     var email: String? = email
 
     @Size(min = 4)
-    var password: String? = password // TODO I don't like those 2 password fields ...
+    private var password: String? = password // TODO I don't like those 2 password fields ...
 
     @Transient
     var plainTextPassword: String? = null
@@ -96,6 +98,42 @@ class User(
         return false
         // TODO("Must find out how to implement it")
         // LearnerAssignment.findByLearnerAndAssignment(this,assignment)
+    }
+
+    override fun getUsername(): String {
+        return username
+    }
+
+    fun setUsername(value: String) {
+        username = value
+    }
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return roles
+    }
+
+    override fun isEnabled(): Boolean {
+        return enabled
+    }
+
+    override fun isCredentialsNonExpired(): Boolean {
+        return !passwordExpired
+    }
+
+    override fun getPassword(): String? {
+        return password
+    }
+
+    fun setPassword(value: String?) {
+        password = value
+    }
+
+    override fun isAccountNonExpired(): Boolean {
+        return !accountExpired
+    }
+
+    override fun isAccountNonLocked(): Boolean {
+        return !accountLocked
     }
 
     override fun toString(): String {

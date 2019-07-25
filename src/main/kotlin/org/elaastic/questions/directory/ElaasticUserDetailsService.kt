@@ -1,6 +1,5 @@
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.security.ElaasticPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -17,7 +16,7 @@ class ElaasticUserDetailsService(
 
     override fun loadUserByUsername(username: String): UserDetails {
         userRepository.findByUsername(username)?.let {
-            return ElaasticPrincipal(it)
+            return it
         } ?: throw UsernameNotFoundException(username)
     }
 
