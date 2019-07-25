@@ -10,9 +10,7 @@
       </span>
       <span class="item">
         <em>elaastic</em>
-        version
-<!--        TODO : find out how to get the version-->
-        <g:meta name="app.version"/>
+        version <span th:text="${applicationVersion}">1.0</span>
       </span>
       <a class="item" th:href="@{/terms}" href="/terms">
         Mentions
