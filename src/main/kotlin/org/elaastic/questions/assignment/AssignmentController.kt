@@ -1,6 +1,7 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.directory.User
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,22 +15,21 @@ import javax.transaction.Transactional
 @Controller
 @RequestMapping("/assignment")
 @Transactional
-class AssignmentController {
+class AssignmentController(
+        @Autowired val assignmentService: AssignmentService
+) {
 
 
     @GetMapping(value=arrayOf("", "/", "/index"))
     fun index(authentication: Authentication): ModelAndView {
         val user: User = authentication.principal as User
         // TODO Paginate
-        // TODO Get the data through the service
 
         return ModelAndView(
                 "/assignment/index",
                 mapOf(
                         "user" to user,
-                        "assignmentInstanceList" to listOf<Assignment>(
-                                Assignment(title = "Titre", owner = user, globalId = "123")
-                        )
+                        "assignmentInstanceList" to assignmentService.findAllByOwner(user)
                 )
 
         )
