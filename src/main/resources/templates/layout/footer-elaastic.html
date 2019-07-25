@@ -1,0 +1,54 @@
+<div th:fragment="footer()"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="ui divider"></div>
+  <footer style="margin-bottom: 2em;">
+
+
+    <div class="ui horizontal celled link list">
+      <span class="item">
+        Copyright &copy; 2013-2018 Tsaap Development Group & Ticetime
+      </span>
+      <span class="item">
+        <em>elaastic</em>
+        version
+<!--        TODO : find out how to get the version-->
+        <g:meta name="app.version"/>
+      </span>
+      <a class="item" th:href="@{/terms}" href="/terms">
+        Mentions
+      </a>
+    </div>
+
+
+<!--/*    TODO Migrate this part */-->
+<!--    <g:if env="development">-->
+<!--      <div class="ui hidden divider"></div>-->
+<!--      <sec:ifNotSwitched>-->
+<!--        <form class="ui form" action='${request.contextPath}/j_spring_security_switch_user' method='POST'>-->
+<!--          <div class="field">-->
+<!--            <label>Switch to user:</label>-->
+
+<!--            <div class="two fields">-->
+<!--              <div class="field">-->
+<!--                <input type='text' name='j_username'/>-->
+<!--              </div>-->
+
+<!--              <div class="field">-->
+<!--                <input class="ui button" type='submit' value='Switch'/>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </sec:ifNotSwitched>-->
+<!--      <sec:ifSwitched>-->
+<!--        <a href='${request.contextPath}/j_spring_security_exit_user'>-->
+<!--          Resume as-->
+<!--          <sec:switchedUserOriginalUsername/>-->
+<!--        </a>-->
+<!--      </sec:ifSwitched>-->
+<!--    </g:if>-->
+
+  </footer>
+
+  <div class="ui hidden divider"></div>
+</div>
