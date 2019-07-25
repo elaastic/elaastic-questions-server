@@ -1,133 +1,136 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="layout/minimal :: minimalLayout(~{::title}, ~{::body}, ~{})"
+<html lang="en" th:replace="layout/leftMenu :: leftMenuLayout(~{::title}, ~{::aside}, ~{::section}, ~{})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <title th:text="#{assignment.my.list.label}">My assignments</title>
+  <title th:text="|elaastic: #{assignment.my.list.label}|">elaastic: My assignments</title>
 </head>
 
 <body>
-<!-- TODO handle the leftLayout -->
-<!--  <content tag="specificMenu">-->
-<!--    <g:link action="create"-->
-<!--            class="item"-->
-<!--            data-tooltip="${message(code: 'assignment.create.label')}"-->
-<!--            data-position="right center"-->
-<!--            data-inverted="">-->
-<!--      <i class="yellow plus square outline icon"></i>-->
-<!--    </g:link>-->
-<!--  </content>-->
-
-<h2 class="ui header">
-  <i class="book icon"></i>
-
-  <div class="content">
-    <span th:text="#{assignment.my.list.label}">My assignments</span>
-    <div class="sub header" th:text="#{assignment.my.list.description}">
-      This page lists all of your assignments
-    </div>
-  </div>
-</h2>
-
-<!--  TODO Handle flash messages -->
-<!--  <g:if test="${flash.message}">-->
-<!--    <div class="ui info message" role="status"><i class="close icon"></i> ${raw(flash.message)}</div>-->
-<!--  </g:if>-->
-
-
-<table th:if="${not #lists.isEmpty(assignmentInstanceList)}"
-       class="ui single selectable line unstackable table">
-  <thead>
-  <tr>
-    <th th:text="#{common.title}">
-      Title
-    </th>
-    <th class="not mobile" th:text="#{common.lastUpdate}">
-      Last update
-    </th>
-    <th></th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="assignmentInstance, i : ${assignmentInstanceList}">
-    <td>
-
-      <a th:href="@{show(id=${assignmentInstance.id})}"
-         href="show?id=123"
-         th:attr="data-tooltip=#{assignment.action.show.label}"
-         data-tooltip="Modify assignment"
-         data-inverted=""
-         th-text="${assignmentInstance.title}">
-        Assignment title
-      </a>
-
-      &nbsp; [
-      <a th:href="@{show(id=${assignmentInstance.id})}"
-         href="show?id=123"
-         th:attr="data-tooltip=#{assignment.action.show.label}"
-         data-tooltip="Modify assignment"
-         data-inverted="">
-        <i class="edit outline icon" style="margin: 0;"></i>
-      </a>
-      ]
-    </td>
-
-    <!--  TODO : find out how to manage date format     -->
-    <td class="not mobile" th:text="${{assignmentInstance.lastUpdated}}">
-      25/07/2019
-    </td>
-
-    <td>
-      <a class="ui compact icon primary button"
-         th:href="@{/player/playFirstSequence(id=${assignmentInstance.id})}"
-         href="/player/playFirstSequence?id=123"
-         th:attr="data-tooltip=#{player.assignment.play}"
-         data-tooltip="Play the assignment"
-         data-inverted="">
-        <i class="play icon"></i>
-      </a>
-    </td>
-  </tr>
-  </tbody>
-</table>
-
-
-<div th:if="${#lists.isEmpty(assignmentInstanceList)}"
-     class="ui info message" th:text="#{assignment.you.have.none}">
-  You have no assignment.
-</div>
-
-
-<div class="ui basic segment">
-  <a th:href="create"
+<aside tag="specificMenu">
+  <a th:href="@{create}"
      href="create"
-     class="ui primary button">
-    <i class="add icon"></i>
-    <span th:text="#{assignment.create.label}">
+     class="item"
+     th:attr="data-tooltip=#{assignment.create.label}"
+     data-tooltip="Create an assignment"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow plus square outline icon"></i>
+  </a>
+</aside>
+
+<section>
+  <h2 class="ui header">
+    <i class="book icon"></i>
+
+    <div class="content">
+      <span th:text="#{assignment.my.list.label}">My assignments</span>
+      <div class="sub header" th:text="#{assignment.my.list.description}">
+        This page lists all of your assignments
+      </div>
+    </div>
+  </h2>
+
+  <!--  TODO Handle flash messages -->
+  <!--  <g:if test="${flash.message}">-->
+  <!--    <div class="ui info message" role="status"><i class="close icon"></i> ${raw(flash.message)}</div>-->
+  <!--  </g:if>-->
+
+
+  <table th:if="${not #lists.isEmpty(assignmentInstanceList)}"
+         class="ui single selectable line unstackable table">
+    <thead>
+    <tr>
+      <th th:text="#{common.title}">
+        Title
+      </th>
+      <th class="not mobile" th:text="#{common.lastUpdate}">
+        Last update
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="assignmentInstance, i : ${assignmentInstanceList}">
+      <td>
+
+        <a th:href="@{show(id=${assignmentInstance.id})}"
+           href="show?id=123"
+           th:attr="data-tooltip=#{assignment.action.show.label}"
+           data-tooltip="Modify assignment"
+           data-inverted=""
+           th-text="${assignmentInstance.title}">
+          Assignment title
+        </a>
+
+        &nbsp; [
+        <a th:href="@{show(id=${assignmentInstance.id})}"
+           href="show?id=123"
+           th:attr="data-tooltip=#{assignment.action.show.label}"
+           data-tooltip="Modify assignment"
+           data-inverted="">
+          <i class="edit outline icon" style="margin: 0;"></i>
+        </a>
+        ]
+      </td>
+
+      <!--  TODO : find out how to manage date format     -->
+      <td class="not mobile" th:text="${{assignmentInstance.lastUpdated}}">
+        25/07/2019
+      </td>
+
+      <td>
+        <a class="ui compact icon primary button"
+           th:href="@{/player/playFirstSequence(id=${assignmentInstance.id})}"
+           href="/player/playFirstSequence?id=123"
+           th:attr="data-tooltip=#{player.assignment.play}"
+           data-tooltip="Play the assignment"
+           data-inverted="">
+          <i class="play icon"></i>
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <div th:if="${#lists.isEmpty(assignmentInstanceList)}"
+       class="ui info message" th:text="#{assignment.you.have.none}">
+    You have no assignment.
+  </div>
+
+
+  <div class="ui basic segment">
+    <a th:href="create"
+       href="create"
+       class="ui primary button">
+      <i class="add icon"></i>
+      <span th:text="#{assignment.create.label}">
         Create an assignment
       </span>
-  </a>
-</div>
+    </a>
+  </div>
 
-<div class="ui hidden divider"></div>
+  <div class="ui hidden divider"></div>
 
-<div class="ui right aligned basic segment">
-  <elaastic:paginate class="ui tiny pagination menu" prev="&laquo;" next="&raquo;"
-                     total="${assignmentInstanceCount ?: 0}"/>
-</div>
+  <div class="ui right aligned basic segment">
+    <elaastic:paginate class="ui tiny pagination menu" prev="&laquo;" next="&raquo;"
+                       total="${assignmentInstanceCount ?: 0}"/>
+  </div>
 
-<script>
-  $(document)
-    .ready(function () {
-      $('.message .close')
-        .on('click', function () {
-          $(this)
-            .closest('.message')
-            .transition('fade')
+  <script>
+    $(document)
+      .ready(function () {
+        $('.message .close')
+          .on('click', function () {
+            $(this)
+              .closest('.message')
+              .transition('fade')
 
-        })
-    })
-</script>
+          })
+      })
+  </script>
+</section>
 
 </body>
 </html>
