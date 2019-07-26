@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class PaginationService {
 
-    fun buildInfo(totalPages: Int, currentPage: Int?): PaginationInfo {
+    fun buildInfo(totalPages: Int, currentPage: Int? = null): PaginationInfo {
         return when {
             totalPages > 1 -> PaginationInfo(
                     paginated = true,
