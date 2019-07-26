@@ -72,8 +72,7 @@
         ]
       </td>
 
-      <!--  TODO : find out how to manage date format     -->
-      <td class="not mobile" th:text="${{assignment.lastUpdated}}">
+      <td class="not mobile" th:text="${#dates.format(assignment.lastUpdated, 'dd/MM/yyyy hh:mm')}">
         25/07/2019
       </td>
 
