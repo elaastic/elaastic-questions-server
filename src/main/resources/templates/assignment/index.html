@@ -31,11 +31,9 @@
     </div>
   </h2>
 
-  <!--  TODO Handle flash messages -->
-  <!--  <g:if test="${flash.message}">-->
-  <!--    <div class="ui info message" role="status"><i class="close icon"></i> ${raw(flash.message)}</div>-->
-  <!--  </g:if>-->
-
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message
+  </div>
 
   <table th:if="${not #lists.isEmpty(assignmentPage.content)}"
          class="ui single selectable line unstackable table">
@@ -119,20 +117,6 @@
   </div>
 
   <div class="ui hidden divider"></div>
-
-
-  <script>
-    $(document)
-      .ready(function () {
-        $('.message .close')
-          .on('click', function () {
-            $(this)
-              .closest('.message')
-              .transition('fade')
-
-          })
-      })
-  </script>
 </section>
 
 </body>

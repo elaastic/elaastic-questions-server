@@ -1,0 +1,22 @@
+<div th:fragment="message(type, content)"
+     th:if="${content != null}"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="ui message"
+       th:classappend="${type}"
+       role="status">
+    <i class="close icon"></i> <p th:text="${content}">content</p>
+  </div>
+
+  <script>
+    $(document)
+      .ready(function () {
+        $('.message .close')
+          .on('click', function () {
+            $(this)
+              .closest('.message')
+              .transition('fade')
+          })
+      })
+  </script>
+</div>
