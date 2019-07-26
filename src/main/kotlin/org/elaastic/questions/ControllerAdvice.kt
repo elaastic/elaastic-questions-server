@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute
 @ControllerAdvice
 class ControllerAdvice {
 
-    @Value("\${elaastic.questions.version}") // TODO Get the value from application.properties
+    @Value("\${elaastic.questions.version}") 
     private lateinit var applicationVersion: String
 
     @ModelAttribute("applicationVersion")
