@@ -37,7 +37,7 @@
   <!--  </g:if>-->
 
 
-  <table th:if="${not #lists.isEmpty(assignmentInstanceList)}"
+  <table th:if="${not #lists.isEmpty(assignmentPage.content)}"
          class="ui single selectable line unstackable table">
     <thead>
     <tr>
@@ -51,20 +51,20 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="assignmentInstance, i : ${assignmentInstanceList}">
+    <tr th:each="assignment, i : ${assignmentPage.content}">
       <td>
 
-        <a th:href="@{show(id=${assignmentInstance.id})}"
+        <a th:href="@{show(id=${assignment.id})}"
            href="show?id=123"
            th:attr="data-tooltip=#{assignment.action.show.label}"
            data-tooltip="Modify assignment"
            data-inverted=""
-           th:text="${assignmentInstance.title}">
+           th:text="${assignment.title}">
           Assignment title
         </a>
 
         &nbsp; [
-        <a th:href="@{show(id=${assignmentInstance.id})}"
+        <a th:href="@{show(id=${assignment.id})}"
            href="show?id=123"
            th:attr="data-tooltip=#{assignment.action.show.label}"
            data-tooltip="Modify assignment"
@@ -75,13 +75,13 @@
       </td>
 
       <!--  TODO : find out how to manage date format     -->
-      <td class="not mobile" th:text="${{assignmentInstance.lastUpdated}}">
+      <td class="not mobile" th:text="${{assignment.lastUpdated}}">
         25/07/2019
       </td>
 
       <td>
         <a class="ui compact icon primary button"
-           th:href="@{/player/playFirstSequence(id=${assignmentInstance.id})}"
+           th:href="@{/player/playFirstSequence(id=${assignment.id})}"
            href="/player/playFirstSequence?id=123"
            th:attr="data-tooltip=#{player.assignment.play}"
            data-tooltip="Play the assignment"
@@ -94,30 +94,32 @@
   </table>
 
 
-  <div th:if="${#lists.isEmpty(assignmentInstanceList)}"
+  <div th:if="${#lists.isEmpty(assignmentPage.content)}"
        class="ui info message" th:text="#{assignment.you.have.none}">
     You have no assignment.
   </div>
 
-
-  <div class="ui basic segment">
-    <a th:href="create"
-       href="create"
-       class="ui primary button">
-      <i class="add icon"></i>
-      <span th:text="#{assignment.create.label}">
+  <div class="ui two column stackable grid">
+    <div class="column">
+      <div class="ui basic segment">
+        <a th:href="create"
+           href="create"
+           class="ui primary button">
+          <i class="add icon"></i>
+          <span th:text="#{assignment.create.label}">
         Create an assignment
       </span>
-    </a>
+        </a>
+      </div>
+    </div>
+    <div class="column">
+      <div th:replace="layout/components/paginate :: paginate(baseUrl='/assignment/index')"></div>
+    </div>
+
   </div>
 
   <div class="ui hidden divider"></div>
 
-<!--  TODO Paginate -->
-  <div class="ui right aligned basic segment">
-    <elaastic:paginate class="ui tiny pagination menu" prev="&laquo;" next="&raquo;"
-                       total="${assignmentInstanceCount ?: 0}"/>
-  </div>
 
   <script>
     $(document)

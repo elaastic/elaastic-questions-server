@@ -1,0 +1,40 @@
+<div th:fragment="paginate(baseUrl)"
+     class="ui right aligned basic segment"
+     th:if="${pagination.paginated}"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="pagination ui tiny pagination menu">
+
+    <div class="prev item" th:classappend="${pagination.currentPage == 1} ? disabled">
+      <a th:unless="${pagination.currentPage == 1}"
+         th:href="@{${baseUrl}(page=${pagination.currentPage-1})}"
+         href="prev">
+        &laquo;
+      </a>
+      <span th:if="${pagination.currentPage == 1}">&laquo;</span>
+    </div>
+
+    <div class="item"
+         th:classappend="${page == pagination.currentPage} ? active"
+         th:each="page : ${pagination.pageList}">
+      <a
+        th:unless="${page == pagination.currentPage}"
+        th:href="@{${baseUrl}(page=${page})}"
+        href="?page=3"
+        class="step"
+        th:text="${page}">
+        i
+      </a>
+      <span th:if="${page == pagination.currentPage}" th:text="${page}">i</span>
+    </div>
+
+    <div class="next item" th:classappend="${pagination.currentPage == pagination.pageList.size()} ? disabled">
+      <a th:unless="${pagination.currentPage == pagination.pageList.size()}"
+         th:href="@{${baseUrl}(page=${pagination.currentPage + 1})}"
+         href="next">
+        &raquo;
+      </a>
+      <span th:if="${pagination.currentPage == pagination.pageList.size()}">&raquo;</span>
+    </div>
+
+  </div>
+</div>
