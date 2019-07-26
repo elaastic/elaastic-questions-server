@@ -1,0 +1,97 @@
+<div th:fragment="assignmentActions()"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+  <div class="menu">
+    <div class="item"
+         onclick="$('#assignment-editProperties-modal').modal('show');">
+      <i class="setting icon"></i>
+      <span th:text="#{assignment.action.propertiesEdition.label}">Edit properties</span>
+    </div>
+    <a href="#"
+       class="item"
+       onclick="$('#confirm-duplicate-assignment-modal').modal('show');">
+      <i class="copy icon"></i>
+      <span th:text="#{assignment.action.duplicate.label}">Duplicate</span>
+    </a>
+
+    <div class="divider"></div>
+    <a href="#"
+       class="item"
+       onclick="$('#confirm-delete-assignment-modal').modal('show');">
+      <i class="outline trash icon"></i>
+      <span th:text="#{assignment.action.delete.label}">Delete</span>
+    </a>
+  </div>
+
+
+<!--  Delete confirm modal-->
+  <div>
+    <div id="confirm-delete-assignment-modal" class="ui tiny modal">
+      <div class="header">
+        <span th:text="#{common.delete}">Delete</span>
+      </div>
+
+      <div class="content">
+        <p>
+          <span th:text="#{assignment.delete.confirm(${assignment.title})}">
+            Do you really want to delete the assignment "{0}"
+          </span>
+        </p>
+      </div>
+
+      <div class="actions">
+        <div class="ui red approve button">
+          <span th:text="#{common.yes}">Yes</span>
+        </div>
+
+        <div class="ui cancel button">
+          <span th:text="#{common.no}">No</span>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      $('#confirm-delete-assignment-modal').modal({
+        onApprove: function () {
+          window.location = /*[[@{/assignment/delete/{id}(id=${assignment.id})}]]*/ '/assignment/delete/123'
+        }
+      })
+    </script>
+  </div>
+
+<!-- Duplicate confirm modal-->
+  <div>
+    <div id="confirm-duplicate-assignment-modal" class="ui tiny modal">
+      <div class="header">
+        <span th:text="#{common.duplicate}">Duplicate</span>
+      </div>
+
+      <div class="content">
+        <p>
+          <span th:text="#{assignment.duplicate.confirm(${assignment.title})}">
+            Do you want to duplicate the assignment "{0}"
+          </span>
+        </p>
+      </div>
+
+      <div class="actions">
+        <div class="ui primary approve button">
+          <span th:text="#{common.yes}">Yes</span>
+        </div>
+
+        <div class="ui cancel button">
+          <span th:text="#{common.no}">No</span>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      $('#confirm-duplicate-assignment-modal').modal({
+        onApprove: function () {
+          window.location = /*[[@{/assignment/duplicate/{id}(id=${assignment.id})}]]*/ '/assignment/duplicate/123'
+        }
+      })
+    </script>
+  </div>
+</div>

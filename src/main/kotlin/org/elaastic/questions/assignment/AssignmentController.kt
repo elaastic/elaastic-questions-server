@@ -6,14 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.ControllerAdvice
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
-import java.util.*
-import java.util.stream.Collectors
-import java.util.stream.IntStream
 import javax.transaction.Transactional
 
 /**
@@ -29,28 +24,39 @@ class AssignmentController(
 
     @GetMapping(value = arrayOf("", "/", "/index"))
     fun index(authentication: Authentication,
+              model: Model,
               @RequestParam("page") page: Int?,
-              @RequestParam("size") size: Int?): ModelAndView {
+              @RequestParam("size") size: Int?): String {
         val user: User = authentication.principal as User
 
         assignmentService.findAllByOwner(
                 user,
                 PageRequest.of((page ?: 1) - 1, size ?: 10)
         ).let {
-            return ModelAndView(
-                    "/assignment/index",
-                    mapOf(
-                            "user" to user,
-                            "assignmentPage" to it,
-                            "pagination" to paginationService.buildInfo(
-                                    it.totalPages,
-                                    page
-                            )
+            model.addAttribute("user", user)
+            model.addAttribute("assignmentPage", it)
+            model.addAttribute(
+                    "pagination",
+                    paginationService.buildInfo(
+                            it.totalPages,
+                            page
                     )
-
             )
         }
 
+        return "/assignment/index"
+    }
+
+    @GetMapping("show/{id}")
+    fun show(authentication: Authentication, model: Model, @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        assignmentService.get(id, fetchSequences = true).let {
+            model.addAttribute("user", user)
+            model.addAttribute("assignment", it)
+        }
+
+        return "/assignment/show"
     }
 
 }

@@ -1,0 +1,31 @@
+<div th:fragment="modalEditProperties(assignment)"
+     id="assignment-editProperties-modal"
+     class="ui modal"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="header" th:text="#{assignment.action.propertiesEdition.label}">
+    Edit properties
+  </div>
+
+  <div class="content">
+    <form name="editProperties-form"
+          id="editProperties-form"
+          class="ui form"
+          th:action="@{/assignment/{id}/update(id=${assignment.id})}"
+          method="post">
+      <input type="hidden" name="version" th:value="${assignment?.version}"/>
+      <div th:replace="assignment/_form_edit_properties :: formEditProperties(${assignment})"></div>
+    </form>
+  </div>
+
+  <div class="actions">
+    <div class="ui primary button"
+         th:text="#{default.button.update.label}"
+         onclick="$('#editProperties-form').submit();">
+      Update
+    </div>
+
+    <div class="ui cancel button" th:text="#{common.cancel}">
+      Cancel
+    </div>
+  </div>
+</div>

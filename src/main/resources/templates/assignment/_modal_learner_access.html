@@ -1,0 +1,70 @@
+<div th:fragment="modalLearnerAccess()"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+
+  <div class="ui small modal" id="learnerAccessModalApp">
+    <i class="close icon"></i>
+
+    <div class="header" th:text="#{assignment.learnerAccess.oneLine}">
+      Link for learners
+    </div>
+
+    <div class="content">
+      <div class="description">
+        <p>
+        <span th:text="#{assignment.learnerAccess.description}">
+          Here is the URL to communicate to learners so they can sign up on the
+        </span> "<span style="font-weight: bold">{{currentAssignmentTitle}}</span>" :
+        </p>
+
+        <div class="ui action fluid input">
+          <input id="studentUrl"
+                 type="text"
+                 v-model="currentAssignmentLearnerUrl" readonly>
+          <button class="ui right icon button" onclick="document.execCommand('copy');">
+            <i class="copy icon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="ui cancel button">
+        OK
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document)
+      .ready(function () {
+
+        // Init VueJS app
+        window.learnerAccessModalApp = new Vue({
+          el: '#learnerAccessModalApp',
+          data: {
+            currentAssignmentTitle: null,
+            currentAssignmentLearnerUrl: null
+          },
+          methods: {
+            showLearnerAccessModal: function (url, title) {
+              this.currentAssignmentLearnerUrl = url
+              this.currentAssignmentTitle = title
+
+              $('#learnerAccessModalApp').modal(
+                {
+                  onVisible: function () {
+                    $('#studentUrl').focus().select()
+                  }
+                }
+              ).modal('show')
+            }
+
+          }
+        })
+
+      })
+
+  </script>
+</div>

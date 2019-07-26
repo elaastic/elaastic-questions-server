@@ -1,0 +1,39 @@
+<div th:fragment="formEditProperties(assignment)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+  <!--  TODO is this really used ?-->
+  <div class="ui error message"></div>
+
+  <div class="required field">
+    <label th:text="#{assignment.title.label}">
+      Title
+    </label>
+    <input type="text"
+           name="title"
+           th:value="${assignment?.title}"
+           autofocus="autofocus"/>
+  </div>
+
+  <script th:inline="javascript">
+    $(document)
+      .ready(function () {
+        $('.ui.form')
+          .form({
+            fields: {
+              title: {
+                identifier: 'title',
+                rules: [
+                  {
+                    type: 'empty',
+                    prompt: /*[[#{assignment.title.mandatory}]]*/  ''
+                  }
+                ]
+              }
+            }
+          })
+
+      })
+  </script>
+
+</div>

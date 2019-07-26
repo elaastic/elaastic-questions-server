@@ -8,7 +8,7 @@
 
 <body>
 <aside tag="specificMenu">
-  <a th:href="@{create}"
+  <a th:href="@{/assignment/create}"
      href="create"
      class="item"
      th:attr="data-tooltip=#{assignment.create.label}"
@@ -52,8 +52,8 @@
     <tr th:each="assignment, i : ${assignmentPage.content}">
       <td>
 
-        <a th:href="@{show(id=${assignment.id})}"
-           href="show?id=123"
+        <a th:href="@{/assignment/show/{id}(id=${assignment.id})}"
+           href="show/123"
            th:attr="data-tooltip=#{assignment.action.show.label}"
            data-tooltip="Modify assignment"
            data-inverted=""
@@ -62,8 +62,8 @@
         </a>
 
         &nbsp; [
-        <a th:href="@{show(id=${assignment.id})}"
-           href="show?id=123"
+        <a th:href="@{/assignment/show/{id}(id=${assignment.id})}"
+           href="show/123"
            th:attr="data-tooltip=#{assignment.action.show.label}"
            data-tooltip="Modify assignment"
            data-inverted="">
@@ -78,8 +78,8 @@
 
       <td>
         <a class="ui compact icon primary button"
-           th:href="@{/player/playFirstSequence(id=${assignment.id})}"
-           href="/player/playFirstSequence?id=123"
+           th:href="@{/player/playFirstSequence/{id}(id=${assignment.id})}"
+           href="/player/playFirstSequence/123"
            th:attr="data-tooltip=#{player.assignment.play}"
            data-tooltip="Play the assignment"
            data-inverted="">

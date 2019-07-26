@@ -23,9 +23,10 @@ class Sequence(
         @field:ManyToOne
         var owner: User,
 
-        @field:OneToOne
+        @field:ManyToOne
         var assignment: Assignment,
 
+        // TODO Fetch statement
         @field:OneToOne
         var statement: Statement,
 

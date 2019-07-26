@@ -12,10 +12,12 @@
     <meta content="#ffffff" name="theme-color"/>
     <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
     <title th:replace="${title}">Page title</title>
-    <link th:href="@{/semantic/dist/semantic.css}" type="text/css" rel="stylesheet" media="screen, projection">
+    <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection">
     <link th:href="@{/css/elaastic.css}" type="text/css" rel="stylesheet" media="screen, projection">
     <script th:src="@{/js/jquery.js}"></script>
     <script th:src="@{/semantic/dist/semantic.js}"></script>
+    <script th:src="@{/js/vuejs/vue.min.js}"></script>
+    <script th:src="@{/js/vuejs/vue-resource.min.js}"></script>
     <style th:replace="${style}"></style>
 
     <style type="text/css">[v-cloak] {
