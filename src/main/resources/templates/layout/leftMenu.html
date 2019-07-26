@@ -31,8 +31,8 @@
     <div class="ui left vertical inverted visible sidebar labeled icon menu"
          style="background-color: #4f7691; overflow: visible !important;">
 
-      <!--      TODO : Find out how to generalize logout URL -->
-      <a href="/logout"
+      <a th:href="${logoutUrl}"
+         href="/logout"
          class="header item"
          style="margin-top: 1em;">
         <img th:src="@{/images/elaastic/logos/Elaastic_pictoRVB.png}"
@@ -74,8 +74,8 @@
         <i class="settings icon"></i>
       </a>
 
-<!--      TODO remove when the user has been properly passed -->
-<!--      <g:render template="/layouts/userMenu" model="[user: user]"/>-->
+      <!--      TODO remove when the user has been properly passed -->
+      <!--      <g:render template="/layouts/userMenu" model="[user: user]"/>-->
       <div th:replace="layout/userMenu :: userMenu"></div>
 
       <div class="ui divider"></div>

@@ -19,4 +19,9 @@ class ControllerAdvice {
     fun getApplicationVersion(): String {
         return applicationVersion
     }
+
+    @ModelAttribute("logoutUrl")
+    fun getLogoutUrl(): String {
+        return "logout"
+    }
 }
