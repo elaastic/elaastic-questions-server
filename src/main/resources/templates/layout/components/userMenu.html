@@ -1,4 +1,4 @@
-<div th:fragment="userMenu()"
+<div th:fragment="userMenu(user)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
@@ -22,7 +22,7 @@
         <span th:text="#{layout.main.account}">My account</span>
       </a>
 
-      <div th:if="${user.canBeUserOwner}">
+      <div th:if="${user.canBeUserOwner}" th:remove="tag">
         <div class="ui divider"></div>
         <a th:href="@{/userAccountBatchCreation}"
            href="/userAccountBatchCreation"

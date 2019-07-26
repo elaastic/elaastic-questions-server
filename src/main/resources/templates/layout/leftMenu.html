@@ -74,9 +74,7 @@
         <i class="settings icon"></i>
       </a>
 
-      <!--      TODO remove when the user has been properly passed -->
-      <!--      <g:render template="/layouts/userMenu" model="[user: user]"/>-->
-      <div th:replace="layout/userMenu :: userMenu"></div>
+      <div th:replace="layout/components/userMenu :: userMenu(user=${user})"></div>
 
       <div class="ui divider"></div>
 
