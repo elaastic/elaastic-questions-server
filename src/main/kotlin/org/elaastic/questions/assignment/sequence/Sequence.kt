@@ -16,24 +16,27 @@ import javax.validation.constraints.NotNull
  * @author John Tranier
  */
 @Entity
+@NamedEntityGraph(
+        name = "Sequence.statement",
+        attributeNodes = [NamedAttributeNode("statement")]
+)
 @EntityListeners(AuditingEntityListener::class)
 class Sequence(
         var rank: Int,
 
-        @field:ManyToOne
+        @field:ManyToOne(fetch = FetchType.LAZY)
         var owner: User,
 
-        @field:ManyToOne
+        @field:ManyToOne(fetch = FetchType.LAZY)
         var assignment: Assignment,
 
-        // TODO Fetch statement
-        @field:OneToOne
+        @field:ManyToOne(fetch = FetchType.EAGER)
         var statement: Statement,
 
         @field:Enumerated(EnumType.STRING)
         var executionContext: ExecutionContext = ExecutionContext.FaceToFace
 
-) :  AbstractJpaPersistable<Long>() {
+) : AbstractJpaPersistable<Long>() {
 
     @Version
     var version: Long? = null

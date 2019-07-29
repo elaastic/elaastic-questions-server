@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class Statement(
         @field:NotNull
-        @field:ManyToOne
+        @field:ManyToOne(fetch = FetchType.LAZY)
         var owner: User,
 
         @field:NotBlank
@@ -36,7 +36,7 @@ class Statement(
         @field:Column(name = "choice_specification")
         var choiceSpecification: ChoiceSpecification? = null,
 
-        @field:ManyToOne
+        @field:ManyToOne(fetch = FetchType.LAZY)
         var parentStatement: Statement? = null,
 
         @field:Column(name = "expected_explanation")

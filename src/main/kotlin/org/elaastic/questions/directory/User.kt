@@ -17,6 +17,7 @@ import kotlin.reflect.KClass
  * @author John Tranier
  */
 @Entity
+@NamedEntityGraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
 @User.HasEmailOrIsOwner
 class User(
         @field:NotBlank var firstName: String,
@@ -51,7 +52,7 @@ class User(
     @NotNull
     var canBeUserOwner: Boolean = false
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     var owner: User? = null
 
     fun getFullname(): String {
@@ -62,18 +63,17 @@ class User(
         return !email.isNullOrBlank()
     }
 
-    fun hasOwner() : Boolean {
+    fun hasOwner(): Boolean {
         return owner != null
     }
 
-    @OneToMany(fetch = FetchType.EAGER,
-            cascade = arrayOf(CascadeType.ALL),
+    @ManyToMany(cascade = [CascadeType.ALL],
             targetEntity = Role::class
     )
     @JoinTable(
             name = "user_role",
-            joinColumns = arrayOf(JoinColumn(name = "user_id")),
-            inverseJoinColumns = arrayOf(JoinColumn(name = "role_id"))
+            joinColumns = [JoinColumn(name = "user_id")],
+            inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
     var roles: MutableSet<Role> = HashSet()
 
@@ -83,15 +83,15 @@ class User(
     }
 
     fun isLearner(): Boolean {
-        return roles.map { it.name } .contains( Role.RoleId.STUDENT.roleName)
+        return roles.map { it.name }.contains(Role.RoleId.STUDENT.roleName)
     }
 
     fun isTeacher(): Boolean {
-        return roles.map { it.name } .contains( Role.RoleId.TEACHER.roleName)
+        return roles.map { it.name }.contains(Role.RoleId.TEACHER.roleName)
     }
 
     fun isAdmin(): Boolean {
-        return roles.map { it.name } .contains( Role.RoleId.ADMIN.roleName)
+        return roles.map { it.name }.contains(Role.RoleId.ADMIN.roleName)
     }
 
     fun isRegisteredInAssignment(assignment: Assignment): Boolean {
@@ -142,11 +142,11 @@ class User(
 
     @Target(AnnotationTarget.CLASS)
     @Retention(AnnotationRetention.RUNTIME)
-    @Constraint(validatedBy = arrayOf(HasEmailOrIsOwnerValidator::class))
+    @Constraint(validatedBy = [HasEmailOrIsOwnerValidator::class])
     annotation class HasEmailOrIsOwner(
             val message: String = "",
             val groups: Array<KClass<*>> = [],
-        val payload: Array<KClass<out Payload>> = []
+            val payload: Array<KClass<out Payload>> = []
     )
 
     class HasEmailOrIsOwnerValidator : ConstraintValidator<HasEmailOrIsOwner, User> {

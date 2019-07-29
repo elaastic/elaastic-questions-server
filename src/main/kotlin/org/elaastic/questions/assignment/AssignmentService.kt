@@ -15,8 +15,7 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class AssignmentService(
-        @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val sequenceRepository: SequenceRepository
+        @Autowired val assignmentRepository: AssignmentRepository
 ) {
     
     fun findAllByOwner(owner: User, pageable: Pageable): Page<Assignment> {
@@ -24,11 +23,9 @@ class AssignmentService(
     }
 
     fun get(id: Long, fetchSequences: Boolean=false) : Assignment {
-        assignmentRepository.getOne(id).let {
-
-            it.sequences = sequenceRepository.findAllByAssignment(it, Sort.by("rank").ascending())
-
-            return it
+        return when(fetchSequences) {
+            true -> assignmentRepository.getWithSequencesById(id)
+            false -> assignmentRepository.getById(id)
         }
     }
 }
