@@ -18,10 +18,11 @@ class UserService (
     }
 
     fun addUser(user: User,
-                // TODO check if necessary mainRole: Role,
                 language: String = "fr",
                 checkEmailAccount: Boolean = false
                 ): User? {
+
+        require(user.roles?.isNotEmpty())
 
         user.password = passwordEncoder.encode(user.password)
 

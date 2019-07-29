@@ -14,7 +14,8 @@ import org.hamcrest.CoreMatchers.*
 @SpringBootTest
 @Transactional
 internal class UserServiceIntegrationTest(
-        @Autowired val userService: UserService
+        @Autowired val userService: UserService,
+        @Autowired val roleService: RoleService
 ) {
 
     @Test
@@ -28,7 +29,7 @@ internal class UserServiceIntegrationTest(
                         password = "1234",
                         email = "foo@elaastic.org"
 
-                )
+                ).addRole(roleService.roleStudent())
         )
 
         // Expect:

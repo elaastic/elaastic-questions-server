@@ -57,8 +57,6 @@ class Sequence(
     var state: State = State.beforeStart
 
     var resultsArePublished: Boolean = false
-
-    // TODO Methods...
 }
 
 enum class State {

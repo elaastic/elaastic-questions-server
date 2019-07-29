@@ -61,12 +61,4 @@ class Assignment(
             mappedBy = "assignment",
             targetEntity = Sequence::class)
     var sequences: List<Sequence> = listOf()
-
-    // TODO List<Sequence> getSequences()
-
-    // TODO Integer countSequences()
-
-    // TODO Sequence getLastSequence()
-
-    // TODO Integer registeredUserCount()
 }
