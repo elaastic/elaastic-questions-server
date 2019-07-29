@@ -3,6 +3,7 @@ package org.elaastic.questions.assignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.hibernate.annotations.SortNatural
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -41,7 +42,7 @@ class Assignment(
 
         @field:NotNull
         @field:NotBlank
-        var globalId: String
+        var globalId: String = UUID.randomUUID().toString()
 ) : AbstractJpaPersistable<Long>() {
 
     @Version
@@ -60,5 +61,7 @@ class Assignment(
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "assignment",
             targetEntity = Sequence::class)
+    @OrderBy("rank ASC")
+    @SortNatural
     var sequences: List<Sequence> = listOf()
 }

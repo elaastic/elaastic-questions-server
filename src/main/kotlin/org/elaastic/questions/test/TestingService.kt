@@ -28,6 +28,11 @@ class TestingService(
         return userRepository.findAll().iterator().next()
     }
 
+    fun getTestTeacher(): User {
+        return userRepository.getByUsername("fsil")
+    }
+
+
     fun getAnyStatement(): Statement {
         return statementRepository.findAll().iterator().next()
     }

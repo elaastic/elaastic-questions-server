@@ -36,7 +36,7 @@ class Sequence(
         @field:Enumerated(EnumType.STRING)
         var executionContext: ExecutionContext = ExecutionContext.FaceToFace
 
-) : AbstractJpaPersistable<Long>() {
+) : AbstractJpaPersistable<Long>(), Comparable<Sequence> {
 
     @Version
     var version: Long? = null
@@ -57,6 +57,10 @@ class Sequence(
     var state: State = State.beforeStart
 
     var resultsArePublished: Boolean = false
+
+    override fun compareTo(other: Sequence): Int {
+        return rank.compareTo(other.rank)
+    }
 }
 
 enum class State {

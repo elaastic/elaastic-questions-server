@@ -9,12 +9,12 @@ import org.springframework.data.jpa.repository.JpaRepository
 /**
  * @author John Tranier
  */
-interface AssignmentRepository : JpaRepository<Assignment, Long> {
+interface AssignmentRepository : JpaRepository<Assignment?, Long> {
 
     fun findAllByOwner(owner: User, pageable: Pageable): Page<Assignment>
 
     @EntityGraph(value = "Assignment.sequences", type = EntityGraph.EntityGraphType.LOAD)
-    fun getWithSequencesById(id: Long): Assignment
+    fun findOneWithSequencesById(id: Long): Assignment?
 
-    fun getById(id: Long): Assignment
+    fun findOneById(id: Long): Assignment?
 }
