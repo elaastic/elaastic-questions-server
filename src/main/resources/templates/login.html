@@ -73,9 +73,8 @@
         </div>
 
 
-        <div class="ui negative message" th:if="${param.message}">
-          <!-- TODO : Change param by "flash" equivalent -->
-          <span th:text="${param.message}"></span>
+        <div class="ui negative message" th:if="${param.error}">
+          <span th:text="#{springSecurity.errors.login.fail}"></span>
         </div>
 
       </form>
