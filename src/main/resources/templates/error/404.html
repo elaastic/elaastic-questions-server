@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="layout/anonymous :: anonymousLayout(~{::title}, ~{::section})" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title th:text="#{common.not.found}">404 - Page not found</title>
+</head>
+
+<body>
+<section>
+<div class="ui icon error message">
+    <i class="warning sign icon"></i>
+    <div class="content">
+        <div class="header">
+           <span th:text="#{error.404.title}"></span>
+        </div>
+        <p><span th:text="#{error.404.text}"></span></p>
+
+        <p><a th:href="@{/home}"><i class="home icon"></i> <span th:text="#{back.home}"></span> </a></p>
+    </div>
+</div>
+</section>
+</body>
+</html>

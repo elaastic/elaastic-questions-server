@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" th:fragment="anonymousLayout (title, content)" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no" name="viewport"/>
+        <meta name="description"
+              th:content="#{elaastic.description}">
+        <meta name="author" content="Ticetime">
+        <meta content="#ffffff" name="theme-color"/>
+        <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+        <title th:replace="${title}">elaastic</title>
+        <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection">
+        <link th:href="@{/css/elaastic.css}" type="text/css" rel="stylesheet" media="screen, projection">
+        <script th:src="@{/js/jquery.js}"></script>
+        <script th:src="@{/semantic/dist/semantic.js}"></script>
+        <style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+    </head>
+
+    <body>
+
+        <div id="page-content" class="ui container">
+            <div class="ui large top fixed inverted menu" style="background-color: #4f7691;">
+                <div class="header item">
+                    <a th:href="@{/home}"><img class="ui avatar bordered circular image logo"
+                                               th:src="@{/images/elaastic_picto_rvb.png}"></a>
+                </div>
+            </div>
+
+            <div class="ui container" style="padding-top: 6em;">
+                <div th:replace="${content}"></div>
+                <div th:replace="layout/components/footer :: footer"></div>
+            </div>
+
+        </div>
+
+        <r:layoutResources/>
+    </body>
+</html>
