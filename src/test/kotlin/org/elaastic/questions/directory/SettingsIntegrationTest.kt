@@ -1,6 +1,8 @@
 package org.elaastic.questions.directory
 
 import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.directive.tThen
+import org.elaastic.questions.test.directive.tWhen
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -85,6 +87,8 @@ internal class SettingsIntegrationTest(
         // expect an exception is thrown when saving
         assertThrows<ConstraintViolationException> { settingsRepository.save(nonValidObj) }
     }
+
+
 
 }
 

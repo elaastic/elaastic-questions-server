@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="layout/minimal :: minimalLayout(~{::title}, ~{::section}, ~{::style})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title th:text="#{index.newUser.signUp.action}">Elaastic</title>
+    <style>
+        .ui.modal > .content > .icon + .description, .ui.modal > .content > .image + .description {
+            flex: auto;
+        }
+    </style>
+</head>
+<body>
+
+<section>
+<!--  to replace  <g:set var="lang" value="${RequestContextUtils.getLocale(request)}"/>-->
+    <div id="subscribe-app" class="ui modal">
+        <div class="header">
+            <i class="id card icon"></i><span th:text="#{index.newUser.signUp.action}"></span> ...
+        </div>
+
+        <div class="image content">
+            <div class="ui medium image">
+                <img th:src="@{/images/picto/blank-profile-picture-973460-640.png}">
+            </div>
+
+            <div class="description">
+
+                <div class="ui negative message" v-if="hasServerError">
+                    <ul class="list">
+                        <li v-for="error in serverErrorList"><span v-html="error"></span></li>
+                    </ul>
+                </div>
+
+                <form id="subscribeForm" class="ui form">
+                    <div class="ui error message"></div>
+
+                    <h4 class="ui dividing header"><i class="address book icon"></i><span th:text="#{useraccount.personalData}"></span>
+                    </h4>
+
+                    <div class="required field">
+                        <label>Name</label>
+
+                        <div class="two fields">
+                            <div class=" field">
+                                <input type="text"
+                                       name="firstName"
+                                       th:placeholder="#{index.signUp.form.firstName.placeholder}"
+                                v-model="userData.firstName">
+                            </div>
+
+                            <div class="field">
+                                <input type="text"
+                                       name="lastName"
+                                       th:placeholder="#{index.signUp.form.lastName.placeholder}"
+                                v-model="userData.lastName">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="required field">
+                        <label>Email</label>
+
+                        <div class="required field">
+
+                            <input type="text"
+                                   name="email"
+                                   th:placeholder="#{index.signUp.form.email.placeholder}"
+                            v-model="userData.email">
+
+                        </div>
+                    </div>
+
+
+                    <h4 class="ui dividing header"><i class="sign in icon"></i><span th:text="#{useraccount.your.elaastic.account}"></span></h4>
+
+                    <div class="required field">
+                        <label><span th:text="#{useraccount.profile.label}"></span></label>
+
+                        <div class="ui fluid selection dropdown">
+                            <input type="hidden" name="role">
+                            <i class="dropdown icon"></i>
+
+                            <div class="default text"><span th:text="#{useraccount.profile.select}"></span></div>
+
+                            <div class="menu">
+                                <div class="item" :data-value="ROLE.STUDENT">
+                                    <i class="student icon"></i><span th:text="#{useraccount.form.learner.radio}"></span>
+                                </div>
+
+                                <div class="item" :data-value="ROLE.TEACHER">
+                                    <i class="travel icon"></i><span th:text="#{useraccount.form.teacher.radio}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="required field">
+                        <label><span th:text="#{useraccount.username.label}"></span></label>
+
+                        <div class="required field">
+
+                            <input type="text"
+                                   name="username"
+                                   th:placeholder="#{index.signUp.form.username.placeholder}"
+                            v-model="userData.username">
+
+                        </div>
+                    </div>
+
+
+                    <div class="required field">
+                        <label><span th:text="#{useraccount.form.password.placeholder}"></span></label>
+
+                        <div class="two fields">
+                            <div class="field">
+                                <input type="password"
+                                       name="password"
+                                       th:placeholder="#{index.signUp.form.password.placeholder}"
+                                v-model="userData.password"/>
+                            </div>
+
+                            <div class="field">
+                                <input type="password"
+                                       name="password2"
+                                       th:placeholder="#{index.signUp.form.confirmPassword.placeholder}"
+                                v-model="userData.password2"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+<!--                <div class="container text">-->
+<!--                    <div class="ui message" th:switch="$lang">-->
+<!--                        <p th:case="${Locale.FRANCE || Locale.FRENCH || Locale.CANADA_FRENCH}">-->
+<!--                            En vous inscrivant, vous acceptez les <a href="../terms"-->
+<!--                                                                     target="_blank">Conditions d'utilisation</a>, notamment l'utilisation de cookies.</p>-->
+<!--                        <p th:case="*">-->
+<!--                            By signing up, you agree to the <a href="../terms"-->
+<!--                                                               target="_blank">Terms of Service</a>, including Cookie Use.</p>-->
+<!--                    </div>-->
+
+<!--                </div>-->
+
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="ui deny button">
+                Annuler
+            </div>
+
+            <div class="ui primary button" v-on:click="submit()" v-bind:class="{ loading: isLoading}">
+                S'inscrire
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+
+            <!-- Init VueJS app -->
+
+
+        var app;
+        (function () {
+            var ROLE = {
+                STUDENT: 'STUDENT_ROLE',
+                TEACHER: 'TEACHER_ROLE'
+            };
+
+            app = new Vue({
+                el: '#subscribe-app',
+                data: {
+                    serverErrorList: [],
+                    isLoading: false,
+                    userData: {
+                        firstName: null,
+                        lastName: null,
+                        email: null,
+                        role: null,
+                        username: null,
+                        password: null,
+                        password2: null,
+                        language: null
+                    }
+                },
+                ready: function () {
+                    alert('Hello');
+                },
+                methods: {
+                    selectRole: function (role) {
+                        this.userData.role = role;
+                    },
+                    submit: function () {
+                        var that = this;
+
+                        that.serverErrorList = [];
+                        var validated = $('.ui.form').form('validate form');
+
+                        if (validated) {
+                            that.isLoading = true;
+                            $.ajax({
+                                type: 'POST',
+                                url: "[(@{/userAccount/ajaxDoSubscribe})]",
+                                data: this.userData,
+                                complete: function () {
+                                    that.isLoading = false;
+                                },
+                                success: function (data) {
+                                    if (data.success) {
+                                        var loginUrl = "[(@{/login?justRegistered=true})]";
+                                        var checkEmail = [[${checkEmail}]];
+
+                                        if (checkEmail) {
+                                            loginUrl += '&checkEmail=true';
+                                        }
+
+                                        window.location = loginUrl;
+                                    } else {
+                                        that.serverErrorList = data.errorList;
+                                    }
+                                },
+                                error: function (data) {
+                                    that.serverErrorList = [
+                                        [[#{unexpected.server.error}]]
+                                    ]
+                                }
+                            });
+                        }
+                    }
+                },
+                computed: {
+                    ROLE: function () {
+                        return ROLE;
+                    },
+                    hasServerError: function () {
+                        return this.serverErrorList.length > 0;
+                    }
+                }
+            });
+        })();
+
+
+        $(document)
+            .ready(function () {
+                $('.ui.modal')
+                    .modal({
+                        closable: false,
+                        onDeny: function () {
+                            window.location = "/";
+                        },
+                        onHide: function () {
+                            window.location = "/";
+                        }
+                    })
+                    .modal('show');
+
+                // Initialize dropdown
+                $('.ui.dropdown').dropdown({
+                    onChange: function (value) {
+                        app.selectRole(value);
+                    }
+                });
+
+                // Initialize accordions
+                $('.ui.accordion').accordion();
+
+                $('.ui.form').form({
+                    on: 'blur',
+                    fields: {
+                        firstName: {
+                            identifier: 'firstName',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: [[#{useraccount.form.firstName.mandatory}]]
+                                }
+                            ]
+
+                        },
+                        lastName: {
+                            identifier: 'lastName',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: [[#{useraccount.form.lastName.mandatory}]]
+                                }
+                            ]
+
+                        },
+                        email: {
+                            identifier: 'email',
+                            rules: [
+                                {
+                                    type: 'email',
+                                    prompt: [[#{useraccount.form.email.invalid}]]
+                                }
+                            ]
+                        },
+                        role: {
+                            identifier: 'role',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: [[#{useraccount.form.profile.mandatory}]]
+                                }
+                            ]
+                        },
+                        username: {
+                            identifier: 'username',
+                            rules: [
+                                {
+                                    type: 'empty',
+                                    prompt: [[#{useraccount.form.username.mandatory}]]
+                                }
+                            ]
+                        },
+                        password: {
+                            identifier: 'password',
+                            rules: [
+                                {
+                                    type: 'minLength[4]',
+                                    prompt: [[#{useraccount.form.password.minlength}]]
+                                }
+                            ]
+                        },
+                        password2: {
+                            identifier: 'password2',
+                            rules: [
+                                {
+                                    type: 'match[password]',
+                                    prompt: [[#{useraccount.form.password.identical}]]
+                                }
+                            ]
+
+                        }
+                    }
+                });
+
+                if (navigator.browserLanguage) {
+                    app.userData.language = navigator.browserLanguage;
+                } else {
+                    app.userData.language = navigator.languages[0].slice(0, 2);
+                }
+
+            });
+
+    </script>
+
+</section>
+</body>
+</html>

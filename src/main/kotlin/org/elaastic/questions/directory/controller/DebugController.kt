@@ -1,4 +1,4 @@
-package org.elaastic.questions.directory
+package org.elaastic.questions.directory.controller
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.springframework.beans.factory.annotation.Autowired

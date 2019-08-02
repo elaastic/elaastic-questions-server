@@ -5,4 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.repository.query.QueryByExampleExecutor
 
 interface UnsubscribeKeyRepository : PagingAndSortingRepository<UnsubscribeKey, Long>, QueryByExampleExecutor<UnsubscribeKey>, JpaRepository<UnsubscribeKey, Long> {
+
+    fun findByUser(user: User): UnsubscribeKey
+
 }

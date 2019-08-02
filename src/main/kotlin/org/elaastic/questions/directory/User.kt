@@ -6,11 +6,9 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
 import javax.persistence.*
-import javax.validation.Constraint
-import javax.validation.ConstraintValidator
-import javax.validation.ConstraintValidatorContext
-import javax.validation.Payload
+import javax.validation.*
 import javax.validation.constraints.*
+import kotlin.jvm.Transient
 import kotlin.reflect.KClass
 
 /**
@@ -19,6 +17,7 @@ import kotlin.reflect.KClass
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
 @User.HasEmailOrIsOwner
+@User.PlainTextPasswordIsNotShort
 class User(
         @field:NotBlank var firstName: String,
         @field:NotBlank var lastName: String,
@@ -27,7 +26,10 @@ class User(
         @field:Column(unique = true, length = 16)
         @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
         private var username: String,
-        password: String,
+
+        @Transient
+        val plainTextPassword: String,
+
         email: String
 ) : AbstractJpaPersistable<Long>(), Serializable, UserDetails {
 
@@ -38,11 +40,9 @@ class User(
     @Email
     var email: String? = email
 
-    @Size(min = 4)
-    private var password: String? = password // TODO I don't like those 2 password fields ...
+    @NotNull @Size(min = 1)
+    private var password: String? = null
 
-    @Transient
-    var plainTextPassword: String? = null
 
     var enabled: Boolean = true
     var accountExpired: Boolean = false
@@ -81,6 +81,9 @@ class User(
         roles.add(role)
         return this
     }
+
+    @OneToOne(mappedBy = "user")
+    var settings: Settings? = null
 
     fun isLearner(): Boolean {
         return roles.map { it.name }.contains(Role.RoleId.STUDENT.roleName)
@@ -144,7 +147,7 @@ class User(
     @Retention(AnnotationRetention.RUNTIME)
     @Constraint(validatedBy = [HasEmailOrIsOwnerValidator::class])
     annotation class HasEmailOrIsOwner(
-            val message: String = "",
+            val message: String = "user.hasEmailOrIsOwner",
             val groups: Array<KClass<*>> = [],
             val payload: Array<KClass<out Payload>> = []
     )
@@ -156,6 +159,20 @@ class User(
         }
     }
 
-    // TODO Settings
 
+    @Target(AnnotationTarget.CLASS)
+    @Retention(AnnotationRetention.RUNTIME)
+    @Constraint(validatedBy = [PlainTextPasswordIsNotShortValidator::class])
+    annotation class PlainTextPasswordIsNotShort(
+            val message: String = "user.plainTextPassword.short",
+            val groups: Array<KClass<*>> = [],
+            val payload: Array<KClass<out Payload>> = []
+    )
+
+    class PlainTextPasswordIsNotShortValidator : ConstraintValidator<PlainTextPasswordIsNotShort, User> {
+
+        override fun isValid(user: User?, context: ConstraintValidatorContext?): Boolean {
+            return user?.let { it.plainTextPassword.length > 3 } ?: false
+        }
+    }
 }

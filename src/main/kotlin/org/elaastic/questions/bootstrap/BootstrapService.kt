@@ -29,35 +29,35 @@ class BootstrapService(
                         firstName = "Franck",
                         lastName = "Sil",
                         username = "fsil",
-                        password = "1234",
+                        plainTextPassword = "1234",
                         email = "fsil@elaastic.org"
                 ).addRole(roleService.roleTeacher()),
                 User(
                         firstName = "Mary",
                         lastName = "Sil",
                         username = "msil",
-                        password = "1234",
+                        plainTextPassword = "1234",
                         email = "msil@elaastic.org"
                 ).addRole(roleService.roleStudent()),
                 User(
                         firstName = "Thom",
                         lastName = "Sil",
                         username = "tsil",
-                        password = "1234",
+                        plainTextPassword = "1234",
                         email = "tsil@elaastic.org"
                 ).addRole(roleService.roleStudent()),
                 User(
                         firstName = "John",
                         lastName = "Tra",
                         username = "jtra",
-                        password = "1234",
+                        plainTextPassword = "1234",
                         email = "jtra@elaastic.org"
                 ).addRole(roleService.roleStudent()),
                 User(
                         firstName = "Erik",
                         lastName = "Erik",
                         username = "erik",
-                        password = "1234",
+                        plainTextPassword = "1234",
                         email = "erik@elaastic.org"
                 ).addRole(roleService.roleStudent())
         ).map {

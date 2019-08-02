@@ -5,4 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.repository.query.QueryByExampleExecutor
 
 interface ActivationKeyRepository : PagingAndSortingRepository<ActivationKey, Long>, QueryByExampleExecutor<ActivationKey>, JpaRepository<ActivationKey, Long> {
+
+    fun findByUser(user: User): ActivationKey?
+
 }

@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 class ActivationKey(
-        @field:NotBlank var activationKey: String,
         @field:NotNull @field:OneToOne var user: User,
+        @field:NotBlank var activationKey: String,
         @field:NotNull var activationEmailSent: Boolean = false,
         @field:NotNull val subscriptionSource: String = "elaastic"
 ) : AbstractJpaPersistable<Long>() {

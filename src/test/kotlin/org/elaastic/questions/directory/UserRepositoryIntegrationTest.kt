@@ -33,7 +33,10 @@ class UserRepositoryIntegrationTest(
                         "jtranier",
                         "1234",
                         "john.tranier@ticetime.com"
-                )
+                ).let {
+                    it.password = "encoded"
+                    it
+                }
         )
 
         assertEquals(18, userRepository.count())
@@ -43,14 +46,32 @@ class UserRepositoryIntegrationTest(
     fun `a user must have a firstname and a lastname`() {
         Assertions.assertThrows(ConstraintViolationException::class.java) { ->
             userRepository.save(
-                    User("", "Tranier", "jtranier", "1234", "john.tranier@ticetime.com")
+                    User(
+                            "",
+                            "Tranier",
+                            "jtranier",
+                            "1234",
+                            "john.tranier@ticetime.com"
+                    ).let {
+                        it.password = "encoded"
+                        it
+                    }
             )
         }
 
         Assertions.assertThrows(ConstraintViolationException::class.java) { ->
-            userRepository.save(
-                    User("John", "", "jtranier", "1234", "john.tranier@ticetime.com")
-            )
+            User(
+                    "John",
+                    "",
+                    "jtranier",
+                    "1234",
+                    "john.tranier@ticetime.com"
+            ).let {
+                it.password = "encoded"
+                it
+            }. let {
+                userRepository.save(it)
+            }
         }
     }
 
@@ -64,7 +85,10 @@ class UserRepositoryIntegrationTest(
                             "jtranier",
                             "1234",
                             "john.tranier@ticetime.com"
-                    )
+                    ).let {
+                        it.password = "encoded"
+                        it
+                    }
             )
 
             userRepository.save(
@@ -74,7 +98,10 @@ class UserRepositoryIntegrationTest(
                             "jtranier",
                             "1234",
                             "john.tranier@ticetime.com"
-                    )
+                    ).let {
+                        it.password = "encoded"
+                        it
+                    }
             )
         }
     }
@@ -87,7 +114,10 @@ class UserRepositoryIntegrationTest(
                 "jtranier",
                 "1234",
                 "john.tranier@ticetime.com"
-        )
+        ).let {
+            it.password = "encoded"
+            it
+        }
         userRepository.save(user)
 
         assertEquals(

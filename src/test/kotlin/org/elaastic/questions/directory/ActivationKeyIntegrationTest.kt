@@ -12,6 +12,7 @@ import javax.validation.Validator
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
@@ -77,6 +78,7 @@ internal class ActivationKeyIntegrationTest(
         assertThat(actKey.id, notNullValue())
         assertThat(actKey.version, equalTo(0L))
         assertThat(actKey.dateCreated, notNullValue())
+        assertFalse(actKey.activationEmailSent)
     }
 
     @Test

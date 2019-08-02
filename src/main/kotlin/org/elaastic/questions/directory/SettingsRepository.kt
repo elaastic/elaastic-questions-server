@@ -5,4 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.repository.query.QueryByExampleExecutor
 
 interface SettingsRepository : PagingAndSortingRepository<Settings, Long>, QueryByExampleExecutor<Settings>, JpaRepository<Settings, Long> {
+
+    fun findByUser(user: User): Settings
+
 }
