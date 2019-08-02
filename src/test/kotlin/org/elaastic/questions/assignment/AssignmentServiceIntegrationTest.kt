@@ -39,8 +39,8 @@ internal class AssignmentServiceIntegrationTest(
 
         assignmentService.findAllByOwner(teacher)
                 .tExpect {
-                    assertThat(it.totalElements, equalTo(0L)
-                    )
+                    assertThat(it.totalElements, equalTo(0L))
+                    assertThat(it.totalPages, equalTo(0))
                 }
     }
 

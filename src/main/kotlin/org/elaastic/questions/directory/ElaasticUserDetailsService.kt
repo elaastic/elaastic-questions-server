@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 /**
  * @author John Tranier
  */
-@Service
+@Service("userDetailsService")
 class ElaasticUserDetailsService(
         @Autowired val userRepository: UserRepository
 ) : UserDetailsService {

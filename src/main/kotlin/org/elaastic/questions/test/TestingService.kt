@@ -10,6 +10,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.lang.IllegalStateException
 
 /**
  * @author John Tranier
@@ -47,6 +48,7 @@ class TestingService(
 
     fun getAnyAssignment() : Assignment {
         return assignmentRepository.findAll().iterator().next()
+                ?: throw IllegalStateException("There is no assignment is testing data")
     }
 
     fun getAnyInteractionResponse() : InteractionResponse {

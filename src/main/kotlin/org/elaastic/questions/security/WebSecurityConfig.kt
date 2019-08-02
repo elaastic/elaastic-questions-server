@@ -1,6 +1,5 @@
 package org.elaastic.questions.security
 
-import org.elaastic.questions.directory.ElaasticUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -9,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
@@ -19,7 +19,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
-        @Autowired val elaasticUserDetailsService: ElaasticUserDetailsService
+        @Autowired val userDetailsService: UserDetailsService
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(auth: AuthenticationManagerBuilder) {
@@ -48,7 +48,7 @@ class WebSecurityConfig(
     @Bean
     fun authenticationProvider(): DaoAuthenticationProvider {
         DaoAuthenticationProvider().let {
-            it.setUserDetailsService(elaasticUserDetailsService)
+            it.setUserDetailsService(userDetailsService)
             it.setPasswordEncoder(encoder())
             return it
         }

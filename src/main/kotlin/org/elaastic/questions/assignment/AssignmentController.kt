@@ -1,14 +1,13 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.persistence.pagination.PaginationService
+import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.servlet.ModelAndView
 import javax.transaction.Transactional
 
 /**
@@ -18,8 +17,7 @@ import javax.transaction.Transactional
 @RequestMapping("/assignment")
 @Transactional
 class AssignmentController(
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val paginationService: PaginationService
+        @Autowired val assignmentService: AssignmentService
 ) {
 
     @GetMapping(value = arrayOf("", "/", "/index"))
@@ -37,7 +35,7 @@ class AssignmentController(
             model.addAttribute("assignmentPage", it)
             model.addAttribute(
                     "pagination",
-                    paginationService.buildInfo(
+                    PaginationUtil.buildInfo(
                             it.totalPages,
                             page
                     )
