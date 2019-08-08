@@ -21,7 +21,6 @@ import javax.validation.ConstraintViolationException
  */
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class UserServiceIntegrationTest(
         @Autowired val userService: UserService,
         @Autowired val roleService: RoleService,
@@ -88,7 +87,8 @@ internal class UserServiceIntegrationTest(
             assertThat(it.enabled, equalTo(false))
             assertThat("settings must be set", it.settings, notNullValue())
             // and activation and unsubscribe key are set
-            assertThat(activationKeyRepository.findByUser(it), notNullValue())
+            val activationKey = activationKeyRepository.findByUser(it)!!
+            assertThat(activationKey.dateCreated, notNullValue())
             assertThat(unsubscribeKeyRepository.findByUser(it), notNullValue())
             it
         }

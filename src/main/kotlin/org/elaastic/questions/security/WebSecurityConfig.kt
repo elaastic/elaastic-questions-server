@@ -37,11 +37,11 @@ class WebSecurityConfig(
                 ?.and()
                 ?.authorizeRequests()
                     ?.antMatchers("/images/**", "/css/**", "/js/**", "/semantic/**", "/", "/demo")?.permitAll()
-                    ?.antMatchers("/register")?.permitAll()
+                    ?.antMatchers("/register", "/api/users", "/login")?.permitAll()
                     ?.anyRequest()?.authenticated()
                     ?.and()
                 ?.formLogin()
-                    ?.loginPage("/login")
+                    ?.loginPage("/login")?.defaultSuccessUrl("/home")
                     ?.permitAll()
     }
 

@@ -18,7 +18,6 @@ import javax.persistence.EntityManager
  */
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class LearnerSequenceRepositoryIntegrationTest(
         @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
         @Autowired val testingService: TestingService,

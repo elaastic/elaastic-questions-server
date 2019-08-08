@@ -21,7 +21,6 @@ import org.hamcrest.CoreMatchers.*
  */
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class InteractionRepositoryIntegrationTest(
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val testingService: TestingService,

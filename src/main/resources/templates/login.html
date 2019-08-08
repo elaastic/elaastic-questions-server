@@ -37,11 +37,11 @@
 
         <div class="ui segments">
           <div class="ui positive small message"
-               th:if="${param.justRegistered == true and param.checkEmail != 'true'}">
+               th:if="${param.justRegistered != null and param.checkEmail == null}">
             <span th:text="#{subscription.success}"></span>
           </div>
           <div class="ui positive small center message"
-               th:if="${param.justRegistered == true and param.checkEmail == 'true'}">
+               th:if="${param.justRegistered != null and param.checkEmail != null}">
             <span th:text="#{subscription.success.email_to_be_checked}"></span>
           </div>
 

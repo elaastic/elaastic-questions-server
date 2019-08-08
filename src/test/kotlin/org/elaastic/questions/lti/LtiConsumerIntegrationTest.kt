@@ -14,7 +14,6 @@ import javax.validation.ConstraintViolationException
 
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class LtiConsumerIntegrationTest(@Autowired val ltiConsumerRepository: LtiConsumerRepository,
                                           @Autowired val em: EntityManager) {
 

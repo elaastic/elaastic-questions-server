@@ -9,6 +9,7 @@
         }
     </style>
 </head>
+
 <body>
 
 <section>
@@ -184,7 +185,7 @@
                     }
                 },
                 ready: function () {
-                    alert('Hello');
+                    console.debug('Hello');
                 },
                 methods: {
                     selectRole: function (role) {
@@ -198,12 +199,17 @@
 
                         if (validated) {
                             that.isLoading = true;
+                            var token = $("meta[name='_csrf']").attr("content");
+                            var header = $("meta[name='_csrf_header']").attr("content");
                             $.ajax({
                                 type: 'POST',
-                                url: "[(@{/userAccount/ajaxDoSubscribe})]",
+                                url: "[(@{/api/users})]",
                                 data: this.userData,
                                 complete: function () {
                                     that.isLoading = false;
+                                },
+                                beforeSend: function(xhr) {
+                                    xhr.setRequestHeader(header, token);
                                 },
                                 success: function (data) {
                                     if (data.success) {
@@ -213,7 +219,6 @@
                                         if (checkEmail) {
                                             loginUrl += '&checkEmail=true';
                                         }
-
                                         window.location = loginUrl;
                                     } else {
                                         that.serverErrorList = data.errorList;
@@ -233,7 +238,10 @@
                         return ROLE;
                     },
                     hasServerError: function () {
-                        return this.serverErrorList.length > 0;
+                        return (
+                            typeof this.serverErrorList !== 'undefined'
+                            && this.serverErrorList.length > 0
+                        );
                     }
                 }
             });

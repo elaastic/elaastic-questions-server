@@ -15,7 +15,6 @@ import javax.transaction.Transactional
  */
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class AssignmentRepositoryIntegrationTest(
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val testingService: TestingService

@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Assertions
  */
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class StatementRepositoryIntegrationTest(
         @Autowired val statementRepository: StatementRepository,
         @Autowired val testingService: TestingService,

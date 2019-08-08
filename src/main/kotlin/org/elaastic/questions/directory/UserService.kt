@@ -1,9 +1,11 @@
 package org.elaastic.questions.directory
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 /**
  * @author John Tranier
@@ -29,6 +31,7 @@ class UserService (
      * @return the saved user
      *
      */
+    @Transactional
     fun addUser(user: User,
                 language: String = "fr",
                 checkEmailAccount: Boolean = false

@@ -8,6 +8,8 @@
               th:content="#{elaastic.description}">
         <meta name="author" content="Ticetime">
         <meta content="#ffffff" name="theme-color"/>
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
         <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
         <title th:replace="${title}">elaastic</title>
         <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection">

@@ -20,7 +20,6 @@ import javax.validation.ConstraintViolationException
 
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class PasswordResetKeyIntegrationTest(
         @Autowired val testingService: TestingService,
         @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository

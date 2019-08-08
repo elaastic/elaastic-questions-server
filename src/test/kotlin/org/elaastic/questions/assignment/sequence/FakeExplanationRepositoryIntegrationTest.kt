@@ -18,7 +18,6 @@ import javax.validation.ConstraintViolationException
  */
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class FakeExplanationRepositoryIntegrationTest(
         @Autowired val fakeExplanationRepository: FakeExplanationRepository,
         @Autowired val testingService: TestingService,

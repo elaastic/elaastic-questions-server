@@ -21,7 +21,6 @@ import org.hamcrest.CoreMatchers.*
  */
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 class PeerGradingRepositoryIntegrationTest(
         @Autowired val peerGradingRepository: PeerGradingRepository,
         @Autowired val testingService: TestingService,

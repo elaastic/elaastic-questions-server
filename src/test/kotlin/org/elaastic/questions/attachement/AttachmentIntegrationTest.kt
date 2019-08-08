@@ -17,7 +17,6 @@ import javax.validation.ConstraintViolationException
 
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class AttachmentIntegrationTest(@Autowired val attachmentRepository: AttachmentRepository,
                                          @Autowired val statementRepository: StatementRepository,
                                          @Autowired val testingService: TestingService,

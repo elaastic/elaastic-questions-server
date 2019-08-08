@@ -19,8 +19,6 @@ import javax.persistence.EntityManager
  */
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
-
 internal class SequenceRepositoryIntegrationTest(
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val testingService: TestingService,

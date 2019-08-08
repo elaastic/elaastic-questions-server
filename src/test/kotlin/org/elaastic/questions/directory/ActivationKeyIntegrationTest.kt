@@ -21,7 +21,6 @@ import javax.validation.ConstraintViolationException
 
 @SpringBootTest
 @Transactional
-@EnableJpaAuditing
 internal class ActivationKeyIntegrationTest(
         @Autowired val testingService: TestingService,
         @Autowired val activationKeyRepository: ActivationKeyRepository
