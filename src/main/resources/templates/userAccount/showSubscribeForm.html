@@ -148,11 +148,10 @@
 
         <div class="actions">
             <div class="ui deny button">
-                Annuler
+                <span th:text="#{index.signUp.form.cancel}">Cancel</span>
             </div>
-
             <div class="ui primary button" v-on:click="submit()" v-bind:class="{ loading: isLoading}">
-                S'inscrire
+                <span th:text="#{index.signUp.form.button}">Register</span>
             </div>
         </div>
     </div>

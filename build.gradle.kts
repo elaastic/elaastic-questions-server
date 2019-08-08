@@ -23,6 +23,7 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.hibernate:hibernate-jcache")
     implementation("org.ehcache:ehcache:3.6.3")
@@ -50,6 +51,7 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-library")
     testImplementation("org.exparity:hamcrest-date:1.1.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("com.icegreen:greenmail:1.5.10")
 }
 
 allOpen {

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{email.checking.page.title}"></title>
+</head>
+<body>
+<p><span th:text="#{email.hi}"></span> [[${firstName}]]</p>
+
+<p>
+    [[#{email.checking.message}]]<br><br>
+    <a th:href="${activationUrl}">[[${activationUrl}]]</a>
+</p>
+</body>
+</html>

@@ -18,10 +18,6 @@ class BootstrapService(
         @Autowired val roleService: RoleService
 ) {
 
-    fun initializeRoles() {
-        
-    }
-
     @Transactional
     fun initializeDevUsers() {
         listOf(
