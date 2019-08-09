@@ -12,6 +12,7 @@ import java.util.*
 import java.util.logging.Logger
 import javax.mail.internet.MimeMessage
 import javax.persistence.EntityManager
+import javax.transaction.Transactional
 
 @Service
 class MailCheckingService(
@@ -31,14 +32,15 @@ class MailCheckingService(
      * Send email to check user emails and then activate the corresponding user
      * accounts
      */
+    @Transactional
     fun sendEmailsToAccountActivation() {
         var processedActivationKeys = mutableListOf<String>()
         findAllNotificationRecipients().forEach { (key, userInfo) ->
-            processedActivationKeys.add(key)
             try {
                 buidMessage(userInfo).let {
                     mailSender.send(it)
                 }
+                processedActivationKeys.add(key)
             } catch (e: Exception) {
                 logger.severe("Error with ${userInfo["email"]} : ${e.message}")
             }
@@ -64,7 +66,7 @@ class MailCheckingService(
         templateContext.setVariable("firstName", userInfo["first_name"])
         templateContext.setVariable("activationUrl", elaasticQuestionUrl + "activate")
         val htmlText = templateEngine.process("email/emailChecking", templateContext)
-        logger.info("""Content of email sent: 
+        logger.fine("""Content of email sent: 
             |$htmlText
         """.trimMargin())
         val mailMessage = mailSender.createMimeMessage()

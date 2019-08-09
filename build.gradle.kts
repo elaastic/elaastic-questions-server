@@ -51,7 +51,7 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-library")
     testImplementation("org.exparity:hamcrest-date:1.1.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    testImplementation("com.icegreen:greenmail:1.5.10")
+    implementation("com.icegreen:greenmail:1.5.10")
 }
 
 allOpen {

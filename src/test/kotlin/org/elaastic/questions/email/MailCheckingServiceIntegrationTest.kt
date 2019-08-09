@@ -2,6 +2,7 @@ package org.elaastic.questions.email
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
+import org.elaastic.questions.bootstrap.BootstrapService
 import org.elaastic.questions.directory.ActivationKeyRepository
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
@@ -25,13 +26,16 @@ internal class MailCheckingServiceIntegrationTest(
         @Autowired val userService: UserService,
         @Autowired val mailCheckingService: MailCheckingService,
         @Autowired val roleService: RoleService,
-        @Autowired val entityManager: EntityManager
+        @Autowired val entityManager: EntityManager,
+        @Autowired val bootstrapService: BootstrapService
 ) {
 
     lateinit var alPacino: User
     lateinit var claraLuciani: User
     lateinit var bobDeniro: User
 
+    val logger = Logger.getLogger(MailCheckingServiceIntegrationTest::class.java.name)
+    val smtpServer = bootstrapService.mailServer!!
 
     @BeforeEach
     fun initUsersWithEmailCheckingNeeded() {
@@ -66,30 +70,6 @@ internal class MailCheckingServiceIntegrationTest(
         }
 
     }
-
-    companion object {
-
-        val logger = Logger.getLogger(MailCheckingServiceIntegrationTest::class.java.name)
-        var smtpServer: GreenMail = GreenMail(ServerSetup(10025, "localhost", "smtp"))
-
-        @BeforeAll
-        @JvmStatic
-        fun startSmtpServer() {
-            logger.info("Start smpt server")
-            with(smtpServer) {
-                setUser("elaastic", "elaastic")
-                start()
-            }
-        }
-
-        @AfterAll
-        @JvmStatic
-        fun stopSmtpServer() {
-            logger.info("Stop smpt server")
-            smtpServer.stop()
-        }
-    }
-
 
     @Test
     fun `test email sending`() {

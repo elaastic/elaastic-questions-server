@@ -19,10 +19,10 @@ class DevBootstrap(
 
     @PostConstruct
     fun init() {
-        LOG.info("Bootstrapping elaastic-questions in development mode...")
-
+        LOG.info("Bootstrapping elaastic-questions in development and test modes...")
         bootstrapService.initializeDevUsers()
-
+        bootstrapService.startDevLocalSmtpServer()
         LOG.info("End of the bootstrap")
     }
+
 }

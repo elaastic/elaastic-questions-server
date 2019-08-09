@@ -1,5 +1,7 @@
 package org.elaastic.questions.bootstrap
 
+import com.icegreen.greenmail.util.GreenMail
+import com.icegreen.greenmail.util.ServerSetup
 import org.elaastic.questions.directory.Role
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
@@ -17,6 +19,8 @@ class BootstrapService(
         @Autowired val userService: UserService,
         @Autowired val roleService: RoleService
 ) {
+
+    var mailServer: GreenMail? = null
 
     @Transactional
     fun initializeDevUsers() {
@@ -59,6 +63,22 @@ class BootstrapService(
         ).map {
             userService.findByUsername(it.username) ?: userService.addUser(it)
         }
+    }
+
+    fun startDevLocalSmtpServer() {
+        mailServer = GreenMail(ServerSetup(10025, "localhost", "smtp"))
+        try {
+            with(mailServer!!) {
+                setUser("elaastic", "elaastic")
+                start()
+            }
+        }catch(e: Exception) {}
+    }
+
+    fun stopDevLocalSmtpServer() {
+        try {
+            mailServer?.stop()
+        } catch(e:Exception) {}
     }
 
 }
