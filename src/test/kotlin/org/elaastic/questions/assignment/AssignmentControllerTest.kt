@@ -1,8 +1,6 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.persistence.pagination.PaginationInfo
-import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.security.TestSecurityConfig
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -31,9 +30,7 @@ internal class AssignmentControllerTest(
         @Autowired val mockMvc: MockMvc,
         @Autowired val userDetailsService: UserDetailsService
 ) {
-
     @MockBean lateinit var assignmentService: AssignmentService
-    @MockBean lateinit var paginationService: PaginationUtil
 
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
