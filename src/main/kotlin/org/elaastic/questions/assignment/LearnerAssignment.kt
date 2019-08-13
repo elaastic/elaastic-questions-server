@@ -9,9 +9,7 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
-/**
- * @author John Tranier
- */
+
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 class LearnerAssignment(

@@ -6,9 +6,7 @@ import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.BeforeEach
 
 
-/**
- * @author John Tranier
- */
+
 internal class InteractionResultConverterTest {
 
     lateinit var interactionResultConverter: InteractionResultConverter

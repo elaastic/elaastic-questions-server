@@ -1,8 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
-/**
- * @author John Tranier
- */
+
 data class OneAttemptResult(var values: List<Float>) {
 
     fun size(): Int = values.size

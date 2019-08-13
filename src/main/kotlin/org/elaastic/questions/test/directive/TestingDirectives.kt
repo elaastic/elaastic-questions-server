@@ -1,8 +1,6 @@
 package org.elaastic.questions.test.directive
 
-/**
- * @author John Tranier
- */
+
 
 inline fun <T, R> T.tExpect(block: (T) -> R): R  {
     return this.let(block)

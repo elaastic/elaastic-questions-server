@@ -11,9 +11,7 @@ import javax.validation.constraints.*
 import kotlin.jvm.Transient
 import kotlin.reflect.KClass
 
-/**
- * @author John Tranier
- */
+
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
 @User.HasEmailOrIsOwner

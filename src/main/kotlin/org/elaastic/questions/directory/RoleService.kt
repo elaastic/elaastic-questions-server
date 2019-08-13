@@ -6,9 +6,7 @@ import javax.annotation.PostConstruct
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
-/**
- * @author John Tranier
- */
+
 @Service
 class RoleService(
         @Autowired val roleRepository: RoleRepository,

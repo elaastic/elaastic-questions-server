@@ -7,9 +7,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
-/**
- * @author John Tranier
- */
+
 @MappedSuperclass
 abstract class AbstractJpaPersistable<T: Serializable> {
 

@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test
 import javax.validation.Validation
 import javax.validation.Validator
 
-/**
- * @author John Tranier
- */
+
 internal class ChoiceItemSpecificationTest {
 
     lateinit var validator: Validator

@@ -12,9 +12,7 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
-/**
- * @author John Tranier
- */
+
 @Entity
 @NamedEntityGraph(
         name = "Sequence.statement",

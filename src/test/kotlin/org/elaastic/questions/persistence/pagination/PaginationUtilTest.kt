@@ -4,9 +4,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test
 
-/**
- * @author John Tranier
- */
+
 internal class PaginationUtilTest {
 
     @Test

@@ -9,9 +9,7 @@ import org.springframework.cache.annotation.EnableCaching
 import javax.transaction.Transactional
 
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @EnableCaching
 @Transactional

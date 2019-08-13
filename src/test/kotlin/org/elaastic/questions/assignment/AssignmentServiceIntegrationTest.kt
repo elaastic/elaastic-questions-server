@@ -17,9 +17,7 @@ import javax.persistence.PersistenceUnitUtil
 import javax.transaction.Transactional
 
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 internal class AssignmentServiceIntegrationTest(

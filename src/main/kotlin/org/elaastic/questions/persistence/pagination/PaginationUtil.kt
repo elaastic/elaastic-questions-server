@@ -2,9 +2,7 @@ package org.elaastic.questions.persistence.pagination
 
 import org.springframework.stereotype.Service
 
-/**
- * @author John Tranier
- */
+
 @Service
 class PaginationUtil {
 

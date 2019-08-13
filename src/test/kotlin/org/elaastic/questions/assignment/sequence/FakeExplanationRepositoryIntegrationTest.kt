@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import javax.persistence.EntityManager
 import javax.validation.ConstraintViolationException
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 internal class FakeExplanationRepositoryIntegrationTest(

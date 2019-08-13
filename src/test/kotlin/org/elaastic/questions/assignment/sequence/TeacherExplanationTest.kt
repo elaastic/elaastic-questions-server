@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Test
 import javax.validation.Validation
 import javax.validation.Validator
 
-/**
- * @author John Tranier
- */
+
 
 class TeacherExplanationTest {
 

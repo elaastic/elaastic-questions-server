@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
 
-/**
- * @author John Tranier
- */
+
 @Service
 class UserService (
         @Autowired val userRepository: UserRepository,

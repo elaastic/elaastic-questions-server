@@ -6,9 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
-/**
- * @author John Tranier
- */
+
 @Service("userDetailsService")
 class ElaasticUserDetailsService(
         @Autowired val userRepository: UserRepository

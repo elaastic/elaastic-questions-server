@@ -9,9 +9,7 @@ import java.io.Serializable
 import javax.persistence.*
 
 
-/**
- * @author John Tranier
- */
+
 @Entity
 @Cacheable("roles")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)

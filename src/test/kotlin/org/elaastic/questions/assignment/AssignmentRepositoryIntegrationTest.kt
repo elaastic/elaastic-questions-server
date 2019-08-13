@@ -10,9 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import java.util.*
 import javax.transaction.Transactional
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 internal class AssignmentRepositoryIntegrationTest(

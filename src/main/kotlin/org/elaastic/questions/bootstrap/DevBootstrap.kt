@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
-/**
- * @author John Tranier
- */
+
 @Component
 @Profile("!prod")
 class DevBootstrap(

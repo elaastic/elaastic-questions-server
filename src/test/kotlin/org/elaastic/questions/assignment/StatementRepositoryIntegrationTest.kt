@@ -18,9 +18,7 @@ import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Assertions
 
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 internal class StatementRepositoryIntegrationTest(

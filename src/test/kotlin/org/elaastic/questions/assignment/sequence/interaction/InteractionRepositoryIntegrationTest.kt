@@ -16,9 +16,7 @@ import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 internal class InteractionRepositoryIntegrationTest(

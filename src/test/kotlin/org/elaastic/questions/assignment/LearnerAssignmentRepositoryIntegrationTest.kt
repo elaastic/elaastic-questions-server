@@ -13,9 +13,7 @@ import org.junit.jupiter.api.Test
 import javax.persistence.EntityManager
 
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 class LearnerAssignmentRepositoryIntegrationTest(

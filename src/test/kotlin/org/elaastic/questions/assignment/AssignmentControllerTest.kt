@@ -19,9 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-/**
- * @author John Tranier
- */
+
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(AssignmentController::class)
 @ContextConfiguration(classes = [TestSecurityConfig::class])

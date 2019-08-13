@@ -16,9 +16,7 @@ import org.hamcrest.CoreMatchers.*
 
 
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 class PeerGradingRepositoryIntegrationTest(

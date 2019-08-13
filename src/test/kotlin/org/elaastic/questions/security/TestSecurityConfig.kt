@@ -8,9 +8,7 @@ import org.springframework.context.annotation.Primary
 import org.springframework.security.core.userdetails.UserDetailsService
 
 
-/**
- * @author John Tranier
- */
+
 @TestConfiguration
 class TestSecurityConfig {
 

@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import javax.persistence.EntityManager
 
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 internal class SequenceRepositoryIntegrationTest(

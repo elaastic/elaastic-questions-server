@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
-/**
- * @author John Tranier
- */
+
 @Service
 class BootstrapService(
         @Autowired val userService: UserService,

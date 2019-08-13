@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import javax.persistence.AttributeConverter
 
-/**
- * @author John Tranier
- */
+
 class InteractionResultConverter : AttributeConverter<InteractionResult?, String?> {
 
     private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())

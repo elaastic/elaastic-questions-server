@@ -10,9 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 class UserRepositoryIntegrationTest(

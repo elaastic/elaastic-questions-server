@@ -11,9 +11,7 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
-/**
- * @author John Tranier
- */
+
 @Entity
 @Table(name = "choice_interaction_response")
 @EntityListeners(AuditingEntityListener::class)

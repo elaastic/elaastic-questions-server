@@ -16,9 +16,7 @@ import javax.persistence.EntityManager
 import javax.validation.ConstraintViolationException
 
 
-/**
- * @author John Tranier
- */
+
 @SpringBootTest
 @Transactional
 internal class UserServiceIntegrationTest(

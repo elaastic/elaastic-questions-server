@@ -5,9 +5,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import javax.persistence.AttributeConverter
 
-/**
- * @author John Tranier
- */
+
 class InteractionSpecificationConverter : AttributeConverter<InteractionSpecification?, String?> {
 
     private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())

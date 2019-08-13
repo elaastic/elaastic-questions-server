@@ -1,8 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
-/**
- * @author John Tranier
- */
+
 data class InteractionResult(
         val attempt1Result: OneAttemptResult,
         val attempt2Result: OneAttemptResult? = null

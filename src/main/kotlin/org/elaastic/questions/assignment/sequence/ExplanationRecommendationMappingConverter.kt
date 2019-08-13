@@ -5,9 +5,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.elaastic.questions.assignment.sequence.interaction.ExplanationRecommendationMapping
 import javax.persistence.AttributeConverter
 
-/**
- * @author John Tranier
- */
+
 class ExplanationRecommendationMappingConverter :
         AttributeConverter<ExplanationRecommendationMapping?, String?> {
 

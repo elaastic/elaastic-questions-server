@@ -6,9 +6,7 @@ import org.springframework.web.bind.annotation.ModelAttribute
 
 
 
-/**
- * @author John Tranier
- */
+
 @ControllerAdvice
 class ControllerAdvice {
 

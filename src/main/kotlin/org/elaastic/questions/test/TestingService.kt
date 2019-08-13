@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
 
-/**
- * @author John Tranier
- */
 @Service
 class TestingService(
         @Autowired val userRepository: UserRepository,
