@@ -32,11 +32,11 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class Assignment(
         @field:NotBlank
-        var title: String,
+        var title: String = "",
 
         @field:NotNull
         @field:ManyToOne(fetch = FetchType.LAZY)
-        var owner: User,
+        var owner: User? = null,
 
         @field:NotNull
         @field:NotBlank
@@ -46,12 +46,10 @@ class Assignment(
     @Version
     var version: Long? = null
 
-    @NotNull
     @Column(name = "date_created")
     @CreatedDate
     lateinit var dateCreated: Date
-
-    @NotNull
+    
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null

@@ -1,17 +1,21 @@
-<div th:fragment="formEditProperties(assignment)"
+<div th:fragment="assignmentForm(assignment)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
   <div class="ui error message"></div>
 
-  <div class="required field">
+  <div class="required field" th:classappend="${#fields.hasErrors('title')}? 'error'">
     <label th:text="#{assignment.title.label}">
       Title
     </label>
     <input type="text"
            name="title"
-           th:value="${assignment?.title}"
+           th:field="*{title}"
            autofocus="autofocus"/>
+
+    <input type="hidden"
+           name="owner"
+           th:field="*{owner}"/>
   </div>
 
   <script th:inline="javascript">
@@ -25,14 +29,14 @@
                 rules: [
                   {
                     type: 'empty',
-                    prompt: /*[[#{assignment.title.mandatory}]]*/  ''
+                    prompt: /*[[#{assignment.title.mandatory}]]*/ ''
                   }
                 ]
               }
             }
           })
-
       })
   </script>
-
 </div>
+
+

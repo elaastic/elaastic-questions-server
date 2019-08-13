@@ -52,8 +52,8 @@
     <tr th:each="assignment, i : ${assignmentPage.content}">
       <td>
 
-        <a th:href="@{/assignment/show/{id}(id=${assignment.id})}"
-           href="show/123"
+        <a th:href="@{/assignment/{id}(id=${assignment.id})}"
+           href="assignment/123"
            th:attr="data-tooltip=#{assignment.action.show.label}"
            data-tooltip="Modify assignment"
            data-inverted=""
@@ -62,8 +62,8 @@
         </a>
 
         &nbsp; [
-        <a th:href="@{/assignment/show/{id}(id=${assignment.id})}"
-           href="show/123"
+        <a th:href="@{/assignment/{id}(id=${assignment.id})}"
+           href="assignment/123"
            th:attr="data-tooltip=#{assignment.action.show.label}"
            data-tooltip="Modify assignment"
            data-inverted="">
@@ -99,7 +99,7 @@
   <div class="ui two column stackable grid">
     <div class="column">
       <div class="ui basic segment">
-        <a th:href="create"
+        <a th:href="@{/assignment/create}"
            href="create"
            class="ui primary button">
           <i class="add icon"></i>

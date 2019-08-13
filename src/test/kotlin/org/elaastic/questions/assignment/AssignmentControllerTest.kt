@@ -1,23 +1,25 @@
 package org.elaastic.questions.assignment
 
+import com.nhaarman.mockitokotlin2.*
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.*
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.MediaType
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 
 
 @ExtendWith(SpringExtension::class)
@@ -28,7 +30,8 @@ internal class AssignmentControllerTest(
         @Autowired val mockMvc: MockMvc,
         @Autowired val userDetailsService: UserDetailsService
 ) {
-    @MockBean lateinit var assignmentService: AssignmentService
+    @MockBean
+    lateinit var assignmentService: AssignmentService
 
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
@@ -37,27 +40,64 @@ internal class AssignmentControllerTest(
         val assignmentPages =
                 PageImpl<Assignment>(listOf(), PageRequest.of(0, 10), 0)
 
-        `when`(assignmentService.findAllByOwner(user)).thenReturn(
+        whenever(assignmentService.findAllByOwner(user)).thenReturn(
                 assignmentPages
         )
 
-        mockMvc.perform(get("/assignment"))
+        mockMvc.perform(
+                get("/assignment")
+                        .with(csrf())
+        )
                 .andExpect(status().isOk)
     }
 
     @Test
     fun `test index - with  results`() {
         val assignmentPages =
-                PageImpl<Assignment>(listOf(
-                        mock(Assignment::class.java),
-                        mock(Assignment::class.java)
-                ), PageRequest.of(0, 2), 4)
+                PageImpl<Assignment>(
+                        listOf(mock<Assignment>(), mock<Assignment>()),
+                        PageRequest.of(0, 2), 4)
 
-        `when`(assignmentService.findAllByOwner(user)).thenReturn(
+        whenever(assignmentService.findAllByOwner(user)).thenReturn(
                 assignmentPages
         )
 
-        mockMvc.perform(get("/assignment"))
+        mockMvc.perform(get("/assignment").with(csrf()))
                 .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `test save - valid`() {
+        val assignmentId = 123L
+        val title = "A title"
+
+        val assignment = Assignment(title = title, owner = user)
+        assignment.id = assignmentId
+
+
+        mockMvc.perform(
+                post("/assignment/save")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .flashAttr("assignment", assignment)
+        )
+                .andExpect(status().isFound())
+                .andExpect(
+                        redirectedUrlTemplate(
+                                "/assignment/{assignmentId}/show",
+                                assignmentId
+                        )
+                )
+    }
+
+    @Test
+    fun `test save - invalid because of blank title`() {
+        mockMvc.perform(
+                post("/assignment/save")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("title", "")
+        )
+                .andExpect(status().isBadRequest()) // no redirect, the page is re-rendered with error messages
     }
 }
