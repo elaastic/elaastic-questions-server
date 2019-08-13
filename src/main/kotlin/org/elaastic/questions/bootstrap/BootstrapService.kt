@@ -2,12 +2,10 @@ package org.elaastic.questions.bootstrap
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
-import org.elaastic.questions.directory.Role
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 

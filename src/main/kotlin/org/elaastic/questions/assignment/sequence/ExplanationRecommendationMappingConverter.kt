@@ -11,7 +11,7 @@ import javax.persistence.AttributeConverter
 class ExplanationRecommendationMappingConverter :
         AttributeConverter<ExplanationRecommendationMapping?, String?> {
 
-    val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     override fun convertToDatabaseColumn(attribute: ExplanationRecommendationMapping?): String? {
         return when(attribute) {

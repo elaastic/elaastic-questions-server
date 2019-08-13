@@ -1,7 +1,5 @@
 package org.elaastic.questions.email
 
-import com.icegreen.greenmail.util.GreenMail
-import com.icegreen.greenmail.util.ServerSetup
 import org.elaastic.questions.bootstrap.BootstrapService
 import org.elaastic.questions.directory.ActivationKeyRepository
 import org.elaastic.questions.directory.RoleService

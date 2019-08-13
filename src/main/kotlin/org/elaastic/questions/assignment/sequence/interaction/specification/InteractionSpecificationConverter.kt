@@ -10,7 +10,7 @@ import javax.persistence.AttributeConverter
  */
 class InteractionSpecificationConverter : AttributeConverter<InteractionSpecification?, String?> {
 
-    val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     override fun convertToDatabaseColumn(attribute: InteractionSpecification?): String? {
         return when(attribute) {
@@ -34,14 +34,14 @@ class InteractionSpecificationConverter : AttributeConverter<InteractionSpecific
     }
 
     private fun isEvaluationSpecification(data: Map<*, *>): Boolean {
-        if (data.containsKey("type")) {
-            return data["type"] == InteractionType.Evaluation.name
-        } else return data.containsKey("responseToEvaluateCount")
+        return if (data.containsKey("type")) {
+            data["type"] == InteractionType.Evaluation.name
+        } else data.containsKey("responseToEvaluateCount")
     }
 
     private fun isResponseSubmissionSpecification(data: Map<*, *>): Boolean {
-        if (data.containsKey("type")) {
-            return data["type"] == InteractionType.ResponseSubmission.name
-        } else return data.containsKey("studentsProvideExplanation")
+        return if (data.containsKey("type")) {
+            data["type"] == InteractionType.ResponseSubmission.name
+        } else data.containsKey("studentsProvideExplanation")
     }
 }

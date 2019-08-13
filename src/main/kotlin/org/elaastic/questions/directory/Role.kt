@@ -13,7 +13,7 @@ import javax.persistence.*
  * @author John Tranier
  */
 @Entity
-@Cacheable
+@Cacheable("roles")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 class Role(
         @field:Column(name = "authority")

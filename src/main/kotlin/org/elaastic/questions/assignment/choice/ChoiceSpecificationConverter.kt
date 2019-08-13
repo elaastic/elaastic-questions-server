@@ -10,7 +10,7 @@ import javax.persistence.AttributeConverter
 class ChoiceSpecificationConverter :
         AttributeConverter<ChoiceSpecification, String?> {
 
-    val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
 
     override fun convertToDatabaseColumn(attribute: ChoiceSpecification?): String? {

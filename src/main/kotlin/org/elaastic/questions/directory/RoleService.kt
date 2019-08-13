@@ -18,7 +18,7 @@ class RoleService(
     private lateinit var allRole: Map<String, Role>
 
     // will be initialized by loadAllRoleId
-    companion object cache {
+    companion object Cache {
         var STUDENT_ROLE_ID: Long = -1
         var TEACHER_ROLE_ID: Long = -1
         var ADMIN_ROLE_ID: Long = -1

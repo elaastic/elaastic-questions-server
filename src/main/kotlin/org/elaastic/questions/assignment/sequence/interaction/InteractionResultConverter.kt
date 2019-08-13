@@ -9,7 +9,7 @@ import javax.persistence.AttributeConverter
  */
 class InteractionResultConverter : AttributeConverter<InteractionResult?, String?> {
 
-    val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     override fun convertToDatabaseColumn(attribute: InteractionResult?): String? {
         return when(attribute) {

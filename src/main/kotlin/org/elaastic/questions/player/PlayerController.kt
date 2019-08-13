@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/player")
 class PlayerController {
 
-    @GetMapping(value = arrayOf("", "/", "/index"))
+    @GetMapping(value = ["", "/", "/index"])
     fun index(): String {
         return "/player/index"
     }

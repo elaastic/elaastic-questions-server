@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 /**
  * @author John Tranier
  */
-interface InteractionRepository : JpaRepository<Interaction, Long> {
-}
+interface InteractionRepository : JpaRepository<Interaction, Long>

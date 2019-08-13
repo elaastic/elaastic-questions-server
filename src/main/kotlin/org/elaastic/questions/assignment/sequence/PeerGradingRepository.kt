@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 /**
  * @author John Tranier
  */
-interface PeerGradingRepository : JpaRepository<PeerGrading, Long> {
-}
+interface PeerGradingRepository : JpaRepository<PeerGrading, Long>

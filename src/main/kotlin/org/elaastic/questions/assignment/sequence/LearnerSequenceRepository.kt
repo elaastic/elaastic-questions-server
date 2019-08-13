@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 /**
  * @author John Tranier
  */
-interface LearnerSequenceRepository : JpaRepository<LearnerSequence, Long> {
-}
+interface LearnerSequenceRepository : JpaRepository<LearnerSequence, Long>

@@ -20,7 +20,7 @@ class AssignmentController(
         @Autowired val assignmentService: AssignmentService
 ) {
 
-    @GetMapping(value = arrayOf("", "/", "/index"))
+    @GetMapping(value = ["", "/", "/index"])
     fun index(authentication: Authentication,
               model: Model,
               @RequestParam("page") page: Int?,

@@ -16,9 +16,8 @@ data class InteractionResult(
     }
 
     fun toLegacyFormat(): Map<String, List<Float>> {
-        if(attempt2Result == null) {
-            return mapOf("1" to attempt1Result.values)
-        }
-        else return mapOf("1" to attempt1Result.values, "2" to attempt2Result.values)
+        return if (attempt2Result == null) {
+            mapOf("1" to attempt1Result.values)
+        } else mapOf("1" to attempt1Result.values, "2" to attempt2Result.values)
     }
 }
