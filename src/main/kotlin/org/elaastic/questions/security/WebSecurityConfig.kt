@@ -35,7 +35,10 @@ class WebSecurityConfig(
                 ?.and()
                 ?.authorizeRequests()
                     ?.antMatchers("/images/**", "/css/**", "/js/**", "/semantic/**", "/", "/demo")?.permitAll()
-                    ?.antMatchers("/register", "/api/users", "/login")?.permitAll()
+                    ?.antMatchers("/register", "/api/users", "/login",
+                            "/userAccount/beginPasswordReset", "/userAccount/resetPassword",
+                            "/userAccount/processPasswordResetRequest", "/userAccount/confirmPasswordReset",
+                            "/userAccount/processResetPassword", "/userAccount/activate")?.permitAll()
                     ?.anyRequest()?.authenticated()
                     ?.and()
                 ?.formLogin()

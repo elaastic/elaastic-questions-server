@@ -1,7 +1,7 @@
 package org.elaastic.questions.directory
 
+import org.apache.commons.lang3.time.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -14,11 +14,26 @@ class UserService (
         @Autowired val passwordEncoder: PasswordEncoder,
         @Autowired val settingsRepository: SettingsRepository,
         @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository,
-        @Autowired val activationKeyRepository: ActivationKeyRepository
+        @Autowired val activationKeyRepository: ActivationKeyRepository,
+        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository
 ) {
 
+    /**
+     *  Find user by username
+     *  @param username the username provided as input
+     *  @return the found user or null otherwise
+     */
     fun findByUsername(username: String) : User? {
         return userRepository.findByUsername(username)
+    }
+
+    /**
+     *  Find user by email
+     *  @param email the email provided as input
+     *  @return the found user or null otherwise
+     */
+    fun findByEmail(email: String): User? {
+        return userRepository.findByEmail(email)
     }
 
     /**
@@ -52,22 +67,36 @@ class UserService (
     }
 
     /**
-     * Initialize settings for a new user
-     * @param user
-     * @return the processed user
+     * Change the password of a user
+     * @param user the processed user
+     * @return the user with its new password
      */
-    fun initializeSettingsForUser(user: User, language: String): Settings {
-        Settings(user = user, language = language).let {
-            user.settings = it
-            settingsRepository.save(it)
+    fun changePasswordForUser(user: User, newPlainTextPassword: String): User {
+        user.plainTextPassword = newPlainTextPassword // required to get validation
+        user.password = passwordEncoder.encode(newPlainTextPassword)
+        userRepository.saveAndFlush(user).let {
             return it
         }
     }
 
     /**
+     * Initialize settings for a new user
+     * @param user the user
+     * @return the settings object
+     */
+    fun initializeSettingsForUser(user: User, language: String): Settings {
+        Settings(user = user, language = language).let {
+            user.settings = it
+            settingsRepository.save(it).let {
+                return it
+            }
+        }
+    }
+
+    /**
      * Initialize unsubscribe key for a new user
-     * @param user
-     * @return the processed user
+     * @param user the user
+     * @return the unsubscribe key object
      */
     fun initializeUnsubscribeKeyForUser(user: User): UnsubscribeKey {
         UnsubscribeKey(
@@ -75,14 +104,15 @@ class UserService (
                 unsubscribeKey = UUID.randomUUID().toString()
         ).let {
             unsubscribeKeyRepository.save(it)
+        }.let {
             return it
         }
     }
 
     /**
      * Initialize activation key for a new user
-     * @param user
-     * @return the processed user
+     * @param user the user
+     * @return the activation key object
      */
     fun initializeActivationKeyForUser(user: User): ActivationKey {
         ActivationKey(
@@ -90,6 +120,71 @@ class UserService (
                 activationKey = UUID.randomUUID().toString()
         ).let {
             activationKeyRepository.save(it)
+        }.let {
+            return it
+        }
+    }
+
+    /**
+     * Enable user with activation key
+     * @param activationKey the string value of the activation key
+     * @return the enabled user or null if no activation key is found
+     */
+    fun enableUserWithActivationKey(activationKey: String): User? {
+        activationKeyRepository.findByActivationKey(activationKey).let {
+            when(it) {
+                null -> return null
+                else -> {
+                    val user = it.user
+                    user.enabled = true
+                    userRepository.save(user)
+                    activationKeyRepository.delete(it)
+                    return it.user
+                }
+            }
+        }
+
+
+    }
+
+    /**
+     * Generate password reset key for a  user
+     * @param user the processed user
+     * @param lifetime lifetime of a password key in hour, default set to 1
+     * @return the password reset key object user
+     */
+    fun generatePasswordResetKeyForUser(user: User, lifetime:Int = 1): PasswordResetKey {
+        var passwordResetKey = passwordResetKeyRepository.findByUser(user)
+        when(passwordResetKey) {
+            null -> {
+                PasswordResetKey(
+                        passwordResetKey = UUID.randomUUID().toString(),
+                        user = user
+                )
+            }
+            else -> {
+                if (passwordResetKey.dateCreated < DateUtils.addHours(Date(), -lifetime)) {
+                    passwordResetKey.passwordResetKey = UUID.randomUUID().toString()
+                    passwordResetKey.dateCreated = Date()
+                }
+                passwordResetKey.passwordResetEmailSent = false
+                passwordResetKey
+            }
+        }.let {
+            passwordResetKeyRepository.saveAndFlush(it)
+        }.let {
+            return it
+        }
+    }
+
+
+    /**
+     * Find user by password reset key
+     * @param passwordResetKeyValue the string value of the password reset key
+     * @return the found user or null otherwise
+     */
+    fun findByPasswordResetKeyValue(passwordResetKeyValue: String): User? {
+        userRepository.findByPasswordResetKeyValue(passwordResetKeyValue).let {
             return it
         }
     }

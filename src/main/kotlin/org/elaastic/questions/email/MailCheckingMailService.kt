@@ -15,7 +15,7 @@ import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @Service
-class MailCheckingService(
+class MailCheckingMailService(
         @Autowired val entityManager: EntityManager,
         @Autowired val messageSource: MessageSource,
         @Autowired val mailSender: JavaMailSender,
@@ -26,7 +26,8 @@ class MailCheckingService(
 
 ) {
 
-    val logger = Logger.getLogger(MailCheckingService::class.java.name)
+    val logger = Logger.getLogger(MailCheckingMailService::class.java.name)
+    val relativeActivationURL = "userAccount/activate"
 
     /**
      * Send email to check user emails and then activate the corresponding user
@@ -37,7 +38,7 @@ class MailCheckingService(
         var processedActivationKeys = mutableListOf<String>()
         findAllNotificationRecipients().forEach { (key, userInfo) ->
             try {
-                buidMessage(userInfo).let {
+                buidMessage(key, userInfo).let {
                     mailSender.send(it)
                 }
                 processedActivationKeys.add(key)
@@ -51,12 +52,14 @@ class MailCheckingService(
         }
     }
 
+
+
     /**
      * Build the mime message
      * @param userInfo user informations
      * @return the built mime message
      */
-    private fun buidMessage(userInfo: Map<String, Any>): MimeMessage {
+    private fun buidMessage(key: String, userInfo: Map<String, Any>): MimeMessage {
         val locale = Locale(userInfo["language"] as String)
         val subject = messageSource.getMessage(
                 "email.checking.title",
@@ -64,8 +67,8 @@ class MailCheckingService(
                 locale)
         val templateContext:Context = Context(locale)
         templateContext.setVariable("firstName", userInfo["first_name"])
-        templateContext.setVariable("activationUrl", elaasticQuestionUrl + "activate")
-        val htmlText = templateEngine.process("email/emailChecking", templateContext)
+        templateContext.setVariable("activationUrl", "$elaasticQuestionUrl$relativeActivationURL?actKey=$key")
+        val htmlText = templateEngine.process("email/emailCheckingMail", templateContext)
         logger.fine("""Content of email sent: 
             |$htmlText
         """.trimMargin())
@@ -127,7 +130,7 @@ class MailCheckingService(
             where tact_key.activation_key in ($it)
             """.trimIndent()
         }
-        logger.info("The update request: $queryStr")
+        logger.fine("The update request: $queryStr")
 
         val query = entityManager.createNativeQuery(queryStr)
         actKeys.forEachIndexed { i, s ->

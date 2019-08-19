@@ -1,6 +1,13 @@
 package org.elaastic.questions.directory
 
 
+import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.directive.tGiven
+import org.elaastic.questions.test.directive.tThen
+import org.elaastic.questions.test.directive.tWhen
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.nullValue
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,12 +16,15 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.dao.DataIntegrityViolationException
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
+import javax.validation.ValidationException
 
 
 @SpringBootTest
 @Transactional
 class UserRepositoryIntegrationTest(
-        @Autowired val userRepository: UserRepository
+        @Autowired val userRepository: UserRepository,
+        @Autowired val testingService: TestingService,
+        @Autowired val userService: UserService
 ) {
 
     @Test
@@ -38,6 +48,60 @@ class UserRepositoryIntegrationTest(
         )
 
         assertEquals(18, userRepository.count())
+    }
+
+    @Test
+    fun `save a  user without plain password`() {
+        userRepository.save(
+                User(
+                        "John",
+                        "Tranier",
+                        "jtranier",
+                        null,
+                        "john.tranier@ticetime.com"
+                ).let {
+                    it.password = "encoded"
+                    it
+                }
+        )
+
+        assertEquals(18, userRepository.count())
+    }
+
+    @Test
+    fun `save a  user without plain password and with paswword encoded`() {
+        Assertions.assertThrows(ValidationException::class.java) { ->
+            userRepository.save(
+                    User(
+                            "John",
+                            "Tranier",
+                            "jtranier",
+                            null,
+                            "john.tranier@ticetime.com"
+                    ).let {
+                        it.password = null
+                        it
+                    }
+            )
+        }
+    }
+
+    @Test
+    fun `save a  user with too short plain password and with paswword encoded`() {
+        Assertions.assertThrows(ValidationException::class.java) { ->
+            userRepository.save(
+                    User(
+                            "John",
+                            "Tranier",
+                            "jtranier",
+                            "123",
+                            "john.tranier@ticetime.com"
+                    ).let {
+                        it.password = "encoded"
+                        it
+                    }
+            )
+        }
     }
 
     @Test
@@ -135,5 +199,30 @@ class UserRepositoryIntegrationTest(
                 listOf("STUDENT_ROLE"),
                 userRepository.findByUsername("john_doe___1")?.roles?.map { it -> it.name }
         )
+    }
+
+    @Test
+    fun `find user by password reset key value`() {
+        tWhen {
+            // triggering user search by password reset key value with a bad value
+            userRepository.findByPasswordResetKeyValue("bad-key")
+        }.tThen {
+            assertThat(it, nullValue())
+        }
+        var keyValue: String? = null
+        tGiven {
+            // user with password reset key
+            testingService.getAnyUser().let {
+                userService.generatePasswordResetKeyForUser(it).let { key ->
+                    keyValue = key.passwordResetKey
+                }
+            }
+        }
+        tWhen {
+            // triggering user search by password reset key value with a good value
+            userRepository.findByPasswordResetKeyValue(keyValue!!)
+        }.tThen {
+            assertThat(it, equalTo(testingService.getAnyUser()))
+        }
     }
 }

@@ -6,16 +6,16 @@ import org.springframework.stereotype.Component
 import java.util.logging.Logger
 
 @Component
-class MailCheckingJob(
-        @Autowired val mailCheckingService: MailCheckingService
+class MailCheckingMailJob(
+        @Autowired val mailCheckingMailService: MailCheckingMailService
 ) {
 
-    val logger = Logger.getLogger(MailCheckingJob::class.java.name)
+    val logger = Logger.getLogger(MailCheckingMailJob::class.java.name)
 
     @Scheduled(cron = "0 0/2 * * * ?") // every 2 minutes
     fun execute() {
         logger.info("Start email checking job...")
-        mailCheckingService.sendEmailsToAccountActivation()
+        mailCheckingMailService.sendEmailsToAccountActivation()
         logger.info("End email checking  job.")
     }
 

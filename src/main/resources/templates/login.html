@@ -44,7 +44,10 @@
                th:if="${param.justRegistered != null and param.checkEmail != null}">
             <span th:text="#{subscription.success.email_to_be_checked}"></span>
           </div>
-
+          <div class="ui positive small center message"
+               th:if="${message}">
+            <span th:text="${message}"></span>
+          </div>
           <div class="ui segment">
             <img class="ui small image" src="/images/elaastic_logo_rvb.png" th:src="@{/images/elaastic_logo_rvb.png}"
                  alt="logo elaastic">
@@ -87,7 +90,7 @@
               </div>
 
               <div class="item">
-                <a th:href="@{/passwordResetKey/doForget}">
+                <a th:href="@{/userAccount/beginPasswordReset}">
                   <span th:text="#{springSecurity.login.lostPassword.message}"></span>
                 </a>
               </div>

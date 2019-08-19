@@ -1,6 +1,11 @@
 package org.elaastic.questions.directory
 
+import org.apache.commons.lang3.time.DateUtils
 import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.directive.tGiven
+import org.elaastic.questions.test.directive.tThen
+import org.elaastic.questions.test.directive.tWhen
+import org.hamcrest.CoreMatchers.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -10,11 +15,8 @@ import java.util.logging.Logger
 import javax.validation.Validation
 import javax.validation.Validator
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
@@ -22,7 +24,8 @@ import javax.validation.ConstraintViolationException
 @Transactional
 internal class PasswordResetKeyIntegrationTest(
         @Autowired val testingService: TestingService,
-        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository
+        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
+        @Autowired val userService: UserService
 ) {
 
     val logger = Logger.getLogger(PasswordResetKeyIntegrationTest::class.java.name)
@@ -89,6 +92,54 @@ internal class PasswordResetKeyIntegrationTest(
         // expect an exception is thrown when saving
         assertThrows<ConstraintViolationException> {
             passwordResetKeyRepository.save(key)
+        }
+    }
+
+    @Test
+    fun `test find all password reset keys`() {
+        var users: List<User>? = null
+        tGiven {
+            // 2 users with password reset keys freshly generated
+            users = listOf(testingService.getTestStudent(), testingService.getTestTeacher())
+            users!!.forEach {
+                userService.generatePasswordResetKeyForUser(it)
+            }
+        }.tWhen {
+            // searching all pasword reset keys
+            passwordResetKeyRepository.findAllPasswordResetKeys(DateUtils.addHours(Date(), -1))
+        }.tThen {
+            assertThat (it.size, equalTo(2))
+            it.forEach { key ->
+                assertThat(users, hasItem(key.user) )
+                assertThat(key.user.settings, notNullValue())
+            }
+        }.tWhen {
+            // the email has been sent for one the users
+            passwordResetKeyRepository.findByUser(users!![1]).let {
+                it!!.passwordResetEmailSent = true
+                passwordResetKeyRepository.saveAndFlush(it)
+            }
+        }.tWhen {
+            // searching all pasword reset keys
+            passwordResetKeyRepository.findAllPasswordResetKeys(DateUtils.addHours(Date(), -1))
+        }.tThen {
+            // only one key is found
+            assertThat (it.size, equalTo(1))
+            it.forEach { key ->
+                assertThat(key.user, equalTo(users!![0]))
+            }
+        }.tWhen {
+            // the date of the last guy has expired
+            passwordResetKeyRepository.findByUser(users!![0]).let {
+                it!!.dateCreated = DateUtils.addHours(it.dateCreated, -2)
+                passwordResetKeyRepository.saveAndFlush(it)
+            }
+        }.tWhen {
+            // searching all pasword reset keys
+            passwordResetKeyRepository.findAllPasswordResetKeys(DateUtils.addHours(Date(), -1))
+        }.tThen {
+            // no more key is found
+            assertThat(it.size, equalTo(0))
         }
     }
 }

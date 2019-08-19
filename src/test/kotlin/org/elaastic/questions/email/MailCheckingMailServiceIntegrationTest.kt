@@ -13,16 +13,17 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.io.BufferedReader
 import java.util.logging.Logger
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest
 @Transactional
-internal class MailCheckingServiceIntegrationTest(
+internal class MailCheckingMailServiceIntegrationTest(
         @Autowired val activationKeyRepository: ActivationKeyRepository,
         @Autowired val userService: UserService,
-        @Autowired val mailCheckingService: MailCheckingService,
+        @Autowired val mailCheckingMailService: MailCheckingMailService,
         @Autowired val roleService: RoleService,
         @Autowired val entityManager: EntityManager,
         @Autowired val bootstrapService: BootstrapService
@@ -32,7 +33,7 @@ internal class MailCheckingServiceIntegrationTest(
     lateinit var claraLuciani: User
     lateinit var bobDeniro: User
 
-    val logger = Logger.getLogger(MailCheckingServiceIntegrationTest::class.java.name)
+    val logger = Logger.getLogger(MailCheckingMailServiceIntegrationTest::class.java.name)
     val smtpServer = bootstrapService.mailServer!!
 
     @BeforeEach
@@ -75,14 +76,15 @@ internal class MailCheckingServiceIntegrationTest(
         val actKeys = listOf(alPacino, claraLuciani, bobDeniro).map {
             activationKeyRepository.findByUser(it)!!
         }
+        smtpServer.purgeEmailFromAllMailboxes()
         // when:  triggering emails sending to check validity
-        mailCheckingService.sendEmailsToAccountActivation()
+        mailCheckingMailService.sendEmailsToAccountActivation()
         // then: 3 messages have been received
         assertThat(smtpServer.receivedMessages.size, equalTo(3))
         smtpServer.receivedMessages.forEachIndexed { index, message ->
             logger.info("""
                 Content of  message $index:
-                ${message.content}
+                ${message.inputStream.bufferedReader().use(BufferedReader::readText)}
             """.trimIndent())
         }
 
@@ -98,7 +100,7 @@ internal class MailCheckingServiceIntegrationTest(
     fun `test find All Notification Recipients`() {
         // when: asking the mail checking service to find mail notification recipients
         //
-        val notificationRecipients = mailCheckingService.findAllNotificationRecipients()
+        val notificationRecipients = mailCheckingMailService.findAllNotificationRecipients()
         // then: 3 notification recipients are found by the mail checking service
         //
         assertThat(
@@ -131,7 +133,7 @@ internal class MailCheckingServiceIntegrationTest(
             assertFalse(it.activationEmailSent)
         }
         // when: asking mail checking service to update status
-        mailCheckingService.updateEmailSentStatusForAllNotifications(actKeys.map { it.activationKey })
+        mailCheckingMailService.updateEmailSentStatusForAllNotifications(actKeys.map { it.activationKey })
         // then: activation key are updated
         actKeys.forEach {
             entityManager.refresh(it)

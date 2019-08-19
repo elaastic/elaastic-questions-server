@@ -26,7 +26,7 @@ class User(
         private var username: String,
 
         @Transient
-        val plainTextPassword: String,
+        var plainTextPassword: String?,
 
         email: String
 ) : AbstractJpaPersistable<Long>(), Serializable, UserDetails {
@@ -170,7 +170,9 @@ class User(
     class PlainTextPasswordIsNotShortValidator : ConstraintValidator<PlainTextPasswordIsNotShort, User> {
 
         override fun isValid(user: User?, context: ConstraintValidatorContext?): Boolean {
-            return user?.let { it.plainTextPassword.length > 3 } ?: false
+            return user?.let {
+                (it.plainTextPassword == null && it.password != null) || it.plainTextPassword!!.length > 3
+            } ?: false
         }
     }
 }
