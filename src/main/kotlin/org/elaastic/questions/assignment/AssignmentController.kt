@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -53,9 +54,14 @@ class AssignmentController(
         val user: User = authentication.principal as User
 
         assignmentService.get(id, fetchSequences = true).let {
+            if(user != it.owner) {
+                // TODO i18n error message
+                throw AccessDeniedException("You are not autorized to access to this assignment")
+            }
             model.addAttribute("user", user)
             model.addAttribute("assignment", it)
         }
+
 
         return "/assignment/show"
     }
