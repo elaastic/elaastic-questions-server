@@ -4,6 +4,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -31,7 +32,7 @@ class AssignmentController(
 
         assignmentService.findAllByOwner(
                 user,
-                PageRequest.of((page ?: 1) - 1, size ?: 10)
+                PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         ).let {
             model.addAttribute("user", user)
             model.addAttribute("assignmentPage", it)
