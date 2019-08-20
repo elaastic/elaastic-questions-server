@@ -19,4 +19,5 @@ interface UserRepository : CrudRepository<User, Long>, JpaRepository<User, Long>
 
     @Query("select u from User u join PasswordResetKey key on key.user = u where key.passwordResetKey = ?1")
     fun findByPasswordResetKeyValue(passwordResetKeyValue: String): User?
+
 }

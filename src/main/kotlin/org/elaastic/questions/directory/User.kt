@@ -83,6 +83,12 @@ class User(
     @OneToOne(mappedBy = "user")
     var settings: Settings? = null
 
+    @OneToOne(mappedBy = "user")
+    var unsubscribeKey: UnsubscribeKey? = null
+
+    @OneToOne(mappedBy = "user")
+    var activationKey: ActivationKey? = null
+
     fun isLearner(): Boolean {
         return roles.map { it.name }.contains(Role.RoleId.STUDENT.roleName)
     }

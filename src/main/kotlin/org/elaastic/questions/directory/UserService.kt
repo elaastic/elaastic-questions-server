@@ -2,14 +2,16 @@ package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Example
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
+import java.util.logging.Logger
 import javax.transaction.Transactional
 
 
 @Service
-class UserService (
+class UserService(
         @Autowired val userRepository: UserRepository,
         @Autowired val passwordEncoder: PasswordEncoder,
         @Autowired val settingsRepository: SettingsRepository,
@@ -18,12 +20,14 @@ class UserService (
         @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository
 ) {
 
+    val logger = Logger.getLogger(UserService::class.java.name)
+
     /**
      *  Find user by username
      *  @param username the username provided as input
      *  @return the found user or null otherwise
      */
-    fun findByUsername(username: String) : User? {
+    fun findByUsername(username: String): User? {
         return userRepository.findByUsername(username)
     }
 
@@ -48,7 +52,7 @@ class UserService (
     fun addUser(user: User,
                 language: String = "fr",
                 checkEmailAccount: Boolean = false
-                ): User {
+    ): User {
 
         require(user.roles.isNotEmpty())
 
@@ -105,6 +109,7 @@ class UserService (
         ).let {
             unsubscribeKeyRepository.save(it)
         }.let {
+            user.unsubscribeKey = it
             return it
         }
     }
@@ -121,6 +126,7 @@ class UserService (
         ).let {
             activationKeyRepository.save(it)
         }.let {
+            user.activationKey = it
             return it
         }
     }
@@ -132,7 +138,7 @@ class UserService (
      */
     fun enableUserWithActivationKey(activationKey: String): User? {
         activationKeyRepository.findByActivationKey(activationKey).let {
-            when(it) {
+            when (it) {
                 null -> return null
                 else -> {
                     val user = it.user
@@ -153,9 +159,9 @@ class UserService (
      * @param lifetime lifetime of a password key in hour, default set to 1
      * @return the password reset key object user
      */
-    fun generatePasswordResetKeyForUser(user: User, lifetime:Int = 1): PasswordResetKey {
+    fun generatePasswordResetKeyForUser(user: User, lifetime: Int = 1): PasswordResetKey {
         var passwordResetKey = passwordResetKeyRepository.findByUser(user)
-        when(passwordResetKey) {
+        when (passwordResetKey) {
             null -> {
                 PasswordResetKey(
                         passwordResetKey = UUID.randomUUID().toString(),
@@ -189,4 +195,32 @@ class UserService (
         }
     }
 
+    /**
+     * Remove old activation keys and corresponding users who didn't activate their
+     * accounts
+     * @param lifetime the lifetime in hours of activation keys, default set to 3
+     */
+    fun removeOldActivationKeys(lifetime: Int = 3) {
+        activationKeyRepository.findAllByDateCreatedLessThan(DateUtils.addHours(Date(), -lifetime)).let {
+            activationKeyRepository.deleteAll(it)
+            logger.info("${it.size} activation keys deleted")
+            it
+        }.map {
+            it.user
+        }.filter { user ->
+            !user.enabled
+        }.let {
+            logger.info("${it.size} user(s) to delete")
+            it
+        }.forEach { user ->
+            settingsRepository.findByUser(user).let { settings ->
+                settingsRepository.delete(settings)
+            }
+            unsubscribeKeyRepository.findByUser(user).let { unsubscribeKey ->
+                unsubscribeKeyRepository.delete(unsubscribeKey)
+            }
+            userRepository.delete(user)
+        }
+    }
 }
+

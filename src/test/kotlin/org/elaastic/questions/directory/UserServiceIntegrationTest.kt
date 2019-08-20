@@ -16,6 +16,7 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.assertThrows
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.*
 import javax.persistence.EntityManager
@@ -34,7 +35,8 @@ internal class UserServiceIntegrationTest(
         @Autowired val activationKeyRepository: ActivationKeyRepository,
         @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository,
         @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
-        @Autowired val passwordEncoder: PasswordEncoder
+        @Autowired val passwordEncoder: PasswordEncoder,
+        @Autowired val userRepository: UserRepository
 ) {
 
     @Test
@@ -298,7 +300,7 @@ internal class UserServiceIntegrationTest(
             }
             it
         }.tThen {
-            assertTrue(passwordEncoder.matches("abcd",it.password))
+            assertTrue(passwordEncoder.matches("abcd", it.password))
         }
 
         tGiven {
@@ -314,4 +316,81 @@ internal class UserServiceIntegrationTest(
         }
     }
 
+    @Test
+    fun `test remove old activation keys`() {
+        tGiven {
+            // 3 users with old activation keys and with only the first one who is enabled
+            listOf(
+                    User(
+                            username = "foo",
+                            firstName = "f",
+                            lastName = "oo",
+                            plainTextPassword = "1234",
+                            email = "foo@elaastic.org"
+                    ).addRole(roleService.roleStudent()).let {
+                        userService.addUser(it, "fr", true).let { user ->
+                            user.enabled = true
+                            userRepository.saveAndFlush(user)
+                            assertThat(user.activationKey, notNullValue())
+                            assertTrue(user.enabled)
+                            user.activationKey!!.dateCreated = DateUtils.addHours(Date(),-4)
+                            activationKeyRepository.saveAndFlush(user.activationKey!!)
+                            user
+                        }
+                    },
+                    User(
+                            username = "foo2",
+                            firstName = "f2",
+                            lastName = "oo",
+                            plainTextPassword = "1234",
+                            email = "foo2@elaastic.org"
+                    ).addRole(roleService.roleStudent()).let {
+                        userService.addUser(it, "fr", true).let { user ->
+                            assertFalse(user.enabled)
+                            assertThat(user.activationKey, notNullValue())
+                            user.activationKey!!.dateCreated = DateUtils.addHours(Date(),-4)
+                            activationKeyRepository.saveAndFlush(user.activationKey!!)
+                            user
+                        }
+                    },
+                    User(
+                            username = "foo3",
+                            firstName = "f3",
+                            lastName = "oo",
+                            plainTextPassword = "1234",
+                            email = "foo3@elaastic.org"
+                    ).addRole(roleService.roleStudent()).let {
+                        userService.addUser(it, "fr", true).let { user ->
+                            assertFalse(user.enabled)
+                            assertThat(user.activationKey, notNullValue())
+                            user.activationKey!!.dateCreated = DateUtils.addHours(Date(),-4)
+                            activationKeyRepository.saveAndFlush(user.activationKey!!)
+                            user
+                        }
+                    }
+            )
+        }.tWhen {
+            // triggering the deletion of old activation keys
+            userService.removeOldActivationKeys()
+            it
+        }.tThen {
+            it.forEach { user -> // all activation keys are deleted
+                assertThat(activationKeyRepository.findByUser(user), nullValue())
+            }
+            it.filter {// for enabled users
+                it.enabled
+            }.forEach { user -> // user and settings are still there
+                assertThat(userRepository.getOne(user.id!!), notNullValue())
+                assertThat(settingsRepository.findByUser(user), notNullValue())
+                assertThat(unsubscribeKeyRepository.findByUser(user), notNullValue())
+            }
+            it.filter { // for non enabled user
+                !it.enabled
+            }.forEach { user -> // user and settings are no more present
+                assertThat(userRepository.findByIdOrNull(user.id!!), nullValue())
+                assertThat(settingsRepository.findByIdOrNull(user.settings!!.id), nullValue())
+                assertThat(unsubscribeKeyRepository.findByIdOrNull(user.unsubscribeKey!!.id), nullValue())
+            }
+        }
+    }
 }
