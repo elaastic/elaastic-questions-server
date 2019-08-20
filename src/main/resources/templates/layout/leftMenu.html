@@ -26,6 +26,18 @@
 
     <script type="text/javascript"
             src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script>
+      $(document)
+        .ready(function () {
+          $('.message .close')
+            .on('click', function () {
+              $(this)
+                .closest('.message')
+                .transition('fade')
+            })
+        })
+    </script>
   </head>
 
   <body>

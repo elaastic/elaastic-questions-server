@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
@@ -29,6 +30,15 @@ class AssignmentService(
             true -> assignmentRepository.findOneWithSequencesById(id)
             false -> assignmentRepository.findOneById(id)
         } ?: throw EntityNotFoundException("There is no assignment for id \"$id\"")
+    }
+
+    fun get(user: User, id: Long, fetchSequences: Boolean = false) : Assignment {
+        get(id, fetchSequences).let {
+            if(it.owner != user) {
+                throw AccessDeniedException("You are not autorized to access to this assignment")
+            }
+            return it
+        }
     }
 
     fun save(assignment: Assignment): Assignment {

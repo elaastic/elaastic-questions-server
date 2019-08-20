@@ -60,4 +60,12 @@ class Assignment(
     @OrderBy("rank ASC")
     @SortNatural
     var sequences: List<Sequence> = listOf()
+
+    fun updateFrom(otherAssignment: Assignment) {
+        if(this.version != otherAssignment.version) {
+            throw OptimisticLockException()
+        }
+
+        this.title = otherAssignment.title
+    }
 }

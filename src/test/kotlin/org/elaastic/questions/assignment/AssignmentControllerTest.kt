@@ -84,7 +84,7 @@ internal class AssignmentControllerTest(
                 .andExpect(status().isFound())
                 .andExpect(
                         redirectedUrlTemplate(
-                                "/assignment/{assignmentId}/show",
+                                "/assignment/{assignmentId}",
                                 assignmentId
                         )
                 )
@@ -100,4 +100,8 @@ internal class AssignmentControllerTest(
         )
                 .andExpect(status().isBadRequest()) // no redirect, the page is re-rendered with error messages
     }
+
+    // TODO test edit action
+
+    // TODO test update action
 }

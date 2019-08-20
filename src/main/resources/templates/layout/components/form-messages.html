@@ -1,0 +1,9 @@
+<div th:fragment="formMessages()"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="ui error message" th:if="${#fields.hasErrors('*')}">
+    <ul class="list">
+      <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+    </ul>
+  </div>
+</div>

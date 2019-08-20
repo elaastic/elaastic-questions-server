@@ -3,15 +3,17 @@ package org.elaastic.questions.assignment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
-import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
@@ -21,7 +23,8 @@ import javax.validation.Valid
 @RequestMapping("/assignment")
 @Transactional
 class AssignmentController(
-        @Autowired val assignmentService: AssignmentService
+        @Autowired val assignmentService: AssignmentService,
+        @Autowired val messageSource: MessageSource
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -53,15 +56,10 @@ class AssignmentController(
     fun show(authentication: Authentication, model: Model, @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
-        assignmentService.get(id, fetchSequences = true).let {
-            if(user != it.owner) {
-                // TODO i18n error message
-                throw AccessDeniedException("You are not autorized to access to this assignment")
-            }
+        assignmentService.get(user, id, fetchSequences = true).let {
             model.addAttribute("user", user)
             model.addAttribute("assignment", it)
         }
-
 
         return "/assignment/show"
     }
@@ -93,7 +91,66 @@ class AssignmentController(
             "/assignment/create"
         } else {
             assignmentService.save(assignment)
-            "redirect:/assignment/${assignment.id}/show"
+            "redirect:/assignment/${assignment.id}"
         }
+    }
+
+    @GetMapping("{id}/edit")
+    fun edit(authentication: Authentication,
+             model: Model,
+             @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        assignmentService.get(user, id, fetchSequences = true).let {
+            model.addAttribute("user", user)
+            model.addAttribute("assignment", it)
+        }
+
+        return "/assignment/edit"
+    }
+
+    @PostMapping("{id}/update")
+    fun update(authentication: Authentication,
+               @Valid @ModelAttribute assignment: Assignment,
+               result: BindingResult,
+               model: Model,
+               @PathVariable id: Long,
+               response: HttpServletResponse,
+               redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("user", user)
+            model.addAttribute("assignment", assignment)
+            "/assignment/edit"
+        } else {
+            assignmentService.get(user, id).let {
+                it.updateFrom(assignment)
+                assignmentService.save(it)
+
+                redirectAttributes.addFlashAttribute("messageType", "success")
+                redirectAttributes.addFlashAttribute(
+                        "messageContent",
+                        messageConfirmUpdateAssignment(it)
+                )
+                "redirect:/assignment/$id"
+            }
+        }
+    }
+
+    private fun messageConfirmUpdateAssignment(assignment: Assignment) : String {
+        return messageSource.getMessage(
+                "assignment.updated.message",
+                arrayOf(
+                        messageSource.getMessage(
+                                "assignment.label",
+                                null,
+                                LocaleContextHolder.getLocale()
+                        ),
+                        assignment.title
+                ),
+                LocaleContextHolder.getLocale()
+        )
     }
 }

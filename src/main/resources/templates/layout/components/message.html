@@ -8,15 +8,4 @@
     <i class="close icon"></i> <p th:text="${content}">content</p>
   </div>
 
-  <script>
-    $(document)
-      .ready(function () {
-        $('.message .close')
-          .on('click', function () {
-            $(this)
-              .closest('.message')
-              .transition('fade')
-          })
-      })
-  </script>
 </div>

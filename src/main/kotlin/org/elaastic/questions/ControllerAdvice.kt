@@ -22,4 +22,6 @@ class ControllerAdvice {
     fun getLogoutUrl(): String {
         return "logout"
     }
+
+    // TODO Handle OptimisticLockingException
 }

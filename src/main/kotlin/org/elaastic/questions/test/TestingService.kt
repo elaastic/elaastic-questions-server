@@ -30,6 +30,10 @@ class TestingService(
         return userRepository.getByUsername("fsil")
     }
 
+    fun getAnotherTestTeacher(): User  {
+        return userRepository.getByUsername("aein")
+    }
+
     fun getTestStudent(): User {
         return userRepository.getByUsername("msil")
     }

@@ -7,13 +7,18 @@
   </div>
 
   <div class="content">
-    <form name="editProperties-form"
+    <form class="ui form"
           id="editProperties-form"
-          class="ui form"
+          th:object="${assignment}"
+          th:classappend="${#fields.hasErrors('*')}? 'error'"
           th:action="@{/assignment/{id}/update(id=${assignment.id})}"
-          method="post">
-      <input type="hidden" name="version" th:value="${assignment?.version}"/>
-      <div th:replace="assignment/_form_edit_properties :: formEditProperties(${assignment})"></div>
+          method="POST">
+
+      <div th:replace="layout/components/form-messages :: formMessages()"></div>
+
+      <input type="hidden" name="version" th:value="*{version}"/>
+
+      <div th:replace="assignment/_assignment_form :: assignmentForm(${assignment})"></div>
     </form>
   </div>
 

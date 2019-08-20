@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
+import org.springframework.security.access.AccessDeniedException
 import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
@@ -95,6 +96,34 @@ internal class AssignmentServiceIntegrationTest(
                     persistentUnitUtil.isLoaded(it, "sequences"),
                     equalTo(true)
             )
+        }
+    }
+
+    @Test
+    fun `get an assignment for a user - OK`() {
+        val teacher = testingService.getTestTeacher()
+        val assignmentId = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        ).id!!
+
+        entityManager.clear()
+
+        assignmentService.get(teacher, assignmentId).let {
+            assertThat(it.id, equalTo(assignmentId))
+        }
+    }
+
+    @Test
+    fun `try to get an assignement for a user that is owned by another user`() {
+        val teacher = testingService.getTestTeacher()
+        val assignmentId = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        ).id!!
+
+        entityManager.clear()
+
+        assertThrows<AccessDeniedException> {
+            assignmentService.get(testingService.getAnotherTestTeacher(), assignmentId)
         }
     }
 
