@@ -393,4 +393,39 @@ internal class UserServiceIntegrationTest(
             }
         }
     }
+
+    @Test
+    fun `test remove old password reset keys`() {
+        tGiven {
+            // 3 users with the last one only with a password reset key "alive"
+            listOf(
+                    testingService.getAnyUser().let {
+                        userService.generatePasswordResetKeyForUser(it).let { passwordResetKey ->
+                            passwordResetKey.dateCreated = DateUtils.addHours(Date(), -2)
+                            passwordResetKeyRepository.saveAndFlush(passwordResetKey)
+                        }
+                        it
+                    },
+                    testingService.getTestStudent().let {
+                        userService.generatePasswordResetKeyForUser(it).let { passwordResetKey ->
+                            passwordResetKey.dateCreated = DateUtils.addHours(Date(), -2)
+                            passwordResetKeyRepository.saveAndFlush(passwordResetKey)
+                        }
+                        it
+                    },
+                    testingService.getTestTeacher().let {
+                        userService.generatePasswordResetKeyForUser(it)
+                        it
+                    }
+            )
+        }.tWhen {
+            // removing old password keys
+            userService.removeOldPasswordResetKeys()
+        }.tThen {
+            // it remains only the last user key
+            assertThat(passwordResetKeyRepository.findByUser(testingService.getAnyUser()), nullValue())
+            assertThat(passwordResetKeyRepository.findByUser(testingService.getTestStudent()), nullValue())
+            assertThat(passwordResetKeyRepository.findByUser(testingService.getTestTeacher()), notNullValue())
+        }
+    }
 }

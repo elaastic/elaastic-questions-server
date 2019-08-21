@@ -15,4 +15,6 @@ interface PasswordResetKeyRepository : PagingAndSortingRepository<PasswordResetK
     @Query("select prk from PasswordResetKey prk left join prk.user user left join user.settings where prk.dateCreated > ?1 and prk.passwordResetEmailSent = false ")
     fun findAllPasswordResetKeys(expirationDate: Date):Collection<PasswordResetKey>
 
+    fun findAllByDateCreatedLessThan(expirationDate:Date): Collection<PasswordResetKey>
+
 }

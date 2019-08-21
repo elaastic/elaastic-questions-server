@@ -222,5 +222,15 @@ class UserService(
             userRepository.delete(user)
         }
     }
+
+    /**
+     * Remove password reset keys older than lifetime hours, default to 1
+     */
+    fun removeOldPasswordResetKeys(lifetime: Int = 1) {
+        passwordResetKeyRepository.findAllByDateCreatedLessThan(DateUtils.addHours(Date(), -lifetime)).let {
+            passwordResetKeyRepository.deleteAll(it)
+            logger.info("${it.size} password reset keys deleted")
+        }
+    }
 }
 
