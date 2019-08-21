@@ -139,6 +139,14 @@ class AssignmentController(
         }
     }
 
+    @GetMapping("{id}/delete")
+    fun delete(authentication: Authentication, @PathVariable id: Long) : String {
+        val user: User = authentication.principal as User
+
+        assignmentService.delete(user, id)
+        return "redirect:/assignment"
+    }
+
     private fun messageConfirmUpdateAssignment(assignment: Assignment) : String {
         return messageSource.getMessage(
                 "assignment.updated.message",

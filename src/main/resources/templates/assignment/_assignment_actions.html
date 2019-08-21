@@ -54,7 +54,7 @@
     <script th:inline="javascript">
       $('#confirm-delete-assignment-modal').modal({
         onApprove: function () {
-          window.location = /*[[@{/assignment/delete/{id}(id=${assignment.id})}]]*/ '/assignment/delete/123'
+          window.location = /*[[@{/assignment/{id}/delete(id=${assignment.id})}]]*/ '/assignment/123/delete'
         }
       })
     </script>

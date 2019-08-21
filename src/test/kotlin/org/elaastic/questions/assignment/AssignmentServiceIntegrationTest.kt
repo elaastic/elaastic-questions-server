@@ -160,6 +160,23 @@ internal class AssignmentServiceIntegrationTest(
         )
     }
 
+    @Test
+    fun `delete an existing assignment`() {
+        val teacher = testingService.getTestTeacher()
+        val initialNbAssignment = assignmentService.count()
+        val assignmentId = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        ).id!!
+
+        entityManager.clear()
+
+        tWhen {
+            assignmentService.delete(teacher, assignmentId)
+        }.tThen {
+            assertThat(assignmentService.count(), equalTo(initialNbAssignment))
+        }
+    }
+
     private fun createTestingData(owner: User, n: Int = 10) {
         (1..n).forEach {
             assignmentService.save(

@@ -41,7 +41,17 @@ class AssignmentService(
         }
     }
 
+    fun delete(user: User, id: Long) {
+        if(assignmentRepository.deleteByIdAndOwner(id, user) != 1L) {
+            throw EntityNotFoundException("There is no assignment \"$id\" for user ${user.username}")
+        }
+    }
+
     fun save(assignment: Assignment): Assignment {
         return assignmentRepository.save(assignment)
+    }
+
+    fun count() : Long {
+        return assignmentRepository.count()
     }
 }

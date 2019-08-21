@@ -15,4 +15,6 @@ interface AssignmentRepository : JpaRepository<Assignment?, Long> {
     fun findOneWithSequencesById(id: Long): Assignment?
 
     fun findOneById(id: Long): Assignment?
+
+    fun deleteByIdAndOwner(id: Long, user: User): Long
 }
