@@ -100,7 +100,7 @@ class UserAccountController(
                locale: Locale): String {
         val authUser: User = authentication.principal as User
         if (!result.hasErrors()) {
-            val updatedUser = userService.get(authUser, passwordData.id!!)!!
+            val updatedUser = userService.get(authUser, passwordData.id!!)
             try {
                 userService.changePasswordForUserWithCurrentPasswordChecking(
                         updatedUser, passwordData.password!!, passwordData.password1!!)

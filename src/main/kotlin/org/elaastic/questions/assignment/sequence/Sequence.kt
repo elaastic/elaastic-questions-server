@@ -20,16 +20,17 @@ import javax.validation.constraints.NotNull
 )
 @EntityListeners(AuditingEntityListener::class)
 class Sequence(
-        var rank: Int,
-
         @field:ManyToOne(fetch = FetchType.LAZY)
         var owner: User,
 
-        @field:ManyToOne(fetch = FetchType.LAZY)
-        var assignment: Assignment,
-
         @field:ManyToOne(fetch = FetchType.EAGER)
         var statement: Statement,
+
+        @field:NotNull
+        @field:ManyToOne(fetch = FetchType.LAZY)
+        var assignment: Assignment?=null,
+
+        var rank: Int = 0,
 
         @field:Enumerated(EnumType.STRING)
         var executionContext: ExecutionContext = ExecutionContext.FaceToFace

@@ -2,7 +2,6 @@
 <html lang="en"
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<html>
 <head>
   <title th:text="#{assignment.creation.label(#{assignment.label})}"></title>
 </head>
@@ -21,7 +20,7 @@
         method="POST"
         th:action="@{/assignment/save}">
 
-    <div th:replace="layout/components/form-messages :: formMessages()"></div>
+    <div th:replace="layout/components/form-messages :: formMessages('')"></div>
 
     <div th:replace="assignment/_assignment_form :: assignmentForm(${assignment})"></div>
 

@@ -1,7 +1,12 @@
-<div th:fragment="formMessages()"
+<div th:fragment="formMessages(headerTitle)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
   <div class="ui error message" th:if="${#fields.hasErrors('*')}">
+    <div class="header"
+         th:if="${not #strings.isEmpty(headerTitle)}"
+         th:text="${headerTitle}">
+
+    </div>
     <ul class="list">
       <li th:each="err : ${#fields.detailedErrors('*')}">
         <span th:text="${err.message}">The error message</span>

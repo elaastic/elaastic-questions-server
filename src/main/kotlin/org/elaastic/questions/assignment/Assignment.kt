@@ -11,6 +11,7 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
+import kotlin.collections.ArrayList
 
 
 @Entity
@@ -32,11 +33,11 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class Assignment(
         @field:NotBlank
-        var title: String = "",
+        var title: String,
 
         @field:NotNull
         @field:ManyToOne(fetch = FetchType.LAZY)
-        var owner: User? = null,
+        var owner: User,
 
         @field:NotNull
         @field:NotBlank
@@ -49,7 +50,7 @@ class Assignment(
     @Column(name = "date_created")
     @CreatedDate
     lateinit var dateCreated: Date
-    
+
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
@@ -59,13 +60,29 @@ class Assignment(
             targetEntity = Sequence::class)
     @OrderBy("rank ASC")
     @SortNatural
-    var sequences: List<Sequence> = listOf()
+    var sequences: MutableList<Sequence> = ArrayList()
 
     fun updateFrom(otherAssignment: Assignment) {
-        if(this.version != otherAssignment.version) {
+        require(id == otherAssignment.id)
+        if (this.version != otherAssignment.version) {
             throw OptimisticLockException()
         }
 
         this.title = otherAssignment.title
+    }
+
+    fun addSequence(sequence: Sequence): Sequence {
+        require(sequence.owner == owner) {
+            "The owner of the assignment cannot be different from the owner of sequence"
+        }
+
+        // TODO set the rank
+        // TODO Check that lastUpdated is impacted
+
+        sequences.add(sequence)
+        sequence.assignment = this
+        sequence.owner = owner
+
+        return sequence
     }
 }

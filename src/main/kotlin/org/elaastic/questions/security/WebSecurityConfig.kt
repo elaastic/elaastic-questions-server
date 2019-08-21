@@ -34,7 +34,7 @@ class WebSecurityConfig(
                     ?.invalidateHttpSession(true)
                 ?.and()
                 ?.authorizeRequests()
-                    ?.antMatchers("/images/**", "/css/**", "/js/**", "/semantic/**", "/", "/demo")?.permitAll()
+                    ?.antMatchers("/images/**", "/css/**", "/js/**", "/semantic/**", "/", "/demo", "/ckeditor/**")?.permitAll()
                     ?.antMatchers("/register", "/api/users", "/login",
                             "/userAccount/beginPasswordReset", "/userAccount/resetPassword",
                             "/userAccount/processPasswordResetRequest", "/userAccount/confirmPasswordReset",

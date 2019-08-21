@@ -19,6 +19,7 @@ import javax.persistence.EntityNotFoundException
 import javax.persistence.PersistenceUnitUtil
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
+import kotlin.collections.ArrayList
 
 
 @SpringBootTest
@@ -142,7 +143,7 @@ internal class AssignmentServiceIntegrationTest(
                     assertThat(it.id, notNullValue())
                     assertThat(it.version, equalTo(0L))
                     assertThat(UUID.fromString(it.globalId), notNullValue())
-                    assertThat(it.sequences, equalTo(listOf()))
+                    assertThat(it.sequences, equalTo(ArrayList()))
                     assertThat(it.owner, equalTo(testingService.getTestTeacher()))
                 }
     }
@@ -195,6 +196,53 @@ internal class AssignmentServiceIntegrationTest(
 
         assertThrows<EntityNotFoundException> {
             assignmentService.delete(testingService.getAnotherTestTeacher(), assignmentId)
+        }
+    }
+
+    @Test
+    fun `count sequences of empty assignment`() {
+        val teacher = testingService.getTestTeacher()
+        val assignment = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        )
+
+        assertThat(
+                assignmentService.countAllSequence(assignment),
+                equalTo(0)
+        )
+    }
+
+    @Test
+    fun `count sequences of the provided test assignment`() {
+        assertThat(
+                assignmentService.countAllSequence(
+                        assignmentService.get(382)
+                ),
+                equalTo(2)
+        )
+    }
+
+    @Test
+    fun `add a sequence to an assignment - valid`() {
+        val teacher = testingService.getTestTeacher()
+        val assignment = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        )
+
+        tWhen {
+            assignmentService.addSequence(
+                    assignment,
+                    Statement.createDefaultStatement(teacher)
+                            .title("Test")
+                            .content("Test content")
+            )
+        }.tThen {
+            assertThat(it.id, notNullValue())
+            assertThat(it.statement.id, notNullValue())
+            assertThat(
+                    assignmentService.countAllSequence(assignment),
+                    equalTo(1)
+            )
         }
     }
 

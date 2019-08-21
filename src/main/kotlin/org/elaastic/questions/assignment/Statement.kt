@@ -1,7 +1,10 @@
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.assignment.choice.ChoiceInteractionType
+import org.elaastic.questions.assignment.choice.ChoiceItemSpecification
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.choice.ChoiceSpecificationConverter
+import org.elaastic.questions.attachement.Attachment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -21,10 +24,10 @@ class Statement(
         var owner: User,
 
         @field:NotBlank
-        var title: String,
+        var title: String = "",
 
         @field:NotBlank
-        var content: String,
+        var content: String = "",
 
         @field:NotNull
         @Enumerated(EnumType.STRING)
@@ -39,7 +42,7 @@ class Statement(
 
         @field:Column(name = "expected_explanation")
         var expectedExplanation: String? = null
-        
+
 ) : AbstractJpaPersistable<Long>() {
 
     @Version
@@ -56,7 +59,10 @@ class Statement(
     var lastUpdated: Date? = null
 
     // TODO getFakeExplanations
-    // TODO getAttachment
+
+    fun getAttachment(): Attachment? {
+        return null // TODO Implement getAttachement
+    }
 
     fun isOpenEnded(): Boolean {
         return questionType == QuestionType.OpenEnded
@@ -72,6 +78,32 @@ class Statement(
 
     fun hasChoice(): Boolean {
         return isMultipleChoice() || isExclusiveChoice()
+    }
+
+    fun title(value: String): Statement {
+        this.title = value
+        return this
+    }
+
+    fun content(value: String): Statement {
+        this.content = value
+        return this
+    }
+
+    companion object {
+        fun createDefaultStatement(user: User): Statement {
+            return Statement(
+                    owner = user,
+                    questionType = QuestionType.ExclusiveChoice,
+                    choiceSpecification = ChoiceSpecification(
+                            choiceInteractionType = ChoiceInteractionType.EXCLUSIVE,
+                            itemCount = 2,
+                            expectedChoiceList = listOf(
+                                    ChoiceItemSpecification(1, 1f)
+                            )
+                    )
+            )
+        }
     }
 }
 

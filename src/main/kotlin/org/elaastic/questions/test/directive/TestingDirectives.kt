@@ -14,7 +14,7 @@ inline fun <T, R> T.tWhen(block: (T) -> R): R  {
     return this.let(block)
 }
 
-inline fun Any.tNoProblem() {
+fun Any.tNoProblem() {
     // Just do nothing
 }
 

@@ -19,7 +19,8 @@ class TestingService(
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val interactionResponseRepository: InteractionResponseRepository
+        @Autowired val interactionResponseRepository: InteractionResponseRepository,
+        @Autowired val assignmentService: AssignmentService
 ) {
 
     fun getAnyUser(): User {
@@ -58,5 +59,9 @@ class TestingService(
 
     fun getAnyInteractionResponse() : InteractionResponse {
         return interactionResponseRepository.findAll().iterator().next()
+    }
+
+    fun getTestAssignment() : Assignment {
+        return assignmentService.get(382)
     }
 }

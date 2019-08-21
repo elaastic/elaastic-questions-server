@@ -71,15 +71,17 @@ internal class AssignmentControllerTest(
         val assignmentId = 123L
         val title = "A title"
 
-        val assignment = Assignment(title = title, owner = user)
-        assignment.id = assignmentId
-
+        val assignmentData = AssignmentController.AssignmentData(
+                id = assignmentId,
+                title = title,
+                owner = user
+        )
 
         mockMvc.perform(
                 post("/assignment/save")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .flashAttr("assignment", assignment)
+                        .flashAttr("assignmentData", assignmentData)
         )
                 .andExpect(status().isFound())
                 .andExpect(

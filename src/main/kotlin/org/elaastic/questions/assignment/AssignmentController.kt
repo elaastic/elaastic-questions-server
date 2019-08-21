@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 
 @Controller
@@ -26,7 +29,6 @@ class AssignmentController(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val messageSource: MessageSource
 ) {
-
     @GetMapping(value = ["", "/", "/index"])
     fun index(authentication: Authentication,
               model: Model,
@@ -69,7 +71,7 @@ class AssignmentController(
         val user: User = authentication.principal as User
 
         if (!model.containsAttribute("assignment")) {
-            model.addAttribute("assignment", Assignment(owner = user))
+            model.addAttribute("assignment", AssignmentData(owner = user))
         }
         model.addAttribute("user", user)
 
@@ -78,7 +80,7 @@ class AssignmentController(
 
     @PostMapping("save")
     fun save(authentication: Authentication,
-             @Valid @ModelAttribute assignment: Assignment,
+             @Valid @ModelAttribute assignmentData: AssignmentData,
              result: BindingResult,
              model: Model,
              response: HttpServletResponse): String {
@@ -87,9 +89,10 @@ class AssignmentController(
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
             model.addAttribute("user", user)
-            model.addAttribute("assignment", assignment)
+            model.addAttribute("assignment", assignmentData)
             "/assignment/create"
         } else {
+            val assignment = assignmentData.toEntity()
             assignmentService.save(assignment)
             "redirect:/assignment/${assignment.id}"
         }
@@ -101,7 +104,7 @@ class AssignmentController(
              @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
-        assignmentService.get(user, id, fetchSequences = true).let {
+        assignmentService.get(user, id).let {
             model.addAttribute("user", user)
             model.addAttribute("assignment", it)
         }
@@ -111,7 +114,7 @@ class AssignmentController(
 
     @PostMapping("{id}/update")
     fun update(authentication: Authentication,
-               @Valid @ModelAttribute assignment: Assignment,
+               @Valid @ModelAttribute assignmentData: AssignmentData,
                result: BindingResult,
                model: Model,
                @PathVariable id: Long,
@@ -122,11 +125,11 @@ class AssignmentController(
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
             model.addAttribute("user", user)
-            model.addAttribute("assignment", assignment)
+            model.addAttribute("assignment", assignmentData)
             "/assignment/edit"
         } else {
             assignmentService.get(user, id).let {
-                it.updateFrom(assignment)
+                it.updateFrom(assignmentData.toEntity())
                 assignmentService.save(it)
 
                 redirectAttributes.addFlashAttribute("messageType", "success")
@@ -136,7 +139,7 @@ class AssignmentController(
                                 "assignment.updated.message",
                                 arrayOf(
                                         message("assignment.label"),
-                                        assignment.title
+                                        it.title
                                 )
                         )
                 )
@@ -169,11 +172,53 @@ class AssignmentController(
         return "redirect:/assignment"
     }
 
+    // TODO Duplicate action
+
+    @GetMapping("{id}/addSequence")
+    fun addSequence(authentication: Authentication,
+                    model: Model,
+                    @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        val assignment = assignmentService.get(user, id)
+        val nbSequence = assignmentService.countAllSequence(assignment)
+
+        model.addAttribute("user", user)
+        model.addAttribute("assignment", assignment)
+        model.addAttribute("nbSequence", nbSequence)
+        model.addAttribute(
+                "statementData",
+                SequenceController.StatementData(
+                        Statement.createDefaultStatement(user)
+                )
+        )
+
+        return "/assignment/sequence/create"
+    }
+
     private fun message(code: String, args: Array<String>? = null): String {
         return messageSource.getMessage(
                 code,
                 args,
                 LocaleContextHolder.getLocale()
         )
+    }
+
+    data class AssignmentData(
+            var id: Long? = null,
+            var version: Long? = null,
+            @field:NotBlank var title: String? = null,
+            @field:NotNull var owner: User? = null
+    ) {
+        fun toEntity(): Assignment {
+            return Assignment(
+                    title = title!!,
+                    owner = owner!!
+            ).let {
+                it.id = id
+                it.version = version
+                it
+            }
+        }
     }
 }

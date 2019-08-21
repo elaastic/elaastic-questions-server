@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, specificMenu=~{::#specificMenu}, content=~{::section})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="|elaastic: ${assignment.title}|">elaastic: My assignments</title>
 </head>
 
 <body>
-<aside id="specificMenu">
+<aside id="pageSpecificMenu">
   <script>
     var elaastic = elaastic || {}
   </script>
@@ -114,10 +114,10 @@
        th:id="|sequence_${sequence.id}|">
     <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
       <div
-        th:replace="sequence/_sequence_actions.html :: sequenceActions(${sequence}, ${position}, ${i.size})"></div>
+        th:replace="assignment/sequence/_sequence_actions.html :: sequenceActions(${sequence}, ${position}, ${i.size})"></div>
 
       <h3 class="ui header">
-        <a th:href="@{/sequence/{id}/edit(id=${sequence.id})}"
+        <a th:href="@{/assignment/{assignmentId}/sequence/{id}/edit(assignmentId=${assignment.id},id=${sequence.id})}"
            href="/sequence/123/edit"
            th:id="${sequence.id}">
           <div class="ui tiny circular label"

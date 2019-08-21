@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import java.util.logging.Logger
 import javax.validation.Valid
-import javax.validation.ValidationException
 
 @RestController
 class UserAccountApiController(
@@ -55,7 +54,7 @@ class UserAccountApiController(
             }.let {
                 SubscriptionResponse(
                         success = false,
-                        errorList = it as List<String>
+                        errorList = it.map { it ?: "" }
                 )
             }
         } else {

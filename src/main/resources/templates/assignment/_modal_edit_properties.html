@@ -14,7 +14,7 @@
           th:action="@{/assignment/{id}/update(id=${assignment.id})}"
           method="POST">
 
-      <div th:replace="layout/components/form-messages :: formMessages()"></div>
+      <div th:replace="layout/components/form-messages :: formMessages('')"></div>
 
       <input type="hidden" name="version" th:value="*{version}"/>
 

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::#edit-sequence}, pageSpecificMenu=~{::#pageSpecificMenu}, extraHeader=~{::head/script})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
+  <script type="text/javascript" th:src="@{/js/elaastic/VueCkeditorComponent.js}"></script>
+  <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
+
+  <title th:text="|elaastic: ${sequenceData.statementData.title}|"></title>
+</head>
+
+<body>
+
+<aside id="pageSpecificMenu">
+  <a th:href="@{/assignment/{id}(id=${assignment.id})}"
+     class="item"
+     th:attr="data-tooltip=#{assignment.back.to.assignment}"
+     data-position="right center"
+     data-inverted="">
+
+    <i class="yellow long arrow alternate left icon"></i>
+  </a>
+
+
+  <a href="#" class="item"
+     onclick="$('#sequenceForm').submit();"
+     th:attr="data-tooltip=#{common.save}"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow save icon"></i>
+  </a>
+
+  <a href="#"
+     class="item"
+     onclick="$('#myFile').click();"
+     th:attr="data-tooltip=#{question.attachment.select}"
+     data-position="right center"
+     data-inverted="">
+    <i class="attach icon"
+       th:classappend="${sequenceData.statementData.attachment} ? 'grey' : 'yellow'"></i>
+  </a>
+
+  <a th:href="@{/player/{id}/play(id=${sequenceData.id})}"
+     class="item"
+     th:attr="data-tooltip=#{sequence.play}"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow play icon"></i>
+  </a>
+</aside>
+
+<div id="edit-sequence">
+  <form name="sequenceForm"
+        class="ui form"
+        th:object="${sequenceData}"
+        th:action="@{/assignment/{assignmentId}/sequence/update(assignmentId=${assignment.id})}"
+        method="post"
+        enctype="multipart/form-data">
+
+    <input type="hidden" name="sequence_instance_id" value="${sequence?.id}"/>
+
+    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+      Message
+    </div>
+
+    <div th:replace="layout/components/form-messages :: formMessages(#{sequence.update.hasError.headerMessage})"></div>
+
+    <h2 class="ui header">
+      <i class="large icons">
+        <i class="question circle outline icon"></i>
+        <i class="corner pencil alternate icon"></i>
+      </i>
+
+      <div class="content" style="vertical-align: middle;" th:text="#{question.update}">
+        Update a question
+      </div>
+    </h2>
+
+    <h3 class="ui block top attached header">
+
+      <div class="content" th:text="|${assignment?.title} – Question n°${sequenceData.rank}|">
+
+      </div>
+    </h3>
+
+    <div class="ui bottom attached segment">
+
+      <div th:replace="/assignment/sequence/_statement_form :: statementForm(${sequenceData.statementData})"></div>
+      <div
+        th:replace="/assignment/sequence/_statement_question_type_form :: statementQuestionTypeForm(${sequenceData.statementData})"></div>
+
+      <div class="ui hidden divider"></div>
+
+      <!--      TODO *** migrate-->
+      <g:render template="/assignment/sequence/statement_explanations_form-elaastic"
+                model="[sequence: sequence]"/>
+
+    </div>
+
+    <div class="ui hidden divider"></div>
+
+    <button type="submit"
+            class="ui primary button"
+            name="returnOnSubject"
+            value="true"
+            th:text="#{question.updateAndReturnToSubject}">
+      Update and return to subject
+    </button>
+
+    <a th:href="@{/assignment/{id}(id=${assignment.id})}"
+       class="ui button"
+       th:text="#{common.cancel}">
+      Cancel
+    </a>
+
+
+    <div class="ui hidden divider"></div>
+
+  </form>
+
+</div>
+</body>
+</html>

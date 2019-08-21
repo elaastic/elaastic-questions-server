@@ -1,5 +1,7 @@
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
@@ -15,7 +18,9 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class AssignmentService(
-        @Autowired val assignmentRepository: AssignmentRepository
+        @Autowired val assignmentRepository: AssignmentRepository,
+        @Autowired val sequenceRepository: SequenceRepository,
+        @Autowired val statementRepository: StatementRepository
 ) {
 
     fun findAllByOwner(owner: User,
@@ -32,9 +37,9 @@ class AssignmentService(
         } ?: throw EntityNotFoundException("There is no assignment for id \"$id\"")
     }
 
-    fun get(user: User, id: Long, fetchSequences: Boolean = false) : Assignment {
+    fun get(user: User, id: Long, fetchSequences: Boolean = false): Assignment {
         get(id, fetchSequences).let {
-            if(it.owner != user) {
+            if (it.owner != user) {
                 throw AccessDeniedException("You are not autorized to access to this assignment")
             }
             return it
@@ -42,7 +47,7 @@ class AssignmentService(
     }
 
     fun delete(user: User, id: Long) {
-        if(assignmentRepository.deleteByIdAndOwner(id, user) != 1L) {
+        if (assignmentRepository.deleteByIdAndOwner(id, user) != 1L) {
             throw EntityNotFoundException("There is no assignment \"$id\" for user ${user.username}")
         }
     }
@@ -51,7 +56,31 @@ class AssignmentService(
         return assignmentRepository.save(assignment)
     }
 
-    fun count() : Long {
+    fun count(): Long {
         return assignmentRepository.count()
+    }
+
+    fun countAllSequence(assignment: Assignment): Int {
+        return sequenceRepository.countAllByAssignment(assignment)
+    }
+
+    fun touch(assignment: Assignment) {
+        assignment.lastUpdated = Date()
+        assignmentRepository.save(assignment)
+    }
+
+    fun addSequence(assignment: Assignment, statement: Statement): Sequence {
+        val sequence = Sequence(
+                owner = assignment.owner,
+                statement = statement,
+                rank = countAllSequence(assignment) + 1
+        )
+
+        assignment.addSequence(sequence)
+        statementRepository.save(sequence.statement)
+        sequenceRepository.save(sequence)
+        touch(assignment)
+
+        return sequence
     }
 }
