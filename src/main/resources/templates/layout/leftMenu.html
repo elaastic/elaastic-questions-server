@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" th:fragment="leftMenuLayout (title, pageSpecificMenu, content, style)"
+<html lang="en"
+      th:fragment="leftMenuLayout (title, content)"
+      th:with="pageSpecificMenu=${pageSpecificMenu} ?: ~{}, extraHeader=${extraHeader} ?: ~{}"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8"/>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no" name="viewport"/>
     <meta name="description"
-          th:content="#{elaastic.description}">
-    <meta name="author" content="Ticetime">
+          th:content="#{elaastic.description}"/>
     <meta content="#ffffff" name="theme-color"/>
-    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon"/>
     <title th:replace="${title}">Page title</title>
-    <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection">
-    <link th:href="@{/css/elaastic.css}" type="text/css" rel="stylesheet" media="screen, projection">
+    <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
+    <link th:href="@{/css/elaastic.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
     <script th:src="@{/js/jquery.js}"></script>
     <script th:src="@{/semantic/dist/semantic.js}"></script>
     <script th:src="@{/js/vuejs/vue.min.js}"></script>
     <script th:src="@{/js/vuejs/vue-resource.min.js}"></script>
-    <style th:replace="${style}"></style>
+    <meta th:replace="${extraHeader}"/>
 
     <style type="text/css">[v-cloak] {
       display: none;

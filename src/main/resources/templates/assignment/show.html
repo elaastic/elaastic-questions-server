@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="layout/leftMenu :: leftMenuLayout(~{::title}, ~{::aside}, ~{::section}, ~{})"
-      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, specificMenu=~{::#specificMenu}, content=~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="|elaastic: ${assignment.title}|">elaastic: My assignments</title>
 </head>
 
 <body>
-<aside tag="specificMenu">
+<aside id="specificMenu">
   <script>
     var elaastic = elaastic || {}
   </script>

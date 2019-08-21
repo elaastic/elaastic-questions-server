@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(~{::title}, ~{}, ~{::section}, ~{})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="|elaastic: ${assignment.title}|"></title>
 </head>
 
 <body>
-<section>
 
-  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-    Message
+<div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+  Message
+</div>
+
+<div class="ui segment">
+  <div class="ui top attached label" th:text="#{assignment.action.propertiesEdition.label}">
+
   </div>
+  <form class="ui form"
+        th:object="${assignment}"
+        th:classappend="${#fields.hasErrors('*')}? 'error'"
+        th:action="@{/assignment/{id}/update(id=${assignment.id})}"
+        method="POST">
 
-  <div class="ui segment">
-    <div class="ui top attached label" th:text="#{assignment.action.propertiesEdition.label}">
+    <div th:replace="layout/components/form-messages :: formMessages()"></div>
 
-    </div>
-    <form class="ui form"
-          th:object="${assignment}"
-          th:classappend="${#fields.hasErrors('*')}? 'error'"
-          th:action="@{/assignment/{id}/update(id=${assignment.id})}"
-          method="POST">
+    <input type="hidden" name="version" th:value="*{version}"/>
 
-      <div th:replace="layout/components/form-messages :: formMessages()"></div>
+    <div th:replace="assignment/_assignment_form :: assignmentForm(${assignment})"></div>
 
-      <input type="hidden" name="version" th:value="*{version}"/>
+    <input type="submit"
+           name="update"
+           class="ui primary button"
+           th:value="#{default.button.update.label}"/>
 
-      <div th:replace="assignment/_assignment_form :: assignmentForm(${assignment})"></div>
+    <a th:href="@{/assignment/{id}(id=${assignment.id})}"
+       class="ui button" th:text="#{common.cancel}">
+      Cancel
+    </a>
+  </form>
+</div>
 
-      <input type="submit"
-             name="update"
-             class="ui primary button"
-             th:value="#{default.button.update.label}"/>
-
-      <a th:href="@{/assignment/{id}(id=${assignment.id})}"
-         class="ui button" th:text="#{common.cancel}">
-        Cancel
-      </a>
-    </form>
-  </div>
-
-</section>
 
 </body>
 </html>
