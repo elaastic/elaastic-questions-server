@@ -177,6 +177,27 @@ internal class AssignmentServiceIntegrationTest(
         }
     }
 
+    @Test
+    fun `try to delete a non-existing assignment`() {
+        val teacher = testingService.getTestTeacher()
+
+        assertThrows<EntityNotFoundException> {
+            assignmentService.delete(teacher, 123456)
+        }
+    }
+
+    @Test
+    fun `try to delete an assignment of another user`() {
+        val teacher = testingService.getTestTeacher()
+        val assignmentId = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        ).id!!
+
+        assertThrows<EntityNotFoundException> {
+            assignmentService.delete(testingService.getAnotherTestTeacher(), assignmentId)
+        }
+    }
+
     private fun createTestingData(owner: User, n: Int = 10) {
         (1..n).forEach {
             assignmentService.save(

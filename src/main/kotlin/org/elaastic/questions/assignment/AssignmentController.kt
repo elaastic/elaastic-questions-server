@@ -132,7 +132,13 @@ class AssignmentController(
                 redirectAttributes.addFlashAttribute("messageType", "success")
                 redirectAttributes.addFlashAttribute(
                         "messageContent",
-                        messageConfirmUpdateAssignment(it)
+                        message(
+                                "assignment.updated.message",
+                                arrayOf(
+                                        message("assignment.label"),
+                                        assignment.title
+                                )
+                        )
                 )
                 "redirect:/assignment/$id"
             }
@@ -140,24 +146,33 @@ class AssignmentController(
     }
 
     @GetMapping("{id}/delete")
-    fun delete(authentication: Authentication, @PathVariable id: Long) : String {
+    fun delete(authentication: Authentication,
+               @PathVariable id: Long,
+               redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
+        val assignment = assignmentService.get(user, id)
         assignmentService.delete(user, id)
+
+        redirectAttributes.addFlashAttribute("messageType", "success")
+        redirectAttributes.addFlashAttribute(
+                "messageContent",
+                message(
+                        "assignment.deleted.message",
+                        arrayOf(
+                                message("assignment.label"),
+                                assignment.title
+                        )
+                )
+        )
+
         return "redirect:/assignment"
     }
 
-    private fun messageConfirmUpdateAssignment(assignment: Assignment) : String {
+    private fun message(code: String, args: Array<String>? = null): String {
         return messageSource.getMessage(
-                "assignment.updated.message",
-                arrayOf(
-                        messageSource.getMessage(
-                                "assignment.label",
-                                null,
-                                LocaleContextHolder.getLocale()
-                        ),
-                        assignment.title
-                ),
+                code,
+                args,
                 LocaleContextHolder.getLocale()
         )
     }
