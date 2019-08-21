@@ -3,10 +3,12 @@ package org.elaastic.questions.directory
 import org.apache.commons.lang3.time.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.logging.Logger
+import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 
@@ -21,6 +23,22 @@ class UserService(
 ) {
 
     val logger = Logger.getLogger(UserService::class.java.name)
+
+    /**
+     * Find user by id
+     * @param id the id
+     * @return the found user or null
+     */
+    fun findById(id: Long): User? {
+        userRepository.findById(id).let {
+            return if (it.isPresent) {
+                it.get()
+            } else {
+                null
+            }
+        }
+    }
+
 
     /**
      *  Find user by username
@@ -67,6 +85,20 @@ class UserService(
                 }
                 return it
             }
+        }
+    }
+
+    @Transactional
+    fun saveUser(authUser: User, user: User):User {
+        if (authUser != user) {
+            logger.severe("Trying illegal access on user ${user.id} from ${authUser.id}")
+            throw AccessDeniedException("You are not authorized to access to this user")
+        }
+        if (user.plainTextPassword != null) {
+            user.password = passwordEncoder.encode(user.plainTextPassword)
+        }
+        userRepository.saveAndFlush(user).let {
+            return it
         }
     }
 

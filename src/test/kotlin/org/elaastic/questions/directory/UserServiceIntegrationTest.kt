@@ -428,4 +428,23 @@ internal class UserServiceIntegrationTest(
             assertThat(passwordResetKeyRepository.findByUser(testingService.getTestTeacher()), notNullValue())
         }
     }
+
+    @Test
+    fun `test save user with role change`() {
+        tGiven {
+            // a teacher
+            testingService.getTestTeacher().let {
+                assertTrue(it.isTeacher())
+                it
+            }
+        }.tWhen {
+            // changing the main role in student
+            it.replaceRolesWithMainRole(roleService.roleForName(Role.RoleId.STUDENT.roleName,true))
+            // and saving the user
+            userService.saveUser(it, it)
+        }.tThen {
+            entityManager.refresh(it)
+            assertTrue(it.isLearner())
+        }
+    }
 }

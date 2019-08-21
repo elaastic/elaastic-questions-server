@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(~{::title}, ~{}, ~{::section}, ~{})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title th:text="|elaastic: #{useraccount.title}|"></title>
+</head>
+
+<body>
+<section>
+  <div style="max-width: 800px; margin: auto;">
+    <h2 class="ui header">
+      <i class="user icon"></i>
+
+      <div class="content">
+        [[#{useraccount.title}]]
+      </div>
+    </h2>
+
+
+    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+      Message
+    </div>
+
+    <div class="ui segment">
+
+      <form class="ui form"
+            th:object="${userData}"
+            th:classappend="${#fields.hasErrors('*')}? 'error'"
+            th:action="@{/userAccount/update(id=${userData.id})}" method="post">
+
+        <div th:replace="layout/components/form-messages :: formMessages()"></div>
+        <input type="hidden" th:field="*{hasOwner}">
+
+        <div class="required field">
+          <label>
+            [[#{useraccount.form.name}]]
+          </label>
+
+          <div class="two fields">
+            <div class="required field">
+              <input type="text"
+                     id="firstName"
+                     name="firstName"
+                     th:field="*{firstName}"
+                     th:placeholder="#{useraccount.form.firstName.placeholder}">
+            </div>
+
+            <div class="required field">
+              <input type="text"
+                     id="lastName"
+                     name="lastName"
+                     th:field="*{lastName}"
+                     th:placeholder="#{useraccount.form.lastName.placeholder}">
+            </div>
+          </div>
+        </div>
+
+        <div class="required field">
+          <label>
+            [[#{useraccount.form.email}]]
+          </label>
+          <input type="text"
+                 id="email"
+                 name="email"
+                 th:placeholder="#{useraccount.form.email.placeholder}"
+                  th:field="*{email}">
+        </div>
+
+        <div class="ui hidden divider"></div>
+
+        <div class="inline fields">
+          <label>[[#{useraccount.profile.label}]]</label>
+
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="role"
+                       value="STUDENT_ROLE"
+                       id="STUDENT_ROLE"
+                       th:checked="${user.isLearner()}"/>
+              <label for="STUDENT_ROLE">[[#{useraccount.form.learner.radio}]]</label>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="role" value="TEACHER_ROLE" id="TEACHER_ROLE"
+                       th:checked="${user.isTeacher()}"/>
+              <label for="TEACHER_ROLE">[[#{useraccount.form.teacher.radio}]]</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="required field">
+          <label>
+            [[#{useraccount.username.label}]]
+          </label>
+          <input type="text"
+                 id="username" th:placeholder="#{useraccount.form.username.placeholder}"
+          name="username"
+          th:field="*{username}">
+        </div>
+
+<!--      TODO - a dedicated form to change the password
+          <div class="ui hidden divider"></div>-->
+
+<!--        <div class="field">-->
+<!--          <label>-->
+<!--            [[#{useraccount.form.password}]]-->
+<!--          </label>-->
+<!--          <input type="password"-->
+<!--                 id="password1" th:placeholder="#{useraccount.form.password.placeholder}"-->
+<!--          name="password1">-->
+<!--        </div>-->
+
+<!--        <div class="field">-->
+<!--          <input type="password"-->
+<!--                 id="password2"-->
+<!--                 th:placeholder="#{useraccount.form.confirmPassword.placeholder}"-->
+<!--          name="password2">-->
+<!--        </div>-->
+
+        <button type="submit"
+                class="ui primary button">
+          [[#{useraccount.save.button}]] &raquo;
+        </button>
+      </form>
+
+    </div>
+
+    <div class="ui segment">
+      <a th:href="@{/userAccount/unsubscribe(id=${userData.id})}" class="ui negative button">
+        [[#{useraccount.unsubscribe.button}]]
+      </a>
+    </div>
+
+
+    <script>
+      $(document)
+      .ready(function () {
+
+      $('.message .close')
+      .on('click', function () {
+      $(this)
+      .closest('.message')
+      .transition('fade')
+      ;
+      });
+
+      });
+
+    </script>
+  </div>
+
+
+</section>
+</body>
+</html>

@@ -1,21 +1,21 @@
 package org.elaastic.questions.directory
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
+import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwner
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
 import javax.persistence.*
-import javax.validation.*
 import javax.validation.constraints.*
 import kotlin.jvm.Transient
-import kotlin.reflect.KClass
 
 
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
-@User.HasEmailOrIsOwner
-@User.PlainTextPasswordIsNotShort
+@ValidateHasEmailOrHasOwner
+@PlainTextPasswordIsTooShort
 class User(
         @field:NotBlank var firstName: String,
         @field:NotBlank var lastName: String,
@@ -29,7 +29,7 @@ class User(
         var plainTextPassword: String?,
 
         email: String
-) : AbstractJpaPersistable<Long>(), Serializable, UserDetails {
+) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwner {
 
     @Version
     var version: Long? = null
@@ -57,11 +57,11 @@ class User(
         return "${this.firstName} ${this.lastName}"
     }
 
-    fun hasEmail(): Boolean {
+    override fun hasEmail(): Boolean {
         return !email.isNullOrBlank()
     }
 
-    fun hasOwner(): Boolean {
+    override fun hasOwner(): Boolean {
         return owner != null
     }
 
@@ -76,6 +76,17 @@ class User(
     var roles: MutableSet<Role> = HashSet()
 
     fun addRole(role: Role): User {
+        roles.add(role)
+        return this
+    }
+
+    /**
+     * Replace the main role
+     * @param role the new main role
+     * @return the user
+     */
+    fun replaceRolesWithMainRole(role: Role): User {
+        roles = HashSet()
         roles.add(role)
         return this
     }
@@ -147,38 +158,4 @@ class User(
         return username
     }
 
-    @Target(AnnotationTarget.CLASS)
-    @Retention(AnnotationRetention.RUNTIME)
-    @Constraint(validatedBy = [HasEmailOrIsOwnerValidator::class])
-    annotation class HasEmailOrIsOwner(
-            val message: String = "user.hasEmailOrIsOwner",
-            val groups: Array<KClass<*>> = [],
-            val payload: Array<KClass<out Payload>> = []
-    )
-
-    class HasEmailOrIsOwnerValidator : ConstraintValidator<HasEmailOrIsOwner, User> {
-
-        override fun isValid(user: User?, context: ConstraintValidatorContext?): Boolean {
-            return user?.let { it.hasEmail() || it.hasOwner() } ?: false
-        }
-    }
-
-
-    @Target(AnnotationTarget.CLASS)
-    @Retention(AnnotationRetention.RUNTIME)
-    @Constraint(validatedBy = [PlainTextPasswordIsNotShortValidator::class])
-    annotation class PlainTextPasswordIsNotShort(
-            val message: String = "user.plainTextPassword.short",
-            val groups: Array<KClass<*>> = [],
-            val payload: Array<KClass<out Payload>> = []
-    )
-
-    class PlainTextPasswordIsNotShortValidator : ConstraintValidator<PlainTextPasswordIsNotShort, User> {
-
-        override fun isValid(user: User?, context: ConstraintValidatorContext?): Boolean {
-            return user?.let {
-                (it.plainTextPassword == null && it.password != null) || it.plainTextPassword!!.length > 3
-            } ?: false
-        }
-    }
 }

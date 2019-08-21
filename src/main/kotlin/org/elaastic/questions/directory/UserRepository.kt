@@ -4,9 +4,13 @@ import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import java.util.*
 
 
 interface UserRepository : CrudRepository<User, Long>, JpaRepository<User, Long> {
+
+    @EntityGraph(value = "User.roles", type = EntityGraph.EntityGraphType.LOAD)
+    override fun findById(id: Long): Optional<User>
 
     @EntityGraph(value = "User.roles", type = EntityGraph.EntityGraphType.LOAD)
     fun findByUsername(username: String): User?

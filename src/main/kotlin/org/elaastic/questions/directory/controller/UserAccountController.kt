@@ -1,16 +1,25 @@
 package org.elaastic.questions.directory.controller
 
+
+import org.elaastic.questions.directory.RoleService
+import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.directory.controller.command.UserData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
+import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.http.HttpStatus
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.util.*
+import java.util.logging.Logger
+import javax.servlet.http.HttpServletResponse
+import javax.validation.*
 
 
 @Controller
@@ -18,8 +27,11 @@ class UserAccountController(
         @Value("\${elaastic.auth.check_user_email:true}")
         val checkEmail: Boolean,
         @Autowired val userService: UserService,
+        @Autowired val roleService: RoleService,
         @Autowired val messageSource: MessageSource
 ) {
+
+    val logger = Logger.getLogger(UserAccountController::javaClass.name)
 
     @GetMapping("/register")
     fun showSubscribeForm(model: Model): String {
@@ -28,9 +40,49 @@ class UserAccountController(
     }
 
     @GetMapping("/userAccount/edit")
-    fun edit(): String {
-        // TODO implement
+    fun edit(authentication: Authentication, model: Model): String {
+        val user: User = authentication.principal as User
+        val userToUpdate = userService.findById(user.id!!)!!
+        model.addAttribute("userData", UserData(userToUpdate))
+        model.addAttribute("user", userToUpdate)
         return "/userAccount/edit"
+    }
+
+    @PostMapping("/userAccount/update")
+    fun update(authentication: Authentication,
+               @Valid @ModelAttribute userData: UserData,
+               result: BindingResult,
+               model: Model,
+               response: HttpServletResponse,
+               redirectAttributes: RedirectAttributes,
+               locale: Locale): String {
+        val authUser: User = authentication.principal as User
+        if (!result.hasErrors()) {
+            val updatedUser = userService.findById(userData.id!!)!!
+            userData.populateUser(updatedUser, roleService)
+            try {
+                userService.saveUser(authUser, updatedUser)
+            } catch (e: DataIntegrityViolationException) {
+                when {
+                    e.message == null -> throw e
+                    e.message!!.contains("username") -> result.rejectValue("username", "user.normalizedUsername.unique")
+                    e.message!!.contains("email") -> result.rejectValue("email", "user.email.unique")
+                    else -> throw e
+                }
+            }
+        }
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("user", authUser)
+            model.addAttribute("userData", userData)
+            "/userAccount/edit"
+        } else {
+            redirectAttributes.addFlashAttribute("messageType", "success")
+            messageSource.getMessage("useraccount.update.success", emptyArray(), locale).let {
+                redirectAttributes.addFlashAttribute("messageContent", it)
+            }
+            "redirect:/userAccount/edit"
+        }
     }
 
     @GetMapping("/userAccount/activate")
