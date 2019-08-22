@@ -2,6 +2,7 @@ package org.elaastic.questions.directory.validation
 
 import org.elaastic.questions.directory.HasEmailOrHasOwner
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.directory.controller.command.UserData
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
@@ -44,21 +45,22 @@ class PlainTextPasswordIsTooShortValidator : ConstraintValidator<PlainTextPasswo
     }
 }
 
-//    TODO - To use for change password dedicated form
-//    @Target(AnnotationTarget.CLASS)
-//    @Retention(AnnotationRetention.RUNTIME)
-//    @Constraint(validatedBy = [PasswordsMustBeIdenticalValidator::class])
-//    annotation class PasswordsMustBeIdentical(
-//            val message: String = "useraccount.form.password.identical",
-//            val groups: Array<KClass<*>> = [],
-//            val payload: Array<KClass<out Payload>> = []
-//    )
-//
-//    class PasswordsMustBeIdenticalValidator : ConstraintValidator<PasswordsMustBeIdentical, UserData> {
-//
-//        override fun isValid(user: UserData?, context: ConstraintValidatorContext?): Boolean {
-//            return user?.let { (it.password1 != null && it.password2 != null && it.password1 == it.password2)
-//                    || (it.password1 == null && it.password2 == null)
-//            } ?: false
-//        }
-//    }
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@Constraint(validatedBy = [PasswordsMustBeIdenticalValidator::class])
+annotation class PasswordsMustBeIdentical(
+        val message: String = "useraccount.form.password.identical",
+        val groups: Array<KClass<*>> = [],
+        val payload: Array<KClass<out Payload>> = []
+)
+
+class PasswordsMustBeIdenticalValidator : ConstraintValidator<PasswordsMustBeIdentical, UserData> {
+
+    override fun isValid(user: UserData?, context: ConstraintValidatorContext?): Boolean {
+        return user?.let {
+            (it.password1 == null && it.password2 == null) ||
+            (it.password1 != null && it.password2 != null && it.password1 == it.password2)
+        } ?: false
+    }
+}

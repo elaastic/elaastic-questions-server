@@ -28,15 +28,13 @@ class User(
         @Transient
         var plainTextPassword: String?,
 
-        email: String
+        @field:Column(unique = true)
+        @field:Email
+        var email: String? = null
 ) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwner {
 
     @Version
     var version: Long? = null
-
-    @Column(unique = true)
-    @Email
-    var email: String? = email
 
     @NotNull @Size(min = 1)
     private var password: String? = null

@@ -63,12 +63,7 @@ class UserAccountController(
             try {
                 userService.saveUser(authUser, updatedUser)
             } catch (e: DataIntegrityViolationException) {
-                when {
-                    e.message == null -> throw e
-                    e.message!!.contains("username") -> result.rejectValue("username", "user.normalizedUsername.unique")
-                    e.message!!.contains("email") -> result.rejectValue("email", "user.email.unique")
-                    else -> throw e
-                }
+                userData.catchDataIntegrityViolationException(e, result)
             }
         }
         return if (result.hasErrors()) {

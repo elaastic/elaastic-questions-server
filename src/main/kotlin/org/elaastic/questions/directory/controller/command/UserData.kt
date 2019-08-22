@@ -3,13 +3,17 @@ package org.elaastic.questions.directory.controller.command
 import org.elaastic.questions.directory.HasEmailOrHasOwner
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.directory.validation.PasswordsMustBeIdentical
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwner
+import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.validation.BindingResult
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 @ValidateHasEmailOrHasOwner
+@PasswordsMustBeIdentical
 data class UserData(
         val id: Long?,
         @field:NotBlank val firstName: String,
@@ -21,9 +25,11 @@ data class UserData(
         val username: String,
 
         @field:Email val email: String?,
-        @field:NotNull val hasOwner: Boolean
+        @field:NotNull val hasOwner: Boolean = false,
+        val password1: String? = null,
+        val password2: String? = null,
+        val language:String = "fr"
 ) : HasEmailOrHasOwner {
-
 
     constructor(user: User) : this(
             user.id,
@@ -42,6 +48,27 @@ data class UserData(
         user.username = username
         user.email = email
         return user
+    }
+
+    fun populateNewUser(roleService: RoleService): User {
+        User(
+                firstName,
+                lastName,
+                username,
+                password1,
+                email
+        ).addRole(roleService.roleForName(role, true)).let {
+            return it
+        }
+    }
+
+    fun catchDataIntegrityViolationException(e: DataIntegrityViolationException, result: BindingResult) {
+        when {
+            e.message == null -> throw e
+            e.message!!.contains("username") -> result.rejectValue("username", "Unique")
+            e.message!!.contains("email") -> result.rejectValue("email", "Unique")
+            else -> throw e
+        }
     }
 
     override fun hasEmail(): Boolean {
