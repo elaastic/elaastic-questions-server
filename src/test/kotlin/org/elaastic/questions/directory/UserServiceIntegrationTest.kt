@@ -317,6 +317,30 @@ internal class UserServiceIntegrationTest(
     }
 
     @Test
+    fun `test change password user with password check`() {
+        tGiven {
+            // a user with "abcd" password
+            testingService.getAnyUser(). let {
+                userService.changePasswordForUser(it, "abcd")
+            }
+        }.tWhen {
+            // changing the password with a correct plain password and correct current password
+            userService.changePasswordForUserWithCurrentPasswordChecking(it,"abcd", "1234").let { user ->
+                entityManager.refresh(user)
+            }
+            it
+        }.tThen {
+            assertTrue(passwordEncoder.matches("1234", it.password))
+            it
+        }.tExpect {
+            // exception when changing the password with an correct plain password but bad current password
+            assertThrows<SecurityException> {
+                userService.changePasswordForUserWithCurrentPasswordChecking(it, "abcd", "5678")
+            }
+        }
+    }
+
+    @Test
     fun `test remove old activation keys`() {
         tGiven {
             // 3 users with old activation keys and with only the first one who is enabled

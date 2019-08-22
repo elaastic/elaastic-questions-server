@@ -1,6 +1,7 @@
 package org.elaastic.questions.directory.controller.command
 
 import org.elaastic.questions.directory.HasEmailOrHasOwner
+import org.elaastic.questions.directory.HasPasswords
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.validation.PasswordsMustBeIdentical
@@ -26,10 +27,10 @@ data class UserData(
 
         @field:Email val email: String?,
         @field:NotNull val hasOwner: Boolean = false,
-        val password1: String? = null,
-        val password2: String? = null,
+        override val password1: String? = null,
+        override val password2: String? = null,
         val language:String = "fr"
-) : HasEmailOrHasOwner {
+) : HasEmailOrHasOwner, HasPasswords {
 
     constructor(user: User) : this(
             user.id,

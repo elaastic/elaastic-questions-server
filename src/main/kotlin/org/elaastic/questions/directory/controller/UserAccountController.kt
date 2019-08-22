@@ -4,6 +4,7 @@ package org.elaastic.questions.directory.controller
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.directory.controller.command.PasswordData
 import org.elaastic.questions.directory.controller.command.UserData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -42,11 +43,12 @@ class UserAccountController(
     @GetMapping("/userAccount/edit")
     fun edit(authentication: Authentication, model: Model): String {
         val user: User = authentication.principal as User
-        val userToUpdate = userService.findById(user.id!!)!!
+        val userToUpdate = userService.get(user.id!!)!!
         model.addAttribute("userData", UserData(userToUpdate))
         model.addAttribute("user", userToUpdate)
         return "/userAccount/edit"
     }
+
 
     @PostMapping("/userAccount/update")
     fun update(authentication: Authentication,
@@ -58,7 +60,7 @@ class UserAccountController(
                locale: Locale): String {
         val authUser: User = authentication.principal as User
         if (!result.hasErrors()) {
-            val updatedUser = userService.findById(userData.id!!)!!
+            val updatedUser = userService.get(userData.id!!)!!
             userData.populateUser(updatedUser, roleService)
             try {
                 userService.saveUser(authUser, updatedUser)
@@ -71,6 +73,45 @@ class UserAccountController(
             model.addAttribute("user", authUser)
             model.addAttribute("userData", userData)
             "/userAccount/edit"
+        } else {
+            redirectAttributes.addFlashAttribute("messageType", "success")
+            messageSource.getMessage("useraccount.update.success", emptyArray(), locale).let {
+                redirectAttributes.addFlashAttribute("messageContent", it)
+            }
+            "redirect:/userAccount/edit"
+        }
+    }
+
+    @GetMapping("/userAccount/editPassword")
+    fun editPassword(authentication: Authentication, model: Model): String {
+        val user: User = authentication.principal as User
+        model.addAttribute("passwordData", PasswordData(user))
+        model.addAttribute("user", user)
+        return "/userAccount/editPassword"
+    }
+
+    @PostMapping("/userAccount/updatePassword")
+    fun updatePassword(authentication: Authentication,
+               @Valid @ModelAttribute passwordData: PasswordData,
+               result: BindingResult,
+               model: Model,
+               response: HttpServletResponse,
+               redirectAttributes: RedirectAttributes,
+               locale: Locale): String {
+        val authUser: User = authentication.principal as User
+        if (!result.hasErrors()) {
+            val updatedUser = userService.get(authUser, passwordData.id!!)!!
+            try {
+                userService.changePasswordForUserWithCurrentPasswordChecking(
+                        updatedUser, passwordData.password!!, passwordData.password1!!)
+            } catch (e: SecurityException) {
+                passwordData.catchSecurityException(e, result)
+            }
+        }
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("user", authUser)
+            "/userAccount/editPassword"
         } else {
             redirectAttributes.addFlashAttribute("messageType", "success")
             messageSource.getMessage("useraccount.update.success", emptyArray(), locale).let {

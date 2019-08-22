@@ -2,13 +2,11 @@ package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Example
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.logging.Logger
-import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 
@@ -25,11 +23,28 @@ class UserService(
     val logger = Logger.getLogger(UserService::class.java.name)
 
     /**
-     * Find user by id
+     * Get user by id checking access authorization
+     * @param authUser the user triggering the get
+     * @param id the id
+     * @return the found user or null
+     * @throws AccessDeniedException when authorization failed
+     */
+    fun get(authUser: User, id: Long) : User {
+        get(id).let {
+            if(it != authUser) {
+                logger.severe("Trying illegal access on user ${it?.id} from ${authUser.id}")
+                throw AccessDeniedException("You are not autorized to access to this user")
+            }
+            return it
+        }
+    }
+
+    /**
+     * Get user by id
      * @param id the id
      * @return the found user or null
      */
-    fun findById(id: Long): User? {
+    fun get(id: Long): User? {
         userRepository.findById(id).let {
             return if (it.isPresent) {
                 it.get()
@@ -105,6 +120,7 @@ class UserService(
     /**
      * Change the password of a user
      * @param user the processed user
+     * @param newPlainTextPassword the new plain text password
      * @return the user with its new password
      */
     fun changePasswordForUser(user: User, newPlainTextPassword: String): User {
@@ -113,6 +129,24 @@ class UserService(
         userRepository.saveAndFlush(user).let {
             return it
         }
+    }
+
+    /**
+     * Change the password of a user
+     * @param user the processed user
+     * @param currentPassword the current password used to check current password is known by the user
+     * @param newPlainTextPassword the new plain text password
+     * @return the user with its new password
+     * @throws AccessDeniedException if current password not valid
+     */
+    fun changePasswordForUserWithCurrentPasswordChecking(user: User, currentPassword: String, newPlainTextPassword: String): User {
+        passwordEncoder.encode(currentPassword).let {
+            if (!passwordEncoder.matches(currentPassword,user.password)) {
+                logger.severe("Trying illegal access on user ${user.id} with bad password")
+                throw SecurityException("Bad.user.password")
+            }
+        }
+        return changePasswordForUser(user, newPlainTextPassword)
     }
 
     /**

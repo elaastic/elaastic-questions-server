@@ -1,6 +1,7 @@
 package org.elaastic.questions.directory.validation
 
 import org.elaastic.questions.directory.HasEmailOrHasOwner
+import org.elaastic.questions.directory.HasPasswords
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.controller.command.UserData
 import javax.validation.Constraint
@@ -55,9 +56,9 @@ annotation class PasswordsMustBeIdentical(
         val payload: Array<KClass<out Payload>> = []
 )
 
-class PasswordsMustBeIdenticalValidator : ConstraintValidator<PasswordsMustBeIdentical, UserData> {
+class PasswordsMustBeIdenticalValidator : ConstraintValidator<PasswordsMustBeIdentical, HasPasswords> {
 
-    override fun isValid(user: UserData?, context: ConstraintValidatorContext?): Boolean {
+    override fun isValid(user: HasPasswords?, context: ConstraintValidatorContext?): Boolean {
         return user?.let {
             (it.password1 == null && it.password2 == null) ||
             (it.password1 != null && it.password2 != null && it.password1 == it.password2)

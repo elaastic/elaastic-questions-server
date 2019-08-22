@@ -101,25 +101,6 @@
           th:field="*{username}">
         </div>
 
-<!--      TODO - a dedicated form to change the password
-          <div class="ui hidden divider"></div>-->
-
-<!--        <div class="field">-->
-<!--          <label>-->
-<!--            [[#{useraccount.form.password}]]-->
-<!--          </label>-->
-<!--          <input type="password"-->
-<!--                 id="password1" th:placeholder="#{useraccount.form.password.placeholder}"-->
-<!--          name="password1">-->
-<!--        </div>-->
-
-<!--        <div class="field">-->
-<!--          <input type="password"-->
-<!--                 id="password2"-->
-<!--                 th:placeholder="#{useraccount.form.confirmPassword.placeholder}"-->
-<!--          name="password2">-->
-<!--        </div>-->
-
         <button type="submit"
                 class="ui primary button">
           [[#{useraccount.save.button}]] &raquo;
@@ -129,7 +110,13 @@
     </div>
 
     <div class="ui segment">
-      <a th:href="@{/userAccount/unsubscribe(id=${userData.id})}" class="ui negative button">
+      <a th:href="@{/userAccount/editPassword}" class="ui warning button">
+        [[#{useraccount.changePassword.button}]]
+      </a>
+    </div>
+
+    <div class="ui segment">
+      <a th:href="@{/userAccount/unsubscribe}" class="ui negative button">
         [[#{useraccount.unsubscribe.button}]]
       </a>
     </div>
