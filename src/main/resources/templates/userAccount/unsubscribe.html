@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(~{::title}, ~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title th:text="|elaastic: #{useraccount.title}|"></title>
+</head>
+
+<body>
+<section>
+  <div style="max-width: 800px; margin: auto;">
+    <h2 class="ui header">
+      <i class="user icon"></i>
+
+      <div class="content">
+        [[#{useraccount.title}]]
+      </div>
+    </h2>
+
+
+    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+      Message
+    </div>
+
+    <div class="ui segment">
+      <a th:href="@{/home}" class="ui primary button">
+        [[#{common.cancel}]]
+      </a>
+      <a th:href="@{/userAccount/processUnsubscription}" class="ui negative button">
+        [[#{useraccount.unsubscribe.button}]]
+      </a>
+    </div>
+  </div>
+
+
+</section>
+</body>
+</html>

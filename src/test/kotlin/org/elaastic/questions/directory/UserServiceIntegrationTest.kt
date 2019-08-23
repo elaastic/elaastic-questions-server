@@ -471,4 +471,22 @@ internal class UserServiceIntegrationTest(
             assertTrue(it.isLearner())
         }
     }
+
+    @Test
+    fun `test disable user`() {
+        tGiven {
+            // a user
+            testingService.getTestTeacher().let {
+                assertTrue(it.enabled)
+                it
+            }
+        }.tWhen {
+            // triggering disable action
+            userService.disableUser(it)
+        }.tThen {
+            // user is disabled
+            entityManager.refresh(it)
+            assertFalse(it.enabled)
+        }
+    }
 }

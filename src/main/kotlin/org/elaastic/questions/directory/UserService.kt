@@ -215,8 +215,17 @@ class UserService(
                 }
             }
         }
+    }
 
-
+    /**
+     * Disable user
+     * @param user the user to disable
+     * @return the disabled user
+     */
+    fun disableUser(user: User):User {
+        user.enabled = false
+        userRepository.saveAndFlush(user)
+        return user
     }
 
     /**

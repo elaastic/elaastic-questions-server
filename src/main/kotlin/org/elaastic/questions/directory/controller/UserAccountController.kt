@@ -140,4 +140,25 @@ class UserAccountController(
         return "redirect:/login"
     }
 
+    @GetMapping("/userAccount/unsubscribe")
+    fun unsubscribe(authentication: Authentication, model: Model, locale: Locale):String {
+        val authUser: User = authentication.principal as User
+        model.addAttribute("user", authUser)
+        messageSource.getMessage("UnsubscribtionWarning.user", emptyArray(), locale).let {
+            model.addAttribute("messageContent", it)
+            model.addAttribute("messageType", "error")
+        }
+        return "/userAccount/unsubscribe"
+    }
+
+    @GetMapping("/userAccount/processUnsubscription")
+    fun processUnsubscription(authentication: Authentication, redirectAttributes: RedirectAttributes, locale: Locale):String {
+        messageSource.getMessage("useraccount.unsubscribe.success", emptyArray(), locale).let {
+            redirectAttributes.addFlashAttribute("message", it)
+        }
+        val authUser: User = authentication.principal as User
+        userService.disableUser(authUser)
+        return "redirect:/logout"
+    }
+
 }
