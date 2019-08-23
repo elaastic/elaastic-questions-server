@@ -8,6 +8,7 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionRespons
 import org.elaastic.questions.assignment.sequence.interaction.InteractionResponseRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
+import org.elaastic.questions.lti.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
@@ -20,7 +21,10 @@ class TestingService(
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val interactionResponseRepository: InteractionResponseRepository,
-        @Autowired val assignmentService: AssignmentService
+        @Autowired val assignmentService: AssignmentService,
+        @Autowired val ltiConsumerRepository: LtiConsumerRepository,
+        @Autowired val ltiContextRepository: LtiContextRepository,
+        @Autowired val ltiUserRepository: LtiUserRepository
 ) {
 
     fun getAnyUser(): User {
@@ -64,4 +68,17 @@ class TestingService(
     fun getTestAssignment() : Assignment {
         return assignmentService.get(382)
     }
+
+    fun getAnyLtiConsumer(): LtiConsumer {
+        return ltiConsumerRepository.findAll().iterator().next()
+    }
+
+    fun getAnyLtiContext(): LtiContext {
+        return ltiContextRepository.findAll().iterator().next()
+    }
+
+    fun getAnyLtiUser(): LtiUser {
+        return ltiUserRepository.findAll().iterator().next()
+    }
 }
+

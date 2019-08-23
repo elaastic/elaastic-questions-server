@@ -41,6 +41,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-allopen")
     implementation("org.springframework.data:spring-data-rest-hal-browser")
     implementation("org.apache.commons:commons-lang3:3.9")
+    implementation("com.icegreen:greenmail:1.5.10")
+    implementation(files("lib/ApacheJMeter_oauth-v2.jar","lib/tsaap-lti-0.4-no-oauth-dep.jar" ))
+
     runtime("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
@@ -53,7 +56,7 @@ dependencies {
     testImplementation("org.exparity:hamcrest-date:1.1.0")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    implementation("com.icegreen:greenmail:1.5.10")
+
 }
 
 allOpen {

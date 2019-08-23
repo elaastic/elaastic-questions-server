@@ -84,13 +84,14 @@ class UserService(
     @Transactional
     fun addUser(user: User,
                 language: String = "fr",
-                checkEmailAccount: Boolean = false
+                checkEmailAccount: Boolean = false,
+                enable: Boolean = true
     ): User {
 
         require(user.roles.isNotEmpty())
 
         with(user) {
-            enabled = !checkEmailAccount
+            enabled = if (checkEmailAccount) false else enable
             password = passwordEncoder.encode(plainTextPassword)
             userRepository.save(this).let {
                 initializeSettingsForUser(it, language)

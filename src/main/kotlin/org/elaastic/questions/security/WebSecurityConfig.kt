@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.authentication.AuthenticationManager
+
+
 
 
 @Configuration
@@ -34,11 +37,27 @@ class WebSecurityConfig(
                     ?.invalidateHttpSession(true)
                 ?.and()
                 ?.authorizeRequests()
-                    ?.antMatchers("/images/**", "/css/**", "/js/**", "/semantic/**", "/", "/demo", "/ckeditor/**")?.permitAll()
-                    ?.antMatchers("/register", "/api/users", "/login",
-                            "/userAccount/beginPasswordReset", "/userAccount/resetPassword",
-                            "/userAccount/processPasswordResetRequest", "/userAccount/confirmPasswordReset",
-                            "/userAccount/processResetPassword", "/userAccount/activate")?.permitAll()
+                    ?.antMatchers(
+                            "/images/**",
+                            "/css/**",
+                            "/js/**",
+                            "/semantic/**",
+                            "/",
+                            "/demo",
+                            "/ckeditor/**"
+                    )?.permitAll()
+                    ?.antMatchers(
+                            "/register",
+                            "/api/users",
+                            "/login",
+                            "/userAccount/beginPasswordReset",
+                            "/userAccount/resetPassword",
+                            "/userAccount/processPasswordResetRequest",
+                            "/userAccount/confirmPasswordReset",
+                            "/userAccount/processResetPassword",
+                            "/userAccount/activate",
+                            "/launch"
+                            )?.permitAll()
                     ?.anyRequest()?.authenticated()
                     ?.and()
                 ?.formLogin()
@@ -58,6 +77,12 @@ class WebSecurityConfig(
     @Bean
     fun encoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    @Throws(Exception::class)
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
     }
 
 }

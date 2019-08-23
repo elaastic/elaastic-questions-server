@@ -19,6 +19,7 @@ class DevBootstrap(
     fun init() {
         LOG.info("Bootstrapping elaastic-questions in development and test modes...")
         bootstrapService.initializeDevUsers()
+        bootstrapService.initializeDevLtiObjects()
         bootstrapService.startDevLocalSmtpServer()
         LOG.info("End of the bootstrap")
     }

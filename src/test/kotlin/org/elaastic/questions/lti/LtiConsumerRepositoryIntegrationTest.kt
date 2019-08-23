@@ -1,12 +1,17 @@
 package org.elaastic.questions.lti
 
+import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.directive.tExpect
+import org.elaastic.questions.test.directive.tGiven
+import org.elaastic.questions.test.directive.tThen
+import org.elaastic.questions.test.directive.tWhen
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import java.util.*
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
@@ -14,19 +19,21 @@ import javax.validation.ConstraintViolationException
 
 @SpringBootTest
 @Transactional
-internal class LtiConsumerIntegrationTest(@Autowired val ltiConsumerRepository: LtiConsumerRepository,
-                                          @Autowired val em: EntityManager) {
+internal class LtiConsumerRepositoryIntegrationTest(
+        @Autowired val ltiConsumerRepository: LtiConsumerRepository,
+        @Autowired val em: EntityManager,
+        @Autowired val testingService: TestingService
+) {
 
     @Test
     fun `test save of a valid lti consumer`() {
         // given a valid object
-        LtiConsumer(consumerName = "Moodle", secret = "secret pass").let {
-            it.id = "abcd1234"
+        LtiConsumer(consumerName = "Edx", secret = "secret pass", key = "abcd1234edx").let {
             it.enableFrom = Date()
             // when saving the object
             ltiConsumerRepository.saveAndFlush(it).let {
                 // then id and version are initialized
-                assertThat("id should not be null", it.id, equalTo("abcd1234"))
+                assertThat("id should not be null", it.key, equalTo("abcd1234edx"))
                 assertThat("date created should be intialized", it.dateCreated, notNullValue())
                 assertThat("date updated should be initialized", it.lastUpdated, notNullValue())
                 assertThat("consumer should be enabled", it.isEnabled, equalTo(1))
@@ -37,8 +44,7 @@ internal class LtiConsumerIntegrationTest(@Autowired val ltiConsumerRepository: 
     @Test
     fun `test save of a non valid lti consumer`() {
         // given a non valid object
-        LtiConsumer(consumerName = "Moodle", secret = "secret pass").let {
-            it.id = ""
+        LtiConsumer(consumerName = "Edx", secret = "secret pass", key = "").let {
             // expect an exception is thrown when saving the attachment
             assertThrows<ConstraintViolationException> { ltiConsumerRepository.saveAndFlush(it) }
         }
@@ -48,17 +54,37 @@ internal class LtiConsumerIntegrationTest(@Autowired val ltiConsumerRepository: 
     @Test
     fun `test fetch of a save lti consumer`() {
         // given a valid saved object
-        LtiConsumer(consumerName = "Moodle", secret = "secret pass").let {
-            it.id = "abcd1234"
+        LtiConsumer(consumerName = "Edx", secret = "secret pass", key = "abcd1234edx").let {
             it.enableFrom = Date()
             ltiConsumerRepository.saveAndFlush(it).let {
                 // when refreshing the saved object
                 em.refresh(it)
                 // then it has the expected value properties
-                assertThat("id is as expected", it.id, equalTo("abcd1234"))
-                assertThat("consumer name is as expected", it.consumerName, equalTo("Moodle"))
+                assertThat("id is as expected", it.key, equalTo("abcd1234edx"))
+                assertThat("consumer name is as expected", it.consumerName, equalTo("Edx"))
                 assertThat("consumer enableFrom is as expected", it.enableFrom, notNullValue())
                 assertThat("consumer is enabled as expected", it.isEnabled, equalTo(1))
+            }
+        }
+    }
+
+    @Test
+    fun `test find by id`() {
+        tGiven {
+            // an lti consumer
+            testingService.getAnyLtiConsumer()
+        }.tWhen {
+            // searching for lti consumer with a given valid key
+            ltiConsumerRepository.findById(it.key)
+        }.tThen {
+            // the lti consumer corresponding with the key is found
+            assertTrue(it.isPresent)
+            assertThat(it.get().key, equalTo(testingService.getAnyLtiConsumer().key))
+            assertThat(it.get().consumerName, equalTo(testingService.getAnyLtiConsumer().consumerName))
+        }.tExpect {
+            // searching a lti Consumer with bad key, an exception is thrown
+            assertThrows<NoSuchElementException> {
+                ltiConsumerRepository.findById("nokey").get()
             }
         }
     }

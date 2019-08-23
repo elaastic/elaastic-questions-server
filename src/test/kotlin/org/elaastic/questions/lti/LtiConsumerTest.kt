@@ -26,9 +26,9 @@ internal class LtiConsumerTest {
         // given a valid obj
         val validObj = LtiConsumer(
                 consumerName = "Moodle From",
-                secret = "secret pass"
+                secret = "secret pass",
+                key = "abcd1234"
         ).let {
-            it.id = "abcd1234"
             it.dateCreated = Date()
             it.lastUpdated = Date()
             it
@@ -49,25 +49,14 @@ internal class LtiConsumerTest {
         // given a non valid object
         val nonValidObj = LtiConsumer(
                 consumerName = "Moodle From",
-                secret = "secret pass"
+                secret = "secret pass",
+                key = ""
         ).let {
-            it.id = ""
             it.dateCreated = Date()
             it.lastUpdated = Date()
             it
         }
         // expect validation fails
-        assertThat(validator.validate(nonValidObj).isEmpty(), equalTo(false))
-        // when setting incorrectly consumer name
-        nonValidObj.id = "abcd1234"
-        nonValidObj.consumerName = ""
-        // then validation still succeeds
-        assertThat(validator.validate(nonValidObj).isEmpty(), equalTo(false))
-        // when setting incorrectly secret
-        nonValidObj.id = "abcd1234"
-        nonValidObj.consumerName = "Moodle from"
-        nonValidObj.secret = ""
-        // then validation still succeeds
         assertThat(validator.validate(nonValidObj).isEmpty(), equalTo(false))
     }
 

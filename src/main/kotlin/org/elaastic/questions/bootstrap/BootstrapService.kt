@@ -5,15 +5,20 @@ import com.icegreen.greenmail.util.ServerSetup
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.lti.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.transaction.Transactional
 
 
 @Service
 class BootstrapService(
         @Autowired val userService: UserService,
-        @Autowired val roleService: RoleService
+        @Autowired val roleService: RoleService,
+        @Autowired val ltiConsumerRepository: LtiConsumerRepository,
+        @Autowired val ltiContextRepository: LtiContextRepository,
+        @Autowired val ltiUserRepository: LtiUserRepository
 ) {
 
     var mailServer: GreenMail? = null
@@ -83,5 +88,56 @@ class BootstrapService(
             mailServer?.stop()
         } catch(e:Exception) {}
     }
+
+    fun initializeDevLtiObjects() {
+
+        LtiConsumer( // a lti consumer aka an LMS
+                consumerName = "Moodle",
+                secret = "secret pass",
+                key = "abcd1234").let {
+            it.enableFrom = Date()
+            if (!ltiConsumerRepository.existsById(it.key)) {
+                ltiConsumerRepository.saveAndFlush(it)
+            }
+            it
+        }.let {
+            LtiContext.LtiContextId( // a lti context aka a course from the LMS
+                    it.key,
+                    "The course").let { contextId ->
+                // and building a valid context
+                LtiContext(
+                        contextId,
+                        contextId.lmsActivityId,
+                        "The course title",
+                        it,
+                        "course id"
+                ).let{ context ->
+                    if(!ltiContextRepository.existsById(contextId)) {
+                        ltiContextRepository.saveAndFlush(context)
+                    }
+                    context
+                }
+            }
+        }.let {
+            LtiUser.LtiUserId(
+                    it.lms.key,
+                    it.lmsActivityId,
+                    "bobdeniro"
+            ).let {ltiUserId ->
+                LtiUser(
+                        ltiUserId,
+                        it.lms,
+                        it,
+                        ltiUserId.lmsUserId
+                ).let { ltiUser ->
+                    if (!ltiUserRepository.existsById(ltiUserId)) {
+                        ltiUserRepository.saveAndFlush(ltiUser)
+                    }
+                }
+            }
+        }
+
+    }
+
 
 }

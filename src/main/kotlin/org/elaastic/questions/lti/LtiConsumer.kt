@@ -15,20 +15,19 @@ class LtiConsumer(
         @field:NotBlank
         @field:Size(max = 45)
         @field:Column(name = "name")
-        var consumerName: String,
+        val consumerName: String,
 
         @field:NotBlank
         @field:Size(max = 32)
-        var secret: String
+        val secret: String,
+
+        @field:Id
+        @field:NotBlank
+        @field:Size(max = 255)
+        @Column(name = "consumer_key")
+        val key: String
 
 )  {
-
-    @field:Id
-    @field:NotBlank
-    @field:Size(max = 255)
-    @Column(name = "consumer_key")
-    lateinit var id: String
-
 
     var ltiVersion: String? = "1.0"
 
@@ -64,14 +63,14 @@ class LtiConsumer(
     var lastUpdated: Date? = null
 
     override fun toString(): String {
-        return "LtiConsumer(consumerName='$consumerName', secret='$secret', id=$id, ltiVersion=$ltiVersion, productName=$productName, productVersion=$productVersion, productGuid=$productGuid, cssPath=$cssPath, isProtected=$isProtected, isEnabled=$isEnabled, enableFrom=$enableFrom, enableUntil=$enableUntil, lastAccess=$lastAccess, dateCreated=$dateCreated, lastUpdated=$lastUpdated)"
+        return "LtiConsumer(consumerName='$consumerName', secret='$secret', id=$key, ltiVersion=$ltiVersion, productName=$productName, productVersion=$productVersion, productGuid=$productGuid, cssPath=$cssPath, isProtected=$isProtected, isEnabled=$isEnabled, enableFrom=$enableFrom, enableUntil=$enableUntil, lastAccess=$lastAccess, dateCreated=$dateCreated, lastUpdated=$lastUpdated)"
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is LtiConsumer) return false
 
-        if (id != other.id) return false
+        if (key != other.key) return false
         if (consumerName != other.consumerName) return false
 
         return true
@@ -79,7 +78,7 @@ class LtiConsumer(
 
     override fun hashCode(): Int {
         var result = consumerName.hashCode()
-        result = 31 * result + id.hashCode()
+        result = 31 * result + key.hashCode()
         return result
     }
 
