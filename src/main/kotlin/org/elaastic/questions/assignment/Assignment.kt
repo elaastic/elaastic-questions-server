@@ -76,9 +76,6 @@ class Assignment(
             "The owner of the assignment cannot be different from the owner of sequence"
         }
 
-        // TODO set the rank
-        // TODO Check that lastUpdated is impacted
-
         sequences.add(sequence)
         sequence.assignment = this
         sequence.owner = owner

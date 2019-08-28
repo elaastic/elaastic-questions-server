@@ -73,7 +73,7 @@ class AssignmentService(
         val sequence = Sequence(
                 owner = assignment.owner,
                 statement = statement,
-                rank = countAllSequence(assignment) + 1
+                rank = assignment.sequences.size + 1
         )
 
         assignment.addSequence(sequence)

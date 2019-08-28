@@ -57,7 +57,7 @@ class SequenceController(
              response: HttpServletResponse): String {
         val user: User = authentication.principal as User
 
-        val assignment = assignmentService.get(user, assignmentId)
+        val assignment = assignmentService.get(user, assignmentId, fetchSequences = true)
 
         if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
@@ -83,7 +83,7 @@ class SequenceController(
             var id: Long? = null,
             var rank: Int = 0,
             val statementData: StatementData
-            ) {
+    ) {
         constructor(sequence: Sequence) : this(
                 id = sequence.id,
                 rank = sequence.rank,
