@@ -7,8 +7,8 @@
       Title
     </a>
 
-    <!--    TODO *** Handle error-->
-    <div class="field ${hasErrors(bean: statementData, field: 'title', 'error')}"
+    <div class="field"
+         th:classappend="${#fields.hasErrors('title')} ? 'error'"
          style="margin-top: 1em;"
          v-on:mouseover="mouseOverTitle"
          v-on:mouseleave="mouseLeaveTitle">

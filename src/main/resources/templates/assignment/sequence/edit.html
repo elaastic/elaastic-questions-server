@@ -8,7 +8,7 @@
   <script type="text/javascript" th:src="@{/js/elaastic/VueCkeditorComponent.js}"></script>
   <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
 
-  <title th:text="|elaastic: ${sequenceData.statementData.title}|"></title>
+  <title th:text="|elaastic: ${statementData.title}|"></title>
 </head>
 
 <body>
@@ -39,7 +39,7 @@
      data-position="right center"
      data-inverted="">
     <i class="attach icon"
-       th:classappend="${sequenceData.statementData.attachment} ? 'grey' : 'yellow'"></i>
+       th:classappend="${statementData.attachment} ? 'grey' : 'yellow'"></i>
   </a>
 
   <a th:href="@{/player/{id}/play(id=${sequenceData.id})}"
@@ -52,31 +52,36 @@
 </aside>
 
 <div id="edit-sequence">
-  <form name="sequenceForm"
+
+  <h2 class="ui header">
+    <i class="large icons">
+      <i class="question circle outline icon"></i>
+      <i class="corner pencil alternate icon"></i>
+    </i>
+
+    <div class="content" style="vertical-align: middle;" th:text="#{question.update}">
+      Update a question
+    </div>
+  </h2>
+
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message
+  </div>
+
+  <form id="sequenceForm"
+        name="sequenceForm"
         class="ui form"
-        th:object="${sequenceData}"
-        th:action="@{/assignment/{assignmentId}/sequence/update(assignmentId=${assignment.id})}"
+        th:object="${statementData}"
+        th:classappend="${#fields.hasErrors('*')}? 'error'"
+        th:action="@{/assignment/{assignmentId}/sequence/{sequenceId}/update(assignmentId=${assignment.id},sequenceId=${sequenceData.id})}"
         method="post"
         enctype="multipart/form-data">
 
     <input type="hidden" name="sequence_instance_id" value="${sequence?.id}"/>
-
-    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-      Message
-    </div>
+    <input type="hidden" name="id" th:value="${statementData.id}"/>
+    <input type="hidden" name="version" th:value="${statementData.version}"/>
 
     <div th:replace="layout/components/form-messages :: formMessages(#{sequence.update.hasError.headerMessage})"></div>
-
-    <h2 class="ui header">
-      <i class="large icons">
-        <i class="question circle outline icon"></i>
-        <i class="corner pencil alternate icon"></i>
-      </i>
-
-      <div class="content" style="vertical-align: middle;" th:text="#{question.update}">
-        Update a question
-      </div>
-    </h2>
 
     <h3 class="ui block top attached header">
 
@@ -87,9 +92,9 @@
 
     <div class="ui bottom attached segment">
 
-      <div th:replace="/assignment/sequence/_statement_form :: statementForm(${sequenceData.statementData})"></div>
+      <div th:replace="/assignment/sequence/_statement_form :: statementForm(${statementData})"></div>
       <div
-        th:replace="/assignment/sequence/_statement_question_type_form :: statementQuestionTypeForm(${sequenceData.statementData})"></div>
+        th:replace="/assignment/sequence/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
 
       <div class="ui hidden divider"></div>
 

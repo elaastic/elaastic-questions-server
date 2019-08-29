@@ -146,10 +146,10 @@
         ChoiceInteractionTypeList: ChoiceInteractionTypeList,
         questionType: questionType,
         choiceQuestionSpec: {
-          interactionType: /*[[${statementData.choiceInteractionType}]]*/ null,
-          nbItem: /*[[${statementData.itemCount}]]*/ null,
-          exclusiveAnswer: /*[[${statementData.exclusiveChoice}]]*/ null,
-          multipleAnswer: /*[[${statementData.expectedChoiceList}]]*/ null
+          interactionType: /*[[${statementData.choiceInteractionType ?: 'EXCLUSIVE'}]]*/ null,
+          nbItem: /*[[${statementData.itemCount ?: 2}]]*/ null,
+          exclusiveAnswer: /*[[${statementData.exclusiveChoice ?: 1}]]*/ null,
+          multipleAnswer: /*[[${statementData.expectedChoiceList ?: [1]}]]*/ null
         }
 
       },

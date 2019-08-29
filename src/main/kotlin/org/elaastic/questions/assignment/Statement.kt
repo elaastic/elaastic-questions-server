@@ -31,7 +31,7 @@ class Statement(
 
         @field:NotNull
         @Enumerated(EnumType.STRING)
-        val questionType: QuestionType,
+        var questionType: QuestionType,
 
         @Convert(converter = ChoiceSpecificationConverter::class)
         @field:Column(name = "choice_specification")
@@ -76,10 +76,6 @@ class Statement(
         return questionType == QuestionType.ExclusiveChoice
     }
 
-    fun hasChoice(): Boolean {
-        return isMultipleChoice() || isExclusiveChoice()
-    }
-
     fun title(value: String): Statement {
         this.title = value
         return this
@@ -87,6 +83,24 @@ class Statement(
 
     fun content(value: String): Statement {
         this.content = value
+        return this
+    }
+
+    // TODO test
+    fun updateFrom(otherStatement: Statement): Statement {
+        require(id == otherStatement.id)
+        require(owner == otherStatement.owner)
+        if (version != otherStatement.version) {
+            throw OptimisticLockException()
+        }
+
+        title = otherStatement.title
+        content = otherStatement.content
+        questionType = otherStatement.questionType
+        choiceSpecification = otherStatement.choiceSpecification
+        parentStatement = otherStatement.parentStatement
+        expectedExplanation = otherStatement.expectedExplanation
+
         return this
     }
 

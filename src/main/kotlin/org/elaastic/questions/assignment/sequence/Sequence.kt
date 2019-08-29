@@ -16,7 +16,10 @@ import javax.validation.constraints.NotNull
 @Entity
 @NamedEntityGraph(
         name = "Sequence.statement",
-        attributeNodes = [NamedAttributeNode("statement")]
+        attributeNodes = [
+            NamedAttributeNode("statement"),
+            NamedAttributeNode("assignment")
+        ]
 )
 @EntityListeners(AuditingEntityListener::class)
 class Sequence(
@@ -27,8 +30,8 @@ class Sequence(
         var statement: Statement,
 
         @field:NotNull
-        @field:ManyToOne(fetch = FetchType.LAZY)
-        var assignment: Assignment?=null,
+        @field:ManyToOne(fetch = FetchType.EAGER)
+        var assignment: Assignment? = null,
 
         var rank: Int = 0,
 
