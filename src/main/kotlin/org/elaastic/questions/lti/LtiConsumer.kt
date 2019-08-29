@@ -15,17 +15,17 @@ class LtiConsumer(
         @field:NotBlank
         @field:Size(max = 45)
         @field:Column(name = "name")
-        val consumerName: String,
+        var consumerName: String,
 
         @field:NotBlank
         @field:Size(max = 32)
-        val secret: String,
+        var secret: String,
 
         @field:Id
         @field:NotBlank
         @field:Size(max = 255)
         @Column(name = "consumer_key")
-        val key: String
+        var key: String
 
 )  {
 
@@ -48,7 +48,7 @@ class LtiConsumer(
     @Column(name = "enabled")
     var isEnabled: Int? = 1
 
-    var enableFrom: Date? = null
+    var enableFrom: Date? = Date()
     var enableUntil: Date? = null
     var lastAccess: Date? = null
 
@@ -63,7 +63,7 @@ class LtiConsumer(
     var lastUpdated: Date? = null
 
     override fun toString(): String {
-        return "LtiConsumer(consumerName='$consumerName', secret='$secret', id=$key, ltiVersion=$ltiVersion, productName=$productName, productVersion=$productVersion, productGuid=$productGuid, cssPath=$cssPath, isProtected=$isProtected, isEnabled=$isEnabled, enableFrom=$enableFrom, enableUntil=$enableUntil, lastAccess=$lastAccess, dateCreated=$dateCreated, lastUpdated=$lastUpdated)"
+        return "LtiConsumer(consumerName='$consumerName', secret='$secret', key='$key', ltiVersion=$ltiVersion, productName=$productName, productVersion=$productVersion, productGuid=$productGuid, cssPath=$cssPath, isProtected=$isProtected, isEnabled=$isEnabled, enableFrom=$enableFrom, enableUntil=$enableUntil, lastAccess=$lastAccess, dateCreated=$dateCreated, lastUpdated=$lastUpdated)"
     }
 
     override fun equals(other: Any?): Boolean {

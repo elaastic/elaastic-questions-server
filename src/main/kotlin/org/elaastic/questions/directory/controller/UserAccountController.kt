@@ -161,4 +161,9 @@ class UserAccountController(
         return "redirect:/logout"
     }
 
+    @GetMapping("/terms")
+    fun terms():String {
+        return "/terms/terms"
+    }
+
 }

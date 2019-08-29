@@ -34,7 +34,9 @@ class LtiController(
     fun launch(request: HttpServletRequest, response: HttpServletResponse) {
         startNewSession(request)
         getDataConnector().let {
-            getToolProvider(request, response, it).execute()
+            getToolProvider(request, response, it).let { tp ->
+                tp.execute()
+            }
         }
     }
 
@@ -58,10 +60,10 @@ class LtiController(
         val serverUrlRoot = serverUrlFromTP.substring(0, serverUrlFromTP.lastIndexOf("/"))
         val result: String
         result = if (lmsUser.user.enabled) {
-            authenticateLmsUser(toolProvider.request, lmsUser)
-            serverUrlRoot + "/player/ltiLaunch/" + lmsAssignment.assignment.id
+            authenticateLmsUser(toolProvider.request, lmsUser) // not good : have to separate consent from enabling
+            "${serverUrlRoot}/player/ltiLaunch/${lmsAssignment.assignment.id}"
         } else {
-            serverUrlRoot + "/terms?username=" + lmsUser.user.username + "&assignment_id=" + lmsAssignment.assignment.id
+            "${serverUrlRoot}/terms?username=${lmsUser.user.username}&assignment_id=${lmsAssignment.assignment.id}"
         }
         toolProvider.redirectUrl = result
     }

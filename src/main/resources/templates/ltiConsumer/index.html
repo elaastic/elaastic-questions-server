@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#specificMenu}, content=~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>elaastic: LTI Consumers</title>
+</head>
+
+<body>
+<aside id="specificMenu">
+  <a th:href="@{/ltiConsumer/create}"
+     href="create"
+     class="item"
+     data-tooltip="Create an lti consumer"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow plus square outline icon"></i>
+  </a>
+</aside>
+
+<section>
+  <h2 class="ui header">
+    <i class="book icon"></i>
+
+    <div class="content">
+      LTI Consumer list
+      <div class="sub header">
+        This page lists all LTI Consumers
+      </div>
+    </div>
+  </h2>
+
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message
+  </div>
+
+  <table th:if="${not #lists.isEmpty(ltiConsumerPage.content)}"
+         class="ui single selectable line unstackable table">
+    <thead>
+    <tr>
+      <th>
+        Consumer Name
+      </th>
+      <th>
+        Consumer Key
+      </th>
+      <th>
+        Enable from
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ltiConsumer, i : ${ltiConsumerPage.content}">
+      <td>
+
+        <a th:href="@{/ltiConsumer/{id}(id=${ltiConsumer.key})}"
+           href="ltiConsumer/123"
+           data-tooltip="Show Detail"
+           data-inverted=""
+           th:text="${ltiConsumer.consumerName}">
+          The name
+        </a>
+
+      </td>
+
+      <td>
+        [[${ltiConsumer.key}]]
+      </td>
+
+      <td class="not mobile" th:text="${#dates.format(ltiConsumer.enableFrom, 'dd/MM/yyyy HH:mm')}">
+        25/07/2019
+      </td>
+
+      <td>
+        <a class="ui compact icon primary button"
+           th:href="@{/ltiConsumer/{id}/edit(id=${ltiConsumer.key})}"
+           href="/ltiConsumer/123/edit"
+           data-tooltip="Edit"
+           data-inverted="">
+          <i class="edit icon"></i>
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <div th:if="${#lists.isEmpty(ltiConsumerPage.content)}"
+       class="ui info message">
+    You have no LTI Consumer.
+  </div>
+
+  <div class="ui two column stackable grid">
+    <div class="column">
+      <div class="ui basic segment">
+        <a th:href="@{/ltiConsumer/create}"
+           href="create"
+           class="ui primary button">
+          <i class="add icon"></i>
+          <span>
+        Create an LTI Consumer
+      </span>
+        </a>
+      </div>
+    </div>
+    <div class="column">
+      <div th:replace="layout/components/paginate :: paginate(baseUrl='/ltiConsumer/index')"></div>
+    </div>
+
+  </div>
+
+  <div class="ui hidden divider"></div>
+</section>
+
+</body>
+</html>

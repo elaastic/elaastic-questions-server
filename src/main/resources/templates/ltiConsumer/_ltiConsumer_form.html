@@ -1,0 +1,76 @@
+<div th:fragment="ltiConsumerForm(ltiConsumer,editionMode)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+  <div class="ui error message"></div>
+
+  <div class="required field" th:classappend="${#fields.hasErrors('consumerName')}? 'error'">
+    <label>
+      Consumer Name
+    </label>
+    <input type="text"
+           name="consumerName"
+           th:field="*{consumerName}"
+           autofocus="autofocus"/>
+
+  </div>
+
+  <div class="required field" th:classappend="${#fields.hasErrors('key')}? 'error'">
+
+    <label>
+      Consumer key
+    </label>
+    <input type="text" th:if="${!editionMode}"
+           name="key"
+           th:field="*{key}"/>
+    <div th:if="${editionMode}">
+      <input type="hidden"
+             name="key"
+             th:field="*{key}"/>
+      [[${ltiConsumer.key}]]
+    </div>
+
+  </div>
+
+  <div class="required field" th:classappend="${#fields.hasErrors('secret')}? 'error'">
+
+    <label>
+      Consumer Secret
+    </label>
+    <input type="text"
+           name="secret"
+           th:field="*{secret}"/>
+
+  </div>
+
+  <script th:inline="javascript">
+    $(document)
+      .ready(function () {
+        $('.ui.form')
+          .form({
+            fields: {
+              consumerName: {
+                identifier: 'consumerName',
+                rules: [
+                  {
+                    type: 'empty',
+                    prompt: 'Consumer name cannot be empty'
+                  }
+                ]
+              },
+              secret: {
+                identifier: 'secret',
+                rules: [
+                  {
+                    type: 'empty',
+                    prompt: 'Secret cannot be empty'
+                  }
+                ]
+              }
+            }
+          })
+      })
+  </script>
+</div>
+
+

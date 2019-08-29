@@ -570,16 +570,16 @@ LOCK TABLES `user` WRITE;
 
 INSERT INTO `user` (`id`, `account_expired`, `account_locked`, `email`, `enabled`, `first_name`, `last_name`, `normalized_username`, `password`, `password_expired`, `username`, `version`, `owner_id`, `can_be_user_owner`)
 VALUES
-	(211,0,0,'admin@tsaap.org',1,'Admin','Tsaap','admin','7110eda4d09e062aa5e4a390b0a572ac0d2c0220',0,'admin',0,NULL,b'0'),
-	(4938,0,0,'John_Doe___1@fakeuser.com',1,'John','Doe','john_doe___1','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___1',0,NULL,b'0'),
-	(4939,0,0,'John_Doe___2@fakeuser.com',1,'John','Doe','john_doe___2','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___2',0,NULL,b'0'),
-	(4940,0,0,'John_Doe___3@fakeuser.com',1,'John','Doe','john_doe___3','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___3',0,NULL,b'0'),
-	(4941,0,0,'John_Doe___4@fakeuser.com',1,'John','Doe','john_doe___4','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___4',0,NULL,b'0'),
-	(4942,0,0,'John_Doe___5@fakeuser.com',1,'John','Doe','john_doe___5','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___5',0,NULL,b'0'),
-	(4943,0,0,'John_Doe___6@fakeuser.com',1,'John','Doe','john_doe___6','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___6',0,NULL,b'0'),
-	(4944,0,0,'John_Doe___7@fakeuser.com',1,'John','Doe','john_doe___7','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___7',0,NULL,b'0'),
-	(4945,0,0,'John_Doe___8@fakeuser.com',1,'John','Doe','john_doe___8','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___8',0,NULL,b'0'),
-	(4946,0,0,'John_Doe___9@fakeuser.com',1,'John','Doe','john_doe___9','06c129f13e5ec40f6d08f57504d30cf416e6cad9',0,'John_Doe___9',0,NULL,b'0');
+	(211,0,0,'admin@tsaap.org',1,'Admin','Tsaap','admin','$2a$10$BMJAZHSKFP/BQE.ckqoX7OKWNpIh/XQkEZLFMPd9yYx/3mDzG51o6',0,'admin',0,NULL,b'0'),
+	(4938,0,0,'John_Doe___1@fakeuser.com',1,'John','Doe','john_doe___1','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___1',0,NULL,b'0'),
+	(4939,0,0,'John_Doe___2@fakeuser.com',1,'John','Doe','john_doe___2','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___2',0,NULL,b'0'),
+	(4940,0,0,'John_Doe___3@fakeuser.com',1,'John','Doe','john_doe___3','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___3',0,NULL,b'0'),
+	(4941,0,0,'John_Doe___4@fakeuser.com',1,'John','Doe','john_doe___4','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___4',0,NULL,b'0'),
+	(4942,0,0,'John_Doe___5@fakeuser.com',1,'John','Doe','john_doe___5','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___5',0,NULL,b'0'),
+	(4943,0,0,'John_Doe___6@fakeuser.com',1,'John','Doe','john_doe___6','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___6',0,NULL,b'0'),
+	(4944,0,0,'John_Doe___7@fakeuser.com',1,'John','Doe','john_doe___7','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___7',0,NULL,b'0'),
+	(4945,0,0,'John_Doe___8@fakeuser.com',1,'John','Doe','john_doe___8','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___8',0,NULL,b'0'),
+	(4946,0,0,'John_Doe___9@fakeuser.com',1,'John','Doe','john_doe___9','$2a$10$cynMHvQ3I3eKzYD9xT/hMuiG.azm7DKDZrHM4iw.ZZyKlo1ehEJXC',0,'John_Doe___9',0,NULL,b'0');
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;

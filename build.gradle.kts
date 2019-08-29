@@ -43,6 +43,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("com.icegreen:greenmail:1.5.10")
     implementation(files("lib/ApacheJMeter_oauth-v2.jar","lib/tsaap-lti-0.4-no-oauth-dep.jar" ))
+    implementation("com.google.code.gson:gson:2.8.5")
 
     runtime("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

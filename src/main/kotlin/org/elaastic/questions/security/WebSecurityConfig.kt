@@ -1,8 +1,10 @@
 package org.elaastic.questions.security
 
+import org.elaastic.questions.directory.Role
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.web.builders.WebSecurity
+
+
 
 
 
@@ -27,7 +32,13 @@ class WebSecurityConfig(
         auth.authenticationProvider(authenticationProvider())
     }
 
+    @Throws(Exception::class)
+    override fun configure(web: WebSecurity) {
+        web.ignoring().antMatchers(HttpMethod.POST,"/launch")
+    }
+
     override fun configure(http: HttpSecurity?) {
+
         http
                 ?.logout()
                     ?.logoutRequestMatcher(AntPathRequestMatcher("/logout"))
@@ -55,9 +66,9 @@ class WebSecurityConfig(
                             "/userAccount/processPasswordResetRequest",
                             "/userAccount/confirmPasswordReset",
                             "/userAccount/processResetPassword",
-                            "/userAccount/activate",
-                            "/launch"
+                            "/userAccount/activate"
                             )?.permitAll()
+                    ?.antMatchers("/ltiConsumer/**")?.hasAuthority(Role.RoleId.ADMIN.roleName)
                     ?.anyRequest()?.authenticated()
                     ?.and()
                 ?.formLogin()

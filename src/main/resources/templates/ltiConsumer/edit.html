@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>LTI consumer [[${ltiConsumer.consumerName}]]</title>
+</head>
+
+<body>
+
+<h2 class="ui header">
+  <i class="large icons">
+    <i class="edit icon"></i>
+    <i class="corner pencil alternate  icon"></i>
+  </i>
+
+  <div class="content" style="vertical-align: middle;">
+    Edition of an LTI Consumer
+  </div>
+</h2>
+
+<div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+  Message
+</div>
+
+<div class="ui segment">
+
+  <form class="ui form"
+        th:object="${ltiConsumer}"
+        th:classappend="${#fields.hasErrors('*')}? 'error'"
+        th:action="@{/ltiConsumer/{id}/update(id=${ltiConsumer.key})}"
+        method="POST">
+
+    <div th:replace="layout/components/form-messages :: formMessages('')"></div>
+
+    <div th:replace="/ltiConsumer/_ltiConsumer_form :: ltiConsumerForm(${ltiConsumer}, ${true})"></div>
+
+    <input type="submit"
+           name="update"
+           class="ui primary button"
+           th:value="#{default.button.update.label}"/>
+
+    <a th:href="@{/ltiConsumer/{id}(id=${ltiConsumer.key})}"
+       class="ui button" th:text="#{common.cancel}">
+      Cancel
+    </a>
+  </form>
+</div>
+
+
+</body>
+</html>

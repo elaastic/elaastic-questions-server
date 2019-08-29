@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>Create an LTI Consumer</title>
+</head>
+
+<body>
+
+<h2 class="ui header">
+  <i class="large icons">
+    <i class="add icon"></i>
+    <i class="corner pencil alternate  icon"></i>
+  </i>
+
+  <div class="content" style="vertical-align: middle;">
+    Creation of an LTI Consumer
+  </div>
+</h2>
+
+<div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+  Message
+</div>
+
+<div class="ui segment">
+  <div class="ui top attached label">Create an Lti Consumer</div>
+  <form class="ui form"
+        th:object="${ltiConsumer}"
+        th:classappend="${#fields.hasErrors('*')}? 'error'"
+        method="POST"
+        th:action="@{/ltiConsumer/save}">
+
+    <div th:replace="layout/components/form-messages :: formMessages('')"></div>
+
+    <div th:replace="/ltiConsumer/_ltiConsumer_form :: ltiConsumerForm(${ltiConsumer}, ${false})"></div>
+
+    <input type="submit"
+           name="create"
+           class="ui primary button"
+           th:value="#{default.button.create.label}"/>
+
+
+    <a th:href="@{/ltiConsumer}" class="ui button" th:text="#{common.cancel}">
+      Cancel
+    </a>
+  </form>
+</div>
+
+
+</body>
+</html>

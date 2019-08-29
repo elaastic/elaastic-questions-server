@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>elaastic: LTI Consumer</title>
+</head>
+
+<body>
+<aside id="pageSpecificMenu">
+  <a href="#"
+     class="item"
+     onclick="$('#confirm-delete-ltiConsumer-modal').modal('show');">
+    <i class="outline trash icon"></i>
+    <span>Delete</span>
+  </a>
+
+  <!--  Delete confirm modal-->
+  <div>
+    <div id="confirm-delete-ltiConsumer-modal" class="ui tiny modal">
+      <div class="header">
+        <span>Delete</span>
+      </div>
+
+      <div class="content">
+        <p>
+          <span>
+            Do you really want to delete LTI Consumer <strong>[[${ltiConsumer.consumerName}]]</strong>
+          </span>
+        </p>
+      </div>
+
+      <div class="actions">
+        <div class="ui red approve button">
+          <span th:text="#{common.yes}">Yes</span>
+        </div>
+
+        <div class="ui cancel button">
+          <span th:text="#{common.no}">No</span>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      $('#confirm-delete-ltiConsumer-modal').modal({
+        onApprove: function () {
+          window.location = /*[[@{/ltiConsumer/{id}/delete(id=${ltiConsumer.key})}]]*/ '/ltiConsumer/123/delete'
+        }
+      })
+    </script>
+  </div>
+</aside>
+
+<section>
+
+  <h2 class="ui header">
+    <i class="large icons">
+      <i class="book icon"></i>
+      <i class="corner pencil alternate  icon"></i>
+    </i>
+
+    <div class="content" style="vertical-align: middle;">
+      Detail of an LTI Consumer
+    </div>
+  </h2>
+
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message
+  </div>
+
+  <h3 class="ui top attached block header">
+    <div class="content">
+      [[${ltiConsumer.consumerName}]]
+    </div>
+  </h3>
+
+  <div class="ui segment bottom attached">
+    <p>
+      <label>Key:</label>
+      <strong>[[${ltiConsumer.key}]]</strong>
+    </p>
+    <p>
+      <label>Secret:</label>
+       <strong>[[${ltiConsumer.secret}]]</strong>
+    </p>
+    <p>
+      <label>Enable from:</label>
+      <strong>[[${#dates.format(ltiConsumer.enableFrom, 'dd/MM/yyyy HH:mm')}]]</strong>
+    </p>
+  </div>
+  <div>
+    <a th:href="@{/ltiConsumer/{id}/edit(id=${ltiConsumer.key})}"
+       href="edit"
+       class="ui primary button">
+      <i class="edit icon"></i>
+      <span>
+        Edit
+      </span>
+    </a>
+  </div>
+
+</section>
+
+</body>
+</html>
