@@ -1,4 +1,4 @@
-package org.elaastic.questions
+package org.elaastic.questions.controller
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.ControllerAdvice

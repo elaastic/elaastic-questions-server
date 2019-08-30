@@ -1,11 +1,11 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.assignment.sequence.SequenceController
+import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
@@ -29,6 +29,9 @@ class AssignmentController(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val messageSource: MessageSource
 ) {
+
+    val messageBuilder = MessageBuilder(messageSource)
+
     @GetMapping(value = ["", "/", "/index"])
     fun index(authentication: Authentication,
               model: Model,
@@ -132,17 +135,15 @@ class AssignmentController(
                 it.updateFrom(assignmentData.toEntity())
                 assignmentService.save(it)
 
-                redirectAttributes.addFlashAttribute("messageType", "success")
-                redirectAttributes.addFlashAttribute(
-                        "messageContent",
-                        message(
-                                "assignment.updated.message",
-                                arrayOf(
-                                        message("assignment.label"),
-                                        it.title
-                                )
-                        )
-                )
+                with(messageBuilder) {
+                    success(
+                            redirectAttributes,
+                            "assignment.updated.message",
+                            message("assignment.label"),
+                            it.title
+                    )
+                }
+
                 "redirect:/assignment/$id"
             }
         }
@@ -157,17 +158,14 @@ class AssignmentController(
         val assignment = assignmentService.get(user, id)
         assignmentService.delete(user, id)
 
-        redirectAttributes.addFlashAttribute("messageType", "success")
-        redirectAttributes.addFlashAttribute(
-                "messageContent",
-                message(
-                        "assignment.deleted.message",
-                        arrayOf(
-                                message("assignment.label"),
-                                assignment.title
-                        )
-                )
-        )
+        with(messageBuilder) {
+            success(
+                    redirectAttributes,
+                    "assignment.deleted.message",
+                    message("assignment.label"),
+                    assignment.title
+            )
+        }
 
         return "redirect:/assignment"
     }
@@ -194,14 +192,6 @@ class AssignmentController(
         )
 
         return "/assignment/sequence/create"
-    }
-
-    private fun message(code: String, args: Array<String>? = null): String {
-        return messageSource.getMessage(
-                code,
-                args,
-                LocaleContextHolder.getLocale()
-        )
     }
 
     data class AssignmentData(
