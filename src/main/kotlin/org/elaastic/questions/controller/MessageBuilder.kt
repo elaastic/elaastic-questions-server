@@ -1,11 +1,18 @@
 package org.elaastic.questions.controller
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
+import org.springframework.context.annotation.Scope
+import org.springframework.context.annotation.ScopedProxyMode
 import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.stereotype.Component
+import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
+@Component
+@Scope(WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 class MessageBuilder(
-        private val messageSource: MessageSource
+        @Autowired val messageSource: MessageSource
 ) {
 
     fun success(redirectAttributes: RedirectAttributes,

@@ -27,10 +27,8 @@ import javax.validation.constraints.NotNull
 @Transactional
 class AssignmentController(
         @Autowired val assignmentService: AssignmentService,
-        @Autowired val messageSource: MessageSource
+        @Autowired val messageBuilder: MessageBuilder
 ) {
-
-    val messageBuilder = MessageBuilder(messageSource)
 
     @GetMapping(value = ["", "/", "/index"])
     fun index(authentication: Authentication,
