@@ -1,6 +1,7 @@
 package org.elaastic.questions.assignment
 
 import com.nhaarman.mockitokotlin2.*
+import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
 import org.junit.jupiter.api.Test
@@ -32,6 +33,9 @@ internal class AssignmentControllerTest(
 ) {
     @MockBean
     lateinit var assignmentService: AssignmentService
+
+    @MockBean
+    lateinit var messageBuilder: MessageBuilder
 
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
