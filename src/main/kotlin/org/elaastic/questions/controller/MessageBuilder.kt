@@ -9,14 +9,10 @@ class MessageBuilder(
 ) {
 
     fun success(redirectAttributes: RedirectAttributes,
-                code: String,
-                vararg args: String) {
+                message: String) {
 
         redirectAttributes.addFlashAttribute("messageType", "success")
-        redirectAttributes.addFlashAttribute(
-                "messageContent",
-                internalMessage(code, arrayOf(*args))
-        )
+        redirectAttributes.addFlashAttribute("messageContent", message)
     }
 
     fun message(code: String, vararg args: String): String {

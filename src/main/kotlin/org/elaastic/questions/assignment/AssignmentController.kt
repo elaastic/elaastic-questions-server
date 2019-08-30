@@ -138,9 +138,11 @@ class AssignmentController(
                 with(messageBuilder) {
                     success(
                             redirectAttributes,
-                            "assignment.updated.message",
-                            message("assignment.label"),
-                            it.title
+                            message(
+                                    "assignment.updated.message",
+                                    message("assignment.label"),
+                                    it.title
+                            )
                     )
                 }
 
@@ -161,9 +163,11 @@ class AssignmentController(
         with(messageBuilder) {
             success(
                     redirectAttributes,
-                    "assignment.deleted.message",
-                    message("assignment.label"),
-                    assignment.title
+                    message(
+                            "assignment.deleted.message",
+                            message("assignment.label"),
+                            assignment.title
+                    )
             )
         }
 
