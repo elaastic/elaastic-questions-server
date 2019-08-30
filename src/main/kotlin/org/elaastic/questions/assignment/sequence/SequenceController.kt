@@ -3,9 +3,7 @@ package org.elaastic.questions.assignment.sequence
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
-import org.elaastic.questions.assignment.choice.ChoiceInteractionType
-import org.elaastic.questions.assignment.choice.ChoiceItemSpecification
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.attachement.Attachment
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
@@ -138,6 +136,8 @@ class SequenceController(
     }
 
     // Note JT : would be nicer if we receive only the relevant data depending on QuestionType
+    // Moreover, the gap between the view model and the entities representation is too important
+    // The code below could be widely simplified by refactoring the view to use the same model as the backend
     data class StatementData(
             var id: Long? = null,
             var version: Long? = null,
@@ -145,7 +145,7 @@ class SequenceController(
             @field:NotBlank val content: String? = null,
             val attachment: Attachment? = null,
             val hasChoices: Boolean = true,
-            val choiceInteractionType: ChoiceInteractionType? = null,
+            val choiceInteractionType: ChoiceType? = null,
             @field:NotNull @field:Max(10) val itemCount: Int? = null,
             @field:NotNull var exclusiveChoice: Int = 1,
             @field:NotNull var expectedChoiceList: List<Int> = listOf(1),
@@ -157,15 +157,16 @@ class SequenceController(
                 title = statement.title,
                 content = statement.content,
                 hasChoices = statement.questionType != QuestionType.OpenEnded,
-                choiceInteractionType = statement.choiceSpecification?.choiceInteractionType,
-                itemCount = statement.choiceSpecification?.itemCount ?: 2
+                choiceInteractionType = statement.choiceSpecification?.getChoiceType(),
+                itemCount = statement.choiceSpecification?.nbCandidateItem ?: 2,
+                expectedChoiceList = listOf(1),
+                exclusiveChoice = 1
+
         ) {
-            when (choiceInteractionType) {
-                ChoiceInteractionType.EXCLUSIVE ->
-                    exclusiveChoice = statement.choiceSpecification?.getExpectedChoice()?.index ?: 1
-                ChoiceInteractionType.MULTIPLE ->
-                    expectedChoiceList = statement.choiceSpecification?.expectedChoiceList?.map { it.index }
-                            ?: listOf(1)
+            val choiceSpecification: ChoiceSpecification? = statement.choiceSpecification
+            when (choiceSpecification) {
+                is ExclusiveChoiceSpecification -> exclusiveChoice = choiceSpecification.expectedChoice.index
+                is MultipleChoiceSpecification -> expectedChoiceList = choiceSpecification.expectedChoiceList.map { it.index }
             }
         }
 
@@ -173,28 +174,29 @@ class SequenceController(
             val questionType: QuestionType =
                     if (hasChoices) {
                         when (choiceInteractionType) {
-                            ChoiceInteractionType.EXCLUSIVE -> QuestionType.ExclusiveChoice
-                            ChoiceInteractionType.MULTIPLE -> QuestionType.MultipleChoice
+                            ChoiceType.EXCLUSIVE -> QuestionType.ExclusiveChoice
+                            ChoiceType.MULTIPLE -> QuestionType.MultipleChoice
                             null -> throw IllegalStateException("No choiceInteractionType defined")
                         }
                     } else QuestionType.OpenEnded
 
             val choiceSpecification: ChoiceSpecification? =
                     if (hasChoices) {
-                        ChoiceSpecification(
-                                choiceInteractionType = choiceInteractionType!!,
-                                itemCount = itemCount!!
-                        ).let {
-                            when (choiceInteractionType) {
-                                ChoiceInteractionType.MULTIPLE -> it.expectedChoiceList =
-                                        expectedChoiceList.map { n ->
-                                            ChoiceItemSpecification(n, 100f / expectedChoiceList.size)
-                                        }
-                                ChoiceInteractionType.EXCLUSIVE -> it.setExpectedChoice(
-                                        ChoiceItemSpecification(exclusiveChoice, 100f)
-                                )
-                            }
-                            it
+                        when (choiceInteractionType) {
+                            null -> null
+
+                            ChoiceType.MULTIPLE -> MultipleChoiceSpecification(
+                                    itemCount!!,
+                                    expectedChoiceList.map { n ->
+                                        ChoiceItem(n, 100f / expectedChoiceList.size)
+                                    },
+                                    listOf()
+                            )
+
+                            ChoiceType.EXCLUSIVE -> ExclusiveChoiceSpecification(
+                                    itemCount!!,
+                                    ChoiceItem(exclusiveChoice, 100f)
+                            )
                         }
                     } else null
 

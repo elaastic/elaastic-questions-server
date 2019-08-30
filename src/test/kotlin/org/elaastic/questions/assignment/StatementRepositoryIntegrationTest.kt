@@ -1,15 +1,14 @@
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.assignment.choice.ChoiceInteractionType
-import org.elaastic.questions.assignment.choice.ChoiceItemSpecification
+import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.elaastic.questions.test.TestingService
 import org.exparity.hamcrest.date.DateMatchers
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import java.util.*
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
@@ -112,12 +111,11 @@ internal class StatementRepositoryIntegrationTest(
     fun `test questionSpecification serialization-deserialization - adhoc data`() {
         // Given: an adhoc choice specification to be serialized into the datasource
         val user = testingService.getAnyUser()
-        val choiceSpecification = ChoiceSpecification(
-                choiceInteractionType = ChoiceInteractionType.MULTIPLE,
-                itemCount = 3,
+        val choiceSpecification : ChoiceSpecification = MultipleChoiceSpecification(
+                nbCandidateItem = 3,
                 expectedChoiceList = listOf(
-                        ChoiceItemSpecification(1, 50f),
-                        ChoiceItemSpecification(3, 50f)
+                        ChoiceItem(1, 50f),
+                        ChoiceItem(3, 50f)
                 ),
                 explanationChoiceList = listOf(
                         TeacherExplanation(1, "Un"),
@@ -155,24 +153,23 @@ internal class StatementRepositoryIntegrationTest(
         assertThat(
                 statement618.choiceSpecification,
                 equalTo(
-                        ChoiceSpecification(
-                                choiceInteractionType = ChoiceInteractionType.MULTIPLE,
-                                itemCount = 6,
+                        MultipleChoiceSpecification(
+                                nbCandidateItem = 6,
                                 expectedChoiceList = listOf(
-                                        ChoiceItemSpecification(
+                                        ChoiceItem(
                                                 index = 2,
                                                 score = 100f / 3f
                                         ),
-                                        ChoiceItemSpecification(
+                                        ChoiceItem(
                                                 index = 3,
                                                 score = 100f / 3f
                                         ),
-                                        ChoiceItemSpecification(
+                                        ChoiceItem(
                                                 index = 6,
                                                 score = 100f / 3f
                                         )
                                 )
-                        )
+                        ) as ChoiceSpecification
                 )
         )
     }

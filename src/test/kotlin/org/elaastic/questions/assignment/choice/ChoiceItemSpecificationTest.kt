@@ -21,7 +21,7 @@ internal class ChoiceItemSpecificationTest {
     @Test
     fun `check that the score cannot overcome 100`() {
         // Given:
-        var choiceItemSpecification = ChoiceItemSpecification(
+        var choiceItemSpecification = ChoiceItem(
                 1,
                 723f
         )
@@ -34,7 +34,7 @@ internal class ChoiceItemSpecificationTest {
         )
 
         // Given:
-        choiceItemSpecification = ChoiceItemSpecification(
+        choiceItemSpecification = ChoiceItem(
                 1,
                 100f
         )

@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.choice
+package org.elaastic.questions.assignment.choice.legacy
 
 import java.util.ArrayList
 

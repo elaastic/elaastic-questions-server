@@ -1,7 +1,7 @@
 package org.elaastic.questions.assignment.choice
 
 
-enum class ChoiceInteractionType {
+enum class ChoiceType {
     EXCLUSIVE,
     MULTIPLE
 }

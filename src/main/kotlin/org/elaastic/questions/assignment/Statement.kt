@@ -1,9 +1,6 @@
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.assignment.choice.ChoiceInteractionType
-import org.elaastic.questions.assignment.choice.ChoiceItemSpecification
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.questions.assignment.choice.ChoiceSpecificationConverter
+import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.attachement.Attachment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -109,12 +106,9 @@ class Statement(
             return Statement(
                     owner = user,
                     questionType = QuestionType.ExclusiveChoice,
-                    choiceSpecification = ChoiceSpecification(
-                            choiceInteractionType = ChoiceInteractionType.EXCLUSIVE,
-                            itemCount = 2,
-                            expectedChoiceList = listOf(
-                                    ChoiceItemSpecification(1, 1f)
-                            )
+                    choiceSpecification = ExclusiveChoiceSpecification(
+                            nbCandidateItem = 2,
+                            expectedChoice = ChoiceItem(1, 1f)
                     )
             )
         }

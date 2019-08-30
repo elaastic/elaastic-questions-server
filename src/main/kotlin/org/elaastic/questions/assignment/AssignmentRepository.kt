@@ -14,7 +14,6 @@ interface AssignmentRepository : JpaRepository<Assignment?, Long> {
     @EntityGraph(value = "Assignment.sequences", type = EntityGraph.EntityGraphType.LOAD)
     fun findOneWithSequencesById(id: Long): Assignment?
 
-    // TODO rename
     fun findOneById(id: Long): Assignment?
 
     fun deleteByIdAndOwner(id: Long, user: User): Long
