@@ -124,7 +124,7 @@
                style="margin-right: 1em;" th:text="${position}">
             3
           </div>
-          <span th:text="${sequence.statement.title}">Title</span>
+          <span th:id="|sequence-title-${sequence.id}|" th:text="${sequence.statement.title}">Title</span>
         </a>
       </h3>
     </div>
@@ -165,14 +165,61 @@
 
   <div th:replace="assignment/_modal_edit_properties :: modalEditProperties(${assignment})"></div>
 
-  <script>
+  <script th:inline="javascript">
     $(document).ready(function () {
       let selectedSequence = $(location.hash)
       if (selectedSequence) {
         selectedSequence.addClass('secondary')
       }
     })
+
+    var elaastic = elaastic || {}
+
+    elaastic.showConfirmDeleteModal = function (sequenceId) {
+
+
+      let title = $('#sequence-title-' + sequenceId).text();
+      let sentenceTemplate = /*[[#{sequence.delete.confirm}]]*/ '';
+      let sentence = sentenceTemplate.replace('{0}', title);
+
+      $('#confirm-delete-sequence-modal-title').text(sentence);
+
+      let confirmDeleteSequenceModal = $('#confirm-delete-sequence-modal');
+      confirmDeleteSequenceModal.modal({
+        onApprove: function () {
+          let baseUrl = /*[[@{/assignment/{assignmentId}/sequence/(assignmentId=${assignment.id})}]]*/ ''
+          window.location =  baseUrl + sequenceId + '/delete';
+        }
+      })
+
+      confirmDeleteSequenceModal.modal('show')
+    }
   </script>
+
+  <!--  Delete confirm modal-->
+  <div>
+    <div id="confirm-delete-sequence-modal" class="ui tiny modal">
+      <div class="header" th:text="#{common.delete}">
+        Delete
+      </div>
+
+      <div class="content">
+        <p id="confirm-delete-sequence-modal-title">
+          Do you really want to delete the question "{0}"?
+        </p>
+      </div>
+
+      <div class="actions">
+        <div class="ui red approve button" th:text="#{common.yes}">
+          Yes
+        </div>
+
+        <div class="ui cancel button" th:text="#{common.no}">
+          No
+        </div>
+      </div>
+    </div>
+  </div>
 
 </section>
 

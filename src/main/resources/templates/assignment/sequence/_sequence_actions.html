@@ -1,9 +1,9 @@
 <div th:fragment="sequenceActions(sequence, position, nbSequence)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-  
+
   <a class="ui right floated icon red tiny button"
      href="#"
-     th:onclick="'$(\'#confirm-delete-sequence-modal-\''+${sequence.id}+').modal(\'show\');'"
+     th:onclick="|elaastic.showConfirmDeleteModal(${sequence.id})|"
      th:attr="data-tooltip=#{common.delete}"
      data-tooltip="Delete"
      data-inverted="">
@@ -48,37 +48,4 @@
     <i class="play icon"></i>
   </a>
 
-  <!--  Delete confirm modal-->
-  <div>
-    <div th:id="|confirm-delete-sequence-modal-${sequence.id}|" class="ui tiny modal">
-      <div class="header" th:text="#{common.delete}">
-        Delete
-      </div>
-
-      <div class="content">
-        <p th:text="#{sequence.delete.confirm(${sequence.statement.title})}">
-          Do you really want to delete the question "{0}"?
-        </p>
-      </div>
-
-      <div class="actions">
-        <div class="ui red approve button" th:text="#{common.yes}">
-          Yes
-        </div>
-
-        <div class="ui cancel button" th:text="#{common.no}">
-          No
-        </div>
-      </div>
-    </div>
-
-    <script th:inline="javascript">
-      $('#confirm-delete-sequence-modal-/*[[${sequence.id}]]*/').modal({
-        onApprove: function () {
-          var url = /*[[@{/sequence/{id}/delete(id=${sequence.id})}]]*/ '';
-          window.location = url;
-        }
-      })
-    </script>
-  </div>
 </div>

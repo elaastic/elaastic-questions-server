@@ -77,6 +77,8 @@ class SequenceController(
                     statementData.toEntity(user)
             )
 
+            assignmentService.removeSequence(sequence)
+
             return "redirect:/assignment/$assignmentId#sequence_${sequence.id}"
         }
     }
@@ -123,6 +125,30 @@ class SequenceController(
                 "redirect:/assignment/$assignmentId/sequence/$id/edit"
             }
         }
+    }
+
+    @GetMapping("{id}/delete")
+    fun delete(authentication: Authentication,
+               @PathVariable assignmentId: Long,
+               @PathVariable id: Long,
+               redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        val sequence = sequenceService.get(user, id)
+        assignmentService.removeSequence(sequence)
+
+        with(messageBuilder) {
+            success(
+                    redirectAttributes,
+                    message(
+                            "sequence.deleted.message",
+                            message("sequence.label"),
+                            sequence.statement.title
+                    )
+            )
+        }
+
+        return "redirect:/assignment/$assignmentId"
     }
 
     data class SequenceData(

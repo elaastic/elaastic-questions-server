@@ -14,4 +14,8 @@ class StatementService(
     fun save(statement: Statement) : Statement {
         return statementRepository.save(statement)
     }
+
+    fun delete(statementId: Long) {
+        statementRepository.deleteById(statementId)
+    }
 }

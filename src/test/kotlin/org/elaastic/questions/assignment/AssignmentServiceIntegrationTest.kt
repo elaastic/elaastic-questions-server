@@ -1,10 +1,12 @@
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.exparity.hamcrest.date.DateMatchers
 import org.springframework.beans.factory.annotation.Autowired
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
@@ -27,7 +29,9 @@ import kotlin.collections.ArrayList
 internal class AssignmentServiceIntegrationTest(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val testingService: TestingService,
-        @Autowired val entityManager: EntityManager
+        @Autowired val entityManager: EntityManager,
+        @Autowired val sequenceRepository: SequenceRepository,
+        @Autowired val statementRepository: StatementRepository
 ) {
 
     val persistentUnitUtil: PersistenceUnitUtil by lazy {
@@ -244,6 +248,74 @@ internal class AssignmentServiceIntegrationTest(
                     equalTo(1)
             )
         }
+    }
+
+    @Test
+    fun `remove a sequence to an assignment - valid`() {
+        val teacher = testingService.getTestTeacher()
+        val assignment = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        )
+        val sequence1 = assignmentService.addSequence(
+                assignment,
+                Statement.createDefaultStatement(teacher)
+                        .title("Sequence n°1")
+                        .content("Content 1")
+        )
+        val sequence2 = assignmentService.addSequence(
+                assignment,
+                Statement.createDefaultStatement(teacher)
+                        .title("Sequence n°2")
+                        .content("Content 2")
+        )
+        val sequence3 = assignmentService.addSequence(
+                assignment,
+                Statement.createDefaultStatement(teacher)
+                        .title("Sequence n°3")
+                        .content("Content 3")
+        )
+        entityManager.flush()
+
+        val assignmentId = assignment.id
+        val sequenceId1 = sequence1.id
+        val statementId1 = sequence1.statement.id
+        val sequenceId2 = sequence2.id
+        val statementId2 = sequence2.statement.id
+        val sequenceId3 = sequence3.id
+        val statementId3 = sequence3.statement.id
+        val assignmentLastUpdated = assignment.lastUpdated
+        val assignmentVersion = assignment.version
+
+        assertThat(assignmentId, notNullValue())
+        assertThat(sequenceId1, notNullValue())
+        assertThat(statementId1, notNullValue())
+        assertThat(sequenceId2, notNullValue())
+        assertThat(statementId2, notNullValue())
+        assertThat(sequenceId3, notNullValue())
+        assertThat(statementId3, notNullValue())
+
+        tWhen {
+            assignmentService.removeSequence(sequence2)
+            entityManager.flush()
+            entityManager.clear()
+        }.tThen {
+            assignmentService.get(assignmentId!!, true).let {
+                assertThat(it.sequences.size, equalTo(2))
+                assertThat(it.lastUpdated, DateMatchers.sameOrAfter(assignmentLastUpdated))
+                assertThat(it.version, equalTo(assignmentVersion!! + 1L))
+            }
+            assertThat(sequenceRepository.existsById(sequenceId2!!), equalTo(false))
+            assertThat(statementRepository.existsById(statementId2!!), equalTo(false))
+        }.tWhen {
+            assignmentService.removeSequence(sequenceRepository.getOne(sequenceId1!!))
+            assignmentService.removeSequence(sequenceRepository.getOne(sequenceId3!!))
+            entityManager.flush()
+        }.tThen {
+            assignmentService.get(assignmentId!!, true).let {
+                assertThat(it.sequences.size, equalTo(0))
+            }
+        }
+
     }
 
     private fun createTestingData(owner: User, n: Int = 10) {

@@ -2,6 +2,7 @@ package org.elaastic.questions.assignment
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.sequence.StatementService
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -20,7 +21,7 @@ import javax.transaction.Transactional
 class AssignmentService(
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val statementRepository: StatementRepository
+        @Autowired val statementService: StatementService
 ) {
 
     fun findAllByOwner(owner: User,
@@ -73,14 +74,29 @@ class AssignmentService(
         val sequence = Sequence(
                 owner = assignment.owner,
                 statement = statement,
-                rank = assignment.sequences.size + 1
+                rank = (assignment.sequences.map { it.rank }.max() ?: 0) + 1
         )
 
         assignment.addSequence(sequence)
-        statementRepository.save(sequence.statement)
+        statementService.save(sequence.statement)
         sequenceRepository.save(sequence)
         touch(assignment)
 
         return sequence
+    }
+
+    fun removeSequence(sequence: Sequence) {
+        require(sequence.assignment != null)
+        val assignment = sequence.assignment!!
+        // TODO Delete Attachement
+        // TODO Delete PeerGrading
+        // TODO Delete InteractionResponse
+        // TODO Delete LearnerSequence
+
+        statementService.delete(sequence.statement.id!!)
+        assignment.sequences.remove(sequence)
+        // TODO check that the sequence is deleted by cascade
+
+        touch(assignment)
     }
 }
