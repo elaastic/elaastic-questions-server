@@ -32,7 +32,7 @@ class TermsService(
     /**
      * get active terms
      */
-    fun getActive(): Terms {
+    fun getActive(): Terms? {
         return termsRepository.findByIsActive(true)
     }
 

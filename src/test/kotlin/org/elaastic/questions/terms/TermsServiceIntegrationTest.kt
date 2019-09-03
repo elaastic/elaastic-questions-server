@@ -78,7 +78,7 @@ internal class TermsServiceIntegrationTest(
             ).forEach {
                 termsService.save(it)
             }.tExpect {
-                termsService.getActive().let {
+                termsService.getActive()!!.let {
                     entityManager.refresh(it)
                     assertTrue(it.isActive)
                     logger.info(it.termsContentsByLanguage["en"]?.content)

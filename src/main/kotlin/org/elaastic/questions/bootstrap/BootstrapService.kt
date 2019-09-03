@@ -6,8 +6,13 @@ import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.lti.*
+import org.elaastic.questions.terms.Terms
+import org.elaastic.questions.terms.TermsContent
+import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.thymeleaf.TemplateEngine
+import org.thymeleaf.context.Context
 import java.util.*
 import javax.transaction.Transactional
 
@@ -18,10 +23,33 @@ class BootstrapService(
         @Autowired val roleService: RoleService,
         @Autowired val ltiConsumerRepository: LtiConsumerRepository,
         @Autowired val ltiContextRepository: LtiContextRepository,
-        @Autowired val ltiUserRepository: LtiUserRepository
+        @Autowired val ltiUserRepository: LtiUserRepository,
+        @Autowired val termsService: TermsService,
+        @Autowired val templateEngine: TemplateEngine
 ) {
 
     var mailServer: GreenMail? = null
+
+    @Transactional
+    fun addTermsIfNotActiveOneAvailable() {
+        if (termsService.getActive() == null) {
+            val startDate = Date()
+            with(Context()) {
+                setVariable("startDate", startDate)
+                listOf(
+                        templateEngine.process("terms/terms_fr", this),
+                        templateEngine.process("terms/terms_en", this)
+                )
+            }.let {
+                Terms(startDate).let { terms ->
+                    TermsContent(it[0], terms)
+                    TermsContent(it[1], terms, "en")
+                    termsService.save(terms)
+                }
+            }
+        }
+    }
+
 
     @Transactional
     fun initializeDevUsers() {
@@ -80,13 +108,15 @@ class BootstrapService(
                 setUser("elaastic", "elaastic")
                 start()
             }
-        }catch(e: Exception) {}
+        } catch (e: Exception) {
+        }
     }
 
     fun stopDevLocalSmtpServer() {
         try {
             mailServer?.stop()
-        } catch(e:Exception) {}
+        } catch (e: Exception) {
+        }
     }
 
     fun initializeDevLtiObjects() {
@@ -111,8 +141,8 @@ class BootstrapService(
                         "The course title",
                         it,
                         "course id"
-                ).let{ context ->
-                    if(!ltiContextRepository.existsById(contextId)) {
+                ).let { context ->
+                    if (!ltiContextRepository.existsById(contextId)) {
                         ltiContextRepository.saveAndFlush(context)
                     }
                     context
@@ -123,7 +153,7 @@ class BootstrapService(
                     it.lms.key,
                     it.lmsActivityId,
                     "bobdeniro"
-            ).let {ltiUserId ->
+            ).let { ltiUserId ->
                 LtiUser(
                         ltiUserId,
                         it.lms,
