@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import java.util.logging.Logger
+import javax.transaction.Transactional
 import javax.validation.Valid
 
 @RestController

@@ -33,6 +33,7 @@ class TermsService(
      * get active terms
      */
     fun getActive(): Terms? {
+        // TODO put in cache
         return termsRepository.findByIsActive(true)
     }
 

@@ -65,3 +65,21 @@ class PasswordsMustBeIdenticalValidator : ConstraintValidator<PasswordsMustBeIde
         } ?: false
     }
 }
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@Constraint(validatedBy = [UserHasGivenConsentValidator::class])
+annotation class UserHasGivenConsent(
+        val message: String = "Consent",
+        val groups: Array<KClass<*>> = [],
+        val payload: Array<KClass<out Payload>> = []
+)
+
+class UserHasGivenConsentValidator : ConstraintValidator<UserHasGivenConsent, UserData> {
+
+    override fun isValid(user: UserData?, context: ConstraintValidatorContext?): Boolean {
+        return user?.let {
+            it.userHasGivenConsent
+        } ?: false
+    }
+}

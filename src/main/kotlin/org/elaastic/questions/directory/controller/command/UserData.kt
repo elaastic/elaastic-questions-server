@@ -5,6 +5,7 @@ import org.elaastic.questions.directory.HasPasswords
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.validation.PasswordsMustBeIdentical
+import org.elaastic.questions.directory.validation.UserHasGivenConsent
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwner
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.validation.BindingResult
@@ -15,6 +16,7 @@ import javax.validation.constraints.Pattern
 
 @ValidateHasEmailOrHasOwner
 @PasswordsMustBeIdentical
+@UserHasGivenConsent
 data class UserData(
         val id: Long?,
         @field:NotBlank val firstName: String,
@@ -29,7 +31,10 @@ data class UserData(
         @field:NotNull val hasOwner: Boolean = false,
         override val password1: String? = null,
         override val password2: String? = null,
-        val language:String = "fr"
+        val language:String = "fr",
+
+        @field:NotNull
+        var userHasGivenConsent: Boolean = false
 ) : HasEmailOrHasOwner, HasPasswords {
 
     constructor(user: User) : this(

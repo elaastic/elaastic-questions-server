@@ -88,7 +88,8 @@ class UserService(
     fun addUser(user: User,
                 language: String = "fr",
                 checkEmailAccount: Boolean = false,
-                enable: Boolean = true
+                enable: Boolean = true,
+                addUserConsent: Boolean = true
     ): User {
 
         require(user.roles.isNotEmpty())
@@ -101,6 +102,9 @@ class UserService(
                 initializeUnsubscribeKeyForUser(it)
                 if (checkEmailAccount) {
                     initializeActivationKeyForUser(it)
+                }
+                if (addUserConsent) {
+                    addUserConsentToActiveTerms(user.username)
                 }
                 return it
             }

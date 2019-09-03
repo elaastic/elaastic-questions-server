@@ -62,6 +62,7 @@ internal class UserServiceIntegrationTest(
             // and activation is not set and unsubscribe key is set
             assertThat(activationKeyRepository.findByUser(it), nullValue())
             assertThat(unsubscribeKeyRepository.findByUser(it), notNullValue())
+            assertTrue(userService.userHasGivenConsentToActiveTerms(it.username))
             it
         }.tWhen {
             // refreshing the user and fecthing the settings
@@ -98,6 +99,7 @@ internal class UserServiceIntegrationTest(
             val activationKey = activationKeyRepository.findByUser(it)!!
             assertThat(activationKey.dateCreated, notNullValue())
             assertThat(unsubscribeKeyRepository.findByUser(it), notNullValue())
+            assertTrue(userService.userHasGivenConsentToActiveTerms(it.username))
             it
         }
     }

@@ -108,7 +108,6 @@
                         </div>
                     </div>
 
-
                     <div class="required field">
                         <label><span th:text="#{useraccount.form.password.placeholder}"></span></label>
 
@@ -128,20 +127,21 @@
                             </div>
 
                         </div>
+                        <div class="required field">
+                            <div class="required field">
+
+                                <input type="checkbox"
+                                       name="userHasGivenConsent"
+                                       th:placeholder="#{index.signUp.form.username.placeholder}"
+                                       v-model="userData.userHasGivenConsent">
+
+                                <label th:utext="#{elaastic.terms.agree}"></label>
+
+                            </div>
+                        </div>
                     </div>
                 </form>
 
-<!--                <div class="container text">-->
-<!--                    <div class="ui message" th:switch="$lang">-->
-<!--                        <p th:case="${Locale.FRANCE || Locale.FRENCH || Locale.CANADA_FRENCH}">-->
-<!--                            En vous inscrivant, vous acceptez les <a href="../terms"-->
-<!--                                                                     target="_blank">Conditions d'utilisation</a>, notamment l'utilisation de cookies.</p>-->
-<!--                        <p th:case="*">-->
-<!--                            By signing up, you agree to the <a href="../terms"-->
-<!--                                                               target="_blank">Terms of Service</a>, including Cookie Use.</p>-->
-<!--                    </div>-->
-
-<!--                </div>-->
 
             </div>
         </div>
@@ -180,7 +180,8 @@
                         username: null,
                         password: null,
                         password2: null,
-                        language: null
+                        language: null,
+                        userHasGivenConsent: null
                     }
                 },
                 ready: function () {
@@ -336,6 +337,15 @@
                                 {
                                     type: 'match[password]',
                                     prompt: [[#{useraccount.form.password.identical}]]
+                                }
+                            ]
+                        },
+                        userHasGivenConsent: {
+                            identifier: 'userHasGivenConsent',
+                            rules: [
+                                {
+                                    type: 'checked',
+                                    prompt: [[#{UserHasGivenConsent.userData}]]
                                 }
                             ]
 
