@@ -9,7 +9,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.tsaap.lti.tp.Callback
 import org.tsaap.lti.tp.DataConnector
 import org.tsaap.lti.tp.ToolProvider
@@ -38,6 +40,11 @@ class LtiController(
                 tp.execute()
             }
         }
+    }
+
+    @GetMapping("/consent")
+    fun doCollectConsent(@RequestParam("withConsent") userHasGivenConsent: Boolean) {
+
     }
 
     /**

@@ -52,4 +52,13 @@ class TermsService(
         return activeTerms
     }
 
+    /**
+     * Get terms content by language
+     * @param language the expected language
+     * @return the terms content in expected language or terms content in english if language is not supported
+     */
+    fun getTermsContentByLanguage(language: String): String {
+        return getActive()!!.termsContentsByLanguage[language]?.content
+                ?: getActive()!!.termsContentsByLanguage["en"]!!.content
+    }
 }

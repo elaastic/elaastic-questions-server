@@ -10,22 +10,25 @@
         <i class="law icon"></i>
 
         <div class="content">
-            <div class="header">
-                [[#{elaastic.terms.title}]]
-            </div>
-
-            <p>[[#{elaastic.terms}]]</p>
+            <div id="terms_content" th:utext="${termsContent}">Terms</div>
         </div>
     </div>
 
-    <div class="ui segment">
+    <div class="ui segment sticky">
         <h3 class="ui header">[[#{elaastic.terms.question}]]</h3>
-        <a href="#" th:href="@{/userAccount/ltiConnection(agree=${true}, assignment_id=${param.assignment_id}, username=${param.username})}"
+        <a href="#" th:href="@{/consent(withConsent=${true})}"
            class="ui primary button">[[#{elaastic.terms.agree}]]</a>
-        <a href="#" th:href="@{/userAccount/ltiConnection(agree=${false})}" class="ui button">
+        <a href="#" th:href="@{/consent(withConsent=${false})}" class="ui button">
             [[#{elaastic.terms.disagree}]]</a>
-
     </div>
 </section>
+<script>
+    $('.ui.sticky')
+        .sticky({
+            context: '#terms_content',
+            pushing: true
+        });
+</script>
+
 </body>
 </html></html>

@@ -117,4 +117,18 @@ internal class TermsServiceIntegrationTest(
         }
     }
 
+    @Test
+    fun testGetTermsContentByLanguage() {
+        tGiven {
+            // the active terms
+            termsService.getActive()!!
+        }.tExpect {
+            // french and content is expectable
+            assertThat(termsService.getTermsContentByLanguage("fr"), equalTo(it.termsContentsByLanguage["fr"]!!.content))
+            assertThat(termsService.getTermsContentByLanguage("en"), equalTo(it.termsContentsByLanguage["en"]!!.content))
+            // German language is not supported and then terms are in english
+            assertThat(termsService.getTermsContentByLanguage("ge"), equalTo(it.termsContentsByLanguage["en"]!!.content))
+        }
+    }
+
 }

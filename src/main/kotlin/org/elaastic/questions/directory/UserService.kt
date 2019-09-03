@@ -1,6 +1,7 @@
 package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
+import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -17,7 +18,9 @@ class UserService(
         @Autowired val settingsRepository: SettingsRepository,
         @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository,
         @Autowired val activationKeyRepository: ActivationKeyRepository,
-        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository
+        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
+        @Autowired val termsService: TermsService,
+        @Autowired val userConsentRepository: UserConsentRepository
 ) {
 
     val logger = Logger.getLogger(UserService::class.java.name)
@@ -219,6 +222,15 @@ class UserService(
     }
 
     /**
+     * Find user by given activiation key
+     * @param activationKey the activiation key value
+     * @return the user or null if not found
+     */
+    fun findUserByActivationKey(activationKey: String): User? {
+        return activationKeyRepository.findByActivationKey(activationKey)?.user
+    }
+
+    /**
      * Disable user
      * @param user the user to disable
      * @return the disabled user
@@ -307,6 +319,30 @@ class UserService(
             passwordResetKeyRepository.deleteAll(it)
             logger.info("${it.size} password reset keys deleted")
         }
+    }
+
+    /**
+     * Return true if user gave consent to active terms
+     */
+    fun userHasGivenConsentToActiveTerms(username:String): Boolean {
+        return userConsentRepository.existsByUsernameAndTerms(
+                        username,
+                        termsService.getActive()!!
+        )
+    }
+
+    /**
+     * Store user consent to active terms if not already stored
+     * @param username the username of the user
+     * @return the username
+     */
+    fun addUserConsentToActiveTerms(username: String): String {
+        if (!userHasGivenConsentToActiveTerms(username)) {
+            UserConsent(username, termsService.getActive()!!).let {
+                userConsentRepository.save(it)
+            }
+        }
+        return username
     }
 }
 

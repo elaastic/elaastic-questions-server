@@ -6,6 +6,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.directory.controller.command.PasswordData
 import org.elaastic.questions.directory.controller.command.UserData
+import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -29,6 +30,7 @@ class UserAccountController(
         val checkEmail: Boolean,
         @Autowired val userService: UserService,
         @Autowired val roleService: RoleService,
+        @Autowired val termsService: TermsService,
         @Autowired val messageSource: MessageSource
 ) {
 
@@ -140,6 +142,7 @@ class UserAccountController(
         return "redirect:/login"
     }
 
+
     @GetMapping("/userAccount/unsubscribe")
     fun unsubscribe(authentication: Authentication, model: Model, locale: Locale):String {
         val authUser: User = authentication.principal as User
@@ -162,7 +165,8 @@ class UserAccountController(
     }
 
     @GetMapping("/terms")
-    fun terms():String {
+    fun terms(model: Model, locale: Locale):String {
+        model.addAttribute("termsContent",termsService.getTermsContentByLanguage(locale.language))
         return "/terms/terms"
     }
 

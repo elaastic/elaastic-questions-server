@@ -489,4 +489,22 @@ internal class UserServiceIntegrationTest(
             assertFalse(it.enabled)
         }
     }
+
+    @Test
+    fun testAddUserConsentToActiveTerms() {
+        tGiven {
+            // a user without consent to active terms
+            testingService.getAnyUser().let {
+                assertFalse(userService.userHasGivenConsentToActiveTerms(it.username))
+                it
+            }.tWhen {
+                // when consent is given and stored
+                userService.addUserConsentToActiveTerms(it.username)
+            }.tThen {
+                // now user has given consent
+                assertTrue(userService.userHasGivenConsentToActiveTerms(it))
+            }
+
+        }
+    }
 }

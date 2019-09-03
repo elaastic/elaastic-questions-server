@@ -25,15 +25,12 @@ create table user_consent
     id           bigint auto_increment
         primary key,
     collect_date datetime default CURRENT_TIMESTAMP not null,
-    user_id      bigint                             not null,
+    username      varchar(255)                       not null,
     terms_id     bigint                             not null,
     constraint user_consent_unique
-        unique (user_id, terms_id),
+        unique (username, terms_id),
     constraint user_consent_terms_fk
         foreign key (terms_id) references terms (id)
-            on delete cascade,
-    constraint user_consent_user_fk
-        foreign key (user_id) references user (id)
             on delete cascade
 );
 
