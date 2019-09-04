@@ -301,7 +301,6 @@ internal class AssignmentServiceIntegrationTest(
         }.tThen {
             assignmentService.get(assignmentId!!, true).let {
                 assertThat(it.sequences.size, equalTo(2))
-                assertThat(it.lastUpdated, DateMatchers.sameOrAfter(assignmentLastUpdated))
                 assertThat(it.version, equalTo(assignmentVersion!! + 1L))
             }
             assertThat(sequenceRepository.existsById(sequenceId2!!), equalTo(false))
