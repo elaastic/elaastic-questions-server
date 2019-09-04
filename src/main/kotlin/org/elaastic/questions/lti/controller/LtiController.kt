@@ -3,23 +3,28 @@ package org.elaastic.questions.lti.controller
 import org.elaastic.questions.lti.LmsAssignment
 import org.elaastic.questions.lti.LmsService
 import org.elaastic.questions.lti.LmsUser
+import org.elaastic.questions.lti.oauth.OauthService
+import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import org.tsaap.lti.tp.Callback
 import org.tsaap.lti.tp.DataConnector
 import org.tsaap.lti.tp.ToolProvider
 import org.tsaap.lti.tp.dataconnector.JDBC
 import java.io.UnsupportedEncodingException
+import java.util.*
 import java.util.logging.Logger
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpSession
 import javax.sql.DataSource
 
 
@@ -27,24 +32,32 @@ import javax.sql.DataSource
 class LtiController(
         @Autowired val dataSource: DataSource,
         @Autowired val lmsService: LmsService,
-        @Autowired val authenticationManager: AuthenticationManager
+        @Autowired val authenticationManager: AuthenticationManager,
+        @Autowired val oauthService: OauthService,
+        @Autowired val termsService: TermsService
 ) : Callback {
 
     internal var logger = Logger.getLogger(LtiController::class.java.name)
 
     @PostMapping("/launch")
-    fun launch(request: HttpServletRequest, response: HttpServletResponse) {
+    fun launch(ltiLaunchData: LtiLaunchData, request: HttpServletRequest, response: HttpServletResponse): String {
         startNewSession(request)
-        getDataConnector().let {
-            getToolProvider(request, response, it).let { tp ->
-                tp.execute()
-            }
-        }
+        oauthService.validateOauthRequest(request)
+        // TODO IN CASE OF CREATION OF LMS USER
+        // TODO Authenticate oauth user with OAUTH role
+        // TODO Give access to "/ltiConsent" only to role OAUTH
+        // TODO No more needs of LTI_USER table
+        request.session.setAttribute("ltiLaunchData", ltiLaunchData)
+        return "redirect:/ltiConsent"
     }
 
-    @GetMapping("/consent")
-    fun doCollectConsent(@RequestParam("withConsent") userHasGivenConsent: Boolean) {
-
+    @GetMapping("/ltiConsent")
+    fun ltiConsent(session: HttpSession, model: Model, locale: Locale):String {
+        val launchData: LtiLaunchData = session.getAttribute("ltiLaunchData") as LtiLaunchData
+        model.addAttribute("termsContent",termsService.getTermsContentByLanguage(locale.language))
+        model.addAttribute("firstName", launchData.lis_person_name_given)
+        model.addAttribute("lastName", launchData.lis_person_name_family)
+        return "/terms/lti_terms_consent_form"
     }
 
     /**

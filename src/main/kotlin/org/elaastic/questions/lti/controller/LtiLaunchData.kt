@@ -1,0 +1,33 @@
+package org.elaastic.questions.lti.controller
+
+class LtiLaunchData(
+        val user_id: String,
+        val lis_person_sourcedid: String?,
+        val roles: String?,
+        val lis_person_name_given: String,
+        val lis_person_name_family: String,
+        val lis_person_name_full: String?,
+        val ext_user_username: String,
+        val lis_person_contact_email_primary: String?,
+        val launch_presentation_locale: String?,
+        val context_id: String,
+val context_label: String?,
+val context_title: String,
+val resource_link_title: String,
+val resource_link_description: String?,
+val resource_link_id: String,
+val context_type: String?,
+val lis_course_section_sourcedid: String?,
+val lis_result_sourcedid: String?,
+val lis_outcome_service_url: String?,
+val ext_lms: String?,
+        val tool_consumer_info_product_family_code: String?,
+val tool_consumer_info_version: String?,
+        val lti_version: String?,
+val lti_message_type: String?,
+val tool_consumer_instance_guid: String?,
+val tool_consumer_instance_name: String?,
+val tool_consumer_instance_description: String?,
+val launch_presentation_document_target: String?,
+val launch_presentation_return_url: String?
+)

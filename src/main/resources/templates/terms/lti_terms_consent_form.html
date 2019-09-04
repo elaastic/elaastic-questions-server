@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="layout/anonymous :: anonymousLayout(~{::title}, ~{::section})" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title th:text="#{elaastic.terms.title}">Terms</title>
+</head>
+
+<body>
+<section>
+    <div class="ui success message">
+        Hi [[${firstName}]] [[${lastName}]]
+    </div>
+    <div class="ui icon message">
+        <i class="law icon"></i>
+
+        <div class="content">
+            <div id="terms_content" th:utext="${termsContent}">Terms</div>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

@@ -67,7 +67,8 @@ class WebSecurityConfig(
                             "/userAccount/confirmPasswordReset",
                             "/userAccount/processResetPassword",
                             "/userAccount/activate",
-                            "/terms"
+                            "/terms",
+                            "/ltiConsent"
                             )?.permitAll()
                     ?.antMatchers("/ltiConsumer/**")?.hasAuthority(Role.RoleId.ADMIN.roleName)
                     ?.anyRequest()?.authenticated()
