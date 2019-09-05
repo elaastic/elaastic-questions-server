@@ -6,17 +6,25 @@
 
 <body>
 <section>
-    <div class="ui success message">
-        Hi [[${firstName}]] [[${lastName}]]
-    </div>
-    <div class="ui icon message">
-        <i class="law icon"></i>
-
+    <div class="ui icon message scrolling">
         <div class="content">
             <div id="terms_content" th:utext="${termsContent}">Terms</div>
         </div>
     </div>
-
+    <div class="ui segment sticky">
+        <h3 class="ui header">[[${firstName}]] [[${lastName}]], [[#{elaastic.terms.question}]]</h3>
+        <a href="#" th:href="@{/launch/consent(withConsent=${true})}"
+           class="ui primary button">[[#{elaastic.terms.agree}]]</a>
+        <a href="#" th:href="@{/launch/consent(withConsent=${false})}" class="ui button">
+            [[#{elaastic.terms.disagree}]]</a>
+    </div>
+    <script>
+        $('.ui.sticky')
+            .sticky({
+                context: '#terms_content',
+                pushing: true
+            });
+    </script>
 </section>
 </body>
 </html>

@@ -22,8 +22,6 @@ class BootstrapService(
         @Autowired val userService: UserService,
         @Autowired val roleService: RoleService,
         @Autowired val ltiConsumerRepository: LtiConsumerRepository,
-        @Autowired val ltiContextRepository: LtiContextRepository,
-        @Autowired val ltiUserRepository: LtiUserRepository,
         @Autowired val termsService: TermsService,
         @Autowired val templateEngine: TemplateEngine
 ) {
@@ -130,41 +128,6 @@ class BootstrapService(
                 ltiConsumerRepository.saveAndFlush(it)
             }
             it
-        }.let {
-            LtiContext.LtiContextId( // a lti context aka a course from the LMS
-                    it.key,
-                    "The course").let { contextId ->
-                // and building a valid context
-                LtiContext(
-                        contextId,
-                        contextId.lmsActivityId,
-                        "The course title",
-                        it,
-                        "course id"
-                ).let { context ->
-                    if (!ltiContextRepository.existsById(contextId)) {
-                        ltiContextRepository.saveAndFlush(context)
-                    }
-                    context
-                }
-            }
-        }.let {
-            LtiUser.LtiUserId(
-                    it.lms.key,
-                    it.lmsActivityId,
-                    "bobdeniro"
-            ).let { ltiUserId ->
-                LtiUser(
-                        ltiUserId,
-                        it.lms,
-                        it,
-                        ltiUserId.lmsUserId
-                ).let { ltiUser ->
-                    if (!ltiUserRepository.existsById(ltiUserId)) {
-                        ltiUserRepository.saveAndFlush(ltiUser)
-                    }
-                }
-            }
         }
 
     }

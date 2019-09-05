@@ -1,6 +1,6 @@
 package org.elaastic.questions.lti.controller
 
-import org.elaastic.questions.lti.LmsAssignment
+import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.lti.LmsService
 import org.elaastic.questions.lti.LmsUser
 import org.elaastic.questions.lti.oauth.OauthService
@@ -14,123 +14,98 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import org.tsaap.lti.tp.Callback
-import org.tsaap.lti.tp.DataConnector
-import org.tsaap.lti.tp.ToolProvider
-import org.tsaap.lti.tp.dataconnector.JDBC
-import java.io.UnsupportedEncodingException
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.*
 import java.util.logging.Logger
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpSession
-import javax.sql.DataSource
 
 
 @Controller
 class LtiController(
-        @Autowired val dataSource: DataSource,
         @Autowired val lmsService: LmsService,
         @Autowired val authenticationManager: AuthenticationManager,
         @Autowired val oauthService: OauthService,
-        @Autowired val termsService: TermsService
-) : Callback {
+        @Autowired val termsService: TermsService,
+        @Autowired val roleService: RoleService
+) {
 
     internal var logger = Logger.getLogger(LtiController::class.java.name)
 
     @PostMapping("/launch")
-    fun launch(ltiLaunchData: LtiLaunchData, request: HttpServletRequest, response: HttpServletResponse): String {
-        startNewSession(request)
-        oauthService.validateOauthRequest(request)
-        // TODO IN CASE OF CREATION OF LMS USER
-        // TODO Authenticate oauth user with OAUTH role
-        // TODO Give access to "/ltiConsent" only to role OAUTH
-        // TODO No more needs of LTI_USER table
-        request.session.setAttribute("ltiLaunchData", ltiLaunchData)
-        return "redirect:/ltiConsent"
-    }
-
-    @GetMapping("/ltiConsent")
-    fun ltiConsent(session: HttpSession, model: Model, locale: Locale):String {
-        val launchData: LtiLaunchData = session.getAttribute("ltiLaunchData") as LtiLaunchData
-        model.addAttribute("termsContent",termsService.getTermsContentByLanguage(locale.language))
-        model.addAttribute("firstName", launchData.lis_person_name_given)
-        model.addAttribute("lastName", launchData.lis_person_name_family)
-        return "/terms/lti_terms_consent_form"
-    }
-
-    /**
-     * Execute the launch of the tool provider activity
-     *
-     * @param toolProvider the tool provider
-     * @return true if the launch is OK
-     */
-    override fun execute(toolProvider: ToolProvider): Boolean {
-        initializeUserSession(toolProvider)
-        val lmsUser = lmsService.getLmsUser(toolProvider)
-        val lmsAssignment = lmsService.getLmsAssignment(toolProvider, lmsUser)
-        updateServerUrl(toolProvider, lmsUser, lmsAssignment)
-        return true
-
-    }
-
-    private fun updateServerUrl(toolProvider: ToolProvider, lmsUser: LmsUser, lmsAssignment: LmsAssignment) {
-        val serverUrlFromTP = toolProvider.request.requestURL.toString()
-        val serverUrlRoot = serverUrlFromTP.substring(0, serverUrlFromTP.lastIndexOf("/"))
-        val result: String
-        result = if (lmsUser.user.enabled) {
-            authenticateLmsUser(toolProvider.request, lmsUser) // not good : have to separate consent from enabling
-            "${serverUrlRoot}/player/ltiLaunch/${lmsAssignment.assignment.id}"
-        } else {
-            "${serverUrlRoot}/terms?username=${lmsUser.user.username}&assignment_id=${lmsAssignment.assignment.id}"
+    fun launch(ltiLaunchData: LtiLaunchData,
+               request: HttpServletRequest,
+               response: HttpServletResponse,
+               model: Model,
+               locale: Locale): String {
+        val session = startNewSession(request)
+        try {
+            oauthService.validateOauthRequest(request)
+            ltiLaunchData.roleService = roleService
+            val lmsUser = lmsService.findLmsUser(
+                    ltiLmsKey = ltiLaunchData.oauth_consumer_key,
+                    ltiUserId = ltiLaunchData.user_id)
+            return if (lmsUser != null) {
+                authenticateLmsUser(session, lmsUser)
+                redirectToAssignment(ltiLaunchData, lmsUser)
+            } else {
+                setLtiLaunchDataInSession(ltiLaunchData, session)
+                model.addAttribute("termsContent", termsService.getTermsContentByLanguage(locale.language))
+                model.addAttribute("firstName", ltiLaunchData.lis_person_name_given)
+                model.addAttribute("lastName", ltiLaunchData.lis_person_name_family)
+                "/terms/lti_terms_consent_form"
+            }
+        } catch (e: Exception) {
+            logger.severe(e.message)
+            return "redirect:${ltiLaunchData.launch_presentation_return_url}"
         }
-        toolProvider.redirectUrl = result
     }
 
-    private fun authenticateLmsUser(request: HttpServletRequest, lmsUser: LmsUser) {
+    @GetMapping("/launch/consent")
+    fun collectConsent(request: HttpServletRequest,
+                       @RequestParam("withConsent") withConsent: Boolean = false): String {
+        val ltiLaunchData = getLtiLaunchDataFromSession(request.session)
+        return if (withConsent) {
+            val lmsUser = lmsService.getLmsUser(ltiLaunchData.toLtiUser())
+            authenticateLmsUser(request.session, lmsUser)
+            redirectToAssignment(ltiLaunchData, lmsUser)
+        } else {
+            "redirect:${ltiLaunchData.launch_presentation_return_url}"
+        }
+
+    }
+
+    private fun authenticateLmsUser(session: HttpSession, lmsUser: LmsUser) {
         val user = lmsUser.user
         val authReq = UsernamePasswordAuthenticationToken(user.username, user.password)
         val auth = authenticationManager.authenticate(authReq)
         val secContext = SecurityContextHolder.getContext()
         secContext.authentication = auth
-        val session = request.getSession(true)
+
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, secContext)
     }
 
-    private fun initializeUserSession(toolProvider: ToolProvider) {
-        with(toolProvider.request.session) {
-            setAttribute("consumer_key", toolProvider.consumer.key)
-            setAttribute("resource_id", toolProvider.resourceLink.id)
-            setAttribute("user_consumer_key", toolProvider.user.resourceLink.consumer.key)
-            setAttribute("user_id", toolProvider.user.idForDefaultScope)
-            setAttribute("isStudent", toolProvider.user.isLearner)
-            setAttribute("lti_context_id", toolProvider.resourceLink.ltiContextId)
-        }
-
+    private fun redirectToAssignment(ltiLaunchData: LtiLaunchData, lmsUser: LmsUser): String {
+        val lmsAssignment = lmsService.getLmsAssignment(
+                lmsUser = lmsUser,
+                ltiActivity = ltiLaunchData.toLtiActivity()
+        )
+        // TODO Bind with assignment when player implemented
+        return "redirect:/home/"
     }
 
-    @Throws(UnsupportedEncodingException::class)
-    private fun startNewSession(request: HttpServletRequest): HttpServletRequest {
-        request.session.invalidate()
-        request.getSession(true)
+    private fun startNewSession(request: HttpServletRequest): HttpSession {
         request.characterEncoding = "UTF-8"
-        return request
+        request.session.invalidate()
+        return request.getSession(true)
     }
 
-    private fun getDataConnector(): DataConnector {
-        return JDBC("", dataSource.connection)
+    private fun setLtiLaunchDataInSession(ltiLaunchData: LtiLaunchData, session: HttpSession) {
+        session.setAttribute("ltiLaunchData", ltiLaunchData)
     }
 
-    private fun getToolProvider(request: HttpServletRequest, response: HttpServletResponse, dc: DataConnector): ToolProvider {
-        val tp = ToolProvider(request, response, this, dc)
-        with(tp) {
-            setParameterConstraint("oauth_consumer_key", true, 50)
-            setParameterConstraint("resource_link_id", true, 50)
-            setParameterConstraint("user_id", true, 50)
-            setParameterConstraint("roles", true, null)
-        }
-        return tp
+    private fun getLtiLaunchDataFromSession(session: HttpSession): LtiLaunchData {
+        return session.getAttribute("ltiLaunchData") as LtiLaunchData
     }
-
 }

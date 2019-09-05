@@ -22,11 +22,11 @@ internal class LmsUserRepositoryIntegrationTest(
 ) {
 
     @Test
-    fun `test save of a valid lti user`() {
+    fun `test save of a valid lms user`() {
         tGiven {
             // a valid lms user
             LmsUser(
-                    testingService.getAnyLtiUser().lmsUserId,
+                    "lms user id",
                     testingService.getAnyLtiConsumer(),
                     testingService.getTestStudent()
             ).tWhen {
@@ -36,7 +36,7 @@ internal class LmsUserRepositoryIntegrationTest(
                 entityManager.refresh(it)
                 assertThat(it.id, notNullValue())
                 assertThat(it.user, equalTo(testingService.getTestStudent()))
-                assertThat(it.lmsUserId, equalTo(testingService.getAnyLtiUser().lmsUserId))
+                assertThat(it.lmsUserId, equalTo("lms user id"))
                 assertThat(it.lms, equalTo(testingService.getAnyLtiConsumer()))
             }
         }

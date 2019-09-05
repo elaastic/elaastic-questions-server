@@ -20,6 +20,9 @@ class LmsAssignment(
         @field:Column(name = "lti_course_id")
         val lmsCourseId: String,
 
+        @field:Column(name = "lti_course_title")
+        val lmsCourseTitle: String,
+
         @field:OneToOne
         val assignment: Assignment
 

@@ -6,9 +6,11 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.InteractionResponse
 import org.elaastic.questions.assignment.sequence.interaction.InteractionResponseRepository
+import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.lti.*
+import org.elaastic.questions.lti.controller.LtiLaunchData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
@@ -23,8 +25,7 @@ class TestingService(
         @Autowired val interactionResponseRepository: InteractionResponseRepository,
         @Autowired val assignmentService: AssignmentService,
         @Autowired val ltiConsumerRepository: LtiConsumerRepository,
-        @Autowired val ltiContextRepository: LtiContextRepository,
-        @Autowired val ltiUserRepository: LtiUserRepository
+        @Autowired val roleService: RoleService
 ) {
 
     fun getAnyUser(): User {
@@ -73,12 +74,42 @@ class TestingService(
         return ltiConsumerRepository.findAll().iterator().next()
     }
 
-    fun getAnyLtiContext(): LtiContext {
-        return ltiContextRepository.findAll().iterator().next()
+    fun getLtiLaunchDataComingFromBoBDeniroTeacher(): LtiLaunchData {
+        return LtiLaunchData(
+                oauth_consumer_key = getAnyLtiConsumer().key,
+                user_id = "lti_user_id",
+                roles = "Instructor",
+                lis_person_name_given = "Bob",
+                lis_person_name_family = "Deniro",
+                lis_person_contact_email_primary = "bob@elaastic.org",
+                context_id = "course_id",
+                context_title = "A spendid course",
+                resource_link_id = "activity_if",
+                resource_link_title = "A great activity"
+        ).let {
+            it.roleService = roleService
+            it
+        }
     }
 
-    fun getAnyLtiUser(): LtiUser {
-        return ltiUserRepository.findAll().iterator().next()
+    fun getLtiLaunchDataWithBadGlobalId(): LtiLaunchData {
+        return LtiLaunchData(
+                oauth_consumer_key = getAnyLtiConsumer().key,
+                user_id = "lti_user_id",
+                roles = "Instructor",
+                lis_person_name_given = "Bob",
+                lis_person_name_family = "Deniro",
+                lis_person_contact_email_primary = "bob@elaastic.org",
+                context_id = "course_id",
+                context_title = "A spendid course",
+                resource_link_id = "activity_id_2",
+                resource_link_title = "A great activity",
+                custom_assignmentid = "Bad_one"
+        ).let {
+            it.roleService = roleService
+            it
+        }
     }
+
 }
 
