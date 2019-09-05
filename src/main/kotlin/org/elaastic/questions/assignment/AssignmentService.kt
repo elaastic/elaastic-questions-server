@@ -11,7 +11,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import java.lang.IllegalStateException
 import java.util.*
+import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
@@ -21,7 +23,8 @@ import javax.transaction.Transactional
 class AssignmentService(
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val statementService: StatementService
+        @Autowired val statementService: StatementService,
+        @Autowired val entityManager: EntityManager
 ) {
 
     fun findAllByOwner(owner: User,
@@ -95,8 +98,61 @@ class AssignmentService(
 
         statementService.delete(sequence.statement.id!!)
         assignment.sequences.remove(sequence)
-        // TODO check that the sequence is deleted by cascade
+        updateAllSequenceRank(assignment)
 
         touch(assignment)
+    }
+
+    fun moveUpSequence(assignment: Assignment, sequenceId: Long) {
+        val idsArray = assignment.sequences.map { it.id }.toTypedArray()
+        val pos = idsArray.indexOf(sequenceId)
+
+        if (pos == -1)
+            throw IllegalStateException("This sequence $sequenceId does not belong to assignment ${assignment.id}")
+        if (pos == 0)
+            return  // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE sequence SET rank = CASE " +
+                        "WHEN id=${sequenceId} THEN ${pos} " +
+                        "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
+                        " END " +
+                        "WHERE id in (${idsArray[pos - 1]}, ${sequenceId})"
+        ).executeUpdate()
+    }
+
+    fun moveDownSequence(assignment: Assignment, sequenceId: Long) {
+        val idsArray = assignment.sequences.map { it.id }.toTypedArray()
+        val pos = idsArray.indexOf(sequenceId)
+
+        if (pos == -1)
+            throw IllegalStateException("This sequence $sequenceId does not belong to assignment ${assignment.id}")
+        if (pos == assignment.sequences.size - 1)
+            return  // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE sequence SET rank = CASE " +
+                        "WHEN id=${sequenceId} THEN ${pos + 1} " +
+                        "WHEN id=${idsArray[pos + 1]} THEN ${pos} " +
+                        " END " +
+                        "WHERE id in (${idsArray[pos + 1]}, ${sequenceId})"
+        ).executeUpdate()
+    }
+
+    fun updateAllSequenceRank(assignment: Assignment) {
+
+        val sequenceIds = assignment.sequences.map { it.id }
+        if(sequenceIds.isEmpty()) return // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE sequence SET rank = CASE " +
+                        sequenceIds.mapIndexed { index, id ->
+                            "WHEN id=$id THEN $index"
+                        }.joinToString(" ") +
+                        " END " +
+                        "WHERE id in (${sequenceIds.joinToString(",")})"
+        ).executeUpdate()
+
+        assignment.sequences.mapIndexed { index, sequence -> sequence.rank = index + 1 }
     }
 }

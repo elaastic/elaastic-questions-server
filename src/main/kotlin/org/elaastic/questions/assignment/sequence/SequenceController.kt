@@ -77,8 +77,6 @@ class SequenceController(
                     statementData.toEntity(user)
             )
 
-            assignmentService.removeSequence(sequence)
-
             return "redirect:/assignment/$assignmentId#sequence_${sequence.id}"
         }
     }
@@ -149,6 +147,30 @@ class SequenceController(
         }
 
         return "redirect:/assignment/$assignmentId"
+    }
+
+    @GetMapping("{id}/up")
+    fun up(authentication: Authentication,
+           @PathVariable assignmentId: Long,
+           @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        val assignment = assignmentService.get(user, assignmentId, true)
+        assignmentService.moveUpSequence(assignment, id)
+
+        return "redirect:/assignment/$assignmentId#sequence_${id}"
+    }
+
+    @GetMapping("{id}/down")
+    fun down(authentication: Authentication,
+           @PathVariable assignmentId: Long,
+           @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        val assignment = assignmentService.get(user, assignmentId, true)
+        assignmentService.moveDownSequence(assignment, id)
+
+        return "redirect:/assignment/$assignmentId#sequence_${id}"
     }
 
     data class SequenceData(

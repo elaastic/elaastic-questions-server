@@ -6,7 +6,6 @@ import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.exparity.hamcrest.date.DateMatchers
 import org.springframework.beans.factory.annotation.Autowired
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
@@ -312,6 +311,97 @@ internal class AssignmentServiceIntegrationTest(
         }.tThen {
             assignmentService.get(assignmentId!!, true).let {
                 assertThat(it.sequences.size, equalTo(0))
+            }
+        }
+    }
+
+    @Test
+    fun `moveUp sequence - the 1st sequence`() {
+        val teacher = testingService.getTestTeacher()
+        val assignment = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        )
+        val sequence1 = assignmentService.addSequence(
+                assignment,
+                Statement.createDefaultStatement(teacher)
+                        .title("Sequence n°1")
+                        .content("Content 1")
+        )
+        val sequence2 = assignmentService.addSequence(
+                assignment,
+                Statement.createDefaultStatement(teacher)
+                        .title("Sequence n°2")
+                        .content("Content 2")
+        )
+
+        tWhen {
+            assignmentService.moveUpSequence(assignment, sequence1.id!!)
+            entityManager.clear()
+        }.tExpect {
+            assignmentService.get(assignment.id!!, true).let {
+                assertThat(it.sequences.size, equalTo(2))
+                assertThat(
+                        it.sequences[0].statement.title,
+                        equalTo("Sequence n°1")
+                )
+                assertThat(
+                        it.sequences[0].rank,
+                        equalTo(1)
+                )
+                assertThat(
+                        it.sequences[1].statement.title,
+                        equalTo("Sequence n°2")
+                )
+                assertThat(
+                        it.sequences[1].rank,
+                        equalTo(2)
+                )
+            }
+        }
+
+    }
+
+    @Test
+    fun `moveUp sequence - any sequence but not the 1st`() {
+        val teacher = testingService.getTestTeacher()
+        val assignment = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        )
+        val sequence1 = assignmentService.addSequence(
+                assignment,
+                Statement.createDefaultStatement(teacher)
+                        .title("Sequence n°1")
+                        .content("Content 1")
+        )
+        val sequence2 = assignmentService.addSequence(
+                assignment,
+                Statement.createDefaultStatement(teacher)
+                        .title("Sequence n°2")
+                        .content("Content 2")
+        )
+
+        tWhen {
+            assignmentService.moveUpSequence(assignment, sequence2.id!!)
+            entityManager.clear()
+        }.tExpect {
+            assignmentService.get(assignment.id!!, true).let {
+                assertThat(it.sequences.size, equalTo(2))
+                assertThat(
+                        it.sequences[0].statement.title,
+                        equalTo("Sequence n°2")
+                )
+                assertThat(
+                        it.sequences[0].rank,
+                        equalTo(1)
+                )
+                assertThat(
+                        it.sequences[1].statement.title,
+                        equalTo("Sequence n°1")
+                )
+                assertThat(
+                        it.sequences[1].rank,
+                        equalTo(2)
+                )
             }
         }
 

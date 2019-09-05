@@ -12,7 +12,7 @@
 
   <a th:unless="${position == nbSequence}"
      class="ui right floated icon tiny button"
-     th:href="@{ /sequence/{id }/down(id=${sequence.id})}"
+     th:href="@{ /assignment/{assignmentId}/sequence/{id}/down(assignmentId=${assignment.id},id=${sequence.id})}"
      href="/sequence/123/downsequence"
      th:attr="data-tooltip=#{common.moveDown}"
      data-tooltip="Move down"
@@ -22,7 +22,7 @@
 
   <a th:unless="${position == 1}"
      class="ui right floated icon tiny button"
-     th:href="@{/sequence/{id}/up(id=${sequence.id})}"
+     th:href="@{/assignment/{assignmentId}/sequence/{id}/up(assignmentId=${assignment.id},id=${sequence.id})}"
      href="/sequence/123/upSequence"
      th:attr="data-tooltip=#{common.moveUp}"
      data-tooltip="Move up"
@@ -31,7 +31,7 @@
   </a>
 
   <a class="ui right floated icon secondary tiny button"
-     th:href="@{/sequence/{id}/edit(id=${sequence.id})}"
+     th:href="@{/assignment/{assignmentId}/sequence/{id}/edit(assignmentId=${assignment.id},id=${sequence.id})}"
      href="/sequence/123/edit"
      th:attr="data-tooltip=#{common.update}"
      data-tooltip="$Update"
@@ -40,7 +40,7 @@
   </a>
 
   <a class="ui right floated icon primary tiny button"
-     th:href="@{/payer/playSequence/{id}(id=${sequence.id})}"
+     th:href="@{/assignment/{assignmentId}/payer/playSequence/{id}(assignmentId=${assignment.id},id=${sequence.id})}"
      href="/player/playSequence/123"
      th:attr="data-tooltip=#{sequence.play}"
      data-tooltip="Play the sequence"
