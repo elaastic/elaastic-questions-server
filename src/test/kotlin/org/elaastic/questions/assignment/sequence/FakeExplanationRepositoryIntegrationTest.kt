@@ -1,9 +1,10 @@
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
+import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.test.directive.*
 import org.elaastic.questions.test.TestingService
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*

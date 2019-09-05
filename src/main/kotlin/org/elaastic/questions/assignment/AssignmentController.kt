@@ -186,7 +186,7 @@ class AssignmentController(
         model.addAttribute("assignment", assignment)
         model.addAttribute("nbSequence", nbSequence)
         model.addAttribute(
-                "statementData",
+                "statementData",            
                 SequenceController.StatementData(
                         Statement.createDefaultStatement(user)
                 )

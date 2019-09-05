@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.questions.assignment.sequence.explanation
 
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.directory.User

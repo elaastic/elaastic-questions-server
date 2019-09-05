@@ -77,12 +77,7 @@
       <div th:replace="/assignment/sequence/_statement_form :: statementForm(${statementData})"></div>
       <div
         th:replace="/assignment/sequence/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
-
-      <!--      TODO migrate renders-->
-
-      <g:render template="/assignment/sequence/statement_explanations_form-elaastic"
-                model="[sequenceInstance: sequenceInstance]"/>
-
+      <div th:replace="/assignment/sequence/_statement_explanations_form :: statementExplanationForm(${statementData}, ${null})"></div>
     </div>
 
     <div class="ui hidden divider"></div>

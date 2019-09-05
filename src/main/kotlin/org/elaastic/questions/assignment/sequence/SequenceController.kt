@@ -4,6 +4,8 @@ import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.choice.*
+import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
+import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachement.Attachment
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
@@ -30,6 +32,7 @@ class SequenceController(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val sequenceService: SequenceService,
         @Autowired val statementService: StatementService,
+        @Autowired val fakeExplanationService: FakeExplanationService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -45,7 +48,13 @@ class SequenceController(
         model.addAttribute("user", user)
         model.addAttribute("assignment", sequence.assignment)
         model.addAttribute("sequenceData", SequenceData(sequence))
-        model.addAttribute("statementData", StatementData(sequence.statement))
+        model.addAttribute(
+                "statementData",
+                StatementData(
+                        sequence.statement,
+                        fakeExplanationService.findAllByStatement(sequence.statement)
+                )
+        )
 
         return "/assignment/sequence/edit"
     }
@@ -76,6 +85,10 @@ class SequenceController(
                     assignment,
                     statementData.toEntity(user)
             )
+            statementService.updateFakeExplanationList(
+                    sequence.statement,
+                    statementData.fakeExplanations
+            )
 
             return "redirect:/assignment/$assignmentId#sequence_${sequence.id}"
         }
@@ -104,8 +117,11 @@ class SequenceController(
 
             "/assignment/sequence/edit"
         } else {
-            sequence.statement.updateFrom(statementData.toEntity(user))
-            statementService.save(sequence.statement)
+            sequence.statement.let {
+                it.updateFrom(statementData.toEntity(user))
+                statementService.save(it)
+                statementService.updateFakeExplanationList(it, statementData.fakeExplanations)
+            }
 
             with(messageBuilder) {
                 success(
@@ -197,7 +213,9 @@ class SequenceController(
             @field:NotNull @field:Max(10) val itemCount: Int? = null,
             @field:NotNull var exclusiveChoice: Int = 1,
             @field:NotNull var expectedChoiceList: List<Int> = listOf(1),
-            var returnOnSubject: Boolean = false
+            var returnOnSubject: Boolean = false,
+            var expectedExplanation: String?,
+            var fakeExplanations: List<FakeExplanationData> = ArrayList()
     ) {
         constructor(statement: Statement) : this(
                 id = statement.id,
@@ -208,7 +226,9 @@ class SequenceController(
                 choiceInteractionType = statement.choiceSpecification?.getChoiceType(),
                 itemCount = statement.choiceSpecification?.nbCandidateItem ?: 2,
                 expectedChoiceList = listOf(1),
-                exclusiveChoice = 1
+                exclusiveChoice = 1,
+                expectedExplanation = statement.expectedExplanation,
+                fakeExplanations = ArrayList()
 
         ) {
             val choiceSpecification: ChoiceSpecification? = statement.choiceSpecification
@@ -216,6 +236,10 @@ class SequenceController(
                 is ExclusiveChoiceSpecification -> exclusiveChoice = choiceSpecification.expectedChoice.index
                 is MultipleChoiceSpecification -> expectedChoiceList = choiceSpecification.expectedChoiceList.map { it.index }
             }
+        }
+
+        constructor(statement: Statement, fakeExplanations: List<FakeExplanation>) : this(statement) {
+            this.fakeExplanations = fakeExplanations.map { FakeExplanationData(it) }
         }
 
         fun toEntity(user: User): Statement {
@@ -254,7 +278,8 @@ class SequenceController(
                     title = title!!,
                     content = content!!,
                     questionType = questionType,
-                    choiceSpecification = choiceSpecification
+                    choiceSpecification = choiceSpecification,
+                    expectedExplanation = expectedExplanation
             )
             statement.id = id
             statement.version = version

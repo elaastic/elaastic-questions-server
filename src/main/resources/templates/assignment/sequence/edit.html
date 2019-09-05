@@ -97,10 +97,7 @@
         th:replace="/assignment/sequence/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
 
       <div class="ui hidden divider"></div>
-
-      <!--      TODO *** migrate-->
-      <g:render template="/assignment/sequence/statement_explanations_form-elaastic"
-                model="[sequence: sequence]"/>
+      <div th:replace="/assignment/sequence/_statement_explanations_form :: statementExplanationForm(${statementData}, @{/api/assignment/${assignmentId}/sequence/{sequenceId}/findAllFakeExplanation(assignmentId=${assignment.id}, sequenceId=${sequenceData.id})})"></div>
 
     </div>
 

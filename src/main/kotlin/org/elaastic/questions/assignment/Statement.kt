@@ -55,8 +55,6 @@ class Statement(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-    // TODO getFakeExplanations
-
     fun getAttachment(): Attachment? {
         return null // TODO Implement getAttachement
     }
