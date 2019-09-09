@@ -4,6 +4,8 @@ import org.elaastic.questions.directory.Role
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.lti.LtiActivity
 import org.elaastic.questions.lti.LtiUser
+import java.net.URLEncoder
+import java.nio.charset.Charset
 
 class LtiLaunchData(
         val oauth_consumer_key: String,
@@ -109,6 +111,17 @@ class LtiLaunchData(
         isStaff() -> roleService!!.roleTeacher()
         isLearner() -> roleService!!.roleStudent()
         else -> roleService!!.roleStudent()
+    }
+
+    fun getRedirectUrlWithErrorMessage(errorMessage: String):String {
+        var url = launch_presentation_return_url!!
+        if (url.indexOf("?") >= 0) {
+            url += '&'
+        } else {
+            url += '?'
+        }
+        url += "lti_errormsg=" + URLEncoder.encode(errorMessage, Charset.defaultCharset())
+        return url
     }
 
 }

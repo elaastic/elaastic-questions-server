@@ -6,7 +6,6 @@ import org.elaastic.questions.lti.LmsUser
 import org.elaastic.questions.lti.oauth.OauthService
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpSession
 @Controller
 class LtiController(
         @Autowired val lmsService: LmsService,
-        @Autowired val authenticationManager: AuthenticationManager,
         @Autowired val oauthService: OauthService,
         @Autowired val termsService: TermsService,
         @Autowired val roleService: RoleService
@@ -40,13 +38,13 @@ class LtiController(
                model: Model,
                locale: Locale): String {
         val session = startNewSession(request)
-        try {
+        return try {
             oauthService.validateOauthRequest(request)
             ltiLaunchData.roleService = roleService
             val lmsUser = lmsService.findLmsUser(
                     ltiLmsKey = ltiLaunchData.oauth_consumer_key,
                     ltiUserId = ltiLaunchData.user_id)
-            return if (lmsUser != null) {
+            if (lmsUser != null) {
                 authenticateLmsUser(session, lmsUser)
                 redirectToAssignment(ltiLaunchData, lmsUser)
             } else {
@@ -57,8 +55,10 @@ class LtiController(
                 "/terms/lti_terms_consent_form"
             }
         } catch (e: Exception) {
-            logger.severe(e.message)
-            return "redirect:${ltiLaunchData.launch_presentation_return_url}"
+            e.stackTrace.iterator().forEach {
+                logger.severe(it.toString())
+            }
+            "redirect:${ltiLaunchData.getRedirectUrlWithErrorMessage(e.message!!)}"
         }
     }
 
@@ -66,24 +66,30 @@ class LtiController(
     fun collectConsent(request: HttpServletRequest,
                        @RequestParam("withConsent") withConsent: Boolean = false): String {
         val ltiLaunchData = getLtiLaunchDataFromSession(request.session)
-        return if (withConsent) {
-            val lmsUser = lmsService.getLmsUser(ltiLaunchData.toLtiUser())
-            authenticateLmsUser(request.session, lmsUser)
-            redirectToAssignment(ltiLaunchData, lmsUser)
-        } else {
-            "redirect:${ltiLaunchData.launch_presentation_return_url}"
+        return try {
+            if (withConsent) {
+                val lmsUser = lmsService.getLmsUser(ltiLaunchData.toLtiUser())
+                authenticateLmsUser(request.session, lmsUser)
+                redirectToAssignment(ltiLaunchData, lmsUser)
+            } else {
+                logger.severe("Consent not given")
+                "redirect:${ltiLaunchData.getRedirectUrlWithErrorMessage("no_consent_given_by_user")}"
+            }
+        } catch (e: Exception) {
+            e.stackTrace.iterator().forEach {
+                logger.severe(it.toString())
+            }
+            "redirect:${ltiLaunchData.getRedirectUrlWithErrorMessage(e.message!!)}"
         }
 
     }
 
     private fun authenticateLmsUser(session: HttpSession, lmsUser: LmsUser) {
-        val user = lmsUser.user
-        val authReq = UsernamePasswordAuthenticationToken(user.username, user.password)
-        val auth = authenticationManager.authenticate(authReq)
-        val secContext = SecurityContextHolder.getContext()
-        secContext.authentication = auth
-
-        session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, secContext)
+        UsernamePasswordAuthenticationToken(lmsUser.user, null, lmsUser.user.authorities).let {
+            val secContext = SecurityContextHolder.getContext()
+            secContext.authentication = it
+            session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, secContext)
+        }
     }
 
     private fun redirectToAssignment(ltiLaunchData: LtiLaunchData, lmsUser: LmsUser): String {
@@ -108,4 +114,5 @@ class LtiController(
     private fun getLtiLaunchDataFromSession(session: HttpSession): LtiLaunchData {
         return session.getAttribute("ltiLaunchData") as LtiLaunchData
     }
+
 }
