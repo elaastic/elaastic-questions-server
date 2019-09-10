@@ -78,7 +78,7 @@ internal class TermsServiceIntegrationTest(
             ).forEach {
                 termsService.save(it)
             }.tExpect {
-                termsService.getActive()!!.let {
+                termsService.findActive()!!.let {
                     entityManager.refresh(it)
                     assertTrue(it.isActive)
                     logger.info(it.termsContentsByLanguage["en"]?.content)
@@ -121,7 +121,7 @@ internal class TermsServiceIntegrationTest(
     fun testGetTermsContentByLanguage() {
         tGiven {
             // the active terms
-            termsService.getActive()!!
+            termsService.getActive()
         }.tExpect {
             // french and content is expectable
             assertThat(termsService.getTermsContentByLanguage("fr"), equalTo(it.termsContentsByLanguage["fr"]!!.content))

@@ -21,33 +21,10 @@ import javax.transaction.Transactional
 class BootstrapService(
         @Autowired val userService: UserService,
         @Autowired val roleService: RoleService,
-        @Autowired val ltiConsumerRepository: LtiConsumerRepository,
-        @Autowired val termsService: TermsService,
-        @Autowired val templateEngine: TemplateEngine
+        @Autowired val ltiConsumerRepository: LtiConsumerRepository
 ) {
 
     var mailServer: GreenMail? = null
-
-    @Transactional
-    fun addTermsIfNotActiveOneAvailable() {
-        if (termsService.getActive() == null) {
-            val startDate = Date()
-            with(Context()) {
-                setVariable("startDate", startDate)
-                listOf(
-                        templateEngine.process("terms/terms_fr", this),
-                        templateEngine.process("terms/terms_en", this)
-                )
-            }.let {
-                Terms(startDate).let { terms ->
-                    TermsContent(it[0], terms)
-                    TermsContent(it[1], terms, "en")
-                    termsService.save(terms)
-                }
-            }
-        }
-    }
-
 
     @Transactional
     fun initializeDevUsers() {

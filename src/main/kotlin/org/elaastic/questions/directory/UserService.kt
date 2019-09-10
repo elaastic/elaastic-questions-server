@@ -331,7 +331,7 @@ class UserService(
     fun userHasGivenConsentToActiveTerms(username:String): Boolean {
         return userConsentRepository.existsByUsernameAndTerms(
                         username,
-                        termsService.getActive()!!
+                        termsService.getActive()
         )
     }
 
@@ -342,7 +342,7 @@ class UserService(
      */
     fun addUserConsentToActiveTerms(username: String): String {
         if (!userHasGivenConsentToActiveTerms(username)) {
-            UserConsent(username, termsService.getActive()!!).let {
+            UserConsent(username, termsService.getActive()).let {
                 userConsentRepository.save(it)
             }
         }
