@@ -37,14 +37,15 @@ data class UserData(
         var userHasGivenConsent: Boolean = false
 ) : HasEmailOrHasOwner, HasPasswords {
 
-    constructor(user: User) : this(
+    constructor(user: User, userHasGivenConsent: Boolean) : this(
             user.id,
             user.firstName,
             user.lastName,
             user.roles.first().name,
             user.username,
             user.email,
-            user.hasOwner()
+            user.hasOwner(),
+            userHasGivenConsent = userHasGivenConsent
     )
 
     fun populateUser(user: User, roleService: RoleService): User {

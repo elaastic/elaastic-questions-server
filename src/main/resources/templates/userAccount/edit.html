@@ -31,6 +31,7 @@
 
         <div th:replace="layout/components/form-messages :: formMessages('')"></div>
         <input type="hidden" th:field="*{hasOwner}">
+        <input type="hidden" th:field="*{userHasGivenConsent}">
 
         <div class="required field">
           <label>

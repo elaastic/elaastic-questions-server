@@ -46,7 +46,7 @@ class UserAccountController(
     fun edit(authentication: Authentication, model: Model): String {
         val user: User = authentication.principal as User
         val userToUpdate = userService.get(user.id!!)!!
-        model.addAttribute("userData", UserData(userToUpdate))
+        model.addAttribute("userData", UserData(userToUpdate, userHasGivenConsent = true))
         model.addAttribute("user", userToUpdate)
         return "/userAccount/edit"
     }
