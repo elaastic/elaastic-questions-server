@@ -3,10 +3,10 @@
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="#{springSecurity.login.page.title}">elaastic</title>
-  <style>
+  <style th:inline="text">
 
     body {
-      background-image: url('/images/elaastic_background.jpg');
+      background-image: url([[@{'/images/elaastic_background.jpg'}]]);
       background-repeat: no-repeat;
       background-size: cover;
     }

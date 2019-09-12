@@ -1,6 +1,3 @@
-// TODO: URLs in this file must be computed according to the context...
-CKEDITOR.plugins.addExternal('pbckcode', '/ckeditor/plugins/pbckcode/')
-CKEDITOR.plugins.addExternal('confighelper', '/ckeditor/plugins/confighelper/')
 CKEDITOR.editorConfig = function (config) {
   config.floatSpaceDockedOffsetY = 10
   config.floatSpaceDockedOffsetX = 60
@@ -109,5 +106,5 @@ CKEDITOR.editorConfig = function (config) {
 
   config.removeButtons = 'Scayt,SelectAll,Find,Save,NewPage,Preview,Print,Templates,Cut,Copy,Redo,Paste,PasteText,PasteFromWord,Undo,Form,HiddenField,Radio,TextField,Checkbox,Textarea,Select,Button,ImageButton,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Flash,PageBreak,Iframe,BGColor,ShowBlocks,Maximize,About,Replace,Source,Strike,Subscript,Superscript'
   config.removePlugins = 'smiley,horizontalrule,elementspath,specialchar'
-  config.skin = 'minimalist,/ckeditor/skins/minimalist/'
+  config.skin = 'minimalist'
 }
