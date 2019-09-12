@@ -407,6 +407,57 @@ internal class AssignmentServiceIntegrationTest(
 
     }
 
+    @Test
+    fun `findByGlobalId - not existing value`() {
+        assertThat(
+                assignmentService.findByGlobalId("not existing"),
+                nullValue()
+        )
+    }
+
+    @Test
+    fun `findByGlobalId - existing value`() {
+        val teacher = testingService.getTestTeacher()
+        assignmentService.save(
+                Assignment(
+                        title = "An assignment",
+                        owner = teacher
+                )
+        ).tExpect {
+            assertThat(
+                    assignmentService.findByGlobalId(it.globalId),
+                    equalTo(it)
+            )
+        }
+    }
+
+    @Test
+    fun `register a student to an assignment`() {
+        val teacher = testingService.getTestTeacher()
+        val student = testingService.getTestStudent()
+
+        val assignment = assignmentService.save(
+                Assignment(
+                        title = "An assignment",
+                        owner = teacher
+                )
+        )
+
+        tWhen {
+            assignmentService.findAllAssignmentsForLearner(student)
+        }.tExpect {
+            assertThat(it.isEmpty, equalTo(true))
+        }
+
+        tWhen {
+            assignmentService.registerUser(student, assignment)
+            assignmentService.findAllAssignmentsForLearner(student)
+        }.tExpect {
+            assertThat(it.content, equalTo(listOf(assignment)))
+        }
+
+    }
+
     private fun createTestingData(owner: User, n: Int = 10) {
         (1..n).forEach {
             assignmentService.save(

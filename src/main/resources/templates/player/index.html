@@ -1,10 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-  <meta charset="UTF-8">
-  <title>Player</title>
+  <meta name="layout" content="left_menu-elaastic">
+  <title th:text="|elaastic: #{player.my.assignment.list.label}|">elaastic: My works</title>
 </head>
+
 <body>
-<h1>Player ...</h1>
+
+<h2 class="ui header">
+  <i class="travel icon"></i>
+
+  <div class="content">
+    <span th:text="#{player.my.assignment.list.label}">My works</span>
+    <div class="sub header" th:text="#{player.my.assignment.list.description}">
+      List of works you have registered
+    </div>
+  </div>
+</h2>
+<div class="ui hidden divider"></div>
+
+<div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+  Message
+</div>
+
+
+<table class="ui single selectable line unstackable table">
+  <thead>
+  <tr>
+    <th th:text="#{player.assignment.label}">Work</th>
+    <th th:text="#{assignment.lastupdated.label}">Last update</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="assignment, i : ${learnerAssignmentPage.content}"
+      th:classappend="${i.odd} ? 'odd' : 'even'">
+
+    <td>
+      <a th:href="@{/player/{assignmentId}/playFirstSequence(assignmentId=${assignment.id})}"
+         th:text="${assignment.title}">
+        [Assignment title]
+      </a>
+    </td>
+
+    <td th:text="${#dates.format(assignment.lastUpdated, 'dd/MM/yyyy HH:mm')}">
+    </td>
+
+    <td>
+      <a class="ui compact icon primary button"
+         th:href="@{/player/{assignmentId}/playFirstSequence(id=${assignment.id})}"
+         th:attr="data-tooltip=#{player.assignment.play}"
+         data-inverted="">
+        <i class="play icon"></i>
+      </a>
+    </td>
+
+  </tr>
+  </tbody>
+</table>
+
+<div class="ui hidden divider"></div>
+
+<!-- TODO Paginate -->
+<!--<div class="ui right aligned basic segment">-->
+<!--  <elaastic:paginate class="ui tiny pagination menu" prev="&laquo;" next="&raquo;"-->
+<!--                     total="${learnerAssignmentListCount ?: 0}"/>-->
+<!--</div>-->
+
+
 </body>
 </html>

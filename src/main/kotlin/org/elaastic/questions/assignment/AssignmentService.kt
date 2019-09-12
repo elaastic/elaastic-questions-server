@@ -23,6 +23,7 @@ import javax.transaction.Transactional
 class AssignmentService(
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val sequenceRepository: SequenceRepository,
+        @Autowired val learnerAssignmentRepository: LearnerAssignmentRepository,
         @Autowired val statementService: StatementService,
         @Autowired val entityManager: EntityManager
 ) {
@@ -154,5 +155,27 @@ class AssignmentService(
         ).executeUpdate()
 
         assignment.sequences.mapIndexed { index, sequence -> sequence.rank = index + 1 }
+    }
+
+    fun findAllAssignmentsForLearner(user: User,
+                                     pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))) : Page<Assignment> {
+        return learnerAssignmentRepository.findAllAssignmentsForLearner(user, pageable)
+    }
+
+    fun findByGlobalId(globalId: String) : Assignment? {
+        return assignmentRepository.findByGlobalId(globalId)
+    }
+
+    fun registerUser(user: User, assignment: Assignment) : LearnerAssignment? {
+        if(assignment.owner == user) {
+            return null
+        }
+
+        return learnerAssignmentRepository.findByLearnerAndAssignment(
+                user,
+                assignment
+        ) ?: learnerAssignmentRepository.save(
+                LearnerAssignment(user, assignment)
+        )
     }
 }

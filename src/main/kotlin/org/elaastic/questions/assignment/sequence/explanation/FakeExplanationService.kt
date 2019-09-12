@@ -15,6 +15,4 @@ class FakeExplanationService(
         return fakeExplanationRepository.findAllByStatement(statement)
     }
 
-    // TODO Move other operations on fake explanations
-
 }
