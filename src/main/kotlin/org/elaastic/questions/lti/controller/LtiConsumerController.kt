@@ -6,8 +6,6 @@ import org.elaastic.questions.lti.LtiConsumer
 import org.elaastic.questions.lti.LtiConsumerRepository
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
@@ -47,7 +45,8 @@ class LtiConsumerController(
                     "pagination",
                     PaginationUtil.buildInfo(
                             it.totalPages,
-                            page
+                            page,
+                            size
                     )
             )
         }

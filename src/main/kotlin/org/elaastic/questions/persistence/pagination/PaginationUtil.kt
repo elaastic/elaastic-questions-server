@@ -7,12 +7,15 @@ import org.springframework.stereotype.Service
 class PaginationUtil {
 
     companion object {
-        fun buildInfo(totalPages: Int, currentPage: Int? = null): PaginationInfo {
+        fun buildInfo(totalPages: Int,
+                      currentPage: Int? = null,
+                      specifiedSize: Int? = null): PaginationInfo {
             return when {
                 totalPages > 1 -> PaginationInfo(
                         paginated = true,
                         pageList = (1..totalPages).toList(),
-                        currentPage = currentPage ?: 1
+                        currentPage = currentPage ?: 1,
+                        specifiedSize = specifiedSize
                 )
                 else -> PaginationInfo(paginated = false)
             }

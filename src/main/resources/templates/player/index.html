@@ -63,12 +63,9 @@
 
 <div class="ui hidden divider"></div>
 
-<!-- TODO Paginate -->
-<!--<div class="ui right aligned basic segment">-->
-<!--  <elaastic:paginate class="ui tiny pagination menu" prev="&laquo;" next="&raquo;"-->
-<!--                     total="${learnerAssignmentListCount ?: 0}"/>-->
-<!--</div>-->
-
+<div class="column">
+  <div th:replace="layout/components/paginate :: paginate(baseUrl='/player/index')"></div>
+</div>
 
 </body>
 </html>

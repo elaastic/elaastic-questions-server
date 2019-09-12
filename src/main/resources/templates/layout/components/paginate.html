@@ -6,7 +6,7 @@
 
     <div class="prev item" th:classappend="${pagination.currentPage == 1} ? disabled">
       <a th:unless="${pagination.currentPage == 1}"
-         th:href="@{${baseUrl}(page=${pagination.currentPage-1})}"
+         th:href="@{${baseUrl}(page=${pagination.currentPage-1},size=${pagination.specifiedSize})}"
          href="prev">
         &laquo;
       </a>
@@ -18,7 +18,7 @@
          th:each="page : ${pagination.pageList}">
       <a
         th:unless="${page == pagination.currentPage}"
-        th:href="@{${baseUrl}(page=${page})}"
+        th:href="@{${baseUrl}(page=${page},size=${pagination.specifiedSize})}"
         href="?page=3"
         class="step"
         th:text="${page}">
@@ -29,7 +29,7 @@
 
     <div class="next item" th:classappend="${pagination.currentPage == pagination.pageList.size()} ? disabled">
       <a th:unless="${pagination.currentPage == pagination.pageList.size()}"
-         th:href="@{${baseUrl}(page=${pagination.currentPage + 1})}"
+         th:href="@{${baseUrl}(page=${pagination.currentPage + 1},size=${pagination.specifiedSize})}"
          href="next">
         &raquo;
       </a>

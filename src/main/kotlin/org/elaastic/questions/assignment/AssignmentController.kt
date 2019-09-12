@@ -46,7 +46,8 @@ class AssignmentController(
                     "pagination",
                     PaginationUtil.buildInfo(
                             it.totalPages,
-                            page
+                            page,
+                            size
                     )
             )
         }

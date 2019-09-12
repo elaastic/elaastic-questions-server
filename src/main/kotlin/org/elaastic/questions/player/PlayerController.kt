@@ -41,7 +41,8 @@ class PlayerController(
                     "pagination",
                     PaginationUtil.buildInfo(
                             it.totalPages,
-                            page
+                            page,
+                            size
                     )
             )
         }
