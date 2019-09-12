@@ -53,7 +53,7 @@
   </div>
 
   <script type="text/javascript" th:inline="javascript"
-          th:with="registerUrl=@{/player/register(globalId=${assignment.globalId})}">
+          th:with="registerUrl=${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/player/register(globalId=${assignment.globalId})}">
     /*<![CDATA[*/
 
     elaastic.showLearnerAccessModal = function () {
