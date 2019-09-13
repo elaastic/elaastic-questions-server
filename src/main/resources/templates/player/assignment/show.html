@@ -3,8 +3,7 @@
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section},extraHeader=~{::head/script})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-  <!--  TODO Check VueJS-->
-  <!--  <r:require modules="semantic_ui,jquery,elaastic_ui,vue_js"/>-->
+  <!--  TODO Add VueJS-->
   <title th:text="|elaastic: ${assignment.title}|">elaastic: My assignments</title>
 
   <script th:inline="javascript">
@@ -53,8 +52,7 @@
   <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
     Message
   </div>
-
-
+  
   <h2 class="ui top attached block header">
     <i class="book icon"></i>
 
@@ -67,8 +65,7 @@
     <span id="nbRegisteredUsers" th:text="${nbRegisteredUsers}">36</span>
     <a href="#"
        onclick="elaastic.updateNbRegisteredUsers()"
-       title="Refresh">
-      <!--      TODO Check & translate refresh -->
+       th:title="#{common.refresh}">
       <i class="refresh icon"></i>
     </a>
     <br/>
