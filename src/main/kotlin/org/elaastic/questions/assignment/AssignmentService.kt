@@ -190,4 +190,10 @@ class AssignmentService(
     fun getNbRegisteredUsers(assignment: Assignment): Int {
         return learnerAssignmentRepository.countAllByAssignment(assignment)
     }
+
+    fun getNbRegisteredUsers(assignmentId: Long): Int {
+        return learnerAssignmentRepository.countAllByAssignment(
+                assignmentRepository.getOne(assignmentId)
+        )
+    }
 }

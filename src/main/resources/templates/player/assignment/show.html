@@ -8,14 +8,14 @@
   <title th:text="|elaastic: ${assignment.title}|">elaastic: My assignments</title>
 
   <script th:inline="javascript">
-    let elaastic = elaastic || {};
+    let elaastic = {}
 
-    elaastic.updateNbRegisteredUsers = function() { console.log("Not ready yet...") }
-    $(document).ready(function() {
-      elaastic.updateNbRegisteredUsers = function() {
-        $('#nbRegisteredUsers').load(/*[[@{/player/updateRegisteredUserCount}]]*/);
+    elaastic.updateNbRegisteredUsers = function () { console.log('Not ready yet...') }
+    $(document).ready(function () {
+      elaastic.updateNbRegisteredUsers = function () {
+        $('#nbRegisteredUsers').load(/*[[@{/player/assignment/{id}/nbRegisteredUsers(id=${assignment.id})}]]*/)
       }
-    });
+    })
   </script>
 </head>
 
@@ -62,27 +62,15 @@
     </div>
   </h2>
 
-  <div class="ui attached segment" th:text="#{player.assignment.registeredUserCount}">
-    Number of registered users:
-    <span id="nbRegisteredUsers" th:text="${nbRegisteredUsers}">
-    36
-  </span>
-
+  <div class="ui attached segment">
+    <span th:text="#{player.assignment.registeredUserCount}">Number of registered users: </span>
+    <span id="nbRegisteredUsers" th:text="${nbRegisteredUsers}">36</span>
     <a href="#"
-       onclick="updateNbRegisteredUsers()"
+       onclick="elaastic.updateNbRegisteredUsers()"
        title="Refresh">
       <!--      TODO Check & translate refresh -->
       <i class="refresh icon"></i>
     </a>
-
-    <!--  TODO migrate remoteLink-->
-    <!--  <g:remoteLink-->
-    <!--    controller="player"-->
-    <!--    action="updateRegisteredUserCount"-->
-    <!--    id="${assignment.id}"-->
-    <!--    title="Refresh"-->
-    <!--    update="registered_user_count">-->
-    <!--    <i class="refresh icon"></i></g:remoteLink>-->
     <br/>
 
   </div>

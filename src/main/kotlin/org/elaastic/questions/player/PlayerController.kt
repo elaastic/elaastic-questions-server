@@ -10,10 +10,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
 import javax.persistence.EntityNotFoundException
 
@@ -75,7 +72,7 @@ class PlayerController(
         }
     }
 
-    @GetMapping("/assignment/show/{id}")
+    @GetMapping(value= ["/assignment/{id}/show", "/assignment/{id}"])
     fun show(authentication: Authentication,
              model: Model,
              @PathVariable id: Long) : String {
@@ -91,5 +88,12 @@ class PlayerController(
         }
 
         return "/player/assignment/show"
+    }
+
+    @GetMapping("/assignment/{id}/nbRegisteredUsers")
+    @ResponseBody
+    fun getNbRegisteredUsers(authentication: Authentication,
+                             @PathVariable id: Long): Int {
+        return assignmentService.getNbRegisteredUsers(id)
     }
 }
