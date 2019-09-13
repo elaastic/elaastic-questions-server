@@ -48,3 +48,17 @@ html.elaastic.three-columns, .elaastic.three-columns body {
     flex: 2;
   }
 }
+
+
+/* Specific steps CSS */
+.ui.steps .step.completed-phase, .ui.steps .step.completed-phase:after {
+  background-color: #f3f4f5;
+}
+
+.ui.steps .step.active-phase, .ui.steps .step.active-phase:after {
+  background-color: #dff0ff;
+}
+
+.ui.steps .step.active-phase .title, .ui.steps .step.active-phase i.phase-icon:before {
+  color: #4183c4;
+}

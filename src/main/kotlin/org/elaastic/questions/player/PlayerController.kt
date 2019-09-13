@@ -96,8 +96,35 @@ class PlayerController(
 
     @GetMapping("/assignment/{id}/nbRegisteredUsers")
     @ResponseBody
-    fun getNbRegisteredUsers(authentication: Authentication,
-                             @PathVariable id: Long): Int {
+    fun getNbRegisteredUsers(@PathVariable id: Long): Int {
         return assignmentService.getNbRegisteredUsers(id)
     }
+    
+    @GetMapping("/debug/components")
+    fun debugSteps(authentication: Authentication,
+                   model: Model,
+                   @RequestParam responseSubmissionState: String?,
+                   @RequestParam evaluationState: String?,
+                   @RequestParam readState: String?,
+                   @RequestParam showStatistics: Boolean?,
+                   @RequestParam studentsProvideExplanation: Boolean?) : String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute("responseSubmissionState", responseSubmissionState ?: "disabled")
+        model.addAttribute("evaluationState", evaluationState ?: "disabled")
+        model.addAttribute("readState", readState ?: "disabled")
+        model.addAttribute("showStatistics", showStatistics ?: false)
+        model.addAttribute("sequenceStatistics", SequenceStatistics())
+        model.addAttribute("studentsProvideExplanation", studentsProvideExplanation ?: true)
+
+
+        return "/player/debug"
+    }
+
+    class SequenceStatistics(
+            val nbResponsesAttempt1 : Int = 10,
+            val nbResponsesAttempt2: Int = 8,
+            val nbEvaluations: Int = 5
+    )
 }

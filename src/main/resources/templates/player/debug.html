@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Player components debug page</title>
+</head>
+<body>
+
+<h1>Player components debugging page</h1>
+
+<h2>Steps</h2>
+<form class="ui form" method="get" th:action="@{/player/debug/components}">
+  <div class="fields">
+    <div class="field">
+      <label>responseSubmissionState</label>
+      <input name="responseSubmissionState" type="text" th:value="${responseSubmissionState}" />
+    </div>
+    <div class="field">
+      <label>evaluationState</label>
+      <input name="evaluationState" type="text" th:value="${evaluationState}" />
+    </div>
+    <div class="field">
+      <label>readState</label>
+      <input name="readState" type="text" th:value="${readState}"/>
+    </div>
+    <div class="field">
+      <label>showStatistics</label>
+      <input name="showStatistics" type="text" th:value="${showStatistics}"/>
+    </div>
+    <div class="field">
+      <label>studentsProvideExplanation</label>
+      <input name="studentsProvideExplanation" type="text" th:value="${studentsProvideExplanation}"/>
+    </div>
+
+  </div>
+
+  <input type="submit" class="ui submit button"/>
+  <hr class="ui hidden divider"/>
+</form>
+
+<div
+  th:replace="player/assignment/sequence/components/_steps.html :: steps(${responseSubmissionState}, ${evaluationState}, ${readState}, ${showStatistics}, ${studentsProvideExplanation}, ${sequenceStatistics})"></div>
+
+</body>
+</html>
