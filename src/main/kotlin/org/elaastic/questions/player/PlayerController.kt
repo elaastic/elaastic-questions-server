@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.lang.IllegalArgumentException
@@ -50,7 +51,7 @@ class PlayerController(
         return "/player/index"
     }
 
-    @GetMapping(value = ["/register"])
+    @GetMapping("/register")
     fun register(authentication: Authentication,
                  model: Model,
                  @RequestParam("globalId") globalId: String?): String {
@@ -72,5 +73,23 @@ class PlayerController(
             assignmentService.registerUser(user, it)
             return "redirect:/player/${it.id}/playFirstSequence"
         }
+    }
+
+    @GetMapping("/assignment/show/{id}")
+    fun show(authentication: Authentication,
+             model: Model,
+             @PathVariable id: Long) : String {
+        val user: User = authentication.principal as User
+
+        assignmentService.get(user, id, true).let {
+            model.addAttribute("user", user)
+            model.addAttribute("assignment", it)
+            model.addAttribute(
+                    "nbRegisteredUsers",
+                    assignmentService.getNbRegisteredUsers(it)
+            )
+        }
+
+        return "/player/assignment/show"
     }
 }

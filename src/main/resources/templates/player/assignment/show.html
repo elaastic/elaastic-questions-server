@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section},extraHeader=~{::head/script})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <!--  TODO Check VueJS-->
+  <!--  <r:require modules="semantic_ui,jquery,elaastic_ui,vue_js"/>-->
+  <title th:text="|elaastic: ${assignment.title}|">elaastic: My assignments</title>
+
+  <script th:inline="javascript">
+    let elaastic = elaastic || {};
+
+    elaastic.updateNbRegisteredUsers = function() { console.log("Not ready yet...") }
+    $(document).ready(function() {
+      elaastic.updateNbRegisteredUsers = function() {
+        $('#nbRegisteredUsers').load(/*[[@{/player/updateRegisteredUserCount}]]*/);
+      }
+    });
+  </script>
+</head>
+
+<body>
+
+<aside id="pageSpecificMenu">
+  <!--  TODO Migrate specific menu -->
+  <!--  <sec:ifAnyGranted roles="${org.tsaap.directory.RoleEnum.TEACHER_ROLE.label}">-->
+  <!--    <g:if test="${assignment.owner.username == sec.username().toString()}">-->
+
+  <!--      <g:link class="item"-->
+  <!--              action="show"-->
+  <!--              controller="assignment"-->
+  <!--              resource="${assignment}"-->
+  <!--              data-tooltip="${message(code: 'assignment.action.show.label')}"-->
+  <!--              data-position="right center"-->
+  <!--              data-inverted="">-->
+  <!--        <i class="yellow edit icon"></i>-->
+  <!--      </g:link>-->
+
+  <!--      <div class="item"-->
+  <!--           onclick="window.learnerAccessModalApp.showLearnerAccessModal('${g.createLink(controller: 'player', action: 'register', absolute: true, params: [globalId: assignment.globalId])}', '${assignment.title.replaceAll("-->
+  <!--      '", "\\\\u0027")}')"-->
+  <!--      data-tooltip="${message(code: 'assignment.learnerAccess.oneLine')}"-->
+  <!--      data-position="right center"-->
+  <!--      data-inverted="">-->
+  <!--      <i class="yellow feed icon"></i>-->
+  <!--      </div>-->
+
+  <!--    </g:if>-->
+  <!--  </sec:ifAnyGranted>-->
+</aside>
+
+<section>
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message
+  </div>
+
+
+  <h2 class="ui top attached block header">
+    <i class="book icon"></i>
+
+    <div class="content" th:text="${assignment.title}">
+    </div>
+  </h2>
+
+  <div class="ui attached segment" th:text="#{player.assignment.registeredUserCount}">
+    Number of registered users:
+    <span id="nbRegisteredUsers" th:text="${nbRegisteredUsers}">
+    36
+  </span>
+
+    <a href="#"
+       onclick="updateNbRegisteredUsers()"
+       title="Refresh">
+      <!--      TODO Check & translate refresh -->
+      <i class="refresh icon"></i>
+    </a>
+
+    <!--  TODO migrate remoteLink-->
+    <!--  <g:remoteLink-->
+    <!--    controller="player"-->
+    <!--    action="updateRegisteredUserCount"-->
+    <!--    id="${assignment.id}"-->
+    <!--    title="Refresh"-->
+    <!--    update="registered_user_count">-->
+    <!--    <i class="refresh icon"></i></g:remoteLink>-->
+    <br/>
+
+  </div>
+
+  <div class="ui attached large text segment"
+       th:each="sequence, i : ${assignment.sequences}"
+       th:id="|sequence_${sequence.id}|">
+
+    <!--  TODO Migrate subtempplate-->
+    <p th:text="|Sequence ${sequence.statement.title}|"></p>
+    <!--  <g:render-->
+    <!--    template="/assignment/player/sequence/${userRole}/${org.tsaap.skin.SkinUtil.getView(params, session, sequenceInstance.state)}"-->
+    <!--    model="[userRole: userRole, sequenceInstance: sequenceInstance, user: user]"/>-->
+
+  </div>
+
+  <div class="ui hidden divider"></div>
+
+  <!-- TODO migrate subtemplates-->
+  <!--<g:render template="/assignment/player/assignment/manage_configuration"/>-->
+  <!--<g:render template="/assignment/learner_access_modal-elaastic"/>-->
+</section>
+</body>
+</html>

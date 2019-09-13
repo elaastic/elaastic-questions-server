@@ -16,4 +16,6 @@ interface LearnerAssignmentRepository : JpaRepository<LearnerAssignment, Long> {
     @Query("select la.assignment from LearnerAssignment as la where la.learner = ?1")
     fun findAllAssignmentsForLearner(user: User,
                                      pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))): Page<Assignment>
+
+    fun countAllByAssignment(assignment: Assignment): Int
 }
