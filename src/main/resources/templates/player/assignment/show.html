@@ -77,7 +77,8 @@
        th:id="|sequence_${sequence.id}|">
 
     <!--  TODO Migrate subtempplate-->
-    <p th:text="|Sequence ${sequence.statement.title}|"></p>
+    <div th:replace="layout/player/assignment/sequence/{} :: todo()">
+    </div>
     <!--  <g:render-->
     <!--    template="/assignment/player/sequence/${userRole}/${org.tsaap.skin.SkinUtil.getView(params, session, sequenceInstance.state)}"-->
     <!--    model="[userRole: userRole, sequenceInstance: sequenceInstance, user: user]"/>-->

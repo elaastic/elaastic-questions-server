@@ -85,6 +85,10 @@ class PlayerController(
                     "nbRegisteredUsers",
                     assignmentService.getNbRegisteredUsers(it)
             )
+            model.addAttribute(
+                    "userRole",
+                    if(user == it.owner) "teacher" else "learner" // TODO Define a type for this
+            )
         }
 
         return "/player/assignment/show"
