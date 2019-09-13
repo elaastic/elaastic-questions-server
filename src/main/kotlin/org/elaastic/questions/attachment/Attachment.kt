@@ -1,4 +1,4 @@
-package org.elaastic.questions.attachement
+package org.elaastic.questions.attachment
 
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -6,40 +6,42 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 import javax.persistence.AttributeConverter
-
+import javax.validation.constraints.NotNull
 
 
 @Entity(name = "attachement")
 class Attachment(
-        @field:NotBlank var path: String,
-        @field:NotBlank var name: String
+        @field:NotBlank var name: String,
+
+        @field:Size(min = 1)
+        var originalName: String? = null,
+
+        var size: Long? = null,
+
+        @Column(name = "type_mime")
+        var mimeType: MimeType? = null,
+
+        var toDelete: Boolean = false
 ) : AbstractJpaPersistable<Long>() {
 
     @Version
     var version: Long? = null
 
-    @Size(min = 1)
-    var originalName: String? = null
-
-    var size: Int? = null
-
-    @Column(name = "type_mime")
-    var mimeType: MimeType? = null
+    @NotNull @NotBlank
+    var path: String? = null
 
     @Embedded
     var dimension: Dimension? = null
-
-    var toDelete: Boolean = false
 
     @ManyToOne
     var statement: Statement? = null
 
 
-    fun isDisplayableImage():Boolean {
+    fun isDisplayableImage(): Boolean {
         return mimeType?.correspondsToDisplayableImage() ?: false
     }
 
-    fun isDisplayableText():Boolean {
+    fun isDisplayableText(): Boolean {
         return mimeType?.correspondsToDisplayableText() ?: false
     }
 
@@ -51,11 +53,11 @@ class Attachment(
 
 class MimeType(val label: String = "application/octet-stream") {
 
-    fun correspondsToDisplayableImage():Boolean {
+    fun correspondsToDisplayableImage(): Boolean {
         return label in MimeTypesOfDisplayableImage.values().map { it.label }
     }
 
-    fun correspondsToDisplayableText():Boolean {
+    fun correspondsToDisplayableText(): Boolean {
         return label.startsWith("text/")
     }
 

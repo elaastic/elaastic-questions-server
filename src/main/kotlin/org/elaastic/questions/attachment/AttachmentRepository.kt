@@ -1,4 +1,4 @@
-package org.elaastic.questions.attachement
+package org.elaastic.questions.attachment
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.PagingAndSortingRepository

@@ -33,6 +33,10 @@
 
     <div class="ui hidden divider"></div>
 
+    <div v-show="hasAttachment">
+        <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{sequence.statement.attachment.label}">Pièce jointe</a>
+    </div>
+
     <!-- TODO : migrate attachment -->
     <!--    <div v-show="hasAttachment">-->
     <!--      <a class="ui ribbon label" style="margin-bottom: 1em;">Pièce jointe</a>-->

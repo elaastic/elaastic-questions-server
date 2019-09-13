@@ -1,4 +1,4 @@
-package org.elaastic.questions.attachement
+package org.elaastic.questions.attachment
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
@@ -6,30 +6,36 @@ import org.elaastic.questions.assignment.StatementRepository
 import org.elaastic.questions.test.TestingService
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
 @SpringBootTest
 @Transactional
-internal class AttachmentIntegrationTest(@Autowired val attachmentRepository: AttachmentRepository,
-                                         @Autowired val statementRepository: StatementRepository,
-                                         @Autowired val testingService: TestingService,
-                                         @Autowired val em: EntityManager) {
+internal class AttachmentIntegrationTest(
+        @Autowired val attachmentRepository: AttachmentRepository,
+        @Autowired val statementRepository: StatementRepository,
+        @Autowired val testingService: TestingService,
+        @Autowired val em: EntityManager,
+        @Autowired val attachmentService: AttachmentService
+) {
 
     @Test
     fun `test save of a valid attachment`() {
         // given a valid attachment
-        val attachment = Attachment(path = "/to/path", name = "MyAttach")
-        attachment.originalName = "originalName"
-        attachment.mimeType = MimeType()
+        val attachment = Attachment(
+                name = "MyAttach",
+                originalName = "originalName",
+                size = 1024,
+                mimeType = MimeType()
+        )
+        attachment.path = "/to/path"
         attachment.dimension = Dimension(width = 100, height = 100)
-        attachment.size = 1024
         // when saving the attachment
         attachmentRepository.save(attachment)
         // then id and version are initialized
@@ -39,9 +45,15 @@ internal class AttachmentIntegrationTest(@Autowired val attachmentRepository: At
 
     @Test
     fun `test save of a non valid attachment`() {
-        // given a valid attachment
-        val attachment = Attachment(path = "/to/path", name = "MyAttach")
-        attachment.originalName = ""
+        // given a non valid attachment
+        val attachment = Attachment(
+                name = "MyAttach",
+                originalName = "",
+                size = 1024,
+                mimeType = MimeType()
+        )
+        attachment.path = "/to/path"
+        attachment.dimension = Dimension(width = 100, height = 100)
         // expect an exception is thrown when saving the attachment
         assertThrows<ConstraintViolationException> { attachmentRepository.save(attachment) }
     }
@@ -49,8 +61,13 @@ internal class AttachmentIntegrationTest(@Autowired val attachmentRepository: At
     @Test
     fun `test fetch of a save attachment`() {
         // given a valid saved attachment
-        val attachment = Attachment(path = "/to/path", name = "MyAttach")
-        attachment.mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.png.label)
+        val attachment = Attachment(
+                name = "MyAttach",
+                originalName = "originalName",
+                size = 1024,
+                mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.png.label)
+        )
+        attachment.path = "/to/path"
         attachment.dimension = Dimension(width = 100, height = 150)
         attachmentRepository.saveAndFlush(attachment)
         // when refreshing the saved attachment
@@ -75,15 +92,25 @@ internal class AttachmentIntegrationTest(@Autowired val attachmentRepository: At
                         )
                 )
         // and an attachment associated with the statement
-        val attachment = Attachment(path = "/to/path", name = "MyAttach")
-        attachment.statement = statement
+        val attachment = Attachment(
+                name = "MyAttach",
+                originalName = "originalName",
+                size = 1024,
+                mimeType = MimeType(),
+                toDelete = false
+        )
+        attachment.path = "/to/path"
+        attachment.dimension = Dimension(width = 100, height = 100)
 
         // when saving the attachement
-        attachmentRepository.save(attachment)
+        attachmentService.addStatementToAttachment(statement, attachment)
 
         // then id and version are initialized
         assertThat("id should not be null", attachment.id, notNullValue())
         assertThat("version should be initialised", attachment.version, equalTo(0L))
+
+        // and the attachment is not to delete
+        assertFalse(attachment.toDelete)
 
         // when refresching attachement
         em.refresh(attachment)
@@ -91,7 +118,7 @@ internal class AttachmentIntegrationTest(@Autowired val attachmentRepository: At
         // then it has the expected statement attached
         assertThat("statement is not as expected", attachment.statement, equalTo(statement))
 
-
     }
+
 
 }

@@ -6,7 +6,9 @@ import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
-import org.elaastic.questions.attachement.Attachment
+import org.elaastic.questions.attachment.Attachment
+import org.elaastic.questions.attachment.AttachmentUploadException
+import org.elaastic.questions.attachment.MimeType
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.lang.IllegalStateException
 import javax.servlet.http.HttpServletResponse
@@ -179,8 +182,8 @@ class SequenceController(
 
     @GetMapping("{id}/down")
     fun down(authentication: Authentication,
-           @PathVariable assignmentId: Long,
-           @PathVariable id: Long): String {
+             @PathVariable assignmentId: Long,
+             @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
         val assignment = assignmentService.get(user, assignmentId, true)
@@ -199,6 +202,70 @@ class SequenceController(
         )
     }
 
+    data class AttachmentData(
+            val name: String,
+            val size: Long? = null,
+            val mimeType: String? = null,
+            val originalFileName: String? = null,
+            val bytes: ByteArray? = null,
+            var id: Long? = null
+    ) {
+
+        constructor(file: MultipartFile) : this(
+                name = file.name,
+                size = file.size,
+                originalFileName = file.originalFilename,
+                mimeType = file.contentType,
+                bytes = file.bytes
+        ) {
+            if (file.isEmpty) {
+                throw AttachmentUploadException("file.empty")
+            }
+        }
+
+        constructor(attachment: Attachment) : this(
+                id = attachment.id,
+                size = attachment.size,
+                name = attachment.name,
+                originalFileName = attachment.originalName,
+                mimeType = attachment.mimeType?.label
+        )
+
+        fun toEntity(): Attachment {
+            return Attachment(
+                    name = this.name,
+                    originalName = this.originalFileName,
+                    size = this.size,
+                    mimeType = if (this.mimeType == null) MimeType() else MimeType(this.mimeType),
+                    toDelete = true
+            )
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is AttachmentData) return false
+
+            if (name != other.name) return false
+            if (size != other.size) return false
+            if (mimeType != other.mimeType) return false
+            if (originalFileName != other.originalFileName) return false
+            if (id != other.id) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = name.hashCode()
+            result = 31 * result + (size?.hashCode() ?: 0)
+            result = 31 * result + (mimeType?.hashCode() ?: 0)
+            result = 31 * result + (originalFileName?.hashCode() ?: 0)
+            result = 31 * result + (id?.hashCode() ?: 0)
+            return result
+        }
+
+
+    }
+
     // Note JT : would be nicer if we receive only the relevant data depending on QuestionType
     // Moreover, the gap between the view model and the entities representation is too important
     // The code below could be widely simplified by refactoring the view to use the same model as the backend
@@ -207,7 +274,7 @@ class SequenceController(
             var version: Long? = null,
             @field:NotBlank val title: String? = null,
             @field:NotBlank val content: String? = null,
-            val attachment: Attachment? = null,
+            val attachment: AttachmentData? = null,
             val hasChoices: Boolean = true,
             val choiceInteractionType: ChoiceType? = null,
             @field:NotNull @field:Max(10) val itemCount: Int? = null,
