@@ -1,6 +1,8 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.InteractionResponse
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
@@ -100,26 +102,19 @@ class PlayerController(
         return assignmentService.getNbRegisteredUsers(id)
     }
 
-    @GetMapping("/test/all-components")
-    fun debugAllComponents(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
-        model.addAttribute("user", user)
-        return "/player/assignment/sequence/components/test-all-components"
-    }
-
     @GetMapping("/test/steps")
-    fun debugSteps(authentication: Authentication,
-                   model: Model,
-                   @RequestParam responseSubmissionState: String?,
-                   @RequestParam evaluationState: String?,
-                   @RequestParam readState: String?,
-                   @RequestParam showStatistics: Boolean?,
-                   @RequestParam studentsProvideExplanation: Boolean?): String {
+    fun testSteps(authentication: Authentication,
+                  model: Model,
+                  @RequestParam responseSubmissionState: String?,
+                  @RequestParam evaluationState: String?,
+                  @RequestParam readState: String?,
+                  @RequestParam showStatistics: Boolean?,
+                  @RequestParam studentsProvideExplanation: Boolean?): String {
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
-        model.addAttribute("responseSubmissionState", responseSubmissionState ?: "disabled")
-        model.addAttribute("evaluationState", evaluationState ?: "disabled")
+        model.addAttribute("responseSubmissionState", responseSubmissionState ?: "completed")
+        model.addAttribute("evaluationState", evaluationState ?: "active")
         model.addAttribute("readState", readState ?: "disabled")
         model.addAttribute("showStatistics", showStatistics ?: false)
         model.addAttribute("sequenceStatistics", SequenceStatistics())
@@ -129,9 +124,31 @@ class PlayerController(
         return "/player/assignment/sequence/components/test-steps"
     }
 
+    @GetMapping("/test/explanation-list")
+    fun testExplanationList(authentication: Authentication,
+                            model: Model): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+                "responses",
+                listOf(
+                        InteractionResponseInfo(),
+                        InteractionResponseInfo(),
+                        InteractionResponseInfo()
+                )
+        )
+        model.addAttribute("displaysAll", true)
+        model.addAttribute("explanationCount", 17)
+
+        return "/player/assignment/sequence/components/test-explanation-list"
+    }
+
     class SequenceStatistics(
             val nbResponsesAttempt1: Int = 10,
             val nbResponsesAttempt2: Int = 8,
             val nbEvaluations: Int = 5
     )
+
+    class InteractionResponseInfo(val explanation: String? = null)
 }

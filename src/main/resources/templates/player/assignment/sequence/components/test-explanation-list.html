@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Test steps components</title>
+</head>
+<body>
+<section>
+  <h2>Explanation list</h2>
+<!--  <form class="ui form" method="get" th:action="@{/player/test/explanation-list}">-->
+<!--    <div class="fields">-->
+<!--      <div class="field">-->
+<!--        <label>responseSubmissionState</label>-->
+<!--        <input name="responseSubmissionState" type="text" th:value="${responseSubmissionState}"/>-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <label>evaluationState</label>-->
+<!--        <input name="evaluationState" type="text" th:value="${evaluationState}"/>-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <label>readState</label>-->
+<!--        <input name="readState" type="text" th:value="${readState}"/>-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <label>showStatistics</label>-->
+<!--        <input name="showStatistics" type="text" th:value="${showStatistics}"/>-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <label>studentsProvideExplanation</label>-->
+<!--        <input name="studentsProvideExplanation" type="text" th:value="${studentsProvideExplanation}"/>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--    <input type="submit" class="ui submit button"/>-->
+<!--    <hr class="ui hidden divider"/>-->
+<!--  </form>-->
+  <div
+    th:replace="player/assignment/sequence/components/_explanation-list.html :: explanationList(${responses}, ${displaysAll}, ${explanationCount})"></div>
+</section>
+</body>
+</html>

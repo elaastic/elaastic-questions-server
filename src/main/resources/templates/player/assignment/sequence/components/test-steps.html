@@ -1,8 +1,16 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Test steps components</title>
+</head>
 <body>
 <section>
   <h2>Steps</h2>
-  <form class="ui form" method="get" th:action="@{/player/debug/components}">
+  <form class="ui form" method="get" th:action="@{/player/test/steps}">
     <div class="fields">
       <div class="field">
         <label>responseSubmissionState</label>
