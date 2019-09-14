@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Test ExplanationViewer component</title>
+</head>
+<body>
+<section>
+  <h2>Explanation viewer</h2>
+
+  <div th:each="explanationViewerSituation : ${explanationViewerSituationArray}"
+       class="ui segment">
+    <h3 th:text="${explanationViewerSituation.description}"></h3>
+    <div
+      th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${explanationViewerSituation.sequenceId}, ${explanationViewerSituation.explanationViewerModel})"></div>
+  </div>
+</section>
+</body>
+</html>

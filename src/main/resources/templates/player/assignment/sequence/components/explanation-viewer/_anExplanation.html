@@ -1,0 +1,19 @@
+<div th:fragment="anExplanation(explanation)"
+     class="ui info message explanation"
+     th:styleappend="${explanation.meanGrade != null ? 'padding-top: 3em;' : ''}"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div th:if="${explanation.meanGrade != null}" class="ui top left attached teal label">
+
+    <span th:text="${explanation.meanGrade}"></span>/5
+
+    <span class="detail" th:if="${explanation.nbEvaluations <= 1}"
+          th:text="${explanation.nbEvaluations}+' '+#{common.evaluation}"></span>
+    <span class="detail" th:if="${explanation.nbEvaluations > 1}"
+          th:text="${explanation.nbEvaluations}+' '+#{common.evaluations}"></span>
+  </div>
+
+  <strong th:text="|@${explanation.author}|"></strong>
+
+  <br/>
+  <span th:text="${explanation.content}"></span>
+</div>

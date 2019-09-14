@@ -1,0 +1,15 @@
+<div th:fragment="explanationList(explanations)"
+     th:with="components=${'/player/assignment/sequence/components/explanation-viewer'}"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div th:if="${#lists.isEmpty(explanations)}"
+       class="ui warning message"
+       th:text="#{player.sequence.explanation.noExplanation}">
+    There is no explanation.
+  </div>
+  <div th:unless="${#lists.isEmpty(explanations)}"
+       th:each="explanation, i : ${explanations}"
+       th:remove="tag">
+    <div
+      th:replace="|${components}/_anExplanation|::anExplanation(${explanation})"></div>
+  </div>
+</div>

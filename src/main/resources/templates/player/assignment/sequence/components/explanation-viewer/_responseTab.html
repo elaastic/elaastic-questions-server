@@ -1,0 +1,20 @@
+<div th:fragment="responseTab(correct, response, explanations)"
+     th:remove="tag"
+     th:with="components=${'/player/assignment/sequence/components/explanation-viewer'}"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="title"
+       th:classappend="${correct ? 'active' : ''}">
+    <i class="dropdown icon"></i>
+    <span
+      th:text="|#{player.sequence.users.responses}: ${response.choices}|">Responses: [2]</span><strong>-</strong>
+    <span th:text="#{player.sequence.user.score(${response.score})}">Score: 100%</span><strong>-</strong>
+    <span th:text="|#{player.sequence.responseCount}: ${#lists.size(explanations)}|">Response Count: 37</span>
+  </div>
+
+
+  <div class="content" th:classappend="${correct ? 'active' : ''}">
+    <p class="panel-body">
+    <div th:replace="|${components}/_explanationList|::explanationList(${explanations})"></div>
+    </p>
+  </div>
+</div>
