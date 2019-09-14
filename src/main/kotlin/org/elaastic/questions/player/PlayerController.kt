@@ -54,14 +54,14 @@ class PlayerController(
                  @RequestParam("globalId") globalId: String?): String {
         val user: User = authentication.principal as User
 
-        if(globalId == null || globalId == "") {
+        if (globalId == null || globalId == "") {
             throw IllegalArgumentException(
                     messageBuilder.message("assignment.register.empty.globalId")
             )
         }
 
         assignmentService.findByGlobalId(globalId).let {
-            if(it == null) {
+            if (it == null) {
                 throw EntityNotFoundException(
                         messageBuilder.message("assignment.globalId.does.not.exist")
                 )
@@ -72,10 +72,10 @@ class PlayerController(
         }
     }
 
-    @GetMapping(value= ["/assignment/{id}/show", "/assignment/{id}"])
+    @GetMapping(value = ["/assignment/{id}/show", "/assignment/{id}"])
     fun show(authentication: Authentication,
              model: Model,
-             @PathVariable id: Long) : String {
+             @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
         assignmentService.get(user, id, true).let {
@@ -87,7 +87,7 @@ class PlayerController(
             )
             model.addAttribute(
                     "userRole",
-                    if(user == it.owner) "teacher" else "learner" // TODO Define a type for this
+                    if (user == it.owner) "teacher" else "learner" // TODO Define a type for this
             )
         }
 
@@ -99,15 +99,22 @@ class PlayerController(
     fun getNbRegisteredUsers(@PathVariable id: Long): Int {
         return assignmentService.getNbRegisteredUsers(id)
     }
-    
-    @GetMapping("/debug/components")
+
+    @GetMapping("/test/all-components")
+    fun debugAllComponents(authentication: Authentication, model: Model): String {
+        val user: User = authentication.principal as User
+        model.addAttribute("user", user)
+        return "/player/assignment/sequence/components/test-all-components"
+    }
+
+    @GetMapping("/test/steps")
     fun debugSteps(authentication: Authentication,
                    model: Model,
                    @RequestParam responseSubmissionState: String?,
                    @RequestParam evaluationState: String?,
                    @RequestParam readState: String?,
                    @RequestParam showStatistics: Boolean?,
-                   @RequestParam studentsProvideExplanation: Boolean?) : String {
+                   @RequestParam studentsProvideExplanation: Boolean?): String {
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
@@ -119,11 +126,11 @@ class PlayerController(
         model.addAttribute("studentsProvideExplanation", studentsProvideExplanation ?: true)
 
 
-        return "/player/debug"
+        return "/player/assignment/sequence/components/test-steps"
     }
 
     class SequenceStatistics(
-            val nbResponsesAttempt1 : Int = 10,
+            val nbResponsesAttempt1: Int = 10,
             val nbResponsesAttempt2: Int = 8,
             val nbEvaluations: Int = 5
     )

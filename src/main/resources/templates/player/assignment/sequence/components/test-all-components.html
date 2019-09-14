@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body}, extraHeader=~{::head/script})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Player components debug page</title>
+  <script th:inline="javascript">
+    $(document).ready(function() {
+      $('#steps').load(/*[[@{/player/test/steps}]]*/)
+    });
+  </script>
+</head>
+<body>
+
+<h1>Player components debugging page</h1>
+
+<section id="steps"></section>
+<!-- TODO ... -->
+<!--<section>-->
+<!--  <h2>Explanation List</h2>-->
+
+<!--  <div th:replace="player/assignment/sequence/components/_explanation-list :: explanationList(~{},~{},~{})"></div>-->
+<!--</section>-->
+
+
+</body>
+</html>
