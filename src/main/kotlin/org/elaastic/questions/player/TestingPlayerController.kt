@@ -44,212 +44,180 @@ class TestingPlayerController() {
         model.addAttribute("user", user)
         model.addAttribute(
                 "explanationViewerSituationArray",
-                arrayOf(
-                        ExplanationViewerSituation(
-                                sequenceId = 1,
-                                description = "1. Question à choix, cas général",
-                                explanationViewerModel =
-                                PlayerController.ChoiceExplanationViewerModel(
-                                        explanationsByResponse = mapOf(
-                                                PlayerController.ResponseData(listOf(1), 100, true)
-                                                        to
-                                                        listOf(
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 1,
-                                                                        meanGrade = BigDecimal(3),
-                                                                        author = "Joe",
-                                                                        content = "Explication B"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 4,
-                                                                        meanGrade = BigDecimal(5),
-                                                                        author = "Bob",
-                                                                        content = "Explication C"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 0,
-                                                                        author = "Arthur",
-                                                                        content = "Explication D"
-                                                                )
-                                                        ),
-                                                PlayerController.ResponseData(listOf(2), 0, false)
-                                                        to
-                                                        listOf(
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 2,
-                                                                        meanGrade = BigDecimal(1.33),
-                                                                        author = "Bill",
-                                                                        content = "Explication A"
-                                                                )
-                                                        )
-
-                                        )
-                                )
-                        ),
-                        ExplanationViewerSituation(
-                                sequenceId = 2,
-                                description = "2. Aucune explication fournie",
-                                explanationViewerModel =
-                                PlayerController.ChoiceExplanationViewerModel(
-                                        explanationsByResponse = mapOf(
-                                                PlayerController.ResponseData(listOf(1), 100, true) to listOf(),
-                                                PlayerController.ResponseData(listOf(2), 0, false) to listOf()
-                                        )
-                                )
-                        ),
-                        ExplanationViewerSituation(
-                                sequenceId = 3,
-                                description = "3. Uniquement 2 explications correctes",
-                                explanationViewerModel =
-                                PlayerController.ChoiceExplanationViewerModel(
-                                        explanationsByResponse = mapOf(
-                                                PlayerController.ResponseData(listOf(1), 100, true)
-                                                        to
-                                                        listOf(
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 1,
-                                                                        meanGrade = BigDecimal(3),
-                                                                        author = "Joe",
-                                                                        content = "Explication B"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 4,
-                                                                        meanGrade = BigDecimal(5),
-                                                                        author = "Bob",
-                                                                        content = "Explication C"
-                                                                )
-                                                        )
-                                        )
-                                )
-                        ),
-                        ExplanationViewerSituation(
-                                sequenceId = 4,
-                                description = "4. Seulement des explications incorrectes",
-                                explanationViewerModel =
-                                PlayerController.ChoiceExplanationViewerModel(
-                                        explanationsByResponse = mapOf(
-                                                PlayerController.ResponseData(listOf(1), 100, true) to listOf(),
-                                                PlayerController.ResponseData(listOf(2), 0, false)
-                                                        to
-                                                        listOf(
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 1,
-                                                                        meanGrade = BigDecimal(3),
-                                                                        author = "Joe",
-                                                                        content = "Explication B"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 4,
-                                                                        meanGrade = BigDecimal(5),
-                                                                        author = "Bob",
-                                                                        content = "Explication C"
-                                                                )
-                                                        )
-                                        )
-                                )
-                        ),
-                        ExplanationViewerSituation(
-                                sequenceId = 5,
-                                description = "5. Plusieurs explications pour une question ouverte",
-                                explanationViewerModel =
-                                PlayerController.OpenExplanationViewerModel(
-                                        listOf(
-                                                PlayerController.ExplanationData(
-                                                        nbEvaluations = 2,
-                                                        meanGrade = BigDecimal(1.33),
-                                                        author = "Bill",
-                                                        content = "Explication A"
-                                                ),
-                                                PlayerController.ExplanationData(
-                                                        nbEvaluations = 1,
-                                                        meanGrade = BigDecimal(3),
-                                                        author = "Joe",
-                                                        content = "Explication B"
-                                                ),
-                                                PlayerController.ExplanationData(
-                                                        nbEvaluations = 4,
-                                                        meanGrade = BigDecimal(5),
-                                                        author = "Bob",
-                                                        content = "Explication C"
-                                                ),
-                                                PlayerController.ExplanationData(
-                                                        nbEvaluations = 0,
-                                                        author = "Arthur",
-                                                        content = "Explication D"
-                                                )
-                                        )
-                                )
-                        ),
-                        ExplanationViewerSituation(
-                                sequenceId = 6,
-                                description = "6. Question à choix multiples",
-                                explanationViewerModel =
-                                PlayerController.ChoiceExplanationViewerModel(
-                                        explanationsByResponse = mapOf(
-                                                PlayerController.ResponseData(listOf(1, 3), 100, true)
-                                                        to
-                                                        listOf(
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 1,
-                                                                        meanGrade = BigDecimal(3),
-                                                                        author = "Joe",
-                                                                        content = "Explication B"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 4,
-                                                                        meanGrade = BigDecimal(5),
-                                                                        author = "Bob",
-                                                                        content = "Explication C"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 0,
-                                                                        author = "Arthur",
-                                                                        content = "Explication D"
-                                                                )
-                                                        ),
-                                                PlayerController.ResponseData(listOf(1, 2), 30, false)
-                                                        to
-                                                        listOf(
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 2,
-                                                                        meanGrade = BigDecimal(1.33),
-                                                                        author = "Bill",
-                                                                        content = "Explication A"
-                                                                )
-                                                        ),
-                                                PlayerController.ResponseData(listOf(3), 0, false)
-                                                        to
-                                                        listOf(
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 2,
-                                                                        meanGrade = BigDecimal(1.33),
-                                                                        author = "Bill",
-                                                                        content = "Explication E"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 0,
-                                                                        meanGrade = null,
-                                                                        author = "Bill",
-                                                                        content = "Explication F"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 1,
-                                                                        meanGrade = BigDecimal(5),
-                                                                        author = "Bill",
-                                                                        content = "Explication G"
-                                                                ),
-                                                                PlayerController.ExplanationData(
-                                                                        nbEvaluations = 4,
-                                                                        meanGrade = BigDecimal(2),
-                                                                        author = "Bill",
-                                                                        content = "Explication H"
-                                                                )
-                                                        )
-
-                                        )
-                                )
-                        )
-                )
+                with(ExplanationViewerCmd) {
+                    arrayOf(
+                            choiceQuestionSituation {
+                                sequenceId = 1
+                                description = "1. Question à choix, cas général"
+                                explanationsByResponse {
+                                    response(listOf(1), 100, true) {
+                                        explanation {
+                                            nbEvaluations = 1
+                                            meanGrade = BigDecimal(3)
+                                            author = "Joe"
+                                            content = "Explication B"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 4
+                                            meanGrade = BigDecimal(5)
+                                            author = "Bob"
+                                            content = "Explication C"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 0
+                                            author = "Arthur"
+                                            content = "Explication D"
+                                        }
+                                    }
+                                    response(listOf(2), 0, false) {
+                                        explanation {
+                                            nbEvaluations = 2
+                                            meanGrade = BigDecimal(1.33)
+                                            author = "Bill"
+                                            content = "Explication A"
+                                        }
+                                    }
+                                }
+                            },
+                            choiceQuestionSituation {
+                                sequenceId = 2
+                                description = "2. Aucune explication fournie"
+                                explanationsByResponse {
+                                    response(listOf(1), 100, true) {}
+                                    response(listOf(2), 0, false) {}
+                                }
+                            },
+                            choiceQuestionSituation {
+                                sequenceId = 3
+                                description = "3. Uniquement 2 explications correctes"
+                                explanationsByResponse {
+                                    response(listOf(1), 100, true) {
+                                        explanation {
+                                            nbEvaluations = 1
+                                            meanGrade = BigDecimal(3)
+                                            author = "Joe"
+                                            content = "Explication B"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 4
+                                            meanGrade = BigDecimal(5)
+                                            author = "Bob"
+                                            content = "Explication C"
+                                        }
+                                    }
+                                }
+                            },
+                            choiceQuestionSituation {
+                                sequenceId = 4
+                                description = "4. Seulement des explications incorrectes"
+                                explanationsByResponse {
+                                    response(listOf(1), 100, true) {}
+                                    response(listOf(2), 0, false) {
+                                        explanation {
+                                            nbEvaluations = 1
+                                            meanGrade = BigDecimal(3)
+                                            author = "Joe"
+                                            content = "Explication B"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 4
+                                            meanGrade = BigDecimal(5)
+                                            author = "Bob"
+                                            content = "Explication C"
+                                        }
+                                    }
+                                }
+                            },
+                            openQuestionSituation {
+                                sequenceId = 5
+                                description = "5. Plusieurs explications pour une question ouverte"
+                                explanations {
+                                    explanation {
+                                        nbEvaluations = 2
+                                        meanGrade = BigDecimal(1.33)
+                                        author = "Bill"
+                                        content = "Explication A"
+                                    }
+                                    explanation {
+                                        nbEvaluations = 1
+                                        meanGrade = BigDecimal(3)
+                                        author = "Joe"
+                                        content = "Explication B"
+                                    }
+                                    explanation {
+                                        nbEvaluations = 4
+                                        meanGrade = BigDecimal(5)
+                                        author = "Bob"
+                                        content = "Explication C"
+                                    }
+                                    explanation {
+                                        nbEvaluations = 0
+                                        author = "Arthur"
+                                        content = "Explication D"
+                                    }
+                                }
+                            },
+                            choiceQuestionSituation {
+                                sequenceId = 6
+                                description = "6. Question à choix multiples"
+                                explanationsByResponse {
+                                    response(listOf(1, 3), 100, true) {
+                                        explanation {
+                                            nbEvaluations = 1
+                                            meanGrade = BigDecimal(3)
+                                            author = "Joe"
+                                            content = "Explication B"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 4
+                                            meanGrade = BigDecimal(5)
+                                            author = "Bob"
+                                            content = "Explication C"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 0
+                                            author = "Arthur"
+                                            content = "Explication D"
+                                        }
+                                    }
+                                    response(listOf(1, 2), 30, false) {
+                                        explanation {
+                                            nbEvaluations = 2
+                                            meanGrade = BigDecimal(1.33)
+                                            author = "Bill"
+                                            content = "Explication A"
+                                        }
+                                    }
+                                    response(listOf(3), 0, false) {
+                                        explanation {
+                                            nbEvaluations = 2
+                                            meanGrade = BigDecimal(1.33)
+                                            author = "Bill"
+                                            content = "Explication E"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 0
+                                            meanGrade = null
+                                            author = "Bill"
+                                            content = "Explication F"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 1
+                                            meanGrade = BigDecimal(5)
+                                            author = "Bill"
+                                            content = "Explication G"
+                                        }
+                                        explanation {
+                                            nbEvaluations = 4
+                                            meanGrade = BigDecimal(2)
+                                            author = "Bill"
+                                            content = "Explication H"
+                                        }
+                                    }
+                                }
+                            }
+                    )
+                }
         )
 
         return "/player/assignment/sequence/components/test-explanation-viewer"
