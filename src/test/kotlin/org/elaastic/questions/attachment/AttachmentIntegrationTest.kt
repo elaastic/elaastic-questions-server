@@ -3,14 +3,22 @@ package org.elaastic.questions.attachment
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.StatementRepository
+import org.elaastic.questions.attachment.datastore.DataIdentifier
+import org.elaastic.questions.attachment.datastore.FileDataStore
 import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.directive.tGiven
+import org.elaastic.questions.test.directive.tThen
+import org.elaastic.questions.test.directive.tWhen
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.io.File
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
@@ -22,7 +30,8 @@ internal class AttachmentIntegrationTest(
         @Autowired val statementRepository: StatementRepository,
         @Autowired val testingService: TestingService,
         @Autowired val em: EntityManager,
-        @Autowired val attachmentService: AttachmentService
+        @Autowired val attachmentService: AttachmentService,
+        @Autowired val dataStore: FileDataStore
 ) {
 
     @Test
@@ -120,5 +129,35 @@ internal class AttachmentIntegrationTest(
 
     }
 
+    @Test
+    fun testSaveStatementAttachment() {
+        // given "a statement and an attachment") {
+        val statement = testingService.getAnyStatement()
+        val content = "Content".toByteArray()
+        Attachment(
+                name = "MyAttach",
+                originalName = "originalName",
+                size = content.size.toLong(),
+                toDelete = true
+        ).tWhen("saving the statement attachment") {
+            attachmentService.saveStatementAttachment(
+                    statement = statement,
+                    attachment = it,
+                    inputStream = content.inputStream()
+            )
+        }.tThen("the attachment is stored in database and linked to the statement") {
+            assertThat(it.id, notNullValue())
+            assertThat(it.statement, equalTo(statement))
+            assertFalse(it.toDelete)
+            assertThat(
+                    dataStore.getRecord(DataIdentifier(it.path!!))!!.stream.readAllBytes(),
+                    equalTo(content))
+        }
+    }
 
+    @AfterEach
+    fun removeDataStore() {
+        File(dataStore.path).deleteRecursively()
+    }
 }
+

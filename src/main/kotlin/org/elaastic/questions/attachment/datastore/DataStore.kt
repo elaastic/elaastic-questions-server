@@ -106,11 +106,10 @@ interface DataStore {
     /**
      * Initialized the data store
      *
-     * @param homeDir the home directory of the repository
      * @throws Exception
      */
     @Throws(Exception::class)
-    fun init(homeDir: String)
+    fun initDataStore()
 
     /**
      * Close the data store
