@@ -7,6 +7,7 @@ import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.Attachment
+import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.attachment.AttachmentUploadException
 import org.elaastic.questions.attachment.MimeType
 import org.elaastic.questions.controller.MessageBuilder
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.lang.IllegalStateException
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
@@ -36,6 +38,7 @@ class SequenceController(
         @Autowired val sequenceService: SequenceService,
         @Autowired val statementService: StatementService,
         @Autowired val fakeExplanationService: FakeExplanationService,
+        @Autowired val attachmentService: AttachmentService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -99,6 +102,7 @@ class SequenceController(
 
     @PostMapping("{id}/update")
     fun update(authentication: Authentication,
+               @RequestParam("fileToAttached") fileToAttached: MultipartFile,
                @Valid @ModelAttribute statementData: StatementData,
                result: BindingResult,
                model: Model,
@@ -124,6 +128,7 @@ class SequenceController(
                 it.updateFrom(statementData.toEntity(user))
                 statementService.save(it)
                 statementService.updateFakeExplanationList(it, statementData.fakeExplanations)
+                attachedFileIfAny(fileToAttached, it)
             }
 
             with(messageBuilder) {
@@ -141,6 +146,15 @@ class SequenceController(
             } else {
                 "redirect:/assignment/$assignmentId/sequence/$id/edit"
             }
+        }
+    }
+
+    private fun attachedFileIfAny(fileToAttached: MultipartFile, it: Statement) {
+        if (!fileToAttached.isEmpty) {
+            attachmentService.saveStatementAttachment(
+                    it,
+                    AttachmentData(fileToAttached).toEntity(),
+                    fileToAttached.inputStream)
         }
     }
 

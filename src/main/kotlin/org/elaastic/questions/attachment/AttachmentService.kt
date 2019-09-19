@@ -38,10 +38,7 @@ class AttachmentService(
      * @param inputStream the input stream corresponding to attachment file
      * @param maxSizeInMega the max authorized size for an atachment in Megabytes
      */
-    fun saveStatementAttachment(statement: Statement, attachment: Attachment, inputStream: InputStream, maxSizeInMega: Int = 10): Attachment {
-        if (attachment.size!! > 1024 * 1024 * maxSizeInMega) {
-            throw AttachmentUploadException("file.toobig")
-        }
+    fun saveStatementAttachment(statement: Statement, attachment: Attachment, inputStream: InputStream): Attachment {
         val dataRecord = dataStore.addRecord(inputStream)
         attachment.path = dataRecord.identifier.toString()
         if (attachment.isDisplayableImage()) {
