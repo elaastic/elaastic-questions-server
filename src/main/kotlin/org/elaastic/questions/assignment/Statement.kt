@@ -55,9 +55,8 @@ class Statement(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-    fun getAttachment(): Attachment? {
-        return null // TODO Implement getAttachement
-    }
+    @OneToOne(mappedBy = "statement")
+    var attachment: Attachment? = null
 
     fun isOpenEnded(): Boolean {
         return questionType == QuestionType.OpenEnded

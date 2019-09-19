@@ -33,7 +33,7 @@ class Attachment(
     @Embedded
     var dimension: Dimension? = null
 
-    @ManyToOne
+    @OneToOne
     var statement: Statement? = null
 
 

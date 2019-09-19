@@ -310,7 +310,8 @@ class SequenceController(
                 expectedChoiceList = listOf(1),
                 exclusiveChoice = 1,
                 expectedExplanation = statement.expectedExplanation,
-                fakeExplanations = ArrayList()
+                fakeExplanations = ArrayList(),
+                attachment = statement.attachment?.let { AttachmentData(it) }
 
         ) {
             val choiceSpecification: ChoiceSpecification? = statement.choiceSpecification

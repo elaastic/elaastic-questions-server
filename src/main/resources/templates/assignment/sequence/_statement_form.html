@@ -36,12 +36,18 @@
         <div>
             <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{sequence.statement.attachment.label}">Pièce
                 jointe</a>
-            <div id="attachment">
+            <div id="attachment" v-show="!hasAttachment">
                 <input type="file"
                        name="fileToAttached"
                        id="fileToAttached" v-on:change="handleAttachmentSelected"/>
             </div>
+            <div id="attachmentView" v-show="hasAttachment">
+                <span th:text="${statementData.attachment.originalFileName}"></span>
+                <a style="margin-left: 2em;" href="#"><i class="trash icon"></i> Supprimer</a>
+            </div>
         </div>
+
+        <div class="ui hidden divider"></div>
 
         <!-- TODO : migrate attachment -->
         <!--    <div v-show="hasAttachment">-->
@@ -62,15 +68,7 @@
         <!--          </g:remoteLink>-->
         <!--        </div>-->
         <!--      </g:if>-->
-        <!--      <g:else>-->
-        <!--        <div id="attachment">-->
-        <!--          <input type="file"-->
-        <!--                 name="myFile"-->
-        <!--                 id="myFile" v-on:change="handleAttachmentSelected"/>-->
-        <!--        </div>-->
-        <!--      </g:else>-->
-        <!--      <div class="ui hidden clearing divider"></div>-->
-        <!--    </div>-->
+
 
     </div>
 
