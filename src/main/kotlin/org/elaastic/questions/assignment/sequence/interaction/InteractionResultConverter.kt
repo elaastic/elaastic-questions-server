@@ -10,26 +10,16 @@ class InteractionResultConverter : AttributeConverter<InteractionResult?, String
     private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     override fun convertToDatabaseColumn(attribute: InteractionResult?): String? {
-        return when(attribute) {
+        return when (attribute) {
             null -> null
-            else -> mapper.writeValueAsString(attribute.toLegacyFormat())
+            else -> mapper.writeValueAsString(attribute)
         }
     }
 
     override fun convertToEntityAttribute(dbData: String?): InteractionResult? {
-        if(dbData == null) return null
-
-        val map = mapper.readValue<Map<String, List<Float>>>(
-                dbData,
-                mapper.typeFactory.constructParametricType(Map::class.java, String::class.java, List::class.java)
-        )
-
-        return InteractionResult(
-                OneAttemptResult(map["1"] ?: listOf()),
-                when {
-                    map.containsKey("2") -> OneAttemptResult(map["2"] ?: listOf())
-                    else -> null
-                }
-        )
+        return when (dbData) {
+            null, "" -> null
+            else -> mapper.readValue(dbData, InteractionResult::class.java)
+        }
     }
 }

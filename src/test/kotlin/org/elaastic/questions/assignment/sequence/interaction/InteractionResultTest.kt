@@ -11,15 +11,15 @@ internal class InteractionResultTest {
     @Test
     fun `instantiate an InteractionResult with a single attempt`() {
         InteractionResult(
-                OneAttemptResult(listOf(33.3f,33.3f,33.3f))
+                ResultOfGroupOnAttempt(2, listOf(2, 0), 0)
         ).tNoProblem()
     }
 
     @Test
     fun `instantiate an InteractionResult with 2 attempts`() {
         InteractionResult(
-                OneAttemptResult(listOf(33.3f,33.3f,33.3f)),
-                OneAttemptResult(listOf(50f,0f,50f))
+                ResultOfGroupOnAttempt(2, listOf(2, 0), 0),
+                ResultOfGroupOnAttempt(2, listOf(1, 1), 0)
         ).tNoProblem()
     }
 
@@ -27,8 +27,8 @@ internal class InteractionResultTest {
     fun `can't instantiate an InteractionResult with 2 attempts with different number of values`() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
             InteractionResult(
-                    OneAttemptResult(listOf(33.3f, 33.3f, 33.3f)),
-                    OneAttemptResult(listOf(50f, 50f))
+                    ResultOfGroupOnAttempt(0, listOf(2, 0, 4)),
+                    ResultOfGroupOnAttempt(0, listOf(2, 0))
             )
         }
     }

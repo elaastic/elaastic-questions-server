@@ -1,5 +1,6 @@
 package org.elaastic.questions.player
 
+import org.elaastic.questions.assignment.sequence.interaction.*
 import org.elaastic.questions.directory.User
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -34,6 +35,12 @@ class TestingPlayerController() {
 
 
         return "/player/assignment/sequence/components/test-steps"
+    }
+
+    object sequenceStatistics {
+        val nbResponsesAttempt1: Int = 10
+        val nbResponsesAttempt2: Int = 8
+        val nbEvaluations: Int = 5
     }
 
     @GetMapping("/explanation-viewer")
@@ -229,9 +236,167 @@ class TestingPlayerController() {
             val explanationViewerModel: PlayerController.ExplanationViewerModel
     )
 
-    object sequenceStatistics {
-        val nbResponsesAttempt1: Int = 10
-        val nbResponsesAttempt2: Int = 8
-        val nbEvaluations: Int = 5
+    @GetMapping("/response-distribution-chart")
+    fun testResponseDistributionChat(authentication: Authentication,
+                                     model: Model): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+                "responseDistributionChartSituations",
+                listOf(
+                        ResponseDistributionChartSituation(
+                                description = "1 seule tentative, 2 items, pas de sans réponse",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 12,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                2,
+                                                listOf(1)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(10, listOf(7, 3))
+                                        ).toLegacyFormat()
+                                )
+
+                        ),
+                        ResponseDistributionChartSituation(
+                                description = "1 seule tentative, 4 items, avec sans réponse",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 14,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                4,
+                                                listOf(3)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(10, listOf(1, 0, 5, 2), 2)
+                                        ).toLegacyFormat()
+                                )
+
+                        ),
+                        ResponseDistributionChartSituation(
+                                description = "1 seule tentative, 10 items, avec sans réponse",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 110,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                10,
+                                                listOf(7)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(60, listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 5)
+                                        ).toLegacyFormat()
+                                )
+
+                        ),
+                        ResponseDistributionChartSituation(
+                                description = "2 tentatives, 2 items, pas de sans réponse",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 22,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                2,
+                                                listOf(1)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(10, listOf(7, 3)),
+                                                ResultOfGroupOnAttempt(10, listOf(9, 1))
+                                        ).toLegacyFormat()
+                                )
+
+                        ),
+                        ResponseDistributionChartSituation(
+                                description = "2 tentatives, 4 items, avec sans réponse à la 1ère tentative",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 241,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                4,
+                                                listOf(3)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(10, listOf(1, 0, 5, 2), 2),
+                                                ResultOfGroupOnAttempt(10, listOf(1, 2, 1, 0), 0)
+                                        ).toLegacyFormat()
+                                )
+
+                        ),
+                        ResponseDistributionChartSituation(
+                                description = "2 tentatives, 4 items, avec sans réponse à la 2ème tentative",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 242,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                4,
+                                                listOf(3)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(10, listOf(1, 2, 5, 2), 0),
+                                                ResultOfGroupOnAttempt(10, listOf(1, 0, 1, 0), 2)
+                                        ).toLegacyFormat()
+                                )
+
+                        ),
+                        ResponseDistributionChartSituation(
+                                description = "2 tentatives, 4 items, avec sans réponse aux 2 tentatives",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 243,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                4,
+                                                listOf(3)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(10, listOf(1, 1, 5, 1), 2),
+                                                ResultOfGroupOnAttempt(10, listOf(1, 0, 1, 0), 2)
+                                        ).toLegacyFormat()
+                                )
+
+                        ),
+                        ResponseDistributionChartSituation(
+                                description = "2 tentatives, 10 items, avec sans réponse",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 210,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                10,
+                                                listOf(7)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(60, listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 5),
+                                                ResultOfGroupOnAttempt(60, listOf(10,9,8,7,6,5,4,3,2,1), 5)
+                                        ).toLegacyFormat()
+                                )
+
+                        ),
+                        ResponseDistributionChartSituation(
+                                description = "Choix multiples",
+                                model = ResponseDistributionChartModel(
+                                        interactionId = 999,
+                                        choiceSpecification = ChoiceSpecificationData(
+                                                4,
+                                                listOf(1,3)
+                                        ),
+                                        results = InteractionResult(
+                                                ResultOfGroupOnAttempt(4, listOf(2, 1, 1, 1), 2),
+                                                ResultOfGroupOnAttempt(4, listOf(2, 1, 3, 1), 0)
+                                        ).toLegacyFormat()
+                                )
+
+                        )
+                )
+
+        )
+
+        return "/player/assignment/sequence/components/test-response-distribution-chart"
     }
+
+    data class ResponseDistributionChartSituation(
+            val description: String,
+            val model: ResponseDistributionChartModel
+    )
+
+    data class ResponseDistributionChartModel(
+            val interactionId: Long,
+            val choiceSpecification: ChoiceSpecificationData,
+            val results: Map<AttemptNum, Map<ItemIndex, ResponsePercentage>>
+    )
+
+    data class ChoiceSpecificationData(
+            val itemCount: Int,
+            val expectedChoiceList: List<Int>
+    )
 }

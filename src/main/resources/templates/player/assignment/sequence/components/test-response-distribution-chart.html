@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body}, extraHeader=~{::head/script})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Test Reponse distribution chart component</title>
+
+  <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+</head>
+<body>
+<section>
+  <h2>Response distribution chart</h2>
+
+  <div th:each="situation : ${responseDistributionChartSituations}">
+    <h3 th:text="${situation.description}"></h3>
+    <div th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${situation.model})"></div>
+  </div>
+
+</section>
+</body>
+</html>

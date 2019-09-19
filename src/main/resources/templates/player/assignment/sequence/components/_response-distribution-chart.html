@@ -1,0 +1,31 @@
+<div
+  th:fragment="responseDistributionChart(model)"
+  th:with="interactionId=${model.interactionId},choiceSpecification=${model.choiceSpecification},results=${model.results}"
+  th:remove="tag"
+  xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+  <div style="text-align: center;">
+    <div th:id="|vega-view-${interactionId}|"></div>
+  </div>
+
+
+  <div style="font-size: 1rem;" th:id=|interaction_${interactionId}_result|>
+
+    <script th:inline="javascript">
+      (function () {
+
+        elaastic.renderGraph(
+          '#vega-view-[[${interactionId}]]',
+          /*[[${choiceSpecification}]]*/ null,
+          /*[[${results}]]*/ null,
+          [],
+          {
+            percentageOfVoters: /*[[#{player.sequence.result.percentageOfVoters}]]*/ '',
+            choice: /*[[#{player.sequence.interaction.choice.label}]]*/ ''
+          }
+        )
+      }())
+
+    </script>
+  </div>
+</div>

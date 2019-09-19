@@ -1,21 +1,52 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import java.lang.IllegalArgumentException
+
+typealias AttemptNum = Int
+typealias ResponsePercentage = Float
 
 data class InteractionResult(
-        val attempt1Result: OneAttemptResult,
-        val attempt2Result: OneAttemptResult? = null
+        val resultForAttempt1: ResultOfGroupOnAttempt,
+        val resultForAttempt2: ResultOfGroupOnAttempt? = null
 ) {
 
     init {
         require(
-                attempt2Result == null || attempt1Result.size() == attempt2Result.size()
+                resultForAttempt2 == null || resultForAttempt1.size() == resultForAttempt2.size()
         )
-
     }
 
-    fun toLegacyFormat(): Map<String, List<Float>> {
-        return if (attempt2Result == null) {
-            mapOf("1" to attempt1Result.values)
-        } else mapOf("1" to attempt1Result.values, "2" to attempt2Result.values)
+    @JsonIgnore
+    fun getNbOfAttempt(): Int =
+            if (resultForAttempt2 == null) 1 else 2
+
+    @JsonIgnore
+    fun getResultForAttemptN(n: Int): ResultOfGroupOnAttempt =
+            when (n) {
+                1 -> resultForAttempt1
+                2 -> resultForAttempt2 ?: throw IllegalArgumentException("This interaction result has only one attempt")
+                else -> throw IllegalArgumentException("$n is not a valid number of attempt")
+            }
+
+    fun toLegacyFormat(): Map<AttemptNum, Map<ItemIndex, ResponsePercentage>> {
+        val data = mutableMapOf<AttemptNum, Map<ItemIndex, ResponsePercentage>>()
+
+        for (numAttempt in 1..getNbOfAttempt()) {
+            val dataAttempt = mutableMapOf<ItemIndex, ResponsePercentage>()
+            getResultForAttemptN(numAttempt).let {
+                dataAttempt[0] = percentOf(it.nbNoItem, it.nbResponse)
+                for (i in 1..it.size()) {
+                    dataAttempt[i] = percentOf(it.getNbVotes(i), it.nbResponse)
+                }
+            }
+            data[numAttempt] = dataAttempt
+        }
+
+        return data
+    }
+
+    private fun percentOf(nbVote: Int, nbResponse: Int): Float {
+        return (100 * nbVote).toFloat() / nbResponse.toFloat()
     }
 }
