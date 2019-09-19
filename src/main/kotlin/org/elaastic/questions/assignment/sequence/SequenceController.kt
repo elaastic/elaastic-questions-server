@@ -67,6 +67,7 @@ class SequenceController(
 
     @PostMapping("save")
     fun save(authentication: Authentication,
+             @RequestParam("fileToAttached") fileToAttached: MultipartFile,
              @Valid @ModelAttribute statementData: StatementData,
              result: BindingResult,
              model: Model,
@@ -95,7 +96,7 @@ class SequenceController(
                     sequence.statement,
                     statementData.fakeExplanations
             )
-
+            attachedFileIfAny(fileToAttached, sequence.statement)
             return "redirect:/assignment/$assignmentId#sequence_${sequence.id}"
         }
     }
