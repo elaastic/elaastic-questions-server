@@ -74,7 +74,7 @@
 
     <div class="ui bottom attached segment">
 
-      <div th:replace="/assignment/sequence/_statement_form :: statementForm(${statementData})"></div>
+      <div th:replace="/assignment/sequence/_statement_form :: statementForm(${statementData}, ${null})"></div>
       <div
         th:replace="/assignment/sequence/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
       <div th:replace="/assignment/sequence/_statement_explanations_form :: statementExplanationForm(${statementData}, ${null})"></div>

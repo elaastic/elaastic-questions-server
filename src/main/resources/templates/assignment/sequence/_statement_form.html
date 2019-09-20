@@ -1,4 +1,4 @@
-<div th:fragment="statementForm(statementData)"
+<div th:fragment="statementForm(statementData, urlRemoveAttachment)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div id="appTitle"
@@ -36,41 +36,43 @@
         <div>
             <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{sequence.statement.attachment.label}">Pièce
                 jointe</a>
-            <div id="attachment" v-show="!hasAttachment">
+            <div id="attachment" v-show="hasAttachment == false">
                 <input type="file"
                        name="fileToAttached"
-                       id="fileToAttached" v-on:change="handleAttachmentSelected"/>
+                       id="fileToAttached" />
             </div>
-            <div id="attachmentView" v-show="hasAttachment">
+            <div id="attachmentView" v-show="hasAttachment" th:if="${statementData.attachment != null}">
                 <span th:text="${statementData.attachment.originalFileName}"></span>
-                <a style="margin-left: 2em;" href="#"><i class="trash icon"></i> Supprimer</a>
+                <a style="margin-left: 2em;" class="ui tiny negative right floated button" v-on:click="removeAttachment">
+                    <i class="trash icon"></i> Supprimer
+                </a>
             </div>
         </div>
-
-        <div class="ui hidden divider"></div>
-
-        <!-- TODO : migrate attachment -->
-        <!--    <div v-show="hasAttachment">-->
-        <!--      <a class="ui ribbon label" style="margin-bottom: 1em;">Pièce jointe</a>-->
-
-        <!--      <g:set var="attachment" value="${statementData?.attachment}"/>-->
-        <!--      <g:if test="${attachment != null}">-->
-        <!--        <div>-->
-        <!--          <tsaap:viewAttachement width="650" height="380" attachement="${attachment}"/>-->
-
-        <!--          <g:remoteLink controller="sequence"-->
-        <!--                        class="ui tiny negative right floated button"-->
-        <!--                        style="margin-left: 2em;"-->
-        <!--                        action="removeAttachement"-->
-        <!--                        id="${statementData.id}"-->
-        <!--                        onComplete="window.handleAttachmentDeleted()">-->
-        <!--            <i class="trash icon"></i> Supprimer-->
-        <!--          </g:remoteLink>-->
-        <!--        </div>-->
-        <!--      </g:if>-->
-
-
     </div>
+
+
+    <!-- TODO : migrate attachment -->
+    <!--    <div v-show="hasAttachment">-->
+    <!--      <a class="ui ribbon label" style="margin-bottom: 1em;">Pièce jointe</a>-->
+
+    <!--      <g:set var="attachment" value="${statementData?.attachment}"/>-->
+    <!--      <g:if test="${attachment != null}">-->
+    <!--        <div>-->
+    <!--          <tsaap:viewAttachement width="650" height="380" attachement="${attachment}"/>-->
+
+    <!--          <g:remoteLink controller="sequence"-->
+    <!--                        class="ui tiny negative right floated button"-->
+    <!--                        style="margin-left: 2em;"-->
+    <!--                        action="removeAttachement"-->
+    <!--                        id="${statementData.id}"-->
+    <!--                        onComplete="window.handleAttachmentDeleted()">-->
+    <!--            <i class="trash icon"></i> Supprimer-->
+    <!--          </g:remoteLink>-->
+    <!--        </div>-->
+    <!--      </g:if>-->
+
+
+    <div class="ui hidden divider"></div>
 
     <div id="statement-section">
         <a class="ui ribbon label">Énoncé</a>
@@ -123,7 +125,7 @@
             data: {
                 modeEdit: false,
                 shouldShowNotice: false,
-                hasAttachment: /*[[${statementData?.attachment} ? 'true' : 'false']]*/ ''
+                hasAttachment: /*[[${statementData?.attachment} ? true : false]]*/ ''
             },
             mounted: function () {
                 var that = this
@@ -153,6 +155,16 @@
                 },
                 handleAttachmentDeleted: function () {
                     this.hasAttachment = false
+                },
+                removeAttachment: function () {
+                    var that = this
+                    $.ajax({
+                        type: 'GET',
+                        url: "[(${urlRemoveAttachment})]",
+                        success: function (data) {
+                            that.hasAttachment = false
+                        }
+                    })
                 }
             }
         })

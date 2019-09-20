@@ -155,9 +155,42 @@ internal class AttachmentIntegrationTest(
         }
     }
 
+    @Test
+    fun testDetachAttachment() {
+        // given "a statement and an attachment") {
+        val statement = testingService.getAnyStatement()
+        val content = "Content".toByteArray()
+        val attachment = Attachment(
+                name = "MyAttach",
+                originalName = "originalName",
+                size = content.size.toLong(),
+                toDelete = true
+        )
+        tGiven("saving the statement attachment") {
+            attachmentService.saveStatementAttachment(
+                    statement = statement,
+                    attachment = attachment,
+                    inputStream = content.inputStream()
+            )
+        }.tWhen("refresh attachment and statement") {
+            em.refresh(statement)
+            em.refresh(it)
+            statement
+        }.tWhen("detach the attachment") {
+            attachmentService.detachAttachmentFromStatement(it.owner, it)
+        }.tThen {
+            assertThat(attachment.statement, nullValue())
+            assertThat(statement.attachment, nullValue())
+            assertTrue(attachment.toDelete)
+        }
+    }
+
+
+
     @AfterEach
     fun removeDataStore() {
         File(dataStore.path).deleteRecursively()
+        dataStore.initDataStore()
     }
 }
 

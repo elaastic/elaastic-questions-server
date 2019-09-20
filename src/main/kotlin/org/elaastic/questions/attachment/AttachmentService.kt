@@ -2,7 +2,9 @@ package org.elaastic.questions.attachment
 
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.attachment.datastore.FileDataStore
+import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.io.InputStream
 import javax.imageio.ImageIO
@@ -45,6 +47,23 @@ class AttachmentService(
             attachment.dimension = getDimensionFromInputStream(inputStream)
         }
         return addStatementToAttachment(statement, attachment)
+    }
+
+    /**
+     * Detach an attachment
+     *
+     * @param myAttachement the attachment to detach
+     * @return the detached attachment
+     */
+    fun detachAttachmentFromStatement(user: User, statement: Statement): Statement  {
+        if (statement.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
+        statement.attachment?.let {
+            statement.attachment = null
+            it.statement = null
+            it.toDelete = true
+            attachmentRepository.save(it)
+        }
+        return statement
     }
 
     private fun getDimensionFromInputStream(inputStream: InputStream): Dimension? {
