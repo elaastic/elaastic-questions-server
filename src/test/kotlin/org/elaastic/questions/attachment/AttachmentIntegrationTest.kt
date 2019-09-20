@@ -1,8 +1,10 @@
 package org.elaastic.questions.attachment
 
+import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.StatementRepository
+import org.elaastic.questions.assignment.sequence.LearnerSequenceRepository
 import org.elaastic.questions.attachment.datastore.DataIdentifier
 import org.elaastic.questions.attachment.datastore.FileDataStore
 import org.elaastic.questions.test.TestingService
@@ -27,6 +29,8 @@ import javax.validation.ConstraintViolationException
 @Transactional
 internal class AttachmentIntegrationTest(
         @Autowired val attachmentRepository: AttachmentRepository,
+        @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
+        @Autowired val assignmentService: AssignmentService,
         @Autowired val statementRepository: StatementRepository,
         @Autowired val testingService: TestingService,
         @Autowired val em: EntityManager,
@@ -185,6 +189,38 @@ internal class AttachmentIntegrationTest(
         }
     }
 
+    @Test
+    fun testRemoveSequenceWithAttachment() {
+        // given an assignment and a sequence with statement with attachment
+        val assignment = testingService.getAnyAssignment()
+        val sequence = assignment.sequences[0]
+        val statement = sequence.statement
+        val content = "Content".toByteArray()
+        val attachment = Attachment(
+                name = "MyAttach",
+                originalName = "originalName",
+                size = content.size.toLong(),
+                toDelete = true
+        )
+        tGiven("saving the statement attachment") {
+            attachmentService.saveStatementAttachment(
+                    statement = statement,
+                    attachment = attachment,
+                    inputStream = content.inputStream()
+            )
+        }.tWhen("removing the sequence") {
+            assignmentService.removeSequence(assignment.sequences[0])
+            em.refresh(attachment)
+            attachment
+        }.tThen("attachment is detached") {
+            assertThat(attachment.statement, nullValue())
+            assertTrue(attachment.toDelete)
+            assertFalse(em.contains(statement))
+            sequence
+        }.tThen("no more learner sequences") {
+            assertTrue(learnerSequenceRepository.findAllBySequence(sequence).isEmpty())
+        }
+    }
 
 
     @AfterEach

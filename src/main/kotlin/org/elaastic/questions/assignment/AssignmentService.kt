@@ -3,6 +3,7 @@ package org.elaastic.questions.assignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.StatementService
+import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -25,6 +26,7 @@ class AssignmentService(
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val learnerAssignmentRepository: LearnerAssignmentRepository,
         @Autowired val statementService: StatementService,
+        @Autowired val attachmentService: AttachmentService,
         @Autowired val entityManager: EntityManager
 ) {
 
@@ -92,10 +94,16 @@ class AssignmentService(
     fun removeSequence(sequence: Sequence) {
         require(sequence.assignment != null)
         val assignment = sequence.assignment!!
-        // TODO Delete Attachement
+
         // TODO Delete PeerGrading
         // TODO Delete InteractionResponse
-        // TODO Delete LearnerSequence
+
+        entityManager.createQuery("delete from LearnerSequence ls where ls.sequence = :sequence")
+                .setParameter("sequence", sequence)
+                .executeUpdate()
+        sequence.statement.attachment?.let {
+            attachmentService.detachAttachmentFromStatement(sequence.owner, sequence.statement)
+        }
 
         statementService.delete(sequence.statement.id!!)
         assignment.sequences.remove(sequence)

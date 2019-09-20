@@ -28,6 +28,7 @@ class AttachmentService(
      */
     fun addStatementToAttachment(statement: Statement, attachment: Attachment): Attachment {
         attachment.statement = statement
+        statement.attachment = attachment
         attachment.toDelete = false
         return attachmentRepository.save(attachment)
     }
@@ -61,7 +62,7 @@ class AttachmentService(
             statement.attachment = null
             it.statement = null
             it.toDelete = true
-            attachmentRepository.save(it)
+            attachmentRepository.saveAndFlush(it)
         }
         return statement
     }
