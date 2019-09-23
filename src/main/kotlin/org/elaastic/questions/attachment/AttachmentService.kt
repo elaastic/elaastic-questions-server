@@ -1,6 +1,7 @@
 package org.elaastic.questions.attachment
 
 import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.attachment.datastore.DataIdentifier
 import org.elaastic.questions.attachment.datastore.FileDataStore
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,6 +19,13 @@ class AttachmentService(
         @Autowired val attachmentRepository: AttachmentRepository,
         @Autowired val dataStore: FileDataStore
 ) {
+
+    /**
+     * Get attachment by id
+     */
+    fun getAttachmentById(id: Long): Attachment {
+        return attachmentRepository.findById(id).get()
+    }
 
     /**
      * Add a statement to an attachment
@@ -65,6 +73,17 @@ class AttachmentService(
             attachmentRepository.saveAndFlush(it)
         }
         return statement
+    }
+
+    /**
+     * Return input stream corresponding to the given Attachement
+     *
+     * @param attachement the attachement
+     * @return the input stream
+     */
+    fun  getInputStreamForAttachement(attachment: Attachment): InputStream {
+        val dataRecord = dataStore.getRecord(DataIdentifier(attachment.path!!))
+        return dataRecord!!.stream
     }
 
     private fun getDimensionFromInputStream(inputStream: InputStream): Dimension? {

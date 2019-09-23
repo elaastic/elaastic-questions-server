@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.lang.IllegalStateException
-import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
@@ -242,14 +241,14 @@ class SequenceController(
                 id = attachment.id,
                 size = attachment.size,
                 name = attachment.name,
-                originalFileName = attachment.originalName,
+                originalFileName = attachment.originalFileName,
                 mimeType = attachment.mimeType?.label
         )
 
         fun toEntity(): Attachment {
             return Attachment(
                     name = this.name,
-                    originalName = this.originalFileName,
+                    originalFileName = this.originalFileName,
                     size = this.size,
                     mimeType = if (this.mimeType == null) MimeType() else MimeType(this.mimeType),
                     toDelete = true

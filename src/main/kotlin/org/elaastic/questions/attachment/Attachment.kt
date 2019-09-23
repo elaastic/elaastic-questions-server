@@ -14,7 +14,8 @@ class Attachment(
         @field:NotBlank var name: String,
 
         @field:Size(min = 1)
-        var originalName: String? = null,
+        @Column(name = "original_name")
+        var originalFileName: String? = null,
 
         var size: Long? = null,
 
@@ -46,7 +47,7 @@ class Attachment(
     }
 
     override fun toString(): String {
-        return "Attachment(path='$path', name='$name', id=$$id, version=$version, originalName=$originalName, size=$size, mimeType=$mimeType, dimension=$dimension, toDelete=$toDelete)"
+        return "Attachment(path='$path', name='$name', id=$$id, version=$version, originalName=$originalFileName, size=$size, mimeType=$mimeType, dimension=$dimension, toDelete=$toDelete)"
     }
 }
 

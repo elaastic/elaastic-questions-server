@@ -43,7 +43,7 @@ internal class AttachmentIntegrationTest(
         // given a valid attachment
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = 1024,
                 mimeType = MimeType()
         )
@@ -61,7 +61,7 @@ internal class AttachmentIntegrationTest(
         // given a non valid attachment
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "",
+                originalFileName = "",
                 size = 1024,
                 mimeType = MimeType()
         )
@@ -76,7 +76,7 @@ internal class AttachmentIntegrationTest(
         // given a valid saved attachment
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = 1024,
                 mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.png.label)
         )
@@ -107,7 +107,7 @@ internal class AttachmentIntegrationTest(
         // and an attachment associated with the statement
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = 1024,
                 mimeType = MimeType(),
                 toDelete = false
@@ -140,7 +140,7 @@ internal class AttachmentIntegrationTest(
         val content = "Content".toByteArray()
         Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = content.size.toLong(),
                 toDelete = true
         ).tWhen("saving the statement attachment") {
@@ -166,7 +166,7 @@ internal class AttachmentIntegrationTest(
         val content = "Content".toByteArray()
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = content.size.toLong(),
                 toDelete = true
         )
@@ -198,7 +198,7 @@ internal class AttachmentIntegrationTest(
         val content = "Content".toByteArray()
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = content.size.toLong(),
                 toDelete = true
         )

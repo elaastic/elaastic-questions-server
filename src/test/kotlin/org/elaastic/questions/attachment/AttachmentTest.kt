@@ -48,7 +48,7 @@ internal class AttachmentTest {
         // given an attachment corresponding to a jpeg image
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = 1024,
                 mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.jpeg.label)
         )
@@ -74,7 +74,7 @@ internal class AttachmentTest {
         // given an attachment corresponding to a jpeg image
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = 1024,
                 mimeType = MimeType("text/html")
         )
@@ -89,7 +89,7 @@ internal class AttachmentTest {
         // given an attachment corresponding to something not displayable
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = 1024,
                 mimeType = MimeType("truc/som")
         )
@@ -105,7 +105,7 @@ internal class AttachmentTest {
         // given a valid attachment
         val attachment = Attachment(
                 name = "MyAttach",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = 1024,
                 mimeType = MimeType("text/html")
         )
@@ -118,7 +118,7 @@ internal class AttachmentTest {
         // when setting correctly properties
         attachment.mimeType = MimeType("text/text")
         attachment.dimension = Dimension(width = 100, height = 100)
-        attachment.originalName = "oldName"
+        attachment.originalFileName = "oldName"
         attachment.size = 125
         // then validation still succeeds
         assertThat(validator.validate(attachment).isEmpty(), equalTo(true))
@@ -129,7 +129,7 @@ internal class AttachmentTest {
         // given a valid attachment
         val attachment = Attachment(
                 name = "",
-                originalName = "originalName",
+                originalFileName = "originalName",
                 size = 1024,
                 mimeType = MimeType("text/html")
         )
@@ -139,7 +139,7 @@ internal class AttachmentTest {
         assertThat(validator.validate(attachment).isEmpty(), equalTo(false))
         // when setting incorrectly originalName
         attachment.name = "myAttach"
-        attachment.originalName = ""
+        attachment.originalFileName = ""
         // then validation still fails
         assertThat(validator.validate(attachment).isEmpty(), equalTo(false))
     }

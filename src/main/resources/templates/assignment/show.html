@@ -124,20 +124,14 @@
                style="margin-right: 1em;" th:text="${position}">
             3
           </div>
+
           <span th:id="|sequence-title-${sequence.id}|" th:text="${sequence.statement.title}">Title</span>
         </a>
       </h3>
     </div>
-
     <div class="ui hidden divider"></div>
-
-    <!--    TODO: Attachement -->
-    <g:set var="attachment" value="${sequence?.statement?.attachment}"/>
-    <g:if test="${attachment != null}">
-      <tsaap:viewAttachement width="650" height="380" attachement="${attachment}"/>
-      <div class="ui hidden divider"></div>
-    </g:if>
-
+    <div th:replace="/assignment/sequence/_statement_attachment :: statementAttachment(${sequence.statement.attachment})"></div>
+    <div class="ui hidden divider"></div>
     <div th:utext="${sequence.statement.content}" th:remove="tag"></div>
   </div>
 
