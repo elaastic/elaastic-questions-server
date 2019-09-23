@@ -1,0 +1,85 @@
+<div th:fragment="results(resultsModel)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+  <script th:inline="javascript" th:if="${#ids.seq('results.script.') == 'results.script.1'}">
+    let Results = {}
+    Results.updateResults = function () { console.log('Not ready yet...') }
+    $(document).ready(function () {
+      Results.updateResults = function (sequenceId) {
+        let url = /*[[@{/player/sequence/}]]*/ ''
+        url += sequenceId + '/updateResults' // TODO Implement & test updateResults (which was updateResultsAndSequenceDisplay)
+
+        $('#sequence_' + sequenceId).load(url, {}, function () {
+          // TODO Test MathJax
+          MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'sequence_[[${resultsModel.sequenceId}]]'])
+        })
+      }
+    })
+  </script>
+
+  <div class="ui accordion segment"
+       th:id="|result-accordion-${resultsModel.sequenceId}|">
+
+    <div class="ui dividing active title header"style="margin-right: 1.25em;">
+      <i class="dropdown icon"></i>
+      <span th:text="#{questions.results}">Results</span>
+    </div>
+
+    <div class="ui basic padded segment active content"
+         style="font-size: 1rem;"
+         th:id="|interaction_${resultsModel.interactionId}_result|">
+
+
+      <div th:if="${resultsModel.hasChoices}">
+
+        <th:block
+          th:if="${resultsModel.hasAnyResult}">
+          <div
+            th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${resultsModel.responseDistributionChartModel})"></div>
+        </th:block>
+        <th:block th:if="${resultsModel.hasExplanations}">
+          <div
+            th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
+        </th:block>
+        <th:block th:if="${!resultsModel.hasAnyResult}">
+          <div th:replace="::noContribution"></div>
+        </th:block>
+      </div>
+
+      <div th:if="${!resultsModel.hasChoices}">
+        <th:block
+          th:if="${resultsModel.hasExplanations}">
+          <div
+            th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
+        </th:block>
+        <th:block th:if="${!resultsModel.hasExplanations}">
+          <div th:replace="::noContribution"></div>
+        </th:block>
+      </div>
+
+
+      <div th:remove="all">
+        <div th:fragment="noContribution"
+             class="ui warning message"
+             th:text="#{player.sequence.noContribution}">
+          No contribution.
+        </div>
+      </div>
+    </div>
+
+    <a th:unless="${resultsModel.sequenceIsStopped}"
+       href="#"
+       th:onclick="|Results.updateResults(${resultsModel.sequenceId})|"
+       style="position: absolute; top: 0.5em; right: 1em; font-size: 1.2em"
+       th:attr="data-tooltip=#{player.sequence.readinteraction.updateAllResults(${resultsModel.interactionRank})}"
+       data-inverted=""
+       data-position="top right">
+      <i class="small refresh icon"></i></a>
+  </div>
+  <script th:inline="javascript">
+    $(document).ready(function () {
+      $('#result-accordion-[[${resultsModel.sequenceId}]]').accordion()
+    })
+  </script>
+</div>

@@ -29,6 +29,11 @@ data class InteractionResult(
                 else -> throw IllegalArgumentException("$n is not a valid number of attempt")
             }
 
+    @JsonIgnore
+    fun hasAnyResult() =
+            resultForAttempt1.nbResponse > 0 ||
+                    (resultForAttempt2 != null && resultForAttempt2.nbResponse > 0)
+
     fun toLegacyFormat(): Map<AttemptNum, Map<ItemIndex, ResponsePercentage>> {
         val data = mutableMapOf<AttemptNum, Map<ItemIndex, ResponsePercentage>>()
 

@@ -32,14 +32,14 @@ class TestingPlayerController() {
         model.addAttribute("evaluationState", evaluationState ?: "active")
         model.addAttribute("readState", readState ?: "disabled")
         model.addAttribute("showStatistics", showStatistics ?: false)
-        model.addAttribute("sequenceStatistics", sequenceStatistics)
+        model.addAttribute("sequenceStatistics", SequenceStatistics)
         model.addAttribute("studentsProvideExplanation", studentsProvideExplanation ?: true)
 
 
         return "/player/assignment/sequence/components/test-steps"
     }
 
-    object sequenceStatistics {
+    object SequenceStatistics {
         val nbResponsesAttempt1: Int = 10
         val nbResponsesAttempt2: Int = 8
         val nbEvaluations: Int = 5
@@ -449,5 +449,210 @@ class TestingPlayerController() {
                         statement.questionType,
                         statement.content
                 )
+    }
+
+    @GetMapping("/results")
+    fun testResults(authentication: Authentication,
+                    model: Model): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+
+        model.addAttribute(
+                "resultsSituations",
+                listOf(
+                        ResultsSituation(
+                                description = "1. Sequence running, hasChoices, no results, no explanations",
+                                resultsModel = ChoiceResultsModel(
+                                        sequenceIsStopped = false,
+                                        sequenceId = 1,
+                                        interactionId = 1,
+                                        interactionRank = 2,
+                                        hasAnyResult = false,
+                                        hasExplanations = false
+                                )
+                        ),
+                        ResultsSituation(
+                                description = "2. Sequence stopped, hasChoices, no results, no explanations",
+                                resultsModel = ChoiceResultsModel(
+                                        sequenceIsStopped = true,
+                                        sequenceId = 2,
+                                        interactionId = 2,
+                                        interactionRank = 2,
+                                        hasAnyResult = false,
+                                        hasExplanations = false
+                                )
+                        ),
+                        ResultsSituation(
+                                description = "3. Sequence running, Open question, no results, no explanations",
+                                resultsModel = ChoiceResultsModel(
+                                        sequenceIsStopped = false,
+                                        sequenceId = 3,
+                                        interactionId = 3,
+                                        interactionRank = 2,
+                                        hasAnyResult = false,
+                                        hasExplanations = false
+                                )
+                        ),
+                        ResultsSituation(
+                                description = "4. Sequence stopped, Open question, no results, no explanations",
+                                resultsModel = OpenResultsModel(
+                                        sequenceIsStopped = true,
+                                        sequenceId = 4,
+                                        interactionId = 4,
+                                        interactionRank = 2,
+                                        hasExplanations = false
+                                )
+                        ),
+                        ResultsSituation(
+                                description = "5. Sequence running, hasChoices, has results, no explanations",
+                                resultsModel = ChoiceResultsModel(
+                                        sequenceIsStopped = false,
+                                        sequenceId = 5,
+                                        interactionId = 5,
+                                        interactionRank = 2,
+                                        hasAnyResult = true,
+                                        responseDistributionChartModel = ResponseDistributionChartModel(
+                                                interactionId = 5,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        2,
+                                                        listOf(2)
+                                                ),
+                                                results = InteractionResult(
+                                                        ResultOfGroupOnAttempt(4, listOf(1, 3), 0)
+                                                ).toLegacyFormat()
+                                        ),
+                                        hasExplanations = false
+                                )
+                        ),
+                        ResultsSituation(
+                                description = "6. Sequence running, hasChoices, has results, has explanations",
+                                resultsModel = ChoiceResultsModel(
+                                        sequenceIsStopped = false,
+                                        sequenceId = 6,
+                                        interactionId = 6,
+                                        interactionRank = 2,
+                                        hasAnyResult = true,
+                                        responseDistributionChartModel = ResponseDistributionChartModel(
+                                                interactionId = 6,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        2,
+                                                        listOf(2)
+                                                ),
+                                                results = InteractionResult(
+                                                        ResultOfGroupOnAttempt(4, listOf(1, 3), 0)
+                                                ).toLegacyFormat()
+                                        ),
+                                        hasExplanations = true,
+                                        explanationViewerModel = PlayerController.ChoiceExplanationViewerModel(
+                                                explanationsByResponse = mapOf(
+                                                        PlayerController.ResponseData(
+                                                                listOf(1),
+                                                                0,
+                                                                false
+                                                        )
+                                                                to listOf(
+                                                                PlayerController.ExplanationData(
+                                                                        "explication 1",
+                                                                        "Joe"
+                                                                ),
+                                                                PlayerController.ExplanationData(
+                                                                        "explication 2",
+                                                                        "Jack"
+                                                                )
+                                                        ),
+                                                        PlayerController.ResponseData(
+                                                                listOf(2),
+                                                                100,
+                                                                true
+                                                        )
+                                                                to listOf(
+                                                                PlayerController.ExplanationData(
+                                                                        "explication 3",
+                                                                        "William"
+                                                                ),
+                                                                PlayerController.ExplanationData(
+                                                                        "explication 4",
+                                                                        "Averell"
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        ),
+                        ResultsSituation(
+                                description = "6. Sequence running, Open question, has explanations",
+                                resultsModel = OpenResultsModel(
+                                        sequenceIsStopped = false,
+                                        sequenceId = 7,
+                                        interactionId = 7,
+                                        interactionRank = 2,
+                                        hasExplanations = true,
+                                        explanationViewerModel = PlayerController.OpenExplanationViewerModel(
+                                                explanations = listOf(
+                                                        PlayerController.ExplanationData(
+                                                                "explication 1",
+                                                                "Joe"
+                                                        ),
+                                                        PlayerController.ExplanationData(
+                                                                "explication 2",
+                                                                "Jack"
+                                                        ),
+
+                                                        PlayerController.ExplanationData(
+                                                                "explication 3",
+                                                                "William"
+                                                        ),
+                                                        PlayerController.ExplanationData(
+                                                                "explication 4",
+                                                                "Averell"
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        )
+
+        return "/player/assignment/sequence/components/test-results"
+    }
+
+    data class ResultsSituation(
+            val description: String,
+            val resultsModel: ResultsModel
+    )
+
+    interface ResultsModel {
+        val sequenceIsStopped: Boolean
+        val sequenceId: Long
+        val interactionId: Long
+        val interactionRank: Int
+        fun getHasChoices(): Boolean
+        val hasExplanations: Boolean
+        val explanationViewerModel: PlayerController.ExplanationViewerModel?
+    }
+
+    data class ChoiceResultsModel(
+            override val sequenceIsStopped: Boolean,
+            override val sequenceId: Long,
+            override val interactionId: Long,
+            override val interactionRank: Int,
+            val hasAnyResult: Boolean,
+            val responseDistributionChartModel: ResponseDistributionChartModel? = null,
+            override val hasExplanations: Boolean,
+            override val explanationViewerModel: PlayerController.ExplanationViewerModel? = null
+    ) : ResultsModel {
+        override fun getHasChoices() = true
+    }
+
+    data class OpenResultsModel(
+            override val sequenceIsStopped: Boolean,
+            override val sequenceId: Long,
+            override val interactionId: Long,
+            override val interactionRank: Int,
+            override val hasExplanations: Boolean,
+            override val explanationViewerModel: PlayerController.ExplanationViewerModel? = null
+    ) : ResultsModel {
+        override fun getHasChoices() = false
     }
 }

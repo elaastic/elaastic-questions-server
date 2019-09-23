@@ -56,6 +56,7 @@ class Interaction(
     @Convert(converter = ExplanationRecommendationMappingConverter::class)
     var explanationRecommendationMapping: ExplanationRecommendationMapping? = null
 
-    // TODO Methods
+    fun hasAnyResult(): Boolean =
+            results?.hasAnyResult() ?: false
 }
 

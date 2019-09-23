@@ -53,8 +53,6 @@ class Sequence(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-    // TODO Interaction
-
     @Enumerated(EnumType.STRING)
     var state: State = State.beforeStart
 
