@@ -42,35 +42,13 @@
                        id="fileToAttached" />
             </div>
             <div id="attachmentView" v-show="hasAttachment" th:if="${statementData.attachment != null}">
-                <span th:text="${statementData.attachment.originalFileName}"></span>
+                <div th:replace="/assignment/sequence/_statement_attachment :: statementAttachment(${statementData.attachment})"></div>
                 <a style="margin-left: 2em;" class="ui tiny negative right floated button" v-on:click="removeAttachment">
                     <i class="trash icon"></i> Supprimer
                 </a>
             </div>
         </div>
     </div>
-
-
-    <!-- TODO : migrate attachment -->
-    <!--    <div v-show="hasAttachment">-->
-    <!--      <a class="ui ribbon label" style="margin-bottom: 1em;">Pièce jointe</a>-->
-
-    <!--      <g:set var="attachment" value="${statementData?.attachment}"/>-->
-    <!--      <g:if test="${attachment != null}">-->
-    <!--        <div>-->
-    <!--          <tsaap:viewAttachement width="650" height="380" attachement="${attachment}"/>-->
-
-    <!--          <g:remoteLink controller="sequence"-->
-    <!--                        class="ui tiny negative right floated button"-->
-    <!--                        style="margin-left: 2em;"-->
-    <!--                        action="removeAttachement"-->
-    <!--                        id="${statementData.id}"-->
-    <!--                        onComplete="window.handleAttachmentDeleted()">-->
-    <!--            <i class="trash icon"></i> Supprimer-->
-    <!--          </g:remoteLink>-->
-    <!--        </div>-->
-    <!--      </g:if>-->
-
 
     <div class="ui hidden divider"></div>
 
