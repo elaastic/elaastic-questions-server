@@ -1,5 +1,7 @@
 package org.elaastic.questions.player
 
+import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.sequence.interaction.*
 import org.elaastic.questions.directory.User
 import org.springframework.security.core.Authentication
@@ -357,7 +359,7 @@ class TestingPlayerController() {
                                         ),
                                         results = InteractionResult(
                                                 ResultOfGroupOnAttempt(60, listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 5),
-                                                ResultOfGroupOnAttempt(60, listOf(10,9,8,7,6,5,4,3,2,1), 5)
+                                                ResultOfGroupOnAttempt(60, listOf(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), 5)
                                         ).toLegacyFormat()
                                 )
 
@@ -368,7 +370,7 @@ class TestingPlayerController() {
                                         interactionId = 999,
                                         choiceSpecification = ChoiceSpecificationData(
                                                 4,
-                                                listOf(1,3)
+                                                listOf(1, 3)
                                         ),
                                         results = InteractionResult(
                                                 ResultOfGroupOnAttempt(4, listOf(2, 1, 1, 1), 2),
@@ -399,4 +401,53 @@ class TestingPlayerController() {
             val itemCount: Int,
             val expectedChoiceList: List<Int>
     )
+
+    @GetMapping("/statement")
+    fun testStatement(authentication: Authentication,
+                      model: Model,
+                      @RequestParam panelClosed: Boolean?,
+                      @RequestParam hideQuestionType: Boolean?,
+                      @RequestParam hideStatement: Boolean?): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+                "statementPanelModel",
+                StatementPanelModel(
+                        panelClosed = panelClosed ?: false,
+                        hideQuestionType = hideQuestionType ?: false,
+                        hideStatement = hideStatement ?: false
+
+                )
+        )
+        model.addAttribute(
+                "statement",
+                StatementInfo(
+                        "Énoncé de test",
+                        QuestionType.ExclusiveChoice,
+                        "Le <strong>contenu</strong> de cet énoncé de test."
+                )
+        )
+
+        return "/player/assignment/sequence/components/test-statement"
+    }
+
+    data class StatementPanelModel(
+            val panelClosed: Boolean = false,
+            val hideQuestionType: Boolean = false,
+            val hideStatement: Boolean = false
+    )
+
+    data class StatementInfo(
+            val title: String,
+            val questionType: QuestionType,
+            val content: String
+    ) {
+        constructor(statement: Statement) :
+                this(
+                        statement.title,
+                        statement.questionType,
+                        statement.content
+                )
+    }
 }

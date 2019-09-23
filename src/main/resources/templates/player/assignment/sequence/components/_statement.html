@@ -1,0 +1,36 @@
+<div th:fragment="statement(statementPanelModel, statement)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="ui accordion segment" id="statement-accordion" style="padding-bottom: 0;">
+    <div class="ui ${isClosed ? '' : 'active'} title header"
+         th:classappend="${statementPanelModel.panelClosed ? '' : 'active'}">
+      <i class="dropdown icon"></i> <span th:text="${statement.title}"></span>
+
+      <th:block th:unless="${statementPanelModel.hideQuestionType}">
+        [<span style="font-variant: all-small-caps; font-weight: normal; font-size: 0.8em; vertical-align: text-top"
+               th:text="#{|statement.questionType.${statement.questionType}|}">
+    </span>]
+      </th:block>
+    </div>
+
+    <div class="ui basic padded large text segment content"
+         th:classappend="${statementPanelModel.panelClosed ? '' : 'active'}">
+      <p th:unless="${statementPanelModel.hideStatement}">
+        <!--        TODO Attachment -->
+        <!--        <g:set var="attachment" value="${statementInstance?.attachment}"/>-->
+        <!--        <g:if test="${attachment != null}">-->
+        <!--          <tsaap:viewAttachement width="650" height="380" attachement="${attachment}"/>-->
+        <!--        </g:if>-->
+
+        <th:block th:utext="${statement.content}"></th:block>
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $('#statement-accordion').accordion()
+    })
+  </script>
+</div>
