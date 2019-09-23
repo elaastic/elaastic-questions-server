@@ -11,6 +11,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - 6603:3306
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
   elaastic-questions-db-test:
     image: mysql:5
     container_name: elaastic-questions-db-test
@@ -21,3 +22,4 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - 6604:3306
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
