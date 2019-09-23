@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.io.InputStream
+import java.util.logging.Logger
 import javax.imageio.ImageIO
 import javax.imageio.ImageReader
+import javax.imageio.stream.ImageInputStream
 import javax.imageio.stream.MemoryCacheImageInputStream
 import javax.transaction.Transactional
 
@@ -19,6 +21,8 @@ class AttachmentService(
         @Autowired val attachmentRepository: AttachmentRepository,
         @Autowired val dataStore: FileDataStore
 ) {
+
+    val logger: Logger = Logger.getLogger(AttachmentService::class.java.name)
 
     /**
      * Get attachment by id
@@ -47,13 +51,16 @@ class AttachmentService(
      * @param statement the concerning statement
      * @param attachment the attachment
      * @param inputStream the input stream corresponding to attachment file
-     * @param maxSizeInMega the max authorized size for an atachment in Megabytes
      */
     fun saveStatementAttachment(statement: Statement, attachment: Attachment, inputStream: InputStream): Attachment {
-        val dataRecord = dataStore.addRecord(inputStream)
-        attachment.path = dataRecord.identifier.toString()
-        if (attachment.isDisplayableImage()) {
-            attachment.dimension = getDimensionFromInputStream(inputStream)
+        inputStream.use { iis ->
+            val dataRecord = dataStore.addRecord(iis)
+            attachment.path = dataRecord.identifier.toString()
+            if (attachment.isDisplayableImage()) {
+                dataRecord.stream.use {
+                    attachment.dimension = getDimensionFromInputStream(it)
+                }
+            }
         }
         return addStatementToAttachment(statement, attachment)
     }
@@ -61,10 +68,10 @@ class AttachmentService(
     /**
      * Detach an attachment
      *
-     * @param myAttachement the attachment to detach
-     * @return the detached attachment
+     * @param statement the statement
+     * @return the statement
      */
-    fun detachAttachmentFromStatement(user: User, statement: Statement): Statement  {
+    fun detachAttachmentFromStatement(user: User, statement: Statement): Statement {
         if (statement.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
         statement.attachment?.let {
             statement.attachment = null
@@ -78,31 +85,33 @@ class AttachmentService(
     /**
      * Return input stream corresponding to the given Attachement
      *
-     * @param attachement the attachement
+     * @param attachment the attachement
      * @return the input stream
      */
-    fun  getInputStreamForAttachement(attachment: Attachment): InputStream {
+    fun getInputStreamForAttachement(attachment: Attachment): InputStream {
         val dataRecord = dataStore.getRecord(DataIdentifier(attachment.path!!))
         return dataRecord!!.stream
     }
 
-    private fun getDimensionFromInputStream(inputStream: InputStream): Dimension? {
-        var reader: ImageReader? = null
-        try {
-            val memInputStream = MemoryCacheImageInputStream(inputStream)
-            val imageReaders = ImageIO.getImageReaders(memInputStream)
-            if (imageReaders.hasNext()) {
-                reader = imageReaders.next()
-                reader.input = memInputStream
-                return Dimension(
-                        width = reader.getWidth(reader.minIndex),
-                        height = reader.getHeight(reader.minIndex)
-                )
-            } else {
-                 return null
+    internal fun getDimensionFromInputStream(inputStream: InputStream): Dimension? {
+        ImageIO.createImageInputStream(inputStream).let { iis ->
+            ImageIO.getImageReaders(iis).let {
+                while (it.hasNext()) {
+                    val reader = it.next()
+                    try {
+                        reader.input = iis
+                        return Dimension(
+                                width = reader.getWidth(reader.minIndex),
+                                height = reader.getHeight(reader.minIndex)
+                        )
+                    } catch (e: Exception) {
+                        logger.severe(e.toString())
+                    } finally {
+                        reader.dispose()
+                    }
+                }
+                return null
             }
-        } finally {
-            reader?.dispose()
         }
     }
 }

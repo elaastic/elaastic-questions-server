@@ -62,12 +62,29 @@ class MimeType(val label: String = "application/octet-stream") {
         return label.startsWith("text/")
     }
 
-    enum class MimeTypesOfDisplayableImage(val label: String) {
-        gif("image/gif"),
-        jpeg("image/jpeg"),
-        png("image/png")
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MimeType) return false
+
+        if (label != other.label) return false
+
+        return true
     }
 
+    override fun hashCode(): Int {
+        return label.hashCode()
+    }
+
+}
+
+enum class MimeTypesOfDisplayableImage(val label: String) {
+    gif("image/gif"),
+    jpeg("image/jpeg"),
+    png("image/png");
+
+    fun toMimeType(): MimeType {
+        return MimeType(this.label)
+    }
 }
 
 @Embeddable
@@ -91,6 +108,24 @@ class Dimension(
     override fun toString(): String {
         return "dim    h: $height     l: $width"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Dimension) return false
+
+        if (width != other.width) return false
+        if (height != other.height) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = width
+        result = 31 * result + height
+        return result
+    }
+
+
 }
 
 @Converter(autoApply = true)

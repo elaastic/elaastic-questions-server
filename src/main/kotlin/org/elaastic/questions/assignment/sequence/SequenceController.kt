@@ -222,7 +222,8 @@ class SequenceController(
             val mimeType: String? = null,
             val originalFileName: String? = null,
             val bytes: ByteArray? = null,
-            var id: Long? = null
+            var id: Long? = null,
+            var isDisplayableImage: Boolean = false
     ) {
 
         constructor(file: MultipartFile) : this(

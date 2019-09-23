@@ -50,7 +50,7 @@ internal class AttachmentTest {
                 name = "MyAttach",
                 originalFileName = "originalName",
                 size = 1024,
-                mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.jpeg.label)
+                mimeType = MimeTypesOfDisplayableImage.jpeg.toMimeType()
         )
         attachment.path = "/to/path"
         attachment.dimension = Dimension(width = 100, height = 100)
@@ -58,12 +58,12 @@ internal class AttachmentTest {
         assertThat(attachment.isDisplayableImage(), equalTo(true))
 
         // given an attachment corresponding to a gif image
-        attachment.mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.gif.label)
+        attachment.mimeType = MimeTypesOfDisplayableImage.gif.toMimeType()
         // expect attachment is acknowledge to be displayable
         assertThat(attachment.isDisplayableImage(), equalTo(true))
 
         // given an attachment corresponding to a png image
-        attachment.mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.png.label)
+        attachment.mimeType = MimeTypesOfDisplayableImage.png.toMimeType()
         // expect attachment is acknowledge to be displayable
         assertThat(attachment.isDisplayableImage(), equalTo(true))
 

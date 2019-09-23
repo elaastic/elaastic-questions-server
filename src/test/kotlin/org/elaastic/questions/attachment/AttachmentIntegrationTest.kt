@@ -20,7 +20,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.util.ResourceUtils
 import java.io.File
+import java.io.FileInputStream
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
@@ -78,7 +80,7 @@ internal class AttachmentIntegrationTest(
                 name = "MyAttach",
                 originalFileName = "originalName",
                 size = 1024,
-                mimeType = MimeType(MimeType.MimeTypesOfDisplayableImage.png.label)
+                mimeType = MimeTypesOfDisplayableImage.png.toMimeType()
         )
         attachment.path = "/to/path"
         attachment.dimension = Dimension(width = 100, height = 150)
@@ -86,7 +88,7 @@ internal class AttachmentIntegrationTest(
         // when refreshing the saved attachment
         em.refresh(attachment)
         // then it has the expected value properties
-        assertThat("mime type is not as expected", attachment.mimeType?.label, equalTo(MimeType.MimeTypesOfDisplayableImage.png.label))
+        assertThat("mime type is not as expected", attachment.mimeType, equalTo(MimeTypesOfDisplayableImage.png.toMimeType()))
         assertThat("dimension width is not as expected", attachment.dimension?.width, equalTo(100))
         assertThat("dimension height is not as expected", attachment.dimension?.height, equalTo(150))
 
@@ -219,6 +221,32 @@ internal class AttachmentIntegrationTest(
             sequence
         }.tThen("no more learner sequences") {
             assertTrue(learnerSequenceRepository.findAllBySequence(sequence).isEmpty())
+        }
+    }
+
+    @Test
+    fun testIsdisplayableImage() {
+        // given "a statement and an attachment") {
+        val statement = testingService.getAnyStatement()
+        val file = ResourceUtils.getFile("classpath:exemple.png")
+        Attachment(
+                name = "MyAttach",
+                originalFileName = "originalName",
+                size = file.length(),
+                toDelete = true,
+                mimeType = MimeTypesOfDisplayableImage.png.toMimeType()
+        ).also {
+            attachmentService.saveStatementAttachment(
+                    statement = statement,
+                    attachment = it,
+                    inputStream = file.inputStream()
+            )
+            em.refresh(it)
+        }.tThen("the attachment is processed as a displayable image") {
+            assertTrue(it.isDisplayableImage())
+            assertThat(it.dimension, notNullValue())
+            val ais = attachmentService.getInputStreamForAttachement(it)
+            assertThat(attachmentService.getDimensionFromInputStream(ais), equalTo(it.dimension))
         }
     }
 
