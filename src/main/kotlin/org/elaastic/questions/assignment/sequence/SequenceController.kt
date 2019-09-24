@@ -6,10 +6,7 @@ import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
-import org.elaastic.questions.attachment.Attachment
-import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.attachment.AttachmentUploadException
-import org.elaastic.questions.attachment.MimeType
+import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,6 +25,7 @@ import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
+import kotlin.math.roundToInt
 
 @Controller
 @RequestMapping("/assignment/{assignmentId}/sequence")
@@ -153,7 +151,7 @@ class SequenceController(
         if (!fileToAttached.isEmpty) {
             attachmentService.saveStatementAttachment(
                     it,
-                    AttachmentData(fileToAttached).toEntity(),
+                    createAttachment(fileToAttached),
                     fileToAttached.inputStream)
         }
     }
@@ -206,6 +204,19 @@ class SequenceController(
         return "redirect:/assignment/$assignmentId#sequence_${id}"
     }
 
+    companion object {
+
+        fun createAttachment(file: MultipartFile): Attachment {
+            return Attachment(
+                    name = file.name,
+                    size = file.size,
+                    originalFileName = file.originalFilename,
+                    mimeType = if (file.contentType.isNullOrBlank()) MimeType() else MimeType(file.contentType!!)
+            )
+        }
+
+    }
+
     data class SequenceData(
             var id: Long? = null,
             var rank: Int = 0
@@ -216,71 +227,6 @@ class SequenceController(
         )
     }
 
-    data class AttachmentData(
-            val name: String,
-            val size: Long? = null,
-            val mimeType: String? = null,
-            val originalFileName: String? = null,
-            val bytes: ByteArray? = null,
-            var id: Long? = null,
-            var isDisplayableImage: Boolean = false
-    ) {
-
-        constructor(file: MultipartFile) : this(
-                name = file.name,
-                size = file.size,
-                originalFileName = file.originalFilename,
-                mimeType = file.contentType,
-                bytes = file.bytes
-        ) {
-            if (file.isEmpty) {
-                throw AttachmentUploadException("file.empty")
-            }
-        }
-
-        constructor(attachment: Attachment) : this(
-                id = attachment.id,
-                size = attachment.size,
-                name = attachment.name,
-                originalFileName = attachment.originalFileName,
-                mimeType = attachment.mimeType?.label
-        )
-
-        fun toEntity(): Attachment {
-            return Attachment(
-                    name = this.name,
-                    originalFileName = this.originalFileName,
-                    size = this.size,
-                    mimeType = if (this.mimeType == null) MimeType() else MimeType(this.mimeType),
-                    toDelete = true
-            )
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other !is AttachmentData) return false
-
-            if (name != other.name) return false
-            if (size != other.size) return false
-            if (mimeType != other.mimeType) return false
-            if (originalFileName != other.originalFileName) return false
-            if (id != other.id) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = name.hashCode()
-            result = 31 * result + (size?.hashCode() ?: 0)
-            result = 31 * result + (mimeType?.hashCode() ?: 0)
-            result = 31 * result + (originalFileName?.hashCode() ?: 0)
-            result = 31 * result + (id?.hashCode() ?: 0)
-            return result
-        }
-
-
-    }
-
     // Note JT : would be nicer if we receive only the relevant data depending on QuestionType
     // Moreover, the gap between the view model and the entities representation is too important
     // The code below could be widely simplified by refactoring the view to use the same model as the backend
@@ -289,7 +235,7 @@ class SequenceController(
             var version: Long? = null,
             @field:NotBlank val title: String? = null,
             @field:NotBlank val content: String? = null,
-            val attachment: AttachmentData? = null,
+            val attachment: Attachment? = null,
             val hasChoices: Boolean = true,
             val choiceInteractionType: ChoiceType? = null,
             @field:NotNull @field:Max(10) val itemCount: Int? = null,
@@ -311,7 +257,7 @@ class SequenceController(
                 exclusiveChoice = 1,
                 expectedExplanation = statement.expectedExplanation,
                 fakeExplanations = ArrayList(),
-                attachment = statement.attachment?.let { AttachmentData(it) }
+                attachment = statement.attachment
 
         ) {
             val choiceSpecification: ChoiceSpecification? = statement.choiceSpecification

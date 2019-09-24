@@ -1,219 +1,221 @@
 <!DOCTYPE html>
 <html lang="en"
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
-      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+      xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-  <title th:text="|elaastic: ${assignment.title}|">elaastic: My assignments</title>
+    <title th:text="|elaastic: ${assignment.title}|">elaastic: My assignments</title>
 </head>
 
 <body>
 <aside id="pageSpecificMenu">
-  <script>
-    var elaastic = elaastic || {}
-  </script>
+    <script>
+        var elaastic = elaastic || {}
+    </script>
 
-  <a class="item"
-     th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}"
-     href="addSequence"
-     th:attr="data-tooltip=#{assignment.action.addSequence.label}"
-     data-tooltip="Add a question"
-     data-position="right center"
-     data-inverted="">
-    <i class="yellow plus square outline icon"></i>
-  </a>
-
-  <a class="item"
-     th:href="@{/player/playFirstSequence/{id}(id=${assignment.id})}"
-     href="playFirstSequence/123"
-     th:attr="data-tooltip=#{player.assignment.play}"
-     data-tooltip="Play the assignment"
-     data-position="right center"
-     data-inverted="">
-    <i class="yellow play icon"></i>
-  </a>
-
-  <div class="item"
-       onclick="elaastic.showLearnerAccessModal()"
-       th:attr="data-tooltip=#{assignment.learnerAccess.oneLine}"
-       data-tooltip="Link for learners"
+    <a class="item"
+       th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}"
+       href="addSequence"
+       th:attr="data-tooltip=#{assignment.action.addSequence.label}"
+       data-tooltip="Add a question"
        data-position="right center"
        data-inverted="">
-    <i class="yellow feed icon"></i>
-  </div>
+        <i class="yellow plus square outline icon"></i>
+    </a>
 
-  <div id="show-assignment-more-actions-dropdown"
-       class="ui dropdown item"
-       th:attr="data-tooltip=#{common.more.actions}"
-       data-tooltip="More actions..."
+    <a class="item"
+       th:href="@{/player/playFirstSequence/{id}(id=${assignment.id})}"
+       href="playFirstSequence/123"
+       th:attr="data-tooltip=#{player.assignment.play}"
+       data-tooltip="Play the assignment"
        data-position="right center"
        data-inverted="">
-    <i class="yellow sidebar icon"></i>
+        <i class="yellow play icon"></i>
+    </a>
 
-    <div th:replace="assignment/_assignment_actions::assignmentActions"></div>
-  </div>
+    <div class="item"
+         onclick="elaastic.showLearnerAccessModal()"
+         th:attr="data-tooltip=#{assignment.learnerAccess.oneLine}"
+         data-tooltip="Link for learners"
+         data-position="right center"
+         data-inverted="">
+        <i class="yellow feed icon"></i>
+    </div>
 
-  <script type="text/javascript" th:inline="javascript"
-          th:with="registerUrl=${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/player/register(globalId=${assignment.globalId})}">
-    /*<![CDATA[*/
+    <div id="show-assignment-more-actions-dropdown"
+         class="ui dropdown item"
+         th:attr="data-tooltip=#{common.more.actions}"
+         data-tooltip="More actions..."
+         data-position="right center"
+         data-inverted="">
+        <i class="yellow sidebar icon"></i>
 
-    elaastic.showLearnerAccessModal = function () {
-      window.learnerAccessModalApp.showLearnerAccessModal(
-        /*[[${registerUrl}]]*/ 'registerUrl',
-        /*[[${assignment.title}]]*/ 'title'
-      )
-    }
+        <div th:replace="assignment/_assignment_actions::assignmentActions"></div>
+    </div>
 
-    $(document)
-      .ready(function () {
+    <script type="text/javascript" th:inline="javascript"
+            th:with="registerUrl=${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/player/register(globalId=${assignment.globalId})}">
+        /*<![CDATA[*/
 
-        // Initialize dropdown
-        $('#show-assignment-more-actions-dropdown').dropdown()
-      })
+        elaastic.showLearnerAccessModal = function () {
+            window.learnerAccessModalApp.showLearnerAccessModal(
+                /*[[${registerUrl}]]*/ 'registerUrl',
+                /*[[${assignment.title}]]*/ 'title'
+            )
+        }
 
-    /*]]>*/
-  </script>
+        $(document)
+            .ready(function () {
+
+                // Initialize dropdown
+                $('#show-assignment-more-actions-dropdown').dropdown()
+            })
+
+        /*]]>*/
+    </script>
 </aside>
 
 <section>
 
-  <h2 class="ui header">
-    <i class="large icons">
-      <i class="book icon"></i>
-      <i class="corner pencil alternate  icon"></i>
-    </i>
+    <h2 class="ui header">
+        <i class="large icons">
+            <i class="book icon"></i>
+            <i class="corner pencil alternate  icon"></i>
+        </i>
 
-    <div class="content" style="vertical-align: middle;" th:text="#{assignment.page.show.title}">
-      Design an assignment
-      <div class="sub header" th:text="#{assignment.page.show.notice}">
-        This page allows you to add, remove, edit, and reorder questions.
-      </div>
+        <div class="content" style="vertical-align: middle;" th:text="#{assignment.page.show.title}">
+            Design an assignment
+            <div class="sub header" th:text="#{assignment.page.show.notice}">
+                This page allows you to add, remove, edit, and reorder questions.
+            </div>
+        </div>
+    </h2>
+
+    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+        Message
     </div>
-  </h2>
 
-  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-    Message
-  </div>
-
-  <h3 class="ui top attached block header">
-    <div class="content">
+    <h3 class="ui top attached block header">
+        <div class="content">
     <span onclick="$('#assignment-editProperties-modal').modal('show');"
           style="cursor: pointer" th:text="${assignment?.title}">
       Assignment title
     </span>
-    </div>
-  </h3>
+        </div>
+    </h3>
 
-  <div class="ui segment bottom attached" th:if="${#lists.isEmpty(assignment.sequences)}">
-    <p th:text="#{assignment.empty}">
-      This assignment is empty.
-    </p>
-  </div>
-
-  <div th:each="sequence, i : ${assignment.sequences}"
-       class="ui clearing segment attached large text"
-       th:id="|sequence_${sequence.id}|">
-    <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
-      <div
-        th:replace="assignment/sequence/_sequence_actions.html :: sequenceActions(${sequence}, ${position}, ${i.size})"></div>
-
-      <h3 class="ui header">
-        <a th:href="@{/assignment/{assignmentId}/sequence/{id}/edit(assignmentId=${assignment.id},id=${sequence.id})}"
-           href="/sequence/123/edit"
-           th:id="${sequence.id}">
-          <div class="ui tiny circular label"
-               style="margin-right: 1em;" th:text="${position}">
-            3
-          </div>
-
-          <span th:id="|sequence-title-${sequence.id}|" th:text="${sequence.statement.title}">Title</span>
-        </a>
-      </h3>
-    </div>
-    <div class="ui hidden divider"></div>
-    <div th:replace="/assignment/sequence/_statement_attachment :: statementAttachment(${sequence.statement.attachment})"></div>
-    <div class="ui hidden divider"></div>
-    <div th:utext="${sequence.statement.content}" th:remove="tag"></div>
-  </div>
-
-
-  <div class="ui basic segment">
-    <a class="ui primary button"
-       th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}">
-      <i class="add icon"></i>
-      <span th:text="#{assignment.action.addSequence.label}">Add a question</span>
-    </a>
-  </div>
-
-  <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess"></div>
-
-  <script>
-    $(document)
-      .ready(function () {
-
-        if (window.location.hash) {
-          $(window.location.hash).scrollTop(400)
-        }
-      })
-
-  </script>
-
-  <div th:replace="assignment/_modal_edit_properties :: modalEditProperties(${assignment})"></div>
-
-  <script th:inline="javascript">
-    $(document).ready(function () {
-      let selectedSequence = $(location.hash)
-      if (selectedSequence) {
-        selectedSequence.addClass('secondary')
-      }
-    })
-
-    var elaastic = elaastic || {}
-
-    elaastic.showConfirmDeleteModal = function (sequenceId) {
-
-
-      let title = $('#sequence-title-' + sequenceId).text();
-      let sentenceTemplate = /*[[#{sequence.delete.confirm}]]*/ '';
-      let sentence = sentenceTemplate.replace('{0}', title);
-
-      $('#confirm-delete-sequence-modal-title').text(sentence);
-
-      let confirmDeleteSequenceModal = $('#confirm-delete-sequence-modal');
-      confirmDeleteSequenceModal.modal({
-        onApprove: function () {
-          let baseUrl = /*[[@{/assignment/{assignmentId}/sequence/(assignmentId=${assignment.id})}]]*/ ''
-          window.location =  baseUrl + sequenceId + '/delete';
-        }
-      })
-
-      confirmDeleteSequenceModal.modal('show')
-    }
-  </script>
-
-  <!--  Delete confirm modal-->
-  <div>
-    <div id="confirm-delete-sequence-modal" class="ui tiny modal">
-      <div class="header" th:text="#{common.delete}">
-        Delete
-      </div>
-
-      <div class="content">
-        <p id="confirm-delete-sequence-modal-title">
-          Do you really want to delete the question "{0}"?
+    <div class="ui segment bottom attached" th:if="${#lists.isEmpty(assignment.sequences)}">
+        <p th:text="#{assignment.empty}">
+            This assignment is empty.
         </p>
-      </div>
-
-      <div class="actions">
-        <div class="ui red approve button" th:text="#{common.yes}">
-          Yes
-        </div>
-
-        <div class="ui cancel button" th:text="#{common.no}">
-          No
-        </div>
-      </div>
     </div>
-  </div>
+
+    <div th:each="sequence, i : ${assignment.sequences}"
+         class="ui clearing segment attached large text"
+         th:id="|sequence_${sequence.id}|">
+        <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
+            <div
+                    th:replace="assignment/sequence/_sequence_actions.html :: sequenceActions(${sequence}, ${position}, ${i.size})"></div>
+
+            <h3 class="ui header">
+                <a th:href="@{/assignment/{assignmentId}/sequence/{id}/edit(assignmentId=${assignment.id},id=${sequence.id})}"
+                   href="/sequence/123/edit"
+                   th:id="${sequence.id}">
+                    <div class="ui tiny circular label"
+                         style="margin-right: 1em;" th:text="${position}">
+                        3
+                    </div>
+
+                    <span th:id="|sequence-title-${sequence.id}|" th:text="${sequence.statement.title}">Title</span>
+                </a>
+            </h3>
+        </div>
+        <div class="ui hidden divider"></div>
+     <div th:if="${sequence.statement.attachment != null}">
+            <div th:replace="/assignment/sequence/_statement_attachment :: statementAttachment(${sequence.statement.attachment},650,380)"></div>
+            <div class="ui hidden divider"></div>
+        </div>
+        <div th:utext="${sequence.statement.content}" th:remove="tag"></div>
+    </div>
+
+
+    <div class="ui basic segment">
+        <a class="ui primary button"
+           th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}">
+            <i class="add icon"></i>
+            <span th:text="#{assignment.action.addSequence.label}">Add a question</span>
+        </a>
+    </div>
+
+    <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess"></div>
+
+    <script>
+        $(document)
+            .ready(function () {
+
+                if (window.location.hash) {
+                    $(window.location.hash).scrollTop(400)
+                }
+            })
+
+    </script>
+
+    <div th:replace="assignment/_modal_edit_properties :: modalEditProperties(${assignment})"></div>
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            let selectedSequence = $(location.hash)
+            if (selectedSequence) {
+                selectedSequence.addClass('secondary')
+            }
+        })
+
+        var elaastic = elaastic || {}
+
+        elaastic.showConfirmDeleteModal = function (sequenceId) {
+
+
+            let title = $('#sequence-title-' + sequenceId).text();
+            let sentenceTemplate = /*[[#{sequence.delete.confirm}]]*/ '';
+            let sentence = sentenceTemplate.replace('{0}', title);
+
+            $('#confirm-delete-sequence-modal-title').text(sentence);
+
+            let confirmDeleteSequenceModal = $('#confirm-delete-sequence-modal');
+            confirmDeleteSequenceModal.modal({
+                onApprove: function () {
+                    let baseUrl = /*[[@{/assignment/{assignmentId}/sequence/(assignmentId=${assignment.id})}]]*/ ''
+                    window.location = baseUrl + sequenceId + '/delete';
+                }
+            })
+
+            confirmDeleteSequenceModal.modal('show')
+        }
+    </script>
+
+    <!--  Delete confirm modal-->
+    <div>
+        <div id="confirm-delete-sequence-modal" class="ui tiny modal">
+            <div class="header" th:text="#{common.delete}">
+                Delete
+            </div>
+
+            <div class="content">
+                <p id="confirm-delete-sequence-modal-title">
+                    Do you really want to delete the question "{0}"?
+                </p>
+            </div>
+
+            <div class="actions">
+                <div class="ui red approve button" th:text="#{common.yes}">
+                    Yes
+                </div>
+
+                <div class="ui cancel button" th:text="#{common.no}">
+                    No
+                </div>
+            </div>
+        </div>
+    </div>
 
 </section>
 

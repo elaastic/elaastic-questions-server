@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 import javax.persistence.AttributeConverter
 import javax.validation.constraints.NotNull
+import kotlin.math.roundToInt
 
 
 @Entity(name = "attachement")
@@ -49,6 +50,27 @@ class Attachment(
     override fun toString(): String {
         return "Attachment(path='$path', name='$name', id=$$id, version=$version, originalName=$originalFileName, size=$size, mimeType=$mimeType, dimension=$dimension, toDelete=$toDelete)"
     }
+
+    fun getDimensionForDisplay(widthMax: Int, heightMax:Int): Dimension {
+        return Companion.getDimensionForDisplay(dimension, widthMax, heightMax)
+    }
+
+    companion object {
+        fun getDimensionForDisplay(dimension: Dimension?, widthMax: Int, heightMax:Int): Dimension {
+            return if (dimension != null) {
+                var l = dimension!!.width
+                var h = dimension!!.height
+                val ratio = listOf(l / widthMax.toDouble() , h / heightMax.toDouble()).max()!!
+
+                if (ratio > 1) {
+                    l = (l / ratio).roundToInt()
+                    h = (h / ratio).roundToInt()
+                }
+                Dimension(l, h)
+            } else Dimension(widthMax,heightMax)
+        }
+    }
+
 }
 
 
@@ -105,9 +127,7 @@ class Dimension(
         return -1
     }
 
-    override fun toString(): String {
-        return "dim    h: $height     l: $width"
-    }
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -124,6 +144,12 @@ class Dimension(
         result = 31 * result + height
         return result
     }
+
+    override fun toString(): String {
+        return "Dimension(width=$width, height=$height)"
+    }
+
+
 
 
 }

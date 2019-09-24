@@ -34,14 +34,6 @@ internal class AttachmentTest {
         assertThat(dimension1.compareTo(Dimension(width = 150, height = 150)), equalTo(-1))
     }
 
-    @Test
-    fun `test dimension to string `() {
-        // given: A dimension
-        val dimension1 = Dimension(width = 100, height = 100)
-
-        // expect: display of the dimension is correct when call to to string
-        assertThat(dimension1.toString(), `is`(equalTo("dim    h: 100     l: 100")))
-    }
 
     @Test
     fun `test attachement is a displayable image`() {

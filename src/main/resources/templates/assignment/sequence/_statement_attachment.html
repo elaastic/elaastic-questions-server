@@ -1,4 +1,13 @@
-<div th:if="${attachment != null}" th:fragment="statementAttachment(attachment)"
-     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-  <a th:href="@{/attachment/{id}(id = ${attachment.id})}"><span th:text="${attachment.originalFileName}">The file</span></a>
+<div th:fragment="statementAttachment(attachment, width, height)"
+     xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <a th:href="@{/attachment/{id}(id = ${attachment.id})}">
+        <span th:if="${attachment.isDisplayableImage() == false}" th:text="${attachment.originalFileName}">The file</span>
+        <div th:if="${attachment.isDisplayableImage() == true}"
+             th:with="dispDim=${attachment.getDimensionForDisplay(width,height)}">
+            <img th:height="${dispDim.height}"
+                 th:src="@{/attachment/{id}(id = ${attachment.id})}"
+                 th:width="${dispDim.width}">
+        </div>
+    </a>
 </div>

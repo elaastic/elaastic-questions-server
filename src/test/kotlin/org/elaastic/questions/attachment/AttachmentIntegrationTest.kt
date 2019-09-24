@@ -5,6 +5,7 @@ import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.StatementRepository
 import org.elaastic.questions.assignment.sequence.LearnerSequenceRepository
+import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.attachment.datastore.DataIdentifier
 import org.elaastic.questions.attachment.datastore.FileDataStore
 import org.elaastic.questions.test.TestingService
@@ -250,6 +251,16 @@ internal class AttachmentIntegrationTest(
         }
     }
 
+    @Test
+    fun testGetDimensionForDisplay() {
+        tGiven("given a dimension") {
+            Dimension(800, 600)
+        }.tWhen("get dimension for display") {
+            Attachment.getDimensionForDisplay(it, 600,600)
+        }.tThen {
+            assertThat(it, equalTo(Dimension(600,450)))
+        }
+    }
 
     @AfterEach
     fun removeDataStore() {

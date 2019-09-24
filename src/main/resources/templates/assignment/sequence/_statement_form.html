@@ -42,7 +42,7 @@
                        id="fileToAttached" />
             </div>
             <div id="attachmentView" v-show="hasAttachment" th:if="${statementData.attachment != null}">
-                <div th:replace="/assignment/sequence/_statement_attachment :: statementAttachment(${statementData.attachment})"></div>
+                <div th:if="${statementData.attachment != null}" th:replace="/assignment/sequence/_statement_attachment :: statementAttachment(${statementData.attachment},650,380)"></div>
                 <a style="margin-left: 2em;" class="ui tiny negative right floated button" v-on:click="removeAttachment">
                     <i class="trash icon"></i> Supprimer
                 </a>
