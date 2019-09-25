@@ -3,6 +3,7 @@ package org.elaastic.questions.assignment.sequence
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -36,7 +37,16 @@ class Sequence(
         var rank: Int = 0,
 
         @field:Enumerated(EnumType.STRING)
-        var executionContext: ExecutionContext = ExecutionContext.FaceToFace
+        var executionContext: ExecutionContext = ExecutionContext.FaceToFace,
+
+        @field:OneToOne
+        var activeInteraction: Interaction? = null,
+
+        @field:Enumerated(EnumType.STRING)
+        var state: State = State.beforeStart,
+
+        var resultsArePublished: Boolean = false
+
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Sequence> {
 
@@ -52,11 +62,6 @@ class Sequence(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
-
-    @Enumerated(EnumType.STRING)
-    var state: State = State.beforeStart
-
-    var resultsArePublished: Boolean = false
 
     override fun compareTo(other: Sequence): Int {
         return rank.compareTo(other.rank)

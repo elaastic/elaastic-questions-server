@@ -30,7 +30,10 @@ class Interaction(
         var owner: User,
 
         @field:OneToOne
-        var sequence: Sequence
+        var sequence: Sequence,
+
+        @field:Enumerated(EnumType.STRING)
+        var state: State = State.beforeStart
 ) : AbstractJpaPersistable<Long>() {
 
     @Version
@@ -45,9 +48,6 @@ class Interaction(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
-
-    @Enumerated(EnumType.STRING)
-    var state: State = State.beforeStart
 
 
     @Convert(converter = InteractionResultConverter::class)

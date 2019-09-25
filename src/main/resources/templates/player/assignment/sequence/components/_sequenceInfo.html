@@ -1,0 +1,9 @@
+<div th:fragment="sequenceInfo(model)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="ui bottom attached message"
+       th:classappend="${model.color}"
+       th:text="${model.message}">
+    { ...message... }
+  </div>
+</div>

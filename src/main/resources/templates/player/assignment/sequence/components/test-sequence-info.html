@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Test sequence info</title>
+</head>
+<body>
+<section>
+  <h2>Sequence info</h2>
+
+  <th:block th:each="situation : ${sequenceInfoSituations}">
+    <h3 th:text="${situation.description}"></h3>
+
+    <div
+      th:replace="player/assignment/sequence/components/_sequenceInfo.html :: sequenceInfo(${situation.model})"></div>
+  </th:block>
+
+</section>
+</body>
+</html>

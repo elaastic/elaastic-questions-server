@@ -2,8 +2,14 @@ package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.SequenceGenerator
 import org.elaastic.questions.assignment.sequence.interaction.*
+import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
+import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -14,7 +20,10 @@ import java.math.BigDecimal
 
 @Controller
 @RequestMapping("/player/test")
-class TestingPlayerController() {
+class TestingPlayerController(
+        @Autowired
+        val messageBuilder: MessageBuilder
+) {
 
 
     @GetMapping("/steps")
@@ -581,7 +590,7 @@ class TestingPlayerController() {
                                 )
                         ),
                         ResultsSituation(
-                                description = "6. Sequence running, Open question, has explanations",
+                                description = "7. Sequence running, Open question, has explanations",
                                 resultsModel = OpenResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 7,
@@ -655,4 +664,41 @@ class TestingPlayerController() {
     ) : ResultsModel {
         override fun getHasChoices() = false
     }
+
+    @GetMapping("/sequence-info")
+    fun testSequenceInfo(authentication: Authentication,
+                         model: Model): String {
+
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+                "sequenceInfoSituations",
+                SequenceGenerator.generateAllTypes(user)
+                        .map {
+                            SequenceInfoSituation(
+                                    describeSequence(it),
+                                    SequenceInfoResolver.resolve(it, messageBuilder)!!
+                            )
+                        }
+        )
+
+        return "/player/assignment/sequence/components/test-sequence-info"
+    }
+
+    data class SequenceInfoSituation(
+            val description: String,
+            val model: SequenceInfoModel
+    )
+
+    private fun describeSequence(sequence: Sequence): String =
+            "sequenceState=${sequence.state}, " +
+                    "executionContext=${sequence.executionContext}, " +
+                    "resultsArePublished=${sequence.resultsArePublished}" +
+
+                    (sequence?.activeInteraction?.let {
+                        ", interaction=(${it.interactionType},${it.state} )"
+                    } ?: "")
+
+
 }
