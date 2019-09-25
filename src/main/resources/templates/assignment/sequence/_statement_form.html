@@ -31,18 +31,17 @@
             </div>
         </div>
 
-        <div class="ui hidden divider"></div>
-
         <div>
+            <div class="ui hidden divider"></div>
             <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{sequence.statement.attachment.label}">Pièce
                 jointe</a>
             <div id="attachment" v-show="hasAttachment == false">
                 <input type="file"
                        name="fileToAttached"
-                       id="fileToAttached" />
+                       id="fileToAttached">
             </div>
             <div id="attachmentView" v-show="hasAttachment" th:if="${statementData.attachment != null}">
-                <div th:if="${statementData.attachment != null}" th:replace="/assignment/sequence/_statement_attachment :: statementAttachment(${statementData.attachment},650,380)"></div>
+                <div  th:replace="/assignment/sequence/_statement_attachment :: statementAttachment(${statementData.attachment},650,380)"></div>
                 <a style="margin-left: 2em;" class="ui tiny negative right floated button" v-on:click="removeAttachment">
                     <i class="trash icon"></i> Supprimer
                 </a>

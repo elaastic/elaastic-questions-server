@@ -32,14 +32,19 @@
     <i class="yellow save icon"></i>
   </a>
 
-  <a href="#"
+  <a th:if="${statementData.attachment == null}" href="#"
      class="item"
-     onclick="$('#myFile').click();"
+     onclick="$('#fileToAttached').click();"
      th:attr="data-tooltip=#{question.attachment.select}"
      data-position="right center"
      data-inverted="">
-    <i class="attach icon"
-       th:classappend="${statementData.attachment} ? 'grey' : 'yellow'"></i>
+    <i class="attach icon yellow"></i>
+  </a>
+  <a th:if="${statementData.attachment != null}" href="#"
+     class="item"
+     data-position="right center"
+     data-inverted="">
+    <i class="attach icon grey"></i>
   </a>
 
   <a th:href="@{/player/{id}/play(id=${sequenceData.id})}"
