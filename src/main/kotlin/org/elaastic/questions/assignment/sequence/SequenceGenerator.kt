@@ -8,6 +8,9 @@ import org.elaastic.questions.directory.User
 
 object SequenceGenerator {
 
+    var idSequence: Long = 999999
+    var idInteractionGenerator: Long = 999999
+
     fun generateAllTypes(user: User): List<Sequence> =
             ExecutionContext.values().flatMap { executionContext ->
                 // sequenceState: beforeStart
@@ -59,8 +62,9 @@ object SequenceGenerator {
                         executionContext = setup.executionContext,
                         resultsArePublished = setup.resultsArePublished
                 ).let {
+                    it.id = (++idSequence)
                     if (setup.interactionType != null) {
-                        it.activeInteraction = Interaction(
+                        val interaction = Interaction(
                                 owner = user,
                                 interactionType = setup.interactionType,
                                 rank = when (setup.interactionType) {
@@ -71,6 +75,9 @@ object SequenceGenerator {
                                 sequence = it,
                                 state = setup.interactionState!!
                         )
+                        interaction.id = (++idInteractionGenerator)
+
+                        it.activeInteraction = interaction
                     }
 
                     it

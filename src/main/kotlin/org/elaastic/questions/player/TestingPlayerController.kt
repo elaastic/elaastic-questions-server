@@ -1,5 +1,6 @@
 package org.elaastic.questions.player
 
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.sequence.Sequence
@@ -7,6 +8,7 @@ import org.elaastic.questions.assignment.sequence.SequenceGenerator
 import org.elaastic.questions.assignment.sequence.interaction.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.math.BigDecimal
+import kotlin.system.exitProcess
 
 @Controller
 @RequestMapping("/player/test")
@@ -696,9 +699,36 @@ class TestingPlayerController(
                     "executionContext=${sequence.executionContext}, " +
                     "resultsArePublished=${sequence.resultsArePublished}" +
 
-                    (sequence?.activeInteraction?.let {
+                    (sequence.activeInteraction?.let {
                         ", interaction=(${it.interactionType},${it.state} )"
                     } ?: "")
 
 
+    @GetMapping("/command")
+    fun testCommand(authentication: Authentication,
+                    model: Model): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+                "commandSituations",
+                SequenceGenerator.generateAllTypes(user)
+                        .filter {
+                            it.activeInteraction != null
+                        }
+                        .map {
+                            CommandSituation(
+                                    describeSequence(it),
+                                    CommandModel(user, it.activeInteraction!!)
+                            )
+                        }
+        )
+
+        return "/player/assignment/sequence/components/test-command"
+    }
+
+    data class CommandSituation(
+            val description: String,
+            val model: CommandModel
+    )
 }

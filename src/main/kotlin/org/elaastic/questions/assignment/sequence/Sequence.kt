@@ -4,6 +4,7 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -63,9 +64,29 @@ class Sequence(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
+    @Transient
+    var interactions: MutableMap<InteractionType, Interaction> = mutableMapOf()
+
     override fun compareTo(other: Sequence): Int {
         return rank.compareTo(other.rank)
     }
+
+    @Transient
+    fun isStopped(): Boolean =
+            state == State.afterStop
+
+    @Transient
+    fun executionIsFaceToFace(): Boolean =
+            executionContext == ExecutionContext.FaceToFace
+
+    @Transient
+    fun resultsCanBePublished() =
+            !resultsArePublished && (
+                    isStopped() ||
+                            (activeInteraction?.isRead() ?: false) ||
+                            interactions[InteractionType.Evaluation]?.state == State.afterStop
+                    )
+            
 }
 
 enum class State {

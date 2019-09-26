@@ -1,0 +1,75 @@
+<div th:fragment="command(model)"
+     class="ui attached stackable icon menu"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+  <a class="item"
+     th:unless="${model.actionStartInteraction.name() == 'HIDDEN'}"
+     th:href="@{/player/interaction/{interactionId}/start(interactionId=${model.interactionId},reloadPage=${true})}">
+    <i class="green play icon" th:classappend="${model.actionStartInteraction.name() == 'DISABLED' ? 'disabled' : ''}"></i>
+    &nbsp;
+    <span
+      th:styleappend="${model.actionStartInteraction.name() == 'DISABLED' ? 'opacity: 0.45' : ''}"
+      th:text="#{player.sequence.interaction.start(${model.interactionRank})}"></span>
+  </a>
+
+  <a class="item"
+     th:unless="${model.actionStopInteraction.name() == 'HIDDEN'}"
+     th:href="@{/player/interaction/{interactionId}/stop(interactionId=${model.interactionId},reloadPage=${true})}">
+    <i class="pause icon"></i>
+    &nbsp; <span th:text="#{player.sequence.interaction.stop(${model.interactionRank})}"></span>
+  </a>
+
+  <a href="#"
+     th:unless="${model.actionStartNextInteraction.name() == 'HIDDEN'}"
+     class="item"
+     th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/interaction/{interactionId}/startNext(interactionId=${model.interactionId})}')|">
+    <i class="green play icon"></i> &nbsp; <span
+    th:text="#{player.sequence.interaction.start(${model.InteractionRank + 1})}"></span>
+  </a>
+
+  <a href="#"
+     th:unless="${model.actionReopenInteraction.name() == 'HIDDEN'}"
+     class="item"
+     th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/interaction/{interactionId}/start(interactionId=${model.interactionId})}')|">
+    <i class="red undo alternate  icon"></i>
+    &nbsp; <span
+    th:text="#{player.sequence.interaction.restart(${model.interactionRank})}">Reopen phase {0}</span>
+  </a>
+
+  <div class="right menu">
+    <a href="#"
+       th:unless="${model.actionReopenSequence.name() == 'HIDDEN'}"
+       class="item"
+       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/reopen}">
+      <i class="red undo alternate icon"></i>
+      &nbsp; <span th:text="#{player.sequence.reopenSequence}">Re-open sequence</span>
+    </a>
+
+    <a href="#"
+       th:unless="${model.actionStopSequence.name() == 'HIDDEN'}"
+       class="item"
+       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/stop}">
+      <i class="red stop icon"></i>
+      &nbsp; <span th:text="#{player.sequence.readinteraction.stopSequence}">Stop sequence</span>
+    </a>
+
+    <a href="#"
+       th:unless="${model.actionPublishResults.name() == 'HIDDEN'}"
+       class="item"
+       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}">
+      <i class="feed icon"></i>
+      &nbsp; <span th:text="#{player.sequence.publishResults}">Publish results</span>
+    </a>
+
+    <a href="#"
+       th:unless="${model.actionUnpublishResults.name() == 'HIDDEN'}"
+       class="item"
+       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/unpublishResults}">
+      <i class="red close icon"></i>
+      <span th:text="#{player.sequence.unpublishResults}">
+          Cancel the publication of results
+        </span>
+    </a>
+
+  </div>
+</div>

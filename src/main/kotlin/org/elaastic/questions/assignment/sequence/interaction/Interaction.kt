@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ExplanationRecommendationMappingConverter
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
@@ -49,6 +50,16 @@ class Interaction(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
+    @Transient
+    fun getStateForTeacher(user: User) =
+            when (sequence.executionContext) {
+                ExecutionContext.Distance -> State.afterStop
+                ExecutionContext.Blended ->
+                    if (interactionType == InteractionType.Read)
+                        state
+                    else State.afterStop
+                ExecutionContext.FaceToFace -> state
+            }
 
     @Convert(converter = InteractionResultConverter::class)
     var results: InteractionResult? = null
@@ -56,7 +67,17 @@ class Interaction(
     @Convert(converter = ExplanationRecommendationMappingConverter::class)
     var explanationRecommendationMapping: ExplanationRecommendationMapping? = null
 
+    @Transient
     fun hasAnyResult(): Boolean =
             results?.hasAnyResult() ?: false
+
+    @Transient
+    fun isRead() = interactionType == InteractionType.Read
+
+    @Transient
+    fun isResponseSubmission() = interactionType == InteractionType.ResponseSubmission
+
+    @Transient
+    fun isEvaluation() = interactionType == InteractionType.Evaluation
 }
 
