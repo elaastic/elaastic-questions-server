@@ -277,6 +277,7 @@ internal class AttachmentIntegrationTest(
                     attachment = it,
                     inputStream = content.inputStream()
             ).toDelete = true
+            attachmentRepository.saveAndFlush(it)
         }
         val attachment2 = Attachment(
                 name = "MyAttach2",
@@ -289,9 +290,10 @@ internal class AttachmentIntegrationTest(
                     attachment = it,
                     inputStream = content.inputStream()
             ).toDelete = true
+            attachmentRepository.saveAndFlush(it)
         }
 
-        //when: "the garbage collector is running and the two attachments are to delete"
+        //when: "the garbage collector is running "
         attachmentService.deleteAttachmentAndFileInSystem()
         // then: "the two attachments are deleted and the image record in system too"
         assertThat(attachmentRepository.findById(attachment1.id!!).orElse(null), nullValue())
@@ -303,42 +305,78 @@ internal class AttachmentIntegrationTest(
     @Test
     fun `test the delete of an attachment without the delete of the file system`() {
         //given: "two attachments to the same image"
+
         val statement = testingService.getAnyStatement()
         val statement2 = testingService.getLastStatement()
-        val content = "Content".toByteArray()
         val attachment1 = Attachment(
                 name = "MyAttach",
                 originalFileName = "originalName",
-                size = content.size.toLong(),
+                size = 8,
                 toDelete = true
         ).also {
             attachmentService.saveStatementAttachment(
                     statement = statement,
                     attachment = it,
-                    inputStream = content.inputStream()
+                    inputStream = "content1".toByteArray().inputStream()
             )
             assertFalse(it.toDelete)
         }
         val attachment2 = Attachment(
                 name = "MyAttach2",
                 originalFileName = "originalName2",
-                size = content.size.toLong(),
+                size = 8,
                 toDelete = true
         ).also {
             attachmentService.saveStatementAttachment(
                     statement = statement2,
                     attachment = it,
-                    inputStream = content.inputStream()
+                    inputStream = "content2".toByteArray().inputStream()
             ).toDelete = true
+            attachmentRepository.saveAndFlush(it)
         }
 
-        //when: "the garbage collector is running and the two attachments are to delete"
+        //when: "the garbage collector is running "
         attachmentService.deleteAttachmentAndFileInSystem()
         // then: "the two attachments are deleted and the image record in system too"
         assertThat(attachmentRepository.findById(attachment1.id!!).orElse(null), notNullValue())
         assertThat(attachmentRepository.findById(attachment2.id!!).orElse(null), nullValue())
         assertTrue(dataStore.getFile(DataIdentifier(attachment1.path!!)).exists())
 
+    }
+
+    @Test
+    fun testGarbageCollectionOnLargerPopulation() {
+        // Given a list of attachments, some are o delete
+        val attachments = statementRepository.findAll().mapIndexed { index, statement ->
+            Attachment(
+                    name = "MyAttach${index}",
+                    originalFileName = "originalName${index}",
+                    size = 8,
+                    toDelete = true
+            ).also {
+                attachmentService.saveStatementAttachment(
+                        statement = statement,
+                        attachment = it,
+                        inputStream = "content${index}".toByteArray().inputStream()
+                )
+                if (index % 2 == 0) {
+                    it.toDelete = true
+                    attachmentRepository.saveAndFlush(it)
+                }
+            }
+        }
+        //when: "the garbage collector is running "
+        attachmentService.deleteAttachmentAndFileInSystem()
+        // then deletions appear as expected
+        attachments.forEachIndexed { index, attachment ->
+            if (index % 2 == 0) {
+                assertThat(attachmentRepository.findById(attachment.id!!).orElse(null), nullValue())
+                assertFalse(dataStore.getFile(DataIdentifier(attachment.path!!)).exists())
+            } else {
+                assertThat(attachmentRepository.findById(attachment.id!!).orElse(null), notNullValue())
+                assertTrue(dataStore.getFile(DataIdentifier(attachment.path!!)).exists())
+            }
+        }
     }
 
 

@@ -106,7 +106,7 @@ class AttachmentService(
     internal fun deleteAttachmentAndFileInSystem(attachmentList: MutableList<Attachment>) {
         if (attachmentList.isEmpty()) return
         val attachmentToDelete = attachmentList[0]
-        val newAttachmentList = if (attachmentList.size > 1) attachmentList.subList(1, attachmentList.lastIndex) else mutableListOf()
+        val newAttachmentList = if (attachmentList.size > 1) attachmentList.subList(1, attachmentList.size) else mutableListOf()
         processAttachmentToDelete(attachmentToDelete, newAttachmentList)
         deleteAttachmentAndFileInSystem(newAttachmentList)
     }
