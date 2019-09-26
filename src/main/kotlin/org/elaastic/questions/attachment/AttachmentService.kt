@@ -90,7 +90,7 @@ class AttachmentService(
      * @param attachment the attachement
      * @return the input stream
      */
-    fun getInputStreamForAttachement(attachment: Attachment): InputStream {
+    fun getInputStreamForAttachment(attachment: Attachment): InputStream {
         val dataRecord = dataStore.getRecord(DataIdentifier(attachment.path!!))
         return dataRecord!!.stream
     }
@@ -100,24 +100,32 @@ class AttachmentService(
      */
     fun deleteAttachmentAndFileInSystem() {
         val attachmentToRemoveList = attachmentRepository.findAllByToDelete(true)
-        val iteratorAttachment = attachmentToRemoveList.iterator()
-        while (iteratorAttachment.hasNext()) {
-            val attachmentToDelete = iteratorAttachment.next()
-            var deleteInSystem = true
-            attachmentRepository.findAllByPathAndIdNot(attachmentToDelete.path!!, attachmentToDelete.id!!).forEach {
-                if (!it.toDelete) {
-                    deleteInSystem = false
-                } else {
-                    attachmentToRemoveList.remove(it) // todo fsil : not clean, to improve
-                    attachmentRepository.delete(it)
-                }
+        deleteAttachmentAndFileInSystem(attachmentToRemoveList)
+    }
+
+    internal fun deleteAttachmentAndFileInSystem(attachmentList: MutableList<Attachment>) {
+        if (attachmentList.isEmpty()) return
+        val attachmentToDelete = attachmentList[0]
+        val newAttachmentList = if (attachmentList.size > 1) attachmentList.subList(1, attachmentList.lastIndex) else mutableListOf()
+        processAttachmentToDelete(attachmentToDelete, newAttachmentList)
+        deleteAttachmentAndFileInSystem(newAttachmentList)
+    }
+
+    private fun processAttachmentToDelete(attachmentToDelete: Attachment, newAttachmentList: MutableList<Attachment>) {
+        var deleteInSystem = true
+        attachmentRepository.findAllByPathAndIdNot(attachmentToDelete.path!!, attachmentToDelete.id!!).forEach {
+            if (!it.toDelete) {
+                deleteInSystem = false
+            } else {
+                newAttachmentList.remove(it)
+                attachmentRepository.delete(it)
             }
-            if (deleteInSystem) {
-                val attachementPath = attachmentToDelete.path!!
-                dataStore.getFile(DataIdentifier(attachementPath)).delete()
-            }
-            attachmentRepository.delete(attachmentToDelete)
         }
+        if (deleteInSystem) {
+            val attachmentPath = attachmentToDelete.path!!
+            dataStore.getFile(DataIdentifier(attachmentPath)).delete()
+        }
+        attachmentRepository.delete(attachmentToDelete)
     }
 
     internal fun getDimensionFromInputStream(inputStream: InputStream): Dimension? {

@@ -21,7 +21,7 @@ class AttachmentController(
     @ResponseBody
     fun serveAttachment(@PathVariable id: Long): ResponseEntity<Resource>? {
         val attachment = attachmentService.getAttachmentById(id)
-        InputStreamResource(attachmentService.getInputStreamForAttachement(attachment)).let {
+        InputStreamResource(attachmentService.getInputStreamForAttachment(attachment)).let {
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                     "attachment; filename=\"${attachment.originalFileName}\"").body<Resource>(it)
         }

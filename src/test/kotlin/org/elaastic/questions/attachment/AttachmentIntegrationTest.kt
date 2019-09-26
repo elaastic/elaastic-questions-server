@@ -5,7 +5,6 @@ import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.StatementRepository
 import org.elaastic.questions.assignment.sequence.LearnerSequenceRepository
-import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.attachment.datastore.DataIdentifier
 import org.elaastic.questions.attachment.datastore.FileDataStore
 import org.elaastic.questions.test.TestingService
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.util.ResourceUtils
 import java.io.File
-import java.io.FileInputStream
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
@@ -246,7 +244,7 @@ internal class AttachmentIntegrationTest(
         }.tThen("the attachment is processed as a displayable image") {
             assertTrue(it.isDisplayableImage())
             assertThat(it.dimension, notNullValue())
-            val ais = attachmentService.getInputStreamForAttachement(it)
+            val ais = attachmentService.getInputStreamForAttachment(it)
             assertThat(attachmentService.getDimensionFromInputStream(ais), equalTo(it.dimension))
         }
     }
