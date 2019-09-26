@@ -262,6 +262,88 @@ internal class AttachmentIntegrationTest(
         }
     }
 
+    @Test
+    fun `test the delete of an attachment and file system`() {
+        //given: "two attachments to the same image"
+        val statement = testingService.getAnyStatement()
+        val statement2 = testingService.getLastStatement()
+        val content = "Content".toByteArray()
+        val attachment1 = Attachment(
+                name = "MyAttach",
+                originalFileName = "originalName",
+                size = content.size.toLong(),
+                toDelete = true
+        ).also {
+            attachmentService.saveStatementAttachment(
+                    statement = statement,
+                    attachment = it,
+                    inputStream = content.inputStream()
+            ).toDelete = true
+        }
+        val attachment2 = Attachment(
+                name = "MyAttach2",
+                originalFileName = "originalName2",
+                size = content.size.toLong(),
+                toDelete = true
+        ).also {
+            attachmentService.saveStatementAttachment(
+                    statement = statement2,
+                    attachment = it,
+                    inputStream = content.inputStream()
+            ).toDelete = true
+        }
+
+        //when: "the garbage collector is running and the two attachments are to delete"
+        attachmentService.deleteAttachmentAndFileInSystem()
+        // then: "the two attachments are deleted and the image record in system too"
+        assertThat(attachmentRepository.findById(attachment1.id!!).orElse(null), nullValue())
+        assertThat(attachmentRepository.findById(attachment2.id!!).orElse(null), nullValue())
+        assertFalse(dataStore.getFile(DataIdentifier(attachment1.path!!)).exists())
+
+    }
+
+    @Test
+    fun `test the delete of an attachment without the delete of the file system`() {
+        //given: "two attachments to the same image"
+        val statement = testingService.getAnyStatement()
+        val statement2 = testingService.getLastStatement()
+        val content = "Content".toByteArray()
+        val attachment1 = Attachment(
+                name = "MyAttach",
+                originalFileName = "originalName",
+                size = content.size.toLong(),
+                toDelete = true
+        ).also {
+            attachmentService.saveStatementAttachment(
+                    statement = statement,
+                    attachment = it,
+                    inputStream = content.inputStream()
+            )
+            assertFalse(it.toDelete)
+        }
+        val attachment2 = Attachment(
+                name = "MyAttach2",
+                originalFileName = "originalName2",
+                size = content.size.toLong(),
+                toDelete = true
+        ).also {
+            attachmentService.saveStatementAttachment(
+                    statement = statement2,
+                    attachment = it,
+                    inputStream = content.inputStream()
+            ).toDelete = true
+        }
+
+        //when: "the garbage collector is running and the two attachments are to delete"
+        attachmentService.deleteAttachmentAndFileInSystem()
+        // then: "the two attachments are deleted and the image record in system too"
+        assertThat(attachmentRepository.findById(attachment1.id!!).orElse(null), notNullValue())
+        assertThat(attachmentRepository.findById(attachment2.id!!).orElse(null), nullValue())
+        assertTrue(dataStore.getFile(DataIdentifier(attachment1.path!!)).exists())
+
+    }
+
+
     @AfterEach
     fun removeDataStore() {
         File(dataStore.path).deleteRecursively()

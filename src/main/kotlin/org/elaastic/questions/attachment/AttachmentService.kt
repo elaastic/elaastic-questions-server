@@ -13,6 +13,8 @@ import javax.imageio.ImageIO
 import javax.imageio.ImageReader
 import javax.imageio.stream.ImageInputStream
 import javax.imageio.stream.MemoryCacheImageInputStream
+import javax.persistence.EntityManager
+import javax.persistence.FlushModeType
 import javax.transaction.Transactional
 
 @Service
@@ -91,6 +93,31 @@ class AttachmentService(
     fun getInputStreamForAttachement(attachment: Attachment): InputStream {
         val dataRecord = dataStore.getRecord(DataIdentifier(attachment.path!!))
         return dataRecord!!.stream
+    }
+
+    /**
+     * Check if there are attachment to delete and delete them in this case.
+     */
+    fun deleteAttachmentAndFileInSystem() {
+        val attachmentToRemoveList = attachmentRepository.findAllByToDelete(true)
+        val iteratorAttachment = attachmentToRemoveList.iterator()
+        while (iteratorAttachment.hasNext()) {
+            val attachmentToDelete = iteratorAttachment.next()
+            var deleteInSystem = true
+            attachmentRepository.findAllByPathAndIdNot(attachmentToDelete.path!!, attachmentToDelete.id!!).forEach {
+                if (!it.toDelete) {
+                    deleteInSystem = false
+                } else {
+                    attachmentToRemoveList.remove(it) // todo fsil : not clean, to improve
+                    attachmentRepository.delete(it)
+                }
+            }
+            if (deleteInSystem) {
+                val attachementPath = attachmentToDelete.path!!
+                dataStore.getFile(DataIdentifier(attachementPath)).delete()
+            }
+            attachmentRepository.delete(attachmentToDelete)
+        }
     }
 
     internal fun getDimensionFromInputStream(inputStream: InputStream): Dimension? {

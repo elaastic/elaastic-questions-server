@@ -225,7 +225,7 @@ class FileDataStore : DataStore {
      * @param identifier data identifier
      * @return identified file
      */
-    private fun getFile(identifier: DataIdentifier): File {
+     fun getFile(identifier: DataIdentifier): File {
         usesIdentifier(identifier)
         val string = identifier.toString()
         var file = directory

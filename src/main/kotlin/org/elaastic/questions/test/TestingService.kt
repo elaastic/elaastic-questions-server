@@ -49,6 +49,10 @@ class TestingService(
         return statementRepository.findAll().iterator().next()
     }
 
+    fun getLastStatement(): Statement {
+        return statementRepository.findAll().last()
+    }
+
     fun getAnyInteraction(): Interaction {
         return interactionRepository.findAll().iterator().next()
     }
