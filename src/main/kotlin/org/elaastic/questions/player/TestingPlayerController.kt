@@ -1,7 +1,6 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceGenerator
 import org.elaastic.questions.assignment.sequence.interaction.*
@@ -15,6 +14,8 @@ import org.elaastic.questions.player.components.results.OpenResultsModel
 import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
+import org.elaastic.questions.player.components.statement.StatementInfo
+import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -434,25 +435,6 @@ class TestingPlayerController(
         )
 
         return "/player/assignment/sequence/components/test-statement"
-    }
-
-    data class StatementPanelModel(
-            val panelClosed: Boolean = false,
-            val hideQuestionType: Boolean = false,
-            val hideStatement: Boolean = false
-    )
-
-    data class StatementInfo(
-            val title: String,
-            val questionType: QuestionType,
-            val content: String
-    ) {
-        constructor(statement: Statement) :
-                this(
-                        statement.title,
-                        statement.questionType,
-                        statement.content
-                )
     }
 
     @GetMapping("/results")
