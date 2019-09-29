@@ -1,6 +1,5 @@
 package org.elaastic.questions.player
 
-import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.sequence.Sequence
@@ -9,6 +8,9 @@ import org.elaastic.questions.assignment.sequence.interaction.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.command.CommandModel
+import org.elaastic.questions.player.components.results.ChoiceResultsModel
+import org.elaastic.questions.player.components.results.OpenResultsModel
+import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.math.BigDecimal
-import kotlin.system.exitProcess
 
 @Controller
 @RequestMapping("/player/test")
@@ -633,40 +634,6 @@ class TestingPlayerController(
             val description: String,
             val resultsModel: ResultsModel
     )
-
-    interface ResultsModel {
-        val sequenceIsStopped: Boolean
-        val sequenceId: Long
-        val interactionId: Long
-        val interactionRank: Int
-        fun getHasChoices(): Boolean
-        val hasExplanations: Boolean
-        val explanationViewerModel: PlayerController.ExplanationViewerModel?
-    }
-
-    data class ChoiceResultsModel(
-            override val sequenceIsStopped: Boolean,
-            override val sequenceId: Long,
-            override val interactionId: Long,
-            override val interactionRank: Int,
-            val hasAnyResult: Boolean,
-            val responseDistributionChartModel: ResponseDistributionChartModel? = null,
-            override val hasExplanations: Boolean,
-            override val explanationViewerModel: PlayerController.ExplanationViewerModel? = null
-    ) : ResultsModel {
-        override fun getHasChoices() = true
-    }
-
-    data class OpenResultsModel(
-            override val sequenceIsStopped: Boolean,
-            override val sequenceId: Long,
-            override val interactionId: Long,
-            override val interactionRank: Int,
-            override val hasExplanations: Boolean,
-            override val explanationViewerModel: PlayerController.ExplanationViewerModel? = null
-    ) : ResultsModel {
-        override fun getHasChoices() = false
-    }
 
     @GetMapping("/sequence-info")
     fun testSequenceInfo(authentication: Authentication,
