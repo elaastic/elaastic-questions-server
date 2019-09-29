@@ -7,6 +7,7 @@ import org.elaastic.questions.assignment.sequence.interaction.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.command.CommandModel
+import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
@@ -659,7 +660,7 @@ class TestingPlayerController(
                         .map {
                             CommandSituation(
                                     describeSequence(it),
-                                    CommandModel(user, it.activeInteraction!!)
+                                    CommandModelFactory.build(user, it)
                             )
                         }
         )
