@@ -8,6 +8,8 @@ import org.elaastic.questions.assignment.sequence.interaction.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.command.CommandModel
+import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
+import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
 import org.elaastic.questions.player.components.results.OpenResultsModel
 import org.elaastic.questions.player.components.results.ResultsModel
@@ -402,17 +404,6 @@ class TestingPlayerController(
     data class ResponseDistributionChartSituation(
             val description: String,
             val model: ResponseDistributionChartModel
-    )
-
-    data class ResponseDistributionChartModel(
-            val interactionId: Long,
-            val choiceSpecification: ChoiceSpecificationData,
-            val results: Map<AttemptNum, Map<ItemIndex, ResponsePercentage>>
-    )
-
-    data class ChoiceSpecificationData(
-            val itemCount: Int,
-            val expectedChoiceList: List<Int>
     )
 
     @GetMapping("/statement")

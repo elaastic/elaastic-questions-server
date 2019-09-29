@@ -1,7 +1,7 @@
 package org.elaastic.questions.player.components.results
 
 import org.elaastic.questions.player.PlayerController
-import org.elaastic.questions.player.TestingPlayerController
+import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
 
 data class ChoiceResultsModel(
         override val sequenceIsStopped: Boolean,
@@ -9,7 +9,7 @@ data class ChoiceResultsModel(
         override val interactionId: Long,
         override val interactionRank: Int,
         val hasAnyResult: Boolean,
-        val responseDistributionChartModel: TestingPlayerController.ResponseDistributionChartModel? = null,
+        val responseDistributionChartModel: ResponseDistributionChartModel? = null,
         override val hasExplanations: Boolean,
         override val explanationViewerModel: PlayerController.ExplanationViewerModel? = null
 ) : ResultsModel {
