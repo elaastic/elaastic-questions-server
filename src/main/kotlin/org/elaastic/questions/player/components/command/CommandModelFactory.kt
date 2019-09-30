@@ -13,6 +13,11 @@ object CommandModelFactory {
                         sequenceId = sequence.id ?: throw IllegalStateException("This sequence hos no ID"),
                         interactionId = interaction?.id,
                         interactionRank = interaction?.rank,
+                        questionType = sequence.statement.questionType,
+                        actionStartSequence =
+                        if(sequence.state == State.beforeStart)
+                            CommandModel.ActionStatus.ENABLED
+                        else CommandModel.ActionStatus.HIDDEN,
                         actionStartInteraction = when {
                             interaction == null -> CommandModel.ActionStatus.HIDDEN
                             interaction.isRead() || interaction.getStateForTeacher(user) == State.afterStop -> CommandModel.ActionStatus.HIDDEN

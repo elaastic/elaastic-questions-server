@@ -3,9 +3,19 @@
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
   <a class="item"
+     th:if="${model.actionStartSequence.name() == 'ENABLED'}"
+     style="width: 100%; text-align: center; display: block; outline: none;"
+     href="#"
+     th:onclick="|$('#sequenceSpec_${model.sequenceId}').modal('show');|">
+    <i class="green play icon"></i>
+    &nbsp;<span th:text="#{player.sequence.start}">Start sequence</span>
+  </a>
+
+  <a class="item"
      th:unless="${model.actionStartInteraction.name() == 'HIDDEN'}"
      th:href="@{/player/interaction/{interactionId}/start(interactionId=${model.interactionId},reloadPage=${true})}">
-    <i class="green play icon" th:classappend="${model.actionStartInteraction.name() == 'DISABLED' ? 'disabled' : ''}"></i>
+    <i class="green play icon"
+       th:classappend="${model.actionStartInteraction.name() == 'DISABLED' ? 'disabled' : ''}"></i>
     &nbsp;
     <span
       th:styleappend="${model.actionStartInteraction.name() == 'DISABLED' ? 'opacity: 0.45' : ''}"
@@ -72,4 +82,12 @@
     </a>
 
   </div>
+
+<div th:if="${model.actionStartSequence.name() == 'ENABLED'}"
+     th:remove="tag">
+  <div
+    th:replace="player/assignment/sequence/components/_config-sequence.html :: configSequence(${model.sequenceId}, ${model.questionType})"></div>
+</div>
+
+
 </div>

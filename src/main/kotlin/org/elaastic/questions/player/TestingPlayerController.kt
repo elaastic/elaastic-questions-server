@@ -654,9 +654,6 @@ class TestingPlayerController(
         model.addAttribute(
                 "commandSituations",
                 SequenceGenerator.generateAllTypes(user)
-                        .filter {
-                            it.activeInteraction != null
-                        }
                         .map {
                             CommandSituation(
                                     describeSequence(it),
