@@ -1,4 +1,4 @@
-<div th:fragment="modalLearnerAccess()"
+<div th:fragment="modalLearnerAccess(assignment)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -36,7 +36,17 @@
     </div>
   </div>
 
-  <script>
+  <script type="text/javascript" th:inline="javascript"
+          th:with="registerUrl=${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/player/register(globalId=${assignment.globalId})}">
+    /*<![CDATA[*/
+
+    elaastic.showLearnerAccessModal = function () {
+      window.learnerAccessModalApp.showLearnerAccessModal(
+        /*[[${registerUrl}]]*/ 'registerUrl',
+        /*[[${assignment.title}]]*/ 'title'
+      )
+    }
+
     $(document)
       .ready(function () {
 

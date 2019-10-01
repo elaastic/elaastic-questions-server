@@ -627,7 +627,7 @@ class TestingPlayerController(
                         .map {
                             SequenceInfoSituation(
                                     describeSequence(it),
-                                    SequenceInfoResolver.resolve(it, messageBuilder)!!
+                                    SequenceInfoResolver.resolve(it, messageBuilder)
                             )
                         }
         )

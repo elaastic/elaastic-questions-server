@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/3columns :: 3columns(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, aside=~{::#aside}, modalAside=~{::#modal-aside}, content=~{::section},extraHeader=~{::head/script})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+
+  <script th:src="@{/static/js/js.cookie.js}"></script>
+  <title th:text="|elaastic: ${assignment.title}|"></title>
+</head>
+
+<body>
+
+<div id="pageSpecificMenu">
+  <script>
+    var elaastic = elaastic || {}
+  </script>
+
+  <th:block th:if="${userRole == 'teacher'}">
+    <a class="item"
+       th:href="@{/assignment/{assignmentId}(assignmentId=${assignment.id})}"
+       th:attr="data-tooltip=#{assignment.action.show.label}"
+       data-position="right center"
+       data-inverted="">
+      <i class="yellow edit icon"></i>
+    </a>
+
+    <div class="item"
+         onclick="elaastic.showLearnerAccessModal()"
+         th:attr="data-tooltip=#{assignment.learnerAccess.oneLine}"
+         data-tooltip="Link for learners"
+         data-position="right center"
+         data-inverted="">
+      <i class="yellow feed icon"></i>
+    </div>
+    <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${assignment})"></div>
+  </th:block>
+</div>
+
+<aside id="aside">
+  <!--  TODO Component assignment overview -->
+  <g:render template="/assignment/player/assignment_overview"
+            model="[assignmentInstance: assignmentInstance,
+                    selectedSequence  : sequenceInstance,
+                    user              : user,
+                    userRole          : userRole,
+                    context           : 'aside']"/>
+</aside>
+
+<!-- TODO Migrate modal-aside -->
+<div id="modal-aside">
+  <g:render template="/assignment/player/assignment_overview"
+            model="[assignmentInstance: assignmentInstance,
+                    selectedSequence  : sequenceInstance,
+                    user              : user,
+                    userRole          : userRole,
+                    context           : 'modal-aside']"/>
+</div>
+
+<section>
+  <div th:if="${sequence}"
+       th:id="|sequence_${sequence.id}|"
+       th:with="components=${'/player/assignment/sequence/components'}">
+    <div th:replace="|${components}/_steps.html| :: steps(${stepsModel}, ${sequenceStatistics})"></div>
+    <div th:replace="|${components}/_command.html| :: command(${commandModel})"></div>
+    <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${sequenceInfoModel})"></div>
+    <div th:replace="|${components}/_statement.html| :: statement(${statementPanelModel},${statement})"></div>
+
+    <g:render
+      template="/assignment/player/sequence/${userRole}/${org.tsaap.skin.SkinUtil.getView(params, session, sequenceInstance.state)}"
+      model="[userRole: userRole, sequenceInstance: sequenceInstance, user: user]"/>
+
+  </div>
+
+</section>
+</body>
+</html>

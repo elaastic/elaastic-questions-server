@@ -66,8 +66,17 @@ class Sequence(
 
     @Transient
     var interactions: MutableMap<InteractionType, Interaction> = mutableMapOf()
+        get() { // Needed because of JPA using a default empty constructor that bypass the var initialization...
+            if(field == null) {
+                field = mutableMapOf()
+            }
+            return field
+        }  
 
-    override fun compareTo(other: Sequence): Int {
+
+            override
+
+    fun compareTo(other: Sequence): Int {
         return rank.compareTo(other.rank)
     }
 
@@ -86,7 +95,7 @@ class Sequence(
                             (activeInteraction?.isRead() ?: false) ||
                             interactions[InteractionType.Evaluation]?.state == State.afterStop
                     )
-            
+
 }
 
 enum class State {

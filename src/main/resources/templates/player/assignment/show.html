@@ -52,7 +52,7 @@
   <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
     Message
   </div>
-  
+
   <h2 class="ui top attached block header">
     <i class="book icon"></i>
 
@@ -76,12 +76,14 @@
        th:each="sequence, i : ${assignment.sequences}"
        th:id="|sequence_${sequence.id}|">
 
-    <!--  TODO Migrate subtempplate-->
-    <div th:replace="layout/player/assignment/sequence/{} :: todo()">
-    </div>
-    <!--  <g:render-->
-    <!--    template="/assignment/player/sequence/${userRole}/${org.tsaap.skin.SkinUtil.getView(params, session, sequenceInstance.state)}"-->
-    <!--    model="[userRole: userRole, sequenceInstance: sequenceInstance, user: user]"/>-->
+    <div th:replace="player/assignment/sequence/components/_steps.html :: steps(${stepsModel}, ${sequenceStatistics})"></div>
+  </div>
+
+  <!--  TODO Migrate subtempplate (bind here the dynamic components assembly -->
+
+  <!--  <g:render-->
+  <!--    template="/assignment/player/sequence/${userRole}/${org.tsaap.skin.SkinUtil.getView(params, session, sequenceInstance.state)}"-->
+  <!--    model="[userRole: userRole, sequenceInstance: sequenceInstance, user: user]"/>-->
 
   </div>
 

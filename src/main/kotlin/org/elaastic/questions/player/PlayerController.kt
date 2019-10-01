@@ -1,9 +1,16 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
+import org.elaastic.questions.player.components.command.CommandModelFactory
+import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
+import org.elaastic.questions.player.components.statement.StatementInfo
+import org.elaastic.questions.player.components.statement.StatementPanelModel
+import org.elaastic.questions.player.components.steps.StepsModelFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -22,6 +29,7 @@ import javax.persistence.EntityNotFoundException
 @RequestMapping("/player")
 class PlayerController(
         @Autowired val assignmentService: AssignmentService,
+        @Autowired val sequenceService: SequenceService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -92,9 +100,37 @@ class PlayerController(
                     "userRole",
                     if (user == it.owner) "teacher" else "learner" // TODO Define a type for this
             )
+            model.addAttribute("stepsModel", StepsModelFactory.build())
         }
 
         return "/player/assignment/show"
+    }
+
+    @GetMapping("/sequence/{id}/play")
+    fun playSequence(authentication: Authentication,
+                     model: Model,
+                     @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        sequenceService.get(user, id, true).let {
+            model.addAttribute("user", user)
+            model.addAttribute("assignment", it.assignment)
+            model.addAttribute("sequence", it)
+            model.addAttribute(
+                    "userRole",
+                    if (user == it.owner) "teacher" else "learner" // TODO Define a type for this
+            )
+            model.addAttribute("stepsModel", StepsModelFactory.build())
+            model.addAttribute("commandModel", CommandModelFactory.build(user, it))
+            model.addAttribute(
+                    "sequenceInfoModel",
+                    SequenceInfoResolver.resolve(it, messageBuilder)
+            )
+            model.addAttribute("statementPanelModel", StatementPanelModel())
+            model.addAttribute("statement", StatementInfo(it.statement))
+        }
+
+        return "/player/assignment/sequence/play"
     }
 
     @GetMapping("/assignment/{id}/nbRegisteredUsers")

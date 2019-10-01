@@ -9,7 +9,7 @@ import java.lang.IllegalStateException
 
 object SequenceInfoResolver {
 
-    fun resolve(sequence: Sequence, messageBuilder: MessageBuilder): SequenceInfoModel? =
+    fun resolve(sequence: Sequence, messageBuilder: MessageBuilder): SequenceInfoModel =
             when (sequence.state) {
                 State.beforeStart -> SequenceInfoModel(
                         messageBuilder.message(
