@@ -17,6 +17,7 @@ import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
+import org.elaastic.questions.player.components.steps.StepsModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -37,21 +38,25 @@ class TestingPlayerController(
     @GetMapping("/steps")
     fun testSteps(authentication: Authentication,
                   model: Model,
-                  @RequestParam responseSubmissionState: String?,
-                  @RequestParam evaluationState: String?,
-                  @RequestParam readState: String?,
+                  @RequestParam responseSubmissionState: StepsModel.PhaseState?,
+                  @RequestParam evaluationState: StepsModel.PhaseState?,
+                  @RequestParam readState: StepsModel.PhaseState?,
                   @RequestParam showStatistics: Boolean?,
                   @RequestParam studentsProvideExplanation: Boolean?): String {
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
-        model.addAttribute("responseSubmissionState", responseSubmissionState ?: "completed")
-        model.addAttribute("evaluationState", evaluationState ?: "active")
-        model.addAttribute("readState", readState ?: "disabled")
-        model.addAttribute("showStatistics", showStatistics ?: false)
+        model.addAttribute(
+                "stepsModel",
+                StepsModel(
+                        responseSubmissionState = responseSubmissionState ?: StepsModel.PhaseState.COMPLETED,
+                        evaluationState = evaluationState ?: StepsModel.PhaseState.ACTIVE,
+                        readState = readState ?: StepsModel.PhaseState.DISABLED,
+                        showStatistics = showStatistics ?: false,
+                        studentsProvideExplanation = studentsProvideExplanation ?: true
+                )
+        )
         model.addAttribute("sequenceStatistics", SequenceStatistics)
-        model.addAttribute("studentsProvideExplanation", studentsProvideExplanation ?: true)
-
 
         return "/player/assignment/sequence/components/test-steps"
     }

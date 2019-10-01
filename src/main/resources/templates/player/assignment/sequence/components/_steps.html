@@ -1,12 +1,12 @@
 <div
-  th:fragment="steps(responseSubmissionState, evaluationState, readState, showStatistics, studentsProvideExplanation, sequenceStatistics)"
+  th:fragment="steps(stepsModel, sequenceStatistics)"
   th:remove="tag"
   xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
   <div class="ui three top attached steps">
     <div class="step"
-         th:classappend="|${responseSubmissionState == 'disabled' ? 'disabled' : ''} ${responseSubmissionState == 'active' ? 'active-phase' : ''} ${responseSubmissionState == 'completed' ? 'completed-phase' : ''}|">
-      <div th:if="${showStatistics == true && responseSubmissionState != 'disabled'}"
+         th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.responseSubmissionState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.responseSubmissionState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
+      <div th:if="${stepsModel.showStatistics == true && stepsModel.responseSubmissionState.name() != 'DISABLED'}"
            class="floating ui grey label" style="left: 3em;" data-inverted=""
            th:attr="data-tooltip=#{'player.sequence.interaction.responseCount'(1)}"
            data-position="bottom left"><i
@@ -21,18 +21,18 @@
         </div>
 
         <div class="description" style="min-height: 2.5rem;">
-          <span th:if="${studentsProvideExplanation == true}"
+          <span th:if="${stepsModel.studentsProvideExplanation == true}"
                 th:text="#{sequence.phase.ResponseSubmission.arguedResponse}"></span>
-          <span th:if="${studentsProvideExplanation == false}"
+          <span th:if="${stepsModel.studentsProvideExplanation == false}"
                 th:text="#{sequence.phase.ResponseSubmission.firstResponse}"></span>
         </div>
       </div>
     </div>
 
     <div class="step"
-         th:classappend="|${evaluationState == 'disabled' ? 'disabled' : ''} ${evaluationState == 'active' ? 'active-phase' : ''} ${evaluationState == 'completed' ? 'completed-phase' : ''}|">
+         th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.evaluationState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.evaluationState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
 
-      <div th:if="${showStatistics == true && evaluationState != 'disabled'}">
+      <div th:if="${stepsModel.showStatistics == true && stepsModel.evaluationState.name() != 'DISABLED'}">
         <div class="floating ui grey label" style="left: 3em;" data-inverted=""
              th:attr="data-tooltip=#{player.sequence.interaction.peerEvaluationCount}"
              data-position="bottom left"><i class="comments outline icon"></i>
@@ -60,7 +60,7 @@
     </div>
 
     <div class="step"
-         th:classappend="|${readState == 'disabled' ? 'disabled' : ''} ${readState == 'active' ? 'active-phase' : ''} ${readState == 'completed' ? 'completed-phase' : ''}|">
+         th:classappend="|${stepsModel.readState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.readState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.readState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
       <i class="phase-icon bar chart icon"></i>
 
       <div class="content">

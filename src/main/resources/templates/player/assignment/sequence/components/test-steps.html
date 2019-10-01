@@ -14,23 +14,23 @@
     <div class="fields">
       <div class="field">
         <label>responseSubmissionState</label>
-        <input name="responseSubmissionState" type="text" th:value="${responseSubmissionState}"/>
+        <input name="responseSubmissionState" type="text" th:value="${stepsModel.responseSubmissionState}"/>
       </div>
       <div class="field">
         <label>evaluationState</label>
-        <input name="evaluationState" type="text" th:value="${evaluationState}"/>
+        <input name="evaluationState" type="text" th:value="${stepsModel.evaluationState}"/>
       </div>
       <div class="field">
         <label>readState</label>
-        <input name="readState" type="text" th:value="${readState}"/>
+        <input name="readState" type="text" th:value="${stepsModel.readState}"/>
       </div>
       <div class="field">
         <label>showStatistics</label>
-        <input name="showStatistics" type="text" th:value="${showStatistics}"/>
+        <input name="showStatistics" type="text" th:value="${stepsModel.showStatistics}"/>
       </div>
       <div class="field">
         <label>studentsProvideExplanation</label>
-        <input name="studentsProvideExplanation" type="text" th:value="${studentsProvideExplanation}"/>
+        <input name="studentsProvideExplanation" type="text" th:value="${stepsModel.studentsProvideExplanation}"/>
       </div>
 
     </div>
@@ -39,7 +39,7 @@
     <hr class="ui hidden divider"/>
   </form>
   <div
-    th:replace="player/assignment/sequence/components/_steps.html :: steps(${responseSubmissionState}, ${evaluationState}, ${readState}, ${showStatistics}, ${studentsProvideExplanation}, ${sequenceStatistics})"></div>
+    th:replace="player/assignment/sequence/components/_steps.html :: steps(${stepsModel}, ${sequenceStatistics})"></div>
 </section>
 </body>
 </html>
