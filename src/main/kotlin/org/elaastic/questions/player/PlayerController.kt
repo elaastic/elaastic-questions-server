@@ -1,11 +1,12 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
+import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo
@@ -30,6 +31,7 @@ import javax.persistence.EntityNotFoundException
 class PlayerController(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val sequenceService: SequenceService,
+        @Autowired val learnerSequenceService: LearnerSequenceService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -83,51 +85,49 @@ class PlayerController(
         }
     }
 
-    @GetMapping(value = ["/assignment/{id}/show", "/assignment/{id}"])
-    fun show(authentication: Authentication,
-             model: Model,
-             @PathVariable id: Long): String {
-        val user: User = authentication.principal as User
-
-        assignmentService.get(user, id, true).let {
-            model.addAttribute("user", user)
-            model.addAttribute("assignment", it)
-            model.addAttribute(
-                    "nbRegisteredUsers",
-                    assignmentService.getNbRegisteredUsers(it)
-            )
-            model.addAttribute(
-                    "userRole",
-                    if (user == it.owner) "teacher" else "learner" // TODO Define a type for this
-            )
-            model.addAttribute("stepsModel", StepsModelFactory.build())
-        }
-
-        return "/player/assignment/show"
-    }
-
     @GetMapping("/sequence/{id}/play")
     fun playSequence(authentication: Authentication,
                      model: Model,
                      @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
-        sequenceService.get(user, id, true).let {
+        // TODO Improve data fetching (should start from the assignment)
+
+        sequenceService.get(user, id, true).let { sequence ->
             model.addAttribute("user", user)
-            model.addAttribute("assignment", it.assignment)
-            model.addAttribute("sequence", it)
+            model.addAttribute("assignment", sequence.assignment)
+            model.addAttribute("sequence", sequence)
             model.addAttribute(
                     "userRole",
-                    if (user == it.owner) "teacher" else "learner" // TODO Define a type for this
+                    if (user == sequence.owner) "teacher" else "learner" // TODO Define a type for this
             )
-            model.addAttribute("stepsModel", StepsModelFactory.build())
-            model.addAttribute("commandModel", CommandModelFactory.build(user, it))
+            model.addAttribute(
+                    "assignmentOverviewModel",
+                    (user == sequence.owner).let { teacher ->
+                        AssignmentOverviewModelFactory.build(
+                                teacher = teacher,
+                                nbRegisteredUser =
+                                assignmentService.getNbRegisteredUsers(sequence.assignment!!),
+                                assignmentTitle = sequence.assignment?.title!!,
+                                sequences = sequence.assignment?.sequences!!,
+                                sequenceToUserActiveInteraction =
+                                if (teacher)
+                                    sequence.assignment!!.sequences.associate { it to it.activeInteraction }
+                                else sequence.assignment!!.sequences.associate {
+                                    it to learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
+                                },
+                                selectedSequenceId = id
+                        )
+                    }
+            )
+            model.addAttribute("stepsModel", StepsModelFactory.build(sequence))
+            model.addAttribute("commandModel", CommandModelFactory.build(user, sequence))
             model.addAttribute(
                     "sequenceInfoModel",
-                    SequenceInfoResolver.resolve(it, messageBuilder)
+                    SequenceInfoResolver.resolve(sequence, messageBuilder)
             )
             model.addAttribute("statementPanelModel", StatementPanelModel())
-            model.addAttribute("statement", StatementInfo(it.statement))
+            model.addAttribute("statement", StatementInfo(sequence.statement))
         }
 
         return "/player/assignment/sequence/play"

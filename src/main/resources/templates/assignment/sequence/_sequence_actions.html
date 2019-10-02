@@ -40,7 +40,7 @@
   </a>
 
   <a class="ui right floated icon primary tiny button"
-     th:href="@{/assignment/{assignmentId}/payer/playSequence/{id}(assignmentId=${assignment.id},id=${sequence.id})}"
+     th:href="@{/player/sequence/{sequenceId}/play(sequenceId=${sequence.id})}"
      href="/player/playSequence/123"
      th:attr="data-tooltip=#{sequence.play}"
      data-tooltip="Play the sequence"

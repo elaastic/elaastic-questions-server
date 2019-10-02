@@ -1,0 +1,86 @@
+<div
+  th:fragment="assignmentOverview(model, context)"
+  th:remove="tag"
+  xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+
+  <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
+    <div class="floating ui grey label"
+         style="left: 3em;"
+         th-attr="data-tooltip=#{player.assignment.registeredUserCount2}"
+         data-inverted=""
+         data-position="bottom left">
+      <i class="users icon"></i> <span th:text="${model.nbRegisteredUser}"></span>
+    </div>
+    <i class="book icon"></i>
+
+    <div class="content" th:text="${model.assignmentTitle}"></div>
+
+  </h3>
+
+  <div class="ui segment bottom attached"
+       th:if="${#lists.isEmpty(model.sequences)}"
+       th:text="#{assignment.empty}">
+    This assignment is empty.
+  </div>
+
+  <div th:each="sequence, i : ${model.sequences}"
+       class="ui clearing attached segment"
+       th:classappend="${sequence.id == model.selectedSequenceId ? 'selected' : ''}"
+       th:id="|${context}-${sequence.id}|"
+       style="padding-bottom: 1em; cursor: pointer; "
+       th:onclick="|window.location = '@{/player/sequence/{sequenceId}/play(sequenceId=${sequence.id})}'|">
+
+    <div class="ui grid">
+      <div class="twelve wide column">
+        <div style="overflow: hidden; height: 100%; padding-top: 2px;">
+          <h4 class="ui header">
+            <div class="ui tiny circular label"
+                 style="margin-right: 1em;"
+                 th:text="|${i.index+1}.|">
+            </div>
+            <span th:utext="${sequence.title}"></span>
+          </h4>
+
+          <!--          TODO : "${userRole == 'teacher' || sequenceInstance.state != StateType.beforeStart.name()}"-->
+          <div style="height: 4em; overflow: hidden;"
+               th:unless="${model.hideStatementContent}"
+               th:utext="${sequence.content}">
+          </div>
+
+        </div>
+      </div>
+
+      <div class="four wide middle aligned column" style="text-align: center;">
+        <i th:each="icon : ${sequence.icons}"
+           class="elaastic-phase icon"
+           th:classappend="${icon}"></i>
+      </div>
+    </div>
+
+  </div>
+
+  <script th:if="${context == 'aside' && model.selectedSequenceId != null}" th:inline="javascript">
+    (function () {
+      var container = $('#layout-aside')
+      var target = $('#' + [[${context}]] + '-[[${model.selectedSequenceId}]]')
+
+      if (!elaastic.util.isVisible(target, container, 50)) {
+        elaastic.util.ensureIsVisible(target, container)
+      }
+    })()
+
+  </script>
+
+
+  <style>
+    .ui.selected.segment {
+      background-color: #fffaf3;
+      color: #573a08;
+    }
+
+    .ui.selected.segment .elaastic-phase.icon {
+      display: none !important;
+    }
+  </style>
+</div>

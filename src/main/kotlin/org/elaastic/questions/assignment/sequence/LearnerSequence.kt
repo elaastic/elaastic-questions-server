@@ -23,7 +23,7 @@ class LearnerSequence(
         var sequence: Sequence,
 
         @field:ManyToOne
-        var activeInteraction: Interaction?
+        var activeInteraction: Interaction? = null
 
 ) : AbstractJpaPersistable<Long>() {
 

@@ -81,12 +81,24 @@ class Sequence(
     }
 
     @Transient
+    fun isNotStarted(): Boolean =
+            state == State.beforeStart
+
+    @Transient
     fun isStopped(): Boolean =
             state == State.afterStop
 
     @Transient
     fun executionIsFaceToFace(): Boolean =
             executionContext == ExecutionContext.FaceToFace
+
+    @Transient
+    fun executionIsBlended(): Boolean =
+            executionContext == ExecutionContext.Blended
+
+    @Transient
+    fun executionIsDistance(): Boolean =
+            executionContext == ExecutionContext.Distance
 
     @Transient
     fun resultsCanBePublished() =

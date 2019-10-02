@@ -79,5 +79,23 @@ class Interaction(
 
     @Transient
     fun isEvaluation() = interactionType == InteractionType.Evaluation
+
+    @Transient
+    fun stateForRegisteredUsers(): State = when {
+        isRead() && sequence.resultsArePublished -> State.show
+
+        sequence.isStopped() ->
+            if (rank <= sequence.activeInteraction?.rank ?: 0)
+                State.afterStop
+            else State.beforeStart
+
+        sequence.executionIsFaceToFace() -> state
+
+        isRead() && sequence.executionIsBlended() -> state
+
+        isRead() && sequence.executionIsDistance() -> State.afterStop
+
+        else -> State.show
+    }
 }
 
