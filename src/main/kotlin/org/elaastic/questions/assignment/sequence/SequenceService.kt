@@ -120,4 +120,19 @@ class SequenceService(
             return it
         }
     }
+
+    fun reopen(user: User, sequence: Sequence): Sequence {
+        require(user == sequence.owner) {
+            "Only the owner of the sequence is allowed to reopen it"
+        }
+        require(sequence.isStopped()) {
+            "This sequence is not stopped, it cannot be reopen"
+        }
+
+        sequence.let {
+            it.state = State.show
+            sequenceRepository.save(it)
+            return it
+        }
+    }
 }

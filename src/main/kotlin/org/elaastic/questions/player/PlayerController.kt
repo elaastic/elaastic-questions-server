@@ -237,4 +237,17 @@ class PlayerController(
 
         return "redirect:/player/sequence/${id}/play"
     }
+
+    @GetMapping("/sequence/{id}/reopen")
+    fun reopenSequence(authentication: Authentication,
+                     model: Model,
+                     @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        sequenceService.get(user, id).let {
+            sequenceService.reopen(user, it)
+        }
+
+        return "redirect:/player/sequence/${id}/play"
+    }
 }

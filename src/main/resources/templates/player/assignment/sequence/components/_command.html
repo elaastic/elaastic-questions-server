@@ -47,10 +47,10 @@
   </a>
 
   <div class="right menu">
-    <a href="#"
+    <!-- TODO partial loading    th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/reopen}"-->
+    <a th:href="@{/player/sequence/{sequenceId}/reopen(sequenceId=${model.sequenceId})}"
        th:unless="${model.actionReopenSequence.name() == 'HIDDEN'}"
-       class="item"
-       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/reopen}">
+       class="item">
       <i class="red undo alternate icon"></i>
       &nbsp; <span th:text="#{player.sequence.reopenSequence}">Re-open sequence</span>
     </a>
