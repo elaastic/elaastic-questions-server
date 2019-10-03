@@ -6,13 +6,14 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 
 object StepsModelFactory {
 
+    // TODO Take sequence state into account
     fun build(sequence: Sequence): StepsModel = StepsModel(
             responseSubmissionState =
-            sequence.interactions[InteractionType.ResponseSubmission]?.state.let(::interactionStateToPhaseState),
+            sequence.interactions[InteractionType.ResponseSubmission]?.stateForRegisteredUsers().let(::interactionStateToPhaseState),
             evaluationState =
-            sequence.interactions[InteractionType.Evaluation]?.state.let(::interactionStateToPhaseState),
+            sequence.interactions[InteractionType.Evaluation]?.stateForRegisteredUsers().let(::interactionStateToPhaseState),
             readState =
-            sequence.interactions[InteractionType.Read]?.state.let(::interactionStateToPhaseState)
+            sequence.interactions[InteractionType.Read]?.stateForRegisteredUsers().let(::interactionStateToPhaseState)
     )
 
     private fun interactionStateToPhaseState(state: State?): StepsModel.PhaseState =
