@@ -131,7 +131,7 @@
       <div class="ui hidden divider"></div>
 
       <div>
-        <input type="hidden" name="reloadPage" value="${true}"/>
+        <input type="hidden" name="reloadPage" th:value="${true}"/>
       </div>
     </form>
   </div>
@@ -144,10 +144,12 @@
 
   <script th:inline="javascript">
     $(document).ready(function () {
-      let modalId = /*[[${sequenceId}]]*/ ''
-
+      let modalId = 'sequenceSpec_' + [[${sequenceId}]]
+      
       $('#' + modalId).modal({
         onApprove: function () {
+          console.log('*** submit')
+          console.info($('#' + modalId + '_form'))
           $('#' + modalId + '_form').submit()
         }
       })
@@ -231,9 +233,7 @@
         manageExecutionContext(sequenceId, questionType, $(this))
       })
 
-
       manageConfigurationChange('[[${sequenceId}]]', [[${questionType}]], $('#studentsProvideExplanation_[[${sequenceId}]]_'+[[${questionType}]]))
-
     })
 
 

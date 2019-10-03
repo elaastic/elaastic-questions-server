@@ -10,6 +10,7 @@ import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.lang.IllegalStateException
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -107,6 +108,12 @@ class Sequence(
                             (activeInteraction?.isRead() ?: false) ||
                             interactions[InteractionType.Evaluation]?.state == State.afterStop
                     )
+
+    fun selectActiveInteraction(interactionType: InteractionType) {
+        interactions[interactionType]?.let {
+            activeInteraction = it
+        } ?: throw IllegalStateException("No interaction ${interactionType} defined for this sequence")
+    }
 
 }
 

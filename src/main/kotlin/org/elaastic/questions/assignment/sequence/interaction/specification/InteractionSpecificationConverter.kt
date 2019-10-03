@@ -27,6 +27,7 @@ class InteractionSpecificationConverter : AttributeConverter<InteractionSpecific
         return when {
             isEvaluationSpecification(map) -> mapper.readValue(dbData, EvaluationSpecification::class.java)
             isResponseSubmissionSpecification(map) -> mapper.readValue(dbData, ResponseSubmissionSpecification::class.java)
+            isReadSpecification(map) -> ReadSpecification()
             else -> throw IllegalStateException("The type of interaction specification could not be determined: \"$dbData\"")
         }
     }
@@ -41,5 +42,9 @@ class InteractionSpecificationConverter : AttributeConverter<InteractionSpecific
         return if (data.containsKey("type")) {
             data["type"] == InteractionType.ResponseSubmission.name
         } else data.containsKey("studentsProvideExplanation")
+    }
+
+    private fun isReadSpecification(data: Map<*, *>): Boolean {
+        return data["type"] == InteractionType.Read.name
     }
 }

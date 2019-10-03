@@ -1,6 +1,7 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.controller.MessageBuilder
@@ -198,5 +199,29 @@ class PlayerController(
         val meanGrade = meanGrade
                 ?.setScale(2, RoundingMode.CEILING)
                 ?.stripTrailingZeros()
+    }
+
+
+    @GetMapping("/sequence/{id}/start")
+    fun startSequence(authentication: Authentication,
+                      model: Model,
+                      @PathVariable id: Long,
+                      @RequestParam executionContext: ExecutionContext,
+                      @RequestParam studentsProvideExplanation: Boolean?,
+                      @RequestParam responseToEvaluateCount: Int?): String {
+        val user: User = authentication.principal as User
+
+        sequenceService.get(user, id, true)
+                .let {
+                    sequenceService.start(
+                            user,
+                            it,
+                            executionContext,
+                            studentsProvideExplanation ?: true,
+                            responseToEvaluateCount ?: 0
+                    )
+                }
+
+        return "redirect:/player/sequence/${id}/play"
     }
 }
