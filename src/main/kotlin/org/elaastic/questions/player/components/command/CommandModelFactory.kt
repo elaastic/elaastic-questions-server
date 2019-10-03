@@ -19,13 +19,13 @@ object CommandModelFactory {
                             CommandModel.ActionStatus.ENABLED
                         else CommandModel.ActionStatus.HIDDEN,
                         actionStartInteraction = when {
-                            interaction == null -> CommandModel.ActionStatus.HIDDEN
+                            interaction == null || sequence.isStopped() -> CommandModel.ActionStatus.HIDDEN
                             interaction.isRead() || interaction.getStateForTeacher(user) == State.afterStop -> CommandModel.ActionStatus.HIDDEN
                             interaction.getStateForTeacher(user) == State.show -> CommandModel.ActionStatus.DISABLED
                             else -> CommandModel.ActionStatus.ENABLED
                         },
                         actionStopInteraction =
-                        if (interaction == null || interaction.getStateForTeacher(user) != State.show || interaction.isRead())
+                        if (interaction == null || sequence.isStopped() || interaction.getStateForTeacher(user) != State.show || interaction.isRead())
                             CommandModel.ActionStatus.HIDDEN
                         else CommandModel.ActionStatus.ENABLED,
                         actionStartNextInteraction =
@@ -38,7 +38,7 @@ object CommandModelFactory {
                         else CommandModel.ActionStatus.ENABLED,
                         actionReopenSequence = when {
                             !sequence.isStopped() -> CommandModel.ActionStatus.HIDDEN
-                            sequence.executionIsFaceToFace() && interaction?.isRead() ?: false -> CommandModel.ActionStatus.HIDDEN
+                            sequence.executionIsFaceToFace() && (interaction?.isRead() ?: false) -> CommandModel.ActionStatus.HIDDEN
                             else -> CommandModel.ActionStatus.ENABLED
                         },
                         actionStopSequence = if (sequence.state != State.show)

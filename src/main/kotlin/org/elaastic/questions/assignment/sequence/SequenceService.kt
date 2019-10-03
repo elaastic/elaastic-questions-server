@@ -99,6 +99,7 @@ class SequenceService(
         
         sequence.let {
             it.state = State.show
+            it.executionContext = executionContext
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
             sequenceRepository.save(it)
         }
@@ -106,5 +107,17 @@ class SequenceService(
         // TODO Build teacher predefined answers
 
         return sequence
+    }
+
+    fun stop(user: User, sequence: Sequence): Sequence {
+        require(user == sequence.owner) {
+            "Only the owner of the sequence is allowed to stop it"
+        }
+
+        sequence.let {
+            it.state = State.afterStop
+            sequenceRepository.save(it)
+            return it
+        }
     }
 }

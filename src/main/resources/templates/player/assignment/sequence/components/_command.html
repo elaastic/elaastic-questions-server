@@ -55,10 +55,10 @@
       &nbsp; <span th:text="#{player.sequence.reopenSequence}">Re-open sequence</span>
     </a>
 
-    <a href="#"
+    <!-- TODO partial reload -       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/stop}')|">-->
+    <a th:href="@{/player/sequence/{sequenceId}/stop(sequenceId=${model.sequenceId})}"
        th:unless="${model.actionStopSequence.name() == 'HIDDEN'}"
-       class="item"
-       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/stop}">
+       class="item">
       <i class="red stop icon"></i>
       &nbsp; <span th:text="#{player.sequence.readinteraction.stopSequence}">Stop sequence</span>
     </a>
@@ -83,11 +83,11 @@
 
   </div>
 
-<div th:if="${model.actionStartSequence.name() == 'ENABLED'}"
-     th:remove="tag">
-  <div
-    th:replace="player/assignment/sequence/components/_config-sequence.html :: configSequence(${model.sequenceId}, ${model.questionType})"></div>
-</div>
+  <div th:if="${model.actionStartSequence.name() == 'ENABLED'}"
+       th:remove="tag">
+    <div
+      th:replace="player/assignment/sequence/components/_config-sequence.html :: configSequence(${model.sequenceId}, ${model.questionType})"></div>
+  </div>
 
 
 </div>
