@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence.interaction
+package org.elaastic.questions.assignment.sequence.interaction.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.lang.IllegalArgumentException
@@ -6,11 +6,10 @@ import java.lang.IllegalArgumentException
 typealias AttemptNum = Int
 typealias ResponsePercentage = Float
 
-data class InteractionResult(
-        val resultForAttempt1: ResultOfGroupOnAttempt,
-        val resultForAttempt2: ResultOfGroupOnAttempt? = null
+data class ResponsesDistribution(
+        val resultForAttempt1: ResponsesDistributionOnAttempt,
+        val resultForAttempt2: ResponsesDistributionOnAttempt? = null
 ) {
-
     init {
         require(
                 resultForAttempt2 == null || resultForAttempt1.size() == resultForAttempt2.size()
@@ -22,7 +21,7 @@ data class InteractionResult(
             if (resultForAttempt2 == null) 1 else 2
 
     @JsonIgnore
-    fun getResultForAttemptN(n: Int): ResultOfGroupOnAttempt =
+    fun getResultForAttemptN(n: Int): ResponsesDistributionOnAttempt =
             when (n) {
                 1 -> resultForAttempt1
                 2 -> resultForAttempt2 ?: throw IllegalArgumentException("This interaction result has only one attempt")

@@ -63,18 +63,18 @@
       &nbsp; <span th:text="#{player.sequence.readinteraction.stopSequence}">Stop sequence</span>
     </a>
 
-    <a href="#"
+    <!--   TODO load partiel template th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}')|"-->
+    <a th:href="@{/player/sequence/{sequenceId}/publish-results(sequenceId=${model.sequenceId})}"
        th:unless="${model.actionPublishResults.name() == 'HIDDEN'}"
-       class="item"
-       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}">
+       class="item">
       <i class="feed icon"></i>
       &nbsp; <span th:text="#{player.sequence.publishResults}">Publish results</span>
     </a>
 
-    <a href="#"
+    <!--  TODO partial load : th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/unpublishResults}')|"  -->
+    <a th:href="@{/player/sequence/{sequenceId}/unpublish-results(sequenceId=${model.sequenceId})}"
        th:unless="${model.actionUnpublishResults.name() == 'HIDDEN'}"
-       class="item"
-       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/unpublishResults}">
+       class="item">
       <i class="red close icon"></i>
       <span th:text="#{player.sequence.unpublishResults}">
           Cancel the publication of results

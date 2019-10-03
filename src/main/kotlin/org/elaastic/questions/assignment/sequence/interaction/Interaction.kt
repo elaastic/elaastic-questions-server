@@ -4,6 +4,7 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ExplanationRecommendationMappingConverter
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistribution
 import org.elaastic.questions.assignment.sequence.interaction.specification.InteractionSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.InteractionSpecificationConverter
 import org.elaastic.questions.directory.User
@@ -61,8 +62,8 @@ class Interaction(
                 ExecutionContext.FaceToFace -> state
             }
 
-    @Convert(converter = InteractionResultConverter::class)
-    var results: InteractionResult? = null
+    @Convert(converter = ResponseDistributionConverter::class)
+    var results: ResponsesDistribution? = null
 
     @Convert(converter = ExplanationRecommendationMappingConverter::class)
     var explanationRecommendationMapping: ExplanationRecommendationMapping? = null

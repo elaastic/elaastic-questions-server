@@ -1,6 +1,8 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
 import org.elaastic.questions.assignment.choice.legacy.ChoiceListSpecification
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -16,8 +18,8 @@ import org.hamcrest.CoreMatchers.*
 
 @SpringBootTest
 @Transactional
-class InteractionResponseRepositoryIntegrationTest(
-        @Autowired val interactionResponseRepository: InteractionResponseRepository,
+class ResponseRepositoryIntegrationTest(
+        @Autowired val responseRepository: ResponseRepository,
         @Autowired val testingService: TestingService,
         @Autowired val entityManager: EntityManager
 ) {
@@ -26,11 +28,11 @@ class InteractionResponseRepositoryIntegrationTest(
     fun `save a valid interaction response - with minimal data`() {
         val learner = testingService.getAnyUser()
         val interaction = testingService.getAnyInteraction()
-        InteractionResponse(
+        Response(
                 learner = learner,
                 interaction = interaction
         ).tWhen {
-            interactionResponseRepository.saveAndFlush(it)
+            responseRepository.saveAndFlush(it)
             entityManager.refresh(it)
             it
         }.tThen {
@@ -49,7 +51,7 @@ class InteractionResponseRepositoryIntegrationTest(
         val learner = testingService.getAnyUser()
         val interaction = testingService.getAnyInteraction()
         val choiceListSpecification = ChoiceListSpecification(listOf<Int>(1, 3))
-        InteractionResponse(
+        Response(
                 learner = learner,
                 interaction = interaction,
                 attempt = 2,
@@ -59,7 +61,7 @@ class InteractionResponseRepositoryIntegrationTest(
                 choiceListSpecification = choiceListSpecification,
                 score = 2.0f
         ).tWhen {
-            interactionResponseRepository.saveAndFlush(it)
+            responseRepository.saveAndFlush(it)
             entityManager.refresh(it)
             it
         }.tThen {

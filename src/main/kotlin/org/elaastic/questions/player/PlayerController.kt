@@ -250,4 +250,17 @@ class PlayerController(
 
         return "redirect:/player/sequence/${id}/play"
     }
+
+    @GetMapping("/sequence/{id}/publish-results")
+    fun publishResults(authentication: Authentication,
+                       model: Model,
+                       @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        sequenceService.get(user, id, true).let {
+            sequenceService.publishResults(user, it)
+        }
+
+        return "redirect:/player/sequence/${id}/play"
+    }
 }

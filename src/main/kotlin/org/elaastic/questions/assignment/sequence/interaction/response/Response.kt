@@ -1,7 +1,8 @@
-package org.elaastic.questions.assignment.sequence.interaction
+package org.elaastic.questions.assignment.sequence.interaction.response
 
 import org.elaastic.questions.assignment.choice.legacy.ChoiceListSpecification
 import org.elaastic.questions.assignment.choice.legacy.ChoiceListSpecificationConverter
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "choice_interaction_response")
 @EntityListeners(AuditingEntityListener::class)
-class InteractionResponse(
+class Response(
 
         @field:ManyToOne
         var learner: User,

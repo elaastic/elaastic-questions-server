@@ -3,7 +3,8 @@ package org.elaastic.questions.player
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceGenerator
-import org.elaastic.questions.assignment.sequence.interaction.*
+import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistribution
+import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistributionOnAttempt
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.command.CommandModel
@@ -277,8 +278,8 @@ class TestingPlayerController(
                                                 2,
                                                 listOf(1)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(10, listOf(7, 3))
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(10, arrayOf(7, 3), 0)
                                         ).toLegacyFormat()
                                 )
 
@@ -291,8 +292,8 @@ class TestingPlayerController(
                                                 4,
                                                 listOf(3)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(10, listOf(1, 0, 5, 2), 2)
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(10, arrayOf(1, 0, 5, 2), 2)
                                         ).toLegacyFormat()
                                 )
 
@@ -305,8 +306,8 @@ class TestingPlayerController(
                                                 10,
                                                 listOf(7)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(60, listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 5)
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(60, arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
                                         ).toLegacyFormat()
                                 )
 
@@ -319,9 +320,9 @@ class TestingPlayerController(
                                                 2,
                                                 listOf(1)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(10, listOf(7, 3)),
-                                                ResultOfGroupOnAttempt(10, listOf(9, 1))
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(10, arrayOf(7, 3)),
+                                                ResponsesDistributionOnAttempt(10, arrayOf(9, 1))
                                         ).toLegacyFormat()
                                 )
 
@@ -334,9 +335,9 @@ class TestingPlayerController(
                                                 4,
                                                 listOf(3)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(10, listOf(1, 0, 5, 2), 2),
-                                                ResultOfGroupOnAttempt(10, listOf(1, 2, 1, 0), 0)
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(10, arrayOf(1, 0, 5, 2), 2),
+                                                ResponsesDistributionOnAttempt(10, arrayOf(1, 2, 1, 0), 0)
                                         ).toLegacyFormat()
                                 )
 
@@ -349,9 +350,9 @@ class TestingPlayerController(
                                                 4,
                                                 listOf(3)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(10, listOf(1, 2, 5, 2), 0),
-                                                ResultOfGroupOnAttempt(10, listOf(1, 0, 1, 0), 2)
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(10, arrayOf(1, 2, 5, 2), 0),
+                                                ResponsesDistributionOnAttempt(10, arrayOf(1, 0, 1, 0), 2)
                                         ).toLegacyFormat()
                                 )
 
@@ -364,9 +365,9 @@ class TestingPlayerController(
                                                 4,
                                                 listOf(3)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(10, listOf(1, 1, 5, 1), 2),
-                                                ResultOfGroupOnAttempt(10, listOf(1, 0, 1, 0), 2)
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(10, arrayOf(1, 1, 5, 1), 2),
+                                                ResponsesDistributionOnAttempt(10, arrayOf(1, 0, 1, 0), 2)
                                         ).toLegacyFormat()
                                 )
 
@@ -379,9 +380,9 @@ class TestingPlayerController(
                                                 10,
                                                 listOf(7)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(60, listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 5),
-                                                ResultOfGroupOnAttempt(60, listOf(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), 5)
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(60, arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 5),
+                                                ResponsesDistributionOnAttempt(60, arrayOf(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), 5)
                                         ).toLegacyFormat()
                                 )
 
@@ -394,9 +395,9 @@ class TestingPlayerController(
                                                 4,
                                                 listOf(1, 3)
                                         ),
-                                        results = InteractionResult(
-                                                ResultOfGroupOnAttempt(4, listOf(2, 1, 1, 1), 2),
-                                                ResultOfGroupOnAttempt(4, listOf(2, 1, 3, 1), 0)
+                                        results = ResponsesDistribution(
+                                                ResponsesDistributionOnAttempt(4, arrayOf(2, 1, 1, 1), 2),
+                                                ResponsesDistributionOnAttempt(4, arrayOf(2, 1, 3, 1), 0)
                                         ).toLegacyFormat()
                                 )
 
@@ -510,8 +511,8 @@ class TestingPlayerController(
                                                         2,
                                                         listOf(2)
                                                 ),
-                                                results = InteractionResult(
-                                                        ResultOfGroupOnAttempt(4, listOf(1, 3), 0)
+                                                results = ResponsesDistribution(
+                                                        ResponsesDistributionOnAttempt(4, arrayOf(1, 3), 0)
                                                 ).toLegacyFormat()
                                         ),
                                         hasExplanations = false
@@ -531,8 +532,8 @@ class TestingPlayerController(
                                                         2,
                                                         listOf(2)
                                                 ),
-                                                results = InteractionResult(
-                                                        ResultOfGroupOnAttempt(4, listOf(1, 3), 0)
+                                                results = ResponsesDistribution(
+                                                        ResponsesDistributionOnAttempt(4, arrayOf(1, 3), 0)
                                                 ).toLegacyFormat()
                                         ),
                                         hasExplanations = true,

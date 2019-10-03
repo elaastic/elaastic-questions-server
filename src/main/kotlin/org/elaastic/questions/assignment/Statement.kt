@@ -58,17 +58,23 @@ class Statement(
     @OneToOne(mappedBy = "statement")
     var attachment: Attachment? = null
 
+    @Transient
     fun isOpenEnded(): Boolean {
         return questionType == QuestionType.OpenEnded
     }
 
+    @Transient
     fun isMultipleChoice(): Boolean {
         return questionType == QuestionType.MultipleChoice
     }
 
+    @Transient
     fun isExclusiveChoice(): Boolean {
         return questionType == QuestionType.ExclusiveChoice
     }
+
+    @Transient
+    fun hasChoices() = isMultipleChoice() || isExclusiveChoice()
 
     fun title(value: String): Statement {
         this.title = value

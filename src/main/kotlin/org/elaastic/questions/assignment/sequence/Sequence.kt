@@ -68,16 +68,24 @@ class Sequence(
     @Transient
     var interactions: MutableMap<InteractionType, Interaction> = mutableMapOf()
         get() { // Needed because of JPA using a default empty constructor that bypass the var initialization...
-            if(field == null) {
+            if (field == null) {
                 field = mutableMapOf()
             }
             return field
-        }  
+        }
+
+    @Transient
+    fun getResponseSubmissionInteraction() =
+            interactions[InteractionType.ResponseSubmission]
+                    ?: throw IllegalStateException("The response submission interaction is not initialized")
+
+    @Transient
+    fun getReadInteraction() =
+            interactions[InteractionType.Read]
+                    ?: throw IllegalStateException("The read interaction is not initialized")
 
 
-            override
-
-    fun compareTo(other: Sequence): Int {
+    override fun compareTo(other: Sequence): Int {
         return rank.compareTo(other.rank)
     }
 

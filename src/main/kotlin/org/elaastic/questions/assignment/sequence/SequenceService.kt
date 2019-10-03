@@ -6,6 +6,8 @@ import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRep
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistributionFactory
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ReadSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
@@ -22,7 +24,8 @@ class SequenceService(
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val fakeExplanationRepository: FakeExplanationRepository,
         @Autowired val interactionService: InteractionService,
-        @Autowired val interactionRepository: InteractionRepository
+        @Autowired val interactionRepository: InteractionRepository,
+        @Autowired val responseService: ResponseService
 ) {
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence { // TODO Test
         return sequenceRepository.findOneById(id)?.let { sequence ->
@@ -86,17 +89,17 @@ class SequenceService(
                         sequence,
                         ReadSpecification(),
                         3,
-                        when(executionContext) {
+                        when (executionContext) {
                             ExecutionContext.FaceToFace, ExecutionContext.Blended -> State.beforeStart
                             ExecutionContext.Distance -> State.show
                         }
 
                 )
 
-        if(executionContext == ExecutionContext.FaceToFace)
+        if (executionContext == ExecutionContext.FaceToFace)
             sequence.selectActiveInteraction(InteractionType.ResponseSubmission)
         else sequence.selectActiveInteraction(InteractionType.Read)
-        
+
         sequence.let {
             it.state = State.show
             it.executionContext = executionContext
@@ -135,4 +138,66 @@ class SequenceService(
             return it
         }
     }
+
+    fun publishResults(user: User, sequence: Sequence): Sequence {
+        require(user == sequence.owner) {
+            "Only the owner of the sequence is allowed to publish results"
+        }
+        require(sequence.resultsCanBePublished()) {
+            "The results of this sequence cannot be published"
+        }
+
+        sequence.let {
+
+            if (it.statement.hasChoices()) {
+                updateResults(user, it)
+            }
+
+            it.resultsArePublished = true
+
+            it.interactions.forEach { type, interaction ->
+                interaction.state = when (type) {
+                    InteractionType.Read -> State.show
+                    else -> State.afterStop
+                }
+                interactionRepository.save(interaction)
+            }
+            sequence.activeInteraction = sequence.getReadInteraction()
+
+            sequenceRepository.save(it)
+            return it
+        }
+    }
+
+    fun updateResults(user: User, sequence: Sequence) {
+        require(canUpdateResults(user, sequence)) {
+            "user cannot update resuts"
+        }
+
+
+        responseService.findAll(sequence.getResponseSubmissionInteraction()).let { responseSet ->
+            if (sequence.statement.hasChoices()) {
+                sequence.getResponseSubmissionInteraction().let {
+                    it.results = ResponsesDistributionFactory.build(
+                            sequence.statement.choiceSpecification!!,
+                            responseSet
+                    )
+                    interactionRepository.save(it)
+                }
+            }
+
+            responseSet[if (sequence.executionIsFaceToFace()) 1 else 2]
+                    .forEach { responseService.updateMeanGrade(it) }
+        }
+
+
+    }
+
+    fun canUpdateResults(user: User, sequence: Sequence): Boolean =
+            user == sequence.owner ||
+                    (
+                            !sequence.isStopped() &&
+                                    user.isRegisteredInAssignment(sequence.assignment!!) &&
+                                    sequence.executionIsDistance()
+                            )
 }

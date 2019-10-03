@@ -1,6 +1,6 @@
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.assignment.sequence.interaction.InteractionResponse
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -21,7 +21,7 @@ class PeerGrading(
         var grader: User,
 
         @field:ManyToOne
-        var response: InteractionResponse
+        var response: Response
 
 ) : AbstractJpaPersistable<Long>() {
 

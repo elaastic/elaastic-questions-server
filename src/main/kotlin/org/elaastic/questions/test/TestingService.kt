@@ -4,8 +4,8 @@ import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
-import org.elaastic.questions.assignment.sequence.interaction.InteractionResponse
-import org.elaastic.questions.assignment.sequence.interaction.InteractionResponseRepository
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
@@ -22,7 +22,7 @@ class TestingService(
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val interactionResponseRepository: InteractionResponseRepository,
+        @Autowired val responseRepository: ResponseRepository,
         @Autowired val assignmentService: AssignmentService,
         @Autowired val ltiConsumerRepository: LtiConsumerRepository,
         @Autowired val roleService: RoleService
@@ -66,8 +66,8 @@ class TestingService(
                 ?: throw IllegalStateException("There is no assignment is testing data")
     }
 
-    fun getAnyInteractionResponse() : InteractionResponse {
-        return interactionResponseRepository.findAll().iterator().next()
+    fun getAnyInteractionResponse() : Response {
+        return responseRepository.findAll().iterator().next()
     }
 
     fun getTestAssignment() : Assignment {
