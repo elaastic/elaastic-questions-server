@@ -53,10 +53,85 @@ class AssignmentService(
         }
     }
 
-    fun delete(user: User, id: Long) {
-        if (assignmentRepository.deleteByIdAndOwner(id, user) != 1L) {
-            throw EntityNotFoundException("There is no assignment \"$id\" for user ${user.username}")
+    fun delete(user: User, assignment: Assignment) {
+        require(user == assignment.owner) {
+            "Only the owner can delete an assignment"
         }
+
+        // TODO Delete LmlAssignment
+
+        // TODO Move thoses delete queries to their natural service
+        entityManager.createQuery("delete from LearnerAssignment ls where ls.assignment = :assignment")
+                .setParameter("assignment", assignment)
+                .executeUpdate()
+
+        entityManager.createNativeQuery("""
+            DELETE pg
+            FROM  peer_grading pg
+                INNER JOIN choice_interaction_response cir on pg.response_id = cir.id
+                INNER JOIN interaction i on cir.interaction_id = i.id
+                INNER JOIN sequence s on i.sequence_id = s.id
+                INNER JOIN assignment a on s.assignment_id = a.id
+            WHERE a.id = :assignmentId
+        """.trimIndent())
+                .setParameter("assignmentId", assignment.id)
+                .executeUpdate()
+
+        entityManager.createNativeQuery("""
+            DELETE cir
+            FROM choice_interaction_response cir
+                     INNER JOIN interaction i on cir.interaction_id = i.id
+                     INNER JOIN sequence s on i.sequence_id = s.id
+                     INNER JOIN assignment a on s.assignment_id = a.id
+            WHERE a.id = :assignmentId
+        """.trimIndent())
+                .setParameter("assignmentId", assignment.id)
+                .executeUpdate()
+
+        entityManager.createNativeQuery("""
+            DELETE ls
+            FROM learner_sequence ls
+                     INNER JOIN sequence s on ls.sequence_id = s.id
+                     INNER JOIN assignment a on s.assignment_id = a.id
+            WHERE a.id = :assignmentId
+        """.trimIndent())
+                .setParameter("assignmentId", assignment.id)
+                .executeUpdate()
+
+        entityManager.createNativeQuery("""
+            UPDATE attachement a
+                INNER JOIN statement s on a.statement_id = s.id
+                INNER JOIN sequence s2 on s.id = s2.statement_id
+                INNER JOIN assignment a2 on s2.assignment_id = a2.id
+            SET to_delete=true
+            WHERE a2.id = :assignmentId
+        """.trimIndent())
+                .setParameter("assignmentId", assignment.id)
+                .executeUpdate()
+
+        entityManager.createNativeQuery("""
+            DELETE fe
+            FROM fake_explanation fe
+                     INNER JOIN statement s on fe.statement_id = s.id
+                     INNER JOIN sequence s2 on s.id = s2.statement_id
+                     INNER JOIN assignment a on s2.assignment_id = a.id
+            WHERE a.id = :assignmentId
+        """.trimIndent())
+                .setParameter("assignmentId", assignment.id)
+                .executeUpdate()
+
+        entityManager.createNativeQuery("""
+            DELETE s
+            FROM statement s    
+                     INNER JOIN sequence s2 on s.id = s2.statement_id
+                     INNER JOIN assignment a on s2.assignment_id = a.id
+            WHERE a.id = :assignmentId
+        """.trimIndent())
+                .setParameter("assignmentId", assignment.id)
+                .executeUpdate()
+        
+        //sequences are deleted by cascade
+        assignmentRepository.delete(assignment)
     }
 
     fun save(assignment: Assignment): Assignment {

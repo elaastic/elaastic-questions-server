@@ -156,7 +156,7 @@ class AssignmentController(
         val user: User = authentication.principal as User
 
         val assignment = assignmentService.get(user, id)
-        assignmentService.delete(user, id)
+        assignmentService.delete(user, assignment)
 
         with(messageBuilder) {
             success(
