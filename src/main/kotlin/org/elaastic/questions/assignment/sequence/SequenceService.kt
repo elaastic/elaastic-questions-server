@@ -169,6 +169,22 @@ class SequenceService(
         }
     }
 
+    fun unpublishResults(user: User, sequence: Sequence): Sequence {
+        require(user == sequence.owner) {
+            "Only the owner of the sequence is allowed to publish results"
+        }
+        require(sequence.resultsArePublished) {
+            "The results of this sequence are not published"
+        }
+
+        sequence.let {
+            it.resultsArePublished = false
+            sequence.getReadInteraction().state = State.beforeStart
+            sequenceRepository.save(it)
+            return it
+        }
+    }
+
     fun updateResults(user: User, sequence: Sequence) {
         require(canUpdateResults(user, sequence)) {
             "user cannot update resuts"
