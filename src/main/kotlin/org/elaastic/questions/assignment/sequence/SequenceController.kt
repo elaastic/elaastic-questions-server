@@ -164,7 +164,7 @@ class SequenceController(
         val user: User = authentication.principal as User
 
         val sequence = sequenceService.get(user, id)
-        assignmentService.removeSequence(sequence)
+        assignmentService.removeSequence(user, sequence)
 
         with(messageBuilder) {
             success(

@@ -285,7 +285,7 @@ internal class AssignmentServiceIntegrationTest(
         assertThat(statementId3, notNullValue())
 
         tWhen {
-            assignmentService.removeSequence(sequence2)
+            assignmentService.removeSequence(sequence2.owner,sequence2)
             entityManager.flush()
             entityManager.clear()
         }.tThen {
@@ -296,8 +296,12 @@ internal class AssignmentServiceIntegrationTest(
             assertThat(sequenceRepository.existsById(sequenceId2!!), equalTo(false))
             assertThat(statementRepository.existsById(statementId2!!), equalTo(false))
         }.tWhen {
-            assignmentService.removeSequence(sequenceRepository.getOne(sequenceId1!!))
-            assignmentService.removeSequence(sequenceRepository.getOne(sequenceId3!!))
+            sequenceRepository.getOne(sequenceId1!!).let {sequence ->
+                assignmentService.removeSequence(sequence.owner, sequence)
+            }
+            sequenceRepository.getOne(sequenceId3!!).let {sequence ->
+                assignmentService.removeSequence(sequence.owner, sequence)
+            }
             entityManager.flush()
         }.tThen {
             assignmentService.get(assignmentId!!, true).let {

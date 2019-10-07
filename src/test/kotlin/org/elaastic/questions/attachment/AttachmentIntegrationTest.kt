@@ -210,7 +210,7 @@ internal class AttachmentIntegrationTest(
                     inputStream = content.inputStream()
             )
         }.tWhen("removing the sequence") {
-            assignmentService.removeSequence(assignment.sequences[0])
+            assignmentService.removeSequence(assignment.owner,assignment.sequences[0])
             em.refresh(attachment)
             attachment
         }.tThen("attachment is detached") {

@@ -6,6 +6,7 @@ import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @Service
@@ -18,8 +19,9 @@ class StatementService(
         return statementRepository.save(statement)
     }
 
-    fun delete(statementId: Long) {
-        statementRepository.deleteById(statementId)
+    fun delete(statement: Statement) {
+        removeAllFakeExplanation(statement)
+        statementRepository.delete(statement)
     }
 
     fun addFakeExplanation(statement: Statement,
