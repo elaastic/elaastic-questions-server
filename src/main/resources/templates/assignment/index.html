@@ -78,8 +78,7 @@
 
       <td>
         <a class="ui compact icon primary button"
-           th:href="@{/player/playFirstSequence/{id}(id=${assignment.id})}"
-           href="/player/playFirstSequence/123"
+           th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
            th:attr="data-tooltip=#{player.assignment.play}"
            data-tooltip="Play the assignment"
            data-inverted="">

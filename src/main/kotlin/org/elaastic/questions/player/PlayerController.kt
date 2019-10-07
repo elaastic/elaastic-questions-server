@@ -21,10 +21,10 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.persistence.EntityNotFoundException
+import kotlin.IllegalStateException
 
 
 @Controller
@@ -83,6 +83,22 @@ class PlayerController(
 
             assignmentService.registerUser(user, it)
             return "redirect:/player/${it.id}/playFirstSequence"
+        }
+    }
+
+    @GetMapping("/assignment/{id}/play")
+    fun playAssignment(authentication: Authentication,
+                       model: Model,
+                       @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        assignmentService.get(user, id, true).let { assignment ->
+
+            if(assignment.sequences.isEmpty()) {
+                throw IllegalStateException("Assignment $id has no sequences")
+            }
+
+            return "redirect:/player/sequence/${assignment.sequences.first().id}/play"
         }
     }
 
