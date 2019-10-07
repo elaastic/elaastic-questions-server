@@ -86,12 +86,12 @@ class UserService(
     }
 
     /**
-     *  Find user by email
+     *  Find users by email
      *  @param email the email provided as input
-     *  @return the found user or null otherwise
+     *  @return the found users
      */
-    fun findByEmail(email: String): User? {
-        return userRepository.findByEmail(email)
+    fun findAllByEmail(email: String): List<User> {
+        return userRepository.findAllByEmail(email)
     }
 
     /**

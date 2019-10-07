@@ -47,25 +47,23 @@ class PasswordResetKeyController(
 
 
     @PostMapping("/userAccount/processPasswordResetRequest")
-    fun doProcessPasswordResetRequest(@RequestParam("email") email:String, model:Model, locale:Locale): String {
-        val user = userService.findByEmail(email)
-        when(user) {
-            null -> {
-                model.addAttribute("message",messageSource.getMessage(
-                        "passwordReset.email.fail",
-                        emptyArray(),
-                        locale))
-                return "/userAccount/beginPasswordReset"
+    fun doProcessPasswordResetRequest(@RequestParam("email") email: String, model: Model, locale: Locale): String {
+        val users = userService.findAllByEmail(email)
+        return if (users.isEmpty()) {
+            model.addAttribute("message", messageSource.getMessage(
+                    "passwordReset.email.fail",
+                    emptyArray(),
+                    locale))
+            "/userAccount/beginPasswordReset"
+        } else {
+            users.forEach {
+                userService.generatePasswordResetKeyForUser(it)
             }
-            else -> {
-                userService.generatePasswordResetKeyForUser(user)
-                model.addAttribute("message",messageSource.getMessage(
-                        "passwordReset.email.success",
-                        emptyArray(),
-                        locale))
-                return "/userAccount/confirmPasswordReset"
-            }
-
+            model.addAttribute("message", messageSource.getMessage(
+                    "passwordReset.email.success",
+                    emptyArray(),
+                    locale))
+            "/userAccount/confirmPasswordReset"
         }
     }
 
@@ -76,7 +74,7 @@ class PasswordResetKeyController(
 
     @PostMapping("/userAccount/processResetPassword")
     fun doProcessResetPassword(resetPasswordData: ResetPasswordData, redirectAttributes: RedirectAttributes, locale: Locale): String {
-        if (resetPasswordData.password != resetPasswordData.passwordConfirm ) {
+        if (resetPasswordData.password != resetPasswordData.passwordConfirm) {
             messageSource.getMessage("useraccount.form.password.identical", emptyArray(), locale).let {
                 redirectAttributes.addFlashAttribute("message", it)
             }
@@ -90,7 +88,7 @@ class PasswordResetKeyController(
                 redirectAttributes.addFlashAttribute("message", it)
             }
             return "redirect:/login"
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             messageSource.getMessage("user.plainTextPassword.short", emptyArray(), locale).let {
                 redirectAttributes.addFlashAttribute("message", it)
             }

@@ -37,7 +37,7 @@ interface UserRepository : CrudRepository<User, Long>, JpaRepository<User, Long>
     fun getByUsername(username: String): User
 
     @EntityGraph(value = "User.roles", type = EntityGraph.EntityGraphType.LOAD)
-    fun findByEmail(email: String): User?
+    fun findAllByEmail(email: String): List<User>
 
     @Query("select u from User u join PasswordResetKey key on key.user = u where key.passwordResetKey = ?1")
     fun findByPasswordResetKeyValue(passwordResetKeyValue: String): User?

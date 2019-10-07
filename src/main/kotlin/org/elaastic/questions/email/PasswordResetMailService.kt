@@ -57,19 +57,37 @@ class PasswordResetMailService(
     fun sendPasswordResetKeyEmails(lifetime: Int = 1) {
         val expirationDate = DateUtils.addHours(Date(), -lifetime)
         var processedKeys = mutableListOf<PasswordResetKey>()
+        var nbSentEmail = 0
+        val keysByUserEmail = mutableMapOf<String, MutableList<PasswordResetKey>>()
         passwordResetKeyRepository.findAllPasswordResetKeys(expirationDate).forEach {
+            val email = it.user.email!!
+            var listForEmail = keysByUserEmail[email]
+            if (listForEmail == null) {
+                listForEmail = mutableListOf<PasswordResetKey>()
+                keysByUserEmail[email] = listForEmail
+            }
+            listForEmail.add(it)
+        }
+        keysByUserEmail.keys.forEach {email ->
             try {
-                buidMessage(it.user, it.passwordResetKey).let { mimeMessage ->
+                val keys = keysByUserEmail[email]!!
+                buidMessage(email, keys).let { mimeMessage ->
                     mailSender.send(mimeMessage)
+                    nbSentEmail++
                 }
-                it.passwordResetEmailSent = true
-                passwordResetKeyRepository.saveAndFlush(it)
-                processedKeys.add(it)
+                keys.forEach { key ->
+                    key.passwordResetEmailSent = true
+                    passwordResetKeyRepository.saveAndFlush(key)
+                    processedKeys.add(key)
+                }
+
             } catch (e: Exception) {
-                logger.severe("Error with ${it.user.username} (${it.user.email}): ${e.message}")
+                logger.severe("Error with ${email}: ${e.message}")
             }
         }
-        logger.info("Nb processed keys and sent emails : ${processedKeys.size}")
+
+        logger.info("Nb processed keys: ${processedKeys.size}")
+        logger.info("Nb processed sent emails: $nbSentEmail")
     }
 
     /**
@@ -77,23 +95,27 @@ class PasswordResetMailService(
      * @param userInfo user informations
      * @return the built mime message
      */
-    private fun buidMessage(user: User, key: String): MimeMessage {
-        val locale = Locale(user.settings?.language)
+    private fun buidMessage(email: String, keys: List<PasswordResetKey>): MimeMessage {
+        val firstUser = keys[0].user
+        val locale = Locale(firstUser.settings?.language)
         val subject = messageSource.getMessage(
                 "email.passwordReset.notification.title",
                 null,
                 locale)
         val templateContext:Context = Context(locale)
-        templateContext.setVariable("firstName", user.firstName)
-        val resetPasswordUrl = "$elaasticQuestionUrl$resetPasswordRelativeUrl?passwordResetKey=$key"
-        templateContext.setVariable("resetPasswordUrl", resetPasswordUrl)
+        templateContext.setVariable("firstName", firstUser.firstName)
+        val mapOfResetPasswordUrl = mutableMapOf<String, String>()
+        keys.forEach {
+            mapOfResetPasswordUrl[it.user.username] = "$elaasticQuestionUrl$resetPasswordRelativeUrl?passwordResetKey=${it.passwordResetKey}"
+        }
+        templateContext.setVariable("resetPasswordUrls", mapOfResetPasswordUrl)
         val htmlText = templateEngine.process("email/passwordResetMail", templateContext)
         logger.fine("""Content of email sent: 
             |$htmlText
         """.trimMargin())
         val mailMessage = mailSender.createMimeMessage()
         MimeMessageHelper(mailMessage, true).let {
-            it.setTo(user.email!!)
+            it.setTo(email)
             it.setSubject(subject)
             it.setText(htmlText, true)
         }

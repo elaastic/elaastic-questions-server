@@ -208,15 +208,15 @@ internal class UserServiceIntegrationTest(
             )
         }.tWhen {
             // triggering research by email with the email of the user
-            userService.findByEmail(it.email!!)
+            userService.findAllByEmail(it.email!!)
         }.tThen {
-            assertThat(it, notNullValue())
-            assertThat(it!!.username, equalTo("foo"))
+            assertFalse(it.isEmpty())
+            assertThat(it.last().username, equalTo("foo"))
         }.tWhen {
             // triggering research by email with an unknown email
-            userService.findByEmail("john@doe.fr")
+            userService.findAllByEmail("john@doe.fr")
         }.tThen {
-            assertThat(it, nullValue())
+            assertTrue(it.isEmpty())
         }
     }
 
