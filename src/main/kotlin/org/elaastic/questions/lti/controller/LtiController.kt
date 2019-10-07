@@ -3,6 +3,7 @@ package org.elaastic.questions.lti.controller
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.lti.LmsService
 import org.elaastic.questions.lti.LmsUser
+import org.elaastic.questions.lti.LtiConsumerService
 import org.elaastic.questions.lti.oauth.OauthService
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession
 @Controller
 class LtiController(
         @Autowired val lmsService: LmsService,
+        @Autowired val ltiConsumerService: LtiConsumerService,
         @Autowired val oauthService: OauthService,
         @Autowired val termsService: TermsService,
         @Autowired val roleService: RoleService
@@ -40,6 +42,13 @@ class LtiController(
         val session = startNewSession(request)
         return try {
             oauthService.validateOauthRequest(request)
+            ltiConsumerService.touchLtiConsumer(
+                    ltiLaunchData.oauth_consumer_key,
+                    ltiLaunchData.tool_consumer_info_product_family_code,
+                    ltiLaunchData.tool_consumer_info_version,
+                    ltiLaunchData.tool_consumer_instance_guid,
+                    ltiLaunchData.lti_version
+            )
             ltiLaunchData.roleService = roleService
             val lmsUser = lmsService.findLmsUser(
                     ltiLmsKey = ltiLaunchData.oauth_consumer_key,
