@@ -128,8 +128,8 @@ internal class InteractionRepositoryIntegrationTest(
         val explanationRecommendationMapping =
                 ExplanationRecommendationMapping(
                         mapOf(
-                                "1" to listOf(1L,2L,3L,5L),
-                                "3" to listOf(4L, 128L)
+                                1L to mutableListOf(1L,2L,3L,5L),
+                                3L to mutableListOf(4L, 128L)
                         )
                 )
         val owner = testingService.getAnyUser()

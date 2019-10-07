@@ -20,7 +20,6 @@ package org.elaastic.questions.attachment
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.logging.Logger

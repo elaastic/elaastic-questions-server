@@ -98,6 +98,11 @@ class Sequence(
                     ?: throw IllegalStateException("The response submission interaction is not initialized")
 
     @Transient
+    fun getEvaluationInteraction() =
+            interactions[InteractionType.Evaluation]
+                    ?: throw IllegalStateException("The evaluation interaction is not initialized")
+
+    @Transient
     fun getReadInteraction() =
             interactions[InteractionType.Read]
                     ?: throw IllegalStateException("The read interaction is not initialized")

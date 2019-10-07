@@ -25,4 +25,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface ResponseRepository : JpaRepository<Response, Long> {
 
     fun findAllByInteraction(interaction: Interaction): List<Response>
+
+    fun findAllByInteractionAndAttempt(interaction: Interaction, attempt: Int = 1): List<Response>
 }

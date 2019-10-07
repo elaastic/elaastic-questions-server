@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
@@ -51,6 +52,7 @@ class PlayerController(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val sequenceService: SequenceService,
         @Autowired val learnerSequenceService: LearnerSequenceService,
+        @Autowired val interactionService: InteractionService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -112,7 +114,7 @@ class PlayerController(
 
         assignmentService.get(user, id, true).let { assignment ->
 
-            if(assignment.sequences.isEmpty()) {
+            if (assignment.sequences.isEmpty()) {
                 throw IllegalStateException("Assignment $id has no sequences")
             }
 
@@ -259,10 +261,32 @@ class PlayerController(
         return "redirect:/player/sequence/${id}/play"
     }
 
+    @GetMapping("/interaction/{id}/start")
+    fun startInteraction(authentication: Authentication,
+                         model: Model,
+                         @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+        val interaction = interactionService.start(user, id)
+        return "redirect:/player/sequence/${interaction.sequence.id}/play"
+    }
+
+    @GetMapping("/interaction/{id}/stop")
+    fun stopInteraction(authentication: Authentication,
+                        model: Model,
+                        @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        interactionService.findById(id).let {
+            sequenceService.loadInteractions(it.sequence)
+            interactionService.stop(user, id)
+            return "redirect:/player/sequence/${it.sequence.id}/play"
+        }
+    }
+
     @GetMapping("/sequence/{id}/stop")
     fun stopSequence(authentication: Authentication,
-                      model: Model,
-                      @PathVariable id: Long): String {
+                     model: Model,
+                     @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
         sequenceService.get(user, id).let {
@@ -274,8 +298,8 @@ class PlayerController(
 
     @GetMapping("/sequence/{id}/reopen")
     fun reopenSequence(authentication: Authentication,
-                     model: Model,
-                     @PathVariable id: Long): String {
+                       model: Model,
+                       @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
         sequenceService.get(user, id).let {
@@ -300,8 +324,8 @@ class PlayerController(
 
     @GetMapping("/sequence/{id}/unpublish-results")
     fun unpublishResults(authentication: Authentication,
-                       model: Model,
-                       @PathVariable id: Long): String {
+                         model: Model,
+                         @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
         sequenceService.get(user, id, true).let {

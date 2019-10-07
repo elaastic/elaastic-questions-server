@@ -19,11 +19,36 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
 
-// TODO This type should be clarified...
-class ExplanationRecommendationMapping : HashMap<String, List<Long>> {
 
-    constructor() : super()
+typealias ResponseId = Long
+class ExplanationRecommendationMapping(val recommendationMap: Map<ResponseId, MutableList<ResponseId>>) {
 
-    constructor(value: Map<String, List<Long>>) : super(value)
+    constructor(responses: List<ResponseId>): this(
+            responses.associate { it to mutableListOf<ResponseId>() }
+    )
+
+    fun addRecommandation(forResponse: ResponseId, recommendedResponse: ResponseId) =
+            (recommendationMap[forResponse] ?: error("This responseId ($recommendedResponse) does not belong to this mapping"))
+                    .add(recommendedResponse)
+
+
+    fun getRecommandation(forResponse: ResponseId) =
+            recommendationMap[forResponse]
+
+    operator fun get(forResponse: ResponseId) =
+            getRecommandation(forResponse) ?: error("this response ($forResponse) does not belong to this mapping")
+
+    override fun toString() = recommendationMap.entries.map {
+        "[${it.key} => ${it.value.map { it }}]\n"
+    }.joinToString(", ")
+
+    override fun equals(other: Any?): Boolean {
+        return toString() == other?.toString()
+    }
+
+    override fun hashCode(): Int {
+        return toString().hashCode()
+    }
+
 
 }

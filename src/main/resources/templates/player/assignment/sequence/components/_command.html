@@ -55,10 +55,11 @@
     th:text="#{player.sequence.interaction.start(${model.InteractionRank + 1})}"></span>
   </a>
 
+<!--  TODO partial load th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/interaction/{interactionId}/start(interactionId=${model.interactionId})}')|"-->
   <a href="#"
      th:unless="${model.actionReopenInteraction.name() == 'HIDDEN'}"
-     class="item"
-     th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/interaction/{interactionId}/start(interactionId=${model.interactionId})}')|">
+     th:href="@{/player/interaction/{interactionId}/start(interactionId=${model.interactionId})}"
+     class="item">
     <i class="red undo alternate  icon"></i>
     &nbsp; <span
     th:text="#{player.sequence.interaction.restart(${model.interactionRank})}">Reopen phase {0}</span>
