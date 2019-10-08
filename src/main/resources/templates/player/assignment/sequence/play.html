@@ -69,12 +69,9 @@
     <div th:replace="|${components}/_command.html| :: command(${commandModel})"></div>
     <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${sequenceInfoModel})"></div>
     <div th:replace="|${components}/_statement.html| :: statement(${statementPanelModel},${statement})"></div>
-
-    <!--    TODO check this is useless -->
-    <!--    <g:render-->
-    <!--      template="/assignment/player/sequence/${userRole}/${org.tsaap.skin.SkinUtil.getView(params, session, sequenceInstance.state)}"-->
-    <!--      model="[userRole: userRole, sequenceInstance: sequenceInstance, user: user]"/>-->
-
+    <div th:if="${showResults}" th:remove="tag">
+      <div th:replace="|${components}/_results.html| :: results(${resultsModel})"></div>
+    </div>
   </div>
 
 </section>

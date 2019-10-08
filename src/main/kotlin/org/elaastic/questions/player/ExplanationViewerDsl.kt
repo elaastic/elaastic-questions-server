@@ -18,6 +18,10 @@
 
 package org.elaastic.questions.player
 
+import org.elaastic.questions.player.components.explanationViewer.ChoiceExplanationViewerModel
+import org.elaastic.questions.player.components.explanationViewer.ExplanationData
+import org.elaastic.questions.player.components.explanationViewer.OpenExplanationViewerModel
+import org.elaastic.questions.player.components.explanationViewer.ResponseData
 import java.math.BigDecimal
 
 @DslMarker
@@ -36,7 +40,7 @@ class OpenExplanationViewerSituationBuilder {
     var sequenceId: Long? = null
     var description: String = ""
 
-    private val explanations = mutableListOf<PlayerController.ExplanationData>()
+    private val explanations = mutableListOf<ExplanationData>()
 
     fun explanations(block: Explanations.() -> Unit) {
         explanations.addAll(Explanations().apply(block))
@@ -46,7 +50,7 @@ class OpenExplanationViewerSituationBuilder {
             sequenceId = sequenceId!!,
             description = description,
             explanationViewerModel =
-            PlayerController.OpenExplanationViewerModel(explanations)
+            OpenExplanationViewerModel(explanations)
     )
 }
 
@@ -55,7 +59,7 @@ class ChoiceExplanationViewerSituationBuilder {
     var sequenceId: Long? = null
     var description: String = ""
 
-    private val explanationsByResponse = mutableMapOf<PlayerController.ResponseData, List<PlayerController.ExplanationData>>()
+    private val explanationsByResponse = mutableMapOf<ResponseData, List<ExplanationData>>()
 
     fun explanationsByResponse(block: ExplanationsByResponse.() -> Unit) {
         explanationsByResponse.putAll(ExplanationsByResponse().apply(block))
@@ -65,12 +69,12 @@ class ChoiceExplanationViewerSituationBuilder {
             sequenceId = sequenceId!!,
             description = description,
             explanationViewerModel =
-            PlayerController.ChoiceExplanationViewerModel(explanationsByResponse)
+            ChoiceExplanationViewerModel(explanationsByResponse)
     )
 }
 
 @ExplanationViewerDsl
-class ExplanationsByResponse : HashMap<PlayerController.ResponseData, List<PlayerController.ExplanationData>>() {
+class ExplanationsByResponse : HashMap<ResponseData, List<ExplanationData>>() {
 
 //    fun explanations(block: ResponseDataToExplanationDatasBuilder.() -> Unit) {
 //        plusAssign(ResponseDataToExplanationDatasBuilder().apply(block).build())
@@ -94,20 +98,20 @@ class ResponseDataToExplanationDatasBuilder(
         val score: Int = 0,
         val correct: Boolean = false
 ) {
-    private var explanations = mutableListOf<PlayerController.ExplanationData>()
+    private var explanations = mutableListOf<ExplanationData>()
 
     fun explanation(block: ExplanationDataBuilder.() -> Unit) {
         explanations.add(ExplanationDataBuilder().apply(block).build())
     }
 
     fun build() = Pair(
-            PlayerController.ResponseData(choices, score, correct),
+            ResponseData(choices, score, correct),
             explanations
     )
 }
 
 @ExplanationViewerDsl
-class Explanations : ArrayList<PlayerController.ExplanationData>() {
+class Explanations : ArrayList<ExplanationData>() {
     fun explanation(block: ExplanationDataBuilder.() -> Unit) {
         add(ExplanationDataBuilder().apply(block).build())
     }
@@ -120,7 +124,7 @@ class ExplanationDataBuilder {
     var nbEvaluations: Int = 0
     var meanGrade: BigDecimal? = null
 
-    fun build() = PlayerController.ExplanationData(
+    fun build() = ExplanationData(
             content = content,
             author = author,
             nbEvaluations = nbEvaluations,

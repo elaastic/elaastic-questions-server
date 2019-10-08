@@ -46,7 +46,7 @@
 
     <div class="ui basic padded segment active content"
          style="font-size: 1rem;"
-         th:id="|interaction_${resultsModel.interactionId}_result|">
+         th:id="|sequence_${resultsModel.sequenceId}_result|">
 
 
       <div th:if="${resultsModel.hasChoices}">
@@ -56,7 +56,7 @@
           <div
             th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${resultsModel.responseDistributionChartModel})"></div>
         </th:block>
-        <th:block th:if="${resultsModel.hasExplanations}">
+        <th:block th:if="${resultsModel.hasExplanations && resultsModel.hasAnyResult}">
           <div
             th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
         </th:block>
@@ -90,7 +90,7 @@
        href="#"
        th:onclick="|Results.updateResults(${resultsModel.sequenceId})|"
        style="position: absolute; top: 0.5em; right: 1em; font-size: 1.2em"
-       th:attr="data-tooltip=#{player.sequence.readinteraction.updateAllResults(${resultsModel.interactionRank})}"
+       th:attr="data-tooltip=#{player.sequence.readinteraction.updateAllResults}"
        data-inverted=""
        data-position="top right">
       <i class="small refresh icon"></i></a>

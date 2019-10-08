@@ -29,6 +29,9 @@ class ResponseSet(responses: List<Response>) {
 
     private val responsesByAttempt = Array<MutableList<Response>>(2) { mutableListOf() }
 
+    fun isEmpty(): Boolean =
+            get(1).isEmpty() && get(2).isEmpty()
+
     operator fun get(i: Int) = when (i) {
         1 -> responsesByAttempt[0]
         2 -> responsesByAttempt[1]

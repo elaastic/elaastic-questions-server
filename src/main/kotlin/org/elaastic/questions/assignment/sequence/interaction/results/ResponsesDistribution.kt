@@ -44,7 +44,7 @@ data class ResponsesDistribution(
                 1 -> resultForAttempt1
                 2 -> resultForAttempt2 ?: throw IllegalArgumentException("This interaction result has only one attempt")
                 else -> throw IllegalArgumentException("$n is not a valid number of attempt")
-            }
+            } 
 
     @JsonIgnore
     fun hasAnyResult() =

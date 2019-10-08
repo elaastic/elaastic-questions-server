@@ -18,7 +18,9 @@
 
 package org.elaastic.questions.assignment.sequence.interaction.response
 
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.EntityManager
@@ -31,10 +33,30 @@ class ResponseService(
         @Autowired val entityManager: EntityManager
 ) {
 
-    fun findAll(interaction: Interaction) : ResponseSet =
+    fun findAll(sequence: Sequence) =
+            findAll(sequence.getResponseSubmissionInteraction())
+
+    fun findAll(interaction: Interaction): ResponseSet =
             ResponseSet(
                     responseRepository.findAllByInteraction(interaction)
             )
+
+    // TODO Need to fetch users with responses
+    fun findAllChoiceResponse(interaction: Interaction, correct: Boolean, attempt: AttemptNum = 1) {
+        if (correct)
+            responseRepository.findAllByInteractionAndAttemptAndScoreOrderByScoreDesc(
+                    interaction,
+                    attempt
+            )
+        else responseRepository.findAllByInteractionAndAttemptAndScoreLessThanOrderByScoreDesc(
+                interaction,
+                attempt
+        )
+    }
+
+    fun findAllOpenResponse(interaction: Interaction, attemptNum: AttemptNum = 1): List<Response> =
+            responseRepository.findAllByInteractionAndAttemptOrderByMeanGradeDesc(interaction, attemptNum)
+
 
     fun updateMeanGrade(response: Response) {
         val meanGrade = entityManager.createQuery("select avg(pg.grade) from PeerGrading pg where pg.response = :response and pg.grade <> -1")

@@ -23,6 +23,7 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -92,7 +93,7 @@ class Sequence(
             return field
         }
 
-    fun getInteractionAt(rank: Int) : Interaction {
+    fun getInteractionAt(rank: Int): Interaction {
         return interactions.values?.find { it.rank == rank }
                 ?: error("There is no interaction for rank $rank in this sequence")
     }
@@ -101,6 +102,16 @@ class Sequence(
     fun getResponseSubmissionInteraction() =
             interactions[InteractionType.ResponseSubmission]
                     ?: throw IllegalStateException("The response submission interaction is not initialized")
+
+    @Transient
+    fun getResponseSubmisssionSpecification(): ResponseSubmissionSpecification =
+            getResponseSubmissionInteraction().specification.let { specification ->
+                when (specification) {
+                    null -> error("This interaction has no specification")
+                    is ResponseSubmissionSpecification -> specification
+                    else -> error("Expected a ResponseSubmissionSpecification but got a ${specification.javaClass}")
+                }
+            }
 
     @Transient
     fun getEvaluationInteraction() =

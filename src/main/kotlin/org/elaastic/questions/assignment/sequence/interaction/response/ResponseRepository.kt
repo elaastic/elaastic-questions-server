@@ -19,6 +19,7 @@
 package org.elaastic.questions.assignment.sequence.interaction.response
 
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.springframework.data.jpa.repository.JpaRepository
 
 
@@ -27,4 +28,16 @@ interface ResponseRepository : JpaRepository<Response, Long> {
     fun findAllByInteraction(interaction: Interaction): List<Response>
 
     fun findAllByInteractionAndAttempt(interaction: Interaction, attempt: Int = 1): List<Response>
+
+    fun findAllByInteractionAndAttemptOrderByMeanGradeDesc(interaction: Interaction, attempt: Int = 1): List<Response>
+
+    // Correct responses
+    fun findAllByInteractionAndAttemptAndScoreOrderByScoreDesc(interaction: Interaction,
+                                                               attempt: AttemptNum = 1,
+                                                               score: Float = 100f)
+
+    // Incorrect responses
+    fun findAllByInteractionAndAttemptAndScoreLessThanOrderByScoreDesc(interaction: Interaction,
+                                                                       attempt: AttemptNum = 1,
+                                                                       score: Float = 100f)
 }

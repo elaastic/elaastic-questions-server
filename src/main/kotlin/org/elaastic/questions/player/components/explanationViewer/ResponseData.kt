@@ -16,22 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.responseDistributionChart
+package org.elaastic.questions.player.components.explanationViewer
 
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import kotlin.math.roundToInt
 
-data class ChoiceSpecificationData(
-        val itemCount: Int,
-        val expectedChoiceList: List<Int>
+class ResponseData(
+        val choices: List<Int> = listOf(),
+        val score: Int, // percents
+        val correct: Boolean
 ) {
-    constructor(value: ChoiceSpecification): this(
-            value.nbCandidateItem,
-            when(value) {
-                is ExclusiveChoiceSpecification -> listOf(value.expectedChoice.index)
-                is MultipleChoiceSpecification -> value.expectedChoiceList.map { it.index }
-                else -> error("Unsupported implementation of ChoiceSpecification")
-            }
+    constructor(response: Response) : this(
+            choices = response.choiceListSpecification!!,
+            score = (response.score!! * 100f).roundToInt(),
+            correct = response.score == 100f
     )
 }

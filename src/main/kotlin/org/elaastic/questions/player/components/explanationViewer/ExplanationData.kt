@@ -16,22 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.responseDistributionChart
+package org.elaastic.questions.player.components.explanationViewer
 
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import java.math.BigDecimal
+import java.math.RoundingMode
 
-data class ChoiceSpecificationData(
-        val itemCount: Int,
-        val expectedChoiceList: List<Int>
+class ExplanationData(
+        val content: String? = null,
+        val author: String? = null,
+        val nbEvaluations: Int = 0,
+        meanGrade: BigDecimal? = null
 ) {
-    constructor(value: ChoiceSpecification): this(
-            value.nbCandidateItem,
-            when(value) {
-                is ExclusiveChoiceSpecification -> listOf(value.expectedChoice.index)
-                is MultipleChoiceSpecification -> value.expectedChoiceList.map { it.index }
-                else -> error("Unsupported implementation of ChoiceSpecification")
-            }
+    constructor(response: Response) : this(
+            content = response.explanation,
+            author = response.learner.username,
+            nbEvaluations = -1, // TODO Need to retrieve PeerGrade for this
+            meanGrade = BigDecimal(-1) // TODO Need to retrieve PeerGrade
     )
+
+    val meanGrade = meanGrade
+            ?.setScale(2, RoundingMode.CEILING)
+            ?.stripTrailingZeros()
 }

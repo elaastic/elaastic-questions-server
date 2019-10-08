@@ -18,7 +18,6 @@
 package org.elaastic.questions.assignment.sequence.interaction.results
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
@@ -53,37 +52,36 @@ class ResultsService(
             "user cannot update results"
         }
 
-        val responseSubmissionInteraction = sequence.getResponseSubmissionInteraction()
-        responseService.findAll(responseSubmissionInteraction).let { responseSet ->
+        responseService.findAll(sequence).let { responseSet ->
             if (sequence.statement.hasChoices()) {
-                updateResponsesDistribution(responseSubmissionInteraction, responseSet)
+                updateResponsesDistribution(sequence, responseSet)
             }
             updateExplanationsMeanGrade(responseSet, sequence)
         }
     }
 
-    fun updateResponsesDistribution(user: User, sequence: Sequence): Unit {
+    fun updateResponsesDistribution(user: User, sequence: Sequence) {
         checkCanUpdateResults(user, sequence)
 
         require(sequence.statement.hasChoices()) {
             "This sequence is not bound to a choice question"
         }
 
-        sequence.getResponseSubmissionInteraction().let {
-            updateResponsesDistribution(
-                    it,
-                    responseService.findAll(it)
-            )
-        }
+        updateResponsesDistribution(
+                sequence,
+                responseService.findAll(sequence)
+        )
     }
 
-    private fun updateResponsesDistribution(responseSubmissionInteraction: Interaction,
+    private fun updateResponsesDistribution(sequence: Sequence,
                                             responseSet: ResponseSet) {
-        responseSubmissionInteraction.results = ResponsesDistributionFactory.build(
-                responseSubmissionInteraction.sequence.statement.choiceSpecification!!,
-                responseSet
-        )
-        interactionRepository.save(responseSubmissionInteraction)
+        sequence.getResponseSubmissionInteraction().let {
+            it.results = ResponsesDistributionFactory.build(
+                    it.sequence.statement.choiceSpecification!!,
+                    responseSet
+            )
+            interactionRepository.save(it)
+        }
     }
 
     fun updateExplanationsMeanGrade(responseSet: ResponseSet, sequence: Sequence) {

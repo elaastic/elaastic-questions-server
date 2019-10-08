@@ -22,12 +22,15 @@ import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.elaastic.questions.player.components.command.CommandModelFactory
+import org.elaastic.questions.player.components.results.ResultsModelFactory
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
@@ -40,8 +43,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
-import java.math.BigDecimal
-import java.math.RoundingMode
 import javax.persistence.EntityNotFoundException
 import kotlin.IllegalStateException
 
@@ -53,6 +54,7 @@ class PlayerController(
         @Autowired val sequenceService: SequenceService,
         @Autowired val learnerSequenceService: LearnerSequenceService,
         @Autowired val interactionService: InteractionService,
+        @Autowired val responseService: ResponseService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -165,6 +167,16 @@ class PlayerController(
             )
             model.addAttribute("statementPanelModel", StatementPanelModel())
             model.addAttribute("statement", StatementInfo(sequence.statement))
+            model.addAttribute("showResults", sequence.state != State.beforeStart)
+
+            if (sequence.state != State.beforeStart)
+                model.addAttribute(
+                        "resultsModel",
+                        ResultsModelFactory.build(
+                                sequence,
+                                responseService.findAll(sequence)
+                        )
+                )
         }
 
         return "/player/assignment/sequence/play"
@@ -174,67 +186,6 @@ class PlayerController(
     @ResponseBody
     fun getNbRegisteredUsers(@PathVariable id: Long): Int {
         return assignmentService.getNbRegisteredUsers(id)
-    }
-
-    interface ExplanationViewerModel {
-        val hasChoice: Boolean
-        val explanationsExcerpt: List<ExplanationData>
-        val hasMoreThanExcerpt: Boolean
-        val nbExplanations: Int
-    }
-
-    class ChoiceExplanationViewerModel(
-            explanationsByResponse: Map<ResponseData, List<ExplanationData>>,
-            alreadySorted: Boolean = false
-    ) : ExplanationViewerModel {
-        override val hasChoice = true
-        val explanationsByResponse =
-                if (alreadySorted) explanationsByResponse
-                else explanationsByResponse.mapValues {
-                    it.value.sortedWith(
-                            compareByDescending<ExplanationData> { it.meanGrade }.thenByDescending { it.nbEvaluations }
-                    )
-                }
-
-        val correctResponse = this.explanationsByResponse.keys.find { it.correct }
-                ?: throw IllegalStateException("There is no correct answer")
-        val explanationsForCorrectResponse = this.explanationsByResponse.filter { it.key.correct }.values.flatten()
-        val explanationsByIncorrectResponses = this.explanationsByResponse.filter { !it.key.correct }
-        val hasExplanationsForIncorrectResponse = this.explanationsByResponse.any { !it.key.correct && !it.value.isEmpty() }
-        val nbExplanationsForCorrectResponse = explanationsForCorrectResponse.count()
-        override val explanationsExcerpt = explanationsForCorrectResponse.take(3)
-        override val nbExplanations = this.explanationsByResponse.values.flatten().count()
-        override val hasMoreThanExcerpt = nbExplanationsForCorrectResponse > 3 || hasExplanationsForIncorrectResponse
-    }
-
-    class OpenExplanationViewerModel(explanations: List<ExplanationData>, alreadySorted: Boolean = false) : ExplanationViewerModel {
-        val explanations =
-                if (alreadySorted) explanations
-                else explanations.sortedWith(
-                        compareByDescending<ExplanationData> { it.meanGrade }.thenByDescending { it.nbEvaluations }
-                )
-        override val hasChoice = false
-        override val nbExplanations = this.explanations.count()
-        override val explanationsExcerpt = this.explanations.take(3)
-        val nbExplanationsForCorrectResponse = nbExplanations
-        override val hasMoreThanExcerpt = nbExplanations > 3
-    }
-
-    class ResponseData(
-            val choices: List<Int> = listOf(),
-            val score: Int, // percents
-            val correct: Boolean
-    )
-
-    class ExplanationData(
-            val content: String? = null,
-            val author: String? = null,
-            val nbEvaluations: Int = 0,
-            meanGrade: BigDecimal? = null
-    ) {
-        val meanGrade = meanGrade
-                ?.setScale(2, RoundingMode.CEILING)
-                ?.stripTrailingZeros()
     }
 
 
@@ -272,8 +223,8 @@ class PlayerController(
 
     @GetMapping("/interaction/{id}/startNext")
     fun startNextInteraction(authentication: Authentication,
-                         model: Model,
-                         @PathVariable id: Long): String {
+                             model: Model,
+                             @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
         interactionService.findById(id).let {

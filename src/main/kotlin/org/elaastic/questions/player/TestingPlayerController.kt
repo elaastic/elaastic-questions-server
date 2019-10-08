@@ -27,6 +27,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
+import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
@@ -276,7 +277,7 @@ class TestingPlayerController(
     class ExplanationViewerSituation(
             val description: String,
             val sequenceId: Long,
-            val explanationViewerModel: PlayerController.ExplanationViewerModel
+            val explanationViewerModel: ExplanationViewerModel
     )
 
     @GetMapping("/response-distribution-chart")
@@ -477,8 +478,6 @@ class TestingPlayerController(
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 1,
-                                        interactionId = 1,
-                                        interactionRank = 2,
                                         hasAnyResult = false,
                                         hasExplanations = false
                                 )
@@ -488,8 +487,6 @@ class TestingPlayerController(
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = true,
                                         sequenceId = 2,
-                                        interactionId = 2,
-                                        interactionRank = 2,
                                         hasAnyResult = false,
                                         hasExplanations = false
                                 )
@@ -499,8 +496,6 @@ class TestingPlayerController(
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 3,
-                                        interactionId = 3,
-                                        interactionRank = 2,
                                         hasAnyResult = false,
                                         hasExplanations = false
                                 )
@@ -509,10 +504,7 @@ class TestingPlayerController(
                                 description = "4. Sequence stopped, Open question, no results, no explanations",
                                 resultsModel = OpenResultsModel(
                                         sequenceIsStopped = true,
-                                        sequenceId = 4,
-                                        interactionId = 4,
-                                        interactionRank = 2,
-                                        hasExplanations = false
+                                        sequenceId = 4
                                 )
                         ),
                         ResultsSituation(
@@ -520,8 +512,6 @@ class TestingPlayerController(
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 5,
-                                        interactionId = 5,
-                                        interactionRank = 2,
                                         hasAnyResult = true,
                                         responseDistributionChartModel = ResponseDistributionChartModel(
                                                 interactionId = 5,
@@ -541,8 +531,6 @@ class TestingPlayerController(
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 6,
-                                        interactionId = 6,
-                                        interactionRank = 2,
                                         hasAnyResult = true,
                                         responseDistributionChartModel = ResponseDistributionChartModel(
                                                 interactionId = 6,
@@ -555,34 +543,34 @@ class TestingPlayerController(
                                                 ).toLegacyFormat()
                                         ),
                                         hasExplanations = true,
-                                        explanationViewerModel = PlayerController.ChoiceExplanationViewerModel(
+                                        explanationViewerModel = ChoiceExplanationViewerModel(
                                                 explanationsByResponse = mapOf(
-                                                        PlayerController.ResponseData(
+                                                        ResponseData(
                                                                 listOf(1),
                                                                 0,
                                                                 false
                                                         )
                                                                 to listOf(
-                                                                PlayerController.ExplanationData(
+                                                                ExplanationData(
                                                                         "explication 1",
                                                                         "Joe"
                                                                 ),
-                                                                PlayerController.ExplanationData(
+                                                                ExplanationData(
                                                                         "explication 2",
                                                                         "Jack"
                                                                 )
                                                         ),
-                                                        PlayerController.ResponseData(
+                                                        ResponseData(
                                                                 listOf(2),
                                                                 100,
                                                                 true
                                                         )
                                                                 to listOf(
-                                                                PlayerController.ExplanationData(
+                                                                ExplanationData(
                                                                         "explication 3",
                                                                         "William"
                                                                 ),
-                                                                PlayerController.ExplanationData(
+                                                                ExplanationData(
                                                                         "explication 4",
                                                                         "Averell"
                                                                 )
@@ -596,25 +584,22 @@ class TestingPlayerController(
                                 resultsModel = OpenResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 7,
-                                        interactionId = 7,
-                                        interactionRank = 2,
-                                        hasExplanations = true,
-                                        explanationViewerModel = PlayerController.OpenExplanationViewerModel(
+                                        explanationViewerModel = OpenExplanationViewerModel(
                                                 explanations = listOf(
-                                                        PlayerController.ExplanationData(
+                                                        ExplanationData(
                                                                 "explication 1",
                                                                 "Joe"
                                                         ),
-                                                        PlayerController.ExplanationData(
+                                                        ExplanationData(
                                                                 "explication 2",
                                                                 "Jack"
                                                         ),
 
-                                                        PlayerController.ExplanationData(
+                                                        ExplanationData(
                                                                 "explication 3",
                                                                 "William"
                                                         ),
-                                                        PlayerController.ExplanationData(
+                                                        ExplanationData(
                                                                 "explication 4",
                                                                 "Averell"
                                                         )

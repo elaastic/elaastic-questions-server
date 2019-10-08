@@ -34,7 +34,7 @@ class ResponseRecommendationService {
                 ).let { recommendationResponsePool ->
                     repeat(nbEvaluation) { i ->
                         computeRecommandations(
-                                forResponseList = allResponse.filter { it.correct }.shuffled(),
+                                forResponseList = allResponse.filter { it.correct }.shuffled(), // TODO Don't do it for each iteration
                                 responsePool = recommendationResponsePool.comparator(
                                         if(i % 2 == 0) INCORRECT_RESPONSE_FIRST else CORRECT_RESPONSE_FIRST
                                 ),
