@@ -92,6 +92,11 @@ class Sequence(
             return field
         }
 
+    fun getInteractionAt(rank: Int) : Interaction {
+        return interactions.values?.find { it.rank == rank }
+                ?: error("There is no interaction for rank $rank in this sequence")
+    }
+
     @Transient
     fun getResponseSubmissionInteraction() =
             interactions[InteractionType.ResponseSubmission]

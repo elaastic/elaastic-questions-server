@@ -270,6 +270,19 @@ class PlayerController(
         return "redirect:/player/sequence/${interaction.sequence.id}/play"
     }
 
+    @GetMapping("/interaction/{id}/startNext")
+    fun startNextInteraction(authentication: Authentication,
+                         model: Model,
+                         @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        interactionService.findById(id).let {
+            sequenceService.loadInteractions(it.sequence)
+            val interaction = interactionService.startNext(user, it)
+            return "redirect:/player/sequence/${interaction.sequence.id}/play"
+        }
+    }
+
     @GetMapping("/interaction/{id}/stop")
     fun stopInteraction(authentication: Authentication,
                         model: Model,

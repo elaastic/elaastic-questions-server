@@ -47,10 +47,10 @@
     &nbsp; <span th:text="#{player.sequence.interaction.stop(${model.interactionRank})}"></span>
   </a>
 
-  <a href="#"
+<!--  TODO lazy loading th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/interaction/{interactionId}/startNext(interactionId=${model.interactionId})}')|" -->
+  <a th:href="@{/player/interaction/{interactionId}/startNext(interactionId=${model.interactionId})}"
      th:unless="${model.actionStartNextInteraction.name() == 'HIDDEN'}"
-     class="item"
-     th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/interaction/{interactionId}/startNext(interactionId=${model.interactionId})}')|">
+     class="item">
     <i class="green play icon"></i> &nbsp; <span
     th:text="#{player.sequence.interaction.start(${model.InteractionRank + 1})}"></span>
   </a>

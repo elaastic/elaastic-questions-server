@@ -116,9 +116,13 @@ class InteractionService(
         interactionRepository.save(interaction)
         interaction.sequence.let {
             it.state = State.show
+            it.activeInteraction = interaction
             sequenceRepository.save(it)
         }
 
         return interaction
     }
+    fun startNext(user: User, interaction: Interaction): Interaction =
+        start(user, interaction.sequence.getInteractionAt(interaction.rank+1))
+
 }
