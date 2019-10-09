@@ -20,8 +20,14 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
   <div class="ui bottom attached message"
-       th:classappend="${model.color}"
-       th:text="${model.message}">
-    { ...message... }
+       th:classappend="${model.color}">
+    <span th:text="${model.message}" th:remove="tag"></span>
+
+<!--    TODO partial reloading with updateSequenceDisplay -->
+    <a th:if="${model.refreshable}"
+       href="./play"
+       th:title="#{common.refresh}">
+      <i class="refresh icon"></i>
+    </a>
   </div>
 </div>

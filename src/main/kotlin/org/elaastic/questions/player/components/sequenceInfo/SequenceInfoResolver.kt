@@ -27,13 +27,14 @@ import java.lang.IllegalStateException
 
 object SequenceInfoResolver {
 
-    fun resolve(sequence: Sequence, messageBuilder: MessageBuilder): SequenceInfoModel =
+    fun resolve(isTeacher: Boolean, sequence: Sequence, messageBuilder: MessageBuilder): SequenceInfoModel =
             when (sequence.state) {
                 State.beforeStart -> SequenceInfoModel(
                         messageBuilder.message(
                                 "player.sequence.beforeStart.message"
                         ),
-                        color = "warning"
+                        color = "warning",
+                        refreshable = !isTeacher
                 )
                 State.show -> if (sequence.executionContext == ExecutionContext.FaceToFace) {
                     if (sequence.activeInteraction?.interactionType in listOf(InteractionType.ResponseSubmission, InteractionType.Evaluation)) {
@@ -44,21 +45,24 @@ object SequenceInfoResolver {
                                             "player.sequence.interaction.beforeStart.message",
                                             sequence.activeInteraction?.rank?.toString() ?: ""
                                     ),
-                                    color = "blue"
+                                    color = "blue",
+                                    refreshable = !isTeacher
                             )
                             State.show -> SequenceInfoModel(
                                     messageBuilder.message(
                                             "player.sequence.interaction.inprogress",
                                             sequence.activeInteraction?.rank?.toString() ?: ""
                                     ),
-                                    color = "blue"
+                                    color = "blue",
+                                    refreshable = !isTeacher
                             )
                             State.afterStop -> SequenceInfoModel(
                                     messageBuilder.message(
                                             "player.sequence.interaction.closed.forTeacher",
                                             sequence.activeInteraction?.rank?.toString() ?: ""
                                     ),
-                                    color = "blue"
+                                    color = "blue",
+                                    refreshable = !isTeacher
                             )
                         }
                     } else {
@@ -74,12 +78,14 @@ object SequenceInfoResolver {
                                             "player.sequence.readinteraction.beforeStart.message",
                                             sequence.activeInteraction?.rank?.toString() ?: ""
                                     ),
-                                    color = "blue"
+                                    color = "blue",
+                                    refreshable = !isTeacher
                             )
                             else -> SequenceInfoModel(
                                     messageBuilder.message(
                                             "player.sequence.readinteraction.not.published"
-                                    )
+                                    ),
+                                    refreshable = !isTeacher
                             )
                         }
                     }

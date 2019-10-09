@@ -21,6 +21,7 @@ package org.elaastic.questions.assignment.sequence
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
@@ -42,11 +43,18 @@ class SequenceService(
         @Autowired val fakeExplanationRepository: FakeExplanationRepository,
         @Autowired val interactionService: InteractionService,
         @Autowired val interactionRepository: InteractionRepository,
-        @Autowired val resultsService: ResultsService
+        @Autowired val resultsService: ResultsService,
+        @Autowired val learnerSequenceService: LearnerSequenceService
 ) {
-    fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence { // TODO Test
+    fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
+            get(id, fetchInteractions).let {
+                if (it.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
+                it
+            }
+
+
+    fun get(id: Long, fetchInteractions: Boolean = false): Sequence {
         return sequenceRepository.findOneById(id)?.let { sequence ->
-            if (sequence.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
 
             if (fetchInteractions) {
                 loadInteractions(sequence)
@@ -205,5 +213,10 @@ class SequenceService(
             return it
         }
     }
+
+    fun getActiveInteractionForLearner(sequence: Sequence, learner: User): Interaction? =
+            if (sequence.executionIsFaceToFace())
+                sequence.activeInteraction
+            else learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).activeInteraction
 
 }

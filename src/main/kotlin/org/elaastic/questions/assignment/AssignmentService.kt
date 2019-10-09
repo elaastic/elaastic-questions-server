@@ -24,7 +24,6 @@ import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.lti.LmsAssignmentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

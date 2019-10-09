@@ -66,7 +66,9 @@
   <div th:if="${sequence}"
        th:id="|sequence_${sequence.id}|">
     <div th:replace="|${components}/_steps.html| :: steps(${stepsModel}, ${sequenceStatistics})"></div>
-    <div th:replace="|${components}/_command.html| :: command(${commandModel})"></div>
+    <th:block th:if="${userRole == 'teacher'}">
+      <div th:replace="|${components}/_command.html| :: command(${commandModel})"></div>
+    </th:block>
     <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${sequenceInfoModel})"></div>
     <div th:replace="|${components}/_statement.html| :: statement(${statementPanelModel},${statement})"></div>
     <div th:if="${showResults}" th:remove="tag">

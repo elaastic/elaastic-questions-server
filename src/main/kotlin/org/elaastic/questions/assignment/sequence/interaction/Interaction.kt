@@ -116,5 +116,26 @@ class Interaction(
 
         else -> State.show
     }
+
+    @Transient
+    fun stateForLearner(learnerActiveInteraction: Interaction): State = when {
+        sequence.isStopped() -> when {
+            isRead() && sequence.resultsArePublished -> State.show
+            rank <= sequence.activeInteraction!!.rank -> State.afterStop
+            else -> State.beforeStart
+        }
+
+        !sequence.executionIsFaceToFace() && !sequence.isStopped() ->
+            if (this == learnerActiveInteraction)
+                when {
+                    isRead() && sequence.resultsArePublished -> State.show
+                    isRead() && sequence.executionIsBlended() -> state
+                    else -> State.show
+                }
+            else State.afterStop
+
+        else -> state
+    }
+
 }
 

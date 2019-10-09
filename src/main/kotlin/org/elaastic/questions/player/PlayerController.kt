@@ -104,7 +104,7 @@ class PlayerController(
             }
 
             assignmentService.registerUser(user, it)
-            return "redirect:/player/${it.id}/playFirstSequence"
+            return "redirect:/player/assignment/${it.id}/play"
         }
     }
 
@@ -112,9 +112,8 @@ class PlayerController(
     fun playAssignment(authentication: Authentication,
                        model: Model,
                        @PathVariable id: Long): String {
-        val user: User = authentication.principal as User
 
-        assignmentService.get(user, id, true).let { assignment ->
+        assignmentService.get(id, true).let { assignment ->
 
             if (assignment.sequences.isEmpty()) {
                 throw IllegalStateException("Assignment $id has no sequences")
@@ -132,17 +131,20 @@ class PlayerController(
 
         // TODO Improve data fetching (should start from the assignment)
 
-        sequenceService.get(user, id, true).let { sequence ->
+        sequenceService.get(id, true).let { sequence ->
             model.addAttribute("user", user)
             model.addAttribute("assignment", sequence.assignment)
             model.addAttribute("sequence", sequence)
-            model.addAttribute(
-                    "userRole",
-                    if (user == sequence.owner) "teacher" else "learner" // TODO Define a type for this
-            )
-            model.addAttribute(
-                    "assignmentOverviewModel",
-                    (user == sequence.owner).let { teacher ->
+
+            (user == sequence.owner).let { teacher ->
+                model.addAttribute(
+                        "userRole",
+                        if (teacher) "teacher" else "learner" // TODO Define a type for this
+                )
+
+                model.addAttribute(
+                        "assignmentOverviewModel",
+
                         AssignmentOverviewModelFactory.build(
                                 teacher = teacher,
                                 nbRegisteredUser =
@@ -157,26 +159,50 @@ class PlayerController(
                                 },
                                 selectedSequenceId = id
                         )
-                    }
-            )
-            model.addAttribute("stepsModel", StepsModelFactory.build(sequence))
-            model.addAttribute("commandModel", CommandModelFactory.build(user, sequence))
-            model.addAttribute(
-                    "sequenceInfoModel",
-                    SequenceInfoResolver.resolve(sequence, messageBuilder)
-            )
-            model.addAttribute("statementPanelModel", StatementPanelModel())
-            model.addAttribute("statement", StatementInfo(sequence.statement))
-            model.addAttribute("showResults", sequence.state != State.beforeStart)
+                )
 
-            if (sequence.state != State.beforeStart)
                 model.addAttribute(
-                        "resultsModel",
-                        ResultsModelFactory.build(
+                        "stepsModel",
+                        if (teacher)
+                            StepsModelFactory.buildForTeacher(sequence)
+                        else StepsModelFactory.buildForLearner(
                                 sequence,
-                                responseService.findAll(sequence)
+                                sequenceService.getActiveInteractionForLearner(sequence, user)
                         )
                 )
+
+                if (teacher)
+                    model.addAttribute("commandModel", CommandModelFactory.build(user, sequence))
+
+
+                model.addAttribute(
+                        "sequenceInfoModel",
+                        SequenceInfoResolver.resolve(teacher, sequence, messageBuilder)
+                )
+                model.addAttribute(
+                        "statementPanelModel",
+                        StatementPanelModel(
+                                hideStatement = !teacher && sequence.state == State.beforeStart,
+                                panelClosed = teacher && sequence.state != State.beforeStart
+                        )
+                )
+                model.addAttribute("statement", StatementInfo(sequence.statement))
+                model.addAttribute(
+                        "showResults",
+                        if (teacher)
+                            sequence.state != State.beforeStart
+                        else sequence.resultsArePublished
+                )
+
+                if (sequence.state != State.beforeStart)
+                    model.addAttribute(
+                            "resultsModel",
+                            ResultsModelFactory.build(
+                                    sequence,
+                                    responseService.findAll(sequence)
+                            )
+                    )
+            }
         }
 
         return "/player/assignment/sequence/play"

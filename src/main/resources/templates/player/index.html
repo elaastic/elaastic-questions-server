@@ -57,7 +57,7 @@
       th:classappend="${i.odd} ? 'odd' : 'even'">
 
     <td>
-      <a th:href="@{/player/{assignmentId}/playFirstSequence(assignmentId=${assignment.id})}"
+      <a th:href="@{/player/assignment/{assignmentId}/play(assignmentId=${assignment.id})}"
          th:text="${assignment.title}">
         [Assignment title]
       </a>
@@ -68,7 +68,7 @@
 
     <td>
       <a class="ui compact icon primary button"
-         th:href="@{/player/{assignmentId}/playFirstSequence(id=${assignment.id})}"
+         th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
          th:attr="data-tooltip=#{player.assignment.play}"
          data-inverted="">
         <i class="play icon"></i>

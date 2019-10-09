@@ -20,12 +20,13 @@ package org.elaastic.questions.player.components.steps
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 
 object StepsModelFactory {
 
     // TODO Take sequence state into account
-    fun build(sequence: Sequence): StepsModel = StepsModel(
+    fun buildForTeacher(sequence: Sequence) = StepsModel(
             responseSubmissionState =
             sequence.interactions[InteractionType.ResponseSubmission]?.stateForRegisteredUsers().let(::interactionStateToPhaseState),
             evaluationState =
@@ -34,8 +35,18 @@ object StepsModelFactory {
             sequence.interactions[InteractionType.Read]?.stateForRegisteredUsers().let(::interactionStateToPhaseState)
     )
 
+    fun buildForLearner(sequence: Sequence, learnerActiveInteraction: Interaction?) = StepsModel(
+            responseSubmissionState =
+            sequence.interactions[InteractionType.ResponseSubmission]?.stateForLearner(learnerActiveInteraction!!).let(::interactionStateToPhaseState),
+            evaluationState =
+            sequence.interactions[InteractionType.Evaluation]?.stateForLearner(learnerActiveInteraction!!).let(::interactionStateToPhaseState),
+            readState =
+            sequence.interactions[InteractionType.Read]?.stateForLearner(learnerActiveInteraction!!).let(::interactionStateToPhaseState)
+
+    )
+
     private fun interactionStateToPhaseState(state: State?): StepsModel.PhaseState =
-            when(state) {
+            when (state) {
                 null -> StepsModel.PhaseState.DISABLED
                 State.beforeStart -> StepsModel.PhaseState.DISABLED
                 State.show -> StepsModel.PhaseState.ACTIVE
