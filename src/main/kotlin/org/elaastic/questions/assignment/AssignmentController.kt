@@ -190,7 +190,28 @@ class AssignmentController(
         return "redirect:/assignment"
     }
 
-    // TODO Duplicate action
+    @GetMapping("duplicate/{id}")
+    fun update(authentication: Authentication,
+               @PathVariable id: Long,
+               redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        assignmentService.get(user, id, true).let {
+            assignmentService.duplicate(it, user).let { duplicatedAssignment ->
+                with(messageBuilder) {
+                    success(
+                            redirectAttributes,
+                            message(
+                                    "assignment.duplicate.message",
+                                    message("assignment.label"),
+                                    duplicatedAssignment.title
+                            )
+                    )
+                }
+                return "redirect:/assignment/${duplicatedAssignment.id}/edit"
+            }
+        }
+    }
 
     @GetMapping("{id}/addSequence")
     fun addSequence(authentication: Authentication,
