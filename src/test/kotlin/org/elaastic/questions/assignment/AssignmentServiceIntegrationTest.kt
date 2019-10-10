@@ -523,6 +523,64 @@ internal class AssignmentServiceIntegrationTest(
         }
     }
 
+    @Test
+    fun testDuplicateAssignment() {
+        val teacher = testingService.getTestTeacher()
+        val assignment = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        )
+        tGiven("2 sequences in the original assignmnent") {
+            Statement.createDefaultStatement(teacher)
+                    .title("Test")
+                    .content("Test content")
+                    .expectedExplanation("because ...")
+                    .let {
+                        assignmentService.addSequence(
+                                assignment,
+                                it
+                        )
+                        statementService.addFakeExplanation(it, FakeExplanationData(1, "this  is 1"))
+                        statementService.addFakeExplanation(it, FakeExplanationData(2, "this  is 2"))
+                    }
+            Statement.createDefaultStatement(teacher)
+                    .title("Test2")
+                    .content("Test content2")
+                    .expectedExplanation("because 2...")
+                    .let {
+                        assignmentService.addSequence(
+                                assignment,
+                                it
+                        )
+                    }
+        }.tWhen("duplicate the assignment") {
+            assignmentService.duplicate(assignment, assignment.owner)
+        }.tThen("the sequence is duplicated as expected") { duplicatedAssignment ->
+
+            assertThat(duplicatedAssignment, not(equalTo(assignment)))
+            assertThat(duplicatedAssignment.title, equalTo(assignment.title + "-copy"))
+            assertThat(duplicatedAssignment.owner, equalTo(assignment.owner))
+            assertThat(duplicatedAssignment.sequences.size, equalTo(assignment.sequences.size))
+            for (i in 0..1) {
+                val duplicatedSequence = duplicatedAssignment.sequences[i]
+                val originalSequence = assignment.sequences[i]
+                assertThat(duplicatedSequence, not(equalTo(originalSequence)))
+                assertThat(duplicatedSequence.statement, not(equalTo(originalSequence.statement)))
+                assertThat(duplicatedSequence.statement.title, equalTo(originalSequence.statement.title))
+                assertThat(duplicatedSequence.statement.content, equalTo(originalSequence.statement.content))
+                assertThat(duplicatedSequence.statement.choiceSpecification, equalTo(originalSequence.statement.choiceSpecification))
+                assertThat(duplicatedSequence.statement.questionType, equalTo(originalSequence.statement.questionType))
+                assertThat(duplicatedSequence.statement.parentStatement, equalTo(originalSequence.statement))
+                assertThat(duplicatedSequence.statement.expectedExplanation, equalTo(originalSequence.statement.expectedExplanation))
+                statementService.findAllFakeExplanationsForStatement(originalSequence.statement).let { originalFExp ->
+                    statementService.findAllFakeExplanationsForStatement(duplicatedSequence.statement).let { duplFExp ->
+                        assertThat(duplFExp.size, equalTo(originalFExp.size))
+                    }
+                }
+            }
+
+        }
+    }
+
     private fun createTestingData(owner: User, n: Int = 10) {
         (1..n).forEach {
             assignmentService.save(
