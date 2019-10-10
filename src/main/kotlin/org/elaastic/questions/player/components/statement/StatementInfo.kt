@@ -20,16 +20,19 @@ package org.elaastic.questions.player.components.statement
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.attachment.Attachment
 
 data class StatementInfo(
         val title: String,
         val questionType: QuestionType,
-        val content: String
+        val content: String,
+        val attachment: Attachment? = null
 ) {
     constructor(statement: Statement) :
             this(
                     statement.title,
                     statement.questionType,
-                    statement.content
+                    statement.content,
+                    statement.attachment
             )
 }
