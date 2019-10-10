@@ -180,7 +180,6 @@ class LtiConsumerController(
     fun delete(authentication: Authentication,
                @PathVariable id: String,
                redirectAttributes: RedirectAttributes): String {
-        val user: User = authentication.principal as User
 
         ltiConsumerRepository.deleteById(id)
 

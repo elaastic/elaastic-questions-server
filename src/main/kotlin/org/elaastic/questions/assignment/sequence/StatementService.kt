@@ -72,4 +72,10 @@ class StatementService(
     fun removeAllFakeExplanation(statement: Statement) {
         fakeExplanationRepository.deleteAllByStatement(statement)
     }
+
+    fun findAllFakeExplanationsForStatement(statement: Statement): List<FakeExplanation> {
+        return fakeExplanationRepository.findAllByStatement(
+                statement
+        )
+    }
 }

@@ -76,8 +76,8 @@ class Attachment(
     companion object {
         fun getDimensionForDisplay(dimension: Dimension?, widthMax: Int, heightMax:Int): Dimension {
             return if (dimension != null) {
-                var l = dimension!!.width
-                var h = dimension!!.height
+                var l = dimension.width
+                var h = dimension.height
                 val ratio = listOf(l / widthMax.toDouble() , h / heightMax.toDouble()).max()!!
 
                 if (ratio > 1) {

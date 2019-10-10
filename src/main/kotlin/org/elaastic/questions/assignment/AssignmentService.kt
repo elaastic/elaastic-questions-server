@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.StatementService
@@ -120,7 +121,7 @@ class AssignmentService(
     }
 
     private fun removeSequence(sequence: Sequence) {
-        val assignment = sequence.assignment!!
+
         entityManager.createNativeQuery("""
             DELETE pg
             FROM  peer_grading pg
@@ -206,7 +207,7 @@ class AssignmentService(
     fun updateAllSequenceRank(assignment: Assignment) {
 
         val sequenceIds = assignment.sequences.map { it.id }
-        if(sequenceIds.isEmpty()) return // Nothing to do
+        if (sequenceIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
                 "UPDATE sequence SET rank = CASE " +
@@ -221,16 +222,16 @@ class AssignmentService(
     }
 
     fun findAllAssignmentsForLearner(user: User,
-                                     pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))) : Page<Assignment> {
+                                     pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))): Page<Assignment> {
         return learnerAssignmentRepository.findAllAssignmentsForLearner(user, pageable)
     }
 
-    fun findByGlobalId(globalId: String) : Assignment? {
+    fun findByGlobalId(globalId: String): Assignment? {
         return assignmentRepository.findByGlobalId(globalId)
     }
 
-    fun registerUser(user: User, assignment: Assignment) : LearnerAssignment? {
-        if(assignment.owner == user) {
+    fun registerUser(user: User, assignment: Assignment): LearnerAssignment? {
+        if (assignment.owner == user) {
             return null
         }
 
@@ -250,5 +251,43 @@ class AssignmentService(
         return learnerAssignmentRepository.countAllByAssignment(
                 assignmentRepository.getOne(assignmentId)
         )
+    }
+
+    /**
+     * Duplicate a sequence in an assignment (without interactions)
+     * @param sequence the sequence to duplicate
+     * @param duplicatedAssignment the target assignment
+     * @param user the user performing the operation
+     * @return the duplicated sequence
+     */
+    fun duplicateSequenceInAssignment(sequence: Sequence, duplicatedAssignment: Assignment, user: User): Sequence {
+        if (duplicatedAssignment.owner != user) {
+            throw AccessDeniedException("You are not autorized to access to this assignment")
+        }
+        with(sequence.statement) {
+            Statement(
+                    title = this.title,
+                    content = this.content,
+                    choiceSpecification = this.choiceSpecification,
+                    questionType = this.questionType,
+                    owner = this.owner,
+                    parentStatement = this,
+                    expectedExplanation = this.expectedExplanation
+            ).let { duplicatedStatement ->
+                this.attachment?.let { attachment ->
+                    attachmentService.duplicateAttachment(attachment).let { duplicatedAttachment ->
+                        attachmentService.addStatementToAttachment(duplicatedStatement, duplicatedAttachment)
+                    }
+                }
+                addSequence(duplicatedAssignment, duplicatedStatement).let {
+                    statementService.findAllFakeExplanationsForStatement(this).forEach { fakeExplanation ->
+                        statementService.addFakeExplanation(duplicatedStatement, FakeExplanationData(
+                                fakeExplanation
+                        ))
+                    }
+                    return it
+                }
+            }
+        }
     }
 }

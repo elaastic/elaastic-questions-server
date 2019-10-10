@@ -18,10 +18,13 @@
 
 package org.elaastic.questions.assignment
 
+import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.sequence.StatementService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tExpect
+import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,7 +51,8 @@ internal class AssignmentServiceIntegrationTest(
         @Autowired val testingService: TestingService,
         @Autowired val entityManager: EntityManager,
         @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val statementRepository: StatementRepository
+        @Autowired val statementRepository: StatementRepository,
+        @Autowired val statementService: StatementService
 ) {
 
     val persistentUnitUtil: PersistenceUnitUtil by lazy {
@@ -303,7 +307,7 @@ internal class AssignmentServiceIntegrationTest(
         assertThat(statementId3, notNullValue())
 
         tWhen {
-            assignmentService.removeSequence(sequence2.owner,sequence2)
+            assignmentService.removeSequence(sequence2.owner, sequence2)
             entityManager.flush()
             entityManager.clear()
         }.tThen {
@@ -314,10 +318,10 @@ internal class AssignmentServiceIntegrationTest(
             assertThat(sequenceRepository.existsById(sequenceId2!!), equalTo(false))
             assertThat(statementRepository.existsById(statementId2!!), equalTo(false))
         }.tWhen {
-            sequenceRepository.getOne(sequenceId1!!).let {sequence ->
+            sequenceRepository.getOne(sequenceId1!!).let { sequence ->
                 assignmentService.removeSequence(sequence.owner, sequence)
             }
-            sequenceRepository.getOne(sequenceId3!!).let {sequence ->
+            sequenceRepository.getOne(sequenceId3!!).let { sequence ->
                 assignmentService.removeSequence(sequence.owner, sequence)
             }
             entityManager.flush()
@@ -469,6 +473,54 @@ internal class AssignmentServiceIntegrationTest(
             assertThat(it.content, equalTo(listOf(assignment)))
         }
 
+    }
+
+
+    @Test
+    fun testDuplicateSequenceInAssignment() {
+        val teacher = testingService.getTestTeacher()
+        val assignment = assignmentService.save(
+                Assignment(title = "Foo", owner = teacher)
+        )
+        val duplicatedAssignment = assignmentService.save(
+                Assignment(title = "Foo duplicate", owner = teacher)
+        )
+        tGiven("a sequence in the original assignmnent") {
+            Statement.createDefaultStatement(teacher)
+                    .title("Test")
+                    .content("Test content")
+                    .expectedExplanation("because ...")
+                    .let {
+                        val seq = assignmentService.addSequence(
+                                assignment,
+                                it
+                        )
+                        statementService.addFakeExplanation(seq.statement, FakeExplanationData(1, "this  is 1"))
+                        statementService.addFakeExplanation(seq.statement, FakeExplanationData(2, "this  is 2"))
+                        seq
+                    }
+        }.tWhen("duplicate the sequence in the duplicated assignment") {
+            assignmentService.duplicateSequenceInAssignment(it, duplicatedAssignment, duplicatedAssignment.owner)
+        }.tThen("the sequence is duplicated as expected") { duplicatedSequence ->
+            val originalSequence = assignment.sequences[0]
+            assertThat(duplicatedSequence, not(equalTo(originalSequence)))
+            assertThat(duplicatedSequence.assignment, equalTo(duplicatedAssignment))
+            assertThat(duplicatedSequence.statement, not(equalTo(originalSequence.statement)))
+            assertThat(duplicatedSequence.statement.title, equalTo(originalSequence.statement.title))
+            assertThat(duplicatedSequence.statement.content, equalTo(originalSequence.statement.content))
+            assertThat(duplicatedSequence.statement.choiceSpecification, equalTo(originalSequence.statement.choiceSpecification))
+            assertThat(duplicatedSequence.statement.questionType, equalTo(originalSequence.statement.questionType))
+            assertThat(duplicatedSequence.statement.parentStatement, equalTo(originalSequence.statement))
+            assertThat(duplicatedSequence.statement.expectedExplanation, equalTo(originalSequence.statement.expectedExplanation))
+            statementService.findAllFakeExplanationsForStatement(originalSequence.statement).let { originalFExp ->
+                statementService.findAllFakeExplanationsForStatement(duplicatedSequence.statement).let { duplFExp ->
+                    assertThat(duplFExp.size, equalTo(originalFExp.size))
+                    assertThat(duplFExp[0], not(originalFExp[0]))
+                    assertThat(duplFExp[0].correspondingItem, equalTo(originalFExp[0].correspondingItem))
+                    assertThat(duplFExp[0].content, equalTo(originalFExp[0].content))
+                }
+            }
+        }
     }
 
     private fun createTestingData(owner: User, n: Int = 10) {

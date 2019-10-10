@@ -104,6 +104,11 @@ class Statement(
         return this
     }
 
+    fun expectedExplanation(value: String?): Statement {
+        this.expectedExplanation = value
+        return this
+    }
+
     // TODO test
     fun updateFrom(otherStatement: Statement): Statement {
         require(id == otherStatement.id)
