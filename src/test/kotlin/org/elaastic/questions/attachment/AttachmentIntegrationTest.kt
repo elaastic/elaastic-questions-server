@@ -364,7 +364,7 @@ internal class AttachmentIntegrationTest(
 
     @Test
     fun testGarbageCollectionOnLargerPopulation() {
-        // Given a list of attachments, some are o delete
+        // Given a list of attachments, some are to delete
         val attachments = statementRepository.findAll().mapIndexed { index, statement ->
             Attachment(
                     name = "MyAttach${index}",
@@ -394,6 +394,36 @@ internal class AttachmentIntegrationTest(
                 assertThat(attachmentRepository.findById(attachment.id!!).orElse(null), notNullValue())
                 assertTrue(dataStore.getFile(DataIdentifier(attachment.path!!)).exists())
             }
+        }
+    }
+
+    @Test
+    fun testDuplicateAttachment() {
+        // given "a statement and an attachment") {
+        val statement = testingService.getAnyStatement()
+        val content = "Content".toByteArray()
+        val attachment = Attachment(
+                name = "MyAttach",
+                originalFileName = "originalName",
+                size = content.size.toLong(),
+                toDelete = true
+        )
+        tGiven("saving the statement attachment") {
+            attachmentService.saveStatementAttachment(
+                    statement = statement,
+                    attachment = attachment,
+                    inputStream = content.inputStream()
+            )
+        }.tWhen("duplicate the attachment") {
+            attachmentService.duplicateAttachment(it)
+        }.tThen {
+            assertThat(it, not(equalTo(attachment)))
+            assertThat(it.toDelete, equalTo(attachment.toDelete))
+            assertThat(it.size, equalTo(attachment.size))
+            assertThat(it.mimeType, equalTo(attachment.mimeType))
+            assertThat(it.originalFileName, equalTo(attachment.originalFileName))
+            assertThat(it.path, equalTo(attachment.path))
+            assertThat(it.dimension, equalTo(attachment.dimension))
         }
     }
 

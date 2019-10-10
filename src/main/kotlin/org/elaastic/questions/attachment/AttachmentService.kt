@@ -86,6 +86,30 @@ class AttachmentService(
     }
 
     /**
+     * Duplicate an attachement
+     * @param original the attachment to duplicate
+     * @return the duplicated attachment
+     */
+    fun duplicateAttachment(original: Attachment): Attachment {
+        val attachment = Attachment(
+                size = original.size,
+                mimeType = original.mimeType,
+                name = original.name,
+                originalFileName = original.originalFileName,
+                toDelete = original.toDelete
+        )
+        attachment.path = original.path
+        original.dimension?.let {
+            attachment.dimension = Dimension(
+                    width = it.width,
+                    height = it.height
+            )
+        }
+        return attachment
+    }
+
+
+    /**
      * Detach an attachment
      *
      * @param statement the statement
@@ -120,6 +144,7 @@ class AttachmentService(
         val attachmentToRemoveList = attachmentRepository.findAllByToDelete(true)
         deleteAttachmentAndFileInSystem(attachmentToRemoveList)
     }
+
 
     internal fun deleteAttachmentAndFileInSystem(attachmentList: MutableList<Attachment>) {
         if (attachmentList.isEmpty()) return
