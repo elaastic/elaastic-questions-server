@@ -15,15 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.elaastic.questions.player.components.steps
 
-package org.elaastic.questions.assignment.choice.legacy
-
-import java.util.ArrayList
-
-
-class ChoiceListSpecification : ArrayList<Int> {
-    constructor(): super()
-
-    constructor(values: List<Int>): super(values)
-
-}
+data class SequenceStatistics(
+        val nbResponsesAttempt1: Int,
+        val nbResponsesAttempt2: Int,
+        val nbEvaluations: Int
+)

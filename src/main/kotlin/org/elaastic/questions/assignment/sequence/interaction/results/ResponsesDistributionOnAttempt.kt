@@ -74,7 +74,7 @@ class ResponsesDistributionOnAttempt(
 
     fun add(response: Response) {
         nbResponse++
-        response.choiceListSpecification.let { choices ->
+        response.learnerChoice.let { choices ->
             if (choices?.isEmpty() != false)
                 nbNoItem++
             else choices.forEach { incNbVotes(it) }

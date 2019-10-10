@@ -19,10 +19,13 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceGenerator
+import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistribution
 import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistributionOnAttempt
+import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.command.CommandModel
@@ -30,6 +33,7 @@ import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
+import org.elaastic.questions.player.components.responseForm.ResponseFormModel
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
 import org.elaastic.questions.player.components.results.OpenResultsModel
 import org.elaastic.questions.player.components.results.ResultsModel
@@ -37,6 +41,7 @@ import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
+import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
@@ -76,15 +81,9 @@ class TestingPlayerController(
                         studentsProvideExplanation = studentsProvideExplanation ?: true
                 )
         )
-        model.addAttribute("sequenceStatistics", SequenceStatistics)
+        model.addAttribute("sequenceStatistics", SequenceStatistics(10, 8, 5))
 
         return "/player/assignment/sequence/components/test-steps"
-    }
-
-    object SequenceStatistics {
-        val nbResponsesAttempt1: Int = 10
-        val nbResponsesAttempt2: Int = 8
-        val nbEvaluations: Int = 5
     }
 
     @GetMapping("/explanation-viewer")
@@ -678,4 +677,34 @@ class TestingPlayerController(
             val description: String,
             val model: CommandModel
     )
+
+    @GetMapping("/response-form")
+    fun testResponseForm(authentication: Authentication,
+                         model: Model): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+                "responseFormModel",
+                ResponseFormModel(
+                        sequenceId = 622L,
+                        interactionId = 1731L,
+                        userActiveInteractionState = State.show,
+                        attempt = 1,
+                        responseSubmissionSpecification = ResponseSubmissionSpecification(
+                                studentsProvideExplanation = true,
+                                studentsProvideConfidenceDegree = true
+                        ),
+                        responseSubmitted = false,
+                        timeToProvideExplanation = true,
+                        hasChoices = true,
+                        multipleChoice = true,
+                        firstAttemptChoices = arrayOf(2),
+                        firstAttemptExplanation = "Hello World",
+                        firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT
+                )
+        )
+
+        return "/player/assignment/sequence/components/test-response-form"
+    }
 }

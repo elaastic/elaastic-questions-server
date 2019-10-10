@@ -44,6 +44,7 @@ class SequenceService(
         @Autowired val interactionService: InteractionService,
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val resultsService: ResultsService,
+        @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
         @Autowired val learnerSequenceService: LearnerSequenceService
 ) {
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
@@ -218,5 +219,14 @@ class SequenceService(
             if (sequence.executionIsFaceToFace())
                 sequence.activeInteraction
             else learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).activeInteraction
+
+    fun nextInteractionForLearner(sequence: Sequence, learner: User) {
+        learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).let { learnerSequence ->
+            learnerSequence.activeInteraction = sequence.getInteractionAt(
+                    (learnerSequence.activeInteraction ?: error("No active interaction, cannot select the next one") ).rank + 1
+            )
+            learnerSequenceRepository.save(learnerSequence)
+        }
+    }
 
 }

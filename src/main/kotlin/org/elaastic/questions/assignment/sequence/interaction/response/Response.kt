@@ -18,8 +18,11 @@
 
 package org.elaastic.questions.assignment.sequence.interaction.response
 
-import org.elaastic.questions.assignment.choice.legacy.ChoiceListSpecification
-import org.elaastic.questions.assignment.choice.legacy.ChoiceListSpecificationConverter
+import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
+import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoiceConverter
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -50,8 +53,9 @@ class Response(
 
         var meanGrade: Float? = null,
 
-        @field:Convert(converter = ChoiceListSpecificationConverter::class)
-        var choiceListSpecification: ChoiceListSpecification? = null,
+        @field:Convert(converter = LearnerChoiceConverter::class)
+        @field:Column(name = "choiceListSpecification")
+        var learnerChoice: LearnerChoice? = null,
 
         var score: Float? = null
 
@@ -69,4 +73,25 @@ class Response(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
+
+    companion object {
+        fun computeScore(learnerChoice: LearnerChoice,
+                         choiceSpecification: ChoiceSpecification): Float =
+                when (choiceSpecification) {
+                    is ExclusiveChoiceSpecification ->
+                        run {
+                            require(learnerChoice.size <= 1) { "Cannot select more than one item with exclusive choice" }
+                            if (learnerChoice.first() == choiceSpecification.expectedChoice.index) 100f else 0f
+                        }
+
+                    is MultipleChoiceSpecification ->
+                        run {
+                            val scorePerItem = 100f / choiceSpecification.expectedChoiceList.size
+                            learnerChoice.filter { it in choiceSpecification.expectedChoiceList.map { it.index } }
+                                    .count() * scorePerItem
+                        }
+
+                    else -> error("Unsupported type of choice")
+                }
+    }
 }

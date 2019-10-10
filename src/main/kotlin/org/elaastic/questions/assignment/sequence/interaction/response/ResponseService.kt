@@ -18,9 +18,12 @@
 
 package org.elaastic.questions.assignment.sequence.interaction.response
 
+import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.EntityManager
@@ -30,16 +33,24 @@ import javax.transaction.Transactional
 @Transactional
 class ResponseService(
         @Autowired val responseRepository: ResponseRepository,
+        @Autowired val learnerAssignmentService: LearnerAssignmentService,
         @Autowired val entityManager: EntityManager
 ) {
 
-    fun findAll(sequence: Sequence) =
+    fun findAll(sequence: Sequence): ResponseSet =
             findAll(sequence.getResponseSubmissionInteraction())
 
     fun findAll(interaction: Interaction): ResponseSet =
             ResponseSet(
                     responseRepository.findAllByInteraction(interaction)
             )
+
+    fun hasResponseForUser(learner: User, sequence: Sequence, attempt: AttemptNum = 1) =
+            responseRepository.countByLearnerAndInteractionAndAttempt(
+                    learner = learner,
+                    interaction = sequence.getResponseSubmissionInteraction(),
+                    attempt = attempt
+            ) > 0
 
     // TODO Need to fetch users with responses
     fun findAllChoiceResponse(interaction: Interaction, correct: Boolean, attempt: AttemptNum = 1) {
@@ -65,5 +76,29 @@ class ResponseService(
 
         response.meanGrade = meanGrade
         responseRepository.save(response)
+    }
+
+    fun save(userActiveInteraction: Interaction, response: Response): Response {
+        require(
+                learnerAssignmentService.isRegistered(
+                        response.learner,
+                        response.interaction.sequence.assignment!!
+                )
+        ) { "You must be registered on the assignment to submit a response" }
+        require(run {
+            userActiveInteraction.isResponseSubmission() &&
+                    userActiveInteraction.state == State.show &&
+                    response.attempt == 1
+        } ||
+                run {
+                    userActiveInteraction.isEvaluation() &&
+                            userActiveInteraction.state == State.show &&
+                            response.attempt == 2
+                }
+
+        ) { "The interaction cannot receive response" }
+
+        responseRepository.save(response)
+        return response
     }
 }

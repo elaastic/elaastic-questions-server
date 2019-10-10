@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.interaction
 
-import org.elaastic.questions.assignment.choice.legacy.ChoiceListSpecification
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.test.TestingService
@@ -68,7 +68,7 @@ class ResponseRepositoryIntegrationTest(
     fun `save a valid interaction response - with all data`() {
         val learner = testingService.getAnyUser()
         val interaction = testingService.getAnyInteraction()
-        val choiceListSpecification = ChoiceListSpecification(listOf<Int>(1, 3))
+        val choiceListSpecification = LearnerChoice(listOf<Int>(1, 3))
         Response(
                 learner = learner,
                 interaction = interaction,
@@ -76,7 +76,7 @@ class ResponseRepositoryIntegrationTest(
                 explanation = "explanation",
                 confidenceDegree = 4,
                 meanGrade = 1.0f,
-                choiceListSpecification = choiceListSpecification,
+                learnerChoice = choiceListSpecification,
                 score = 2.0f
         ).tWhen {
             responseRepository.saveAndFlush(it)
@@ -87,7 +87,7 @@ class ResponseRepositoryIntegrationTest(
             assertThat(it.explanation, equalTo("explanation"))
             assertThat(it.confidenceDegree, equalTo(4))
             assertThat(it.meanGrade, equalTo(1.0f))
-            assertThat(it.choiceListSpecification, equalTo(choiceListSpecification))
+            assertThat(it.learnerChoice, equalTo(choiceListSpecification))
             assertThat(it.score, equalTo(2.0f))
         }
     }

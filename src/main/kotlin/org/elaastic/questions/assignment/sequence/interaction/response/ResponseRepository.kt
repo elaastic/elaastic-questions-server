@@ -20,6 +20,7 @@ package org.elaastic.questions.assignment.sequence.interaction.response
 
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.questions.directory.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 
@@ -40,4 +41,8 @@ interface ResponseRepository : JpaRepository<Response, Long> {
     fun findAllByInteractionAndAttemptAndScoreLessThanOrderByScoreDesc(interaction: Interaction,
                                                                        attempt: AttemptNum = 1,
                                                                        score: Float = 100f)
+
+    fun countByLearnerAndInteractionAndAttempt(learner: User,
+                                               interaction: Interaction,
+                                               attempt: AttemptNum): Int
 }

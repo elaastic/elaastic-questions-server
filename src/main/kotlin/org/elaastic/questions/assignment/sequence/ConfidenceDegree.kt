@@ -15,28 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.elaastic.questions.assignment.sequence
 
-package org.elaastic.questions.player.components.explanationViewer
-
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import kotlin.math.roundToInt
-
-class ResponseData(
-        val choices: List<Int> = listOf(),
-        val score: Int, // percents
-        val correct: Boolean
-) {
-    constructor(response: Response) : this(
-            choices = response.learnerChoice ?: error("The learner choice is undefined"),
-            score = ((response.score ?: error("The score is undefined")) * 100f).roundToInt(),
-            correct = response.score == 100f
-    )
-
-    override fun equals(other: Any?): Boolean {
-        return (other is ResponseData) && choices == other.choices
-    }
-
-    override fun hashCode(): Int {
-        return choices.hashCode()
-    }
+enum class ConfidenceDegree {
+        NOT_CONFIDENT_AT_ALL,
+        NOT_REALLY_CONFIDENT,
+        CONFIDENT,
+        TOTALLY_CONFIDENT
 }

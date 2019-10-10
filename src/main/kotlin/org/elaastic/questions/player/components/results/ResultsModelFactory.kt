@@ -40,15 +40,17 @@ object ResultsModelFactory {
                         if (sequence.getResponseSubmisssionSpecification().studentsProvideExplanation)
                             ExplanationViewerModelFactory.buildChoice(
                                     choiceSpecification = sequence.statement.choiceSpecification!!,
-                                    responseList = responseSet[2]
-                            ) // TODO Select the right attempt
+                                    responseList = responseSet[if (sequence.executionIsFaceToFace()) 1 else 2]
+                            )
                         else null
                 )
             else OpenResultsModel(
                     sequenceIsStopped = sequence.isStopped(),
                     sequenceId = sequence.id ?: error("This sequence has no ID"),
                     explanationViewerModel =
-                    ExplanationViewerModelFactory.buildOpen(responseSet[2]) // TODO Select the right attempt
+                    ExplanationViewerModelFactory.buildOpen(
+                            responseSet[if (sequence.executionIsFaceToFace()) 1 else 2]
+                    )
             )
 
     private fun buildResponseDistributionChartModel(sequence: Sequence,

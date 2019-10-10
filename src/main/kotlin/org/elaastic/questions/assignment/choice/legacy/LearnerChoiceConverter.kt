@@ -23,22 +23,22 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import javax.persistence.AttributeConverter
 
 
-class ChoiceListSpecificationConverter :
-        AttributeConverter<ChoiceListSpecification?, String?> {
+class LearnerChoiceConverter :
+        AttributeConverter<LearnerChoice?, String?> {
 
     private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
-    override fun convertToDatabaseColumn(attribute: ChoiceListSpecification?): String? {
+    override fun convertToDatabaseColumn(attribute: LearnerChoice?): String? {
         return when(attribute) {
             null -> null
             else -> mapper.writeValueAsString(attribute)
         }
     }
 
-    override fun convertToEntityAttribute(dbData: String?): ChoiceListSpecification? {
+    override fun convertToEntityAttribute(dbData: String?): LearnerChoice? {
         return when(dbData) {
             null -> null
-            else -> mapper.readValue(dbData, ChoiceListSpecification::class.java)
+            else -> mapper.readValue(dbData, LearnerChoice::class.java)
         }
     }
 }

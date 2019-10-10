@@ -16,27 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.explanationViewer
+package org.elaastic.questions.assignment.choice.legacy
 
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import kotlin.math.roundToInt
+import java.util.ArrayList
 
-class ResponseData(
-        val choices: List<Int> = listOf(),
-        val score: Int, // percents
-        val correct: Boolean
-) {
-    constructor(response: Response) : this(
-            choices = response.learnerChoice ?: error("The learner choice is undefined"),
-            score = ((response.score ?: error("The score is undefined")) * 100f).roundToInt(),
-            correct = response.score == 100f
-    )
 
-    override fun equals(other: Any?): Boolean {
-        return (other is ResponseData) && choices == other.choices
-    }
-
-    override fun hashCode(): Int {
-        return choices.hashCode()
-    }
-}
+class LearnerChoice(values: List<Int>) : ArrayList<Int>(values)

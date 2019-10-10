@@ -18,10 +18,14 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/3columns :: 3columns(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, aside=~{::#layout-aside}, modalAside=~{::#modal-aside}, content=~{::section})"
+      th:replace="layout/3columns :: 3columns(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, aside=~{::#layout-aside}, modalAside=~{::#modal-aside}, content=~{::section},extraHeader=~{::head/script})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-  <title th:text="|elaastic: ${assignment.title}|"></title>
+  <title th:text="|elaastic: ${playerModel.assignment.title}|"></title>
+  <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
+  <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
 </head>
 
 <body>
@@ -31,9 +35,9 @@
     var elaastic = elaastic || {}
   </script>
 
-  <th:block th:if="${userRole == 'teacher'}">
+  <th:block th:if="${playerModel.userRole.name() == 'teacher'}">
     <a class="item"
-       th:href="@{/assignment/{assignmentId}(assignmentId=${assignment.id})}"
+       th:href="@{/assignment/{assignmentId}(assignmentId=${playerModel.assignment.id})}"
        th:attr="data-tooltip=#{assignment.action.show.label}"
        data-position="right center"
        data-inverted="">
@@ -48,31 +52,36 @@
          data-inverted="">
       <i class="yellow feed icon"></i>
     </div>
-    <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${assignment})"></div>
+    <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${playerModel.assignment})"></div>
   </th:block>
 </div>
 
 <aside id="layout-aside" th:with="components=${'/player/assignment/sequence/components'}">
   <div
-    th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${assignmentOverviewModel}, aside)"></div>
+    th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 </aside>
 
 <div id="modal-aside" th:with="components=${'/player/assignment/sequence/components'}">
   <div
-    th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${assignmentOverviewModel}, modal-aside)"></div>
+    th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, modal-aside)"></div>
 </div>
 
 <section th:with="components=${'/player/assignment/sequence/components'}">
-  <div th:if="${sequence}"
-       th:id="|sequence_${sequence.id}|">
-    <div th:replace="|${components}/_steps.html| :: steps(${stepsModel}, ${sequenceStatistics})"></div>
-    <th:block th:if="${userRole == 'teacher'}">
-      <div th:replace="|${components}/_command.html| :: command(${commandModel})"></div>
+  <div th:if="${playerModel.sequence}"
+       th:id="|sequence_${playerModel.sequence.id}|">
+    <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
+    <th:block th:if="${playerModel.userRole == 'teacher'}">
+      <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel})"></div>
     </th:block>
-    <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${sequenceInfoModel})"></div>
-    <div th:replace="|${components}/_statement.html| :: statement(${statementPanelModel},${statement})"></div>
-    <div th:if="${showResults}" th:remove="tag">
-      <div th:replace="|${components}/_results.html| :: results(${resultsModel})"></div>
+    <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel})"></div>
+    <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
+
+    <th:block th:if="${playerModel.showResponseForm}">
+      <div th:replace="|${components}/_response-form.html| :: responseForm(${playerModel.responseFormModel})"></div>
+    </th:block>
+
+    <div th:if="${playerModel.showResults}" th:remove="tag">
+      <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
     </div>
   </div>
 

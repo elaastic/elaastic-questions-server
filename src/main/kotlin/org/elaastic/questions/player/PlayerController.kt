@@ -20,21 +20,17 @@ package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
-import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
-import org.elaastic.questions.player.components.command.CommandModelFactory
-import org.elaastic.questions.player.components.results.ResultsModelFactory
-import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
-import org.elaastic.questions.player.components.statement.StatementInfo
-import org.elaastic.questions.player.components.statement.StatementPanelModel
-import org.elaastic.questions.player.components.steps.StepsModelFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -133,76 +129,33 @@ class PlayerController(
 
         sequenceService.get(id, true).let { sequence ->
             model.addAttribute("user", user)
-            model.addAttribute("assignment", sequence.assignment)
-            model.addAttribute("sequence", sequence)
+            val teacher = user == sequence.owner
 
-            (user == sequence.owner).let { teacher ->
-                model.addAttribute(
-                        "userRole",
-                        if (teacher) "teacher" else "learner" // TODO Define a type for this
-                )
-
-                model.addAttribute(
-                        "assignmentOverviewModel",
-
-                        AssignmentOverviewModelFactory.build(
-                                teacher = teacher,
-                                nbRegisteredUser =
-                                assignmentService.getNbRegisteredUsers(sequence.assignment!!),
-                                assignmentTitle = sequence.assignment?.title!!,
-                                sequences = sequence.assignment?.sequences!!,
-                                sequenceToUserActiveInteraction =
-                                if (teacher)
-                                    sequence.assignment!!.sequences.associate { it to it.activeInteraction }
-                                else sequence.assignment!!.sequences.associate {
-                                    it to learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
-                                },
-                                selectedSequenceId = id
-                        )
-                )
-
-                model.addAttribute(
-                        "stepsModel",
-                        if (teacher)
-                            StepsModelFactory.buildForTeacher(sequence)
-                        else StepsModelFactory.buildForLearner(
-                                sequence,
-                                sequenceService.getActiveInteractionForLearner(sequence, user)
-                        )
-                )
-
-                if (teacher)
-                    model.addAttribute("commandModel", CommandModelFactory.build(user, sequence))
-
-
-                model.addAttribute(
-                        "sequenceInfoModel",
-                        SequenceInfoResolver.resolve(teacher, sequence, messageBuilder)
-                )
-                model.addAttribute(
-                        "statementPanelModel",
-                        StatementPanelModel(
-                                hideStatement = !teacher && sequence.state == State.beforeStart,
-                                panelClosed = teacher && sequence.state != State.beforeStart
-                        )
-                )
-                model.addAttribute("statement", StatementInfo(sequence.statement))
-                model.addAttribute(
-                        "showResults",
-                        if (teacher)
-                            sequence.state != State.beforeStart
-                        else sequence.resultsArePublished
-                )
-
-                if (sequence.state != State.beforeStart)
-                    model.addAttribute(
-                            "resultsModel",
-                            ResultsModelFactory.build(
-                                    sequence,
-                                    responseService.findAll(sequence)
-                            )
+            model.addAttribute(
+                    "playerModel",
+                    PlayerModelFactory.build(
+                            user = user,
+                            teacher = teacher,
+                            sequence = sequence,
+                            nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!),
+                            sequenceToUserActiveInteraction =
+                            if (teacher)
+                                sequence.assignment!!.sequences.associate { it to it.activeInteraction }
+                            else sequence.assignment!!.sequences.associate {
+                                it to learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
+                            },
+                            messageBuilder = messageBuilder,
+                            getLearnerSequence = {
+                                learnerSequenceService.findOrCreateLearnerSequence(user, sequence)
+                            },
+                            hasResponseForUser = {
+                                responseService.hasResponseForUser(user, sequence)
+                            },
+                            findAllResponses = {
+                                responseService.findAll(sequence)
+                            }
                     )
-            }
+            )
         }
 
         return "/player/assignment/sequence/play"
@@ -324,4 +277,53 @@ class PlayerController(
 
         return "redirect:/player/sequence/${id}/play"
     }
+
+    @PostMapping("/sequence/{id}/submit-response")
+    fun submitResponse(authentication: Authentication,
+                       model: Model,
+                       @ModelAttribute responseSubmissionData: ResponseSubmissionData,
+                       @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        sequenceService.get(id, true).let { sequence ->
+            val choiceListSpecification = responseSubmissionData.choiceList?.let {
+                LearnerChoice(it)
+            }
+
+            val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
+
+            responseService.save(
+                    userActiveInteraction
+                            ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
+                    Response(
+                            learner = user,
+                            interaction = sequence.getResponseSubmissionInteraction(),
+                            attempt = responseSubmissionData.attempt,
+                            confidenceDegree = responseSubmissionData.confidenceDegree?.ordinal,
+                            explanation = responseSubmissionData.explanation,  // TODO Sanitize
+                            learnerChoice = choiceListSpecification,
+                            score = choiceListSpecification?.let {
+                                Response.computeScore(
+                                        it,
+                                        sequence.statement.choiceSpecification
+                                                ?: error("The choice specification is undefined")
+                                )
+                            }
+                    )
+            )
+            if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
+                sequenceService.nextInteractionForLearner(sequence, user)
+            }
+        }
+
+        return "redirect:/player/sequence/${id}/play"
+    }
+
+    data class ResponseSubmissionData(
+            val interactionId: Long,
+            val attempt: AttemptNum,
+            val choiceList: List<Int>?,
+            val confidenceDegree: ConfidenceDegree?,
+            val explanation: String?
+    )
 }

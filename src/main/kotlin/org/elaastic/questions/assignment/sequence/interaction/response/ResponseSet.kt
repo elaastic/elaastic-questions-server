@@ -23,11 +23,11 @@ import java.lang.IllegalStateException
 
 class ResponseSet(responses: List<Response>) {
 
+    private val responsesByAttempt = Array<MutableList<Response>>(2) { mutableListOf() }
+    
     init {
         responses.forEach { add(it) }
     }
-
-    private val responsesByAttempt = Array<MutableList<Response>>(2) { mutableListOf() }
 
     fun isEmpty(): Boolean =
             get(1).isEmpty() && get(2).isEmpty()
