@@ -28,6 +28,8 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
@@ -39,6 +41,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
+import java.util.HashMap
 import javax.persistence.EntityNotFoundException
 import kotlin.IllegalStateException
 
@@ -51,6 +54,7 @@ class PlayerController(
         @Autowired val learnerSequenceService: LearnerSequenceService,
         @Autowired val interactionService: InteractionService,
         @Autowired val responseService: ResponseService,
+        @Autowired val peerGradingService: PeerGradingService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -145,14 +149,20 @@ class PlayerController(
                                 it to learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
                             },
                             messageBuilder = messageBuilder,
-                            getLearnerSequence = {
-                                learnerSequenceService.findOrCreateLearnerSequence(user, sequence)
+                            getActiveInteractionForLearner = { learnerSequenceService.getActiveInteractionForLearner(user, sequence) },
+                            hasResponseForUser = { attemptNum: AttemptNum ->
+                                responseService.hasResponseForUser(user, sequence, attemptNum)
                             },
-                            hasResponseForUser = {
-                                responseService.hasResponseForUser(user, sequence)
+                            findAllResponses = { responseService.findAll(sequence) },
+                            findAllRecommandedResponsesForUser = {
+                                responseService.findAllRecommandedResponsesForUser(
+                                        sequence = sequence,
+                                        attempt = sequence.whichAttemptEvaluate(),
+                                        user = user
+                                )
                             },
-                            findAllResponses = {
-                                responseService.findAll(sequence)
+                            userHasPerformedEvaluation = {
+                                peerGradingService.userHasPerformedEvaluation(user, sequence)
                             }
                     )
             )
@@ -326,4 +336,73 @@ class PlayerController(
             val confidenceDegree: ConfidenceDegree?,
             val explanation: String?
     )
+
+    @PostMapping("/sequence/{id}/submit-evaluation-and-second-attempt")
+    fun submitEvaluationAndSecondAttempt(authentication: Authentication,
+                                         model: Model,
+                                         @ModelAttribute evaluationData: EvaluationData,
+                                         @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        sequenceService.get(id, true).let { sequence ->
+            evaluationData.getGrades().forEach {
+                peerGradingService.createOrUpdate(user, responseService.getOne(it.key), it.value.toBigDecimal())
+            }
+
+            if (sequence.isSecondAttemptAllowed()
+                    && !responseService.hasResponseForUser(user, sequence, 2)) {
+                val choiceListSpecification = evaluationData.choiceList?.let {
+                    LearnerChoice(it)
+                }
+
+                Response(
+                        learner = user,
+                        interaction = sequence.getResponseSubmissionInteraction(),
+                        attempt = 2,
+                        confidenceDegree = evaluationData.confidenceDegree?.ordinal,
+                        explanation = evaluationData.explanation,
+                        learnerChoice = choiceListSpecification,
+                        score = choiceListSpecification?.let {
+                            Response.computeScore(
+                                    it,
+                                    sequence.statement.choiceSpecification
+                                            ?: error("The choice specification is undefined")
+                            )
+                        }
+                )
+                        .let {
+                            val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
+                                    ?: error("No active interaction, cannot submit a response") // TODO we should provide a user-friendly error page for this
+
+                            responseService.save(
+                                    userActiveInteraction,
+                                    it
+                            )
+                        }
+
+
+            }
+
+            if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
+                sequenceService.nextInteractionForLearner(sequence, user)
+            }
+
+            return "redirect:/player/sequence/${id}/play"
+        }
+    }
+
+    class EvaluationData(
+            val id: Long,
+            val choiceList: List<ItemIndex>?,
+            val confidenceDegree: ConfidenceDegree?,
+            val explanation: String?
+    ) {
+        private var grades = HashMap<Long, Int>()
+
+        fun getGrades() = grades
+
+        fun setGrades(value: HashMap<Long, Int>) {
+            grades = value
+        }
+    }
 }

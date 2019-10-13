@@ -16,13 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction
+package org.elaastic.questions.player.components.evaluationPhase
 
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.springframework.data.jpa.repository.JpaRepository
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 
-
-interface InteractionRepository : JpaRepository<Interaction, Long> {
-
-    fun findAllBySequence(sequence: Sequence): List<Interaction>
+data class ResponseData(
+        val id: Long,
+        val choiceList: List<Int> = listOf(),
+        val explanation: String,
+        val userGrade: String
+) {
+    constructor(response: Response): this(
+            id = response.id ?: error("Response has no ID"),
+            choiceList = response.learnerChoice ?: listOf<Int>(),
+            explanation = response.explanation ?:"",
+            userGrade = "Why do I need that here ?" // TODO ***
+    )
 }

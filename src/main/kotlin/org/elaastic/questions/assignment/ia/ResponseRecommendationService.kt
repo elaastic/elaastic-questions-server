@@ -18,11 +18,21 @@
 package org.elaastic.questions.assignment.ia
 
 import org.elaastic.questions.assignment.sequence.interaction.ExplanationRecommendationMapping
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
+import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.springframework.stereotype.Service
+import java.math.BigInteger
+import java.util.*
+import javax.persistence.EntityManager
+import kotlin.Comparator
 
 @Service
-class ResponseRecommendationService {
+class ResponseRecommendationService(
+        val entityManager: EntityManager,
+        val responseRepository: ResponseRepository
+) {
 
     fun computeRecommendations(responseList: List<Response>,
                                nbEvaluation: Int): ExplanationRecommendationMapping {
@@ -32,19 +42,22 @@ class ResponseRecommendationService {
                         allResponse.filter { it.evaluable },
                         INCORRECT_RESPONSE_FIRST
                 ).let { recommendationResponsePool ->
+                    val correctResponseList = allResponse.filter { it.correct }.shuffled()
+                    val incorrectResponseList = allResponse.filter { !it.correct }.shuffled()
+
                     repeat(nbEvaluation) { i ->
                         computeRecommandations(
-                                forResponseList = allResponse.filter { it.correct }.shuffled(), // TODO Don't do it for each iteration
+                                forResponseList = correctResponseList,
                                 responsePool = recommendationResponsePool.comparator(
-                                        if(i % 2 == 0) INCORRECT_RESPONSE_FIRST else CORRECT_RESPONSE_FIRST
+                                        if (i % 2 == 0) INCORRECT_RESPONSE_FIRST else CORRECT_RESPONSE_FIRST
                                 ),
                                 recommendationsMapping = recommendationsMapping
                         )
 
                         computeRecommandations(
-                                forResponseList = allResponse.filter { !it.correct }.shuffled(),
+                                forResponseList = incorrectResponseList,
                                 responsePool = recommendationResponsePool.comparator(
-                                        if(i % 2 == 0) CORRECT_RESPONSE_FIRST else INCORRECT_RESPONSE_FIRST
+                                        if (i % 2 == 0) CORRECT_RESPONSE_FIRST else INCORRECT_RESPONSE_FIRST
                                 ),
                                 recommendationsMapping = recommendationsMapping
                         )
@@ -72,15 +85,34 @@ class ResponseRecommendationService {
         }
     }
 
-    fun getRecommendationsForOpenQuestion(responseList: List<Response>,
-                                          nbRecommendation: Int) {
-           // TODO("Requirements")
+    fun findAllResponsesOrderedByEvaluationCount(interaction: Interaction,
+                                                 attemptNum: AttemptNum,
+                                                 limit: Int,
+                                                 seed: Long = System.nanoTime()): List<Response> =
+            entityManager.createNativeQuery("""
+        SELECT cir.id as responseId, (select count(*) from peer_grading pg where pg.response_id = cir.id) as evalCount
+        FROM choice_interaction_response cir 
+        WHERE cir.interaction_id = :interactionId and cir.attempt = :attempt
+              and cir.explanation is not null and CHAR_LENGTH(cir.explanation) > $MIN_SIZE_OF_EXPLANATION_TO_BE_EVALUATED
+        ORDER BY evalCount ASC LIMIT :limit            
+        """.trimIndent())
+                    .setParameter("interactionId", interaction.id)
+                    .setParameter("attempt", attemptNum)
+                    .setParameter("limit", limit)
+                    .resultList.let { rawData ->
+                responseRepository.getAllByIdIn(
+                        rawData.map {
+                            if (it is Array<*>) {
+                                (it[0] as BigInteger).toLong()
+                            } else error("Expect an array but got a ${it?.javaClass}")
+                        }
+                ).shuffled(random = Random(seed))
 
-        
-        
-    }
+            }
 
     companion object {
+        const val MIN_SIZE_OF_EXPLANATION_TO_BE_EVALUATED = 10
+
         val INCORRECT_RESPONSE_FIRST: Comparator<ResponseInfo> = kotlin.Comparator<ResponseInfo> { r1, r2 ->
             when (Pair(r1.correct, r2.correct)) {
                 Pair(true, false) -> -1

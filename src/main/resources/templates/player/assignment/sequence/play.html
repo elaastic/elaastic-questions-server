@@ -76,8 +76,12 @@
     <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel})"></div>
     <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
 
-    <th:block th:if="${playerModel.showResponseForm}">
-      <div th:replace="|${components}/_response-form.html| :: responseForm(${playerModel.responseFormModel})"></div>
+    <th:block th:if="${playerModel.showResponsePhase}">
+      <div th:replace="|${components}/_response-phase.html| :: responsePhase(${playerModel.responsePhaseModel})"></div>
+    </th:block>
+
+    <th:block th:if="${playerModel.showEvaluationPhase}">
+      <div th:replace="|${components}/_evaluation-phase.html| :: evaluationPhase(${playerModel.evaluationPhaseModel})"></div>
     </th:block>
 
     <div th:if="${playerModel.showResults}" th:remove="tag">

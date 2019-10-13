@@ -21,7 +21,8 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel
 import org.elaastic.questions.player.components.command.CommandModel
-import org.elaastic.questions.player.components.responseForm.ResponseFormModel
+import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
+import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.statement.StatementInfo
@@ -29,6 +30,7 @@ import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModel
 
+// TODO : we should subclass the PlayerModel ; it's not an option to have showResponsePhase & showEvaluationPhase
 data class PlayerModel(
         val assignment: Assignment,
         val sequence: Sequence,
@@ -40,8 +42,10 @@ data class PlayerModel(
         val sequenceInfoModel: SequenceInfoModel,
         val statementPanelModel: StatementPanelModel,
         val statement: StatementInfo,
-        val showResponseForm: Boolean,
-        val responseFormModel: ResponseFormModel?,
+        val showResponsePhase: Boolean,
+        val responsePhaseModel: ResponsePhaseModel?,
+        val showEvaluationPhase: Boolean,
+        val evaluationPhaseModel: EvaluationPhaseModel?,
         val showResults: Boolean,
         val resultsModel: ResultsModel?
 

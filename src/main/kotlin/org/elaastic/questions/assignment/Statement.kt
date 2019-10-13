@@ -33,6 +33,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
+// TODO (+) We should define a interface so that a sequence can implement statement operations by delegation
 class Statement(
         @field:NotNull
         @field:ManyToOne(fetch = FetchType.LAZY)
@@ -109,7 +110,6 @@ class Statement(
         return this
     }
 
-    // TODO test
     fun updateFrom(otherStatement: Statement): Statement {
         require(id == otherStatement.id)
         require(owner == otherStatement.owner)

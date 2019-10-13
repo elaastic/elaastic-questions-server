@@ -15,14 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.elaastic.questions.player.components.responsePhase
 
-package org.elaastic.questions.assignment.sequence.interaction
+import org.elaastic.questions.assignment.sequence.State
 
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.springframework.data.jpa.repository.JpaRepository
+data class ResponsePhaseModel(
+        val sequenceId: Long,
+        val interactionId: Long, // TODO we shouldn't use interactionId ; sequenceId is enough
+        val userActiveInteractionState: State,
+        val responseSubmitted: Boolean,
+        val responseFormModel: ResponseFormModel
+) {
 
-
-interface InteractionRepository : JpaRepository<Interaction, Long> {
-
-    fun findAllBySequence(sequence: Sequence): List<Interaction>
 }

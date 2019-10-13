@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.elaastic.questions.player.components.responseForm
+package org.elaastic.questions.player.components.responsePhase
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
@@ -23,30 +23,29 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 
-object ResponseFormModelFactory {
+object ResponsePhaseModelFactory {
 
     fun build(responseSubmitted: Boolean,
-              attempt: AttemptNum,
               sequence: Sequence,
-              userActiveInteraction: Interaction?) =
-            (attempt == 1
-                    || sequence.executionIsBlended()
-                    || sequence.executionIsDistance()).let { timeToProvideExplanation ->
+              userActiveInteraction: Interaction?) = run {
 
-                val interaction = sequence.getResponseSubmissionInteraction()
+        val interaction = sequence.getResponseSubmissionInteraction()
 
-                ResponseFormModel(
-                        sequenceId = sequence.id ?: error("Sequence must have an ID to get a response"),
+        ResponsePhaseModel(
+                sequenceId = sequence.id ?: error("Sequence must have an ID to get a response"),
+                interactionId = interaction.id ?: error("Interaction must have an ID to get response"),
+                userActiveInteractionState = userActiveInteraction?.state ?: State.beforeStart,
+                responseSubmitted = responseSubmitted,
+                responseFormModel = ResponseFormModel(
                         interactionId = interaction.id ?: error("Interaction must have an ID to get response"),
-                        userActiveInteractionState = userActiveInteraction?.state ?: State.beforeStart,
-                        attempt = attempt,
-                        responseSubmitted = responseSubmitted,
+                        attempt = 1,
                         responseSubmissionSpecification = interaction.specification as ResponseSubmissionSpecification,
-                        timeToProvideExplanation = timeToProvideExplanation,
+                        timeToProvideExplanation = true,
                         hasChoices = sequence.statement.hasChoices(),
                         multipleChoice = sequence.statement.isMultipleChoice(),
-                        itemCount = sequence.statement.choiceSpecification?.nbCandidateItem
+                        nbItem = sequence.statement.choiceSpecification?.nbCandidateItem
                 )
-            }
+        )
+    }
 
 }

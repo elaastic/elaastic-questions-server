@@ -16,9 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.questions.player.components.evaluationPhase
 
-import org.springframework.data.jpa.repository.JpaRepository
+import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.player.components.responsePhase.ResponseFormModel
 
-
-interface PeerGradingRepository : JpaRepository<PeerGrading, Long>
+data class EvaluationPhaseModel(
+        val sequenceId: Long,
+        val interactionId: Long,
+        val userActiveInteractionState: State,
+        val choices: Boolean,
+        val activeInteractionRank: Int,
+        val userHasCompletedPhase2: Boolean,
+        val userHasPerformedEvaluation: Boolean,
+        val responsesToGrade: List<ResponseData>,
+        val secondAttemptAllowed: Boolean,
+        val secondAttemptAlreadySubmitted: Boolean,
+        val responseFormModel: ResponseFormModel
+)

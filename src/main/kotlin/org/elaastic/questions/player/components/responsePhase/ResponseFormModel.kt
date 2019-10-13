@@ -15,28 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.elaastic.questions.player.components.responseForm
+package org.elaastic.questions.player.components.responsePhase
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 
-data class ResponseFormModel( // TODO Improve this model
-        val sequenceId: Long,
+data class ResponseFormModel(
         val interactionId: Long,
-        val userActiveInteractionState: State,
         val attempt: AttemptNum,
-        val responseSubmitted: Boolean,
-        val responseSubmissionSpecification: ResponseSubmissionSpecification,
-        val timeToProvideExplanation: Boolean,
         val hasChoices: Boolean,
         val multipleChoice: Boolean,
-        val ConfidenceDegreeValues: Array<ConfidenceDegree> = ConfidenceDegree.values(),
-        val itemCount: Int? = null,
+        val nbItem: Int? = null,
         val firstAttemptChoices: Array<Int> = arrayOf(),
+        val timeToProvideExplanation: Boolean,
         val firstAttemptExplanation: String? = null,
-        val firstAttemptConfidenceDegree: ConfidenceDegree? = null
-) {
-
-}
+        val firstAttemptConfidenceDegree: ConfidenceDegree? = null,
+        val responseSubmissionSpecification: ResponseSubmissionSpecification,
+        val ConfidenceDegreeValues: Array<ConfidenceDegree> = ConfidenceDegree.values()
+)

@@ -39,7 +39,7 @@ class ResponseSet(responses: List<Response>) {
     }
 
     fun add(response: Response) = when(response.attempt) {
-        0, 1 -> responsesByAttempt[response.attempt-1].add(response)
+        1, 2 -> responsesByAttempt[response.attempt-1].add(response)
         else -> throw IllegalStateException("Invalid response ; attempt=${response.attempt}")
     }
 }

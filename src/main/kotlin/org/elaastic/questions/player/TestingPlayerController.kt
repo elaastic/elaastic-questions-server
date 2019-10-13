@@ -30,10 +30,12 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
+import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
-import org.elaastic.questions.player.components.responseForm.ResponseFormModel
+import org.elaastic.questions.player.components.responsePhase.ResponseFormModel
+import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
 import org.elaastic.questions.player.components.results.OpenResultsModel
 import org.elaastic.questions.player.components.results.ResultsModel
@@ -678,33 +680,91 @@ class TestingPlayerController(
             val model: CommandModel
     )
 
-    @GetMapping("/response-form")
-    fun testResponseForm(authentication: Authentication,
-                         model: Model): String {
+    @GetMapping("/response-phase")
+    fun testResponsePhase(authentication: Authentication,
+                          model: Model): String {
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
         model.addAttribute(
-                "responseFormModel",
-                ResponseFormModel(
+                "responsePhaseModel",
+                ResponsePhaseModel(
                         sequenceId = 622L,
                         interactionId = 1731L,
                         userActiveInteractionState = State.show,
-                        attempt = 1,
-                        responseSubmissionSpecification = ResponseSubmissionSpecification(
-                                studentsProvideExplanation = true,
-                                studentsProvideConfidenceDegree = true
-                        ),
                         responseSubmitted = false,
-                        timeToProvideExplanation = true,
-                        hasChoices = true,
-                        multipleChoice = true,
-                        firstAttemptChoices = arrayOf(2),
-                        firstAttemptExplanation = "Hello World",
-                        firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT
+                        responseFormModel = ResponseFormModel(
+                                interactionId = 1731L,
+                                attempt = 1,
+                                responseSubmissionSpecification = ResponseSubmissionSpecification(
+                                        studentsProvideExplanation = true,
+                                        studentsProvideConfidenceDegree = true
+                                ),
+                                timeToProvideExplanation = true,
+                                hasChoices = true,
+                                multipleChoice = true,
+                                firstAttemptChoices = arrayOf(2),
+                                firstAttemptExplanation = "Hello World",
+                                firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
+                                nbItem = 3
+                        )
+
                 )
         )
 
-        return "/player/assignment/sequence/components/test-response-form"
+        return "/player/assignment/sequence/components/test-response-phase"
+    }
+
+    @GetMapping("/evaluation-phase")
+    fun testEvaluationPhase(authentication: Authentication,
+                            model: Model): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+                "evaluationPhaseModel",
+                EvaluationPhaseModel(
+                        sequenceId = 12,
+                        interactionId = 123,
+                        choices = true,
+                        activeInteractionRank = 2,
+                        userHasCompletedPhase2 = false,
+                        responsesToGrade = listOf(
+                                org.elaastic.questions.player.components.evaluationPhase.ResponseData(
+                                        id = 1,
+                                        choiceList = listOf(1),
+                                        explanation = "1st explanation",
+                                        userGrade = "Pas mal"
+                                ),
+                                org.elaastic.questions.player.components.evaluationPhase.ResponseData(
+                                        id = 2,
+                                        choiceList = listOf(2),
+                                        explanation = "2nd explanation",
+                                        userGrade = "Àch'"
+                                )
+                        ),
+                        secondAttemptAllowed = true,
+                        secondAttemptAlreadySubmitted = false,
+                        responseFormModel = ResponseFormModel(
+                                interactionId = 1731L,
+                                attempt = 2,
+                                responseSubmissionSpecification = ResponseSubmissionSpecification(
+                                        studentsProvideExplanation = true,
+                                        studentsProvideConfidenceDegree = true
+                                ),
+                                timeToProvideExplanation = true,
+                                hasChoices = true,
+                                multipleChoice = true,
+                                firstAttemptChoices = arrayOf(2),
+                                firstAttemptExplanation = "Hello World",
+                                firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
+                                nbItem = 3
+                        ),
+                        userActiveInteractionState = State.show,
+                        userHasPerformedEvaluation = false
+                )
+        )
+
+        return "/player/assignment/sequence/components/test-evaluation-phase"
     }
 }

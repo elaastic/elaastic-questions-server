@@ -1,0 +1,147 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<div th:fragment="evaluationPhase(model)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="ui segment">
+    <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
+      Comparing viewpoints
+    </div>
+
+
+    <form th:unless="${model.userHasCompletedPhase2 || model.userActiveInteractionState.name() == 'afterStop'}"
+          th:action="@{/player/sequence/{sequenceId}/submit-evaluation-and-second-attempt(sequenceId=${model.sequenceId})}"
+          class="ui form"
+          method="post">
+      <input type="hidden" name="id" th:value="${model.interactionId}"/>
+      <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
+        <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.intro}">
+          Here are presented one or several alternative responses. Please indicate how much you agree with these
+          answers.
+        </div>
+
+        <div id="phase2-evaluation-app">
+          <div th:each="currentResponse : ${model.responsesToGrade}" class="ui attached segment">
+            <th:block th:if="${model.choices}">
+              <strong th:text="#{player.sequence.interaction.choice.label}">Choice</strong>
+              <strong th:text="${currentResponse.choiceList}"></strong>
+              <br/>
+            </th:block>
+            <span th:utext="${currentResponse.explanation}"></span>
+
+
+            <evaluation-input th:attr="current-response-id=${currentResponse.id}"
+                              th:value="${currentResponse.userGrade}"></evaluation-input>
+
+          </div>
+        </div>
+
+        <div class="ui hidden divider"></div>
+
+      </th:block>
+
+
+      <th:block th:if="${model.secondAttemptAllowed}">
+        <div th:if="${model.secondAttemptAlreadySubmitted}"
+             class="ui blue message"
+             th:text="#{player.sequence.interaction.secondAttemptSubmitted}">
+          Your second response has been registered.
+        </div>
+        <th:block th:unless="${model.secondAttemptAlreadySubmitted}">
+          <div class="ui blue message"
+               th:text="#{player.sequence.interaction.secondAttemptSubmittable}">
+            Take a second chance to change or improve your answer.
+          </div>
+
+          <div class="ui basic segment">
+            <div
+              th:replace="player/assignment/sequence/components/_response-form.html :: responseForm(${model.responseFormModel})"></div>
+          </div>
+        </th:block>
+      </th:block>
+      <input type="submit"
+             class="ui primary button"
+             onclick="onSubmitResponse()"
+             th:value="#{player.sequence.interaction.submitResponse}"/>
+    </form>
+
+    <div th:if="${model.userHasCompletedPhase2}"
+         class="ui blue message"
+         th:text="#{player.sequence.phase.completedByUser(${model.activeInteractionRank})}">
+    </div>
+
+    <div th:if="${!model.userHasCompletedPhase2 && model.userActiveInteractionState.name() == 'afterStop'}"
+         class="ui blue message"
+         th:text="#{player.sequence.interaction.evaluation.tooLate}">
+    </div>
+
+
+  </div>
+
+
+  <style>
+    .fieldgrade .active.item {
+      background-color: #dff0ff !important;
+      color: #0e6eb8 !important;
+    }
+  </style>
+
+  <script th:inline="javascript">
+
+    new Vue({
+      el: '#phase2-evaluation-app',
+      components: {
+        'evaluation-input': {
+          props: ['currentResponseId', 'value'],
+          template: `
+    <div class="field grade">
+      <input type="hidden" :id="\'grades[\'+currentResponseId+\']\'" :name="\'grades[\'+currentResponseId+\']\'" v-model="grade" />` +
+            '<label>' + [[#{player.sequence.interaction.your.evaluation}]] + '</label>' +
+            `<div class="ui stackable pagination menu" >
+        <a class="item" v-bind:class="{ active: grade === -1 }" v-on:click="grade = -1">` +
+            [[#{player.sequence.interaction.grade.-1}]] +
+            `</a>
+        <div class="disabled item"></div>` +
+            /*[# th:each="grade : ${#numbers.sequence(1, 5)}"]*/
+            '<a class="item"' +
+            'v-bind:class="{ active: grade === [[${grade}]] }"' +
+            'v-on:click="grade=[[${grade}]]"' +
+            'data-inverted=""' +
+            'data-tooltip="' + [[#{|player.sequence.interaction.grade.${grade}|}]]+ '"' +
+            'data-position="top center">' +
+            '[[${grade}]]' +
+            '</a>' +
+            [/]
+              `
+      </div>
+    </div>`,
+              data
+    :
+
+    function () {
+      return {
+        grade: this.value
+      }
+    }
+    }
+    }
+    })
+
+  </script>
+
+</div>

@@ -20,13 +20,19 @@ package org.elaastic.questions.assignment.ia
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.junit.jupiter.api.Test
 import com.nhaarman.mockitokotlin2.*
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import java.math.BigDecimal
+import javax.persistence.EntityManager
+
 
 internal class ResponseRecommendationServiceTest {
 
     @Test
     fun `Simple test of computeRecommendations`() {
-        val service = ResponseRecommendationService()
+        val service = ResponseRecommendationService(
+                mock<EntityManager>(),
+                mock<ResponseRepository>()
+        )
 
         service.computeRecommendations(
                 listOf(

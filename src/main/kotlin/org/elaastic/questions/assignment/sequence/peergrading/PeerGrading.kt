@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.questions.assignment.sequence.peergrading
 
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.directory.User
@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class PeerGrading(
         var grade: BigDecimal?,
-        var annotation: String?,
+        var annotation: String? = null,
 
         @field:ManyToOne
         var grader: User,

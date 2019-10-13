@@ -23,6 +23,7 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -114,6 +115,16 @@ class Sequence(
             }
 
     @Transient
+    fun getEvaluationSpecification(): EvaluationSpecification =
+            getEvaluationInteraction().specification.let { specification ->
+                when (specification) {
+                    null -> error("This interaction has no specification")
+                    is EvaluationSpecification -> specification
+                    else -> error("Expected an EvaluationSpecification but got a ${specification.javaClass}")
+                }
+            }
+
+    @Transient
     fun getEvaluationInteraction() =
             interactions[InteractionType.Evaluation]
                     ?: throw IllegalStateException("The evaluation interaction is not initialized")
@@ -161,6 +172,14 @@ class Sequence(
             activeInteraction = it
         } ?: throw IllegalStateException("No interaction ${interactionType} defined for this sequence")
     }
+
+
+    @Transient
+    fun isSecondAttemptAllowed() =
+            !(executionIsFaceToFace() && statement.isOpenEnded())
+
+    fun whichAttemptEvaluate() =
+            if (executionIsFaceToFace()) 1 else 2
 
 }
 

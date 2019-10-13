@@ -18,13 +18,12 @@
 
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.assignment.sequence.PeerGrading
-import org.elaastic.questions.assignment.sequence.PeerGradingRepository
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import javax.transaction.Transactional
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

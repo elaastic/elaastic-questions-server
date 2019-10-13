@@ -16,26 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.directory.controller
+package org.elaastic.questions.assignment.sequence.peergrading
 
-import org.elaastic.questions.assignment.AssignmentService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.directory.User
+import org.springframework.data.jpa.repository.JpaRepository
 
 
-@RestController
-class DebugController( // TODO Remove
-        @Autowired val assignmentService: AssignmentService
-) {
-
-    @RequestMapping("/debug/fetch")
-    fun fetch(): String {
-        return assignmentService.get(1, true).toString()
-    }
-
-    @RequestMapping("/debug/no-fetch")
-    fun noFetch(): String {
-        return assignmentService.get(1, false).toString()
-    }
+interface PeerGradingRepository : JpaRepository<PeerGrading, Long> {
+    fun findByGraderAndResponse(grader: User, response: Response): PeerGrading?
 }

@@ -60,7 +60,6 @@
             <span th:utext="${sequence.title}"></span>
           </h4>
 
-          <!--          TODO : "${userRole == 'teacher' || sequenceInstance.state != StateType.beforeStart.name()}"-->
           <div style="height: 4em; overflow: hidden;"
                th:unless="${model.hideStatementContent}"
                th:utext="${sequence.content}">

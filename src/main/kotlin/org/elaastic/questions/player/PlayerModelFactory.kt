@@ -17,16 +17,19 @@
  */
 package org.elaastic.questions.player
 
-import org.elaastic.questions.assignment.sequence.LearnerSequence
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
+import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.elaastic.questions.player.components.command.CommandModelFactory
-import org.elaastic.questions.player.components.responseForm.ResponseFormModelFactory
+import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModelFactory
+import org.elaastic.questions.player.components.evaluationPhase.ResponseData
+import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModelFactory
 import org.elaastic.questions.player.components.results.ResultsModelFactory
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo
@@ -42,16 +45,19 @@ object PlayerModelFactory {
               nbRegisteredUsers: Int,
               sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
               messageBuilder: MessageBuilder,
-              getLearnerSequence: () -> LearnerSequence,
-              hasResponseForUser: () -> Boolean,
-              findAllResponses: () -> ResponseSet): PlayerModel =
+              getActiveInteractionForLearner: () -> Interaction?,
+              hasResponseForUser: (attemptNum: AttemptNum) -> Boolean,
+              findAllResponses: () -> ResponseSet,
+              findAllRecommandedResponsesForUser: () -> List<Response>,
+              userHasPerformedEvaluation: () -> Boolean): PlayerModel =
             run {
                 val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
-                val showResponseForm = getShowResponseForm(teacher, sequence, getLearnerSequence)
+                val showResponsePhase = getShowResponsePhase(teacher, sequence, getActiveInteractionForLearner)
+                val showEvaluationPhase = getShowEvaluationPhase(teacher, sequence, getActiveInteractionForLearner)
                 val showResults =
                         if (teacher)
                             sequence.state != State.beforeStart
-                        else sequence.resultsArePublished && getLearnerSequence().activeInteraction?.isRead() == true
+                        else sequence.resultsArePublished && getActiveInteractionForLearner()?.isRead() == true
 
                 PlayerModel(
                         assignment = assignment,
@@ -70,9 +76,9 @@ object PlayerModelFactory {
                             StepsModelFactory.buildForTeacher(sequence)
                         else StepsModelFactory.buildForLearner(
                                 sequence,
-                                getLearnerSequence().activeInteraction
+                                getActiveInteractionForLearner()
                         ),
-                        sequenceStatistics = SequenceStatistics(1,2,3), // TODO Compute statistics
+                        sequenceStatistics = SequenceStatistics(1, 2, 3), // TODO Compute statistics
                         commandModel =
                         if (teacher)
                             CommandModelFactory.build(user, sequence)
@@ -83,15 +89,33 @@ object PlayerModelFactory {
                                 panelClosed = teacher && sequence.state != State.beforeStart
                         ),
                         statement = StatementInfo(sequence.statement),
-                        showResponseForm = showResponseForm,
-                        responseFormModel =
-                        if (showResponseForm)
-                            ResponseFormModelFactory.build(
-                                    responseSubmitted = hasResponseForUser(),
-                                    attempt = 1,
+                        showResponsePhase = showResponsePhase,
+                        responsePhaseModel =
+                        if (showResponsePhase)
+                            ResponsePhaseModelFactory.build(
+                                    responseSubmitted = hasResponseForUser(1),
                                     sequence = sequence,
-                                    userActiveInteraction = getLearnerSequence().activeInteraction
+                                    userActiveInteraction = getActiveInteractionForLearner()
                             )
+                        else null,
+                        showEvaluationPhase = showEvaluationPhase,
+                        evaluationPhaseModel =
+                        if (showEvaluationPhase)
+                            run {
+                                val userHasPerformedEvaluation = userHasPerformedEvaluation()
+                                val secondAttemptAlreadySubmitted = hasResponseForUser(2)
+                                val responsesToGrade = if (!userHasPerformedEvaluation)
+                                    findAllRecommandedResponsesForUser().map { ResponseData(it) }
+                                else listOf()
+                                EvaluationPhaseModelFactory.build(
+                                        userHasCompletedPhase2 = (responsesToGrade.isEmpty() && secondAttemptAlreadySubmitted),
+                                        userHasPerformedEvaluation = userHasPerformedEvaluation,
+                                        secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
+                                        responsesToGrade = responsesToGrade,
+                                        sequence = sequence,
+                                        userActiveInteraction = getActiveInteractionForLearner()
+                                )
+                            }
                         else null,
                         showResults = showResults,
                         resultsModel =
@@ -105,13 +129,18 @@ object PlayerModelFactory {
                 )
             }
 
-    private fun getShowResponseForm(teacher: Boolean,
-                                    sequence: Sequence,
-                                    getLearnerSequence: () -> LearnerSequence): Boolean =
+    // TODO Perhaps we could implement the logic to get the current LearnerPhase
+    private fun getShowResponsePhase(teacher: Boolean,
+                                     sequence: Sequence,
+                                     getActiveInteractionForLearner: () -> Interaction?): Boolean =
             !teacher &&
                     sequence.state == State.show &&
-                    getLearnerSequence().activeInteraction.let {
-                        it != null && it.isResponseSubmission()
-                    }
+                    getActiveInteractionForLearner()?.isResponseSubmission() == true
 
+    private fun getShowEvaluationPhase(teacher: Boolean,
+                                       sequence: Sequence,
+                                       getActiveInteractionForLearner: () -> Interaction?): Boolean =
+            !teacher &&
+                    sequence.state == State.show &&
+                    getActiveInteractionForLearner()?.isEvaluation() == true
 }

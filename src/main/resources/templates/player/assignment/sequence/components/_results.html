@@ -20,22 +20,6 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <script th:inline="javascript" th:if="${#ids.seq('results.script.') == 'results.script.1'}">
-    let Results = {}
-    Results.updateResults = function () { console.log('Not ready yet...') }
-    $(document).ready(function () {
-      Results.updateResults = function (sequenceId) {
-        let url = /*[[@{/player/sequence/}]]*/ ''
-        url += sequenceId + '/updateResults' // TODO Implement & test updateResults (which was updateResultsAndSequenceDisplay)
-
-        $('#sequence_' + sequenceId).load(url, {}, function () {
-          // TODO Test MathJax
-          MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'sequence_[[${resultsModel.sequenceId}]]'])
-        })
-      }
-    })
-  </script>
-
   <div class="ui accordion segment"
        th:id="|result-accordion-${resultsModel.sequenceId}|">
 
@@ -88,7 +72,7 @@
 
     <a th:unless="${resultsModel.sequenceIsStopped}"
        href="#"
-       th:onclick="|Results.updateResults(${resultsModel.sequenceId})|"
+       onclick="location.reload()"
        style="position: absolute; top: 0.5em; right: 1em; font-size: 1.2em"
        th:attr="data-tooltip=#{player.sequence.readinteraction.updateAllResults}"
        data-inverted=""

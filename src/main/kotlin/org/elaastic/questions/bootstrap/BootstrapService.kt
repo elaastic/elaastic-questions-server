@@ -24,13 +24,8 @@ import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.lti.*
-import org.elaastic.questions.terms.Terms
-import org.elaastic.questions.terms.TermsContent
-import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.thymeleaf.TemplateEngine
-import org.thymeleaf.context.Context
 import java.util.*
 import javax.transaction.Transactional
 

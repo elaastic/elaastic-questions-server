@@ -23,14 +23,14 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Test Response Form</title>
+  <title>Test evaluation phase</title>
   <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
 </head>
 <body>
 <section>
-  <h2>Response form</h2>
+  <h2>Evaluation Phase</h2>
   <div
-    th:replace="player/assignment/sequence/components/_response-form.html :: responseForm(${responseFormModel})"></div>
+    th:replace="player/assignment/sequence/components/_evaluation-phase.html :: evaluationPhase(${evaluationPhaseModel})"></div>
 </section>
 </body>
 </html>

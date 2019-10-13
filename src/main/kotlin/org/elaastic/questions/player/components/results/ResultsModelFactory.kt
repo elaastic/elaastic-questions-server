@@ -40,7 +40,7 @@ object ResultsModelFactory {
                         if (sequence.getResponseSubmisssionSpecification().studentsProvideExplanation)
                             ExplanationViewerModelFactory.buildChoice(
                                     choiceSpecification = sequence.statement.choiceSpecification!!,
-                                    responseList = responseSet[if (sequence.executionIsFaceToFace()) 1 else 2]
+                                    responseList = responseSet[sequence.whichAttemptEvaluate()]
                             )
                         else null
                 )
@@ -49,7 +49,7 @@ object ResultsModelFactory {
                     sequenceId = sequence.id ?: error("This sequence has no ID"),
                     explanationViewerModel =
                     ExplanationViewerModelFactory.buildOpen(
-                            responseSet[if (sequence.executionIsFaceToFace()) 1 else 2]
+                            responseSet[sequence.whichAttemptEvaluate()]
                     )
             )
 
@@ -60,7 +60,7 @@ object ResultsModelFactory {
                         ?: error("This is an open question ; cannot compute response distribution")
 
                 ResponseDistributionChartModel(
-                        interactionId = responseSubmissionInteraction.id!!, // TODO would be more relevant to use sequence.id
+                        interactionId = responseSubmissionInteraction.id!!, // TODO (+) would be more relevant to use sequence.id
                         choiceSpecification = ChoiceSpecificationData(choiceSpecification),
                         results = ResponsesDistributionFactory.build(
                                 sequence.statement.choiceSpecification!!,

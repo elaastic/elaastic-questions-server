@@ -19,6 +19,7 @@
 package org.elaastic.questions.assignment.sequence.interaction.response
 
 import org.elaastic.questions.assignment.LearnerAssignmentService
+import org.elaastic.questions.assignment.ia.ResponseRecommendationService
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
@@ -33,7 +34,6 @@ import org.elaastic.questions.directory.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import java.math.MathContext
 import java.math.RoundingMode
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
@@ -43,10 +43,13 @@ import javax.transaction.Transactional
 class ResponseService(
         @Autowired val responseRepository: ResponseRepository,
         @Autowired val learnerAssignmentService: LearnerAssignmentService,
+        @Autowired val entityManager: EntityManager,
+        @Autowired val recommendationService: ResponseRecommendationService,
         @Autowired val statementService: StatementService,
-        @Autowired val userService: UserService,
-        @Autowired val entityManager: EntityManager
+        @Autowired val userService: UserService
 ) {
+
+    fun getOne(id: Long) = responseRepository.getOne(id)
 
     fun findAll(sequence: Sequence): ResponseSet =
             findAll(sequence.getResponseSubmissionInteraction())
@@ -56,6 +59,25 @@ class ResponseService(
                     responseRepository.findAllByInteraction(interaction)
             )
 
+    fun findAllRecommandedResponsesForUser(sequence: Sequence, user: User, attempt: AttemptNum): List<Response> =
+            if (sequence.executionIsFaceToFace()) {
+                // TODO (+) We should index the recommended explanations by userId to that we don't need to get the userResponse to find its recommendations
+                responseRepository.findByInteractionAndAttemptAndLearner(
+                        sequence.getResponseSubmissionInteraction(),
+                        1,
+                        user
+                )?.let { userResponse ->
+                    sequence.getResponseSubmissionInteraction().explanationRecommendationMapping?.getRecommandation(
+                            userResponse.id!!
+                    )?.let { responseRepository.getAllByIdIn(it) }
+                } ?: listOf<Response>()
+
+            } else recommendationService.findAllResponsesOrderedByEvaluationCount(
+                    interaction = sequence.getResponseSubmissionInteraction(),
+                    attemptNum = attempt,
+                    limit = sequence.getEvaluationSpecification().responseToEvaluateCount
+            )
+
     fun hasResponseForUser(learner: User, sequence: Sequence, attempt: AttemptNum = 1) =
             responseRepository.countByLearnerAndInteractionAndAttempt(
                     learner = learner,
@@ -63,32 +85,14 @@ class ResponseService(
                     attempt = attempt
             ) > 0
 
-    // TODO Need to fetch users with responses
-    fun findAllChoiceResponse(interaction: Interaction, correct: Boolean, attempt: AttemptNum = 1) {
-        if (correct)
-            responseRepository.findAllByInteractionAndAttemptAndScoreOrderByScoreDesc(
-                    interaction,
-                    attempt
-            )
-        else responseRepository.findAllByInteractionAndAttemptAndScoreLessThanOrderByScoreDesc(
-                interaction,
-                attempt
-        )
-    }
-
-    fun findAllOpenResponse(interaction: Interaction, attemptNum: AttemptNum = 1): List<Response> =
-            responseRepository.findAllByInteractionAndAttemptOrderByMeanGradeDesc(interaction, attemptNum)
-
-
     fun updateMeanGradeAndEvaluationCount(response: Response): Response {
         val res = entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.grade) as evaluationCount from PeerGrading pg where pg.response = :response and pg.grade <> -1")
                 .setParameter("response", response)
-                .singleResult as Array<Object>
+                .singleResult as Array<Object?>
 
-        response.meanGrade = if (res[0] != null) {
-            BigDecimal(res[0] as Double).setScale(2, RoundingMode.HALF_UP)
-        } else null
-        response.evaluationCount = if (res[1] != null) (res[1] as Long).toInt() else 0
+        response.meanGrade = res[0]?.let { BigDecimal(it as Double).setScale(2, RoundingMode.HALF_UP) }
+        response.evaluationCount =  res[1]?.let { (it as Long).toInt() } ?: 0
+
         return responseRepository.save(response)
     }
 
@@ -130,22 +134,24 @@ class ResponseService(
         if (statement.expectedExplanation.isNullOrBlank()) {
             return null
         }
-        val attempt = if (sequence.executionIsFaceToFace()) 1 else 2
+        val attempt = sequence.whichAttemptEvaluate()
         val interaction = sequence.getResponseSubmissionInteraction()
         var score: BigDecimal? = null
-        val learnerChoice = when (val choiceSpecification = statement.choiceSpecification) {
-            is ExclusiveChoiceSpecification -> {
-                LearnerChoice(listOf(choiceSpecification.expectedChoice.index)).also {
-                    score = Response.computeScore(it, choiceSpecification)
+        val learnerChoice = statement.choiceSpecification.let { choiceSpecification ->
+            when(choiceSpecification) {
+                is ExclusiveChoiceSpecification -> {
+                    LearnerChoice(listOf(choiceSpecification.expectedChoice.index)).also {
+                        score = Response.computeScore(it, choiceSpecification)
+                    }
                 }
-            }
-            is MultipleChoiceSpecification -> {
-                LearnerChoice(choiceSpecification.expectedChoiceList.map { it.index }).also {
-                    score = Response.computeScore(it, choiceSpecification)
+                is MultipleChoiceSpecification -> {
+                    LearnerChoice(choiceSpecification.expectedChoiceList.map { it.index }).also {
+                        score = Response.computeScore(it, choiceSpecification)
+                    }
                 }
-            }
-            else -> {
-                null
+                else -> {
+                    null
+                }
             }
         }
         return responseRepository.save(Response(
@@ -171,7 +177,7 @@ class ResponseService(
         val statement = sequence.statement
         val explanations = statementService.findAllFakeExplanationsForStatement(statement)
         if (explanations.isNotEmpty()) {
-            val attempt = if (sequence.executionIsFaceToFace()) 1 else 2
+            val attempt = sequence.whichAttemptEvaluate()
             val interaction = sequence.getResponseSubmissionInteraction()
             explanations.forEachIndexed { index, fakeExplanation ->
                 val fakeLearner = entityManager.merge(userService.fakeUserList!![index % userService.fakeUserList!!.size])

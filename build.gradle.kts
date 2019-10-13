@@ -96,7 +96,3 @@ docker {
 tasks.getByName<War>("war") {
     enabled = true
 }
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    languageVersion = "1.3"
-}
