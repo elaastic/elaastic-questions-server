@@ -527,4 +527,16 @@ internal class UserServiceIntegrationTest(
 
         }
     }
+
+    @Test
+    fun testFakeUserListInitialization() {
+        tWhen("Accessing fake user list") {
+            userService.fakeUserList
+        }.tThen {
+            assertThat(it!!.size, equalTo(9))
+            for(i in 0..8) {
+                assertThat(it!![i].username, equalTo("${userService.FAKE_USER_PREFIX}${i+1}"))
+            }
+        }
+    }
 }

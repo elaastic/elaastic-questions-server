@@ -51,7 +51,7 @@ internal class LmsUserAccountCreationServiceIntegrationTest(
     @Test
     fun `test generate password`() {
         tWhen {
-            lmsUserAccountCreationService.generatePassword()
+            userService.generatePassword()
         }.tExpect {
             // expect generated password is OK
             logger.info("generated password: $it")
@@ -59,7 +59,7 @@ internal class LmsUserAccountCreationServiceIntegrationTest(
             it
         }.tExpect {
             // 2 generated password are not identical
-            val p2 = lmsUserAccountCreationService.generatePassword()
+            val p2 = userService.generatePassword()
             logger.info("Second generated password: $p2")
             assertThat(it, not(equalTo(p2)))
         }

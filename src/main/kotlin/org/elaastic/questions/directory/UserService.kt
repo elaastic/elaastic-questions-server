@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.logging.Logger
+import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
 
@@ -41,7 +42,9 @@ class UserService(
         @Autowired val userConsentRepository: UserConsentRepository
 ) {
 
+    val FAKE_USER_PREFIX = "John_Doe___"
     val logger = Logger.getLogger(UserService::class.java.name)
+    var fakeUserList: List<User>? = null
 
     /**
      * Get user by id checking access authorization
@@ -365,6 +368,33 @@ class UserService(
             }
         }
         return username
+    }
+
+    /**
+     * Generate a password (not encoded)
+     * @return the password
+     */
+    fun generatePassword(): String {
+        var password = ""
+        val alphabet = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789"
+        val rand = Random()
+        for (i in 0..7) {
+            password += alphabet[rand.nextInt(alphabet.length)]
+        }
+        return password
+    }
+
+    @PostConstruct
+    fun initializeFakeUserList() {
+        fakeUserList = buildFakeUserList()
+    }
+
+    private fun buildFakeUserList(): List<User> {
+        return mutableListOf<User>().also { fakeUserList ->
+            for(i in 1..9) {
+                fakeUserList.add(findByUsername("$FAKE_USER_PREFIX${i}")!!)
+            }
+        }
     }
 }
 

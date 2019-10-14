@@ -39,19 +39,7 @@ class LmsUserAccountCreationService(
 
     internal val logger = Logger.getLogger(LmsUserAccountCreationService::class.java.name)
 
-    /**
-     * Generate a password (not encoded)
-     * @return the password
-     */
-    fun generatePassword(): String {
-        var password = ""
-        val alphabet = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789"
-        val rand = Random()
-        for (i in 0..7) {
-            password += alphabet[rand.nextInt(alphabet.length)]
-        }
-        return password
-    }
+
 
     /**
      * Generate username from firstname and lastname
@@ -125,7 +113,7 @@ class LmsUserAccountCreationService(
                 firstName = ltiUser.firstName,
                 lastName = ltiUser.lastName,
                 username = generateUsername(ltiUser.firstName, ltiUser.lastName),
-                plainTextPassword = generatePassword(),
+                plainTextPassword = userService.generatePassword(),
                 email = ltiUser.email
         ).let {
             it.addRole(ltiUser.role)
