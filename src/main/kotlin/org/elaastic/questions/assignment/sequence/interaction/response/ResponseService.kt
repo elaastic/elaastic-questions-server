@@ -19,6 +19,10 @@
 package org.elaastic.questions.assignment.sequence.interaction.response
 
 import org.elaastic.questions.assignment.LearnerAssignmentService
+import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
+import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
@@ -101,4 +105,52 @@ class ResponseService(
         responseRepository.save(response)
         return response
     }
+
+    /**
+     * Build response from teacher expected explanation
+     * @param teacher the teacher
+     * @param sequence the sequence
+     */
+    fun buildResponseBasedOnTeacherExpectedExplanationForASequence(
+            sequence: Sequence,
+            teacher: User,
+            confidenceDegree: ConfidenceDegree = ConfidenceDegree.CONFIDENT
+    ): Response? {
+        val statement = sequence.statement
+        if (statement.expectedExplanation == null) {
+            return null
+        }
+        val attempt = if (sequence.executionIsFaceToFace()) 1 else 2
+        val interaction = sequence.getResponseSubmissionInteraction()
+        var score: Float? = null
+        val learnerChoice = when(val choiceSpecification = statement.choiceSpecification) {
+            is ExclusiveChoiceSpecification ->  {
+                LearnerChoice(listOf(choiceSpecification.expectedChoice.index)).let {
+                    score = Response.computeScore(it, choiceSpecification)
+                    it
+                }
+            }
+            is MultipleChoiceSpecification -> {
+                LearnerChoice(choiceSpecification.expectedChoiceList.map { it.index }).let {
+                    score = Response.computeScore(it, choiceSpecification)
+                    it
+                }
+            }
+            else -> {
+                null
+            }
+        }
+        val resp = Response(
+                learner = teacher,
+                explanation = statement.expectedExplanation,
+                confidenceDegree = confidenceDegree.ordinal,
+                attempt = attempt,
+                interaction = interaction,
+                learnerChoice = learnerChoice,
+                score = score,
+                isAFake = true
+        )
+        return responseRepository.save(resp)
+    }
+
 }

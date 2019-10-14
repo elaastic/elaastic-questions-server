@@ -25,6 +25,7 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ReadSpecification
@@ -45,7 +46,8 @@ class SequenceService(
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val resultsService: ResultsService,
         @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
-        @Autowired val learnerSequenceService: LearnerSequenceService
+        @Autowired val learnerSequenceService: LearnerSequenceService,
+        @Autowired val responseService: ResponseService
 ) {
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
             get(id, fetchInteractions).let {
@@ -93,6 +95,34 @@ class SequenceService(
             "The sequence has already been started"
         }
 
+        initializeInteractionsForSequence(sequence, studentsProvideExplanation, nbResponseToEvaluate, executionContext)
+
+        if (executionContext == ExecutionContext.FaceToFace)
+            sequence.selectActiveInteraction(InteractionType.ResponseSubmission)
+        else sequence.selectActiveInteraction(InteractionType.Read)
+
+        sequence.let {
+            it.state = State.show
+            it.executionContext = executionContext
+            it.resultsArePublished = (executionContext == ExecutionContext.Distance)
+            sequenceRepository.save(it)
+        }
+
+        responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
+                sequence = sequence,
+                teacher = sequence.owner
+        )
+        // TODO Build teacher predefined answers based on fake explanation
+
+        return sequence
+    }
+
+    internal fun initializeInteractionsForSequence(
+            sequence: Sequence,
+            studentsProvideExplanation: Boolean,
+            nbResponseToEvaluate: Int,
+            executionContext: ExecutionContext
+    ): Sequence {
         sequence.interactions[InteractionType.ResponseSubmission] =
                 interactionService.create(
                         sequence,
@@ -127,20 +157,6 @@ class SequenceService(
                         }
 
                 )
-
-        if (executionContext == ExecutionContext.FaceToFace)
-            sequence.selectActiveInteraction(InteractionType.ResponseSubmission)
-        else sequence.selectActiveInteraction(InteractionType.Read)
-
-        sequence.let {
-            it.state = State.show
-            it.executionContext = executionContext
-            it.resultsArePublished = (executionContext == ExecutionContext.Distance)
-            sequenceRepository.save(it)
-        }
-
-        // TODO Build teacher predefined answers
-
         return sequence
     }
 

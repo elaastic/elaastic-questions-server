@@ -57,8 +57,10 @@ class Response(
         @field:Column(name = "choiceListSpecification")
         var learnerChoice: LearnerChoice? = null,
 
-        var score: Float? = null
+        var score: Float? = null,
 
+        @field:Column(name = "is_a_fake")
+        var isAFake: Boolean = false
 
 ) : AbstractJpaPersistable<Long>() {
     @Version
