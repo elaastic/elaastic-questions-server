@@ -25,9 +25,11 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.assignment.sequence.StatementService
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.directory.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.EntityManager
@@ -38,6 +40,8 @@ import javax.transaction.Transactional
 class ResponseService(
         @Autowired val responseRepository: ResponseRepository,
         @Autowired val learnerAssignmentService: LearnerAssignmentService,
+        @Autowired val statementService: StatementService,
+        @Autowired val userService: UserService,
         @Autowired val entityManager: EntityManager
 ) {
 
@@ -123,24 +127,22 @@ class ResponseService(
         val attempt = if (sequence.executionIsFaceToFace()) 1 else 2
         val interaction = sequence.getResponseSubmissionInteraction()
         var score: Float? = null
-        val learnerChoice = when(val choiceSpecification = statement.choiceSpecification) {
-            is ExclusiveChoiceSpecification ->  {
-                LearnerChoice(listOf(choiceSpecification.expectedChoice.index)).let {
+        val learnerChoice = when (val choiceSpecification = statement.choiceSpecification) {
+            is ExclusiveChoiceSpecification -> {
+                LearnerChoice(listOf(choiceSpecification.expectedChoice.index)).also {
                     score = Response.computeScore(it, choiceSpecification)
-                    it
                 }
             }
             is MultipleChoiceSpecification -> {
-                LearnerChoice(choiceSpecification.expectedChoiceList.map { it.index }).let {
+                LearnerChoice(choiceSpecification.expectedChoiceList.map { it.index }).also {
                     score = Response.computeScore(it, choiceSpecification)
-                    it
                 }
             }
             else -> {
                 null
             }
         }
-        val resp = Response(
+        return responseRepository.save(Response(
                 learner = teacher,
                 explanation = statement.expectedExplanation,
                 confidenceDegree = confidenceDegree.ordinal,
@@ -149,8 +151,45 @@ class ResponseService(
                 learnerChoice = learnerChoice,
                 score = score,
                 isAFake = true
-        )
-        return responseRepository.save(resp)
+        ))
+    }
+
+
+    /**
+     * Build  responses from teacher fake explanations
+     * @param sequence the sequence
+     */
+    fun buildResponsesBasedOnTeacherFakeExplanationsForASequence(sequence: Sequence,
+                                                                 confidenceDegree: ConfidenceDegree = ConfidenceDegree.CONFIDENT): List<Response> {
+        val res = mutableListOf<Response>()
+        val statement = sequence.statement
+        val explanations = statementService.findAllFakeExplanationsForStatement(statement)
+        if (explanations.isNotEmpty()) {
+            val attempt = if (sequence.executionIsFaceToFace()) 1 else 2
+            val interaction = sequence.getResponseSubmissionInteraction()
+            explanations.forEachIndexed { index, fakeExplanation ->
+                val fakeLearner = entityManager.merge(userService.fakeUserList!![index % userService.fakeUserList!!.size])
+                var score: Float? = null
+                val learnerChoice = if (statement.hasChoices()) {
+                    LearnerChoice(listOf(fakeExplanation.correspondingItem!!)).also {
+                        score = Response.computeScore(learnerChoice = it, choiceSpecification = statement.choiceSpecification!!)
+                    }
+                } else null
+                responseRepository.save(Response(
+                        learner = fakeLearner,
+                        explanation = fakeExplanation.content,
+                        confidenceDegree = confidenceDegree.ordinal,
+                        attempt = attempt,
+                        interaction = interaction,
+                        learnerChoice = learnerChoice,
+                        score = score,
+                        isAFake = true
+                )).let {
+                    res.add(it)
+                }
+            }
+        }
+        return res
     }
 
 }

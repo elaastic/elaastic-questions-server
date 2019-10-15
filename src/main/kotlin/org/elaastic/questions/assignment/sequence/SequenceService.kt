@@ -112,7 +112,7 @@ class SequenceService(
                 sequence = sequence,
                 teacher = sequence.owner
         )
-        // TODO Build teacher predefined answers based on fake explanation
+        responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(sequence)
 
         return sequence
     }

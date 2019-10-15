@@ -26,9 +26,9 @@ import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.*
+import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
+import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
@@ -48,7 +48,9 @@ internal class ResponseServiceIntegrationTest(
         @Autowired val responseService: ResponseService,
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val sequenceService: SequenceService,
-        @Autowired val assignmentService: AssignmentService
+        @Autowired val assignmentService: AssignmentService,
+        @Autowired val statementService: StatementService,
+        @Autowired val userService: UserService
 ) {
 
     @Test
@@ -144,7 +146,7 @@ internal class ResponseServiceIntegrationTest(
                             title = "q1",
                             content = "question 1",
                             expectedExplanation = "it is expected",
-                            questionType = QuestionType.ExclusiveChoice,
+                            questionType = QuestionType.MultipleChoice,
                             choiceSpecification = MultipleChoiceSpecification(
                                     nbCandidateItem = 4,
                                     expectedChoiceList = listOf(
@@ -177,7 +179,182 @@ internal class ResponseServiceIntegrationTest(
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
             assertThat(response.attempt, equalTo(1))
             assertTrue(response.isAFake)
-            assertThat(response.learnerChoice, equalTo(LearnerChoice(listOf(4,2))))
+            assertThat(response.learnerChoice, equalTo(LearnerChoice(listOf(4, 2))))
+        }
+    }
+
+    @Test
+    fun buildResponseBasedOnTeacherFakeExplanationsForASequenceOpenEndedBlended() {
+        //"given a sequence corresponding with an open ended question but with fake explanations"
+        val fakeExplanations = listOf(
+                FakeExplanationData(
+                        null,
+                        content = "first fake"
+                ),
+                FakeExplanationData(
+                        null,
+                        content = "second fake"
+                )
+        )
+        assignmentService.addSequence(
+                assignment = testingService.getAnyAssignment(),
+                statement = Statement(
+                        owner = testingService.getAnyAssignment().owner,
+                        title = "q1",
+                        content = "question 1",
+                        expectedExplanation = "it is expected",
+                        questionType = QuestionType.OpenEnded
+                )
+        ).let {
+            statementService.updateFakeExplanationList(it.statement, fakeExplanations)
+            sequenceService.initializeInteractionsForSequence(
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.Blended
+            ).let { sequence ->
+                sequence.executionContext = ExecutionContext.Blended
+                sequenceRepository.save(sequence)
+
+            }
+        }.tWhen("we build a response based on expected explanations") { sequence ->
+            responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(
+                    sequence = sequence
+            )
+        }.tThen { responseList ->
+            assertThat(responseList.size, equalTo(2))
+            responseList.forEachIndexed { index, response ->
+                assertThat(response!!.id, notNullValue())
+                assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
+                assertThat(response.score, nullValue())
+                assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT.ordinal))
+                assertThat(response.explanation, equalTo(fakeExplanations[index].content))
+                assertThat(response.attempt, equalTo(2))
+                assertTrue(response.isAFake)
+            }
+        }
+    }
+
+    @Test
+    fun buildResponseBasedOnTeacherFakeExplanationsForASequenceExclusiveChoiceBlended() {
+        //"given a sequence corresponding with an open ended question but with fake explanations"
+        val fakeExplanations = listOf(
+                FakeExplanationData(
+                        1,
+                        content = "first fake"
+                ),
+                FakeExplanationData(
+                        2,
+                        content = "second fake"
+                ),
+                FakeExplanationData(
+                        3,
+                        content = "third fake"
+                )
+        )
+        assignmentService.addSequence(
+                assignment = testingService.getAnyAssignment(),
+                statement = Statement(
+                        owner = testingService.getAnyAssignment().owner,
+                        title = "q1",
+                        content = "question 1",
+                        expectedExplanation = "it is expected",
+                        questionType = QuestionType.ExclusiveChoice,
+                        choiceSpecification = ExclusiveChoiceSpecification(
+                                nbCandidateItem = 3,
+                                expectedChoice = ChoiceItem(2, 100f)
+                        )
+                )
+        ).let {
+            statementService.updateFakeExplanationList(it.statement, fakeExplanations)
+            sequenceService.initializeInteractionsForSequence(
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.Blended
+            ).let { sequence ->
+                sequence.executionContext = ExecutionContext.Blended
+                sequenceRepository.save(sequence)
+
+            }
+        }.tWhen("we build a response based on expected explanations") { sequence ->
+            responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(
+                    sequence = sequence
+            )
+        }.tThen { responseList ->
+            assertThat(responseList.size, equalTo(3))
+            responseList.forEachIndexed { index, response ->
+                assertThat(response!!.id, notNullValue())
+                assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
+                assertThat(response.score, equalTo(if (index == 1) 100f else 0f))
+                assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT.ordinal))
+                assertThat(response.explanation, equalTo(fakeExplanations[index].content))
+                assertThat(response.attempt, equalTo(2))
+                assertTrue(response.isAFake)
+            }
+        }
+    }
+
+    @Test
+    fun buildResponseBasedOnTeacherFakeExplanationsForASequenceMultipleChoiceFaceToFace() {
+        //"given a sequence corresponding with an open ended question but with fake explanations"
+        val fakeExplanations = listOf(
+                FakeExplanationData(
+                        1,
+                        content = "first fake"
+                ),
+                FakeExplanationData(
+                        2,
+                        content = "second fake"
+                ),
+                FakeExplanationData(
+                        3,
+                        content = "third fake"
+                )
+        )
+        assignmentService.addSequence(
+                assignment = testingService.getAnyAssignment(),
+                statement = Statement(
+                        owner = testingService.getAnyAssignment().owner,
+                        title = "q1",
+                        content = "question 1",
+                        expectedExplanation = "it is expected",
+                        questionType = QuestionType.MultipleChoice,
+                        choiceSpecification = MultipleChoiceSpecification(
+                                nbCandidateItem = 4,
+                                expectedChoiceList = listOf(
+                                        ChoiceItem(4, 50f),
+                                        ChoiceItem(2, 50f)
+                                )
+                        )
+                )
+        ).let {
+            statementService.updateFakeExplanationList(it.statement, fakeExplanations)
+            sequenceService.initializeInteractionsForSequence(
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.FaceToFace
+            ).let { sequence ->
+                sequence.executionContext = ExecutionContext.FaceToFace
+                sequenceRepository.save(sequence)
+
+            }
+        }.tWhen("we build a response based on expected explanations") { sequence ->
+            responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(
+                    sequence = sequence
+            )
+        }.tThen { responseList ->
+            assertThat(responseList.size, equalTo(3))
+            responseList.forEachIndexed { index, response ->
+                assertThat(response!!.id, notNullValue())
+                assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
+                assertThat(response.score, equalTo(if (index == 1) 50f else 0f))
+                assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT.ordinal))
+                assertThat(response.explanation, equalTo(fakeExplanations[index].content))
+                assertThat(response.attempt, equalTo(1))
+                assertTrue(response.isAFake)
+            }
         }
     }
 }
