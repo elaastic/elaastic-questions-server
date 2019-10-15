@@ -35,7 +35,7 @@
     var elaastic = elaastic || {}
   </script>
 
-  <th:block th:if="${playerModel.userRole.name() == 'teacher'}">
+  <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
     <a class="item"
        th:href="@{/assignment/{assignmentId}(assignmentId=${playerModel.assignment.id})}"
        th:attr="data-tooltip=#{assignment.action.show.label}"
@@ -70,7 +70,7 @@
   <div th:if="${playerModel.sequence}"
        th:id="|sequence_${playerModel.sequence.id}|">
     <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
-    <th:block th:if="${playerModel.userRole == 'teacher'}">
+    <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
       <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel})"></div>
     </th:block>
     <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel})"></div>
