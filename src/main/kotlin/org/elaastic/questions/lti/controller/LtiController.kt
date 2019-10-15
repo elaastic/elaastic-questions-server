@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.lti.controller
 
+import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.lti.LmsService
 import org.elaastic.questions.lti.LmsUser
@@ -46,7 +47,8 @@ class LtiController(
         @Autowired val ltiConsumerService: LtiConsumerService,
         @Autowired val oauthService: OauthService,
         @Autowired val termsService: TermsService,
-        @Autowired val roleService: RoleService
+        @Autowired val roleService: RoleService,
+        @Autowired val assignmentService: AssignmentService
 ) {
 
     internal var logger = Logger.getLogger(LtiController::class.java.name)
@@ -120,12 +122,20 @@ class LtiController(
     }
 
     private fun redirectToAssignment(ltiLaunchData: LtiLaunchData, lmsUser: LmsUser): String {
-        val lmsAssignment = lmsService.getLmsAssignment(
+        val assignment = lmsService.getLmsAssignment(
                 lmsUser = lmsUser,
                 ltiActivity = ltiLaunchData.toLtiActivity()
-        )
-        // TODO Bind with assignment when player implemented
-        return "redirect:/home/"
+        ).assignment
+        val user = lmsUser.user
+        assignmentService.registerUser(user, assignment)
+        return when {
+            assignment.sequences.isNotEmpty() -> "redirect:/player/assignment/${assignment.id}/play"
+            user == assignment.owner -> "redirect:/assignment/${assignment.id}"
+            else -> {
+                logger.severe("Student cannot access empty assignment")
+                "redirect:${ltiLaunchData.getRedirectUrlWithErrorMessage("student_cannot_access_empty_assignment")}"
+            }
+        }
     }
 
     private fun startNewSession(request: HttpServletRequest): HttpSession {
