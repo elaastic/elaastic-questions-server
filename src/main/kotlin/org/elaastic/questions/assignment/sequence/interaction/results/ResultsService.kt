@@ -17,6 +17,7 @@
  */
 package org.elaastic.questions.assignment.sequence.interaction.results
 
+import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
@@ -30,14 +31,15 @@ import javax.transaction.Transactional
 @Transactional
 class ResultsService(
         @Autowired val responseService: ResponseService,
-        @Autowired val interactionRepository: InteractionRepository
+        @Autowired val interactionRepository: InteractionRepository,
+        @Autowired val assignmentService: AssignmentService
         ) {
 
     fun canUpdateResults(user: User, sequence: Sequence): Boolean =
             user == sequence.owner ||
                     (
                             !sequence.isStopped() &&
-                                    user.isRegisteredInAssignment(sequence.assignment!!) &&
+                                    assignmentService.userIsRegisteredInAssignment(user, sequence.assignment!!) &&
                                     sequence.executionIsDistance()
                             )
 

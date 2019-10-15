@@ -128,12 +128,6 @@ class User(
         return roles.map { it.name }.contains(Role.RoleId.ADMIN.roleName)
     }
 
-    fun isRegisteredInAssignment(assignment: Assignment): Boolean {
-        return false
-        // TODO("Must find out how to implement it")
-        // LearnerAssignment.findByLearnerAndAssignment(this,assignment)
-    }
-
     override fun getUsername(): String {
         return username
     }

@@ -242,6 +242,13 @@ class AssignmentService(
         )
     }
 
+    fun userIsRegisteredInAssignment(user: User, assignment: Assignment): Boolean {
+        return learnerAssignmentRepository.findByLearnerAndAssignment(
+                user,
+                assignment
+        ) != null
+    }
+
     fun getNbRegisteredUsers(assignment: Assignment): Int {
         return learnerAssignmentRepository.countAllByAssignment(assignment)
     }
