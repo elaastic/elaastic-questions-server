@@ -32,6 +32,9 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
@@ -77,13 +80,16 @@ class ResponseService(
             responseRepository.findAllByInteractionAndAttemptOrderByMeanGradeDesc(interaction, attemptNum)
 
 
-    fun updateMeanGrade(response: Response) {
-        val meanGrade = entityManager.createQuery("select avg(pg.grade) from PeerGrading pg where pg.response = :response and pg.grade <> -1")
+    fun updateMeanGradeAndEvaluationCount(response: Response): Response {
+        val res = entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.grade) as evaluationCount from PeerGrading pg where pg.response = :response and pg.grade <> -1")
                 .setParameter("response", response)
-                .singleResult as Float
+                .singleResult as Array<Object>
 
-        response.meanGrade = meanGrade
-        responseRepository.save(response)
+        response.meanGrade = if (res[0] != null) {
+            BigDecimal(res[0] as Double).setScale(2, RoundingMode.HALF_UP)
+        } else null
+        response.evaluationCount = if (res[1] != null) (res[1] as Long).toInt() else 0
+        return responseRepository.save(response)
     }
 
     fun save(userActiveInteraction: Interaction, response: Response): Response {
@@ -126,7 +132,7 @@ class ResponseService(
         }
         val attempt = if (sequence.executionIsFaceToFace()) 1 else 2
         val interaction = sequence.getResponseSubmissionInteraction()
-        var score: Float? = null
+        var score: BigDecimal? = null
         val learnerChoice = when (val choiceSpecification = statement.choiceSpecification) {
             is ExclusiveChoiceSpecification -> {
                 LearnerChoice(listOf(choiceSpecification.expectedChoice.index)).also {
@@ -169,7 +175,7 @@ class ResponseService(
             val interaction = sequence.getResponseSubmissionInteraction()
             explanations.forEachIndexed { index, fakeExplanation ->
                 val fakeLearner = entityManager.merge(userService.fakeUserList!![index % userService.fakeUserList!!.size])
-                var score: Float? = null
+                var score: BigDecimal? = null
                 val learnerChoice = if (statement.hasChoices()) {
                     LearnerChoice(listOf(fakeExplanation.correspondingItem!!)).also {
                         score = Response.computeScore(learnerChoice = it, choiceSpecification = statement.choiceSpecification!!)

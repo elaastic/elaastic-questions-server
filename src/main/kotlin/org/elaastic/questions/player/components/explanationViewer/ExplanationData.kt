@@ -31,8 +31,8 @@ class ExplanationData(
     constructor(response: Response) : this(
             content = response.explanation,
             author = response.learner.username,
-            nbEvaluations = -1, // TODO Need to retrieve PeerGrade for this
-            meanGrade = BigDecimal(-1) // TODO Need to retrieve PeerGrade
+            nbEvaluations = response.evaluationCount,
+            meanGrade = response.meanGrade
     )
 
     val meanGrade = meanGrade

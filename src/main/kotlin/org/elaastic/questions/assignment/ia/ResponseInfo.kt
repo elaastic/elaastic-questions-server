@@ -1,6 +1,7 @@
 package org.elaastic.questions.assignment.ia
 
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import java.math.BigDecimal
 
 class ResponseInfo(
         val id: Long,
@@ -11,7 +12,7 @@ class ResponseInfo(
 
     constructor(response: Response) : this(
             response.id!!,
-            response.score == 100f,
+            response.score == BigDecimal(100),
             response.explanation?.length ?: 0 > 10 // TODO Constant
     )
 

@@ -39,6 +39,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
+import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest
@@ -50,7 +52,9 @@ internal class ResponseServiceIntegrationTest(
         @Autowired val sequenceService: SequenceService,
         @Autowired val assignmentService: AssignmentService,
         @Autowired val statementService: StatementService,
-        @Autowired val userService: UserService
+        @Autowired val userService: UserService,
+        @Autowired val peerGradingRepository: PeerGradingRepository,
+        @Autowired val entityManager: EntityManager
 ) {
 
     @Test
@@ -127,7 +131,7 @@ internal class ResponseServiceIntegrationTest(
         }.tThen { response ->
             assertThat(response!!.id, notNullValue())
             assertThat(response.learner, equalTo(testingService.getAnyAssignment().owner))
-            assertThat(response.score, equalTo(100f))
+            assertThat(response.score, equalTo(BigDecimal(100)))
             assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT.ordinal))
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
             assertThat(response.attempt, equalTo(2))
@@ -174,7 +178,7 @@ internal class ResponseServiceIntegrationTest(
         }.tThen { response ->
             assertThat(response!!.id, notNullValue())
             assertThat(response.learner, equalTo(testingService.getAnyAssignment().owner))
-            assertThat(response.score, equalTo(100f))
+            assertThat(response.score, equalTo(BigDecimal(100)))
             assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT.ordinal))
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
             assertThat(response.attempt, equalTo(1))
@@ -286,7 +290,7 @@ internal class ResponseServiceIntegrationTest(
             responseList.forEachIndexed { index, response ->
                 assertThat(response!!.id, notNullValue())
                 assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
-                assertThat(response.score, equalTo(if (index == 1) 100f else 0f))
+                assertThat(response.score, equalTo(if (index == 1) BigDecimal(100) else BigDecimal.ZERO))
                 assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT.ordinal))
                 assertThat(response.explanation, equalTo(fakeExplanations[index].content))
                 assertThat(response.attempt, equalTo(2))
@@ -338,7 +342,6 @@ internal class ResponseServiceIntegrationTest(
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.FaceToFace
                 sequenceRepository.save(sequence)
-
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(
@@ -349,7 +352,7 @@ internal class ResponseServiceIntegrationTest(
             responseList.forEachIndexed { index, response ->
                 assertThat(response!!.id, notNullValue())
                 assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
-                assertThat(response.score, equalTo(if (index == 1) 50f else 0f))
+                assertThat(response.score, equalTo(if (index == 1) BigDecimal(50) else BigDecimal.ZERO))
                 assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT.ordinal))
                 assertThat(response.explanation, equalTo(fakeExplanations[index].content))
                 assertThat(response.attempt, equalTo(1))
@@ -357,4 +360,114 @@ internal class ResponseServiceIntegrationTest(
             }
         }
     }
+
+    @Test
+    fun testUpgradeMeanGradeAndEvaluationCount() {
+        tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
+            assignmentService.addSequence(
+                    assignment = testingService.getAnyAssignment(),
+                    statement = Statement(
+                            owner = testingService.getAnyAssignment().owner,
+                            title = "q1",
+                            content = "question 1",
+                            expectedExplanation = "it is expected",
+                            questionType = QuestionType.MultipleChoice,
+                            choiceSpecification = MultipleChoiceSpecification(
+                                    nbCandidateItem = 4,
+                                    expectedChoiceList = listOf(
+                                            ChoiceItem(4, 50f),
+                                            ChoiceItem(2, 50f)
+                                    )
+                            )
+                    )
+            ).let {
+                sequenceService.initializeInteractionsForSequence(
+                        it,
+                        true,
+                        3,
+                        ExecutionContext.FaceToFace
+                ).let { sequence ->
+                    sequence.executionContext = ExecutionContext.FaceToFace
+                    sequenceRepository.save(sequence)
+                }
+            }
+        }.tWhen("we build a response based on expected explanations") { sequence ->
+            responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
+                    sequence = sequence,
+                    teacher = sequence.owner
+            )
+        }.tWhen("we build some peer grading") {
+            listOf(
+                    PeerGrading(
+                            grade = BigDecimal(1),
+                            grader = userService.fakeUserList!![0],
+                            response = it!!,
+                            annotation = null
+                    ),
+                    PeerGrading(
+                            grade = BigDecimal(2),
+                            grader = userService.fakeUserList!![1],
+                            response = it,
+                            annotation = null
+                    ),
+                    PeerGrading(
+                            grade = BigDecimal(1),
+                            grader = userService.fakeUserList!![2],
+                            response = it,
+                            annotation = null
+                    )
+            ).map { peerGrading ->
+                peerGradingRepository.save(peerGrading)
+            }.tWhen("update mean grade and evaluation count") { peerGradingList ->
+                responseService.updateMeanGradeAndEvaluationCount(response = peerGradingList[0].response)
+            }.tThen { response ->
+                assertThat(response.evaluationCount, equalTo(3))
+                assertThat(response.meanGrade!!, equalTo(BigDecimal("1.33")))
+            }
+        }
+    }
+
+    @Test
+    fun testUpgradeMeanGradeAndEvaluationCountWhenNoPeerGrading() {
+        tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
+            assignmentService.addSequence(
+                    assignment = testingService.getAnyAssignment(),
+                    statement = Statement(
+                            owner = testingService.getAnyAssignment().owner,
+                            title = "q1",
+                            content = "question 1",
+                            expectedExplanation = "it is expected",
+                            questionType = QuestionType.MultipleChoice,
+                            choiceSpecification = MultipleChoiceSpecification(
+                                    nbCandidateItem = 4,
+                                    expectedChoiceList = listOf(
+                                            ChoiceItem(4, 50f),
+                                            ChoiceItem(2, 50f)
+                                    )
+                            )
+                    )
+            ).let {
+                sequenceService.initializeInteractionsForSequence(
+                        it,
+                        true,
+                        3,
+                        ExecutionContext.FaceToFace
+                ).let { sequence ->
+                    sequence.executionContext = ExecutionContext.FaceToFace
+                    sequenceRepository.save(sequence)
+                }
+            }
+        }.tWhen("we build a response based on expected explanations") { sequence ->
+            responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
+                    sequence = sequence,
+                    teacher = sequence.owner
+            )
+        }.tWhen("update mean grade and evaluation count") { response ->
+            responseService.updateMeanGradeAndEvaluationCount(response = response!!)
+        }.tThen { response ->
+            assertThat(response.evaluationCount, equalTo(0))
+            assertThat(response.meanGrade, nullValue())
+        }
+    }
 }
+

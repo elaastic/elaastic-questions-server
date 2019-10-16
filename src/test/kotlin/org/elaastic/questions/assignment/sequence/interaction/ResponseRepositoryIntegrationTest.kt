@@ -31,7 +31,8 @@ import javax.persistence.EntityManager
 import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
-
+import java.math.BigDecimal
+import java.math.BigInteger
 
 
 @SpringBootTest
@@ -75,9 +76,9 @@ class ResponseRepositoryIntegrationTest(
                 attempt = 2,
                 explanation = "explanation",
                 confidenceDegree = 4,
-                meanGrade = 1.0f,
+                meanGrade = BigDecimal(1),
                 learnerChoice = choiceListSpecification,
-                score = 2.0f
+                score = BigDecimal(2)
         ).tWhen {
             responseRepository.saveAndFlush(it)
             entityManager.refresh(it)
@@ -86,9 +87,9 @@ class ResponseRepositoryIntegrationTest(
             assertThat(it.attempt, equalTo(2))
             assertThat(it.explanation, equalTo("explanation"))
             assertThat(it.confidenceDegree, equalTo(4))
-            assertThat(it.meanGrade, equalTo(1.0f))
+            assertThat(it.meanGrade?.toDouble(), equalTo(BigDecimal(1).toDouble()))
             assertThat(it.learnerChoice, equalTo(choiceListSpecification))
-            assertThat(it.score, equalTo(2.0f))
+            assertThat(it.score?.toDouble(), equalTo(BigDecimal(2).toDouble()))
         }
     }
 }

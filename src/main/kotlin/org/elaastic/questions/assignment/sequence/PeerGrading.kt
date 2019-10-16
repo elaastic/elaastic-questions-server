@@ -24,6 +24,7 @@ import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -32,7 +33,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 class PeerGrading(
-        var grade: Float?,
+        var grade: BigDecimal?,
         var annotation: String?,
 
         @field:ManyToOne

@@ -20,6 +20,7 @@ package org.elaastic.questions.assignment.ia
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.junit.jupiter.api.Test
 import com.nhaarman.mockitokotlin2.*
+import java.math.BigDecimal
 
 internal class ResponseRecommendationServiceTest {
 
@@ -30,32 +31,32 @@ internal class ResponseRecommendationServiceTest {
         service.computeRecommendations(
                 listOf(
                         mock<Response> {
-                            on { score }.doReturn(100f)
+                            on { score }.doReturn(BigDecimal(100))
                             on { id }.doReturn(1)
                             on { explanation }.doReturn("Hello World, and Universe")
                         },
                         mock<Response> {
-                            on { score }.doReturn(50f)
+                            on { score }.doReturn(BigDecimal(50))
                             on { id }.doReturn(2)
                             on { explanation }.doReturn("Hello World, and Universe")
                         },
                         mock<Response> {
-                            on { score }.doReturn(100f)
+                            on { score }.doReturn(BigDecimal(100))
                             on { id }.doReturn(3)
                             on { explanation }.doReturn("Hello World, and Universe")
                         },
                         mock<Response> {
-                            on { score }.doReturn(100f)
+                            on { score }.doReturn(BigDecimal(100))
                             on { id }.doReturn(4)
                             on { explanation }.doReturn("Hello World, and Universe")
                         },
                         mock<Response> {
-                            on { score }.doReturn(50f)
+                            on { score }.doReturn(BigDecimal(50))
                             on { id }.doReturn(5)
                             on { explanation }.doReturn("Hello World, and Universe")
                         },
                         mock<Response> {
-                            on { score }.doReturn(100f)
+                            on { score }.doReturn(BigDecimal(100))
                             on { id }.doReturn(6)
                             on { explanation }.doReturn("Hello World, and Universe")
                         }

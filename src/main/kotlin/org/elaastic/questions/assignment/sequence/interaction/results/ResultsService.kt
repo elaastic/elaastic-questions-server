@@ -88,6 +88,6 @@ class ResultsService(
 
     fun updateExplanationsMeanGrade(responseSet: ResponseSet, sequence: Sequence) {
         responseSet[if (sequence.executionIsFaceToFace()) 1 else 2]
-                .forEach { responseService.updateMeanGrade(it) }
+                .forEach { responseService.updateMeanGradeAndEvaluationCount(it) }
     }
 }

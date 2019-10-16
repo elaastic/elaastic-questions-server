@@ -29,6 +29,7 @@ import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -51,16 +52,18 @@ class Response(
 
         var confidenceDegree: Int? = null,
 
-        var meanGrade: Float? = null,
+        var meanGrade: BigDecimal? = null,
 
         @field:Convert(converter = LearnerChoiceConverter::class)
         @field:Column(name = "choiceListSpecification")
         var learnerChoice: LearnerChoice? = null,
 
-        var score: Float? = null,
+        var score: BigDecimal? = null,
 
         @field:Column(name = "is_a_fake")
-        var isAFake: Boolean = false
+        var isAFake: Boolean = false,
+
+        var evaluationCount: Int = 0
 
 ) : AbstractJpaPersistable<Long>() {
     @Version
@@ -78,19 +81,20 @@ class Response(
 
     companion object {
         fun computeScore(learnerChoice: LearnerChoice,
-                         choiceSpecification: ChoiceSpecification): Float =
+                         choiceSpecification: ChoiceSpecification): BigDecimal =
                 when (choiceSpecification) {
                     is ExclusiveChoiceSpecification ->
                         run {
                             require(learnerChoice.size <= 1) { "Cannot select more than one item with exclusive choice" }
-                            if (learnerChoice.first() == choiceSpecification.expectedChoice.index) 100f else 0f
+                            if (learnerChoice.first() == choiceSpecification.expectedChoice.index) BigDecimal(100) else BigDecimal(0)
                         }
 
                     is MultipleChoiceSpecification ->
                         run {
-                            val scorePerItem = 100f / choiceSpecification.expectedChoiceList.size
-                            learnerChoice.filter { it in choiceSpecification.expectedChoiceList.map { it.index } }
-                                    .count() * scorePerItem
+                            val scorePerItem = BigDecimal(100) / BigDecimal(choiceSpecification.expectedChoiceList.size)
+                            learnerChoice.filter { it in choiceSpecification.expectedChoiceList.map { it.index } }.count().let {nbGoodChoice ->
+                                BigDecimal(nbGoodChoice)
+                            } * scorePerItem
                         }
 
                     else -> error("Unsupported type of choice")

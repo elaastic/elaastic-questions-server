@@ -31,8 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import javax.persistence.EntityManager
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
-
-
+import java.math.BigDecimal
 
 
 @SpringBootTest
@@ -48,14 +47,14 @@ class PeerGradingRepositoryIntegrationTest(
         val grader = testingService.getAnyUser()
         val interactionResponse = testingService.getAnyInteractionResponse()
         PeerGrading(
-                grade = 2.0f,
+                grade = BigDecimal(2),
                 annotation = "Annotation",
                 grader = grader,
                 response = interactionResponse
         )
                 .tWhen {
                     peerGradingRepository.saveAndFlush(it)
-                    entityManager.refresh(it)
+                    entityManager.clear()
                     it
                 }
                 .tThen {

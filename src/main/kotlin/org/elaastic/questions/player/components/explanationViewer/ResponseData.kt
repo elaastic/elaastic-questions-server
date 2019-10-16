@@ -19,6 +19,7 @@
 package org.elaastic.questions.player.components.explanationViewer
 
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import java.math.BigDecimal
 import kotlin.math.roundToInt
 
 class ResponseData(
@@ -28,8 +29,8 @@ class ResponseData(
 ) {
     constructor(response: Response) : this(
             choices = response.learnerChoice ?: error("The learner choice is undefined"),
-            score = ((response.score ?: error("The score is undefined")) * 100f).roundToInt(),
-            correct = response.score == 100f
+            score = ((response.score ?: error("The score is undefined")) * BigDecimal(100)).toInt(),
+            correct = response.score == BigDecimal(100)
     )
 
     override fun equals(other: Any?): Boolean {
