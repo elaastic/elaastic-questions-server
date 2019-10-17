@@ -127,7 +127,7 @@ class ResponseService(
             confidenceDegree: ConfidenceDegree = ConfidenceDegree.CONFIDENT
     ): Response? {
         val statement = sequence.statement
-        if (statement.expectedExplanation == null) {
+        if (statement.expectedExplanation.isNullOrBlank()) {
             return null
         }
         val attempt = if (sequence.executionIsFaceToFace()) 1 else 2

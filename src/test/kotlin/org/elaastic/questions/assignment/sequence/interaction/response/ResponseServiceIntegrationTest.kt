@@ -58,6 +58,72 @@ internal class ResponseServiceIntegrationTest(
 ) {
 
     @Test
+    fun buildResponseBasedOnTeacherNullExpectedExplanationForASequenceOpenEndedBlended() {
+        tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
+            assignmentService.addSequence(
+                    assignment = testingService.getAnyAssignment(),
+                    statement = Statement(
+                            owner = testingService.getAnyAssignment().owner,
+                            title = "q1",
+                            content = "question 1",
+                            expectedExplanation = null,
+                            questionType = QuestionType.OpenEnded
+                    )
+            ).let {
+                sequenceService.initializeInteractionsForSequence(
+                        it,
+                        true,
+                        3,
+                        ExecutionContext.Blended
+                ).let { sequence ->
+                    sequence.executionContext = ExecutionContext.Blended
+                    sequenceRepository.save(sequence)
+                }
+            }
+        }.tWhen("we build a response based on expected explanations") { sequence ->
+            responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
+                    sequence = sequence,
+                    teacher = sequence.owner
+            )
+        }.tThen { response ->
+            assertThat(response, nullValue())
+        }
+    }
+
+    @Test
+    fun buildResponseBasedOnTeacherEmptyExpectedExplanationForASequenceOpenEndedBlended() {
+        tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
+            assignmentService.addSequence(
+                    assignment = testingService.getAnyAssignment(),
+                    statement = Statement(
+                            owner = testingService.getAnyAssignment().owner,
+                            title = "q1",
+                            content = "question 1",
+                            expectedExplanation = "",
+                            questionType = QuestionType.OpenEnded
+                    )
+            ).let {
+                sequenceService.initializeInteractionsForSequence(
+                        it,
+                        true,
+                        3,
+                        ExecutionContext.Blended
+                ).let { sequence ->
+                    sequence.executionContext = ExecutionContext.Blended
+                    sequenceRepository.save(sequence)
+                }
+            }
+        }.tWhen("we build a response based on expected explanations") { sequence ->
+            responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
+                    sequence = sequence,
+                    teacher = sequence.owner
+            )
+        }.tThen { response ->
+            assertThat(response, nullValue())
+        }
+    }
+
+    @Test
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
             assignmentService.addSequence(
