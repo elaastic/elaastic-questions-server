@@ -30,8 +30,7 @@ object AssignmentOverviewModelFactory {
               assignmentTitle: String,
               sequences: List<Sequence>,
               sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
-              selectedSequenceId: Long? = null,
-              hideStatementContent: Boolean = false
+              selectedSequenceId: Long? = null
     ): AssignmentOverviewModel = AssignmentOverviewModel(
             nbRegisteredUser = nbRegisteredUser,
             assignmentTitle = assignmentTitle,
@@ -40,14 +39,14 @@ object AssignmentOverviewModelFactory {
                         id = it.id!!,
                         title = it.statement.title,
                         content = it.statement.content,
+                        hideStatementContent = !teacher && it.state == State.beforeStart,
                         icons = resolveIcons(
                                 teacher,
                                 it,
                                 sequenceToUserActiveInteraction[it])
                 )
             },
-            selectedSequenceId = selectedSequenceId,
-            hideStatementContent = hideStatementContent
+            selectedSequenceId = selectedSequenceId
     )
 
     private fun resolveIcons(teacher: Boolean,

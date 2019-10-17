@@ -30,7 +30,8 @@ data class AssignmentOverviewModel(
             val id: Long,
             val title: String,
             val content: String,
-            val icons: List<PhaseIcon>
+            val icons: List<PhaseIcon>,
+            val hideStatementContent: Boolean
     )
 }
 
