@@ -43,15 +43,15 @@ class ChoiceExplanationStore(choiceSpecification: ChoiceSpecification) : Explana
 
             is MultipleChoiceSpecification ->
 
-            // Create only the correct entry for multiple choices
-            this.put(
-                    ResponseData(
-                            choices = choiceSpecification.expectedChoiceList.map { it.index },
-                            correct = true,
-                            score = 100
-                    ),
-                    mutableListOf()
-            )
+                // Create only the correct entry for multiple choices
+                this.put(
+                        ResponseData(
+                                choices = choiceSpecification.expectedChoiceList.map { it.index },
+                                correct = true,
+                                score = 100
+                        ),
+                        mutableListOf()
+                )
 
             else -> error("Unsupported type of ChoiceSpecification: ${choiceSpecification.javaClass}")
         }
@@ -66,10 +66,11 @@ class ChoiceExplanationStore(choiceSpecification: ChoiceSpecification) : Explana
     }
 
     fun add(response: Response) {
-        add(
-                ResponseData(response),
-                ExplanationData(response)
-        )
+        if (response.learnerChoice != null)
+            add(
+                    ResponseData(response),
+                    ExplanationData(response)
+            )
     }
 
     fun add(responseData: ResponseData, explanationData: ExplanationData) {
