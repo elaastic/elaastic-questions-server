@@ -105,6 +105,10 @@
       <label>Enable from:</label>
       <strong>[[${#dates.format(ltiConsumer.enableFrom, 'dd/MM/yyyy HH:mm')}]]</strong>
     </p>
+    <p>
+      <label>Last access:</label>
+      <strong>[[${#dates.format(ltiConsumer.lastAccess, 'dd/MM/yyyy HH:mm')}]]</strong>
+    </p>
   </div>
   <div>
     <a th:href="@{/ltiConsumer/{id}/edit(id=${ltiConsumer.key})}"
