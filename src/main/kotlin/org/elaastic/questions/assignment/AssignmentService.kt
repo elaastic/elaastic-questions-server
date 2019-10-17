@@ -84,7 +84,8 @@ class AssignmentService(
             removeSequence(it)
         }
 
-        assignmentRepository.delete(assignment)
+        entityManager.clear()
+        assignmentRepository.deleteById(assignment.id!!)
     }
 
     fun save(assignment: Assignment): Assignment {
@@ -120,7 +121,7 @@ class AssignmentService(
     }
 
     private fun removeSequence(sequence: Sequence) {
-
+        entityManager.clear()
         entityManager.createNativeQuery("""
             DELETE pg
             FROM  peer_grading pg
@@ -153,7 +154,6 @@ class AssignmentService(
         }
 
         statementService.delete(sequence.statement)
-
     }
 
     fun removeSequence(user: User, sequence: Sequence) {

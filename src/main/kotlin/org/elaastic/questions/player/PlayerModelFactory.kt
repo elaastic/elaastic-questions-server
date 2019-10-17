@@ -101,7 +101,7 @@ object PlayerModelFactory {
                         showEvaluationPhase = showEvaluationPhase,
                         evaluationPhaseModel =
                         if (showEvaluationPhase)
-                            run {
+                            run {       // TODO Retrieve the 1st response to fill the form
                                 val userHasPerformedEvaluation = userHasPerformedEvaluation()
                                 val secondAttemptAlreadySubmitted = hasResponseForUser(2)
                                 val responsesToGrade = if (!userHasPerformedEvaluation)
