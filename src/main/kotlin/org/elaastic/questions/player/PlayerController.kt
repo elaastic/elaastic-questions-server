@@ -163,6 +163,9 @@ class PlayerController(
                             },
                             userHasPerformedEvaluation = {
                                 peerGradingService.userHasPerformedEvaluation(user, sequence)
+                            },
+                            getFirstAttemptResponse = {
+                                responseService.find(user, sequence)
                             }
                     )
             )
@@ -309,7 +312,7 @@ class PlayerController(
                             learner = user,
                             interaction = sequence.getResponseSubmissionInteraction(),
                             attempt = responseSubmissionData.attempt,
-                            confidenceDegree = responseSubmissionData.confidenceDegree?.ordinal,
+                            confidenceDegree = responseSubmissionData.confidenceDegree,
                             explanation = responseSubmissionData.explanation,  // TODO Sanitize
                             learnerChoice = choiceListSpecification,
                             score = choiceListSpecification?.let {
@@ -359,7 +362,7 @@ class PlayerController(
                         learner = user,
                         interaction = sequence.getResponseSubmissionInteraction(),
                         attempt = 2,
-                        confidenceDegree = evaluationData.confidenceDegree?.ordinal,
+                        confidenceDegree = evaluationData.confidenceDegree,
                         explanation = evaluationData.explanation,
                         learnerChoice = choiceListSpecification,
                         score = choiceListSpecification?.let {

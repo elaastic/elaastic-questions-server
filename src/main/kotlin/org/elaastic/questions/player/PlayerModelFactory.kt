@@ -49,7 +49,8 @@ object PlayerModelFactory {
               hasResponseForUser: (attemptNum: AttemptNum) -> Boolean,
               findAllResponses: () -> ResponseSet,
               findAllRecommandedResponsesForUser: () -> List<Response>,
-              userHasPerformedEvaluation: () -> Boolean): PlayerModel =
+              userHasPerformedEvaluation: () -> Boolean,
+              getFirstAttemptResponse: () -> Response?): PlayerModel =
             run {
                 val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
                 val showResponsePhase = getShowResponsePhase(teacher, sequence, getActiveInteractionForLearner)
@@ -101,7 +102,7 @@ object PlayerModelFactory {
                         showEvaluationPhase = showEvaluationPhase,
                         evaluationPhaseModel =
                         if (showEvaluationPhase)
-                            run {       // TODO Retrieve the 1st response to fill the form
+                            run {
                                 val userHasPerformedEvaluation = userHasPerformedEvaluation()
                                 val secondAttemptAlreadySubmitted = hasResponseForUser(2)
                                 val responsesToGrade = if (!userHasPerformedEvaluation)
@@ -113,7 +114,8 @@ object PlayerModelFactory {
                                         secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
                                         responsesToGrade = responsesToGrade,
                                         sequence = sequence,
-                                        userActiveInteraction = getActiveInteractionForLearner()
+                                        userActiveInteraction = getActiveInteractionForLearner(),
+                                        firstAttemptResponse = getFirstAttemptResponse()
                                 )
                             }
                         else null,

@@ -733,14 +733,12 @@ class TestingPlayerController(
                                 org.elaastic.questions.player.components.evaluationPhase.ResponseData(
                                         id = 1,
                                         choiceList = listOf(1),
-                                        explanation = "1st explanation",
-                                        userGrade = "Pas mal"
+                                        explanation = "1st explanation"
                                 ),
                                 org.elaastic.questions.player.components.evaluationPhase.ResponseData(
                                         id = 2,
                                         choiceList = listOf(2),
-                                        explanation = "2nd explanation",
-                                        userGrade = "Àch'"
+                                        explanation = "2nd explanation"
                                 )
                         ),
                         secondAttemptAllowed = true,

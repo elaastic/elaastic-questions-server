@@ -23,13 +23,11 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 data class ResponseData(
         val id: Long,
         val choiceList: List<Int> = listOf(),
-        val explanation: String,
-        val userGrade: String
+        val explanation: String
 ) {
     constructor(response: Response): this(
             id = response.id ?: error("Response has no ID"),
             choiceList = response.learnerChoice ?: listOf<Int>(),
-            explanation = response.explanation ?:"",
-            userGrade = "Why do I need that here ?" // TODO ***
+            explanation = response.explanation ?:""
     )
 }

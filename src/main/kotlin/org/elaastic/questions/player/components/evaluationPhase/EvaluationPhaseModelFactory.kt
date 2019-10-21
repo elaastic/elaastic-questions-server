@@ -3,6 +3,7 @@ package org.elaastic.questions.player.components.evaluationPhase
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.player.components.responsePhase.ResponseFormModel
 
 object EvaluationPhaseModelFactory {
@@ -12,7 +13,8 @@ object EvaluationPhaseModelFactory {
               secondAttemptAlreadySubmitted: Boolean,
               responsesToGrade: List<ResponseData>,
               sequence: Sequence,
-              userActiveInteraction: Interaction?) = run {
+              userActiveInteraction: Interaction?,
+              firstAttemptResponse: Response?) = run {
         val interaction = sequence.getEvaluationInteraction()
         val sequenceId = sequence.id ?: error("The sequence must have an ID during evaluation phase")
         val interactionId = interaction.id ?: error("The interaction must have an ID during evaluation phase")
@@ -35,7 +37,10 @@ object EvaluationPhaseModelFactory {
                         timeToProvideExplanation = (sequence.executionIsBlended() || sequence.executionIsDistance()), // TODO I don't understand this logic
                         hasChoices = sequence.statement.hasChoices(),
                         multipleChoice = sequence.statement.isMultipleChoice(),
-                        nbItem = sequence.statement.choiceSpecification?.nbCandidateItem
+                        nbItem = sequence.statement.choiceSpecification?.nbCandidateItem,
+                        firstAttemptExplanation = firstAttemptResponse?.explanation,
+                        firstAttemptChoices = firstAttemptResponse?.learnerChoice?.toTypedArray() ?: arrayOf(),
+                        firstAttemptConfidenceDegree = firstAttemptResponse?.confidenceDegree
                 )
         )
     }

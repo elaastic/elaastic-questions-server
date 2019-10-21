@@ -23,6 +23,7 @@ import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoiceConverter
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -50,7 +51,8 @@ class Response(
 
         var explanation: String? = null,
 
-        var confidenceDegree: Int? = null,
+        @field:Enumerated(EnumType.ORDINAL)
+        var confidenceDegree: ConfidenceDegree? = null,
 
         var meanGrade: BigDecimal? = null,
 

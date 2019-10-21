@@ -19,6 +19,7 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.test.TestingService
@@ -32,7 +33,6 @@ import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import java.math.BigDecimal
-import java.math.BigInteger
 
 
 @SpringBootTest
@@ -75,7 +75,7 @@ class ResponseRepositoryIntegrationTest(
                 interaction = interaction,
                 attempt = 2,
                 explanation = "explanation",
-                confidenceDegree = 4,
+                confidenceDegree = ConfidenceDegree.CONFIDENT,
                 meanGrade = BigDecimal(1),
                 learnerChoice = choiceListSpecification,
                 score = BigDecimal(2)

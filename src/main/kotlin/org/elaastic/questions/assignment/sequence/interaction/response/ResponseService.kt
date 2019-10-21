@@ -85,13 +85,20 @@ class ResponseService(
                     attempt = attempt
             ) > 0
 
+    fun find(learner: User, sequence: Sequence, attempt: AttemptNum = 1) =
+            responseRepository.findByInteractionAndAttemptAndLearner(
+                    sequence.getResponseSubmissionInteraction(),
+                    attempt,
+                    learner
+            )
+
     fun updateMeanGradeAndEvaluationCount(response: Response): Response {
         val res = entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.grade) as evaluationCount from PeerGrading pg where pg.response = :response and pg.grade <> -1")
                 .setParameter("response", response)
                 .singleResult as Array<Object?>
 
         response.meanGrade = res[0]?.let { BigDecimal(it as Double).setScale(2, RoundingMode.HALF_UP) }
-        response.evaluationCount =  res[1]?.let { (it as Long).toInt() } ?: 0
+        response.evaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
 
         return responseRepository.save(response)
     }
@@ -138,7 +145,7 @@ class ResponseService(
         val interaction = sequence.getResponseSubmissionInteraction()
         var score: BigDecimal? = null
         val learnerChoice = statement.choiceSpecification.let { choiceSpecification ->
-            when(choiceSpecification) {
+            when (choiceSpecification) {
                 is ExclusiveChoiceSpecification -> {
                     LearnerChoice(listOf(choiceSpecification.expectedChoice.index)).also {
                         score = Response.computeScore(it, choiceSpecification)
@@ -157,7 +164,7 @@ class ResponseService(
         return responseRepository.save(Response(
                 learner = teacher,
                 explanation = statement.expectedExplanation,
-                confidenceDegree = confidenceDegree.ordinal,
+                confidenceDegree = confidenceDegree,
                 attempt = attempt,
                 interaction = interaction,
                 learnerChoice = learnerChoice,
@@ -190,7 +197,7 @@ class ResponseService(
                 responseRepository.save(Response(
                         learner = fakeLearner,
                         explanation = fakeExplanation.content,
-                        confidenceDegree = confidenceDegree.ordinal,
+                        confidenceDegree = confidenceDegree,
                         attempt = attempt,
                         interaction = interaction,
                         learnerChoice = learnerChoice,
