@@ -109,7 +109,8 @@ object PlayerModelFactory {
                                     findAllRecommandedResponsesForUser().map { ResponseData(it) }
                                 else listOf()
                                 EvaluationPhaseModelFactory.build(
-                                        userHasCompletedPhase2 = (responsesToGrade.isEmpty() && secondAttemptAlreadySubmitted),
+                                        userHasCompletedPhase2 = (responsesToGrade.isEmpty() &&
+                                                (secondAttemptAlreadySubmitted || !sequence.isSecondAttemptAllowed())),
                                         userHasPerformedEvaluation = userHasPerformedEvaluation,
                                         secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
                                         responsesToGrade = responsesToGrade,
