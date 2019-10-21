@@ -50,6 +50,7 @@ class LearnerSequenceService(
                 if (it.activeInteraction == null && sequence.activeInteraction != null) {
                     it.activeInteraction = sequence.interactions[InteractionType.ResponseSubmission]
                     learnerSequenceRepository.save(it)
+                    it
                 }
                 else it
             }

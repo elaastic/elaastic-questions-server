@@ -146,7 +146,9 @@ class PlayerController(
                             if (teacher)
                                 sequence.assignment!!.sequences.associate { it to it.activeInteraction }
                             else sequence.assignment!!.sequences.associate {
-                                it to learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
+                                it to if(it.executionIsFaceToFace())
+                                    it.activeInteraction
+                                    else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
                             },
                             messageBuilder = messageBuilder,
                             getActiveInteractionForLearner = { learnerSequenceService.getActiveInteractionForLearner(user, sequence) },
