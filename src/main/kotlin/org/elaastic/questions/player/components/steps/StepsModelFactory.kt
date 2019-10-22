@@ -25,14 +25,14 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 
 object StepsModelFactory {
 
-    // TODO Take sequence state into account
     fun buildForTeacher(sequence: Sequence) = StepsModel(
             responseSubmissionState =
             sequence.interactions[InteractionType.ResponseSubmission]?.stateForRegisteredUsers().let(::interactionStateToPhaseState),
             evaluationState =
             sequence.interactions[InteractionType.Evaluation]?.stateForRegisteredUsers().let(::interactionStateToPhaseState),
             readState =
-            sequence.interactions[InteractionType.Read]?.stateForRegisteredUsers().let(::interactionStateToPhaseState)
+            sequence.interactions[InteractionType.Read]?.stateForRegisteredUsers().let(::interactionStateToPhaseState),
+            showStatistics = true
     )
 
     fun buildForLearner(sequence: Sequence, learnerActiveInteraction: Interaction?) = StepsModel(

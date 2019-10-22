@@ -84,7 +84,7 @@ class TestingService(
                 ?: throw IllegalStateException("There is no assignment is testing data")
     }
 
-    fun getAnyInteractionResponse() : Response {
+    fun getAnyResponse() : Response {
         return responseRepository.findAll().iterator().next()
     }
 

@@ -44,12 +44,12 @@ class PeerGradingRepositoryIntegrationTest(
     @Test
     fun `save a valid peer grading`() {
         val grader = testingService.getAnyUser()
-        val interactionResponse = testingService.getAnyInteractionResponse()
+        val response = testingService.getAnyResponse()
         PeerGrading(
                 grade = BigDecimal(2),
                 annotation = "Annotation",
                 grader = grader,
-                response = interactionResponse
+                response = response
         )
                 .tWhen {
                     peerGradingRepository.saveAndFlush(it)
@@ -62,7 +62,7 @@ class PeerGradingRepositoryIntegrationTest(
                     assertThat(it.dateCreated, notNullValue())
                     assertThat(it.lastUpdated, notNullValue())
                     assertThat(it.grader, equalTo(grader))
-                    assertThat(it.response, equalTo(interactionResponse))
+                    assertThat(it.response, equalTo(response))
                 }
     }
 }

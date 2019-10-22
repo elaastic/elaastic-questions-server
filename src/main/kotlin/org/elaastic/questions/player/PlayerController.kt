@@ -168,6 +168,15 @@ class PlayerController(
                             },
                             getFirstAttemptResponse = {
                                 responseService.find(user, sequence)
+                            },
+                            countNbResponsesAttempt1 = {
+                                responseService.count(sequence, 1)
+                            },
+                            countNbResponsesAttempt2 = {
+                                responseService.count(sequence, 2)
+                            },
+                            countNbEvaluations = {
+                                peerGradingService.countEvaluations(sequence)
                             }
                     )
             )

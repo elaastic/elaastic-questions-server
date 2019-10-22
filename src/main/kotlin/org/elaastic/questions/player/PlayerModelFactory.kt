@@ -50,7 +50,10 @@ object PlayerModelFactory {
               findAllResponses: () -> ResponseSet,
               findAllRecommandedResponsesForUser: () -> List<Response>,
               userHasPerformedEvaluation: () -> Boolean,
-              getFirstAttemptResponse: () -> Response?): PlayerModel =
+              getFirstAttemptResponse: () -> Response?,
+              countNbResponsesAttempt1: () -> Int,
+              countNbResponsesAttempt2: () -> Int,
+              countNbEvaluations: () -> Int): PlayerModel =
             run {
                 val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
                 val showResponsePhase = getShowResponsePhase(teacher, sequence, getActiveInteractionForLearner)
@@ -79,7 +82,11 @@ object PlayerModelFactory {
                                 sequence,
                                 getActiveInteractionForLearner()
                         ),
-                        sequenceStatistics = SequenceStatistics(1, 2, 3), // TODO Compute statistics
+                        sequenceStatistics = SequenceStatistics(
+                                countNbResponsesAttempt1(),
+                                countNbResponsesAttempt2(), // TODO should only compute this data if phase2 open or done
+                                countNbEvaluations() // TODO should only compute this data if phase2 open or done
+                        ),
                         commandModel =
                         if (teacher)
                             CommandModelFactory.build(user, sequence)

@@ -59,6 +59,12 @@ class ResponseService(
                     responseRepository.findAllByInteraction(interaction)
             )
 
+    fun count(sequence: Sequence, attempt: AttemptNum) =
+            count(sequence.getResponseSubmissionInteraction(), attempt)
+
+    fun count(interaction: Interaction, attempt: AttemptNum) =
+            responseRepository.countByInteractionAndAttempt(interaction, attempt)
+
     fun findAllRecommandedResponsesForUser(sequence: Sequence, user: User, attempt: AttemptNum): List<Response> =
             if (sequence.executionIsFaceToFace()) {
                 // TODO (+) We should index the recommended explanations by userId to that we don't need to get the userResponse to find its recommendations
