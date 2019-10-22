@@ -83,9 +83,9 @@ object PlayerModelFactory {
                                 getActiveInteractionForLearner()
                         ),
                         sequenceStatistics = SequenceStatistics(
-                                countNbResponsesAttempt1(),
-                                countNbResponsesAttempt2(), // TODO should only compute this data if phase2 open or done
-                                countNbEvaluations() // TODO should only compute this data if phase2 open or done
+                                if(sequence.isNotStarted()) 0 else countNbResponsesAttempt1(),
+                                if(sequence.isNotStarted()) 0 else countNbResponsesAttempt2(), // TODO should only compute this data if phase2 open or done
+                                if(sequence.isNotStarted()) 0 else countNbEvaluations() // TODO should only compute this data if phase2 open or done
                         ),
                         commandModel =
                         if (teacher)

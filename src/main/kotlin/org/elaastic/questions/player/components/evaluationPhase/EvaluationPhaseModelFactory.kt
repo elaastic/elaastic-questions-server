@@ -33,7 +33,7 @@ object EvaluationPhaseModelFactory {
                 responseFormModel = ResponseFormModel(
                         interactionId = interactionId,
                         attempt = 2,
-                        responseSubmissionSpecification = sequence.getResponseSubmisssionSpecification(),
+                        responseSubmissionSpecification = sequence.getResponseSubmissionSpecification(),
                         timeToProvideExplanation = (sequence.executionIsBlended() || sequence.executionIsDistance()), // TODO I don't understand this logic
                         hasChoices = sequence.statement.hasChoices(),
                         multipleChoice = sequence.statement.isMultipleChoice(),

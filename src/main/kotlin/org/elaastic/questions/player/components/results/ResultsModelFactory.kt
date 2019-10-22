@@ -32,12 +32,12 @@ object ResultsModelFactory {
                 ChoiceResultsModel(
                         sequenceIsStopped = sequence.isStopped(),
                         sequenceId = sequence.id ?: error("This sequence has no ID"),
-                        hasExplanations = sequence.getResponseSubmisssionSpecification().studentsProvideExplanation,
+                        hasExplanations = sequence.getResponseSubmissionSpecification().studentsProvideExplanation,
                         hasAnyResult = !responseSet.isEmpty(),
                         responseDistributionChartModel =
                         buildResponseDistributionChartModel(sequence, responseSet),
                         explanationViewerModel =
-                        if (sequence.getResponseSubmisssionSpecification().studentsProvideExplanation)
+                        if (sequence.getResponseSubmissionSpecification().studentsProvideExplanation)
                             ExplanationViewerModelFactory.buildChoice(
                                     choiceSpecification = sequence.statement.choiceSpecification!!,
                                     responseList = responseSet[sequence.whichAttemptEvaluate()]

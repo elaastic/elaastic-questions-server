@@ -105,7 +105,7 @@ class Sequence(
                     ?: throw IllegalStateException("The response submission interaction is not initialized")
 
     @Transient
-    fun getResponseSubmisssionSpecification(): ResponseSubmissionSpecification =
+    fun getResponseSubmissionSpecification(): ResponseSubmissionSpecification =
             getResponseSubmissionInteraction().specification.let { specification ->
                 when (specification) {
                     null -> error("This interaction has no specification")
