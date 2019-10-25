@@ -86,7 +86,7 @@ class ResponseRepositoryIntegrationTest(
         }.tThen {
             assertThat(it.attempt, equalTo(2))
             assertThat(it.explanation, equalTo("explanation"))
-            assertThat(it.confidenceDegree, equalTo(4))
+            assertThat(it.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
             assertThat(it.meanGrade?.toDouble(), equalTo(BigDecimal(1).toDouble()))
             assertThat(it.learnerChoice, equalTo(choiceListSpecification))
             assertThat(it.score?.toDouble(), equalTo(BigDecimal(2).toDouble()))
