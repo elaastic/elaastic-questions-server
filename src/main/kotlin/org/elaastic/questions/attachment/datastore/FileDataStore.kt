@@ -227,9 +227,7 @@ class FileDataStore : DataStore {
         } catch (e: IOException) {
             throw DataStoreException("Could not add record", e)
         } finally {
-            if (temporary != null) {
-                temporary!!.delete()
-            }
+            temporary?.let { it.delete() }
         }
     }
 

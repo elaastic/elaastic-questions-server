@@ -74,12 +74,17 @@ class AttachmentService(
      */
     fun saveStatementAttachment(statement: Statement, attachment: Attachment, inputStream: InputStream): Attachment {
         inputStream.use { iis ->
-            val dataRecord = dataStore.addRecord(iis)
-            attachment.path = dataRecord.identifier.toString()
-            if (attachment.isDisplayableImage()) {
-                dataRecord.stream.use {
-                    attachment.dimension = getDimensionFromInputStream(it)
+            try {
+                val dataRecord = dataStore.addRecord(iis)
+                attachment.path = dataRecord.identifier.toString()
+                if (attachment.isDisplayableImage()) {
+                    dataRecord.stream.use {
+                        attachment.dimension = getDimensionFromInputStream(it)
+                    }
                 }
+            } catch (e: Exception) {
+                logger.severe(e.message)
+                throw Exception("A problem occurs when trying to save the attachment")
             }
         }
         return addStatementToAttachment(statement, attachment)
