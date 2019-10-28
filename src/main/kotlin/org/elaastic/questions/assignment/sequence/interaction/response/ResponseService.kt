@@ -51,19 +51,21 @@ class ResponseService(
 
     fun getOne(id: Long) = responseRepository.getOne(id)
 
-    fun findAll(sequence: Sequence): ResponseSet =
-            findAll(sequence.getResponseSubmissionInteraction())
+    fun findAll(sequence: Sequence, excludeFakes: Boolean = true): ResponseSet =
+            findAll(sequence.getResponseSubmissionInteraction(), excludeFakes)
 
-    fun findAll(interaction: Interaction): ResponseSet =
+    fun findAll(interaction: Interaction, excludeFakes: Boolean = true): ResponseSet =
             ResponseSet(
-                    responseRepository.findAllByInteraction(interaction)
+                    if (excludeFakes)
+                        responseRepository.findAllByInteractionAndFakeIsFalse(interaction)
+                    else responseRepository.findAllByInteraction(interaction)
             )
 
     fun count(sequence: Sequence, attempt: AttemptNum) =
             count(sequence.getResponseSubmissionInteraction(), attempt)
 
     fun count(interaction: Interaction, attempt: AttemptNum) =
-            responseRepository.countByInteractionAndAttempt(interaction, attempt)
+            responseRepository.countByInteractionAndAttemptAndFakeIsFalse(interaction, attempt)
 
     fun findAllRecommandedResponsesForUser(sequence: Sequence, user: User, attempt: AttemptNum): List<Response> =
             if (sequence.executionIsFaceToFace()) {
@@ -175,7 +177,7 @@ class ResponseService(
                 interaction = interaction,
                 learnerChoice = learnerChoice,
                 score = score,
-                isAFake = true
+                fake = true
         ))
     }
 
@@ -208,7 +210,7 @@ class ResponseService(
                         interaction = interaction,
                         learnerChoice = learnerChoice,
                         score = score,
-                        isAFake = true
+                        fake = true
                 )).let {
                     res.add(it)
                 }

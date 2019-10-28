@@ -30,27 +30,16 @@ interface ResponseRepository : JpaRepository<Response, Long> {
 
     fun findAllByInteraction(interaction: Interaction): List<Response>
 
+    fun findAllByInteractionAndFakeIsFalse(interaction: Interaction): List<Response>
+
     fun findAllByInteractionAndAttempt(interaction: Interaction, attempt: Int = 1): List<Response>
 
     fun findByInteractionAndAttemptAndLearner(interaction: Interaction, attempt: AttemptNum, learner: User): Response?
-
-    // TODO *** Remove unused methods
-    fun findAllByInteractionAndAttemptOrderByMeanGradeDesc(interaction: Interaction, attempt: Int = 1): List<Response>
-
-    // Correct responses
-    fun findAllByInteractionAndAttemptAndScoreOrderByScoreDesc(interaction: Interaction,
-                                                               attempt: AttemptNum = 1,
-                                                               score: Float = 100f)
-
-    // Incorrect responses
-    fun findAllByInteractionAndAttemptAndScoreLessThanOrderByScoreDesc(interaction: Interaction,
-                                                                       attempt: AttemptNum = 1,
-                                                                       score: Float = 100f)
 
     fun countByLearnerAndInteractionAndAttempt(learner: User,
                                                interaction: Interaction,
                                                attempt: AttemptNum): Int
 
-    fun countByInteractionAndAttempt(interaction: Interaction,
-                                     attempt: AttemptNum): Int
+    fun countByInteractionAndAttemptAndFakeIsFalse(interaction: Interaction,
+                                                   attempt: AttemptNum): Int
 }

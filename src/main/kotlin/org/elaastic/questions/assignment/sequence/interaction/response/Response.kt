@@ -63,7 +63,7 @@ class Response(
         var score: BigDecimal? = null,
 
         @field:Column(name = "is_a_fake")
-        var isAFake: Boolean = false,
+        var fake: Boolean = false,
 
         var evaluationCount: Int = 0
 

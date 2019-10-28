@@ -159,7 +159,7 @@ internal class ResponseServiceIntegrationTest(
             assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
             assertThat(response.attempt, equalTo(2))
-            assertTrue(response.isAFake)
+            assertTrue(response.fake)
         }
     }
 
@@ -202,7 +202,7 @@ internal class ResponseServiceIntegrationTest(
             assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
             assertThat(response.attempt, equalTo(2))
-            assertTrue(response.isAFake)
+            assertTrue(response.fake)
             assertThat(response.learnerChoice, equalTo(LearnerChoice(listOf(2))))
         }
     }
@@ -249,7 +249,7 @@ internal class ResponseServiceIntegrationTest(
             assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
             assertThat(response.attempt, equalTo(1))
-            assertTrue(response.isAFake)
+            assertTrue(response.fake)
             assertThat(response.learnerChoice, equalTo(LearnerChoice(listOf(4, 2))))
         }
     }
@@ -301,7 +301,7 @@ internal class ResponseServiceIntegrationTest(
                 assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
                 assertThat(response.explanation, equalTo(fakeExplanations[index].content))
                 assertThat(response.attempt, equalTo(2))
-                assertTrue(response.isAFake)
+                assertTrue(response.fake)
             }
         }
     }
@@ -361,7 +361,7 @@ internal class ResponseServiceIntegrationTest(
                 assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
                 assertThat(response.explanation, equalTo(fakeExplanations[index].content))
                 assertThat(response.attempt, equalTo(2))
-                assertTrue(response.isAFake)
+                assertTrue(response.fake)
             }
         }
     }
@@ -423,7 +423,7 @@ internal class ResponseServiceIntegrationTest(
                 assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
                 assertThat(response.explanation, equalTo(fakeExplanations[index].content))
                 assertThat(response.attempt, equalTo(1))
-                assertTrue(response.isAFake)
+                assertTrue(response.fake)
             }
         }
     }
