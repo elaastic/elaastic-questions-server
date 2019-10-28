@@ -25,7 +25,7 @@ import java.lang.IllegalStateException
 
 object CommandModelFactory {
 
-    fun build(user: User, sequence: Sequence) : CommandModel =
+    fun build(user: User, sequence: Sequence): CommandModel =
             sequence.activeInteraction.let { interaction ->
                 CommandModel(
                         sequenceId = sequence.id ?: throw IllegalStateException("This sequence hos no ID"),
@@ -33,7 +33,7 @@ object CommandModelFactory {
                         interactionRank = interaction?.rank,
                         questionType = sequence.statement.questionType,
                         actionStartSequence =
-                        if(sequence.state == State.beforeStart)
+                        if (sequence.state == State.beforeStart)
                             CommandModel.ActionStatus.ENABLED
                         else CommandModel.ActionStatus.HIDDEN,
                         actionStartInteraction = when {
@@ -51,7 +51,7 @@ object CommandModelFactory {
                             CommandModel.ActionStatus.HIDDEN
                         else CommandModel.ActionStatus.ENABLED,
                         actionReopenInteraction =
-                        if (interaction == null|| sequence.isStopped()  ||  interaction.getStateForTeacher(user) != State.afterStop || !interaction.isResponseSubmission())
+                        if (interaction == null || sequence.isStopped() || interaction.getStateForTeacher(user) != State.afterStop || interaction.isRead())
                             CommandModel.ActionStatus.HIDDEN
                         else CommandModel.ActionStatus.ENABLED,
                         actionReopenSequence = when {
