@@ -44,11 +44,13 @@
           <div
             th:replace="|${components}/_responseTab|::responseTab(${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponse})"></div>
 
-          <div th:each="explanationsByResponse, i : ${explanationViewerModel.explanationsByIncorrectResponses}"
-               th:remove="tag">
-            <div
-              th:replace="|${components}/_responseTab|::responseTab(${false}, ${explanationsByResponse.key}, ${explanationsByResponse.value})"></div>
-          </div>
+          <th:block th:unless="${explanationViewerModel.showOnlyCorrectResponse}">
+            <div th:each="explanationsByResponse, i : ${explanationViewerModel.explanationsByIncorrectResponses}"
+                 th:remove="tag">
+              <div
+                th:replace="|${components}/_responseTab|::responseTab(${false}, ${explanationsByResponse.key}, ${explanationsByResponse.value})"></div>
+            </div>
+          </th:block>
         </div>
       </div>
       <div th:if="${!explanationViewerModel.hasChoice}">

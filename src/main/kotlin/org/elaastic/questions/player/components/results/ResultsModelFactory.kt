@@ -26,7 +26,8 @@ import org.elaastic.questions.player.components.responseDistributionChart.Respon
 
 object ResultsModelFactory {
 
-    fun build(sequence: Sequence,
+    fun build(teacher: Boolean,
+              sequence: Sequence,
               responseSet: ResponseSet): ResultsModel =
             if (sequence.statement.hasChoices())
                 ChoiceResultsModel(
@@ -39,6 +40,7 @@ object ResultsModelFactory {
                         explanationViewerModel =
                         if (sequence.getResponseSubmissionSpecification().studentsProvideExplanation)
                             ExplanationViewerModelFactory.buildChoice(
+                                    teacher = teacher,
                                     choiceSpecification = sequence.statement.choiceSpecification!!,
                                     responseList = responseSet[sequence.whichAttemptEvaluate()]
                             )

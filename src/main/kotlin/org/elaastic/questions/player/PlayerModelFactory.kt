@@ -131,6 +131,7 @@ object PlayerModelFactory {
                         resultsModel =
                         if (showResults)
                             ResultsModelFactory.build(
+                                    teacher,
                                     sequence,
                                     findAllResponses()
                             )
