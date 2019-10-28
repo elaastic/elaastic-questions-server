@@ -316,7 +316,7 @@ internal class AssignmentServiceIntegrationTest(
                 assertThat(it.version, equalTo(assignmentVersion!! + 1L))
             }
             assertThat(sequenceRepository.existsById(sequenceId2!!), equalTo(false))
-            assertThat(statementRepository.existsById(statementId2!!), equalTo(false))
+            assertThat(statementRepository.existsById(statementId2!!), equalTo(true)) // statement is not deleted
         }.tWhen {
             sequenceRepository.getOne(sequenceId1!!).let { sequence ->
                 assignmentService.removeSequence(sequence.owner, sequence)

@@ -213,9 +213,9 @@ internal class AttachmentIntegrationTest(
         // given an assignment and a sequence with statement with attachment
         val assignment = testingService.getAnyAssignment()
         val sequence = assignment.sequences[0]
-        val statement = sequence.statement
+        var statement = sequence.statement
         val content = "Content".toByteArray()
-        val attachment = Attachment(
+        var attachment = Attachment(
                 name = "MyAttach",
                 originalFileName = "originalName",
                 size = content.size.toLong(),
@@ -229,12 +229,12 @@ internal class AttachmentIntegrationTest(
             )
         }.tWhen("removing the sequence") {
             assignmentService.removeSequence(assignment.owner,assignment.sequences[0])
-            em.refresh(attachment)
+            statement = statementRepository.findById(statement.id!!).get()
+            attachment = attachmentRepository.findById(attachment.id!!).get()
             attachment
-        }.tThen("attachment is detached") {
-            assertThat(attachment.statement, nullValue())
-            assertTrue(attachment.toDelete)
-            assertFalse(em.contains(statement))
+        }.tThen("statement is still there with its attachment") {
+            assertThat(attachment.statement, notNullValue())
+            assertFalse(attachment.toDelete)
             sequence
         }.tThen("no more learner sequences") {
             assertTrue(learnerSequenceRepository.findAllBySequence(sequence).isEmpty())

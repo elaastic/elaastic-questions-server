@@ -76,16 +76,7 @@ class AssignmentService(
         require(user == assignment.owner) {
             "Only the owner can delete an assignment"
         }
-        entityManager.createQuery("delete from LmsAssignment la where la.assignment = :assignment")
-                .setParameter("assignment", assignment)
-                .executeUpdate()
-
-        assignment.sequences.forEach {
-            removeSequence(it)
-        }
-
-        entityManager.clear()
-        assignmentRepository.deleteById(assignment.id!!)
+        assignmentRepository.delete(assignment) // all other linked entities are deletes by DB cascade
     }
 
     fun save(assignment: Assignment): Assignment {
@@ -120,51 +111,19 @@ class AssignmentService(
         return sequence
     }
 
-    private fun removeSequence(sequence: Sequence) {
-        entityManager.createNativeQuery("""
-            DELETE pg
-            FROM  peer_grading pg
-                INNER JOIN choice_interaction_response cir on pg.response_id = cir.id
-                INNER JOIN interaction i on cir.interaction_id = i.id
-                INNER JOIN sequence s on i.sequence_id = s.id
-            WHERE s.id = :sequenceId
-        """.trimIndent())
-                .setParameter("sequenceId", sequence.id)
-                .executeUpdate()
-
-        entityManager.createNativeQuery("""
-            DELETE cir
-            FROM choice_interaction_response cir
-                     INNER JOIN interaction i on cir.interaction_id = i.id
-                     INNER JOIN sequence s on i.sequence_id = s.id
-            WHERE s.id = :sequenceId
-        """.trimIndent())
-                .setParameter("sequenceId", sequence.id)
-                .executeUpdate()
-
-        entityManager.createQuery("delete from LearnerSequence ls where ls.sequence = :sequence")
-                .setParameter("sequence", sequence)
-                .executeUpdate()
-        entityManager.createQuery("delete from Interaction i where i.sequence = :sequence")
-                .setParameter("sequence", sequence)
-                .executeUpdate()
-        sequence.statement.attachment?.let {
-            attachmentService.detachAttachmentFromStatement(sequence.owner, sequence.statement)
-        }
-
-        statementService.delete(sequence.statement)
-
-    }
-
     fun removeSequence(user: User, sequence: Sequence) {
         require(user == sequence.owner) {
             "Only the owner can delete a sequence"
         }
         val assignment = sequence.assignment!!
-        removeSequence(sequence)
-        assignment.sequences.remove(sequence)
-        updateAllSequenceRank(assignment)
         touch(assignment)
+        assignment.sequences.remove(sequence)
+        entityManager.flush()
+        sequenceRepository.delete(sequence) // all other linked entities are deletes by DB cascade
+        entityManager.flush()
+        entityManager.clear()
+        updateAllSequenceRank(assignment)
+
     }
 
     fun moveUpSequence(assignment: Assignment, sequenceId: Long) {
@@ -204,7 +163,6 @@ class AssignmentService(
     }
 
     fun updateAllSequenceRank(assignment: Assignment) {
-
         val sequenceIds = assignment.sequences.map { it.id }
         if (sequenceIds.isEmpty()) return // Nothing to do
 
