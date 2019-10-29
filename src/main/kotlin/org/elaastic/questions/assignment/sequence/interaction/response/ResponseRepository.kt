@@ -28,9 +28,9 @@ interface ResponseRepository : JpaRepository<Response, Long> {
 
     fun getAllByIdIn(ids: List<Long>): List<Response>
 
-    fun findAllByInteraction(interaction: Interaction): List<Response>
+    fun findAllByInteractionOrderByMeanGradeDesc(interaction: Interaction): List<Response>
 
-    fun findAllByInteractionAndFakeIsFalse(interaction: Interaction): List<Response>
+    fun findAllByInteractionAndFakeIsFalseOrderByMeanGradeDesc(interaction: Interaction): List<Response>
 
     fun findAllByInteractionAndAttempt(interaction: Interaction, attempt: Int = 1): List<Response>
 

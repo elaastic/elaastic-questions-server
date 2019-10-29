@@ -57,8 +57,8 @@ class ResponseService(
     fun findAll(interaction: Interaction, excludeFakes: Boolean = true): ResponseSet =
             ResponseSet(
                     if (excludeFakes)
-                        responseRepository.findAllByInteractionAndFakeIsFalse(interaction)
-                    else responseRepository.findAllByInteraction(interaction)
+                        responseRepository.findAllByInteractionAndFakeIsFalseOrderByMeanGradeDesc(interaction)
+                    else responseRepository.findAllByInteractionOrderByMeanGradeDesc(interaction)
             )
 
     fun count(sequence: Sequence, attempt: AttemptNum) =
