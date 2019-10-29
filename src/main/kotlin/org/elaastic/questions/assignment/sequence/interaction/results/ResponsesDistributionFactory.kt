@@ -28,12 +28,12 @@ object ResponsesDistributionFactory {
             ResponsesDistribution(
                     ResponsesDistributionOnAttempt(
                             choiceSpecification.nbCandidateItem,
-                            responseSet[1]
+                            responseSet.getWithoutFake(1)
                     ),
                     if (responseSet[2].isNotEmpty()) {
                         ResponsesDistributionOnAttempt(
                                 choiceSpecification.nbCandidateItem,
-                                responseSet[2]
+                                responseSet.getWithoutFake(2)
                         )
                     } else null
             )

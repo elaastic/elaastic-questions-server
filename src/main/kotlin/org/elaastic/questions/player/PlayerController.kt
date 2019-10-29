@@ -155,7 +155,7 @@ class PlayerController(
                             hasResponseForUser = { attemptNum: AttemptNum ->
                                 responseService.hasResponseForUser(user, sequence, attemptNum)
                             },
-                            findAllResponses = { responseService.findAll(sequence) },
+                            findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
                             findAllRecommandedResponsesForUser = {
                                 responseService.findAllRecommandedResponsesForUser(
                                         sequence = sequence,

@@ -54,7 +54,7 @@ class ResultsService(
             "user cannot update results"
         }
 
-        responseService.findAll(sequence).let { responseSet ->
+        responseService.findAll(sequence, excludeFakes = false).let { responseSet ->
             if (sequence.statement.hasChoices()) {
                 updateResponsesDistribution(sequence, responseSet)
             }

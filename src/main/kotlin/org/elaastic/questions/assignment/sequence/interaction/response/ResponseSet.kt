@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.interaction.response
 
+import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 
@@ -32,11 +33,13 @@ class ResponseSet(responses: List<Response>) {
     fun isEmpty(): Boolean =
             get(1).isEmpty() && get(2).isEmpty()
 
-    operator fun get(i: Int) = when (i) {
+    operator fun get(i: AttemptNum) = when (i) {
         1 -> responsesByAttempt[0]
         2 -> responsesByAttempt[1]
         else -> throw IllegalArgumentException("There is no attempt $i")
     }
+
+    fun getWithoutFake(attempt: AttemptNum) = get(attempt).filter { !it.fake }
 
     fun add(response: Response) = when(response.attempt) {
         1, 2 -> responsesByAttempt[response.attempt-1].add(response)
