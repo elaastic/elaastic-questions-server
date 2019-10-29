@@ -23,7 +23,8 @@ import org.elaastic.questions.player.components.explanationViewer.ExplanationVie
 data class OpenResultsModel(
         override val sequenceIsStopped: Boolean,
         override val sequenceId: Long,
-        override val explanationViewerModel: ExplanationViewerModel? = null
+        override val explanationViewerModel: ExplanationViewerModel? = null,
+        override val userCanRefreshResults: Boolean = true
 ) : ResultsModel {
     override val hasExplanations = explanationViewerModel?.nbExplanations ?: 0 > 0
     override fun getHasChoices() = false

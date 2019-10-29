@@ -53,7 +53,8 @@ object PlayerModelFactory {
               getFirstAttemptResponse: () -> Response?,
               countNbResponsesAttempt1: () -> Int,
               countNbResponsesAttempt2: () -> Int,
-              countNbEvaluations: () -> Int): PlayerModel =
+              countNbEvaluations: () -> Int,
+              userCanRefreshResults: () -> Boolean): PlayerModel =
             run {
                 val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
                 val showResponsePhase = getShowResponsePhase(teacher, sequence, getActiveInteractionForLearner)
@@ -133,7 +134,8 @@ object PlayerModelFactory {
                             ResultsModelFactory.build(
                                     teacher,
                                     sequence,
-                                    findAllResponses()
+                                    findAllResponses(),
+                                    userCanRefreshResults()
                             )
                         else null
 

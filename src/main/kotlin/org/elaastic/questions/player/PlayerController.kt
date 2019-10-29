@@ -29,6 +29,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
+import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
@@ -55,7 +56,8 @@ class PlayerController(
         @Autowired val interactionService: InteractionService,
         @Autowired val responseService: ResponseService,
         @Autowired val peerGradingService: PeerGradingService,
-        @Autowired val messageBuilder: MessageBuilder
+        @Autowired val messageBuilder: MessageBuilder,
+        @Autowired val resultsService: ResultsService
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -130,7 +132,6 @@ class PlayerController(
         val user: User = authentication.principal as User
 
         // TODO Improve data fetching (should start from the assignment)
-
         sequenceService.get(id, true).let { sequence ->
             model.addAttribute("user", user)
             val teacher = user == sequence.owner
@@ -177,6 +178,9 @@ class PlayerController(
                             },
                             countNbEvaluations = {
                                 peerGradingService.countEvaluations(sequence)
+                            },
+                            userCanRefreshResults = {
+                                resultsService.canUpdateResults(user, sequence)
                             }
                     )
             )
@@ -284,6 +288,19 @@ class PlayerController(
 
         sequenceService.get(user, id, true).let {
             sequenceService.publishResults(user, it)
+        }
+
+        return "redirect:/player/sequence/${id}/play"
+    }
+
+    @GetMapping("/sequence/{id}/refresh-results")
+    fun refreshResults(authentication: Authentication,
+                       model: Model,
+                       @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        sequenceService.get(id, true).let {
+            sequenceService.refreshResults(user, it)
         }
 
         return "redirect:/player/sequence/${id}/play"

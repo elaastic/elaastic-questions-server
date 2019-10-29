@@ -28,7 +28,8 @@ object ResultsModelFactory {
 
     fun build(teacher: Boolean,
               sequence: Sequence,
-              responseSet: ResponseSet): ResultsModel =
+              responseSet: ResponseSet,
+              userCanRefreshResults: Boolean): ResultsModel =
             if (sequence.statement.hasChoices())
                 ChoiceResultsModel(
                         sequenceIsStopped = sequence.isStopped(),
@@ -44,7 +45,8 @@ object ResultsModelFactory {
                                     choiceSpecification = sequence.statement.choiceSpecification!!,
                                     responseList = responseSet[sequence.whichAttemptEvaluate()]
                             )
-                        else null
+                        else null,
+                        userCanRefreshResults = userCanRefreshResults
                 )
             else OpenResultsModel(
                     sequenceIsStopped = sequence.isStopped(),
@@ -52,7 +54,8 @@ object ResultsModelFactory {
                     explanationViewerModel =
                     ExplanationViewerModelFactory.buildOpen(
                             responseSet[sequence.whichAttemptEvaluate()]
-                    )
+                    ),
+                    userCanRefreshResults = userCanRefreshResults
             )
 
     private fun buildResponseDistributionChartModel(sequence: Sequence,

@@ -26,4 +26,5 @@ interface ResultsModel {
     fun getHasChoices(): Boolean
     val hasExplanations: Boolean
     val explanationViewerModel: ExplanationViewerModel?
+    val userCanRefreshResults : Boolean
 }

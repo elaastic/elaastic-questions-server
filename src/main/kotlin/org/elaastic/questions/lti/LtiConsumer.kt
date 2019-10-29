@@ -70,12 +70,10 @@ class LtiConsumer(
     var enableUntil: Date? = null
     var lastAccess: Date? = null
 
-    @NotNull
     @CreatedDate
     @Column(name = "created")
     var dateCreated: Date? = null
 
-    @NotNull
     @LastModifiedDate
     @Column(name = "updated")
     var lastUpdated: Date? = null

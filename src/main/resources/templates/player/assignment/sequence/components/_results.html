@@ -70,9 +70,8 @@
       </div>
     </div>
 
-    <a th:unless="${resultsModel.sequenceIsStopped}"
-       href="#"
-       onclick="location.reload()"
+    <a th:if="${resultsModel.userCanRefreshResults}"
+       th:href="@{/player/sequence/{id}/refresh-results(id=${resultsModel.sequenceId})}"
        style="position: absolute; top: 0.5em; right: 1em; font-size: 1.2em"
        th:attr="data-tooltip=#{player.sequence.readinteraction.updateAllResults}"
        data-inverted=""

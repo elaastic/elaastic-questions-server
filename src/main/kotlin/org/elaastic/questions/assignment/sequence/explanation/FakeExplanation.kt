@@ -48,12 +48,10 @@ class FakeExplanation(
     @Version
     var version: Long? = null
 
-    @NotNull
     @Column(name = "date_created")
     @CreatedDate
     lateinit var dateCreated: Date
 
-    @NotNull
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null

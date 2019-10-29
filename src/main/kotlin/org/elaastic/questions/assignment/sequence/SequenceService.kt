@@ -187,6 +187,13 @@ class SequenceService(
         }
     }
 
+    fun refreshResults(user: User, sequence: Sequence): Sequence {
+        sequence.let {
+            resultsService.updateResults(user, it)
+            return it
+        }
+    }
+
     fun publishResults(user: User, sequence: Sequence): Sequence {
         require(user == sequence.owner) {
             "Only the owner of the sequence is allowed to publish results"
