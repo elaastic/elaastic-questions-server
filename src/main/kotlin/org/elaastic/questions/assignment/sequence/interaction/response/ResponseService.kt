@@ -100,6 +100,32 @@ class ResponseService(
                     learner
             )
 
+
+    /**
+     *  Update the mean grade and nb of evaluations for every responses
+     *  bound the provided interaction
+     */
+    fun updateGradings(sequence: Sequence) {
+        entityManager.createNativeQuery("""
+            UPDATE choice_interaction_response response
+            INNER JOIN (
+                    SELECT pg.response_id as rid,
+                           avg(pg.grade) as meanGrade,
+                           count(pg.grade) as evaluationCount
+                    FROM peer_grading pg WHERE pg.grade <> -1
+                    GROUP BY pg.response_id
+                ) data ON rid = response.id
+            SET
+                mean_grade = data.meanGrade,
+                evaluation_count = data.evaluationCount
+            WHERE response.interaction_id = :interactionId
+                AND response.attempt = :attempt
+        """.trimIndent())
+                .setParameter("interactionId", sequence.getResponseSubmissionInteraction().id)
+                .setParameter("attempt", sequence.whichAttemptEvaluate())
+                .executeUpdate()
+    }
+
     fun updateMeanGradeAndEvaluationCount(response: Response): Response {
         val res = entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.grade) as evaluationCount from PeerGrading pg where pg.response = :response and pg.grade <> -1")
                 .setParameter("response", response)

@@ -58,7 +58,7 @@ class ResultsService(
             if (sequence.statement.hasChoices()) {
                 updateResponsesDistribution(sequence, responseSet)
             }
-            updateExplanationsMeanGrade(responseSet, sequence)
+            responseService.updateGradings(sequence)
         }
     }
 
@@ -86,8 +86,4 @@ class ResultsService(
         }
     }
 
-    fun updateExplanationsMeanGrade(responseSet: ResponseSet, sequence: Sequence) {
-        responseSet[sequence.whichAttemptEvaluate()]
-                .forEach { responseService.updateMeanGradeAndEvaluationCount(it) }
-    }
 }
