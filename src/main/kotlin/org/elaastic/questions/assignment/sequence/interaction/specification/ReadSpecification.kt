@@ -24,4 +24,15 @@ class ReadSpecification : InteractionSpecification {
     override fun getType(): InteractionType =
             InteractionType.Read
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ReadSpecification) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
+    }
+
+
 }
