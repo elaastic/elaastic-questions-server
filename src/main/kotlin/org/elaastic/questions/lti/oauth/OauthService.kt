@@ -20,6 +20,7 @@ package org.elaastic.questions.lti.oauth
 
 import net.oauth.OAuthAccessor
 import net.oauth.OAuthConsumer
+import net.oauth.OAuthProblemException
 import net.oauth.SimpleOAuthValidator
 import org.elaastic.questions.lti.LtiConsumerRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,9 +54,13 @@ class OauthService(
             OAuthAccessor(it).let { oAuthAccessor ->
                 try {
                     SimpleOAuthValidator().validateMessage(HttpRequestOAuthMessage(request), oAuthAccessor)
-                } catch(e: Exception) {
+                }  catch (pe : OAuthProblemException) {
+                    logger.severe(pe.message)
+                    logger.severe(pe.problem)
+                    throw pe;
+                } catch(e: OAuthException) {
                     logger.severe(e.message)
-                    throw OAuthException(VALIDATION_FAILS)
+                    throw e
                 }
             }
         }
