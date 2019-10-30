@@ -56,7 +56,9 @@ class OauthService(
                     SimpleOAuthValidator().validateMessage(HttpRequestOAuthMessage(request), oAuthAccessor)
                 }  catch (pe : OAuthProblemException) {
                     logger.severe(pe.message)
-                    logger.severe(pe.problem)
+                    pe.parameters.keys.forEach { key ->
+                        logger.severe(pe.parameters[key].toString())
+                    }
                     throw pe;
                 } catch(e: OAuthException) {
                     logger.severe(e.message)

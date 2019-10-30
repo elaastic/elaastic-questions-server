@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.io.InputStream
+import java.util.logging.Level
 import java.util.logging.Logger
 import javax.imageio.ImageIO
 import javax.imageio.ImageReader
@@ -83,8 +84,11 @@ class AttachmentService(
                     }
                 }
             } catch (e: Exception) {
-                logger.severe(e.message)
-                throw Exception("A problem occurs when trying to save the attachment")
+                logger.log(Level.SEVERE, "Message",e)
+                e.cause?.let {
+                    logger.log(Level.SEVERE, "Message",it)
+                }
+                throw Exception("A problem occurs when trying to save the attachment",e)
             }
         }
         return addStatementToAttachment(statement, attachment)
