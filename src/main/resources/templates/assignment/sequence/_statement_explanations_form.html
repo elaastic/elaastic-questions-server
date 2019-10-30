@@ -193,7 +193,7 @@
         },
 
         removeFakeExplanation: function (index) {
-          this.fakeExplanationList[index].content = null
+          this.fakeExplanationList.splice(index, 1);
         },
 
         fakeExplationIsNotNull: function (index) {
