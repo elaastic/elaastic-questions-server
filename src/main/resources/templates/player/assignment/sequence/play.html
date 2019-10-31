@@ -20,6 +20,7 @@
 <html lang="en"
       th:replace="layout/3columns :: 3columns(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, aside=~{::#layout-aside}, modalAside=~{::#modal-aside}, content=~{::section},extraHeader=~{::head/script})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<!--/*@thymesVar id="playerModel" type="org.elaastic.questions.player.PlayerModel"*/-->
 <head>
   <title th:text="|elaastic: ${playerModel.assignment.title}|"></title>
   <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
@@ -69,7 +70,12 @@
 <section th:with="components=${'/player/assignment/sequence/components'}">
   <div th:if="${playerModel.sequence}"
        th:id="|sequence_${playerModel.sequence.id}|">
-    <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
+    <th:block th:if="${playerModel instanceof T(org.elaastic.questions.player.TeacherPlayerModel)}">
+      <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
+    </th:block>
+    <th:block th:unless="${playerModel instanceof T(org.elaastic.questions.player.TeacherPlayerModel)}">
+      <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ~{})"></div>
+    </th:block>                                      
     <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
       <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel})"></div>
     </th:block>

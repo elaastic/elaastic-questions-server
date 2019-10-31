@@ -30,7 +30,9 @@ import org.elaastic.questions.assignment.sequence.interaction.results.ResultsSer
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ReadSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
@@ -47,7 +49,8 @@ class SequenceService(
         @Autowired val resultsService: ResultsService,
         @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
         @Autowired val learnerSequenceService: LearnerSequenceService,
-        @Autowired val responseService: ResponseService
+        @Autowired val responseService: ResponseService,
+        @Autowired val peerGradingService: PeerGradingService
 ) {
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
             get(id, fetchInteractions).let {
@@ -251,5 +254,11 @@ class SequenceService(
             learnerSequenceRepository.save(learnerSequence)
         }
     }
+
+    fun getStatistics(sequence: Sequence) = SequenceStatistics(
+            if(sequence.isNotStarted()) 0 else responseService.count(sequence, 1),
+            if(sequence.isNotStarted()) 0 else responseService.count(sequence, 2), // TODO should only compute this data if phase2 open or done
+            if(sequence.isNotStarted()) 0 else peerGradingService.countEvaluations(sequence) // TODO should only compute this data if phase2 open or done
+    )
 
 }

@@ -39,121 +39,132 @@ import org.elaastic.questions.player.components.steps.StepsModelFactory
 
 object PlayerModelFactory {
 
-    fun build(user: User,
-              sequence: Sequence,
-              teacher: Boolean,
-              nbRegisteredUsers: Int,
-              sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
-              messageBuilder: MessageBuilder,
-              getActiveInteractionForLearner: () -> Interaction?,
-              hasResponseForUser: (attemptNum: AttemptNum) -> Boolean,
-              findAllResponses: () -> ResponseSet,
-              findAllRecommandedResponsesForUser: () -> List<Response>,
-              userHasPerformedEvaluation: () -> Boolean,
-              getFirstAttemptResponse: () -> Response?,
-              countNbResponsesAttempt1: () -> Int,
-              countNbResponsesAttempt2: () -> Int,
-              countNbEvaluations: () -> Int,
-              userCanRefreshResults: () -> Boolean): PlayerModel =
-            run {
-                val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
-                val showResponsePhase = getShowResponsePhase(teacher, sequence, getActiveInteractionForLearner)
-                val showEvaluationPhase = getShowEvaluationPhase(teacher, sequence, getActiveInteractionForLearner)
-                val showResults =
-                        if (teacher)
-                            sequence.state != State.beforeStart
-                        else sequence.resultsArePublished && getActiveInteractionForLearner()?.isRead() == true
+    fun buildForTeacher(user: User,
+                        sequence: Sequence,
+                        nbRegisteredUsers: Int,
+                        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
+                        messageBuilder: MessageBuilder,
+                        findAllResponses: () -> ResponseSet,
+                        sequenceStatistics: SequenceStatistics,
+                        userCanRefreshResults: () -> Boolean): TeacherPlayerModel = run {
+        val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
+        val showResults = sequence.state != State.beforeStart
 
-                PlayerModel(
-                        assignment = assignment,
-                        sequence = sequence,
-                        userRole = if (teacher) UserRole.Teacher else UserRole.Learner,
-                        assignmentOverviewModel = AssignmentOverviewModelFactory.build(
-                                nbRegisteredUser = nbRegisteredUsers,
-                                assignmentTitle = assignment.title,
-                                sequences = assignment.sequences,
-                                sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
-                                selectedSequenceId = sequence.id,
-                                teacher = teacher
-                        ),
-                        stepsModel =
-                        if (teacher)
-                            StepsModelFactory.buildForTeacher(sequence)
-                        else StepsModelFactory.buildForLearner(
-                                sequence,
-                                getActiveInteractionForLearner()
-                        ),
-                        sequenceStatistics = SequenceStatistics(
-                                if(sequence.isNotStarted()) 0 else countNbResponsesAttempt1(),
-                                if(sequence.isNotStarted()) 0 else countNbResponsesAttempt2(), // TODO should only compute this data if phase2 open or done
-                                if(sequence.isNotStarted()) 0 else countNbEvaluations() // TODO should only compute this data if phase2 open or done
-                        ),
-                        commandModel =
-                        if (teacher)
-                            CommandModelFactory.build(user, sequence)
-                        else null,
-                        sequenceInfoModel = SequenceInfoResolver.resolve(teacher, sequence, messageBuilder),
-                        statementPanelModel = StatementPanelModel(
-                                hideStatement = !teacher && sequence.state == State.beforeStart,
-                                panelClosed = teacher && sequence.state != State.beforeStart
-                        ),
-                        statement = StatementInfo(sequence.statement),
-                        showResponsePhase = showResponsePhase,
-                        responsePhaseModel =
-                        if (showResponsePhase)
-                            ResponsePhaseModelFactory.build(
-                                    responseSubmitted = hasResponseForUser(1),
-                                    sequence = sequence,
-                                    userActiveInteraction = getActiveInteractionForLearner()
-                            )
-                        else null,
-                        showEvaluationPhase = showEvaluationPhase,
-                        evaluationPhaseModel =
-                        if (showEvaluationPhase)
-                            run {
-                                val userHasPerformedEvaluation = userHasPerformedEvaluation()
-                                val secondAttemptAlreadySubmitted = hasResponseForUser(2)
-                                val responsesToGrade = if (!userHasPerformedEvaluation)
-                                    findAllRecommandedResponsesForUser().map { ResponseData(it) }
-                                else listOf()
-                                EvaluationPhaseModelFactory.build(
-                                        userHasCompletedPhase2 = (responsesToGrade.isEmpty() &&
-                                                (secondAttemptAlreadySubmitted || !sequence.isSecondAttemptAllowed())),
-                                        userHasPerformedEvaluation = userHasPerformedEvaluation,
-                                        secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
-                                        responsesToGrade = responsesToGrade,
-                                        sequence = sequence,
-                                        userActiveInteraction = getActiveInteractionForLearner(),
-                                        firstAttemptResponse = getFirstAttemptResponse()
-                                )
-                            }
-                        else null,
-                        showResults = showResults,
-                        resultsModel =
-                        if (showResults)
-                            ResultsModelFactory.build(
-                                    teacher,
-                                    sequence,
-                                    findAllResponses(),
-                                    userCanRefreshResults()
-                            )
-                        else null
+        TeacherPlayerModel(
+                assignment = assignment,
+                sequence = sequence,
+                assignmentOverviewModel = AssignmentOverviewModelFactory.build(
+                        nbRegisteredUser = nbRegisteredUsers,
+                        assignmentTitle = assignment.title,
+                        sequences = assignment.sequences,
+                        sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
+                        selectedSequenceId = sequence.id,
+                        teacher = true
+                ),
+                stepsModel = StepsModelFactory.buildForTeacher(sequence),
+                sequenceStatistics = sequenceStatistics,
+                commandModel = CommandModelFactory.build(user, sequence),
+                sequenceInfoModel = SequenceInfoResolver.resolve(true, sequence, messageBuilder),
+                statementPanelModel = StatementPanelModel(
+                        hideStatement = false,
+                        panelClosed = sequence.state != State.beforeStart
+                ),
+                statement = StatementInfo(sequence.statement),
+                showResults = showResults,
+                resultsModel = if (showResults)
+                    ResultsModelFactory.build(
+                            true,
+                            sequence,
+                            findAllResponses(),
+                            userCanRefreshResults()
+                    )
+                else null
+        )
+    }
 
-                )
-            }
 
-    // TODO Perhaps we could implement the logic to get the current LearnerPhase
-    private fun getShowResponsePhase(teacher: Boolean,
-                                     sequence: Sequence,
-                                     getActiveInteractionForLearner: () -> Interaction?): Boolean =
-            !teacher &&
-                    sequence.state == State.show &&
-                    getActiveInteractionForLearner()?.isResponseSubmission() == true
+    fun buildForLearner(user: User,
+                        sequence: Sequence,
+                        nbRegisteredUsers: Int,
+                        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
+                        messageBuilder: MessageBuilder,
+                        getActiveInteractionForLearner: () -> Interaction?,
+                        hasResponseForUser: (attemptNum: AttemptNum) -> Boolean,
+                        findAllResponses: () -> ResponseSet,
+                        findAllRecommandedResponsesForUser: () -> List<Response>,
+                        userHasPerformedEvaluation: () -> Boolean,
+                        getFirstAttemptResponse: () -> Response?,
+                        userCanRefreshResults: () -> Boolean): LearnerPlayerModel = run {
+        val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
+        val showResponsePhase = sequence.state == State.show &&
+                getActiveInteractionForLearner()?.isResponseSubmission() == true
+        val showEvaluationPhase = sequence.state == State.show &&
+                getActiveInteractionForLearner()?.isEvaluation() == true
+        val showResults =
+                sequence.resultsArePublished && getActiveInteractionForLearner()?.isRead() == true
 
-    private fun getShowEvaluationPhase(teacher: Boolean,
-                                       sequence: Sequence,
-                                       getActiveInteractionForLearner: () -> Interaction?): Boolean =
-            !teacher &&
-                    sequence.state == State.show &&
-                    getActiveInteractionForLearner()?.isEvaluation() == true
+        LearnerPlayerModel(
+                assignment = assignment,
+                sequence = sequence,
+                assignmentOverviewModel = AssignmentOverviewModelFactory.build(
+                        nbRegisteredUser = nbRegisteredUsers,
+                        assignmentTitle = assignment.title,
+                        sequences = assignment.sequences,
+                        sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
+                        selectedSequenceId = sequence.id,
+                        teacher = false
+                ),
+                stepsModel = StepsModelFactory.buildForLearner(
+                        sequence,
+                        getActiveInteractionForLearner()
+                ),
+                sequenceInfoModel = SequenceInfoResolver.resolve(false, sequence, messageBuilder),
+                statementPanelModel = StatementPanelModel(
+                        hideStatement = sequence.state == State.beforeStart,
+                        panelClosed = false
+                ),
+                statement = StatementInfo(sequence.statement),
+                showResponsePhase = showResponsePhase,
+                responsePhaseModel =
+                if (showResponsePhase)
+                    ResponsePhaseModelFactory.build(
+                            responseSubmitted = hasResponseForUser(1),
+                            sequence = sequence,
+                            userActiveInteraction = getActiveInteractionForLearner()
+                    )
+                else null,
+                showEvaluationPhase = showEvaluationPhase,
+                evaluationPhaseModel =
+                if (showEvaluationPhase)
+                    run {
+                        val userHasPerformedEvaluation = userHasPerformedEvaluation()
+                        val secondAttemptAlreadySubmitted = hasResponseForUser(2)
+                        val responsesToGrade = if (!userHasPerformedEvaluation)
+                            findAllRecommandedResponsesForUser().map { ResponseData(it) }
+                        else listOf()
+                        EvaluationPhaseModelFactory.build(
+                                userHasCompletedPhase2 = (responsesToGrade.isEmpty() &&
+                                        (secondAttemptAlreadySubmitted || !sequence.isSecondAttemptAllowed())),
+                                userHasPerformedEvaluation = userHasPerformedEvaluation,
+                                secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
+                                responsesToGrade = responsesToGrade,
+                                sequence = sequence,
+                                userActiveInteraction = getActiveInteractionForLearner(),
+                                firstAttemptResponse = getFirstAttemptResponse()
+                        )
+                    }
+                else null,
+                showResults = showResults,
+                resultsModel =
+                if (showResults)
+                    ResultsModelFactory.build(
+                            false,
+                            sequence,
+                            findAllResponses(),
+                            userCanRefreshResults()
+                    )
+                else null
+        )
+    }
+
 }

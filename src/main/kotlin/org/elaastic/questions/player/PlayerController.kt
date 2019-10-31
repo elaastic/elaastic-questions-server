@@ -135,21 +135,28 @@ class PlayerController(
         sequenceService.get(id, true).let { sequence ->
             model.addAttribute("user", user)
             val teacher = user == sequence.owner
+            val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
 
             model.addAttribute(
                     "playerModel",
-                    PlayerModelFactory.build(
+                    if (teacher)
+                        PlayerModelFactory.buildForTeacher(
+                                user = user,
+                                sequence = sequence,
+                                nbRegisteredUsers = nbRegisteredUsers,
+                                sequenceToUserActiveInteraction = sequence.assignment!!.sequences.associate { it to it.activeInteraction },
+                                messageBuilder = messageBuilder,
+                                findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
+                                sequenceStatistics = sequenceService.getStatistics(sequence), userCanRefreshResults = { resultsService.canUpdateResults(user, sequence) }
+                        )
+                    else PlayerModelFactory.buildForLearner(
                             user = user,
-                            teacher = teacher,
                             sequence = sequence,
-                            nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!),
-                            sequenceToUserActiveInteraction =
-                            if (teacher)
-                                sequence.assignment!!.sequences.associate { it to it.activeInteraction }
-                            else sequence.assignment!!.sequences.associate {
-                                it to if(it.executionIsFaceToFace())
+                            nbRegisteredUsers = nbRegisteredUsers,
+                            sequenceToUserActiveInteraction = sequence.assignment!!.sequences.associate {
+                                it to if (it.executionIsFaceToFace())
                                     it.activeInteraction
-                                    else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
+                                else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
                             },
                             messageBuilder = messageBuilder,
                             getActiveInteractionForLearner = { learnerSequenceService.getActiveInteractionForLearner(user, sequence) },
@@ -169,15 +176,6 @@ class PlayerController(
                             },
                             getFirstAttemptResponse = {
                                 responseService.find(user, sequence)
-                            },
-                            countNbResponsesAttempt1 = {
-                                responseService.count(sequence, 1)
-                            },
-                            countNbResponsesAttempt2 = {
-                                responseService.count(sequence, 2)
-                            },
-                            countNbEvaluations = {
-                                peerGradingService.countEvaluations(sequence)
                             },
                             userCanRefreshResults = {
                                 resultsService.canUpdateResults(user, sequence)
