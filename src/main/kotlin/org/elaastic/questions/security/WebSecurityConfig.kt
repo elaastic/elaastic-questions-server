@@ -52,7 +52,7 @@ class WebSecurityConfig(
 
     @Throws(Exception::class)
     override fun configure(web: WebSecurity) {
-        web.ignoring().antMatchers(HttpMethod.POST,"/launch")
+        web.ignoring().antMatchers(HttpMethod.POST,"/launch", "/elaastic-questions/launch")
     }
 
     override fun configure(http: HttpSecurity?) {
