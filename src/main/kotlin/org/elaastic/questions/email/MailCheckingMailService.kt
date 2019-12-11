@@ -40,7 +40,10 @@ class MailCheckingMailService(
         @Autowired val templateEngine: TemplateEngine,
 
         @Value("\${elaastic.questions.url}")
-        val elaasticQuestionUrl:String
+        val elaasticQuestionUrl:String,
+
+        @Value("\${elaastic.questions.mail.activation.from}")
+        val elaasticQuestionActivationFrom:String
 
 ) {
 
@@ -93,6 +96,7 @@ class MailCheckingMailService(
         val mailMessage = mailSender.createMimeMessage()
         MimeMessageHelper(mailMessage, true).let {
             it.setTo(userInfo["email"] as String)
+            it.setFrom(elaasticQuestionActivationFrom)
             it.setSubject(subject)
             it.setText(htmlText, true)
         }

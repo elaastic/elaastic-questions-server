@@ -43,7 +43,10 @@ class PasswordResetMailService(
         @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
 
         @Value("\${elaastic.questions.url}")
-        val elaasticQuestionUrl:String
+        val elaasticQuestionUrl:String,
+
+        @Value("\${elaastic.questions.mail.password.from}")
+        val elaasticQuestionPasswordRecoveringFrom:String
 ) {
 
     val logger = Logger.getLogger(PasswordResetMailService::class.java.name)
@@ -116,6 +119,7 @@ class PasswordResetMailService(
         val mailMessage = mailSender.createMimeMessage()
         MimeMessageHelper(mailMessage, true).let {
             it.setTo(email)
+            it.setFrom(elaasticQuestionPasswordRecoveringFrom)
             it.setSubject(subject)
             it.setText(htmlText, true)
         }
