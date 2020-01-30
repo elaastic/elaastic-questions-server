@@ -25,6 +25,8 @@ import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.feedback.Feedback
+import org.elaastic.questions.assignment.sequence.interaction.feedback.FeedbackService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
@@ -55,6 +57,7 @@ class PlayerController(
         @Autowired val learnerSequenceService: LearnerSequenceService,
         @Autowired val interactionService: InteractionService,
         @Autowired val responseService: ResponseService,
+        @Autowired val feedbackService: FeedbackService,  // TODO test
         @Autowired val peerGradingService: PeerGradingService,
         @Autowired val messageBuilder: MessageBuilder,
         @Autowired val resultsService: ResultsService
@@ -361,11 +364,24 @@ class PlayerController(
     @GetMapping("/sequence/{id}/submit-feedback")
     fun submitQuestionFeedback(authentication: Authentication,
                               model: Model,
-                              //@RequestParam("agreement-level") agreementLevel: Int?,
-                              //@RequestParam("agreement-explanation") agreementExplanation: String?,
+                              @RequestParam("agreement-level") agreementLevel: Int?,
+                              @RequestParam("agreement-explanation") agreementExplanation: String?,
                               @PathVariable id: Long): String {
+
         val user: User = authentication.principal as User
 
+        val userActivateInteraction = sequenceService.getActiveInteractionForLearner(sequece, user)
+
+        feedbackService.save(
+                userActivateInteraction
+                        ?: error("No active interaction, cannot submit a response"),
+                Feedback(
+                        learner = user,
+                        interaction = null,
+                        agreementLevel = agreementLevel,
+                        agreementExplanation = agreementExplanation
+                )
+        )
         // TODO Add the agreement level and explanation to the feedback service
 
         return "redirect:/player/sequence/${id}/play"
