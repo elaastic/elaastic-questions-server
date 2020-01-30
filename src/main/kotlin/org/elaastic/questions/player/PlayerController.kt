@@ -358,6 +358,19 @@ class PlayerController(
         return "redirect:/player/sequence/${id}/play"
     }
 
+    @GetMapping("/sequence/{id}/submit-feedback")
+    fun submitQuestionFeedback(authentication: Authentication,
+                              model: Model,
+                              //@RequestParam("agreement-level") agreementLevel: Int?,
+                              //@RequestParam("agreement-explanation") agreementExplanation: String?,
+                              @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        // TODO Add the agreement level and explanation to the feedback service
+
+        return "redirect:/player/sequence/${id}/play"
+    }
+
     data class ResponseSubmissionData(
             val interactionId: Long,
             val attempt: AttemptNum,
