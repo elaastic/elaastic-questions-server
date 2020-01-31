@@ -185,9 +185,6 @@ class PlayerController(
                             }
                     )
             )
-            feedbackService.getFeedback(user, sequence).let {
-                model.addAttribute("sequenceFeedback", it)
-            }
         }
 
         return "/player/assignment/sequence/play"
@@ -375,10 +372,14 @@ class PlayerController(
 
         sequenceService.get(id, true).let { sequence ->
 
+            val userActivateInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
+
             feedbackService.save(
+                    userActivateInteraction
+                            ?: error("No active interaction, cannot submit a response"),
                     Feedback(
                             learner = user,
-                            sequence = sequence,
+                            interaction = sequence.getResponseSubmissionInteraction(),
                             rating = agreementLevel,
                             explanation = agreementExplanation
                     )
