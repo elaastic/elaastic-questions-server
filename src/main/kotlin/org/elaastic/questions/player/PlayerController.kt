@@ -379,9 +379,9 @@ class PlayerController(
                             ?: error("No active interaction, cannot submit a response"),
                     Feedback(
                             learner = user,
-                            interaction = sequence.getResponseSubmissionInteraction(), // TODO verifier s'il faut chopper la reponse aux quesiton.
-                            agreementLevel = agreementLevel,
-                            agreementExplanation = agreementExplanation
+                            interaction = sequence.getResponseSubmissionInteraction(),
+                            rating = agreementLevel,
+                            explanation = agreementExplanation
                     )
             )
            // if (sequence.executionIsDistance() || sequence.executionIsBlended()) {

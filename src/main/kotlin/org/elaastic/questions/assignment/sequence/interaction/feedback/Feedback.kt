@@ -39,11 +39,11 @@ class Feedback (
         @field:ManyToOne
         var interaction: Interaction,
 
-        @field:Column(name = "agreement_level")
-        var agreementLevel: Int?,
+        @field:Column(name = "rating")
+        var rating: Int?,
 
-        @field:Column(name = "agreement_explanation")
-        var agreementExplanation: String?
+        @field:Column(name = "explanation")
+        var explanation: String?
 
 ) : AbstractJpaPersistable<Long>() {
 
@@ -52,10 +52,6 @@ class Feedback (
 
         @Column(name = "date created")
         lateinit var dateCreated: Date
-
-        @LastModifiedDate
-        @Column(name ="last_updated")
-        var lastUpdated: Date? = null
 
     // TODO In process, I think it's ready but ...
 }

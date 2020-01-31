@@ -19,8 +19,8 @@
 CREATE TABLE `sequence_feedback` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `date_created` datetime NOT NULL,
-  `author_id` bigint(20) NOT NULL,
-  `sequence_id` bigint(20) NOT NULL,
+  `learner_id` bigint(20) NOT NULL,
+  `interaction_id` bigint(20) NOT NULL,
   `rating` tinyint(1) NOT NULL,
   `explanation` text NOT NULL,
   PRIMARY KEY (`id`),
