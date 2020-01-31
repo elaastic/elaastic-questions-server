@@ -17,12 +17,10 @@
  */
 package org.elaastic.questions.assignment.sequence.interaction.feedback
 
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.EntityListeners
@@ -37,7 +35,7 @@ class Feedback (
         var learner: User,
 
         @field:ManyToOne
-        var interaction: Interaction,
+        var sequence: Sequence,
 
         @field:Column(name = "rating")
         var rating: Int?,
