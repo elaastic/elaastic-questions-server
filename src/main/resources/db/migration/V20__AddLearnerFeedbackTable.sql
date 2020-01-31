@@ -24,6 +24,6 @@ CREATE TABLE `sequence_feedback` (
   `rating` tinyint(1) NOT NULL,
   `explanation` text NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_sequence_feedback_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `fk_sequence_feedback_sequence` FOREIGN KEY (`sequence_id`) REFERENCES `sequence` (`id`)
+  CONSTRAINT `fk_sequence_feedback_learner` FOREIGN KEY (`learner_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `fk_sequence_feedback_sequence` FOREIGN KEY (`interaction_id`) REFERENCES `interaction` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
