@@ -31,18 +31,13 @@ class FeedbackService(
         @Autowired val feedbackRepository: FeedbackRepository
 ) {
 
-    fun save(userActiveInteraction: Interaction, feedback: Feedback): Feedback {
+    fun save(feedback: Feedback): Feedback {
         require(
                 learnerAssignmentService.isRegistered(
                    feedback.learner,
-                        feedback.interaction.sequence.assignment!!
+                        feedback.sequence.assignment!!
                 )
         ) { "You must be registered on the assignment to submit a response" }
-       // require( run {
-       //     userActiveInteraction.isEvaluation() &&
-       //             userActiveInteraction.state == State.show
-       // }
-       // ) { "The intearction cannot receive response" }
 
         // TODO in process look at ResponseService (save)
         feedbackRepository.save(feedback)

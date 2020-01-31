@@ -372,14 +372,10 @@ class PlayerController(
 
         sequenceService.get(id, true).let { sequence ->
 
-            val userActivateInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
-
             feedbackService.save(
-                    userActivateInteraction
-                            ?: error("No active interaction, cannot submit a response"),
                     Feedback(
                             learner = user,
-                            interaction = sequence.getResponseSubmissionInteraction(),
+                            sequence = sequence,
                             rating = agreementLevel,
                             explanation = agreementExplanation
                     )
