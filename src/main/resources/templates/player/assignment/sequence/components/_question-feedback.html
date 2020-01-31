@@ -28,27 +28,41 @@
             <span th:text="#{question.feedback.title}">Point of view on the sequence</span>
         </div>
 
-        <div class="ui basic padded segment active content"
+        <div class="ui basic active content"
              style="font-size: 1rem;"
              th:id="|sequence_${sequenceId}_pov|">
 
-            <form>
+            <form class="ui form">
                 <p th:text="#{question.feedback.statement}">I think I learnt something from this sequence ?</p>
-                <div style="display: flex">
-                    <div>No at all</div>
-                    <div style="display: flex; justify-content: space-evenly">
-                        <input type="radio" value="1" name="agreement-level" />
-                        <input type="radio" value="2" name="agreement-level" />
-                        <input type="radio" value="3" name="agreement-level" />
-                        <input type="radio" value="4" name="agreement-level" />
-                        <input type="radio" value="5" name="agreement-level" />
-                    </div>
-                    <div>Yes</div>
+                <div class="inline fields">
+                    <label class="field" style="font-size: 18px">
+                        <i class="ui red icon frown"></i>
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="1" name="agreement-level" />
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="2" name="agreement-level" />
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="3" name="agreement-level" />
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="4" name="agreement-level" />
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="5" name="agreement-level" />
+                    </label>
+                    <label class="field" style="font-size: 18px">
+                        <i class="ui green icon smile"></i>
+                    </label>
                 </div>
-                <textarea name="agreement-explanation" placeholder="Commentaire"></textarea>
+                <label>
+                    <textarea name="agreement-explanation" th:placeholder="#{question.feedback.title}"></textarea>
+                </label>
 
-                <input type="submit" value="Ok" />
-            </form>
+                <input type="submit" th:value="#{common.save}" />
+            </form> 
         </div>
     </div>
     <script th:inline="javascript">
