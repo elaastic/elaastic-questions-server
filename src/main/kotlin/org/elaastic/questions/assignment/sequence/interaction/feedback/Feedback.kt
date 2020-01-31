@@ -40,10 +40,10 @@ class Feedback (
         var interaction: Interaction,
 
         @field:Column(name = "agreement_level")
-        var agreementLevel: Int,
+        var agreementLevel: Int?,
 
         @field:Column(name = "agreement_explanation")
-        var agreementExplanation: String
+        var agreementExplanation: String?
 
 ) : AbstractJpaPersistable<Long>() {
 

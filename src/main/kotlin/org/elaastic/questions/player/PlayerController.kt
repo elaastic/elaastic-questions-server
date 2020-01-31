@@ -370,18 +370,24 @@ class PlayerController(
 
         val user: User = authentication.principal as User
 
-        val userActivateInteraction = sequenceService.getActiveInteractionForLearner(sequece, user)
+        sequenceService.get(id, true).let { sequence ->
 
-        feedbackService.save(
-                userActivateInteraction
-                        ?: error("No active interaction, cannot submit a response"),
-                Feedback(
-                        learner = user,
-                        interaction = null,
-                        agreementLevel = agreementLevel,
-                        agreementExplanation = agreementExplanation
-                )
-        )
+            val userActivateInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
+
+            feedbackService.save(
+                    userActivateInteraction
+                            ?: error("No active interaction, cannot submit a response"),
+                    Feedback(
+                            learner = user,
+                            interaction = sequence.getResponseSubmissionInteraction(),
+                            agreementLevel = agreementLevel,
+                            agreementExplanation = agreementExplanation
+                    )
+            )
+           // if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
+           //     sequenceService.nextInteractionForLearner(sequence, user)
+           // }
+        }
         // TODO Add the agreement level and explanation to the feedback service
 
         return "redirect:/player/sequence/${id}/play"

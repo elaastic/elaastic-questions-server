@@ -21,5 +21,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface FeedbackRepository : JpaRepository<Feedback, Long> {
 
+    fun getAllByIdIn(ids: List<Long>): List<Feedback>
+
     // TODO in process Look at ResponseRepository (save ResponseService method call this interface)
 }
