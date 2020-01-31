@@ -361,7 +361,7 @@ class PlayerController(
         return "redirect:/player/sequence/${id}/play"
     }
 
-    @GetMapping("/sequence/{id}/submit-feedback")
+    @PostMapping("/sequence/{id}/submit-feedback")
     fun submitQuestionFeedback(authentication: Authentication,
                               model: Model,
                               @RequestParam("agreement-level") agreementLevel: Int?,
@@ -379,7 +379,7 @@ class PlayerController(
                             ?: error("No active interaction, cannot submit a response"),
                     Feedback(
                             learner = user,
-                            interaction = sequence.getResponseSubmissionInteraction(),
+                            interaction = sequence.getResponseSubmissionInteraction(), // TODO verifier s'il faut chopper la reponse aux quesiton.
                             agreementLevel = agreementLevel,
                             agreementExplanation = agreementExplanation
                     )

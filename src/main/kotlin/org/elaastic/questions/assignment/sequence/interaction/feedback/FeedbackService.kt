@@ -38,11 +38,11 @@ class FeedbackService(
                         feedback.interaction.sequence.assignment!!
                 )
         ) { "You must be registered on the assignment to submit a response" }
-        require( run {
-            userActiveInteraction.isEvaluation() &&
-                    userActiveInteraction.state == State.show
-        }
-        ) { "The intearction cannot receive response" }
+       // require( run {
+       //     userActiveInteraction.isEvaluation() &&
+       //             userActiveInteraction.state == State.show
+       // }
+       // ) { "The intearction cannot receive response" }
 
         // TODO in process look at ResponseService (save)
         feedbackRepository.save(feedback)
