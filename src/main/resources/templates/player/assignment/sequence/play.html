@@ -91,10 +91,10 @@
     </th:block>
 
     <div th:if="${playerModel.showResults}" th:remove="tag">
+      <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
       <div th:if="${playerModel.userRole.name() == 'Learner'}" th:remove="tag">
         <div th:replace="|${components}/_question-feedback.html| :: question-feedback(${playerModel.resultsModel})"></div>
       </div>
-      <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
     </div>
 
 
