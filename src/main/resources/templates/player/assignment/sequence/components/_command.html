@@ -82,6 +82,14 @@
       &nbsp; <span th:text="#{player.sequence.readinteraction.stopSequence}">Stop sequence</span>
     </a>
 
+    <!--
+    <a th:href="@{/assignment/{assignmentId}/sequence/{id}/statistics(assignmentId=${model.assignmentId}, id=${model.sequenceId})}"
+       class="item">
+      <i class="chart bar icon"></i>
+      &nbsp; <span th:text="#{sequence.statistic}">Statistics</span>
+    </a>
+    -->
+
     <!--   TODO load partiel template th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}')|"-->
     <a th:href="@{/player/sequence/{sequenceId}/publish-results(sequenceId=${model.sequenceId})}"
        th:unless="${model.actionPublishResults.name() == 'HIDDEN'}"
@@ -107,6 +115,5 @@
     <div
       th:replace="player/assignment/sequence/components/_config-sequence.html :: configSequence(${model.sequenceId}, ${model.questionType})"></div>
   </div>
-
 
 </div>

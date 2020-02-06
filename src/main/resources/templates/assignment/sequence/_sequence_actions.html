@@ -48,6 +48,16 @@
     <i class="arrow up icon"></i>
   </a>
 
+
+  <a class="ui right floated icon orange tiny button"
+     th:href="@{/assignment/{assignmentId}/sequence/{id}/statistics(assignmentId=${assignment.id},id=${sequence.id})}"
+     href="/sequence/123/upSequence"
+     th:attr="data-tooltip=#{sequence.statistics}"
+     data-tooltip="Statistics"
+     data-inverted="">
+    <i class="chart bar icon"></i>
+  </a>
+
   <a class="ui right floated icon secondary tiny button"
      th:href="@{/assignment/{assignmentId}/sequence/{id}/edit(assignmentId=${assignment.id},id=${sequence.id})}"
      href="/sequence/123/edit"

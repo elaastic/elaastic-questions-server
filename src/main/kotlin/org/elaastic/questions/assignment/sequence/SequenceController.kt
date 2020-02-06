@@ -79,6 +79,31 @@ class SequenceController(
         return "/assignment/sequence/edit"
     }
 
+    @GetMapping("{id}/statistics")
+    fun statistics(authentication: Authentication,
+        model: Model,
+               @PathVariable assignmentId: Long,
+             @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        val sequence = sequenceService.get(user, id)
+
+        model.addAttribute("user", user)
+        model.addAttribute("assignment", sequence.assignment)
+        model.addAttribute("sequenceData", SequenceData(sequence))
+        model.addAttribute(
+                "statementData",
+                StatementData(
+                        sequence.statement,
+                        fakeExplanationService.findAllByStatement(sequence.statement)
+                )
+        )
+
+        return "/assignment/sequence/statistics"
+    }
+
+
+
     @PostMapping("save")
     fun save(authentication: Authentication,
              @RequestParam("fileToAttached") fileToAttached: MultipartFile,
