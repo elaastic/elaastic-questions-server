@@ -89,6 +89,9 @@ class PlayerController(
         return "/player/index"
     }
 
+
+
+
     @GetMapping("/register")
     fun register(authentication: Authentication,
                  model: Model,
