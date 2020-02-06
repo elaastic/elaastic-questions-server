@@ -1,0 +1,77 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="question-feedback(model)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <div class="ui accordion segment"
+         th:id="|question-feedback-accordion-${model.sequenceId}|">
+
+        <div class="ui dividing active title header" style="margin-right: 1.25em;">
+            <i class="dropdown icon"></i>
+            <span th:text="#{player.sequence.feedback.title}">Point of view on the sequence</span>
+        </div>
+
+        <div class="ui basic large text segment active content"
+             style="font-size: 1rem;"
+             th:id="|sequence_${model.sequenceId}_pov|">
+
+            <form class="ui form"
+                  th:action="@{/player/sequence/{sequenceId}/submit-feedback(sequenceId=${model.sequenceId})}"
+                  method="post">
+                <p th:text="#{player.sequence.feedback.statement}">I think I learnt something from this sequence ?</p>
+                <div class="inline fields">
+                    <label class="field" th:text="#{player.sequence.feedback.lowdegree}">
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="1" name="agreement-level" />
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="2" name="agreement-level" />
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="3" name="agreement-level" />
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="4" name="agreement-level" />
+                    </label>
+                    <label class="field">
+                        <input class="ui radio checkbox" type="radio" value="5" name="agreement-level" />
+                    </label>
+                    <label class="field" th:text="#{player.sequence.feedback.highdegree}">
+                    </label>
+                </div>
+                <div class="field">
+                    <label>
+                        <textarea class="" name="agreement-explanation" th:placeholder="#{player.sequence.feedback.title}"></textarea>
+                    </label>
+                </div>
+                <div class="field">
+                    <input class="ui primary button" type="submit" th:value="#{player.sequence.interaction.submitResponse}"/>
+                </div>
+
+            </form> 
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $('#question-feedback-accordion-[[${model.sequenceId}]]').accordion()
+        })
+    </script>
+</div>

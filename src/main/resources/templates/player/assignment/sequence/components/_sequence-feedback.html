@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="question-feedback(model)"
+<div th:fragment="question-feedback(model, sequenceFeedback)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -32,41 +32,48 @@
              style="font-size: 1rem;"
              th:id="|sequence_${model.sequenceId}_pov|">
 
-            <form class="ui form"
-                  th:action="@{/player/sequence/{sequenceId}/submit-feedback(sequenceId=${model.sequenceId})}"
-                  method="post">
-                <p th:text="#{player.sequence.feedback.statement}">I think I learnt something from this sequence ?</p>
+            <form class="ui form">
+                <p th:text="#{player.sequence.feedback.statement}">I think I learn something from this sequence ?</p>
                 <div class="inline fields">
-                    <label class="field" th:text="#{player.sequence.feedback.lowdegree}">
+                    <label class="field"
+                           th:text="#{player.sequence.feedback.lowdegree}">
                     </label>
                     <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="1" name="agreement-level" />
+                        <input class="ui radio checkbox"
+                               th:checked="${sequenceFeedback.rating == 1}"
+                               disabled type="radio" value="1" name="agreement-level" />
                     </label>
                     <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="2" name="agreement-level" />
+                        <input class="ui radio checkbox"
+                               th:checked="${sequenceFeedback.rating == 2}"
+                               disabled type="radio" value="2" name="agreement-level" />
                     </label>
                     <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="3" name="agreement-level" />
+                        <input class="ui radio checkbox"
+                               th:checked="${sequenceFeedback.rating == 3}"
+                               disabled type="radio" value="3" name="agreement-level" />
                     </label>
                     <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="4" name="agreement-level" />
+                        <input class="ui radio checkbox"
+                               th:checked="${sequenceFeedback.rating == 4}"
+                               disabled type="radio" value="4" name="agreement-level" />
                     </label>
                     <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="5" name="agreement-level" />
+                        <input class="ui radio checkbox"
+                               th:checked="${sequenceFeedback.rating == 5}"
+                               disabled type="radio" value="5" name="agreement-level" />
                     </label>
                     <label class="field" th:text="#{player.sequence.feedback.highdegree}">
                     </label>
                 </div>
                 <div class="field">
                     <label>
-                        <textarea name="agreement-explanation" class="" th:placeholder="#{player.sequence.feedback.title}"></textarea>
+                        <textarea th:text="${sequenceFeedback.explanation}"
+                                  readonly name="agreement-explanation">
+                        </textarea>
                     </label>
                 </div>
-                <div class="field">
-                    <input type="submit" class="ui primary button" th:value="#{player.sequence.interaction.submitResponse}"/>
-                </div>
-
-            </form> 
+            </form>
         </div>
     </div>
     <script th:inline="javascript">

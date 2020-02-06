@@ -364,8 +364,8 @@ class PlayerController(
     @PostMapping("/sequence/{id}/submit-feedback")
     fun submitQuestionFeedback(authentication: Authentication,
                               model: Model,
-                              @RequestParam("agreement-level") agreementLevel: Int?,
-                              @RequestParam("agreement-explanation") agreementExplanation: String?,
+                              @RequestParam("agreement-level") agreementLevel: Int,
+                              @RequestParam("agreement-explanation") agreementExplanation: String,
                               @PathVariable id: Long): String {
 
         val user: User = authentication.principal as User
@@ -384,11 +384,7 @@ class PlayerController(
                             explanation = agreementExplanation
                     )
             )
-           // if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-           //     sequenceService.nextInteractionForLearner(sequence, user)
-           // }
         }
-        // TODO Add the agreement level and explanation to the feedback service
 
         return "redirect:/player/sequence/${id}/play"
     }

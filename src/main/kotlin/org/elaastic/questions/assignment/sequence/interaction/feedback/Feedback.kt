@@ -39,10 +39,10 @@ class Feedback (
         var sequence: Sequence,
 
         @field:Column(name = "rating")
-        var rating: Int?,
+        var rating: Int,
 
         @field:Column(name = "explanation")
-        var explanation: String?
+        var explanation: String
 
 ) : AbstractJpaPersistable<Long>() {
 

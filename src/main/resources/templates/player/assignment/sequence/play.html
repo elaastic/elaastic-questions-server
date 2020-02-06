@@ -92,9 +92,13 @@
 
     <div th:if="${playerModel.showResults}" th:remove="tag">
       <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
-      <div th:if="${playerModel.userRole.name() == 'Learner'}" th:remove="tag">
-        <div th:replace="|${components}/_question-feedback.html| :: question-feedback(${playerModel.resultsModel})"></div>
+      <div th:if="${playerModel.userRole.name() == 'Learner' AND sequenceFeedback == null}" th:remove="tag">
+        <div th:replace="|${components}/_sequence-feedback-form.html| :: question-feedback(${playerModel.resultsModel})"></div>
       </div>
+      <div th:if="${playerModel.userRole.name() == 'Learner' AND sequenceFeedback != null}" th:remove="tag">
+        <div th:replace="|${components}/_sequence-feedback.html| :: question-feedback(${playerModel.resultsModel}, ${sequenceFeedback})"></div>
+      </div>
+
     </div>
 
 
