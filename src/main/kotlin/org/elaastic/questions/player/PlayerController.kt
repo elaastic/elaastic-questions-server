@@ -383,11 +383,7 @@ class PlayerController(
                             explanation = agreementExplanation
                     )
             )
-           // if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-           //     sequenceService.nextInteractionForLearner(sequence, user)
-           // }
         }
-        // TODO Add the agreement level and explanation to the feedback service
 
         return "redirect:/player/sequence/${id}/play"
     }
