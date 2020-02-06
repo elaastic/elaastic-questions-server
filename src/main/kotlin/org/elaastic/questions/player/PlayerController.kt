@@ -185,6 +185,9 @@ class PlayerController(
                             }
                     )
             )
+            feedbackService.getFeedback(user, sequence).let {
+                model.addAttribute("sequenceFeedback", it)
+            }
         }
 
         return "/player/assignment/sequence/play"

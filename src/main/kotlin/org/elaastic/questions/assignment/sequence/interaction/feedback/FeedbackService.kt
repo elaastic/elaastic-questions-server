@@ -18,8 +18,10 @@
 package org.elaastic.questions.assignment.sequence.interaction.feedback;
 
 import org.elaastic.questions.assignment.LearnerAssignmentService
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -30,12 +32,13 @@ class FeedbackService(
         @Autowired val learnerAssignmentService: LearnerAssignmentService,
         @Autowired val feedbackRepository: FeedbackRepository
 ) {
+    fun getFeedback(learner: User, sequence: Sequence): Feedback? =
+            feedbackRepository.findByLearnerAndSequence(learner, sequence)
 
     fun save(feedback: Feedback): Feedback {
         require(
                 learnerAssignmentService.isRegistered(
-                   feedback.learner,
-                        feedback.sequence.assignment!!
+                   feedback.learner, feedback.sequence.assignment!!
                 )
         ) { "You must be registered on the assignment to submit a response" }
 

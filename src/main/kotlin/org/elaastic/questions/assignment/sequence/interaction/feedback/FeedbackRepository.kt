@@ -17,11 +17,10 @@
  */
 package org.elaastic.questions.assignment.sequence.interaction.feedback;
 
+import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.directory.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface FeedbackRepository : JpaRepository<Feedback, Long> {
-
-    fun getAllByIdIn(ids: List<Long>): List<Feedback>
-
-    // TODO in process Look at ResponseRepository (save ResponseService method call this interface)
+    fun findByLearnerAndSequence(learner: User, sequence: Sequence): Feedback?
 }
