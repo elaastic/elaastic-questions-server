@@ -85,7 +85,7 @@ object SequenceGenerator {
                         val interaction = Interaction(
                                 owner = user,
                                 interactionType = setup.interactionType,
-                                rank when (setup.interactionType) {
+                                rank = when (setup.interactionType) {
                                     InteractionType.ResponseSubmission -> 1
                                     InteractionType.Evaluation -> 2
                                     InteractionType.Read -> 3

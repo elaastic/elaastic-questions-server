@@ -185,6 +185,9 @@ class PlayerController(
                             }
                     )
             )
+            feedbackService.getFeedback(user, sequence).let {
+                model.addAttribute("sequenceFeedback", it)
+            }
         }
 
         return "/player/assignment/sequence/play"
@@ -363,23 +366,19 @@ class PlayerController(
 
     @PostMapping("/sequence/{id}/submit-feedback")
     fun submitQuestionFeedback(authentication: Authentication,
-                              model: Model,
-                              @RequestParam("agreement-level") agreementLevel: Int,
-                              @RequestParam("agreement-explanation") agreementExplanation: String,
-                              @PathVariable id: Long): String {
+                               model: Model,
+                               @RequestParam("agreement-level") agreementLevel: Int,
+                               @RequestParam("agreement-explanation") agreementExplanation: String,
+                               @PathVariable id: Long): String {
 
         val user: User = authentication.principal as User
 
         sequenceService.get(id, true).let { sequence ->
 
-            val userActivateInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
-
             feedbackService.save(
-                    userActivateInteraction
-                            ?: error("No active interaction, cannot submit a response"),
                     Feedback(
                             learner = user,
-                            interaction = sequence.getResponseSubmissionInteraction(),
+                            sequence = sequence,
                             rating = agreementLevel,
                             explanation = agreementExplanation
                     )
