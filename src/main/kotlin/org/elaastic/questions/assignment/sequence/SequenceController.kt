@@ -81,9 +81,10 @@ class SequenceController(
 
     @GetMapping("{id}/statistics")
     fun statistics(authentication: Authentication,
-        model: Model,
-               @PathVariable assignmentId: Long,
-             @PathVariable id: Long): String {
+                   model: Model,
+                   @PathVariable assignmentId: Long,
+                   @PathVariable id: Long): String {
+
         val user: User = authentication.principal as User
 
         val sequence = sequenceService.get(user, id)
