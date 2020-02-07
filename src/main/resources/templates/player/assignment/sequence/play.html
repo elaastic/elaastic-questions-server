@@ -75,9 +75,10 @@
     </th:block>
     <th:block th:unless="${playerModel instanceof T(org.elaastic.questions.player.TeacherPlayerModel)}">
       <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ~{})"></div>
-    </th:block>                                      
+    </th:block>
+    <!-- TODO made a statistics model ? -->
     <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
-      <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel})"></div>
+      <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel}, ${playerModel.assignment.id})"></div>
     </th:block>
     <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel})"></div>
     <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>

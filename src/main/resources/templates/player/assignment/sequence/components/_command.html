@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="command(model)"
+<div th:fragment="command(model, assignmentId)"
      class="ui attached stackable icon menu"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -82,20 +82,23 @@
       &nbsp; <span th:text="#{player.sequence.readinteraction.stopSequence}">Stop sequence</span>
     </a>
 
-    <!--
-    <a th:href="@{/assignment/{assignmentId}/sequence/{id}/statistics(assignmentId=${model.assignmentId}, id=${model.sequenceId})}"
+    <!--   TODO load partiel template th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}')|"-->
+    <a th:href="@{/assignment/{assignmentId}/sequence/{id}/statistics(assignmentId=${assignmentId}, id=${model.sequenceId})}"
        class="item">
       <i class="chart bar icon"></i>
-      &nbsp; <span th:text="#{sequence.statistic}">Statistics</span>
+      <span th:text="#{sequence.statistics}">
+        Statistics
+      </span>
     </a>
-    -->
 
     <!--   TODO load partiel template th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}')|"-->
     <a th:href="@{/player/sequence/{sequenceId}/publish-results(sequenceId=${model.sequenceId})}"
        th:unless="${model.actionPublishResults.name() == 'HIDDEN'}"
        class="item">
       <i class="feed icon"></i>
-      &nbsp; <span th:text="#{player.sequence.publishResults}">Publish results</span>
+      <span th:text="#{player.sequence.publishResults}">
+             Publish results
+      </span>
     </a>
 
     <!--  TODO partial load : th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/unpublishResults}')|"  -->
@@ -105,7 +108,7 @@
       <i class="red close icon"></i>
       <span th:text="#{player.sequence.unpublishResults}">
           Cancel the publication of results
-        </span>
+      </span>
     </a>
 
   </div>
