@@ -48,13 +48,23 @@
     <i class="arrow up icon"></i>
   </a>
 
+  <!-- Statistics button is disabled for unfinished sequences -->
 
-  <a class="ui right floated icon orange tiny button"
-     th:href="@{/assignment/{assignmentId}/sequence/{id}/statistics(assignmentId=${assignment.id},id=${sequence.id})}"
-     href="/sequence/123/upSequence"
-     th:attr="data-tooltip=#{sequence.statistics}"
-     data-tooltip="Statistics"
-     data-inverted="">
+  <button th:if ="${sequence.state.name() != 'afterStop'}"
+          class="ui disabled right floated icon tiny button"
+          th:attr="data-tooltip=#{sequence.statistics}"
+          data-tooltip="Statistics"
+          data-inverted="">
+    <i class="chart bar icon"></i>
+  </button>
+
+  <a th:if ="${sequence.state.name() == 'afterStop'}"
+          class="ui right floated icon orange tiny button"
+          th:href="@{/assignment/{assignmentId}/sequence/{id}/statistics(assignmentId=${assignment.id},id=${sequence.id})}"
+          href="/sequence/123/upSequence"
+          th:attr="data-tooltip=#{sequence.statistics}"
+          data-tooltip="Statistics"
+          data-inverted="">
     <i class="chart bar icon"></i>
   </a>
 
