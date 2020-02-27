@@ -1,0 +1,66 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body}, pageSpecificMenu=~{::#pageSpecificMenu}, extraHeader=~{::head/script})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title th:text="|elaastic: ${statementData.title}|"></title>
+    <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+</head>
+
+<body>
+    <h1 style="line-height: 50%;"> Statistiques - <span th:text="${assignment.title}"></span></h1>
+    <h2 style="font-size: 1.5em;" th:text="${statementData.title}"></h2>
+
+    <div class="ui top attached tabular menu">
+        <div class="item active" data-tab="indicators" th:text="#{statistics.indicators.tabname}">Indicators</div>
+        <div class="item" data-tab="feedback" th:text="#{statistics.feedbacks.tabname}">Feedbacks</div>
+        <div id="results-tab-title" class="item" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
+    </div>
+
+    <div class="ui tab bottom attached active segment" data-tab="indicators">
+        <a href="https://github.com/elaastic/elaastic-questions-server/issues/5">Content Incoming #5</a>
+    </div>
+
+    <div class="ui bottom attached tab segment" data-tab="feedback">
+        <a href="https://github.com/elaastic/elaastic-questions-server/issues/15">Content Incoming #15</a>
+    </div>
+
+    <div class="ui bottom attached tab segment" data-tab="results">
+        <div th:with="components=${'/player/assignment/sequence/components'}">
+            <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
+            <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        $('.menu .item').tab();
+        $(document).ready(function () {
+            $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
+        })
+        $("#results-tab-title").click(function() {
+            $(window).trigger("resize");
+        });
+    </script>
+</body>
+</html>
