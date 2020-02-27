@@ -100,7 +100,7 @@ class SequenceController(
                 )
         )
 
-        return "/assignment/sequence/statistics"
+        return "/assignment/sequence/statistics/statistics"
     }
 
 

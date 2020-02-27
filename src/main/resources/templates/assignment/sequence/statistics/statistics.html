@@ -27,9 +27,28 @@
 
 <body>
 
-La page qui accueillera les statistiques
+    <h1> Statistiques </h1>
 
+    <div class="ui top attached tabular menu">
+        <div class="item active" data-tab="statistics" th:text="#{statistics.indicators.tabname}">Statistics</div>
+        <div class="item" data-tab="feedback" th:text="#{statistics.feedbacks.tabname}">Feedbacks</div>
+        <div class="item" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
+    </div>
 
+    <div class="ui tab bottom attached active segment" data-tab="statistics">
+        <a href="https://github.com/elaastic/elaastic-questions-server/issues/5">Content Incoming #5</a>
+    </div>
+
+    <div class="ui bottom attached tab segment" data-tab="feedback">
+        <a href="https://github.com/elaastic/elaastic-questions-server/issues/15">Content Incoming #15</a>
+    </div>
+
+    <div class="ui bottom attached tab segment" data-tab="results">
+        <a href="https://github.com/elaastic/elaastic-questions-server/issues/16">Content Incoming #16</a>
+    </div>
+
+    <script>
+        $('.menu .item').tab();
+    </script>
 </body>
-
 </html>
