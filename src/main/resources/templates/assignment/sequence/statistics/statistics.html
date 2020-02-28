@@ -29,17 +29,16 @@
 </head>
 
 <body>
-
     <h1 style="line-height: 50%;"> Statistiques - <span th:text="${assignment.title}"></span></h1>
     <h2 style="font-size: 1.5em;" th:text="${statementData.title}"></h2>
 
     <div class="ui top attached tabular menu">
-        <div class="item " data-tab="indicators" th:text="#{statistics.indicators.tabname}">Indicators</div>
+        <div class="item active" data-tab="indicators" th:text="#{statistics.indicators.tabname}">Indicators</div>
         <div class="item" data-tab="feedback" th:text="#{statistics.feedbacks.tabname}">Feedbacks</div>
-        <div class="item active" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
+        <div id="results-tab-title" class="item" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
     </div>
 
-    <div class="ui tab bottom attached segment" data-tab="indicators">
+    <div class="ui tab bottom attached active segment" data-tab="indicators">
         <a href="https://github.com/elaastic/elaastic-questions-server/issues/5">Content Incoming #5</a>
     </div>
 
@@ -47,17 +46,21 @@
         <a href="https://github.com/elaastic/elaastic-questions-server/issues/15">Content Incoming #15</a>
     </div>
 
-    <div class="ui bottom attached tab segment active" data-tab="results">
-        <div th:replace="/player/assignment/sequence/components/_statement.html :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
-        <div style="min-height: 50%" th:replace="/player/assignment/sequence/components/_results.html :: results(${playerModel.resultsModel})"></div>
+    <div class="ui bottom attached tab segment" data-tab="results">
+        <div th:with="components=${'/player/assignment/sequence/components'}">
+            <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
+            <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
+        </div>
     </div>
 
     <script th:inline="javascript">
+        $('.menu .item').tab();
         $(document).ready(function () {
             $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
         })
-
-        $('.menu .item').tab();
+        $("#results-tab-title").click(function() {
+            $(window).trigger("resize");
+        });
     </script>
 </body>
 </html>
