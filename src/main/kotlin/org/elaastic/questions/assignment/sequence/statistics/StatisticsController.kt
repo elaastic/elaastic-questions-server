@@ -18,11 +18,24 @@
 
 package org.elaastic.questions.assignment.sequence.statistics
 
+import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import javax.transaction.Transactional
 
 @Controller
 @Transactional
-class StatisticsController {
+@RequestMapping("/assignment")
+class StatisticsController(
+        @Autowired val assignmentService: AssignmentService,
+        @Autowired val sequenceService: SequenceService,
+        @Autowired val resultsService: ResultsService ) {
+
+//@GetMapping("/assignement/{id}/")
+
 
 }

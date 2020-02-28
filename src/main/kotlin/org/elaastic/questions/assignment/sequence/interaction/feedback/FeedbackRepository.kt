@@ -23,4 +23,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface FeedbackRepository : JpaRepository<Feedback, Long> {
     fun findByLearnerAndSequence(learner: User, sequence: Sequence): Feedback?
+    fun findAllBySequence(sequence : Sequence): List<Feedback>?
 }
