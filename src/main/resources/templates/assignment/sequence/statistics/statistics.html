@@ -23,19 +23,23 @@
 
 <head>
     <title th:text="|elaastic: ${statementData.title}|"></title>
+    <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
 </head>
 
 <body>
 
-    <h1> Statistiques </h1>
+    <h1 style="line-height: 50%;"> Statistiques - <span th:text="${assignment.title}"></span></h1>
+    <h2 style="font-size: 1.5em;" th:text="${statementData.title}"></h2>
 
     <div class="ui top attached tabular menu">
-        <div class="item active" data-tab="statistics" th:text="#{statistics.indicators.tabname}">Statistics</div>
+        <div class="item " data-tab="indicators" th:text="#{statistics.indicators.tabname}">Indicators</div>
         <div class="item" data-tab="feedback" th:text="#{statistics.feedbacks.tabname}">Feedbacks</div>
-        <div class="item" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
+        <div class="item active" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
     </div>
 
-    <div class="ui tab bottom attached active segment" data-tab="statistics">
+    <div class="ui tab bottom attached segment" data-tab="indicators">
         <a href="https://github.com/elaastic/elaastic-questions-server/issues/5">Content Incoming #5</a>
     </div>
 
@@ -43,11 +47,16 @@
         <a href="https://github.com/elaastic/elaastic-questions-server/issues/15">Content Incoming #15</a>
     </div>
 
-    <div class="ui bottom attached tab segment" data-tab="results">
-        <a href="https://github.com/elaastic/elaastic-questions-server/issues/16">Content Incoming #16</a>
+    <div class="ui bottom attached tab segment active" data-tab="results">
+        <div th:replace="/player/assignment/sequence/components/_statement.html :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
+        <div style="min-height: 50%" th:replace="/player/assignment/sequence/components/_results.html :: results(${playerModel.resultsModel})"></div>
     </div>
 
-    <script>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
+        })
+
         $('.menu .item').tab();
     </script>
 </body>
