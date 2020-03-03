@@ -25,12 +25,16 @@ import java.util.*
 import kotlin.collections.ArrayList
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
-import org.apache.commons.csv.CSVRecord
+import java.io.FileWriter
+import java.lang.Exception
+import java.util.logging.Logger
 
 @Service
 class LtiConsumerService(
         @Autowired val ltiConsumerRepository: LtiConsumerRepository
 ) {
+
+    internal var logger = Logger.getLogger(LtiConsumerService::class.java.name)
 
     fun touchLtiConsumer(
             consumerKey: String,
@@ -75,4 +79,28 @@ class LtiConsumerService(
         return consumers
     }
 
+
+    /**
+     * Print lti consumer list in a CSV file
+     * @param consumers the list of lti consumers
+     * @param fileWriter the writer to write in the CSV file
+     * @return the writer
+     */
+    fun printLtiConsumerListInCsvFile(consumers: List<LtiConsumer>, fileWriter: FileWriter): FileWriter {
+        val csvFormat = CSVFormat.DEFAULT.withDelimiter(';')
+        val csvPrinter = CSVPrinter(fileWriter, csvFormat)
+        try {
+            csvPrinter.printRecord(FileHeader)
+            consumers.forEach {
+                csvPrinter.printRecord(listOf(it.key, it.secret, it.consumerName))
+            }
+        } catch (e: Exception) {
+            logger.severe(e.message)
+        } finally {
+            csvPrinter.close()
+        }
+        return fileWriter
+    }
+
+    private val FileHeader = listOf("key", "secret", "name")
 }

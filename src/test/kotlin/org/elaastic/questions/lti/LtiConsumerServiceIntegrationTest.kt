@@ -24,6 +24,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.FileReader
+import java.io.FileWriter
+import java.io.IOException
 import java.util.logging.Logger
 import javax.transaction.Transactional
 
@@ -47,7 +49,7 @@ internal class LtiConsumerServiceIntegrationTest(
         //then the list contains 3 elements
         assertEquals(3, ltiList.size)
         assertEquals("0541357G.elaastic.org", ltiList[0].key)
-        assertEquals("LPP  SAINT ÉTIENNE site de Méjanès", ltiList[0].consumerName)
+        assertEquals("LPP  SAINT ÉTIENNE ; site de Méjanès", ltiList[0].consumerName)
         assertEquals("0570100Z.elaastic.org", ltiList[1].key)
         assertEquals("LP Simon LAZARD", ltiList[1].consumerName)
         assertEquals("0540015Y.elaastic.org", ltiList[2].key)
@@ -73,7 +75,7 @@ internal class LtiConsumerServiceIntegrationTest(
         //then the list contains 3 elements
         assertEquals(3, ltiList.size)
         assertEquals("0541357G.elaastic.org", ltiList[0].key)
-        assertEquals("LPP  SAINT ÉTIENNE site de Méjanès", ltiList[0].consumerName)
+        assertEquals("LPP  SAINT ÉTIENNE ; site de Méjanès", ltiList[0].consumerName)
         assertEquals("0570100Z.elaastic.org", ltiList[1].key)
         assertEquals("LP Simon LAZARD", ltiList[1].consumerName)
         assertEquals("already saved secret", ltiList[1].secret)
@@ -82,6 +84,28 @@ internal class LtiConsumerServiceIntegrationTest(
         ltiList.forEach {
             assertNotNull(it.secret)
             logger.severe("secret: ${it.secret}")
+        }
+    }
+
+    @Test
+    fun generateLtiConsumerCSVFileFromList() {
+        // given an input stream reader on a CSV file
+        val fileReader = FileReader("src/test/resources/lti-samples.csv")
+        // and a suffix
+        val suffix = ".elaastic.org"
+        // and the generated list
+        val ltiList = ltiConsumerService.generateLtiConsumerListFromCSVFile(fileReader, suffix)
+        // and the target file
+        val fileWriter = FileWriter("src/test/resources/lti-consumers-export-file.csv")
+        //when we generate the export file
+        ltiConsumerService.printLtiConsumerListInCsvFile(ltiList,fileWriter)
+        assertEquals(3, ltiList.size)
+        try {
+            fileWriter.flush()
+            fileWriter.close()
+        } catch (e: IOException) {
+            logger.severe("Error while flushing/closing fileWriter !!!")
+            logger.severe(e.message)
         }
     }
 }
