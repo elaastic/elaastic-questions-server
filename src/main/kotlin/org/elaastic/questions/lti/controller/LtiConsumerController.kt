@@ -22,6 +22,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.lti.LtiConsumer
 import org.elaastic.questions.lti.LtiConsumerRepository
+import org.elaastic.questions.lti.LtiConsumerService
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -37,7 +38,12 @@ import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
+import org.springframework.web.multipart.MultipartFile
+import java.io.FileWriter
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 
 
 @Controller
@@ -45,6 +51,7 @@ import javax.validation.constraints.Size
 @Transactional
 class LtiConsumerController(
         @Autowired val ltiConsumerRepository: LtiConsumerRepository,
+        @Autowired val ltiConsumerService: LtiConsumerService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
     @GetMapping(value = ["", "/", "/index"])
@@ -96,6 +103,57 @@ class LtiConsumerController(
         return "/ltiConsumer/create"
     }
 
+    @GetMapping("import")
+    fun import(authentication: Authentication, model: Model): String {
+        val user: User = authentication.principal as User
+
+        if (!model.containsAttribute("ltiConsumersImport")) {
+            model.addAttribute("ltiConsumersImport", LtiConsumersImport())
+        }
+        model.addAttribute("user", user)
+
+        return "/ltiConsumer/import"
+    }
+
+    @PostMapping("saveImport")
+    fun saveImport(authentication: Authentication,
+                   @RequestParam("csvFile") csvFile: MultipartFile,
+                   @Valid @ModelAttribute ltiConsumersImport: LtiConsumersImport,
+                   result: BindingResult,
+                   model: Model,
+                   response: HttpServletResponse,
+                   redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("user", user)
+            model.addAttribute("ltiConsumersImport", ltiConsumersImport)
+            "/ltiConsumer/import"
+        } else {
+            csvFile?.let {
+                val isr = InputStreamReader(it.inputStream)
+                ltiConsumerService.generateLtiConsumerListFromCSVFile(isr, ltiConsumersImport.suffix).let {
+                    with(response) {
+                        contentType = "text/csv"
+                        characterEncoding = "UTF-8"
+                        setHeader("Content-Disposition", "Attachment;Filename=\"ltiConsumers.csv\"")
+                    }
+                    ltiConsumerService.printLtiConsumerListInCsvFile(it, OutputStreamWriter( response.outputStream))
+                    with(messageBuilder) {
+                        success(
+                                redirectAttributes,
+                                message(
+                                        "default.import.message"
+                                )
+                        )
+                    }
+                }
+            }
+            "redirect:/ltiConsumer/index"
+        }
+    }
+
     @PostMapping("save")
     fun save(authentication: Authentication,
              @Valid @ModelAttribute ltiConsumerData: LtiConsumerData,
@@ -109,7 +167,7 @@ class LtiConsumerController(
             response.status = HttpStatus.BAD_REQUEST.value()
             model.addAttribute("user", user)
             model.addAttribute("ltiConsumer", ltiConsumerData)
-            "/assignment/create"
+            "/ltiConsumer/create"
         } else {
             val ltiConsumer = ltiConsumerData.toEntity()
             ltiConsumerRepository.save(ltiConsumer).let {
@@ -225,4 +283,8 @@ class LtiConsumerController(
             ltiConsumer.secret = this.secret!!
         }
     }
+
+    data class LtiConsumersImport(
+            val suffix: String? = null
+    )
 }

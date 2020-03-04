@@ -25,7 +25,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
-import java.io.FileWriter
+import java.io.OutputStreamWriter
 import java.lang.Exception
 import java.util.logging.Logger
 
@@ -83,12 +83,12 @@ class LtiConsumerService(
     /**
      * Print lti consumer list in a CSV file
      * @param consumers the list of lti consumers
-     * @param fileWriter the writer to write in the CSV file
+     * @param writer the writer to write in the CSV file
      * @return the writer
      */
-    fun printLtiConsumerListInCsvFile(consumers: List<LtiConsumer>, fileWriter: FileWriter): FileWriter {
+    fun printLtiConsumerListInCsvFile(consumers: List<LtiConsumer>, writer: OutputStreamWriter): OutputStreamWriter {
         val csvFormat = CSVFormat.DEFAULT.withDelimiter(';')
-        val csvPrinter = CSVPrinter(fileWriter, csvFormat)
+        val csvPrinter = CSVPrinter(writer, csvFormat)
         try {
             csvPrinter.printRecord(FileHeader)
             consumers.forEach {
@@ -99,7 +99,7 @@ class LtiConsumerService(
         } finally {
             csvPrinter.close()
         }
-        return fileWriter
+        return writer
     }
 
     private val FileHeader = listOf("key", "secret", "name")
