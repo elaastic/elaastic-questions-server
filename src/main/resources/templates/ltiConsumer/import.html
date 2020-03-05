@@ -43,6 +43,9 @@
 
 <div class="ui segment">
   <div class="ui top attached label">Create Lti Consumers</div>
+  <img th:src="@{/images/lti/lti-sample-csv-file.png}"
+       src="/images/lti/lti-sample-csv-file.png"
+       style="width: 300px"/>
   <form class="ui form" enctype="multipart/form-data"
         th:object="${ltiConsumersImport}"
         th:classappend="${#fields.hasErrors('*')}? 'error'"
