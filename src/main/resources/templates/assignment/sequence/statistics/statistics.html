@@ -60,9 +60,155 @@
         <div id="results-tab-title" class="item" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
     </div>
 
+    <!-- Tab Indicators -->
+
     <div class="ui tab bottom attached active segment" data-tab="indicators">
-        <a href="https://github.com/elaastic/elaastic-questions-server/issues/5">Content Incoming #5</a>
+
+        <div class="grouped fields">
+            <div class="field">
+                <div class="ui four column grid">
+                    <div class="two wide column">
+                        <h5 th:text="#{player.sequence.type}"></h5>
+                    </div>
+                    <div class="two wide column">
+                        <div th:if="${statementData.hasChoices}" th:remove>
+                            <span th:text="#{player.sequence.type.choice}"></span>
+                        </div>
+                        <div th:unless="${statementData.hasChoices}" th:remove>
+                            <span th:text="#{player.sequence.type.open.ended}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="three wide column">
+                        <h5 th:text="#{player.sequence.type.execution}"></h5>
+                    </div>
+                    <div class="two wide column">
+                        <div th:if="${typeExecution == 'faceToFace'}" th:remove>
+                            <span th:text="#{sequence.interaction.executionContext.faceToFace}"></span>
+                        </div>
+
+                        <div th:if="${typeExecution == 'blended'}" th:remove>
+                            <span th:text="#{sequence.interaction.executionContext.blended"></span>
+                        </div>
+
+
+                        <div th:if="${typeExecution == 'distance'}" th:remove>
+                            <span th:text="#{sequence.interaction.executionContext.distance}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui eight column grid">
+                    <div class="six wide column">
+                        <h5 th:text="#{player.sequence.mean.time}"></h5>
+                    </div>
+                    <div class="two wide column">
+                        <span>0 sec</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui eight column grid">
+                    <div class="six wide column">
+                        <h5 th:text="#{player.sequence.response.to.evaluate.count}"></h5>
+                    </div>
+                    <div class="two wide column">
+                        <span th:text="${responseToEvaluateCount}"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div th:if="${statementData.hasChoices and standardDeviation != -1.0}" th:remove>
+                <div class="field">
+                    <div class="ui eight column grid">
+                        <div class="six wide column">
+                                <h5 th:text="#{player.sequence.standard.deviation}"></h5>
+                        </div>
+                        <div class="two wide column">
+                               <span id="standard-deviation"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="field" style="padding-bottom: 1.5rem;">
+                <h5 th:text="#{player.sequence.interaction.confidenceDegree.label}"></h5>
+            </div>
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="four wide column">
+                        <span th:text="#{player.sequence.interaction.confidenceDegree.TOTALLY_CONFIDENT}"></span>
+                        <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-4">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-confidence-4"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="four wide column">
+                        <span th:text="#{player.sequence.interaction.confidenceDegree.CONFIDENT}"></span>
+                        <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-confidence-3">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-confidence-3"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="four wide column">
+                        <span th:text="#{player.sequence.interaction.confidenceDegree.NOT_REALLY_CONFIDENT}"></span>
+                        <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-confidence-2">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-confidence-2"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="four wide column">
+                        <span th:text="#{player.sequence.interaction.confidenceDegree.NOT_CONFIDENT_AT_ALL}"></span>
+                        <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-confidence-1">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-confidence-1"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5 th:text="#{player.sequence.participation.rate}"></h5>
+        <div id="vega-view-participation"></div>
     </div>
+
+        <!-- Tab Feedback -->
 
     <div class="ui bottom attached tab segment" data-tab="feedback">
         <div class="grouped fields">
@@ -187,10 +333,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
         </div>
 
         <div class="ui dividing header">Feedbacks</div>
@@ -202,6 +344,8 @@
 
 
     </div>
+
+    <!-- Tab Results -->
 
     <div class="ui bottom attached tab segment" data-tab="results">
         <div th:with="components=${'/player/assignment/sequence/components'}">
@@ -218,6 +362,30 @@
         $("#results-tab-title").click(function() {
             $(window).trigger("resize");
         });
+
+        let nbTotalConfidenceDegree = [[${nbConfidenceDegree1}]] + [[${nbConfidenceDegree2}]] + [[${nbConfidenceDegree3}]] + [[${nbConfidenceDegree4}]]
+
+
+        $("#progress-confidence-1").progress({
+            percent : (100 * [[${nbConfidenceDegree1}]])/nbTotalConfidenceDegree
+        });
+        $("#progress-confidence-2").progress({
+            percent : (100 * [[${nbConfidenceDegree2}]])/nbTotalConfidenceDegree
+        });
+        $("#progress-confidence-3").progress({
+            percent : (100 * [[${nbConfidenceDegree3}]])/nbTotalConfidenceDegree
+        });
+        $("#progress-confidence-4").progress({
+            percent : (100 * [[${nbConfidenceDegree4}]])/nbTotalConfidenceDegree
+        });
+
+        $('#show-nb-confidence-1').text([[${nbConfidenceDegree1}]]);
+        $('#show-nb-confidence-2').text([[${nbConfidenceDegree2}]]);
+        $('#show-nb-confidence-3').text([[${nbConfidenceDegree3}]]);
+        $('#show-nb-confidence-4').text([[${nbConfidenceDegree4}]]);
+
+        $('#standard-deviation').text([[${standardDeviation}]])
+
 
         let feedbackTemplate = document.getElementById("feedbackTemplate")
         let feedbacksDiv = document.getElementById("feedbacks")

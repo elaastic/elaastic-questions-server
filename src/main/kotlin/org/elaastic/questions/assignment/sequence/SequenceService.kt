@@ -25,6 +25,7 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
@@ -36,6 +37,7 @@ import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
@@ -260,5 +262,23 @@ class SequenceService(
             if(sequence.isNotStarted()) 0 else responseService.count(sequence, 2), // TODO should only compute this data if phase2 open or done
             if(sequence.isNotStarted()) 0 else peerGradingService.countEvaluations(sequence) // TODO should only compute this data if phase2 open or done
     )
+
+    fun getStandardDeviation(sequence: Sequence): Double {
+
+        return responseService.findAll(sequence, excludeFakes = true).get(1).let {
+
+            if (it.size == 0) return -1.0
+
+            val allScores: List<Double> = it.map { it?.score?.toDouble() ?: 0.0 }
+
+            val mean = allScores.sum() / allScores.size
+
+            val standardDeviation = allScores.fold(0.0) { acc,score -> acc + Math.pow(score - mean, 2.0)  }
+
+            val divider = allScores.size
+
+            Math.sqrt(standardDeviation / divider)
+        }
+    }
 
 }
