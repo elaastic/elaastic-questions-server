@@ -28,6 +28,7 @@ import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationSer
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.interaction.feedback.FeedbackService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
@@ -95,13 +96,20 @@ class SequenceController(
                    @PathVariable id: Long): String {
 
         val user: User = authentication.principal as User
-        val sequence = sequenceService.get(user, id)
+        val sequence = sequenceService.get(user, id, true)
         val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
-
 
         model.addAttribute("user", user)
         model.addAttribute("assignment", sequence.assignment)
         model.addAttribute("sequenceData", SequenceData(sequence))
+        model.addAttribute("typeExecution", sequence.typeOfExecution())
+        model.addAttribute("responseToEvaluateCount",
+                    try {
+                        sequence.getEvaluationSpecification().responseToEvaluateCount
+                    } catch (e: IllegalStateException) { // if the sequence was not played
+                        0
+                    })
+
         model.addAttribute(
                 "statementData",
                 StatementData(
@@ -109,6 +117,31 @@ class SequenceController(
                         fakeExplanationService.findAllByStatement(sequence.statement)
                 )
         )
+        val allResponses: MutableList<Response> = responseService.findAll(sequence,excludeFakes = true).get(1)
+        var nbConfidenceDegree4: Int = 0
+        var nbConfidenceDegree3: Int = 0
+        var nbConfidenceDegree2: Int = 0
+        var nbConfidenceDegree1: Int = 0
+
+        allResponses.forEach{
+            when (it.confidenceDegree) {
+                ConfidenceDegree.NOT_CONFIDENT_AT_ALL -> nbConfidenceDegree1++
+                ConfidenceDegree.NOT_REALLY_CONFIDENT -> nbConfidenceDegree2++
+                ConfidenceDegree.CONFIDENT -> nbConfidenceDegree3++
+                ConfidenceDegree.TOTALLY_CONFIDENT -> nbConfidenceDegree4++
+            }
+        }
+        model.addAttribute("nbConfidenceDegree1",nbConfidenceDegree1)
+        model.addAttribute("nbConfidenceDegree2",nbConfidenceDegree2)
+        model.addAttribute("nbConfidenceDegree3",nbConfidenceDegree3)
+        model.addAttribute("nbConfidenceDegree4",nbConfidenceDegree4)
+
+        model.addAttribute("standardDeviation",
+                try {
+                    sequenceService.getStandardDeviation(sequence)
+                } catch (e: IllegalArgumentException ) {
+                    -1 // If the list is empty
+                })
 
         model.addAttribute("feedbackJson",feedbackService.getSequenceFeedbacks(sequence)?.map {
             FeedbackData(it.rating, it.explanation)
@@ -119,7 +152,6 @@ class SequenceController(
         sequenceService.get(id, true).let { sequence ->
             model.addAttribute("user", user)
             val teacher = user == sequence.owner
-            val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
             model.addAttribute("playerModel", PlayerModelFactory.buildForTeacher(
                         user = user,
                         sequence = sequence,
@@ -130,6 +162,19 @@ class SequenceController(
                         sequenceStatistics = sequenceService.getStatistics(sequence), userCanRefreshResults = { false }
             ))
         }
+
+        model.addAttribute("participationData",
+                if (nbRegisteredUsers > 0) {
+                    responseService.findAll(sequence, excludeFakes = true).let {
+                        ParticipationData(
+                                nbRegisteredUsers,
+                                it[1].size,
+                                it[2].size
+                        )
+                    }
+                } else {
+                    ParticipationData(0, 0, 0)
+                })
 
         return "/assignment/sequence/statistics/statistics"
     }
@@ -392,4 +437,10 @@ class SequenceController(
     }
 
     data class FeedbackData(val rating: Int, val explanation: String)
+
+    data class ParticipationData(
+        val nbRegisteredUsers: Int,
+        val nbParticipentsPhase1: Int,
+        val nbParticipentsPhase2: Int
+    )
 }

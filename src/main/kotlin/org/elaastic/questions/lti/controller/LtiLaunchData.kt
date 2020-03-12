@@ -138,7 +138,7 @@ class LtiLaunchData(
         } else {
             url += '?'
         }
-        url += "lti_errormsg=" + URLEncoder.encode(errorMessage, Charset.defaultCharset())
+        url += "lti_errormsg=" + URLEncoder.encode(errorMessage, Charset.defaultCharset().toString())
         return url
     }
 

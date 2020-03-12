@@ -157,6 +157,15 @@ class Sequence(
     fun executionIsDistance(): Boolean =
             executionContext == ExecutionContext.Distance
 
+    fun typeOfExecution(): String {
+        if (executionIsFaceToFace()) {
+            return "faceToFace"
+        } else if (executionIsBlended()) {
+            return "blended"
+        }
+        return "distance"
+    }
+
     @Transient
     fun resultsCanBePublished() =
             !resultsArePublished && (
