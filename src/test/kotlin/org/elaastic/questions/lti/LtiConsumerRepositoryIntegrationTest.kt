@@ -35,7 +35,7 @@ import javax.persistence.EntityManager
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LtiConsumerRepositoryIntegrationTest(
         @Autowired val ltiConsumerRepository: LtiConsumerRepository,

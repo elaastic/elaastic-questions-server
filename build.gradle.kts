@@ -46,6 +46,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.5")
     implementation("commons-io:commons-io:2.6")
     implementation("org.apache.commons:commons-csv:1.5")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
 
     runtime("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

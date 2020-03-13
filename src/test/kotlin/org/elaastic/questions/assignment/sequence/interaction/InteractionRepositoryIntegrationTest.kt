@@ -33,7 +33,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class InteractionRepositoryIntegrationTest(
         @Autowired val interactionRepository: InteractionRepository,

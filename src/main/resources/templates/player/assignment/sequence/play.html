@@ -27,6 +27,7 @@
   <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+  <script type="text/javascript" th:src="@{/js/elaastic/auto-reload.js}"></script>
 </head>
 
 <body>
@@ -86,7 +87,7 @@
     </th:block>
     <th:block th:unless="${playerModel instanceof T(org.elaastic.questions.player.TeacherPlayerModel)}">
       <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ~{})"></div>
-    </th:block>                                      
+    </th:block>
     <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
       <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel})"></div>
     </th:block>
@@ -105,7 +106,9 @@
       <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
     </div>
   </div>
-
+  <th:block th:if="${playerModel.userRole.name() == 'Learner'}">
+    <th:block th:replace="|${components}/_auto-reload.html| :: auto-reload(${playerModel.sequence.id})"></th:block>
+  </th:block>
 </section>
 </body>
 </html>

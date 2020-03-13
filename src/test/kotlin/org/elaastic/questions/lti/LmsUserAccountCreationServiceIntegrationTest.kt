@@ -37,7 +37,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.util.logging.Logger
 import javax.transaction.Transactional
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LmsUserAccountCreationServiceIntegrationTest(
         @Autowired val lmsUserAccountCreationService: LmsUserAccountCreationService,

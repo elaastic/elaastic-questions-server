@@ -37,7 +37,7 @@ import javax.validation.ConstraintViolationException
 import javax.validation.ValidationException
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class UserRepositoryIntegrationTest(
         @Autowired val userRepository: UserRepository,

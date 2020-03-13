@@ -33,7 +33,7 @@ import javax.persistence.EntityManager
 import javax.validation.ConstraintViolationException
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class FakeExplanationRepositoryIntegrationTest(
         @Autowired val fakeExplanationRepository: FakeExplanationRepository,

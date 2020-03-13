@@ -30,7 +30,7 @@ import org.springframework.security.access.AccessDeniedException
 import javax.persistence.EntityNotFoundException
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class SequenceServiceIntegrationTest(
         @Autowired val sequenceService: SequenceService,

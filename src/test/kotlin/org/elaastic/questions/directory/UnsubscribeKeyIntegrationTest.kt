@@ -34,7 +34,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class UnsubscribeKeyIntegrationTest(
         @Autowired val testingService: TestingService,
