@@ -27,6 +27,7 @@
   <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+  <script type="text/javascript" th:src="@{/js/elaastic/auto-reload.js}"></script>
 </head>
 
 <body>
@@ -99,10 +100,11 @@
       <div th:if="${playerModel.userRole.name() == 'Learner' AND sequenceFeedback != null}" th:remove="tag">
         <div th:replace="|${components}/_sequence-feedback.html| :: question-feedback(${playerModel.resultsModel}, ${sequenceFeedback})"></div>
       </div>
-
     </div>
 
-
+    <th:block th:if="${playerModel.userRole.name() == 'Learner'}">
+      <th:block th:replace="|${components}/_auto-reload.html| :: auto-reload(${playerModel.sequence.id})"></th:block>
+    </th:block>
   </div>
 
 </section>
