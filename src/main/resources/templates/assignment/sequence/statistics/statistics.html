@@ -29,8 +29,9 @@
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        var feedbackList = JSON.parse([[${feedbackJson}]]);
+            var feedbackList = JSON.parse([[${feedbackJson}]]);
         /*]]>*/
+        feedbackList.push({rating: 1, explanation: "Rating 1"}, {rating: 3, explanation: "Rating 3"}, {rating: 2, explanation: "Rating 2"}, {rating: 4, explanation: "Rating 4"}, {rating: 5, explanation: "Rating 5"})
     </script>
 </head>
 
@@ -75,7 +76,11 @@
                 <div class="ui five column grid">
                     <div class="column">
                         <div class="ui checkbox ">
-                            <input class="rating" type="checkbox" data-rating="5" onchange="applyFeedbackFilter()">
+                            <input class="rating"
+                                   type="checkbox"
+                                   data-rating="5"
+                                   checked="true"
+                                   onchange="applyFeedbackFilter()">
                             <label th:text="#{player.sequence.feedbackDegree.HIGH}">
                                 Totally
                             </label>
@@ -102,7 +107,11 @@
                 <div class="ui five column grid">
                     <div class="column">
                         <div class="ui checkbox">
-                            <input class="rating" type="checkbox" data-rating="4" onchange="applyFeedbackFilter()">
+                            <input class="rating"
+                                   type="checkbox"
+                                   data-rating="4"
+                                   checked="true"
+                                   onchange="applyFeedbackFilter()">
                             <label th:text="#{player.sequence.feedbackDegree.ABOVE_AVERAGE}">
                                 A bit
                             </label>
@@ -129,7 +138,11 @@
                 <div class="ui five column grid">
                     <div class="column">
                         <div class="ui checkbox">
-                            <input class="rating" type="checkbox" data-rating="3" onchange="applyFeedbackFilter()">
+                            <input class="rating"
+                                   type="checkbox"
+                                   data-rating="3"
+                                   checked="true"
+                                   onchange="applyFeedbackFilter()">
                             <label th:text="#{player.sequence.feedbackDegree.AVERAGE}">
                                 Average
                             </label>
@@ -150,7 +163,11 @@
                 <div class="ui five column grid">
                     <div class="column">
                         <div class="ui checkbox">
-                            <input class="rating" type="checkbox" data-rating="2" onchange="applyFeedbackFilter()">
+                            <input class="rating"
+                                   type="checkbox"
+                                   data-rating="2"
+                                   checked="true"
+                                   onchange="applyFeedbackFilter()">
                             <label th:text="#{player.sequence.feedbackDegree.UNDER_AVERAGE}">
                                 Not really
                             </label>
@@ -171,7 +188,11 @@
                 <div class="ui five column grid">
                     <div class="column">
                         <div class="ui checkbox">
-                            <input class="rating" type="checkbox" data-rating="1" onchange="applyFeedbackFilter()">
+                            <input class="rating"
+                                   type="checkbox"
+                                   data-rating="1"
+                                   checked="true"
+                                   onchange="applyFeedbackFilter()">
                             <label th:text="#{player.sequence.feedbackDegree.LOW}">
                                 Not at all
                             </label>
@@ -224,17 +245,18 @@
         displayFeedbackList(feedbackList);
 
         function applyFeedbackFilter() {
-            let feedbacks;
+            let feedbacks =[];
             let checkedCheckboxes = Array.prototype.map.call(
                 document.querySelectorAll('.rating:checked'),
                 checkbox => parseInt(checkbox.dataset.rating)
             )
 
-            if (checkedCheckboxes.length === 0) {
+            if (checkedCheckboxes.length === 5) {
                 feedbacks = feedbackList
 
             } else {
-                feedbacks = feedbackList.filter(feedback => checkedCheckboxes.includes(feedback.rating))
+                feedbacks = feedbackList
+                    .filter(feedback => checkedCheckboxes.includes(feedback.rating))
             }
 
             removeFeedbackList()
@@ -248,13 +270,15 @@
         }
 
         function displayFeedbackList(feedbacks) {
+            feedbacks.sort((a,b) => a.rating <= b.rating ? 1 : -1)
+
             let ratings = [
                 undefined,
-                [[#{player.sequence.feedback.lowdegree}]],
-                [[#{player.sequence.feedback.underaveragedegree}]],
-                [[#{player.sequence.feedback.averagedegree}]],
-                [[#{player.sequence.feedback.aboveaveragedegree}]],
-                [[#{player.sequence.feedback.highdegree}]]
+                [[#{player.sequence.feedbackDegree.LOW}]],
+                [[#{player.sequence.feedbackDegree.UNDER_AVERAGE}]],
+                [[#{player.sequence.feedbackDegree.AVERAGE}]],
+                [[#{player.sequence.feedbackDegree.ABOVE_AVERAGE}]],
+                [[#{player.sequence.feedbackDegree.HIGH}]]
             ]
 
             feedbacks.forEach( feedback => {
