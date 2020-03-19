@@ -36,7 +36,7 @@
                 <p th:text="#{player.sequence.feedback.statement}">I think I learn something from this sequence ?</p>
                 <div class="inline fields">
                     <label class="field"
-                           th:text="#{player.sequence.feedback.lowdegree}">
+                           th:text="#{player.sequence.feedbackDegree.LOW}">
                     </label>
                     <label class="field">
                         <input class="ui radio checkbox"
@@ -63,7 +63,7 @@
                                th:checked="${sequenceFeedback.rating == 5}"
                                disabled type="radio" value="5" name="agreement-level" />
                     </label>
-                    <label class="field" th:text="#{player.sequence.feedback.highdegree}">
+                    <label class="field" th:text="#{player.sequence.feedbackDegree.HIGH}">
                     </label>
                 </div>
                 <div class="field">
