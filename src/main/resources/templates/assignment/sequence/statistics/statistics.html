@@ -209,8 +209,24 @@
                 </div>
             </div>
 
-
-
+            <div class="ui five column grid">
+                <div class="colum">
+                    <button id="checkButton"
+                            class="ui button"
+                            type="button"
+                            onclick="checkUncheckAll(true)"
+                            th:text="#{player.sequence.checkAll}">
+                        Check all
+                    </button>
+                    <button id="unCheckButton"
+                            class="ui button"
+                            type="button"
+                            onclick="checkUncheckAll(false)"
+                            th:text="#{player.sequence.uncheckAll}">>
+                        Uncheck all
+                    </button>
+                </div>
+            </div>
 
         </div>
 
@@ -240,6 +256,15 @@
             $(window).trigger("resize");
         });
 
+        /** Check - Uncheck Checkboxes */
+
+        function checkUncheckAll(order) {
+            let checkboxes = document.querySelectorAll('.rating')
+            checkboxes.forEach( checkbox => checkbox.checked = order)
+            applyFeedbackFilter()
+        }
+
+        /** -------------------------- */
         let feedbackTemplate = document.getElementById("feedbackTemplate")
         let feedbacksDiv = document.getElementById("feedbacks")
         displayFeedbackList(feedbackList);

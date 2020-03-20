@@ -35,28 +35,22 @@
             <form class="ui form"
                   th:action="@{/player/sequence/{sequenceId}/submit-feedback(sequenceId=${model.sequenceId})}"
                   method="post">
-                <p th:text="#{player.sequence.feedback.statement}">I think I learnt something from this sequence ?</p>
-                <div class="inline fields">
-                    <label class="field" th:text="#{player.sequence.feedbackDegree.LOW}">
-                    </label>
-                    <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="1" name="agreement-level" />
-                    </label>
-                    <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="2" name="agreement-level" />
-                    </label>
-                    <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="3" name="agreement-level" />
-                    </label>
-                    <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="4" name="agreement-level" />
-                    </label>
-                    <label class="field">
-                        <input class="ui radio checkbox" type="radio" value="5" name="agreement-level" />
-                    </label>
-                    <label class="field" th:text="#{player.sequence.feedbackDegree.HIGH}">
-                    </label>
+                <p th:text="#{player.sequence.feedback.statement}">I think I learnt something from this sequence </p>
+
+                <div class="ui fluid five item stackable menu"  >
+                    <input type="radio" name="agreement-level" id="fbDegree-5" style="display:none">
+                    <label class="item" for="fbDegree-5" th:text="#{player.sequence.feedbackDegree.HIGH}"></label>
+                    <input type="radio" name="agreement-level" id="fbDegree-4" style="display:none">
+                    <label class="item" for="fbDegree-4" th:text="#{player.sequence.feedbackDegree.ABOVE_AVERAGE}"></label>
+                    <input type="radio" name="agreement-level" id="fbDegree-3" style="display:none">
+                    <label class="item" for="fbDegree-3" th:text="#{player.sequence.feedbackDegree.AVERAGE}"></label>
+                    <input type="radio" name="agreement-level" id="fbDegree-2" style="display:none">
+                    <label class="item" for="fbDegree-2" th:text="#{player.sequence.feedbackDegree.UNDER_AVERAGE}"></label>
+                    <input type="radio" name="agreement-level" id="fbDegree-1" style="display:none">
+                    <label class="item" for="fbDegree-1" th:text="#{player.sequence.feedbackDegree.LOW}"></label>
                 </div>
+
+
                 <div class="field">
                     <label>
                         <textarea class="" name="agreement-explanation" th:placeholder="#{player.sequence.feedback.title}"></textarea>
@@ -69,6 +63,55 @@
             </form> 
         </div>
     </div>
+
+    <style>
+        #fbDegree-5 + label {
+            background-color: #008000;
+        }
+        #fbDegree-5:checked + label {
+            background-color: #008000;
+            border-color: #006000;
+            border-width: 0.3em;
+            border-style: groove;
+        }
+        #fbDegree-4 + label {
+            background-color: #ADFF2F;
+        }
+        #fbDegree-4:checked + label {
+            background-color: #ADFF2F;
+            border-color: #ABFD2D;
+            border-width: 0.3em;
+            border-style: groove;
+        }
+        #fbDegree-3 + label {
+            background-color: #FFD700;
+        }
+        #fbDegree-3:checked + label {
+            background-color: #FFD700;
+            border-color: #FDD500;
+            border-width: 0.3em;
+            border-style: groove;
+        }
+        #fbDegree-2 + label {
+            background-color: #FF8C00;
+        }
+        #fbDegree-2:checked + label {
+            background-color: #FF8C00;
+            border-color: #FD8A00;
+            border-width: 0.3em;
+            border-style: groove;
+        }
+        #fbDegree-1 + label {
+            background-color: #B22222;
+        }
+        #fbDegree-1:checked + label {
+            background-color: #B22222;
+            border-color: #B02020;
+            border-width: 0.3em;
+            border-style: groove;
+        }
+    </style>
+
     <script th:inline="javascript">
         $(document).ready(function () {
             $('#question-feedback-accordion-[[${model.sequenceId}]]').accordion()
