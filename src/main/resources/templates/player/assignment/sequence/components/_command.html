@@ -51,8 +51,8 @@
   <a th:href="@{/player/interaction/{interactionId}/startNext(interactionId=${model.interactionId})}"
      th:unless="${model.actionStartNextInteraction.name() == 'HIDDEN'}"
      class="item">
-    <i class="green play icon"></i> &nbsp; <span
-    th:text="#{player.sequence.interaction.start(${model.InteractionRank + 1})}"></span>
+    <i class="green play icon"></i> &nbsp;
+    <span th:text="#{player.sequence.interaction.start(${model.InteractionRank + 1})}"></span>
   </a>
 
 <!--  TODO partial load th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/interaction/{interactionId}/start(interactionId=${model.interactionId})}')|"-->
@@ -61,8 +61,9 @@
      th:href="@{/player/interaction/{interactionId}/start(interactionId=${model.interactionId})}"
      class="item">
     <i class="red undo alternate  icon"></i>
-    &nbsp; <span
-    th:text="#{player.sequence.interaction.restart(${model.interactionRank})}">Reopen phase {0}</span>
+    <span th:text="#{player.sequence.interaction.restart(${model.interactionRank})}">
+      Reopen phase {0}
+    </span>
   </a>
 
   <div class="right menu">
@@ -71,7 +72,9 @@
        th:unless="${model.actionReopenSequence.name() == 'HIDDEN'}"
        class="item">
       <i class="red undo alternate icon"></i>
-      &nbsp; <span th:text="#{player.sequence.reopenSequence}">Re-open sequence</span>
+      <span th:text="#{player.sequence.reopenSequence}">
+        Re-open sequence
+      </span>
     </a>
 
     <!-- TODO partial reload -       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/stop}')|">-->
@@ -79,12 +82,14 @@
        th:unless="${model.actionStopSequence.name() == 'HIDDEN'}"
        class="item">
       <i class="red stop icon"></i>
-      &nbsp; <span th:text="#{player.sequence.readinteraction.stopSequence}">Stop sequence</span>
+      <span th:text="#{player.sequence.readinteraction.stopSequence}">
+        Stop sequence
+      </span>
     </a>
 
     <!--   TODO load partiel template th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}')|"-->
     <a th:href="@{/assignment/{assignmentId}/sequence/{id}/statistics(assignmentId=${assignmentId}, id=${model.sequenceId})}"
-       th:unless="${model.actionPublishResults.name() == 'HIDDEN' and model.actionUnpublishResults.name() == 'HIDDEN'}"
+       th:if="${model.actionStartSequence.name() == 'HIDDEN' and model.interactionRank >= 2}"
        class="item">
       <i class="chart bar icon"></i>
       <span th:text="#{sequence.statistics}">
@@ -112,6 +117,7 @@
       </span>
     </a>
 
+
   </div>
 
   <div th:if="${model.actionStartSequence.name() == 'ENABLED'}"
@@ -119,5 +125,6 @@
     <div
       th:replace="player/assignment/sequence/components/_config-sequence.html :: configSequence(${model.sequenceId}, ${model.questionType})"></div>
   </div>
+
 
 </div>
