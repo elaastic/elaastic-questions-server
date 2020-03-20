@@ -214,13 +214,15 @@
                     <button id="checkButton"
                             class="ui button"
                             type="button"
-                            onclick="checkUncheckAll(true)">
+                            onclick="checkUncheckAll(true)"
+                            th:text="#{player.sequence.checkAll}">
                         Check all
                     </button>
                     <button id="unCheckButton"
                             class="ui button"
                             type="button"
-                            onclick="checkUncheckAll(false)">
+                            onclick="checkUncheckAll(false)"
+                            th:text="#{player.sequence.uncheckAll}">>
                         Uncheck all
                     </button>
                 </div>
