@@ -26,6 +26,7 @@
     <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
     <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
     <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+    <script type="text/javascript" th:src="@{/js/elaastic/graph/participation-rate-graph.js}"></script>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -55,7 +56,7 @@
     <h2 style="font-size: 1.5em;" th:text="${statementData.title}"></h2>
 
     <div class="ui top attached tabular menu">
-        <div class="item active" data-tab="indicators" th:text="#{statistics.indicators.tabname}">Indicators</div>
+        <div id="indicators-tab-title" class="item active" data-tab="indicators" th:text="#{statistics.indicators.tabname}">Indicators</div>
         <div class="item" data-tab="feedback" th:text="#{statistics.feedbacks.tabname}">Feedbacks</div>
         <div id="results-tab-title" class="item" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
     </div>
@@ -94,8 +95,7 @@
                         <div th:if="${typeExecution == 'blended'}" th:remove>
                             <span th:text="#{sequence.interaction.executionContext.blended"></span>
                         </div>
-
-
+                        
                         <div th:if="${typeExecution == 'distance'}" th:remove>
                             <span th:text="#{sequence.interaction.executionContext.distance}"></span>
                         </div>
@@ -203,7 +203,7 @@
                 </div>
             </div>
         </div>
-
+        
         <h5 th:text="#{player.sequence.participation.rate}"></h5>
         <div id="vega-view-participation"></div>
     </div>
@@ -353,18 +353,80 @@
             <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+</div>
+
+<script th:inline="javascript">
+    $('.menu .item').tab();
+    $(document).ready(function () {
+        $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
+    });
+    $("#results-tab-title, #indicators-tab-title").click(function() {
+        $(window).trigger("resize");
+    });
+
+    elaastic.renderParticipationRateGraph("#vega-view-participation", [[${participationData}]], {
+        phase: [[#{statistics.participationgraph.phase}]]
+    });
+
+    let nbTotalConfidenceDegree = [[${nbConfidenceDegree1}]] + [[${nbConfidenceDegree2}]] + [[${nbConfidenceDegree3}]] + [[${nbConfidenceDegree4}]]
+
+    $("#progress-confidence-1").progress({
+        percent : (100 * [[${nbConfidenceDegree1}]])/nbTotalConfidenceDegree
+    });
+    $("#progress-confidence-2").progress({
+        percent : (100 * [[${nbConfidenceDegree2}]])/nbTotalConfidenceDegree
+    });
+    $("#progress-confidence-3").progress({
+        percent : (100 * [[${nbConfidenceDegree3}]])/nbTotalConfidenceDegree
+    });
+    $("#progress-confidence-4").progress({
+        percent : (100 * [[${nbConfidenceDegree4}]])/nbTotalConfidenceDegree
+    });
+
+    $('#show-nb-confidence-1').text([[${nbConfidenceDegree1}]]);
+    $('#show-nb-confidence-2').text([[${nbConfidenceDegree2}]]);
+    $('#show-nb-confidence-3').text([[${nbConfidenceDegree3}]]);
+    $('#show-nb-confidence-4').text([[${nbConfidenceDegree4}]]);
+
+    $('#standard-deviation').text([[${standardDeviation}]])
+
+
+    let feedbackTemplate = document.getElementById("feedbackTemplate")
+    let feedbacksDiv = document.getElementById("feedbacks")
+    displayFeedbackList(feedbackList);
+
+    function applyFeedbackFilter() {
+        let feedbacks;
+        let checkedCheckboxes = Array.prototype.map.call(
+            document.querySelectorAll('.rating:checked'),
+            checkbox => parseInt(checkbox.dataset.rating)
+        )
+
+        if (checkedCheckboxes.length === 0) {
+            feedbacks = feedbackList
+
+        } else {
+            feedbacks = feedbackList.filter(feedback => checkedCheckboxes.includes(feedback.rating))
+        }
+>>>>>>> dc35a94... Modified the participation rate graph filename
 
     <script th:inline="javascript">
         $('.menu .item').tab();
         $(document).ready(function () {
             $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
-        })
-        $("#results-tab-title").click(function() {
+        });
+        $("#results-tab-title, #indicators-tab-title").click(function() {
             $(window).trigger("resize");
         });
 
-        let nbTotalConfidenceDegree = [[${nbConfidenceDegree1}]] + [[${nbConfidenceDegree2}]] + [[${nbConfidenceDegree3}]] + [[${nbConfidenceDegree4}]]
+        elaastic.renderConfidenceGraph("#vega-view-participation", [[${participationData}]], {
+            phase: [[#{statistics.participationgraph.phase}]],
+            participationRate: [[#{statistics.participationgraph.participationRate}]]
+        });
 
+        let nbTotalConfidenceDegree = [[${nbConfidenceDegree1}]] + [[${nbConfidenceDegree2}]] + [[${nbConfidenceDegree3}]] + [[${nbConfidenceDegree4}]]
 
         $("#progress-confidence-1").progress({
             percent : (100 * [[${nbConfidenceDegree1}]])/nbTotalConfidenceDegree

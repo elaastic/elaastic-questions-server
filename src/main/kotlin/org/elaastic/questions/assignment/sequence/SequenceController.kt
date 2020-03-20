@@ -152,7 +152,6 @@ class SequenceController(
         sequenceService.get(id, true).let { sequence ->
             model.addAttribute("user", user)
             val teacher = user == sequence.owner
-            val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
             model.addAttribute("playerModel", PlayerModelFactory.buildForTeacher(
                         user = user,
                         sequence = sequence,
@@ -162,9 +161,20 @@ class SequenceController(
                         findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
                         sequenceStatistics = sequenceService.getStatistics(sequence), userCanRefreshResults = { false }
             ))
-
-
         }
+
+        model.addAttribute("participationData",
+                if (nbRegisteredUsers > 0) {
+                    responseService.findAll(sequence, excludeFakes = true).let {
+                        ParticipationData(
+                                nbRegisteredUsers,
+                                it[1].size,
+                                it[2].size
+                        )
+                    }
+                } else {
+                    ParticipationData(0, 0, 0)
+                })
 
         return "/assignment/sequence/statistics/statistics"
     }
@@ -427,4 +437,10 @@ class SequenceController(
     }
 
     data class FeedbackData(val rating: Int, val explanation: String)
+
+    data class ParticipationData(
+        val nbRegisteredUsers: Int,
+        val nbParticipentsPhase1: Int,
+        val nbParticipentsPhase2: Int
+    )
 }
