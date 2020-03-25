@@ -89,7 +89,7 @@
 
     <!--   TODO load partiel template th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}')|"-->
     <a th:href="@{/assignment/{assignmentId}/sequence/{id}/statistics(assignmentId=${assignmentId}, id=${model.sequenceId})}"
-       th:if="${model.actionStartSequence.name() == 'HIDDEN' and model.interactionRank >= 2}"
+       th:if="${model.actionStartSequence.name() == 'HIDDEN'}"
        class="item">
       <i class="chart bar icon"></i>
       <span th:text="#{sequence.statistics}">
