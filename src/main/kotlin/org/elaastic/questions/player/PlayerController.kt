@@ -347,6 +347,7 @@ class PlayerController(
                             learner = user,
                             interaction = sequence.getResponseSubmissionInteraction(),
                             attempt = responseSubmissionData.attempt,
+                            responseTime = responseSubmissionData.responseTime,
                             confidenceDegree = responseSubmissionData.confidenceDegree,
                             explanation = responseSubmissionData.explanation,  // TODO Sanitize
                             learnerChoice = choiceListSpecification,
@@ -394,6 +395,7 @@ class PlayerController(
     data class ResponseSubmissionData(
             val interactionId: Long,
             val attempt: AttemptNum,
+            val responseTime: Int?,
             val choiceList: List<Int>?,
             val confidenceDegree: ConfidenceDegree?,
             val explanation: String?
@@ -421,6 +423,7 @@ class PlayerController(
                         learner = user,
                         interaction = sequence.getResponseSubmissionInteraction(),
                         attempt = 2,
+                        responseTime = evaluationData.responseTime,
                         confidenceDegree = evaluationData.confidenceDegree,
                         explanation = evaluationData.explanation,
                         learnerChoice = choiceListSpecification,
@@ -456,6 +459,7 @@ class PlayerController(
     class EvaluationData(
             val id: Long,
             val choiceList: List<ItemIndex>?,
+            val responseTime: Int?,
             val confidenceDegree: ConfidenceDegree?,
             val explanation: String?
     ) {

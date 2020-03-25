@@ -176,6 +176,10 @@ class SequenceController(
                     ParticipationData(0, 0, 0)
                 })
 
+        model.addAttribute("meanResponseTimes",
+                listOf(responseService.getMeanResponseTimeForPhase(sequence, 1),
+                        responseService.getMeanResponseTimeForPhase(sequence, 2)))
+
         return "/assignment/sequence/statistics/statistics"
     }
 

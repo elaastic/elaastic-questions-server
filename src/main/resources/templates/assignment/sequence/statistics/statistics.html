@@ -93,7 +93,7 @@
                         </div>
 
                         <div th:if="${typeExecution == 'blended'}" th:remove>
-                            <span th:text="#{sequence.interaction.executionContext.blended"></span>
+                            <span th:text="#{sequence.interaction.executionContext.blended}"></span>
                         </div>
                         
                         <div th:if="${typeExecution == 'distance'}" th:remove>
@@ -109,7 +109,7 @@
                         <h5 th:text="#{player.sequence.mean.time}"></h5>
                     </div>
                     <div class="two wide column">
-                        <span>0 sec</span>
+                        [[${meanResponseTimes[0]}]] sec
                     </div>
                 </div>
             </div>
