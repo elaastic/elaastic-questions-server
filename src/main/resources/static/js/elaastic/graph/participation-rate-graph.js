@@ -16,12 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-var elaastic = elaastic || {};
+var elaastic = elaastic || {};
 
-elaastic.renderConfidenceGraph = function(elViewSelector, participationData, i18n) {
+elaastic.renderParticipationRateGraph = function(elViewSelector, participationData, i18n) {
     var i18n = i18n || {
-        phase: "Phase",
-        participationRate: "Participation Rate"
+        phase: "Phase"
     };
 
     let participationRatePhase1 = Math.round((participationData.nbParticipentsPhase1 / participationData.nbRegisteredUsers) * 100);
@@ -85,8 +84,7 @@ elaastic.renderConfidenceGraph = function(elViewSelector, participationData, i18
                 "orient": "left",
                 "scale": "yscale",
                 "values": [0, 25, 50, 75, 100],
-                "grid": true,
-                "title": i18n.participationRate
+                "grid": true
             }
         ],
 
