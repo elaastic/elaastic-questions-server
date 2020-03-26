@@ -245,4 +245,13 @@ class ResponseService(
         return res
     }
 
+    fun getMeanResponseTimeForPhase(sequence: Sequence, phase: Int) =
+            findAll(sequence, excludeFakes = true)[phase].let { responses ->
+        responses.filter { it.responseTime != null }.let { responsesWithTime ->
+            if (responsesWithTime.size > 0)
+                responsesWithTime.sumBy { it.responseTime as Int } / responsesWithTime.size.toDouble()
+            else
+                0.0
+        }
+    }
 }
