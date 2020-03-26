@@ -101,7 +101,7 @@
                     <span th:text="#{sequence.interaction.executionContext.faceToFace}"></span>
                 </div>
                 <div th:if="${typeExecution == 'blended'}" th:remove>
-                    <span th:text="#{sequence.interaction.executionContext.blended"></span>
+                    <span th:text="#{sequence.interaction.executionContext.blended}"></span>
                 </div>
                 <div th:if="${typeExecution == 'distance'}" th:remove>
                     <span th:text="#{sequence.interaction.executionContext.distance}"></span>
@@ -190,12 +190,6 @@
                 <div id="vega-view-participation"></div>
             </div>
         </div>
-<<<<<<< HEAD
-        
-        <h5 th:text="#{player.sequence.participation.rate}"></h5>
-        <div id="vega-view-participation"></div>
-=======
->>>>>>> 392204a... Merge time and update layout
     </div>
 
     <style>
@@ -339,68 +333,7 @@
     <div id="feedbacks">
         <!-- List of feedbacks filled by JS -->
     </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 </div>
-
-<script th:inline="javascript">
-    $('.menu .item').tab();
-    $(document).ready(function () {
-        $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
-    });
-    $("#results-tab-title, #indicators-tab-title").click(function() {
-        $(window).trigger("resize");
-    });
-
-    elaastic.renderParticipationRateGraph("#vega-view-participation", [[${participationData}]], {
-        phase: [[#{statistics.participationgraph.phase}]]
-    });
-
-    let nbTotalConfidenceDegree = [[${nbConfidenceDegree1}]] + [[${nbConfidenceDegree2}]] + [[${nbConfidenceDegree3}]] + [[${nbConfidenceDegree4}]]
-
-    $("#progress-confidence-1").progress({
-        percent : (100 * [[${nbConfidenceDegree1}]])/nbTotalConfidenceDegree
-    });
-    $("#progress-confidence-2").progress({
-        percent : (100 * [[${nbConfidenceDegree2}]])/nbTotalConfidenceDegree
-    });
-    $("#progress-confidence-3").progress({
-        percent : (100 * [[${nbConfidenceDegree3}]])/nbTotalConfidenceDegree
-    });
-    $("#progress-confidence-4").progress({
-        percent : (100 * [[${nbConfidenceDegree4}]])/nbTotalConfidenceDegree
-    });
-
-    $('#show-nb-confidence-1').text([[${nbConfidenceDegree1}]]);
-    $('#show-nb-confidence-2').text([[${nbConfidenceDegree2}]]);
-    $('#show-nb-confidence-3').text([[${nbConfidenceDegree3}]]);
-    $('#show-nb-confidence-4').text([[${nbConfidenceDegree4}]]);
-
-    $('#standard-deviation').text([[${standardDeviation}]])
-
-
-    let feedbackTemplate = document.getElementById("feedbackTemplate")
-    let feedbacksDiv = document.getElementById("feedbacks")
-    displayFeedbackList(feedbackList);
-
-    function applyFeedbackFilter() {
-        let feedbacks;
-        let checkedCheckboxes = Array.prototype.map.call(
-            document.querySelectorAll('.rating:checked'),
-            checkbox => parseInt(checkbox.dataset.rating)
-        )
-
-        if (checkedCheckboxes.length === 0) {
-            feedbacks = feedbackList
-
-        } else {
-            feedbacks = feedbackList.filter(feedback => checkedCheckboxes.includes(feedback.rating))
-        }
->>>>>>> dc35a94... Modified the participation rate graph filename
-=======
-</div>
->>>>>>> 392204a... Merge time and update layout
 
 <!-- Tab Results -->
 
@@ -420,9 +353,8 @@
         $(window).trigger("resize");
     });
 
-    elaastic.renderConfidenceGraph("#vega-view-participation", [[${participationData}]], {
-        phase: [[#{statistics.participationgraph.phase}]],
-        participationRate: [[#{statistics.participationgraph.participationRate}]]
+    elaastic.renderParticipationRateGraph("#vega-view-participation", [[${participationData}]], {
+        phase: [[#{statistics.participationgraph.phase}]]
     });
 
     let nbTotalConfidenceDegree = [[${nbConfidenceDegree1}]] + [[${nbConfidenceDegree2}]] + [[${nbConfidenceDegree3}]] + [[${nbConfidenceDegree4}]]
