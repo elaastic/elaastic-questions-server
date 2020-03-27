@@ -21,6 +21,7 @@
 
 
   <input type="hidden" name="attempt" th:value="${model.attempt}"/>
+  <input id="response-time" type="hidden" name="responseTime" value="0" />
   <th:block th:if="${model.hasChoices}">
     <div class="field">
       <div th:if="${model.multipleChoice}" class="inline fields">
@@ -133,5 +134,13 @@
     function onSubmitResponse () {
       // Do nothing
     }
+  </script>
+
+  <script>
+    let responseTimeElement = document.getElementById("response-time");
+    setInterval(() => {
+      let val = Number(responseTimeElement.getAttribute("value"));
+      responseTimeElement.setAttribute("value", val + 1);
+    }, 1000);
   </script>
 </div>

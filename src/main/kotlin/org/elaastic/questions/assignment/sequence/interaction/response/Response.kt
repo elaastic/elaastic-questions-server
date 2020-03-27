@@ -49,6 +49,9 @@ class Response(
 
         var attempt: Int = 1,
 
+        // in seconds
+        var responseTime: Int? = null,
+
         var explanation: String? = null,
 
         @field:Enumerated(EnumType.ORDINAL)
