@@ -53,5 +53,4 @@ class Feedback (
         @CreatedDate
         lateinit var dateCreated: Date
 
-    // TODO In process, I think it's ready but ...
 }

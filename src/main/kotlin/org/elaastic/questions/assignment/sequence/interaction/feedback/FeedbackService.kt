@@ -30,7 +30,8 @@ import javax.transaction.Transactional
 @Transactional
 class FeedbackService(
         @Autowired val learnerAssignmentService: LearnerAssignmentService,
-        @Autowired val feedbackRepository: FeedbackRepository
+        @Autowired val feedbackRepository: FeedbackRepository,
+        @Autowired val teacherFeedbackRepository: TeacherFeedbackRepository
 ) {
     fun getFeedback(learner: User, sequence: Sequence): Feedback? =
             feedbackRepository.findByLearnerAndSequence(learner, sequence)
@@ -49,6 +50,15 @@ class FeedbackService(
         feedbackRepository.save(feedback)
         return feedback
     }
+
+    fun getTeacherFeedback(teacher: User, sequence: Sequence): TeacherFeedback? =
+            teacherFeedbackRepository.findByTeacherAndSequence(teacher, sequence);
+
+    fun saveTeacherFeedback(teacherFeedback: TeacherFeedback): TeacherFeedback =
+            teacherFeedbackRepository.save(teacherFeedback)
+
+    fun getTeachersSequenceFeedbacks(sequence: Sequence): List<TeacherFeedback>? =
+            teacherFeedbackRepository.findAllBySequence(sequence);
 
     //TODO faire la moyenne des ranking
     fun getAverage(): Int?{

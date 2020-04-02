@@ -27,6 +27,7 @@ import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.feedback.Feedback
 import org.elaastic.questions.assignment.sequence.interaction.feedback.FeedbackService
+import org.elaastic.questions.assignment.sequence.interaction.feedback.TeacherFeedback
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
@@ -58,10 +59,11 @@ class PlayerController(
         @Autowired val learnerSequenceService: LearnerSequenceService,
         @Autowired val interactionService: InteractionService,
         @Autowired val responseService: ResponseService,
-        @Autowired val feedbackService: FeedbackService,  // TODO test
+        @Autowired val feedbackService: FeedbackService,
         @Autowired val peerGradingService: PeerGradingService,
         @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val resultsService: ResultsService
+        @Autowired val resultsService: ResultsService,
+        @Autowired val teacherFeedbackService: FeedbackService // TODO test
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -154,7 +156,9 @@ class PlayerController(
                                 sequenceToUserActiveInteraction = sequence.assignment!!.sequences.associate { it to it.activeInteraction },
                                 messageBuilder = messageBuilder,
                                 findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
-                                sequenceStatistics = sequenceService.getStatistics(sequence), userCanRefreshResults = { resultsService.canUpdateResults(user, sequence) }
+                                sequenceStatistics = sequenceService.getStatistics(sequence),
+                                userCanRefreshResults = { resultsService.canUpdateResults(user, sequence) },
+                                sequenceFeedback = { feedbackService.getTeacherFeedback(user, sequence) }
                         )
                     else PlayerModelFactory.buildForLearner(
                             user = user,
@@ -400,6 +404,38 @@ class PlayerController(
                             explanation = agreementExplanation
                     )
             )
+        }
+
+        return "redirect:/player/sequence/${id}/play"
+    }
+
+    @PostMapping("/sequence/{id}/submit-teacher-feedback")
+    fun submitTeacherfeedback(authentication: Authentication,
+                              model: Model,
+                              @PathVariable id: Long,
+                              @RequestParam("reuseDegree") reuseDegree: Int,
+                              @RequestParam("recommendDegree") recommendDegree: Int,
+                              @RequestParam("explanation") explanation: String?): String {
+
+        val user: User = authentication.principal as User
+
+        if (reuseDegree < 0 || recommendDegree < 0)
+            return "redirect:/player/sequence/${id}/play"
+
+        sequenceService.get(id, true).let { sequence ->
+
+            var feedback: TeacherFeedback? = teacherFeedbackService.getTeacherFeedback(user, sequence)
+
+            if (feedback == null) {
+                feedback = TeacherFeedback(
+                        teacher = user,
+                        sequence = sequence,
+                        recommendRating = recommendDegree,
+                        reuseRating = reuseDegree,
+                        explanation = explanation
+                )
+                teacherFeedbackService.saveTeacherFeedback(feedback)
+            }
         }
 
         return "redirect:/player/sequence/${id}/play"

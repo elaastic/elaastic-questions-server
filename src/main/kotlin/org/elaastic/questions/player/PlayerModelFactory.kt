@@ -20,6 +20,7 @@ package org.elaastic.questions.player
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.feedback.TeacherFeedback
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
@@ -29,6 +30,7 @@ import org.elaastic.questions.player.components.assignmentOverview.AssignmentOve
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.ResponseData
+import org.elaastic.questions.player.components.feedback.TeacherFeedbackModelFactory
 import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModelFactory
 import org.elaastic.questions.player.components.results.ResultsModelFactory
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
@@ -46,7 +48,8 @@ object PlayerModelFactory {
                         messageBuilder: MessageBuilder,
                         findAllResponses: () -> ResponseSet,
                         sequenceStatistics: SequenceStatistics,
-                        userCanRefreshResults: () -> Boolean): TeacherPlayerModel = run {
+                        userCanRefreshResults: () -> Boolean,
+                        sequenceFeedback: () -> TeacherFeedback?): TeacherPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResults = sequence.state != State.beforeStart
 
@@ -77,6 +80,13 @@ object PlayerModelFactory {
                             sequence,
                             findAllResponses(),
                             userCanRefreshResults()
+                    )
+                else null,
+                sequenceFeedbackModel = if (sequenceFeedback != null)
+                    TeacherFeedbackModelFactory.build(
+                            user,
+                            sequence,
+                            sequenceFeedback()
                     )
                 else null
         )
