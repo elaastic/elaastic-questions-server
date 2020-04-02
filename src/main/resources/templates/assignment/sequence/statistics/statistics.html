@@ -46,95 +46,93 @@
     </div>
 </template>
 
-<h1 style="line-height: 50%;">
-        <span th:text="#{statistics.title}">
-            Statistiques
-        </span>
-    -
-    <span th:text="${assignment.title}"></span>
+<h1>
+    <span th:text="#{statistics.title}">
+        Statistiques </span> - <span th:text="${assignment.title}"></span>
 </h1>
-<h2 style="font-size: 1.5em;" th:text="${statementData.title}"></h2>
+
+<div th:with="components=${'/player/assignment/sequence/components'}">
+    <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
+</div>
 
 <div class="ui top attached tabular menu">
-    <div id="indicators-tab-title" class="item active" data-tab="indicators" th:text="#{statistics.indicators.tabname}">Indicators</div>
+    <div id="indicators-tab-title" class="item active" data-tab="indicators"
+         th:text="#{statistics.indicators.tabname}">Indicators</div>
     <div class="item" data-tab="feedback" th:text="#{statistics.feedbacks.tabname}">Feedbacks</div>
-    <div id="results-tab-title" class="item" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
 </div>
 
 <!-- Tab Indicators -->
 
 <div class="ui tab bottom attached active segment" data-tab="indicators">
 
-    <div class="grouped fields" style="margin-top: 1rem;" >
-        <div class="field ui four column grid">
-            <div class="six wide column">
-                <h5 th:text="#{player.sequence.type}"></h5>
-            </div>
-
-            <div class="column">
-                <div th:if="${statementData.hasChoices}" th:remove>
-                    <span th:text="#{player.sequence.type.choice}"></span>
+    <div class="ui three column grid " style="padding:1rem;">
+        <div class="column" style="border-style:double;">
+            <div class="ui two column two row grid">
+                <div class="row">
+                    <div class="ten wide column">
+                        <h5 th:text="#{player.sequence.type.execution}"></h5>
+                    </div>
+                    <div class="six wide olumn">
+                        <div th:if="${typeExecution == 'faceToFace'}" th:remove>
+                            <span th:text="#{sequence.interaction.executionContext.faceToFace}"></span>
+                        </div>
+                        <div th:if="${typeExecution == 'blended'}" th:remove>
+                            <span th:text="#{sequence.interaction.executionContext.blended}"></span>
+                        </div>
+                        <div th:if="${typeExecution == 'distance'}" th:remove>
+                            <span th:text="#{sequence.interaction.executionContext.distance}"></span>
+                        </div>
+                    </div>
                 </div>
-
-                <div th:unless="${statementData.hasChoices}" th:remove>
-                    <span th:text="#{player.sequence.type.open.ended}"></span>
-                </div>
-            </div>
-
-            <div class="three wide column">
-                <h5 th:text="#{player.sequence.mean.time}"></h5>
-            </div>
-
-            <div class="two wide column">
-                [[${meanResponseTimes[0]}]] sec
-            </div>
-
-        </div>
-
-        <div class="field ui four column grid">
-            <div class="six wide column">
-                <h5 th:text="#{player.sequence.type.execution}"></h5>
-            </div>
-
-            <div class="column">
-                <div th:if="${typeExecution == 'faceToFace'}" th:remove>
-                    <span th:text="#{sequence.interaction.executionContext.faceToFace}"></span>
-                </div>
-                <div th:if="${typeExecution == 'blended'}" th:remove>
-                    <span th:text="#{sequence.interaction.executionContext.blended}"></span>
-                </div>
-                <div th:if="${typeExecution == 'distance'}" th:remove>
-                    <span th:text="#{sequence.interaction.executionContext.distance}"></span>
-                </div>
-            </div>
-            <div class="ui two column grid"
-                 th:if="${statementData.hasChoices and standardDeviation != -1.0}" th:remove>
-                <div class="thirteen wide column">
-                    <h5 th:text="#{player.sequence.standard.deviation}"></h5>
-                </div>
-                <div class="two wide column">
-                    <span id="standard-deviation"></span>
+                <div class="row">
+                    <div class="twelve wide column" style="padding-bottom:1rem;">
+                        <h5 th:text="#{player.sequence.response.to.evaluate.count}"></h5>
+                    </div>
+                    <div class="two wide column">
+                        <span th:text="${responseToEvaluateCount}"></span>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="field ui four column grid">
-            <div class="six wide column">
-                <h5 th:text="#{player.sequence.response.to.evaluate.count}"></h5>
-            </div>
-            <div class="column">
-                <span th:text="${responseToEvaluateCount}"></span>
+        <div class="column" style="border-style:double;">
+            <div class="ui two row two column grid">
+                <div class="row" th:if="${statementData.hasChoices and standardDeviation != -1.0}" th:remove>
+                    <div class="eleven wide column">
+                        <h5 th:text="#{player.sequence.standard.deviation}"></h5>
+                    </div>
+                    <div class="two wide column">
+                        <label id="standard-deviation"></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="eleven wide column">
+                        <h5 th:text="#{player.sequence.mean.time}"></h5>
+                    </div>
+                    <div class="five wide column">
+                        <label>[[${meanResponseTimes[0]}]] sec</label>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="field ui two column grid" style="padding: 1.5rem;">
+    <div class="grouped fields" style="padding:1rem;" >
+
+        <div class="field ui three column grid">
+            <div class="column" style="padding-right: 4rem;"
+                 th:if="${resultsModel.hasChoices} and ${resultsModel.hasAnyResult}">
+                <div>
+                    <h4 class="field" style="margin-bottom: 1.5rem;" th:text="#{questions.results}"></h4>
+                    <div th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${resultsModel.responseDistributionChartModel})"></div>
+                </div>
+            </div>
 
             <div class="column">
                 <h4 class="field" style="margin-bottom: 1.5rem;" th:text="#{player.sequence.statistics.confidenceDegree}"></h4>
                 <div class="field">
                     <span th:text="#{player.sequence.interaction.confidenceDegree.TOTALLY_CONFIDENT}"></span>
                     <div class="ui two column grid">
-                        <div class="seven wide column">
+                        <div class="ten wide column">
                             <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-4">
                                 <div class="bar" style="min-width : 0%"></div>
                             </div>
@@ -147,7 +145,7 @@
                 <div class="field">
                     <span th:text="#{player.sequence.interaction.confidenceDegree.CONFIDENT}"></span>
                     <div class="ui two column grid">
-                        <div class="seven wide column">
+                        <div class="ten wide column">
                             <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-3">
                                 <div class="bar" style="min-width : 0%"></div>
                             </div>
@@ -160,7 +158,7 @@
                 <div class="field">
                     <span th:text="#{player.sequence.interaction.confidenceDegree.NOT_REALLY_CONFIDENT}"></span>
                     <div class="ui two column grid">
-                        <div class="seven wide column">
+                        <div class="ten wide column">
                             <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-2">
                                 <div class="bar" style="min-width : 0%"></div>
                             </div>
@@ -173,7 +171,7 @@
                 <div class="field">
                     <span th:text="#{player.sequence.interaction.confidenceDegree.NOT_CONFIDENT_AT_ALL}"></span>
                     <div class="ui two column grid">
-                        <div class="seven wide column">
+                        <div class="ten wide column">
                             <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-1">
                                 <div class="bar" style="min-width : 0%"></div>
                             </div>
@@ -185,17 +183,34 @@
                 </div>
             </div>
 
+
             <div class="column">
                 <h4 th:text="#{player.sequence.participation.rate}"></h4>
                 <div id="vega-view-participation"></div>
             </div>
         </div>
+
     </div>
 
     <style>
+        .ui.grid {
+            column-gap: 0.5rem;
+        }
         .ui.grid > .column:not(.row){
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
+        }
+        .ui.grid > .row {
+            margin: 1rem 1rem 0rem 0rem;
+            padding-bottom: 0;
+            padding-top: 0;
+        }
+        .ui[class*="three column"].grid > .column:not(.row), .ui[class*="three column"].grid > .row > .column {
+            min-width: 280px;
+            min-height: 100px;
+            width: 30%;
+            border-style: double;
+            margin-top: 1rem;
         }
     </style>
 
@@ -207,7 +222,7 @@
     <div class="grouped fields">
         <div class="field" style="padding-bottom: 1.5rem;">
             <label th:text="#{player.sequence.feedback.statement}">
-                I think I learned something from this sequence?
+                I think I learned something from this sequence
             </label>
         </div>
         <div class="field">
@@ -347,7 +362,7 @@
             </div>
         </div>
 
-        <div class="ui five column grid">
+        <div class="ui five column grid" style="margin-top: 1rem;">
             <div class="colum">
                 <button id="checkButton"
                         class="ui button"
@@ -375,23 +390,12 @@
     </div>
 </div>
 
-<!-- Tab Results -->
-
-<div class="ui bottom attached tab segment" data-tab="results">
-    <div th:with="components=${'/player/assignment/sequence/components'}">
-        <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
-        <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
-    </div>
-</div>
-
 <script th:inline="javascript">
     $('.menu .item').tab();
     $(document).ready(function () {
         $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
     });
-    $("#results-tab-title, #indicators-tab-title").click(function() {
-        $(window).trigger("resize");
-    });
+    $(window).trigger("resize");
 
     elaastic.renderParticipationRateGraph("#vega-view-participation", [[${participationData}]], {
         phase: [[#{statistics.participationgraph.phase}]]
