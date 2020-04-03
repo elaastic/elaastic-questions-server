@@ -9,7 +9,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(name="teacher-sequence-feedback")
+@Table(name="sequence_feedback_teacher")
 @EntityListeners(AuditingEntityListener::class)
 class TeacherFeedback (
 
