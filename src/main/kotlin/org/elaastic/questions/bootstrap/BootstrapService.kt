@@ -43,6 +43,13 @@ class BootstrapService(
     fun initializeDevUsers() {
         listOf(
                 User(
+                        firstName = "Email",
+                        lastName = "Tests",
+                        username = "email",
+                        plainTextPassword = "1234",
+                        email = "elaastic.tests.mdl1920@gmail.com"
+                ).addRole(roleService.roleTeacher()),
+                User(
                         firstName = "Franck",
                         lastName = "Sil",
                         username = "fsil",

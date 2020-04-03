@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
@@ -172,6 +173,7 @@ class SequenceService(
 
         sequence.let {
             it.state = State.afterStop
+            it.dateStopped = Date()
             sequenceRepository.save(it)
             return it
         }
@@ -281,4 +283,9 @@ class SequenceService(
         }
     }
 
+    fun findAll() =
+            sequenceRepository.findAll()
+
+    fun save(sequence: Sequence) =
+            sequenceRepository.save(sequence)
 }

@@ -67,8 +67,12 @@ class Sequence(
         @field:Enumerated(EnumType.STRING)
         var state: State = State.beforeStart,
 
-        var resultsArePublished: Boolean = false
+        var resultsArePublished: Boolean = false,
 
+        var feedbackReminderMailSent: Boolean = false,
+
+        @field:Temporal(TemporalType.TIMESTAMP)
+        var dateStopped: Date? = null
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Sequence> {
 
