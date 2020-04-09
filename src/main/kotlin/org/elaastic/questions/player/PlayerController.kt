@@ -192,6 +192,10 @@ class PlayerController(
             feedbackService.getFeedback(user, sequence).let {
                 model.addAttribute("sequenceFeedback", it)
             }
+
+            val learnerFeedbackDegree: Array<LearnerFeedbackDegree> = LearnerFeedbackDegree.values()
+            model.addAttribute("learnerFeedbackDegree", learnerFeedbackDegree)
+
         }
 
         return "/player/assignment/sequence/play"
