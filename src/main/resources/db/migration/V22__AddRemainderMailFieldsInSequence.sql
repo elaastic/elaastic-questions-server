@@ -17,4 +17,4 @@
 #
 
 ALTER TABLE sequence ADD feedback_reminder_mail_sent boolean DEFAULT true;
-ALTER TABLE sequence ADD date_stopped datetime;
+ALTER TABLE sequence ADD date_results_published datetime;

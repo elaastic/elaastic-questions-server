@@ -19,9 +19,13 @@
 package org.elaastic.questions.email
 
 import org.elaastic.questions.assignment.*
+import org.elaastic.questions.assignment.choice.ChoiceItem
+import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.sequence.Sequence as ElaasticSequence
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.StatementService
+import org.elaastic.questions.assignment.sequence.interaction.feedback.FeedbackService
+import org.elaastic.questions.assignment.sequence.interaction.feedback.TeacherFeedback
 import org.elaastic.questions.bootstrap.BootstrapService
 import org.elaastic.questions.directory.*
 import org.elaastic.questions.test.directive.tWhen
@@ -48,6 +52,7 @@ internal class TeacherFeedbackMailServiceIntegrationTest(
         @Autowired val statementService: StatementService,
         @Autowired val userService: UserService,
         @Autowired val teacherFeedbackMailService: TeacherFeedbackMailService,
+        @Autowired val feedbackService: FeedbackService,
         @Autowired val roleService: RoleService,
         @Autowired val entityManager: EntityManager,
         @Autowired val bootstrapService: BootstrapService
@@ -87,14 +92,16 @@ internal class TeacherFeedbackMailServiceIntegrationTest(
         sequence1 = ElaasticSequence(
                 alPacino,
                 statementService.save(Statement(alPacino, "A",
-                        "A?", QuestionType.ExclusiveChoice)),
+                        "A?", QuestionType.ExclusiveChoice,
+                        ExclusiveChoiceSpecification(2, ChoiceItem(1, 100.0f)))),
                 assignmentService.save(Assignment("A", alPacino))
         ).let(sequenceService::save)
 
         sequence2 = ElaasticSequence(
                 claraLuciani,
                 statementService.save(Statement(claraLuciani, "B",
-                        "B?", QuestionType.ExclusiveChoice)),
+                        "B?", QuestionType.ExclusiveChoice,
+                        ExclusiveChoiceSpecification(2, ChoiceItem(1, 100.0f)))),
                 assignmentService.save(Assignment("B", claraLuciani))
         ).let(sequenceService::save)
     }
@@ -112,7 +119,8 @@ internal class TeacherFeedbackMailServiceIntegrationTest(
             sequenceService.start(alPacino, sequence1, ExecutionContext.FaceToFace, false, 2)
             sequenceService.start(claraLuciani, sequence2, ExecutionContext.FaceToFace, false, 2)
             sequenceService.stop(alPacino, sequence1)
-            sequence1.dateStopped = Date(Date().time - 6 * 60 * 1000)
+            sequenceService.publishResults(alPacino, sequence1)
+            sequence1.dateResultsPublished = Date(Date().time - 6 * 60 * 1000)
             sequenceService.save(sequence1)
         }
         tWhen("triggering email sending to give a feedback on a sequence") {
@@ -143,7 +151,9 @@ internal class TeacherFeedbackMailServiceIntegrationTest(
             sequenceService.start(claraLuciani, sequence2, ExecutionContext.FaceToFace, false, 2)
             sequenceService.stop(alPacino, sequence1)
             sequenceService.stop(claraLuciani, sequence2)
-            sequence1.dateStopped = Date(Date().time - 6 * 60 * 1000)
+            sequenceService.publishResults(alPacino, sequence1)
+            sequenceService.publishResults(claraLuciani, sequence2)
+            sequence1.dateResultsPublished = Date(Date().time - 6 * 60 * 1000)
             sequenceService.save(sequence1)
         }
         tWhen("triggering email sending to give a feedback on a sequence") {
@@ -160,4 +170,44 @@ internal class TeacherFeedbackMailServiceIntegrationTest(
         }
     }
 
+    @Test
+    fun `test email sending 3`() {
+        smtpServer.purgeEmailFromAllMailboxes()
+
+        tGiven("""
+                2 teachers and 2 sequences both stopped 6 minutes ago.
+                One of the two teachers have not submitted feedback.
+            """.trimIndent()
+        ) {
+            sequenceService.start(alPacino, sequence1, ExecutionContext.FaceToFace, false, 2)
+            sequenceService.start(claraLuciani, sequence2, ExecutionContext.FaceToFace, false, 2)
+            sequenceService.stop(alPacino, sequence1)
+            sequenceService.stop(claraLuciani, sequence2)
+            sequenceService.publishResults(alPacino, sequence1)
+            sequenceService.publishResults(claraLuciani, sequence2)
+            sequence1.dateResultsPublished = Date(Date().time - 6 * 60 * 1000)
+            sequence2.dateResultsPublished = Date(Date().time - 6 * 60 * 1000)
+            sequenceService.save(sequence1)
+            sequence2 = sequenceService.save(sequence2)
+            TeacherFeedback(
+                    claraLuciani,
+                    sequence2,
+                    3,
+                    3,
+                    "Test"
+            ).let(feedbackService::saveTeacherFeedback)
+        }
+        tWhen("triggering email sending to give a feedback on a sequence") {
+            teacherFeedbackMailService.sendFeedbackReminderEmails()
+        }
+        tThen("1 email has been sent") {
+            assertThat(smtpServer.receivedMessages.size, equalTo(1))
+            smtpServer.receivedMessages.forEachIndexed { index, message ->
+                logger.info("""
+                    Content of  message $index:
+                    ${message.inputStream.bufferedReader().use(BufferedReader::readText)}
+                """.trimIndent())
+            }
+        }
+    }
 }

@@ -2,7 +2,7 @@ package org.elaastic.questions.player.components.feedback
 
 import org.elaastic.questions.assignment.sequence.interaction.feedback.TeacherConfidenceDegree
 
-data class TeacherFeebackModel(
+data class TeacherFeedbackModel(
         val userId: Long,
         val sequenceId: Long,
         val hasSubmitedFeedback: Boolean,

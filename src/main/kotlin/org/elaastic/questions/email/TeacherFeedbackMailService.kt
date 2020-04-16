@@ -34,6 +34,7 @@ import javax.transaction.Transactional
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.feedback.FeedbackService
 
 @Service
 class TeacherFeedbackMailService(
@@ -42,6 +43,7 @@ class TeacherFeedbackMailService(
         @Autowired val mailSender: JavaMailSender,
         @Autowired val templateEngine: TemplateEngine,
         @Autowired val sequenceService: SequenceService,
+        @Autowired val feedbackService: FeedbackService,
 
         @Value("\${elaastic.questions.url}")
         val elaasticQuestionUrl: String,
@@ -103,10 +105,10 @@ class TeacherFeedbackMailService(
     fun findAllNotificationRecipients(): List<Sequence> =
             sequenceService.findAll().filter {
                 it.owner.hasEmail()
-                        && it.isStopped()
+                        && it.resultsArePublished
                         && !it.feedbackReminderMailSent
-                        // TODO only take the ones with no feedback
-                        && it.dateStopped?.before(Date(Date().time - 5 * 60 * 1000)) ?: false
+                        && feedbackService.getTeacherFeedback(it.owner, it) == null
+                        && it.dateResultsPublished?.before(Date(Date().time - 5 * 60 * 1000)) ?: false
             }
 
     fun updateEmailSentStatusForAllNotifications(sequences: List<Sequence>) =

@@ -7,8 +7,8 @@ import java.lang.IllegalStateException
 
 object TeacherFeedbackModelFactory {
 
-    fun build(user: User, sequence: Sequence, teacherFeedback: TeacherFeedback?): TeacherFeebackModel =
-            TeacherFeebackModel(
+    fun build(user: User, sequence: Sequence, teacherFeedback: TeacherFeedback?): TeacherFeedbackModel =
+            TeacherFeedbackModel(
                     userId = user.id?: throw IllegalStateException("This sequence has no ID"),
                     sequenceId = sequence.id ?: throw IllegalStateException("This sequence has no ID"),
                     hasSubmitedFeedback = teacherFeedback != null,

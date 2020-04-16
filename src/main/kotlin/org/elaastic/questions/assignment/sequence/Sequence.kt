@@ -72,7 +72,7 @@ class Sequence(
         var feedbackReminderMailSent: Boolean = false,
 
         @field:Temporal(TemporalType.TIMESTAMP)
-        var dateStopped: Date? = null
+        var dateResultsPublished: Date? = null
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Sequence> {
 

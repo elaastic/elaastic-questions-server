@@ -19,11 +19,10 @@ package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.feedback.TeacherFeedback
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
-import org.elaastic.questions.player.components.feedback.TeacherFeebackModel
+import org.elaastic.questions.player.components.feedback.TeacherFeedbackModel
 import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
@@ -59,7 +58,7 @@ class TeacherPlayerModel(
         statement: StatementInfo,
         showResults: Boolean,
         resultsModel: ResultsModel?,
-        val sequenceFeedbackModel: TeacherFeebackModel?
+        val sequenceFeedbackModel: TeacherFeedbackModel?
 ) : PlayerModel(
         assignment = assignment,
         sequence = sequence,

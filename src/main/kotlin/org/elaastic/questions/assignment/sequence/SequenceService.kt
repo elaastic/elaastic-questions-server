@@ -25,7 +25,6 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
@@ -37,7 +36,6 @@ import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.math.BigDecimal
 import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
@@ -173,7 +171,6 @@ class SequenceService(
 
         sequence.let {
             it.state = State.afterStop
-            it.dateStopped = Date()
             sequenceRepository.save(it)
             return it
         }
@@ -213,6 +210,7 @@ class SequenceService(
 
             resultsService.updateResults(user, it)
             it.resultsArePublished = true
+            it.dateResultsPublished = Date()
 
             // Set Read active and close all other interactions
             it.interactions.forEach { type, interaction ->
