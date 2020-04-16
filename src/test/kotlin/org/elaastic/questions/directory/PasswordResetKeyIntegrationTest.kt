@@ -38,7 +38,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class PasswordResetKeyIntegrationTest(
         @Autowired val testingService: TestingService,

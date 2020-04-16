@@ -33,7 +33,7 @@ import org.hamcrest.CoreMatchers.*
 import java.math.BigDecimal
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class PeerGradingRepositoryIntegrationTest(
         @Autowired val peerGradingRepository: PeerGradingRepository,

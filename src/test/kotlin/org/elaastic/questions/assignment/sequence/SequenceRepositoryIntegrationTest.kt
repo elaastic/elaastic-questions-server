@@ -33,7 +33,7 @@ import javax.persistence.EntityManager
 
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class SequenceRepositoryIntegrationTest(
         @Autowired val sequenceRepository: SequenceRepository,
