@@ -36,7 +36,7 @@ import org.hamcrest.CoreMatchers.*
 import java.math.BigDecimal
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class FeedbackRepositoryIntegrationTest(
         @Autowired val feedbackRepository: FeedbackRepository,

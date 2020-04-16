@@ -28,7 +28,7 @@ import javax.transaction.Transactional
 
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableCaching
 @Transactional
 internal class RoleServiceIntegrationTest(

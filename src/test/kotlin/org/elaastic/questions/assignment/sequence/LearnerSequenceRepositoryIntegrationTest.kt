@@ -32,7 +32,7 @@ import javax.persistence.EntityManager
 
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LearnerSequenceRepositoryIntegrationTest(
         @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
