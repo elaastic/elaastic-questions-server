@@ -35,6 +35,10 @@ class FeedbackService(
     fun getFeedback(learner: User, sequence: Sequence): Feedback? =
             feedbackRepository.findByLearnerAndSequence(learner, sequence)
 
+
+    fun getSequenceFeedbacks(sequence: Sequence): List<Feedback>? =
+            feedbackRepository.findAllBySequence(sequence)
+
     fun save(feedback: Feedback): Feedback {
         require(
                 learnerAssignmentService.isRegistered(
@@ -45,4 +49,11 @@ class FeedbackService(
         feedbackRepository.save(feedback)
         return feedback
     }
+
+    //TODO faire la moyenne des ranking
+    fun getAverage(): Int?{
+
+        return null
+    }
+
 }

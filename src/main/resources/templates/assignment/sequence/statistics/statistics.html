@@ -26,10 +26,32 @@
     <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
     <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
     <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var feedbackList = JSON.parse([[${feedbackJson}]]);
+        /*]]>*/
+    </script>
 </head>
 
 <body>
-    <h1 style="line-height: 50%;"> Statistiques - <span th:text="${assignment.title}"></span></h1>
+    <template id="feedbackTemplate">
+        <div class="ui info message explanation">
+            <strong>Rating: </strong>
+            <span class="student-rating"></span>
+            <br>
+            <strong>Explanation: </strong>
+            <span class="student-explanation"></span>
+        </div>
+    </template>
+
+    <h1 style="line-height: 50%;">
+        <span th:text="#{statistics.title}">
+            Statistiques
+        </span>
+            -
+        <span th:text="${assignment.title}"></span>
+    </h1>
     <h2 style="font-size: 1.5em;" th:text="${statementData.title}"></h2>
 
     <div class="ui top attached tabular menu">
@@ -43,7 +65,142 @@
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="feedback">
-        <a href="https://github.com/elaastic/elaastic-questions-server/issues/15">Content Incoming #15</a>
+        <div class="grouped fields">
+            <div class="field" style="padding-bottom: 1.5rem;">
+                <label th:text="#{player.sequence.feedback.statement}">
+                    I think I learned something from this sequence?
+                </label>
+            </div>
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="column">
+                        <div class="ui checkbox ">
+                            <input class="rating" type="checkbox" data-rating="5" onchange="applyFeedbackFilter()">
+                            <label th:text="#{player.sequence.feedback.highdegree}">
+                                Totally
+                            </label>
+                        </div>
+                    </div>
+                    <div class="four wide column">
+                        <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-rating-5">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-feedback-by-rating-5"></label>
+                    </div>
+                    <div class="five wide column">
+                        <label th:text="#{player.sequence.feedback.feedbacksnumber}">
+                            Total number of feedbacks  :
+                        </label>
+                        <label id="show-nb-feedback"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="column">
+                        <div class="ui checkbox">
+                            <input class="rating" type="checkbox" data-rating="4" onchange="applyFeedbackFilter()">
+                            <label th:text="#{player.sequence.feedback.aboveaveragedegree}">
+                                A bit
+                            </label>
+                        </div>
+                    </div>
+                    <div class="four wide column">
+                        <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-4">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-feedback-by-rating-4"></label>
+                    </div>
+                    <div class="five wide column">
+                        <label th:text="#{player.sequence.feedback.averagerating}">
+                            Average value of feedbacks ratings  :
+                        </label>
+                        <label id="show-average-rating"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="column">
+                        <div class="ui checkbox">
+                            <input class="rating" type="checkbox" data-rating="3" onchange="applyFeedbackFilter()">
+                            <label th:text="#{player.sequence.feedback.averagedegree}">
+                                Average
+                            </label>
+                        </div>
+                    </div>
+                    <div class="four wide column">
+                        <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-3">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-feedback-by-rating-3"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="column">
+                        <div class="ui checkbox">
+                            <input class="rating" type="checkbox" data-rating="2" onchange="applyFeedbackFilter()">
+                            <label th:text="#{player.sequence.feedback.underaveragedegree}">
+                                Not really
+                            </label>
+                        </div>
+                    </div>
+                    <div class="four wide column">
+                        <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-2">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-feedback-by-rating-2"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui five column grid">
+                    <div class="column">
+                        <div class="ui checkbox">
+                            <input class="rating" type="checkbox" data-rating="1" onchange="applyFeedbackFilter()">
+                            <label th:text="#{player.sequence.feedback.lowdegree}">
+                                Not at all
+                            </label>
+                        </div>
+                    </div>
+                    <div class="four wide column">
+                        <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-1">
+                            <div class="bar" style="min-width : 0%"></div>
+                        </div>
+                    </div>
+                    <div class="two wide column">
+                        <label id="show-nb-feedback-by-rating-1"></label>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="ui dividing header">Feedbacks</div>
+
+        <div id="feedbacks">
+            <!-- List of feedbacks filled by JS -->
+        </div>
+
+
+
     </div>
 
     <div class="ui bottom attached tab segment" data-tab="results">
@@ -61,6 +218,78 @@
         $("#results-tab-title").click(function() {
             $(window).trigger("resize");
         });
+
+        let feedbackTemplate = document.getElementById("feedbackTemplate")
+        let feedbacksDiv = document.getElementById("feedbacks")
+        displayFeedbackList(feedbackList);
+
+        function applyFeedbackFilter() {
+            let feedbacks;
+            let checkedCheckboxes = Array.prototype.map.call(
+                document.querySelectorAll('.rating:checked'),
+                checkbox => parseInt(checkbox.dataset.rating)
+            )
+
+            if (checkedCheckboxes.length === 0) {
+                feedbacks = feedbackList
+
+            } else {
+                feedbacks = feedbackList.filter(feedback => checkedCheckboxes.includes(feedback.rating))
+            }
+
+            removeFeedbackList()
+            displayFeedbackList(feedbacks)
+        }
+
+        function removeFeedbackList() {
+            while (feedbacksDiv.childNodes.length != 0) {
+                feedbacksDiv.removeChild(feedbacksDiv.childNodes[0])
+            }
+        }
+
+        function displayFeedbackList(feedbacks) {
+            let ratings = [
+                undefined,
+                [[#{player.sequence.feedback.lowdegree}]],
+                [[#{player.sequence.feedback.underaveragedegree}]],
+                [[#{player.sequence.feedback.averagedegree}]],
+                [[#{player.sequence.feedback.aboveaveragedegree}]],
+                [[#{player.sequence.feedback.highdegree}]]
+            ]
+
+            feedbacks.forEach( feedback => {
+                let clone = feedbackTemplate.content.children[0].cloneNode(true)
+                clone.querySelector(".student-rating").innerHTML = ratings[feedback.rating]
+                clone.querySelector(".student-explanation").innerHTML = feedback.explanation
+                feedbacksDiv.appendChild(clone)
+            })
+        }
+
+        let nbFeedbackByRating = []
+        let nbFeedbacks = feedbackList.length
+        let averageRating = 0;
+        for (let i = 1 ; i <= 5 ; i++) {
+            nbFeedbackByRating[i] = feedbackList.filter(feedback => feedback.rating == i).length
+        }
+
+        for (let i = 1; i <= 5; i++) {
+            $('#progress-rating-' + i).progress({
+                percent : (100 * nbFeedbackByRating[i])/nbFeedbacks
+            });
+            $('#show-nb-feedback-by-rating-' + i).text(nbFeedbackByRating[i]);
+        }
+
+
+        $('#show-nb-feedback').text(nbFeedbacks);
+
+        if (nbFeedbacks != 0) {
+            for (let i = 1; i <= 5; i++) {
+                averageRating += nbFeedbackByRating[i] * i
+            }
+            averageRating = averageRating / nbFeedbacks
+        }
+
+        $('#show-average-rating').text(Math.round(averageRating));
     </script>
 </body>
 </html>
