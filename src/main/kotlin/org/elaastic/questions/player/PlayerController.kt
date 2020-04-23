@@ -25,6 +25,8 @@ import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.feedback.Feedback
+import org.elaastic.questions.assignment.sequence.interaction.feedback.FeedbackService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
@@ -55,6 +57,7 @@ class PlayerController(
         @Autowired val learnerSequenceService: LearnerSequenceService,
         @Autowired val interactionService: InteractionService,
         @Autowired val responseService: ResponseService,
+        @Autowired val feedbackService: FeedbackService,  // TODO test
         @Autowired val peerGradingService: PeerGradingService,
         @Autowired val messageBuilder: MessageBuilder,
         @Autowired val resultsService: ResultsService
@@ -182,6 +185,9 @@ class PlayerController(
                             }
                     )
             )
+            feedbackService.getFeedback(user, sequence).let {
+                model.addAttribute("sequenceFeedback", it)
+            }
         }
 
         return "/player/assignment/sequence/play"
@@ -353,6 +359,30 @@ class PlayerController(
             if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
                 sequenceService.nextInteractionForLearner(sequence, user)
             }
+        }
+
+        return "redirect:/player/sequence/${id}/play"
+    }
+
+    @PostMapping("/sequence/{id}/submit-feedback")
+    fun submitQuestionFeedback(authentication: Authentication,
+                               model: Model,
+                               @RequestParam("agreement-level") agreementLevel: Int,
+                               @RequestParam("agreement-explanation") agreementExplanation: String,
+                               @PathVariable id: Long): String {
+
+        val user: User = authentication.principal as User
+
+        sequenceService.get(id, true).let { sequence ->
+
+            feedbackService.save(
+                    Feedback(
+                            learner = user,
+                            sequence = sequence,
+                            rating = agreementLevel,
+                            explanation = agreementExplanation
+                    )
+            )
         }
 
         return "redirect:/player/sequence/${id}/play"
