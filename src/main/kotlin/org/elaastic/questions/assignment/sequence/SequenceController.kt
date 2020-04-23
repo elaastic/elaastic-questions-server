@@ -18,15 +18,21 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import com.google.gson.Gson
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.Statement
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
+import org.elaastic.questions.assignment.sequence.interaction.feedback.FeedbackService
 import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.player.PlayerModel
+import org.elaastic.questions.player.PlayerModelFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
@@ -53,7 +59,10 @@ class SequenceController(
         @Autowired val statementService: StatementService,
         @Autowired val fakeExplanationService: FakeExplanationService,
         @Autowired val attachmentService: AttachmentService,
-        @Autowired val messageBuilder: MessageBuilder
+        @Autowired val messageBuilder: MessageBuilder,
+        @Autowired val responseService: ResponseService,
+        @Autowired val resultsService: ResultsService,
+        @Autowired val feedbackService : FeedbackService
 ) {
 
     @GetMapping("{id}/edit")
@@ -86,8 +95,9 @@ class SequenceController(
                    @PathVariable id: Long): String {
 
         val user: User = authentication.principal as User
-
         val sequence = sequenceService.get(user, id)
+        val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
+
 
         model.addAttribute("user", user)
         model.addAttribute("assignment", sequence.assignment)
@@ -100,7 +110,28 @@ class SequenceController(
                 )
         )
 
-        return "/assignment/sequence/statistics"
+        model.addAttribute("feedbackJson",feedbackService.getSequenceFeedbacks(sequence)?.map {
+            FeedbackData(it.rating, it.explanation)
+        }.let {
+            Gson().toJson(it)
+        })
+
+        sequenceService.get(id, true).let { sequence ->
+            model.addAttribute("user", user)
+            val teacher = user == sequence.owner
+            val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
+            model.addAttribute("playerModel", PlayerModelFactory.buildForTeacher(
+                        user = user,
+                        sequence = sequence,
+                        nbRegisteredUsers = nbRegisteredUsers,
+                        sequenceToUserActiveInteraction = sequence.assignment!!.sequences.associate { it to it.activeInteraction },
+                        messageBuilder = messageBuilder,
+                        findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
+                        sequenceStatistics = sequenceService.getStatistics(sequence), userCanRefreshResults = { false }
+            ))
+        }
+
+        return "/assignment/sequence/statistics/statistics"
     }
 
 
@@ -359,4 +390,6 @@ class SequenceController(
             return statement
         }
     }
+
+    data class FeedbackData(val rating: Int, val explanation: String)
 }
