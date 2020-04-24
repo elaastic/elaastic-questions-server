@@ -102,6 +102,12 @@
       </div>
     </div>
 
+    <div th:with="publishResults=${playerModel.sequence.state.name() == 'afterStop' and playerModel.commandModel.actionPublishResults.name() == 'HIDDEN'}">
+      <div th:if="${playerModel.userRole.name() == 'Teacher' and publishResults}" th:remove="tag">
+          <div th:replace="|${components}/_teacher-sequence-feedback-form.html| :: question-feedback(${playerModel.sequenceFeedbackModel})"></div>
+      </div>
+    </div>
+
     <th:block th:if="${playerModel.userRole.name() == 'Learner'}">
       <th:block th:replace="|${components}/_auto-reload.html| :: auto-reload(${playerModel.sequence.id})"></th:block>
     </th:block>
