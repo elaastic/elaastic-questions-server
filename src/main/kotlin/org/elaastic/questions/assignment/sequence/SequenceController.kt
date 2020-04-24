@@ -32,6 +32,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.player.PlayerModel
 import org.elaastic.questions.player.PlayerModelFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -97,17 +98,16 @@ class SequenceController(
         val user: User = authentication.principal as User
         val sequence = sequenceService.get(user, id, true)
         val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
-
         model.addAttribute("user", user)
         model.addAttribute("assignment", sequence.assignment)
         model.addAttribute("sequenceData", SequenceData(sequence))
         model.addAttribute("typeExecution", sequence.typeOfExecution())
         model.addAttribute("responseToEvaluateCount",
-                    try {
-                        sequence.getEvaluationSpecification().responseToEvaluateCount
-                    } catch (e: IllegalStateException) { // if the sequence was not played
-                        0
-                    })
+                try {
+                    sequence.getEvaluationSpecification().responseToEvaluateCount
+                } catch (e: IllegalStateException) { // if the sequence was not played
+                    0
+                })
 
         model.addAttribute(
                 "statementData",
@@ -148,19 +148,20 @@ class SequenceController(
             Gson().toJson(it)
         })
 
+        val playerModel = PlayerModelFactory.buildForTeacher(
+                user = user,
+                sequence = sequence,
+                nbRegisteredUsers = nbRegisteredUsers,
+                sequenceToUserActiveInteraction = sequence.assignment!!.sequences.associate { it to it.activeInteraction },
+                messageBuilder = messageBuilder,
+                findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
+                sequenceStatistics = sequenceService.getStatistics(sequence), userCanRefreshResults = { false },
+                sequenceFeedback = { feedbackService.getTeacherFeedback(user, sequence) }
+        )
         sequenceService.get(id, true).let { sequence ->
             model.addAttribute("user", user)
             val teacher = user == sequence.owner
-            model.addAttribute("playerModel", PlayerModelFactory.buildForTeacher(
-                        user = user,
-                        sequence = sequence,
-                        nbRegisteredUsers = nbRegisteredUsers,
-                        sequenceToUserActiveInteraction = sequence.assignment!!.sequences.associate { it to it.activeInteraction },
-                        messageBuilder = messageBuilder,
-                        findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
-                        sequenceStatistics = sequenceService.getStatistics(sequence), userCanRefreshResults = { false },
-                        sequenceFeedback = { feedbackService.getTeacherFeedback(user, sequence) }
-            ))
+            model.addAttribute("playerModel", playerModel)
         }
 
         model.addAttribute("participationData",
@@ -179,6 +180,14 @@ class SequenceController(
         model.addAttribute("meanResponseTimes",
                 listOf(responseService.getMeanResponseTimeForPhase(sequence, 1),
                         responseService.getMeanResponseTimeForPhase(sequence, 2)))
+
+        model.addAttribute("resultsModel",playerModel.resultsModel)
+
+        var manyItems = false
+        if (sequence.statement.questionType != QuestionType.OpenEnded)
+            if (sequence.statement.choiceSpecification!!.nbCandidateItem>6) manyItems = true
+
+        model.addAttribute("manyItems", manyItems)
 
         return "/assignment/sequence/statistics/statistics"
     }
@@ -443,8 +452,9 @@ class SequenceController(
     data class FeedbackData(val rating: Int, val explanation: String)
 
     data class ParticipationData(
-        val nbRegisteredUsers: Int,
-        val nbParticipentsPhase1: Int,
-        val nbParticipentsPhase2: Int
+            val nbRegisteredUsers: Int,
+            val nbParticipentsPhase1: Int,
+            val nbParticipentsPhase2: Int
     )
 }
+
