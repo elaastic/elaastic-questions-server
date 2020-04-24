@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body}, pageSpecificMenu=~{::#pageSpecificMenu}, extraHeader=~{::head/script})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::#sequence-statistics}, pageSpecificMenu=~{::#pageSpecificMenu}, extraHeader=~{::head/script})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
@@ -36,473 +36,506 @@
 </head>
 
 <body>
-<template id="feedbackTemplate">
-    <div class="ui info message explanation">
-        <strong>Rating: </strong>
-        <span class="student-rating"></span>
-        <br>
-        <strong>Explanation: </strong>
-        <span class="student-explanation"></span>
-    </div>
-</template>
 
-<h1 style="line-height: 50%;">
-        <span th:text="#{statistics.title}">
-            Statistiques
-        </span>
-    -
-    <span th:text="${assignment.title}"></span>
-</h1>
-<h2 style="font-size: 1.5em;" th:text="${statementData.title}"></h2>
+    <div id="pageSpecificMenu">
+        <a th:attr="data-tooltip=#{common.previous}"
+           class="item"
+           onclick="history.go(-1)"
+           data-position="right center"
+           data-inverted="">
+            <i class="yellow long arrow alternate left icon"></i>
+        </a>
 
-<div class="ui top attached tabular menu">
-    <div id="indicators-tab-title" class="item active" data-tab="indicators" th:text="#{statistics.indicators.tabname}">Indicators</div>
-    <div class="item" data-tab="feedback" th:text="#{statistics.feedbacks.tabname}">Feedbacks</div>
-    <div id="results-tab-title" class="item" data-tab="results" th:text="#{statistics.results.tabname}">Results</div>
-</div>
+        <a th:href="@{/assignment/{id}(id=${assignment.id})}"
+           class="item"
+           th:attr="data-tooltip=#{assignment.back.to.assignment}"
+           data-position="right center"
+           data-inverted="">
+            <i class="yellow edit icon"></i>
+        </a>
 
-<!-- Tab Indicators -->
-
-<div class="ui tab bottom attached active segment" data-tab="indicators">
-
-    <div class="grouped fields" style="margin-top: 1rem;" >
-        <div class="field ui four column grid">
-            <div class="six wide column">
-                <h5 th:text="#{player.sequence.type}"></h5>
-            </div>
-
-            <div class="column">
-                <div th:if="${statementData.hasChoices}" th:remove>
-                    <span th:text="#{player.sequence.type.choice}"></span>
-                </div>
-
-                <div th:unless="${statementData.hasChoices}" th:remove>
-                    <span th:text="#{player.sequence.type.open.ended}"></span>
-                </div>
-            </div>
-
-            <div class="three wide column">
-                <h5 th:text="#{player.sequence.mean.time}"></h5>
-            </div>
-
-            <div class="two wide column">
-                [[${meanResponseTimes[0]}]] sec
-            </div>
-
-        </div>
-
-        <div class="field ui four column grid">
-            <div class="six wide column">
-                <h5 th:text="#{player.sequence.type.execution}"></h5>
-            </div>
-
-            <div class="column">
-                <div th:if="${typeExecution == 'faceToFace'}" th:remove>
-                    <span th:text="#{sequence.interaction.executionContext.faceToFace}"></span>
-                </div>
-                <div th:if="${typeExecution == 'blended'}" th:remove>
-                    <span th:text="#{sequence.interaction.executionContext.blended}"></span>
-                </div>
-                <div th:if="${typeExecution == 'distance'}" th:remove>
-                    <span th:text="#{sequence.interaction.executionContext.distance}"></span>
-                </div>
-            </div>
-            <div class="ui two column grid"
-                 th:if="${statementData.hasChoices and standardDeviation != -1.0}" th:remove>
-                <div class="thirteen wide column">
-                    <h5 th:text="#{player.sequence.standard.deviation}"></h5>
-                </div>
-                <div class="two wide column">
-                    <span id="standard-deviation"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="field ui four column grid">
-            <div class="six wide column">
-                <h5 th:text="#{player.sequence.response.to.evaluate.count}"></h5>
-            </div>
-            <div class="column">
-                <span th:text="${responseToEvaluateCount}"></span>
-            </div>
-        </div>
-
-        <div class="field ui two column grid" style="padding: 1.5rem;">
-
-            <div class="column">
-                <h4 class="field" style="margin-bottom: 1.5rem;" th:text="#{player.sequence.statistics.confidenceDegree}"></h4>
-                <div class="field">
-                    <span th:text="#{player.sequence.interaction.confidenceDegree.TOTALLY_CONFIDENT}"></span>
-                    <div class="ui two column grid">
-                        <div class="seven wide column">
-                            <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-4">
-                                <div class="bar" style="min-width : 0%"></div>
-                            </div>
-                        </div>
-                        <div class="two wide column">
-                            <label id="show-nb-confidence-4"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <span th:text="#{player.sequence.interaction.confidenceDegree.CONFIDENT}"></span>
-                    <div class="ui two column grid">
-                        <div class="seven wide column">
-                            <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-3">
-                                <div class="bar" style="min-width : 0%"></div>
-                            </div>
-                        </div>
-                        <div class="two wide column">
-                            <label id="show-nb-confidence-3"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <span th:text="#{player.sequence.interaction.confidenceDegree.NOT_REALLY_CONFIDENT}"></span>
-                    <div class="ui two column grid">
-                        <div class="seven wide column">
-                            <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-2">
-                                <div class="bar" style="min-width : 0%"></div>
-                            </div>
-                        </div>
-                        <div class="two wide column">
-                            <label id="show-nb-confidence-2"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <span th:text="#{player.sequence.interaction.confidenceDegree.NOT_CONFIDENT_AT_ALL}"></span>
-                    <div class="ui two column grid">
-                        <div class="seven wide column">
-                            <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-1">
-                                <div class="bar" style="min-width : 0%"></div>
-                            </div>
-                        </div>
-                        <div class="two wide column">
-                            <label id="show-nb-confidence-1"></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column">
-                <h4 th:text="#{player.sequence.participation.rate}"></h4>
-                <div id="vega-view-participation"></div>
-            </div>
-        </div>
+        <a th:href="@{/player/sequence/{id}/play(id=${sequenceData.id})}"
+           class="item"
+           th:attr="data-tooltip=#{sequence.play}"
+           data-position="right center"
+           data-inverted="">
+            <i class="yellow play icon"></i>
+        </a>
     </div>
 
-    <style>
-        .ui.grid > .column:not(.row){
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-        }
-    </style>
+    <div id="sequence-statistics">
+        <template id="feedbackTemplate">
+            <div class="ui info message explanation">
+                <strong>Rating: </strong>
+                <span class="student-rating"></span>
+                <br>
+                <strong>Explanation: </strong>
+                <span class="student-explanation"></span>
+            </div>
+        </template>
 
-</div>
+        <h1>
+            <span th:text="#{statistics.title}">
+                Statistiques </span> - <span th:text="${assignment.title}"></span>
+        </h1>
 
-<!-- Tab Feedback -->
-
-<div class="ui bottom attached tab segment" data-tab="feedback">
-    <div class="grouped fields">
-        <div class="field" style="padding-bottom: 1.5rem;">
-            <label th:text="#{player.sequence.feedback.statement}">
-                I think I learned something from this sequence?
-            </label>
+        <div th:with="components=${'/player/assignment/sequence/components'}">
+            <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
         </div>
-        <div class="field">
-            <div class="ui five column grid">
-                <div class="column">
-                    <div class="ui checkbox ">
-                        <input class="rating"
-                               type="checkbox"
-                               data-rating="5"
-                               checked="true"
-                               onchange="applyFeedbackFilter()">
-                        <label th:text="#{player.sequence.feedbackDegree.HIGH}">
-                            Totally
-                        </label>
+
+        <div class="ui top attached tabular menu">
+            <div id="indicators-tab-title" class="item active" data-tab="indicators"
+                 th:text="#{statistics.indicators.tabname}">Indicators</div>
+            <div class="item" data-tab="feedback" th:text="#{statistics.feedbacks.tabname}">Feedbacks</div>
+        </div>
+
+        <!-- Tab Indicators -->
+
+        <div class="ui tab bottom attached active segment" data-tab="indicators">
+
+            <div class="ui three column grid " style="padding:1rem;">
+                <div class="column" style="border-style:double;">
+                    <div class="ui two column two row grid">
+                        <div class="row">
+                            <div class="ten wide column">
+                                <h5 th:text="#{player.sequence.type.execution}"></h5>
+                            </div>
+                            <div class="six wide olumn">
+                                <div th:if="${typeExecution == 'faceToFace'}" th:remove>
+                                    <span th:text="#{sequence.interaction.executionContext.faceToFace}"></span>
+                                </div>
+                                <div th:if="${typeExecution == 'blended'}" th:remove>
+                                    <span th:text="#{sequence.interaction.executionContext.blended}"></span>
+                                </div>
+                                <div th:if="${typeExecution == 'distance'}" th:remove>
+                                    <span th:text="#{sequence.interaction.executionContext.distance}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="twelve wide column" style="padding-bottom:1rem;">
+                                <h5 th:text="#{player.sequence.response.to.evaluate.count}"></h5>
+                            </div>
+                            <div class="two wide column">
+                                <span th:text="${responseToEvaluateCount}"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="four wide column">
-                    <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-rating-5">
-                        <div class="bar" style="min-width : 0%"></div>
+                <div class="column" style="border-style:double;">
+                    <div class="ui two row two column grid">
+                        <div class="row" th:if="${statementData.hasChoices and standardDeviation != -1.0}" th:remove>
+                            <div class="eleven wide column">
+                                <h5 th:text="#{player.sequence.standard.deviation}"></h5>
+                            </div>
+                            <div class="two wide column">
+                                <label id="standard-deviation"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="eleven wide column">
+                                <h5 th:text="#{player.sequence.mean.time}"></h5>
+                            </div>
+                            <div class="five wide column">
+                                <label>[[${meanResponseTimes[0]}]] sec</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="two wide column">
-                    <label id="show-nb-feedback-by-rating-5"></label>
+            </div>
+
+            <div class="grouped fields" style="padding:1rem;" >
+
+                <div class="field ui three column grid">
+                    <div class="column" style="padding-right: 4rem;"
+                         th:if="${resultsModel.hasChoices} and ${resultsModel.hasAnyResult}">
+                        <div>
+                            <h4 class="field" style="margin-bottom: 1.5rem;" th:text="#{questions.results}"></h4>
+                            <div th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${resultsModel.responseDistributionChartModel})"></div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <h4 class="field" style="margin-bottom: 1.5rem;" th:text="#{player.sequence.statistics.confidenceDegree}"></h4>
+                        <div class="field">
+                            <span th:text="#{player.sequence.interaction.confidenceDegree.TOTALLY_CONFIDENT}"></span>
+                            <div class="ui two column grid">
+                                <div class="ten wide column">
+                                    <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-4">
+                                        <div class="bar" style="min-width : 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="two wide column">
+                                    <label id="show-nb-confidence-4"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <span th:text="#{player.sequence.interaction.confidenceDegree.CONFIDENT}"></span>
+                            <div class="ui two column grid">
+                                <div class="ten wide column">
+                                    <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-3">
+                                        <div class="bar" style="min-width : 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="two wide column">
+                                    <label id="show-nb-confidence-3"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <span th:text="#{player.sequence.interaction.confidenceDegree.NOT_REALLY_CONFIDENT}"></span>
+                            <div class="ui two column grid">
+                                <div class="ten wide column">
+                                    <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-2">
+                                        <div class="bar" style="min-width : 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="two wide column">
+                                    <label id="show-nb-confidence-2"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <span th:text="#{player.sequence.interaction.confidenceDegree.NOT_CONFIDENT_AT_ALL}"></span>
+                            <div class="ui two column grid">
+                                <div class="ten wide column">
+                                    <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-confidence-1">
+                                        <div class="bar" style="min-width : 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="two wide column">
+                                    <label id="show-nb-confidence-1"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="column">
+                        <h4 th:text="#{player.sequence.participation.rate}"></h4>
+                        <div id="vega-view-participation"></div>
+                    </div>
                 </div>
-                <div class="five wide column">
-                    <label th:text="#{player.sequence.feedback.feedbacksnumber}">
-                        Total number of feedbacks  :
+
+            </div>
+
+            <style>
+                .ui.grid {
+                    column-gap: 0.5rem;
+                }
+                .ui.grid > .column:not(.row){
+                    padding-top: 0.5rem;
+                    padding-bottom: 0.5rem;
+                }
+                .ui.grid > .row {
+                    margin: 1rem 1rem 0rem 0rem;
+                    padding-bottom: 0;
+                    padding-top: 0;
+                }
+                .ui[class*="three column"].grid > .column:not(.row), .ui[class*="three column"].grid > .row > .column {
+                    min-width: 280px;
+                    min-height: 100px;
+                    width: 30%;
+                    border-style: double;
+                    margin-top: 1rem;
+                }
+            </style>
+
+        </div>
+
+        <!-- Tab Feedback -->
+
+        <div class="ui bottom attached tab segment" data-tab="feedback">
+            <div class="grouped fields">
+                <div class="field" style="padding-bottom: 1.5rem;">
+                    <label th:text="#{player.sequence.feedback.statement}">
+                        I think I learned something from this sequence
                     </label>
-                    <label id="show-nb-feedback"></label>
                 </div>
+                <div class="field">
+                    <div class="ui five column grid">
+                        <div class="column">
+                            <div class="ui checkbox ">
+                                <input class="rating"
+                                       type="checkbox"
+                                       data-rating="5"
+                                       checked="true"
+                                       onchange="applyFeedbackFilter()">
+                                <label th:text="#{player.sequence.feedbackDegree.HIGH}">
+                                    Totally
+                                </label>
+                            </div>
+                        </div>
+                        <div class="four wide column">
+                            <div class="ui tiny progress" style="margin-top:0.6rem;"  id="progress-rating-5">
+                                <div class="bar" style="min-width : 0%"></div>
+                            </div>
+                        </div>
+                        <div class="two wide column">
+                            <label id="show-nb-feedback-by-rating-5"></label>
+                        </div>
+                        <div class="five wide column">
+                            <label th:text="#{player.sequence.feedback.feedbacksnumber}">
+                                Total number of feedbacks  :
+                            </label>
+                            <label id="show-nb-feedback"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui five column grid">
+                        <div class="column">
+                            <div class="ui checkbox">
+                                <input class="rating"
+                                       type="checkbox"
+                                       data-rating="4"
+                                       checked="true"
+                                       onchange="applyFeedbackFilter()">
+                                <label th:text="#{player.sequence.feedbackDegree.ABOVE_AVERAGE}">
+                                    A bit
+                                </label>
+                            </div>
+                        </div>
+                        <div class="four wide column">
+                            <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-4">
+                                <div class="bar" style="min-width : 0%"></div>
+                            </div>
+                        </div>
+                        <div class="two wide column">
+                            <label id="show-nb-feedback-by-rating-4"></label>
+                        </div>
+                        <div class="five wide column">
+                            <label th:text="#{player.sequence.feedback.averagerating}">
+                                Average value of feedbacks ratings  :
+                            </label>
+                            <label id="show-average-rating"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui five column grid">
+                        <div class="column">
+                            <div class="ui checkbox">
+                                <input class="rating"
+                                       type="checkbox"
+                                       data-rating="3"
+                                       checked="true"
+                                       onchange="applyFeedbackFilter()">
+                                <label th:text="#{player.sequence.feedbackDegree.AVERAGE}">
+                                    Average
+                                </label>
+                            </div>
+                        </div>
+                        <div class="four wide column">
+                            <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-3">
+                                <div class="bar" style="min-width : 0%"></div>
+                            </div>
+                        </div>
+                        <div class="two wide column">
+                            <label id="show-nb-feedback-by-rating-3"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui five column grid">
+                        <div class="column">
+                            <div class="ui checkbox">
+                                <input class="rating"
+                                       type="checkbox"
+                                       data-rating="2"
+                                       checked="true"
+                                       onchange="applyFeedbackFilter()">
+                                <label th:text="#{player.sequence.feedbackDegree.UNDER_AVERAGE}">
+                                    Not really
+                                </label>
+                            </div>
+                        </div>
+                        <div class="four wide column">
+                            <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-2">
+                                <div class="bar" style="min-width : 0%"></div>
+                            </div>
+                        </div>
+                        <div class="two wide column">
+                            <label id="show-nb-feedback-by-rating-2"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui five column grid">
+                        <div class="column">
+                            <div class="ui checkbox">
+                                <input class="rating"
+                                       type="checkbox"
+                                       data-rating="1"
+                                       checked="true"
+                                       onchange="applyFeedbackFilter()">
+                                <label th:text="#{player.sequence.feedbackDegree.LOW}">
+                                    Not at all
+                                </label>
+                            </div>
+                        </div>
+                        <div class="four wide column">
+                            <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-1">
+                                <div class="bar" style="min-width : 0%"></div>
+                            </div>
+                        </div>
+                        <div class="two wide column">
+                            <label id="show-nb-feedback-by-rating-1"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui five column grid" style="margin-top: 1rem;">
+                    <div class="colum">
+                        <button id="checkButton"
+                                class="ui button"
+                                type="button"
+                                onclick="checkUncheckAll(true)"
+                                th:text="#{player.sequence.checkAll}">
+                            Check all
+                        </button>
+                        <button id="unCheckButton"
+                                class="ui button"
+                                type="button"
+                                onclick="checkUncheckAll(false)"
+                                th:text="#{player.sequence.uncheckAll}">>
+                            Uncheck all
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="ui dividing header">Feedbacks</div>
+
+            <div id="feedbacks">
+                <!-- List of feedbacks filled by JS -->
             </div>
         </div>
 
-        <div class="field">
-            <div class="ui five column grid">
-                <div class="column">
-                    <div class="ui checkbox">
-                        <input class="rating"
-                               type="checkbox"
-                               data-rating="4"
-                               checked="true"
-                               onchange="applyFeedbackFilter()">
-                        <label th:text="#{player.sequence.feedbackDegree.ABOVE_AVERAGE}">
-                            A bit
-                        </label>
-                    </div>
-                </div>
-                <div class="four wide column">
-                    <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-4">
-                        <div class="bar" style="min-width : 0%"></div>
-                    </div>
-                </div>
-                <div class="two wide column">
-                    <label id="show-nb-feedback-by-rating-4"></label>
-                </div>
-                <div class="five wide column">
-                    <label th:text="#{player.sequence.feedback.averagerating}">
-                        Average value of feedbacks ratings  :
-                    </label>
-                    <label id="show-average-rating"></label>
-                </div>
-            </div>
-        </div>
+        <script th:inline="javascript">
+            $('.menu .item').tab();
+            $(document).ready(function () {
+                $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
+            });
+            $(window).trigger("resize");
 
-        <div class="field">
-            <div class="ui five column grid">
-                <div class="column">
-                    <div class="ui checkbox">
-                        <input class="rating"
-                               type="checkbox"
-                               data-rating="3"
-                               checked="true"
-                               onchange="applyFeedbackFilter()">
-                        <label th:text="#{player.sequence.feedbackDegree.AVERAGE}">
-                            Average
-                        </label>
-                    </div>
-                </div>
-                <div class="four wide column">
-                    <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-3">
-                        <div class="bar" style="min-width : 0%"></div>
-                    </div>
-                </div>
-                <div class="two wide column">
-                    <label id="show-nb-feedback-by-rating-3"></label>
-                </div>
-            </div>
-        </div>
+            elaastic.renderParticipationRateGraph("#vega-view-participation", [[${participationData}]], {
+                phase: [[#{statistics.participationgraph.phase}]]
+            });
 
-        <div class="field">
-            <div class="ui five column grid">
-                <div class="column">
-                    <div class="ui checkbox">
-                        <input class="rating"
-                               type="checkbox"
-                               data-rating="2"
-                               checked="true"
-                               onchange="applyFeedbackFilter()">
-                        <label th:text="#{player.sequence.feedbackDegree.UNDER_AVERAGE}">
-                            Not really
-                        </label>
-                    </div>
-                </div>
-                <div class="four wide column">
-                    <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-2">
-                        <div class="bar" style="min-width : 0%"></div>
-                    </div>
-                </div>
-                <div class="two wide column">
-                    <label id="show-nb-feedback-by-rating-2"></label>
-                </div>
-            </div>
-        </div>
+            let nbTotalConfidenceDegree = [[${nbConfidenceDegree1}]] + [[${nbConfidenceDegree2}]] + [[${nbConfidenceDegree3}]] + [[${nbConfidenceDegree4}]]
 
-        <div class="field">
-            <div class="ui five column grid">
-                <div class="column">
-                    <div class="ui checkbox">
-                        <input class="rating"
-                               type="checkbox"
-                               data-rating="1"
-                               checked="true"
-                               onchange="applyFeedbackFilter()">
-                        <label th:text="#{player.sequence.feedbackDegree.LOW}">
-                            Not at all
-                        </label>
-                    </div>
-                </div>
-                <div class="four wide column">
-                    <div class="ui tiny progress" style="margin-top:0.6rem;" id="progress-rating-1">
-                        <div class="bar" style="min-width : 0%"></div>
-                    </div>
-                </div>
-                <div class="two wide column">
-                    <label id="show-nb-feedback-by-rating-1"></label>
-                </div>
-            </div>
-        </div>
+            $("#progress-confidence-1").progress({
+                percent : (100 * [[${nbConfidenceDegree1}]])/nbTotalConfidenceDegree
+            });
+            $("#progress-confidence-2").progress({
+                percent : (100 * [[${nbConfidenceDegree2}]])/nbTotalConfidenceDegree
+            });
+            $("#progress-confidence-3").progress({
+                percent : (100 * [[${nbConfidenceDegree3}]])/nbTotalConfidenceDegree
+            });
+            $("#progress-confidence-4").progress({
+                percent : (100 * [[${nbConfidenceDegree4}]])/nbTotalConfidenceDegree
+            });
 
-        <div class="ui five column grid">
-            <div class="colum">
-                <button id="checkButton"
-                        class="ui button"
-                        type="button"
-                        onclick="checkUncheckAll(true)"
-                        th:text="#{player.sequence.checkAll}">
-                    Check all
-                </button>
-                <button id="unCheckButton"
-                        class="ui button"
-                        type="button"
-                        onclick="checkUncheckAll(false)"
-                        th:text="#{player.sequence.uncheckAll}">>
-                    Uncheck all
-                </button>
-            </div>
-        </div>
+            $('#show-nb-confidence-1').text([[${nbConfidenceDegree1}]]);
+            $('#show-nb-confidence-2').text([[${nbConfidenceDegree2}]]);
+            $('#show-nb-confidence-3').text([[${nbConfidenceDegree3}]]);
+            $('#show-nb-confidence-4').text([[${nbConfidenceDegree4}]]);
 
+            $('#standard-deviation').text([[${standardDeviation}]])
+
+            /** Check - Uncheck Checkboxes */
+
+            function checkUncheckAll(order) {
+                let checkboxes = document.querySelectorAll('.rating')
+                checkboxes.forEach( checkbox => checkbox.checked = order)
+                applyFeedbackFilter()
+            }
+
+            /** -------------------------- */
+
+            let feedbackTemplate = document.getElementById("feedbackTemplate")
+            let feedbacksDiv = document.getElementById("feedbacks")
+            displayFeedbackList(feedbackList);
+
+            function applyFeedbackFilter() {
+                let feedbacks =[];
+                let checkedCheckboxes = Array.prototype.map.call(
+                    document.querySelectorAll('.rating:checked'),
+                    checkbox => parseInt(checkbox.dataset.rating)
+                )
+
+                if (checkedCheckboxes.length === 5) {
+                    feedbacks = feedbackList
+
+                } else {
+                    feedbacks = feedbackList
+                        .filter(feedback => checkedCheckboxes.includes(feedback.rating))
+                }
+
+                removeFeedbackList()
+                displayFeedbackList(feedbacks)
+            }
+
+            function removeFeedbackList() {
+                while (feedbacksDiv.childNodes.length != 0) {
+                    feedbacksDiv.removeChild(feedbacksDiv.childNodes[0])
+                }
+            }
+
+            function displayFeedbackList(feedbacks) {
+                feedbacks.sort((a,b) => a.rating <= b.rating ? 1 : -1)
+
+                let ratings = [
+                    undefined,
+                    [[#{player.sequence.feedbackDegree.LOW}]],
+                    [[#{player.sequence.feedbackDegree.UNDER_AVERAGE}]],
+                    [[#{player.sequence.feedbackDegree.AVERAGE}]],
+                    [[#{player.sequence.feedbackDegree.ABOVE_AVERAGE}]],
+                    [[#{player.sequence.feedbackDegree.HIGH}]]
+                ]
+
+                feedbacks.forEach( feedback => {
+                    let clone = feedbackTemplate.content.children[0].cloneNode(true)
+                    clone.querySelector(".student-rating").innerHTML = ratings[feedback.rating]
+                    clone.querySelector(".student-explanation").innerHTML = feedback.explanation
+                    feedbacksDiv.appendChild(clone)
+                })
+            }
+
+            let nbFeedbackByRating = []
+            let nbFeedbacks = feedbackList.length
+            let averageRating = 0;
+            for (let i = 1 ; i <= 5 ; i++) {
+                nbFeedbackByRating[i] = feedbackList.filter(feedback => feedback.rating == i).length
+            }
+
+            for (let i = 1; i <= 5; i++) {
+                $('#progress-rating-' + i).progress({
+                    percent : (100 * nbFeedbackByRating[i])/nbFeedbacks
+                });
+                $('#show-nb-feedback-by-rating-' + i).text(nbFeedbackByRating[i]);
+            }
+
+
+            $('#show-nb-feedback').text(nbFeedbacks);
+
+            if (nbFeedbacks != 0) {
+                for (let i = 1; i <= 5; i++) {
+                    averageRating += nbFeedbackByRating[i] * i
+                }
+                averageRating = averageRating / nbFeedbacks
+            }
+
+            $('#show-average-rating').text(Math.round(averageRating));
+        </script>
     </div>
-
-    <div class="ui dividing header">Feedbacks</div>
-
-    <div id="feedbacks">
-        <!-- List of feedbacks filled by JS -->
-    </div>
-</div>
-
-<!-- Tab Results -->
-
-<div class="ui bottom attached tab segment" data-tab="results">
-    <div th:with="components=${'/player/assignment/sequence/components'}">
-        <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
-        <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
-    </div>
-</div>
-
-<script th:inline="javascript">
-    $('.menu .item').tab();
-    $(document).ready(function () {
-        $('#result-accordion-[[${playerModel.resultsModel.sequenceId}]]').accordion()
-    });
-    $("#results-tab-title, #indicators-tab-title").click(function() {
-        $(window).trigger("resize");
-    });
-
-    elaastic.renderParticipationRateGraph("#vega-view-participation", [[${participationData}]], {
-        phase: [[#{statistics.participationgraph.phase}]]
-    });
-
-    let nbTotalConfidenceDegree = [[${nbConfidenceDegree1}]] + [[${nbConfidenceDegree2}]] + [[${nbConfidenceDegree3}]] + [[${nbConfidenceDegree4}]]
-
-    $("#progress-confidence-1").progress({
-        percent : (100 * [[${nbConfidenceDegree1}]])/nbTotalConfidenceDegree
-    });
-    $("#progress-confidence-2").progress({
-        percent : (100 * [[${nbConfidenceDegree2}]])/nbTotalConfidenceDegree
-    });
-    $("#progress-confidence-3").progress({
-        percent : (100 * [[${nbConfidenceDegree3}]])/nbTotalConfidenceDegree
-    });
-    $("#progress-confidence-4").progress({
-        percent : (100 * [[${nbConfidenceDegree4}]])/nbTotalConfidenceDegree
-    });
-
-    $('#show-nb-confidence-1').text([[${nbConfidenceDegree1}]]);
-    $('#show-nb-confidence-2').text([[${nbConfidenceDegree2}]]);
-    $('#show-nb-confidence-3').text([[${nbConfidenceDegree3}]]);
-    $('#show-nb-confidence-4').text([[${nbConfidenceDegree4}]]);
-
-    $('#standard-deviation').text([[${standardDeviation}]])
-
-    /** Check - Uncheck Checkboxes */
-
-    function checkUncheckAll(order) {
-        let checkboxes = document.querySelectorAll('.rating')
-        checkboxes.forEach( checkbox => checkbox.checked = order)
-        applyFeedbackFilter()
-    }
-
-    /** -------------------------- */
-
-    let feedbackTemplate = document.getElementById("feedbackTemplate")
-    let feedbacksDiv = document.getElementById("feedbacks")
-    displayFeedbackList(feedbackList);
-
-    function applyFeedbackFilter() {
-        let feedbacks =[];
-        let checkedCheckboxes = Array.prototype.map.call(
-            document.querySelectorAll('.rating:checked'),
-            checkbox => parseInt(checkbox.dataset.rating)
-        )
-
-        if (checkedCheckboxes.length === 5) {
-            feedbacks = feedbackList
-
-        } else {
-            feedbacks = feedbackList
-                .filter(feedback => checkedCheckboxes.includes(feedback.rating))
-        }
-
-        removeFeedbackList()
-        displayFeedbackList(feedbacks)
-    }
-
-    function removeFeedbackList() {
-        while (feedbacksDiv.childNodes.length != 0) {
-            feedbacksDiv.removeChild(feedbacksDiv.childNodes[0])
-        }
-    }
-
-    function displayFeedbackList(feedbacks) {
-        feedbacks.sort((a,b) => a.rating <= b.rating ? 1 : -1)
-
-        let ratings = [
-            undefined,
-            [[#{player.sequence.feedbackDegree.LOW}]],
-            [[#{player.sequence.feedbackDegree.UNDER_AVERAGE}]],
-            [[#{player.sequence.feedbackDegree.AVERAGE}]],
-            [[#{player.sequence.feedbackDegree.ABOVE_AVERAGE}]],
-            [[#{player.sequence.feedbackDegree.HIGH}]]
-        ]
-
-        feedbacks.forEach( feedback => {
-            let clone = feedbackTemplate.content.children[0].cloneNode(true)
-            clone.querySelector(".student-rating").innerHTML = ratings[feedback.rating]
-            clone.querySelector(".student-explanation").innerHTML = feedback.explanation
-            feedbacksDiv.appendChild(clone)
-        })
-    }
-
-    let nbFeedbackByRating = []
-    let nbFeedbacks = feedbackList.length
-    let averageRating = 0;
-    for (let i = 1 ; i <= 5 ; i++) {
-        nbFeedbackByRating[i] = feedbackList.filter(feedback => feedback.rating == i).length
-    }
-
-    for (let i = 1; i <= 5; i++) {
-        $('#progress-rating-' + i).progress({
-            percent : (100 * nbFeedbackByRating[i])/nbFeedbacks
-        });
-        $('#show-nb-feedback-by-rating-' + i).text(nbFeedbackByRating[i]);
-    }
-
-
-    $('#show-nb-feedback').text(nbFeedbacks);
-
-    if (nbFeedbacks != 0) {
-        for (let i = 1; i <= 5; i++) {
-            averageRating += nbFeedbackByRating[i] * i
-        }
-        averageRating = averageRating / nbFeedbacks
-    }
-
-    $('#show-average-rating').text(Math.round(averageRating));
-</script>
 </body>
 </html>

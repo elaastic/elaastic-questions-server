@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="question-feedback(model, sequenceFeedback)"
+<div th:fragment="question-feedback(model, learnerFeedbackDegree, sequenceFeedback)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -33,24 +33,19 @@
              th:id="|sequence_${model.sequenceId}_pov|">
 
             <form class="ui form">
-                <p th:text="#{player.sequence.feedback.statement}">I think I learn something from this sequence</p>
+                <div class="field" id="feedbackSelectionApp">
+                    <label th:text="#{player.sequence.feedback.statement}">I think I learnt something from this sequence</label>
+                    <input type="hidden"
+                           name="agreement-level"
+                           v-model="selectedFeedbackDegreeValue"
+                           th:id="|studentFeedbackDegree_${model.sequenceId}|"/>
 
-                <div class="ui fluid five item stackable menu"  >
-                    <input disabled type="radio" name="agreement-level" id="fbDegree-5" style="display:none"
-                           th:checked="${sequenceFeedback.rating == 5}">
-                    <label class="item" for="fbDegree-5" th:text="#{player.sequence.feedbackDegree.HIGH}"></label>
-                    <input disabled type="radio" name="agreement-level" id="fbDegree-4" style="display:none"
-                           th:checked="${sequenceFeedback.rating == 4}">
-                    <label class="item" for="fbDegree-4" th:text="#{player.sequence.feedbackDegree.ABOVE_AVERAGE}"></label>
-                    <input disabled type="radio" name="agreement-level" id="fbDegree-3" style="display:none"
-                           th:checked="${sequenceFeedback.rating == 3}">
-                    <label class="item" for="fbDegree-3" th:text="#{player.sequence.feedbackDegree.AVERAGE}"></label>
-                    <input disabled type="radio" name="agreement-level" id="fbDegree-2" style="display:none"
-                           th:checked="${sequenceFeedback.rating == 2}">
-                    <label class="item" for="fbDegree-2" th:text="#{player.sequence.feedbackDegree.UNDER_AVERAGE}"></label>
-                    <input disabled type="radio" name="agreement-level" id="fbDegree-1" style="display:none"
-                           th:checked="${sequenceFeedback.rating == 1}">
-                    <label class="item" for="fbDegree-1" th:text="#{player.sequence.feedbackDegree.LOW}"></label>
+                    <div class="ui fluid five item stackable menu">
+                        <a th:each="feedbackDegree : ${learnerFeedbackDegree}" class="item"
+                           th:attr="'v-bind:class'=|{ active: selectedFeedbackDegree === '${feedbackDegree.name()}' }|"
+                           th:text="#{|player.sequence.feedbackDegree.${feedbackDegree.name()}|}">
+                        </a>
+                    </div>
                 </div>
 
                 <div class="field">
@@ -65,60 +60,47 @@
     </div>
 
     <style>
-        #fbDegree-5 + label {
-            background-color: #008000;
-        }
-        #fbDegree-5:checked + label {
-            background-color: #008000;
-            border-color: #006000;
-            opacity: 1 !important;
-            border-width: 0.3em;
-            border-style: groove;
-        }
-        #fbDegree-4 + label {
-            background-color: #ADFF2F;
-        }
-        #fbDegree-4:checked + label {
-            background-color: #ADFF2F;
-            border-color: #ABFD2D;
-            opacity: 1 !important;
-            border-width: 0.3em;
-            border-style: groove;
-        }
-        #fbDegree-3 + label {
-            background-color: #FFD700;
-        }
-        #fbDegree-3:checked + label {
-            background-color: #FFD700;
-            border-color: #FDD500;
-            opacity: 1 !important;
-            border-width: 0.3em;
-            border-style: groove;
-        }
-        #fbDegree-2 + label {
-            background-color: #FF8C00;
-        }
-        #fbDegree-2:checked + label {
-            background-color: #FF8C00;
-            border-color: #FD8A00;
-            opacity: 1 !important;
-            border-width: 0.3em;
-            border-style: groove;
-        }
-        #fbDegree-1 + label {
-            background-color: #B22222;
-        }
-        #fbDegree-1:checked + label {
-            background-color: #B22222;
-            border-color: #B02020;
-            opacity: 1 !important;
-            border-width: 0.3em;
-            border-style: groove;
-        }
-        input:disabled + label {
-            opacity: 0.6;
+        #feedbackSelectionApp .active.item {
+            background-color: #dff0ff;
+            color: #0e6eb8;
         }
     </style>
+
+    <script th:inline="javascript">
+        new Vue({
+            el: '#feedbackSelectionApp',
+            data: {
+                selectedFeedbackDegreeValue : [[${sequenceFeedback.rating}]],
+                selectedFeedbackDegree: null
+            },
+            mounted:function(){
+                this.setSelectedFromValue(this.selectedFeedbackDegreeValue)
+            },
+            methods: {
+                setSelectedFromValue : function (value) {
+                    switch(value) {
+                        case 1:
+                            this.selectedFeedbackDegree = 'LOW'
+                            break;
+                        case 2:
+                            this.selectedFeedbackDegree = 'UNDER_AVERAGE'
+                            break;
+                        case 3:
+                            this.selectedFeedbackDegree = 'AVERAGE'
+                            break;
+                        case 4:
+                            this.selectedFeedbackDegree = 'ABOVE_AVERAGE'
+                            break;
+                        case 5:
+                            this.selectedFeedbackDegree = 'HIGH'
+                            break;
+                        default:
+                            this.selectedFeedbackDegree = null
+                    }
+                }
+            }
+        })
+    </script>
 
     <script th:inline="javascript">
         $(document).ready(function () {
