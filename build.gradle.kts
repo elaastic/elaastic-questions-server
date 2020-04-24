@@ -45,6 +45,7 @@ dependencies {
     implementation(files("lib/ApacheJMeter_oauth-v2.jar"))
     implementation("com.google.code.gson:gson:2.8.5")
     implementation("commons-io:commons-io:2.6")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
 
     runtime("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
