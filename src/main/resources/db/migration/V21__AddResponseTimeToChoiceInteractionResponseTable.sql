@@ -16,8 +16,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-statistics.indicators.tabname=Indicateurs
-statistics.feedbacks.tabname=Points de vue
-statistics.results.tabname=Résultats
-statistics.title=Statistiques
-statistics.participationgraph.phase=Phase
+ALTER TABLE choice_interaction_response ADD response_time bigint(20)
