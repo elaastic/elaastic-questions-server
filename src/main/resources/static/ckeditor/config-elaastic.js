@@ -107,4 +107,5 @@ CKEDITOR.editorConfig = function (config) {
   config.removeButtons = 'Scayt,SelectAll,Find,Save,NewPage,Preview,Print,Templates,Cut,Copy,Redo,Paste,PasteText,PasteFromWord,Undo,Form,HiddenField,Radio,TextField,Checkbox,Textarea,Select,Button,ImageButton,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Flash,PageBreak,Iframe,BGColor,ShowBlocks,Maximize,About,Replace,Source,Strike,Subscript,Superscript'
   config.removePlugins = 'smiley,horizontalrule,elementspath,specialchar'
   config.skin = 'minimalist'
+  config.mathJaxLib = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
 }
