@@ -1,0 +1,98 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="modalLtiParameter(assignment)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+
+  <div class="ui small modal" id="ltiParameterModalApp">
+    <i class="close icon"></i>
+
+    <div class="header" th:text="#{assignment.ltiparameter.oneLine}">
+      Link for learners
+    </div>
+
+    <div class="content">
+      <div class="description">
+        <p>
+        <span th:text="#{assignment.ltiparameter.description}">
+          Here is the parameter to use in lti configuration
+        </span> "<span style="font-weight: bold">{{currentAssignmentTitle}}</span>" :
+        </p>
+
+        <div class="ui action fluid input">
+          <input id="ltiParameter"
+                 type="text"
+                 v-model="currentAssignmentLtiParameter" readonly>
+          <button class="ui right icon button" onclick="document.execCommand('copy');">
+            <i class="copy icon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="ui cancel button">
+        OK
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" th:inline="javascript"
+          th:with="ltiParameter='assignmentid='+${assignment.globalId}">
+    /*<![CDATA[*/
+
+    elaastic.showLtiParameterModal = function () {
+      window.ltiParameterModalApp.showLtiParameterModal(
+        /*[[${ltiParameter}]]*/ 'ltiParameter',
+        /*[[${assignment.title}]]*/ 'title'
+      )
+    }
+
+    $(document)
+      .ready(function () {
+
+        // Init VueJS app
+        window.ltiParameterModalApp = new Vue({
+          el: '#ltiParameterModalApp',
+          data: {
+            currentAssignmentTitle: null,
+            currentAssignmentLtiParameter: null
+          },
+          methods: {
+            showLtiParameterModal: function (ltiParameter, title) {
+              this.currentAssignmentLtiParameter = ltiParameter;
+              this.currentAssignmentTitle = title;
+
+              $('#ltiParameterModalApp').modal(
+                {
+                  onVisible: function () {
+                    $('#ltiParameter').focus().select()
+                  }
+                }
+              ).modal('show')
+            }
+
+          }
+        })
+
+      })
+
+  </script>
+</div>

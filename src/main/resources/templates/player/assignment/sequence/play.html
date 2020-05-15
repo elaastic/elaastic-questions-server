@@ -54,6 +54,17 @@
       <i class="yellow feed icon"></i>
     </div>
     <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${playerModel.assignment})"></div>
+
+    <div class="item"
+         onclick="elaastic.showLtiParameterModal()"
+         th:attr="data-tooltip=#{assignment.ltiparameter.oneLine}"
+         data-tooltip="LTI Parameter"
+         data-position="right center"
+         data-inverted="">
+      <i class="yellow graduation icon"></i>
+    </div>
+    <div th:replace="assignment/_modal_lti_parameter.html :: modalLtiParameter(${playerModel.assignment})"></div>
+
   </th:block>
 </div>
 
