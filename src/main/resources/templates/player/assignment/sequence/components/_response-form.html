@@ -77,45 +77,46 @@
       </script>
     </div>
 
-    <th:block th:if="${model.responseSubmissionSpecification.studentsProvideConfidenceDegree}">
-      <div class="field" id="confidenceSelectionApp">
-        <label th:text="#{player.sequence.interaction.confidenceDegree.label}"></label>
-        <input type="hidden"
-               name="confidenceDegree"
-               v-model="selectedConfidenceDegree"
-               th:id="|confidenceDegree_${model.interactionId}|"/>
+  </th:block>
 
-        <div class="ui fluid four item stackable menu">
-          <a th:each="confidenceDegree : ${model.ConfidenceDegreeValues}" class="item"
-             th:attr="'v-on:click'=|setSelectedConfidenceDegree('${confidenceDegree.name()}')|,'v-bind:class'=|{ active: selectedConfidenceDegree === '${confidenceDegree.name()}' }|"
-             th:text="#{|player.sequence.interaction.confidenceDegree.${confidenceDegree.name()}|}">
-          </a>
-        </div>
+  <th:block th:if="${model.responseSubmissionSpecification.studentsProvideConfidenceDegree}">
+    <div class="field" id="confidenceSelectionApp">
+      <label th:text="#{player.sequence.interaction.confidenceDegree.label}"></label>
+      <input type="hidden"
+             name="confidenceDegree"
+             v-model="selectedConfidenceDegree"
+             th:id="|confidenceDegree_${model.interactionId}|"/>
+
+      <div class="ui fluid four item stackable menu">
+        <a th:each="confidenceDegree : ${model.ConfidenceDegreeValues}" class="item"
+           th:attr="'v-on:click'=|setSelectedConfidenceDegree('${confidenceDegree.name()}')|,'v-bind:class'=|{ active: selectedConfidenceDegree === '${confidenceDegree.name()}' }|"
+           th:text="#{|player.sequence.interaction.confidenceDegree.${confidenceDegree.name()}|}">
+        </a>
       </div>
+    </div>
 
-      <style>
-        #confidenceSelectionApp .active.item {
-          background-color: #dff0ff;
-          color: #0e6eb8;
-        }
-      </style>
+    <style>
+      #confidenceSelectionApp .active.item {
+        background-color: #dff0ff;
+        color: #0e6eb8;
+      }
+    </style>
 
-      <script th:inline="javascript">
-        new Vue({
-          el: '#confidenceSelectionApp',
-          data: {
-            selectedConfidenceDegree: [[${model.firstAttemptConfidenceDegree?.name()}]]
-          },
-          methods: {
-            setSelectedConfidenceDegree: function (degree) {
-              this.selectedConfidenceDegree = degree
-            }
+    <script th:inline="javascript">
+      new Vue({
+        el: '#confidenceSelectionApp',
+        data: {
+          selectedConfidenceDegree: [[${model.firstAttemptConfidenceDegree?.name()}]]
+        },
+        methods: {
+          setSelectedConfidenceDegree: function (degree) {
+            this.selectedConfidenceDegree = degree
           }
-        })
-      </script>
+        }
+      })
+    </script>
 
 
-    </th:block>
   </th:block>
 
   <script
