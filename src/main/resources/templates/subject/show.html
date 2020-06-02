@@ -1,0 +1,80 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#specificMenu}, content=~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title th:text="|elaastic: ${subjectItem.title} - ${subjectItem.course} |">elaastic: Subject edit</title>
+</head>
+
+<body>
+<aside id="pageSpecificMenu">
+  <script>
+    var elaastic = elaastic || {}
+  </script>
+  <!-- TODO fill with item we need in the left menu -->
+
+</aside>
+
+<section>
+
+  <div id="subjectPage">
+
+    <h1 class="content" style="vertical-align: middle;" th:text="#{subject.page.show.title}" >
+      Manage a subject
+    </h1>
+    <div class="sub header" th:text="#{subject.page.show.notice}">
+      This page allows you to add, remove, edit, and reorder questions of a subject. It also allows you to make
+      assignment with questions of the subject.
+    </div>
+
+    <h2 class="ui header" style="padding-top: 1.5em;">
+      <i class="large icons">
+        <i class="book icon"></i>
+        <i class="corner pencil alternate  icon"></i>
+      </i>
+      <span th:text="${subjectItem.title}">Titre sujet</span> - <span th:text="${subjectItem.course}">Intitulé Cours</span>
+    </h2>
+
+
+    <div class="ui top attached tabular menu">
+      <div id="subject-managment-tab" class="item active" data-tab="questions"
+           th:text="#{subject.page.show.questions-tab-title}">questions</div>
+      <div class="item" data-tab="assignments" th:text="#{subject.page.show.assignments-tab-title}">assignments</div>
+    </div>
+
+    <!-- Question Tab -->
+    <div class="ui bottom attached tab active segment" data-tab="questions">
+        <div th:replace="|/subject/question-tab.html|"></div>
+    </div>
+
+    <!-- Assignments Tab -->
+    <div class="ui bottom attached tab segment" data-tab="assignments">
+        <div th:replace="/subject/assignment-tab.html"></div>
+    </div>
+
+  </div>
+  <script th:inline="javascript">
+    $('.menu .item').tab();
+  </script>
+</section>
+
+</body>
+</html>

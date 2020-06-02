@@ -1,0 +1,99 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<body>
+
+<section>
+    <div class="ui segment bottom attached" th:if="${subjectItem.course == 'Cours temporaire'}">
+        <p style="margin-left : 1em;" th:text="#{subject.assignment.empty}">
+            There is no assignment.
+        </p>
+    </div>
+
+    <!-- TODO Display all assignments of subject
+    <div th:each="subjectItem, i : ${subjectItem.assignments}"
+         class="ui clearing segment attached large text"
+         th:id="|assignment_${assignment.id}|"
+         style="padding: 1em;">
+        <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
+            <div></div>
+            <h3 class="ui header">
+                    <span th:id="|assignment-title-${assignment.id}|" th:text="${assignment.title}">Title</span>
+                </a>
+            </h3>
+        </div>
+        <div class="ui hidden divider"></div>
+    </div>
+    -->
+
+    <!-- TODO button adding an Assignment
+    <div class="ui basic segment">
+        <a class="ui primary button"
+           th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}">
+            <i class="add icon"></i>
+            <span th:text="#{subject.assignment.addAssignment}">Add an assignment</span>
+        </a>
+    </div>
+    -->
+
+    <style>
+        .ui.header {
+            margin-top: calc(-0.142857em + 0.5rem);
+        }
+        .ui.segment {
+            margin-left : 1em;
+            padding-left : 0em;
+            padding-right: 0em;
+        }
+    </style>
+
+    <script>
+        $(document)
+            .ready(function () {
+
+                if (window.location.hash) {
+                    $(window.location.hash).scrollTop(400)
+                }
+            })
+
+    </script>
+
+    <!-- TODO
+    <div th:replace="subject/_modal_edit_properties :: modalEditProperties(${assignment})"></div>
+    -->
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            let selectedAssignment = $(location.hash)
+            if (selectedAssignment) {
+                selectedAssignment.addClass('secondary')
+            }
+        })
+
+        var elaastic = elaastic || {}
+
+        elaastic.showConfirmDeleteModal = function (sequenceId) {
+
+    </script>
+
+</section>
+</body>
+</html>
