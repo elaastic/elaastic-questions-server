@@ -21,7 +21,7 @@ package org.elaastic.questions.assignment.sequence.interaction.response
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.subject.Statement
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
@@ -30,6 +30,7 @@ import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.subject.StatementService
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen

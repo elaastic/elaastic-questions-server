@@ -19,7 +19,7 @@
 package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.subject.Statement
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.directory.User

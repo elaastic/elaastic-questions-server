@@ -21,9 +21,10 @@ package org.elaastic.questions.assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.assignment.sequence.StatementService
+import org.elaastic.questions.subject.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

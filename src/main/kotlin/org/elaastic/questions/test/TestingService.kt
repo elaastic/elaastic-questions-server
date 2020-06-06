@@ -29,6 +29,8 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.lti.*
 import org.elaastic.questions.lti.controller.LtiLaunchData
+import org.elaastic.questions.subject.Statement
+import org.elaastic.questions.subject.StatementRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException

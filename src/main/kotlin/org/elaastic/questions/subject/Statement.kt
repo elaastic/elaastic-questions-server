@@ -16,8 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment
+package org.elaastic.questions.subject
 
+import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.directory.User
@@ -57,7 +58,10 @@ class Statement(
         var parentStatement: Statement? = null,
 
         @field:Column(name = "expected_explanation")
-        var expectedExplanation: String? = null
+        var expectedExplanation: String? = null,
+
+        @field:ManyToOne( fetch = FetchType.LAZY)
+        var subject: Subject? = null
 
 ) : AbstractJpaPersistable<Long>() {
 

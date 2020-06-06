@@ -16,10 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment
+package org.elaastic.questions.subject;
 
+import org.elaastic.questions.directory.User
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.elaastic.questions.subject.Subject
 
 
+interface SubjectRepository : JpaRepository<Subject?, Long> {
 
-interface StatementRepository : JpaRepository<Statement, Long>
+    fun findAllByOwner(owner: User, pageable: Pageable): Page<Subject>
+
+    @EntityGraph(value = "Subject.statments", type = EntityGraph.EntityGraphType.LOAD)
+    fun findOneWithStatmentById(id: Long): Subject?
+
+    fun findOneById(id: Long): Subject?
+
+    fun findByGlobalId(globalId: String): Subject?
+
+    fun deleteByIdAndOwner(id: Long, user: User): Long
+}

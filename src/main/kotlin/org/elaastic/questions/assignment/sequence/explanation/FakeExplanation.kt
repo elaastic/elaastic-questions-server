@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.explanation
 
-import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.subject.Statement
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -27,7 +27,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 
 
 @Entity

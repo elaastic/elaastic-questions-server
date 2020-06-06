@@ -16,15 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.explanation
+package org.elaastic.questions.subject
 
 import org.elaastic.questions.subject.Statement
 import org.springframework.data.jpa.repository.JpaRepository
 
 
-interface FakeExplanationRepository : JpaRepository<FakeExplanation, Long> {
 
-    fun findAllByStatement(statement: Statement): List<FakeExplanation>
-
-    fun deleteAllByStatement(statement: Statement): Long
-}
+interface StatementRepository : JpaRepository<Statement, Long>
