@@ -20,8 +20,8 @@
           xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <script>
         const autoReloader = elaastic.autoReload.createAutoReloader(
-            "[(${@environment.getProperty('elaastic.websocket.protocol.prefix')})]://" + location.host
-            + "/player/sequence/[(${playerModel.sequence.id})]/auto-reload"
+            "[(${@environment.getProperty('elaastic.questions.websocket.url')})]" +
+             "player/sequence/[(${playerModel.sequence.id})]/auto-reload"
         );
     </script>
 </th:block>
