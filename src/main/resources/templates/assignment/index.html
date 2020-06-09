@@ -70,7 +70,7 @@
     <tr th:each="assignment, i : ${assignmentPage.content}">
       <td>
 
-        <a th:href="@{/subject/{id}(id=${assignment.id})}"
+        <a th:href="@{/assignment/{id}(id=${assignment.id})}"
            href="assignment/123"
            th:attr="data-tooltip=#{assignment.action.show.label}"
            data-tooltip="Modify assignment"

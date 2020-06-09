@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.attachment
 
-import org.elaastic.questions.subject.Statement
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.attachment.datastore.DataIdentifier
 import org.elaastic.questions.attachment.datastore.FileDataStore
 import org.elaastic.questions.directory.User

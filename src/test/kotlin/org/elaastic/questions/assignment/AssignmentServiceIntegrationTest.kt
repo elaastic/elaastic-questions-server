@@ -20,10 +20,10 @@ package org.elaastic.questions.assignment
 
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.subject.StatementService
+import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.subject.Statement
-import org.elaastic.questions.subject.StatementRepository
+import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.questions.subject.statement.StatementRepository
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven

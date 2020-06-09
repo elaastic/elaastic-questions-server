@@ -17,83 +17,81 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<div th:fragment="subjectItem(subject)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-<body>
-
-<section>
-    <div class="ui segment bottom attached" th:if="${subjectItem.course == 'Cours temporaire'}">
-        <p style="margin-left : 1em;" th:text="#{subject.assignment.empty}">
-            There is no assignment.
-        </p>
-    </div>
-
-    <!-- TODO Display all assignments of subject
-    <div th:each="subjectItem, i : ${subjectItem.assignments}"
-         class="ui clearing segment attached large text"
-         th:id="|assignment_${assignment.id}|"
-         style="padding: 1em;">
-        <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
-            <div></div>
-            <h3 class="ui header">
-                    <span th:id="|assignment-title-${assignment.id}|" th:text="${assignment.title}">Title</span>
-                </a>
-            </h3>
+    <section>
+        <div class="ui segment bottom attached" th:if="${subject.course.isEmpty()}">
+            <p style="margin-left : 1em;" th:text="#{subject.assignment.empty}">
+                There is no assignment.
+            </p>
         </div>
-        <div class="ui hidden divider"></div>
-    </div>
-    -->
 
-    <!-- TODO button adding an Assignment
-    <div class="ui basic segment">
-        <a class="ui primary button"
-           th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}">
-            <i class="add icon"></i>
-            <span th:text="#{subject.assignment.addAssignment}">Add an assignment</span>
-        </a>
-    </div>
-    -->
+        <!--
+        <div th:each="assignment, i : ${subject.assignments}"
+             class="ui clearing segment attached large text"
+             th:id="|assignment_${assignment.id}|"
+             style="padding: 1em;">
+            <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
+                <div></div>
+                <h3 class="ui header">
+                        <span th:id="|assignment-title-${assignment.id}|" th:text="${assignment.title}">Title</span>
+                    </a>
+                </h3>
+            </div>
+            <div class="ui hidden divider"></div>
+        </div>-->
 
-    <style>
-        .ui.header {
-            margin-top: calc(-0.142857em + 0.5rem);
-        }
-        .ui.segment {
-            margin-left : 1em;
-            padding-left : 0em;
-            padding-right: 0em;
-        }
-    </style>
+        <!-- TODO button adding an Assignment
+        <div class="ui basic segment">
+            <a class="ui primary button"
+               th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}">
+                <i class="add icon"></i>
+                <span th:text="#{subject.assignment.addAssignment}">Add an assignment</span>
+            </a>
+        </div>
+        -->
 
-    <script>
-        $(document)
-            .ready(function () {
+        <style>
+            .ui.header {
+                margin-top: calc(-0.142857em + 0.5rem);
+            }
+            .ui.segment {
+                margin-left : 1em;
+                padding-left : 0em;
+                padding-right: 0em;
+            }
+        </style>
 
-                if (window.location.hash) {
-                    $(window.location.hash).scrollTop(400)
+        <script>
+            $(document)
+                .ready(function () {
+
+                    if (window.location.hash) {
+                        $(window.location.hash).scrollTop(400)
+                    }
+                })
+
+        </script>
+
+        <!-- TODO
+        <div th:replace="subject/_modal_edit_properties :: modalEditProperties(${assignment})"></div>
+        -->
+
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                let selectedAssignment = $(location.hash)
+                if (selectedAssignment) {
+                    selectedAssignment.addClass('secondary')
                 }
             })
 
-    </script>
+            var elaastic = elaastic || {}
 
-    <!-- TODO
-    <div th:replace="subject/_modal_edit_properties :: modalEditProperties(${assignment})"></div>
-    -->
+            elaastic.showConfirmDeleteModal = function (sequenceId) {
 
-    <script th:inline="javascript">
-        $(document).ready(function () {
-            let selectedAssignment = $(location.hash)
-            if (selectedAssignment) {
-                selectedAssignment.addClass('secondary')
-            }
-        })
+        </script>
 
-        var elaastic = elaastic || {}
-
-        elaastic.showConfirmDeleteModal = function (sequenceId) {
-
-    </script>
-
-</section>
-</body>
-</html>
+    </section>
+</div>

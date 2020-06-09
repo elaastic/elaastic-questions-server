@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.explanation
 
-import org.elaastic.questions.subject.Statement
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate

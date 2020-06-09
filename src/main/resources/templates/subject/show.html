@@ -21,7 +21,7 @@
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#specificMenu}, content=~{::section})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-  <title th:text="|elaastic: ${subjectItem.title} - ${subjectItem.course} |">elaastic: Subject edit</title>
+  <title th:text="|elaastic: ${subject.title} - ${subject.course} |">elaastic: Subject edit</title>
 </head>
 
 <body>
@@ -45,12 +45,12 @@
       assignment with questions of the subject.
     </div>
 
-    <h2 class="ui header" style="padding-top: 1.5em;">
+    <h2 class="ui header">
       <i class="large icons">
         <i class="book icon"></i>
         <i class="corner pencil alternate  icon"></i>
       </i>
-      <span th:text="${subjectItem.title}">Titre sujet</span> - <span th:text="${subjectItem.course}">Intitulé Cours</span>
+      <span th:text="${subject.title}">Titre sujet</span> - <span th:text="${subject.course}">Intitulé Cours</span>
     </h2>
 
 
@@ -62,12 +62,12 @@
 
     <!-- Question Tab -->
     <div class="ui bottom attached tab active segment" data-tab="questions">
-        <div th:replace="|/subject/question-tab.html|"></div>
+        <div th:replace="|/subject/question-tab.html| :: subjectItem(${subject})"></div>
     </div>
 
     <!-- Assignments Tab -->
     <div class="ui bottom attached tab segment" data-tab="assignments">
-        <div th:replace="/subject/assignment-tab.html"></div>
+        <div th:replace="|/subject/assignment-tab.html| :: subjectItem(${subject})"></div>
     </div>
 
   </div>

@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.explanation
 
-import org.elaastic.questions.subject.Statement
+import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional

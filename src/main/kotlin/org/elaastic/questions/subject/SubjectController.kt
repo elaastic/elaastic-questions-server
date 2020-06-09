@@ -19,17 +19,23 @@
 package org.elaastic.questions.subject
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
-import org.springframework.web.bind.annotation.RequestMapping
+import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -37,30 +43,98 @@ import javax.validation.constraints.NotNull
 @RequestMapping("/subject")
 @Transactional
 public class SubjectController(
-        @Autowired val assignmentService: AssignmentService,
+        @Autowired val subjectService: SubjectService,
         @Autowired val messageBuilder: MessageBuilder
 ){
+
+    @GetMapping(value = ["", "/", "/index"])
+    fun index(authentication: Authentication,
+              model: Model,
+              @RequestParam("page") page: Int?,
+              @RequestParam("size") size: Int?): String {
+        val user: User = authentication.principal as User
+
+        subjectService.findAllByOwner(
+                user,
+                PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+        ).let {
+            model.addAttribute("user", user)
+            model.addAttribute("subjectPage", it)
+            model.addAttribute(
+                    "pagination",
+                    PaginationUtil.buildInfo(
+                            it.totalPages,
+                            page,
+                            size
+                    )
+            )
+        }
+
+        return "/subject/index"
+    }
 
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(authentication: Authentication, model: Model, @PathVariable id: Long): String {
         val user: User = authentication.principal as User
-        var subjectTemp:Subject? = null ;
-        assignmentService.get(user, id, fetchSequences = true).let {
+
+        subjectService.get(user, id, fetchStatements = true, fetchAssignments = true).let {
             model.addAttribute("user", user)
-            model.addAttribute("assignment", it)
-            subjectTemp = Subject(id=it.id,title=it.title,course = "Cours temporaire",owner = it.owner)
+            model.addAttribute("subject", it)
         }
-
-
-        model.addAttribute("subjectItem",subjectTemp)
 
         return "/subject/show"
     }
 
-    data class Subject(
+    @GetMapping("create")
+    fun create(authentication: Authentication, model: Model): String {
+        val user: User = authentication.principal as User
+
+        if (!model.containsAttribute("subject")) {
+            model.addAttribute("subject", SubjectData(owner = user))
+        }
+        model.addAttribute("user", user)
+
+        return "/subject/create"
+    }
+
+    @PostMapping("save")
+    fun save(authentication: Authentication,
+             @Valid @ModelAttribute subjectData: SubjectController.SubjectData,
+             result: BindingResult,
+             model: Model,
+             response: HttpServletResponse): String {
+        val user: User = authentication.principal as User
+
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("user", user)
+            model.addAttribute("subject", subjectData)
+            "/subject/create"
+        } else {
+            val subject = subjectData.toEntity()
+            subjectService.save(subject)
+            "redirect:/subject/${subject.id}"
+        }
+    }
+
+    data class SubjectData(
             var id: Long? = null,
+            var version: Long? = null,
             @field:NotBlank var title: String? = null,
             var course: String? = null,
             @field:NotNull var owner: User? = null
-    )
+    ) {
+        fun toEntity(): Subject {
+            return Subject(
+                    title = title!!,
+                    owner = owner!!,
+                    course = course!!
+            ).let {
+                it.id = id
+                it.version = version
+                it
+            }
+        }
+    }
+
 }

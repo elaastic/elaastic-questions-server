@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.subject
+package org.elaastic.questions.subject.statement
 
-import org.elaastic.questions.subject.Statement
+import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.jpa.repository.JpaRepository
 
 

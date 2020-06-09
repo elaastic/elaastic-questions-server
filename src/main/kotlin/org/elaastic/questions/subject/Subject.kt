@@ -63,14 +63,12 @@ class Subject (
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "subject",
             targetEntity = Assignment::class)
-    @OrderBy("rank ASC")
     @SortNatural
     var assignments: MutableList<Assignment> = ArrayList()
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "subject",
             targetEntity = Statement::class)
-    @OrderBy("rank ASC")
     @SortNatural
     var statements: MutableList<Statement> = ArrayList()
 

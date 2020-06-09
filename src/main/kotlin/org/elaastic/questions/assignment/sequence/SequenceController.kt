@@ -20,14 +20,14 @@ package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.subject.Statement
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.subject.StatementService
+import org.elaastic.questions.subject.statement.StatementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
@@ -53,7 +53,6 @@ class SequenceController(
         @Autowired val sequenceService: SequenceService,
         @Autowired val statementService: StatementService,
         @Autowired val fakeExplanationService: FakeExplanationService,
-        @Autowired val attachmentService: AttachmentService,
         @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -111,7 +110,7 @@ class SequenceController(
                     sequence.statement,
                     statementData.fakeExplanations
             )
-            attachedFileIfAny(fileToAttached, sequence.statement)
+            // attachedFileIfAny(fileToAttached, sequence.statement)
             return "redirect:/assignment/$assignmentId#sequence_${sequence.id}"
         }
     }
@@ -144,7 +143,7 @@ class SequenceController(
                 it.updateFrom(statementData.toEntity(user))
                 statementService.save(it)
                 statementService.updateFakeExplanationList(it, statementData.fakeExplanations)
-                attachedFileIfAny(fileToAttached, it)
+                //attachedFileIfAny(fileToAttached, it)
             }
 
             with(messageBuilder) {
@@ -162,15 +161,6 @@ class SequenceController(
             } else {
                 "redirect:/assignment/$assignmentId/sequence/$id/edit"
             }
-        }
-    }
-
-    private fun attachedFileIfAny(fileToAttached: MultipartFile, it: Statement) {
-        if (!fileToAttached.isEmpty) {
-            attachmentService.saveStatementAttachment(
-                    it,
-                    createAttachment(fileToAttached),
-                    fileToAttached.inputStream)
         }
     }
 

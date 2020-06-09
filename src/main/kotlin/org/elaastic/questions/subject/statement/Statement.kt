@@ -16,13 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.subject
+package org.elaastic.questions.subject.statement
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.questions.subject.Subject
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
