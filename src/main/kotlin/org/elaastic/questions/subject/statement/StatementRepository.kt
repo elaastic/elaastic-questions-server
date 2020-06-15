@@ -18,9 +18,16 @@
 
 package org.elaastic.questions.subject.statement
 
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.questions.subject.Subject
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 
 
+interface StatementRepository : JpaRepository<Statement, Long> {
 
-interface StatementRepository : JpaRepository<Statement, Long>
+    @EntityGraph(value = "Statement.title", type = EntityGraph.EntityGraphType.LOAD)
+    fun findOneById(id: Long) : Statement?
+
+    fun countAllBySubject(subject: Subject) : Int
+
+}

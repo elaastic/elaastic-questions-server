@@ -21,120 +21,114 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-
     <section>
 
         <div class="ui segment bottom attached" th:if="${subject.statements.isEmpty()}">
-            <p th:text="#{subject.assignment.empty}">
+            <p style="margin-left : 1em;" th:text="#{subject.statement.empty}">
                 This subject is empty
             </p>
         </div>
 
-        <!--
         <div th:each="statement, i : ${subject.statements}"
              class="ui clearing segment attached large text"
              th:id="|statement_${statement.id}|"
              style="padding: 1em;">
             <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
-                <span th:id="|statement-title-${statement.id}|" th:text="${statement.title}">Title</span>
-            </div>-->
+                <div th:replace="subject/statement/_statement_actions.html :: statementActions(${statement}, ${position}, ${i.size})"></div>
 
-            <!--
-                <div
-                        th:replace="assignment/sequence/_sequence_actions.html :: sequenceActions(${sequence}, ${position}, ${i.size})"></div>
 
                 <h3 class="ui header">
-                    <a th:href="@{/assignment/{assignmentId}/sequence/{id}/edit(assignmentId=${assignment.id},id=${sequence.id})}"
-                       href="/sequence/123/edit"
-                       th:id="${sequence.id}">
+                    <a th:href="@{/subject/{subjectId}/statement/{id}/edit(subjectId=${subject.id},id=${statement.id})}"
+                       href="/statement/123/edit"
+                       th:id="${statement.id}">
                         <div class="ui tiny circular label"
                              style="margin-right: 1em;" th:text="${position}">
                             3
                         </div>
 
-                        <span th:id="|sequence-title-${sequence.id}|" th:text="${sequence.statement.title}">Title</span>
+                        <span th:id="|statement-title-${statement.id}|" th:text="${statement.title}">Title</span>
                     </a>
                 </h3>
-            </div>-->
+                <div th:utext="${statement.content}" th:remove="tag"></div>
+            </div>
         </div>
-
 
         <div class="ui basic segment">
             <a class="ui primary button"
-               th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}">
+               th:href="@{/subject/{id}/addStatement(id=${subject.id})}">
                 <i class="add icon"></i>
-                <span th:text="#{assignment.action.addSequence.label}">Add a question</span>
+                <span th:text="#{subject.statement.addStatement}">Add a statement</span>
             </a>
         </div>
 
+        <!--
+         <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${subject})"></div>
 
-        <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${subject})"></div>
+         <div th:replace="assignment/_modal_lti_parameter.html :: modalLtiParameter(${subject})"></div>-->
 
-        <div th:replace="assignment/_modal_lti_parameter.html :: modalLtiParameter(${subject})"></div>
+    <style>
+         .ui.header {
+             margin-top: calc(-0.142857em + 0.5rem);
+         }
+         .ui.segment {
+             margin-left : 1em;
+             padding-left : 0em;
+             padding-right: 0em;
+         }
+     </style>
 
-        <style>
-            .ui.header {
-                margin-top: calc(-0.142857em + 0.5rem);
-            }
-            .ui.segment {
-                margin-left : 1em;
-                padding-left : 0em;
-                padding-right: 0em;
-            }
-        </style>
+     <script>
+         $(document)
+             .ready(function () {
 
-        <script>
-            $(document)
-                .ready(function () {
+                 if (window.location.hash) {
+                     $(window.location.hash).scrollTop(400)
+                 }
+             })
 
-                    if (window.location.hash) {
-                        $(window.location.hash).scrollTop(400)
-                    }
-                })
+     </script>
 
-        </script>
+     <div th:replace="subject/_modal_edit_properties :: modalEditProperties(${subject})"></div>
 
-        <div th:replace="assignment/_modal_edit_properties :: modalEditProperties(${subject})"></div>
+     <script th:inline="javascript">
+         $(document).ready(function () {
+             let selectedStatement = $(location.hash)
+             if (selectedStatement) {
+                 selectedStatement.addClass('secondary')
+             }
+         })
 
-        <script th:inline="javascript">
-            $(document).ready(function () {
-                let selectedSequence = $(location.hash)
-                if (selectedSequence) {
-                    selectedSequence.addClass('secondary')
-                }
-            })
+         var elaastic = elaastic || {}
 
-            var elaastic = elaastic || {}
+         elaastic.showConfirmDeleteModal = function (statementId) {
 
-            elaastic.showConfirmDeleteModal = function (sequenceId) {
+             let title = $('#statement-title-' + statementId).text()
+             let sentenceTemplate = /*[[#{statement.delete.confirm}]]*/ ''
+             let sentence = sentenceTemplate.replace('{0}', title)
 
-                let title = $('#sequence-title-' + sequenceId).text()
-                let sentenceTemplate = /*[[#{sequence.delete.confirm}]]*/ ''
-                let sentence = sentenceTemplate.replace('{0}', title)
+             $('#confirm-delete-statement-modal-title').text(sentence)
 
-                $('#confirm-delete-sequence-modal-title').text(sentence)
+             let confirmDeleteStatementModal = $('#confirm-delete-statement-modal')
+             confirmDeleteStatementModal.modal({
+                 onApprove: function () {
+                     let baseUrl = /*[[@{/subject/{subjectId}/statement/(subjectId=${subject.id})}]]*/ ''
+                     window.location = baseUrl + statementId + '/delete'
+                 }
+             })
 
-                let confirmDeleteSequenceModal = $('#confirm-delete-sequence-modal')
-                confirmDeleteSequenceModal.modal({
-                    onApprove: function () {
-                        let baseUrl = /*[[@{/assignment/{assignmentId}/sequence/(assignmentId=${assignment.id})}]]*/ ''
-                        window.location = baseUrl + sequenceId + '/delete'
-                    }
-                })
+             confirmDeleteStatementModal.modal('show')
+         }
+     </script>
 
-                confirmDeleteSequenceModal.modal('show')
-            }
-        </script>
-
-        <!--  Delete confirm modal-->
+     <!--  Delete confirm modal-->
         <div>
-            <div id="confirm-delete-sequence-modal" class="ui tiny modal">
+            <div id="confirm-delete-statement-modal" class="ui tiny modal">
                 <div class="header" th:text="#{common.delete}">
                     Delete
                 </div>
 
                 <div class="content">
-                    <p id="confirm-delete-sequence-modal-title">
+                    <p id="confirm-delete-statement-modal-title">
                         Do you really want to delete the question "{0}"?
                     </p>
                 </div>

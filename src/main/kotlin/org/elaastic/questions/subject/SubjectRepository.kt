@@ -30,14 +30,11 @@ interface SubjectRepository : JpaRepository<Subject?, Long> {
 
     fun findAllByOwner(owner: User, pageable: Pageable): Page<Subject>
 
-    @EntityGraph(value = "Subject.statements", type = EntityGraph.EntityGraphType.LOAD)
-    fun findOneWithOnlyStatementsById(id: Long): Subject?
-
-    fun findOneEmptyById(id: Long): Subject?
+    @EntityGraph(value = "Subject.statements_assignments", type = EntityGraph.EntityGraphType.LOAD)
+    fun findOneWithStatementsAndAssignmentsById(id: Long): Subject?
 
     fun findOneById(id: Long): Subject?
 
     fun findByGlobalId(globalId: String): Subject?
 
-    fun deleteByIdAndOwner(id: Long, user: User): Long
 }

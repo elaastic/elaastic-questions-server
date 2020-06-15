@@ -163,7 +163,7 @@ internal class AssignmentServiceIntegrationTest(
     }
 
     @Test
-    fun `save a valid assignent`() {
+    fun `save a valid assignment`() {
         val assignment = Assignment("title", testingService.getTestTeacher())
         tWhen { assignmentService.save(assignment) }
                 .tThen {

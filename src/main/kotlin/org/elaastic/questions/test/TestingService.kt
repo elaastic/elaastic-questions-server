@@ -29,6 +29,8 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.lti.*
 import org.elaastic.questions.lti.controller.LtiLaunchData
+import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.SubjectRepository
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +47,8 @@ class TestingService(
         @Autowired val responseRepository: ResponseRepository,
         @Autowired val assignmentService: AssignmentService,
         @Autowired val ltiConsumerRepository: LtiConsumerRepository,
-        @Autowired val roleService: RoleService
+        @Autowired val roleService: RoleService,
+        @Autowired val subjectRepository: SubjectRepository
 ) {
 
     fun getAnyUser(): User {
@@ -133,6 +136,10 @@ class TestingService(
             it.roleService = roleService
             it
         }
+    }
+
+    fun getAnyTestSubject(): Subject {
+        return subjectRepository.findAll().iterator().next()!!
     }
 
 }

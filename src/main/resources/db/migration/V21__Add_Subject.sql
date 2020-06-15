@@ -32,8 +32,8 @@ CREATE TABLE `subject`(
 
 ALTER TABLE `assignment`
     ADD COLUMN `subject_id` bigint(20) DEFAULT NULL,
-    ADD CONSTRAINT `fk_assignment_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`);
+    ADD CONSTRAINT `fk_assignment_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)  ON DELETE CASCADE;
 
 ALTER TABLE `statement`
     ADD COLUMN `subject_id` bigint(20) DEFAULT NULL,
-    ADD CONSTRAINT `fk_statement_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`);
+    ADD CONSTRAINT `fk_statement_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)  ON DELETE CASCADE;

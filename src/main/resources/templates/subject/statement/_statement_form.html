@@ -21,7 +21,7 @@
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div id="appTitle"
          v-cloak>
-        <a class="ui ribbon label" th:text="#{sequence.statement.title.label}">
+        <a class="ui ribbon label" th:text="#{statement.title.label}">
             Title
         </a>
 
@@ -37,7 +37,7 @@
                        id="title"
                        th:value="${statementData?.title}"
                        v-bind:class="{onlyShow: !modeEdit && !shouldShowNotice}"
-                       th:placeholder="#{sequence.statement.title.type.here}"
+                       th:placeholder="#{statement.title.type.here}"
                        v-on:focus="startEditing"
                        v-on:blur="stopEditing"
                        size="75"></input>
@@ -49,32 +49,21 @@
             </div>
         </div>
 
-        <div th:if="${statementData.attachment != null}">
+        <div >
             <div class="ui hidden divider"></div>
-            <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{sequence.statement.attachment.label}">Pièce
+            <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{statement.attachment.label}">Pièce
                 jointe</a>
             <div id="attachment" v-show="anAttachmentIsSelected == false">
                 <input type="file"
                        name="fileToAttached"
                        id="fileToAttached">
             </div>
-            <div id="attachmentView" v-show="anAttachmentIsSelected">
+            <div th:if="${statementData.attachment != null}" id="attachmentView" v-show="anAttachmentIsSelected">
                 <div th:replace="/subject/statement/_statement_attachment :: statementAttachment(${statementData.attachment},650,380)"></div>
                 <a style="margin-left: 2em;" class="ui tiny negative right floated button"
                    v-on:click="removeAttachment">
                     <i class="trash icon"></i> Supprimer
                 </a>
-            </div>
-        </div>
-        <div th:if="${statementData.attachment == null}" v-show="anAttachmentIsSelected">
-            <div class="ui hidden divider"></div>
-            <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{sequence.statement.attachment.label}">Pièce
-                jointe</a>
-            <div id="attachment">
-                <input type="file"
-                       name="fileToAttached"
-                       id="fileToAttached"
-                       v-on:change="handleAttachmentSelected">
             </div>
         </div>
     </div>
@@ -101,7 +90,7 @@
             <vue-ckeditor v-bind:id="'content'"
                           v-bind:name="'content'"
                           v-model="content"
-                          th:placeholder="#{sequence.statement.content.type.here(@{/images/example/moon-picnic.jpg})}+#{sequence.statement.content.example}"
+                          th:placeholder="#{statement.content.type.here(@{/images/example/moon-picnic.jpg})}+#{statement.content.example}"
                           v-on:focus="startEditing"
                           v-on:blur="stopEditing"
                           v-bind:config="ckeditorConfig"></vue-ckeditor>

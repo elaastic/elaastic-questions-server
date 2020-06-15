@@ -18,12 +18,15 @@
 
 package org.elaastic.questions.subject
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentController
-import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.SequenceController
+import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
+import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
+import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.questions.subject.statement.StatementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -33,6 +36,8 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
@@ -42,8 +47,10 @@ import javax.validation.constraints.NotNull
 @Controller
 @RequestMapping("/subject")
 @Transactional
-public class SubjectController(
+class SubjectController(
         @Autowired val subjectService: SubjectService,
+        @Autowired val statementService: StatementService,
+        @Autowired val attachmentService: AttachmentService,
         @Autowired val messageBuilder: MessageBuilder
 ){
 
@@ -77,7 +84,7 @@ public class SubjectController(
     fun show(authentication: Authentication, model: Model, @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
-        subjectService.get(user, id, fetchStatements = true, fetchAssignments = true).let {
+        subjectService.get(user, id, fetchStatementsAndAssignments = true).let {
             model.addAttribute("user", user)
             model.addAttribute("subject", it)
         }
@@ -99,7 +106,7 @@ public class SubjectController(
 
     @PostMapping("save")
     fun save(authentication: Authentication,
-             @Valid @ModelAttribute subjectData: SubjectController.SubjectData,
+             @Valid @ModelAttribute subjectData: SubjectData,
              result: BindingResult,
              model: Model,
              response: HttpServletResponse): String {
@@ -115,6 +122,126 @@ public class SubjectController(
             subjectService.save(subject)
             "redirect:/subject/${subject.id}"
         }
+    }
+
+    @PostMapping("{subjectId}/addStatement")
+    fun addStatement(authentication: Authentication,
+             @RequestParam("fileToAttached") fileToAttached: MultipartFile,
+             @Valid @ModelAttribute statementData: SequenceController.StatementData,
+             result: BindingResult,
+             model: Model,
+             @PathVariable subjectId: Long,
+             response: HttpServletResponse): String {
+        val user: User = authentication.principal as User
+
+        val subject = subjectService.get(user, subjectId, fetchStatementsAndAssignments = true)
+
+        if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("user", user)
+            model.addAttribute("subject", subject)
+            model.addAttribute("statement", statementData)
+            model.addAttribute("nbStatement",subject.statements.size)
+            return "/subject/statement/create"
+        } else {
+            val statementSaved = subjectService.addStatement(subject, statementData.toEntity(user))
+            statementService.updateFakeExplanationList(
+                    statementSaved,
+                    statementData.fakeExplanations
+            )
+            attachedFileIfAny(fileToAttached, statementSaved)
+            return "redirect:/subject/${subject.id}"
+        }
+    }
+
+    private fun attachedFileIfAny(fileToAttached: MultipartFile, it: Statement) {
+        if (!fileToAttached.isEmpty) {
+            attachmentService.saveStatementAttachment(
+                    it,
+                    SequenceController.createAttachment(fileToAttached),
+                    fileToAttached.inputStream)
+        }
+    }
+
+    @GetMapping("{subjectId}/addStatement")
+    fun addStatement(authentication: Authentication,
+                    model: Model,
+                    @PathVariable subjectId: Long): String {
+        val user: User = authentication.principal as User
+
+        val subject = subjectService.get(user, subjectId)
+
+        model.addAttribute("user", user)
+        model.addAttribute("subject", subject)
+        model.addAttribute("nbStatement",subject.statements.size)
+        model.addAttribute(
+                "statementData",
+                SequenceController.StatementData(
+                        Statement.createDefaultStatement(user)
+                )
+        )
+
+        return "/subject/statement/create"
+    }
+
+    @PostMapping("{id}/update")
+    fun update(authentication: Authentication,
+               @Valid @ModelAttribute subjectData: SubjectData,
+               result: BindingResult,
+               model: Model,
+               @PathVariable id: Long,
+               response: HttpServletResponse,
+               redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("subject", subjectData)
+            "/subject/$id"
+        } else {
+            subjectService.get(user, id).let {
+                it.updateFrom(subjectData.toEntity())
+                subjectService.save(it)
+
+                with(messageBuilder) {
+                    success(
+                            redirectAttributes,
+                            message(
+                                    "subject.updated.message",
+                                    message("subject.label"),
+                                    it.title
+                            )
+                    )
+                }
+                model.addAttribute("subject", it)
+                "redirect:/subject/$id"
+            }
+        }
+    }
+
+    @GetMapping("{id}/delete")
+    fun delete(authentication: Authentication,
+               @PathVariable id: Long,
+               redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        val subject = subjectService.get(user, id)
+        subjectService.delete(user, subject)
+
+        with(messageBuilder) {
+            success(
+                    redirectAttributes,
+                    message(
+                            "subject.deleted.message",
+                            message("subject.label"),
+                            subject.title
+                    )
+            )
+        }
+
+        return "redirect:/subject"
     }
 
     data class SubjectData(

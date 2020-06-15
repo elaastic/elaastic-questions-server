@@ -21,7 +21,9 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.questions.subject.statement.Statement
 import org.hibernate.annotations.SortNatural
+import org.hibernate.mapping.Bag
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -32,10 +34,22 @@ import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
 
 @Entity
+@NamedEntityGraph(
+        name = "Subject.statements_assignments",
+        attributeNodes = [
+            NamedAttributeNode(
+                    value = "statements"
+            ),
+            NamedAttributeNode(
+                    value = "assignments"
+                    )
+        ]
+)
 @EntityListeners(AuditingEntityListener::class)
 class Subject (
 
         @field:NotNull
+        @field:NotBlank
         var title: String,
 
         var course: String,
@@ -63,12 +77,12 @@ class Subject (
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "subject",
             targetEntity = Assignment::class)
-    @SortNatural
-    var assignments: MutableList<Assignment> = ArrayList()
+    var assignments: MutableSet<Assignment> = mutableSetOf()
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "subject",
             targetEntity = Statement::class)
+    @OrderBy("rank ASC")
     @SortNatural
     var statements: MutableList<Statement> = ArrayList()
 

@@ -19,12 +19,19 @@
 package org.elaastic.questions.subject
 
 
+import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.AssignmentRepository
+import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.questions.subject.statement.StatementRepository
 import org.elaastic.questions.test.TestingService
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test
+import org.junit.platform.commons.util.Preconditions.notNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+
 import java.util.*
 import javax.transaction.Transactional
 
@@ -33,12 +40,14 @@ import javax.transaction.Transactional
 @Transactional
 class SubjectRepositoryIntegrationTest (
         @Autowired val subjectRepository: SubjectRepository,
-        @Autowired val testingService: TestingService
+        @Autowired val testingService: TestingService,
+        @Autowired val assignmentRepository: AssignmentRepository,
+        @Autowired val statementRepository: StatementRepository
 ) {
 
     @Test
     fun `save a valid subject`() {
-        // Given : an assignment
+        // Given : a subject
         Subject(
                 "My test subject",
                 "My test course",
@@ -54,5 +63,33 @@ class SubjectRepositoryIntegrationTest (
                 assertThat(it.version, equalTo(0L))
             }
         }
+    }
+
+    @Test
+    fun `finding a subject with statements and assignments`(){
+        // Given a subject with statements and assignments
+        var randomUser = testingService.getAnyUser()
+        var subject: Subject = Subject(
+                "My test subject",
+                "My test course",
+                randomUser,
+                UUID.randomUUID().toString()
+        )
+
+        subjectRepository.saveAndFlush(subject)
+
+        Statement(
+                randomUser,
+                "My test statement",
+                "Test content",
+                QuestionType.OpenEnded,
+                subject=subject
+        ).let {
+            statementRepository.saveAndFlush(it)}
+
+        subjectRepository.findOneWithStatementsAndAssignmentsById(subject.id!!).let{
+            assertThat(it!!, equalToObject(subject))
+        }
+
     }
 }

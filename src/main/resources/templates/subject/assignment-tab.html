@@ -22,7 +22,7 @@
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <section>
-        <div class="ui segment bottom attached" th:if="${subject.course.isEmpty()}">
+        <div class="ui segment bottom attached" th:if="${subject.assignments.isEmpty()}">
             <p style="margin-left : 1em;" th:text="#{subject.assignment.empty}">
                 There is no assignment.
             </p>
@@ -75,10 +75,6 @@
 
         </script>
 
-        <!-- TODO
-        <div th:replace="subject/_modal_edit_properties :: modalEditProperties(${assignment})"></div>
-        -->
-
         <script th:inline="javascript">
             $(document).ready(function () {
                 let selectedAssignment = $(location.hash)
@@ -88,8 +84,6 @@
             })
 
             var elaastic = elaastic || {}
-
-            elaastic.showConfirmDeleteModal = function (sequenceId) {
 
         </script>
 

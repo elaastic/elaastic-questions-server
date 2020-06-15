@@ -19,10 +19,14 @@
 package org.elaastic.questions.subject.statement
 
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
+import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
 @Service
@@ -31,6 +35,16 @@ class StatementService(
         @Autowired val statementRepository: StatementRepository,
         @Autowired val fakeExplanationRepository: FakeExplanationRepository
 ) {
+    fun get(user: User, id: Long): Statement {
+        val statement:Statement = get(id)
+        if (statement.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
+        return statement
+    }
+
+    fun get(statementId: Long): Statement{
+        return statementRepository.getOne(statementId)
+    }
+
     fun save(statement: Statement): Statement {
         return statementRepository.save(statement)
     }

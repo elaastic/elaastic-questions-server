@@ -18,14 +18,14 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#specificMenu}, content=~{::section})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <title th:text="|elaastic: #{assignment.my.list.label}|">elaastic: My assignments</title>
+    <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My assignments</title>
 </head>
 
 <body>
-<aside id="specificMenu">
+<aside id="pageSpecificMenu">
     <a th:href="@{/subject/create}"
        href="create"
        class="item"
@@ -42,8 +42,8 @@
         <i class="book icon"></i>
 
         <div class="content">
-            <span th:text="#{assignment.my.list.label}">My assignments</span>
-            <div class="sub header" th:text="#{assignment.my.list.description}">
+            <span th:text="#{subject.my.list.label}">My assignments</span>
+            <div class="sub header" th:text="#{subject.my.list.description}">
                 This page lists all of your assignments
             </div>
         </div>
@@ -72,7 +72,7 @@
 
                 <a th:href="@{/subject/{id}(id=${subject.id})}"
                    href="assignment/123"
-                   th:attr="data-tooltip=#{assignment.action.show.label}"
+                   th:attr="data-tooltip=#{subject.action.show.label}"
                    data-tooltip="Modify assignment"
                    data-inverted=""
                    th:text="${subject.title}">
@@ -82,7 +82,7 @@
                 &nbsp; [
                 <a th:href="@{/subject/{id}(id=${subject.id})}"
                    href="subject/123"
-                   th:attr="data-tooltip=#{assignment.action.show.label}"
+                   th:attr="data-tooltip=#{subject.action.show.label}"
                    data-tooltip="Modify assignment"
                    data-inverted="">
                     <i class="edit outline icon" style="margin: 0;"></i>
@@ -100,7 +100,7 @@
 
 
     <div th:if="${#lists.isEmpty(subjectPage.content)}"
-         class="ui info message" th:text="#{assignment.you.have.none}">
+         class="ui info message" th:text="#{subject.you.have.none}">
         You have no assignment.
     </div>
 
@@ -111,8 +111,8 @@
                    href="create"
                    class="ui primary button">
                     <i class="add icon"></i>
-                    <span th:text="#{assignment.create.label}">
-        Create an assignment
+                    <span th:text="#{subject.create.label}">
+        Create a subject
       </span>
                 </a>
             </div>

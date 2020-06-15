@@ -20,6 +20,7 @@ package org.elaastic.questions.subject.statement
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.*
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -62,9 +63,11 @@ class Statement(
         var expectedExplanation: String? = null,
 
         @field:ManyToOne( fetch = FetchType.LAZY)
-        var subject: Subject? = null
+        var subject: Subject? = null,
 
-) : AbstractJpaPersistable<Long>() {
+        var rank: Int = 0
+
+) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
     @Version
     var version: Long? = null
@@ -97,6 +100,10 @@ class Statement(
 
     @Transient
     fun hasChoices() = isMultipleChoice() || isExclusiveChoice()
+
+    override fun compareTo(other: Statement): Int {
+        return rank.compareTo(other.rank)
+    }
 
     fun title(value: String): Statement {
         this.title = value
