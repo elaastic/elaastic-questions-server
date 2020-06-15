@@ -24,7 +24,6 @@ import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import java.util.*
 import javax.annotation.PostConstruct
-import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @Service
@@ -40,6 +39,7 @@ class TermsService(
         var ACTIVE_TERM_ID: Long = -1
         var TERM_CONTENT_EN_ID: Long = -1
         var TERM_CONTENT_FR_ID: Long = -1
+        var TERM_CONTENT_ES_ID: Long = -1
     }
 
     /**
@@ -59,6 +59,7 @@ class TermsService(
         return when(language) {
             Locale.FRENCH.language -> termsContentRepository.getOne(TERM_CONTENT_FR_ID).content
             Locale.ENGLISH.language -> termsContentRepository.getOne(TERM_CONTENT_EN_ID).content
+            "es" -> termsContentRepository.getOne(TERM_CONTENT_ES_ID).content
             else -> termsContentRepository.getOne(TERM_CONTENT_EN_ID).content
         }
     }
@@ -73,12 +74,14 @@ class TermsService(
                 setVariable("startDate", startDate)
                 listOf(
                         templateEngine.process("terms/terms_fr", this),
-                        templateEngine.process("terms/terms_en", this)
+                        templateEngine.process("terms/terms_en", this),
+                        templateEngine.process("terms/terms_es", this)
                 )
             }.let {
                 Terms(startDate).let { terms ->
                     TermsContent(it[0], terms)
                     TermsContent(it[1], terms, "en")
+                    TermsContent(it[2], terms, "es")
                     activeTerms = save(terms)
                 }
             }
@@ -86,6 +89,7 @@ class TermsService(
         ACTIVE_TERM_ID = activeTerms!!.id!!
         TERM_CONTENT_EN_ID = activeTerms!!.termsContentsByLanguage["en"]!!.id!!
         TERM_CONTENT_FR_ID = activeTerms!!.termsContentsByLanguage["fr"]!!.id!!
+        TERM_CONTENT_ES_ID = activeTerms!!.termsContentsByLanguage["es"]!!.id!!
     }
 
     /**
