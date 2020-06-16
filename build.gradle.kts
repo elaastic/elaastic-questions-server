@@ -39,7 +39,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-allopen")
-    implementation("org.springframework.data:spring-data-rest-hal-browser")
+    implementation("org.springframework.data:spring-data-rest-hal-explorer")
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("com.icegreen:greenmail:1.5.10")
     implementation(files("lib/ApacheJMeter_oauth-v2.jar"))
