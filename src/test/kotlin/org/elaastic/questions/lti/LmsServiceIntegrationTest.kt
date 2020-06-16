@@ -36,7 +36,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.lang.IllegalArgumentException
 import javax.transaction.Transactional
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LmsServiceIntegrationTest(
         @Autowired val lmsService: LmsService,

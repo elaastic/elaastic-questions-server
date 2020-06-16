@@ -29,7 +29,7 @@ import java.util.*
 import javax.transaction.Transactional
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class AssignmentRepositoryIntegrationTest(
         @Autowired val assignmentRepository: AssignmentRepository,

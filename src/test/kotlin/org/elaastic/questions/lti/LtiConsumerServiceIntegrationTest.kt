@@ -29,7 +29,7 @@ import java.io.IOException
 import java.util.logging.Logger
 import javax.transaction.Transactional
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LtiConsumerServiceIntegrationTest(
         @Autowired val ltiConsumerService: LtiConsumerService,

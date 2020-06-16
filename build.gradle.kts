@@ -2,18 +2,17 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    kotlin("plugin.jpa") version "1.2.71"
-    id("org.springframework.boot") version "2.1.5.RELEASE"
-    id("io.spring.dependency-management") version "1.0.7.RELEASE"
+    kotlin("plugin.jpa") version "1.3.72"
+    id("org.springframework.boot") version "2.3.0.RELEASE"
+    id("io.spring.dependency-management") version "1.0.9.RELEASE"
     war
-    kotlin("jvm") version "1.2.71"
-    kotlin("plugin.spring") version "1.2.71"
-    id("com.palantir.docker") version "0.22.1"
-    id("org.flywaydb.flyway") version "5.2.4"
+    kotlin("jvm") version "1.3.72"
+    kotlin("plugin.spring") version "1.3.72"
+    id("com.palantir.docker") version "0.25.0"
 }
 
 group = "org.elaastic.questions"
-version = "3.0.2"
+version = "3.0.3"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -22,6 +21,7 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-cache")
@@ -39,15 +39,16 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-allopen")
-    implementation("org.springframework.data:spring-data-rest-hal-browser")
+    implementation("org.springframework.data:spring-data-rest-hal-explorer")
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("com.icegreen:greenmail:1.5.10")
     implementation(files("lib/ApacheJMeter_oauth-v2.jar"))
     implementation("com.google.code.gson:gson:2.8.5")
     implementation("commons-io:commons-io:2.6")
     implementation("org.apache.commons:commons-csv:1.5")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
 
-    runtime("mysql:mysql-connector-java")
+    runtimeOnly("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 

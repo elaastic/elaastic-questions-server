@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions
+var elaastic = elaastic || {};
 
-import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ElaasticQuestionsServerTests {
-
-	@Test
-	fun contextLoads() {
-	}
-
-}
+elaastic.autoReload = {
+    createAutoReloader: function (url) {
+        const socket = new WebSocket(url);
+        socket.onmessage = function (event) {
+            if (event.data == "reload") {
+                setTimeout(() => location.reload(), 1000);
+            }
+        };
+        return socket;
+    },
+};

@@ -44,7 +44,7 @@ import javax.validation.ConstraintViolationException
 import kotlin.collections.ArrayList
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class AssignmentServiceIntegrationTest(
         @Autowired val assignmentService: AssignmentService,

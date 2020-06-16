@@ -35,7 +35,7 @@ import java.util.logging.Logger
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class PasswordResetMailServiceIntegrationTest(
         @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,

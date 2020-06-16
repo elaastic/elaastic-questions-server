@@ -34,6 +34,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
+import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -59,6 +60,8 @@ class PlayerController(
         @Autowired val messageBuilder: MessageBuilder,
         @Autowired val resultsService: ResultsService
 ) {
+
+    private val autoReloadSessionHandler = AutoReloadSessionHandler
 
     @GetMapping(value = ["", "/", "/index"])
     fun index(authentication: Authentication,
@@ -212,6 +215,7 @@ class PlayerController(
                             studentsProvideExplanation ?: true,
                             responseToEvaluateCount ?: 0
                     )
+                    autoReloadSessionHandler.broadcastReload(id)
                 }
 
         return "redirect:/player/sequence/${id}/play"
@@ -223,6 +227,7 @@ class PlayerController(
                          @PathVariable id: Long): String {
         val user: User = authentication.principal as User
         val interaction = interactionService.start(user, id)
+        autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
         return "redirect:/player/sequence/${interaction.sequence.id}/play"
     }
 
@@ -235,6 +240,7 @@ class PlayerController(
         interactionService.findById(id).let {
             sequenceService.loadInteractions(it.sequence)
             val interaction = interactionService.startNext(user, it)
+            autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
             return "redirect:/player/sequence/${interaction.sequence.id}/play"
         }
     }
@@ -248,6 +254,7 @@ class PlayerController(
         interactionService.findById(id).let {
             sequenceService.loadInteractions(it.sequence)
             interactionService.stop(user, id)
+            autoReloadSessionHandler.broadcastReload(it.sequence.id!!)
             return "redirect:/player/sequence/${it.sequence.id}/play"
         }
     }
@@ -260,6 +267,7 @@ class PlayerController(
 
         sequenceService.get(user, id).let {
             sequenceService.stop(user, it)
+            autoReloadSessionHandler.broadcastReload(id)
         }
 
         return "redirect:/player/sequence/${id}/play"
@@ -273,6 +281,7 @@ class PlayerController(
 
         sequenceService.get(user, id).let {
             sequenceService.reopen(user, it)
+            autoReloadSessionHandler.broadcastReload(id)
         }
 
         return "redirect:/player/sequence/${id}/play"
@@ -286,6 +295,7 @@ class PlayerController(
 
         sequenceService.get(user, id, true).let {
             sequenceService.publishResults(user, it)
+            autoReloadSessionHandler.broadcastReload(id)
         }
 
         return "redirect:/player/sequence/${id}/play"
@@ -312,6 +322,7 @@ class PlayerController(
 
         sequenceService.get(user, id, true).let {
             sequenceService.unpublishResults(user, it)
+            autoReloadSessionHandler.broadcastReload(id)
         }
 
         return "redirect:/player/sequence/${id}/play"

@@ -44,7 +44,7 @@ import java.math.BigDecimal
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class ResponseServiceIntegrationTest(
         @Autowired val testingService: TestingService,
