@@ -34,7 +34,6 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
-import org.elaastic.questions.player.websocket.AutoReloadServer
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
