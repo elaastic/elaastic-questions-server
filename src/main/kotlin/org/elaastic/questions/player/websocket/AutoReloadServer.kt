@@ -23,7 +23,7 @@ import javax.websocket.*
 import javax.websocket.server.PathParam
 import javax.websocket.server.ServerEndpoint
 
-@ServerEndpoint(value = "/player/sequence/{id}/auto-reload")
+@ServerEndpoint(value = "/player/sequence/auto-reload/{id}")
 class AutoReloadServer {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
