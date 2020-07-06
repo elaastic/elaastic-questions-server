@@ -16,32 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions
+package org.elaastic.questions.subject;
 
 import org.elaastic.questions.directory.User
-import org.springframework.security.core.Authentication
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.servlet.ModelAndView
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.EntityGraph
+import org.springframework.data.jpa.repository.JpaRepository
+import org.elaastic.questions.subject.Subject
 
-/**
- * Controller for the homepage of each user
- * It basically delegates to the appropriate controller depending on the user role
- * @author John Tranier
- */
-@Controller
-class HomeController {
 
-    @GetMapping("/home")
-    fun home(authentication: Authentication): ModelAndView {
-        val user: User = authentication.principal as User
+interface SubjectRepository : JpaRepository<Subject?, Long> {
 
-        return ModelAndView(
-                when {
-                    user.isLearner() -> "forward:/player/index"
-                    else -> "forward:/subject/index"
-                }
+    fun findAllByOwner(owner: User, pageable: Pageable): Page<Subject>
 
-        )
-    }
+    @EntityGraph(value = "Subject.statements_assignments", type = EntityGraph.EntityGraphType.LOAD)
+    fun findOneWithStatementsAndAssignmentsById(id: Long): Subject?
+
+    fun findOneById(id: Long): Subject?
+
+    fun findByGlobalId(globalId: String): Subject?
+
 }

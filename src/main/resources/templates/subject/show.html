@@ -1,0 +1,138 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title th:text="|elaastic: ${subject.title} - ${subject.course} |">elaastic: Subject edit</title>
+</head>
+
+<body>
+<aside id="pageSpecificMenu">
+  <script>
+    var elaastic = elaastic || {}
+  </script>
+
+  <div class="item"
+       onclick="$('#subject-editProperties-modal').modal('show');"
+       th:attr="data-tooltip=#{subject.action.propertiesEdition.label}"
+       data-tooltip="Edit"
+       data-position="right center"
+       data-inverted="">
+    <i class="setting icon"></i>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="item"
+       onclick="$('#confirm-delete-subject-modal').modal('show');"
+       th:attr="data-tooltip=#{subject.action.delete.label}"
+       data-tooltip="Delete"
+       data-position="right center"
+       data-inverted="">
+    <i class="big trash icon"></i>
+  </div>
+</aside>
+
+<section>
+
+  <div id="subjectPage">
+
+    <h1 class="content" style="vertical-align: middle;" th:text="#{subject.page.show.title}" >
+      Manage a subject
+    </h1>
+    <div class="sub header" th:text="#{subject.page.show.notice}">
+      This page allows you to add, remove, edit, and reorder questions of a subject. It also allows you to make
+      assignment with questions of the subject.
+    </div>
+
+    <h2 class="ui header" style="margin-top: 1em;">
+      <i class="large icons">
+        <i class="book icon"></i>
+        <i class="corner pencil alternate  icon"></i>
+      </i>
+
+      <span th:text="${subject.title}">Titre sujet</span>
+      <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
+    </h2>
+
+
+    <div class="ui top attached tabular menu">
+      <div id="subject-managment-tab" class="item active" data-tab="questions"
+           th:text="#{subject.page.show.questions-tab-title}">questions</div>
+      <div class="item" data-tab="assignments" th:text="#{subject.page.show.assignments-tab-title}">assignments</div>
+    </div>
+
+    <!-- Question Tab -->
+    <div class="ui bottom attached tab active segment" data-tab="questions">
+        <div th:replace="|/subject/question-tab.html| :: subjectItem(${subject})"></div>
+    </div>
+
+    <!-- Assignments Tab -->
+    <div class="ui bottom attached tab segment" data-tab="assignments">
+        <div th:replace="|/subject/assignment-tab.html| :: subjectItem(${subject})"></div>
+    </div>
+
+    <div th:replace="subject/_modal_edit_properties :: modalEditProperties(${subject})"></div>
+
+  </div>
+  <script th:inline="javascript">
+    $('.menu .item').tab();
+  </script>
+
+  <!--  Delete confirm modal-->
+  <div>
+    <div id="confirm-delete-subject-modal" class="ui tiny modal">
+      <div class="header">
+        <span th:text="#{common.delete}">Delete</span>
+      </div>
+
+      <div class="content">
+        <p>
+          <span th:text="#{subject.delete.confirm(${subject.title})}">
+            Do you really want to delete the assignment "{0}"
+          </span>
+        </p>
+      </div>
+
+      <div class="actions">
+        <div class="ui red approve button">
+          <span th:text="#{common.yes}">Yes</span>
+        </div>
+
+        <div class="ui cancel button">
+          <span th:text="#{common.no}">No</span>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      $('#confirm-delete-subject-modal').modal({
+        onApprove: function () {
+          window.location = /*[[@{/subject/{id}/delete(id=${subject.id})}]]*/ '/subject/123/delete'
+        }
+      })
+    </script>
+  </div>
+
+</section>
+
+</body>
+</html>

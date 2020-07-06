@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.attachment
 
-import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.attachment.datastore.DataIdentifier
 import org.elaastic.questions.attachment.datastore.FileDataStore
 import org.elaastic.questions.directory.User
@@ -29,11 +29,6 @@ import java.io.InputStream
 import java.util.logging.Level
 import java.util.logging.Logger
 import javax.imageio.ImageIO
-import javax.imageio.ImageReader
-import javax.imageio.stream.ImageInputStream
-import javax.imageio.stream.MemoryCacheImageInputStream
-import javax.persistence.EntityManager
-import javax.persistence.FlushModeType
 import javax.transaction.Transactional
 
 @Service

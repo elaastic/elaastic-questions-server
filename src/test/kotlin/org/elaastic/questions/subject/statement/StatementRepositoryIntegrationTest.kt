@@ -16,8 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment
+package org.elaastic.questions.subject.statement
 
+import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
@@ -103,7 +104,7 @@ internal class StatementRepositoryIntegrationTest(
                 user,
                 "Parent statement",
                 "...",
-                QuestionType.ExclusiveChoice
+                questionType = QuestionType.ExclusiveChoice
         )
 
         val childStatement = Statement(

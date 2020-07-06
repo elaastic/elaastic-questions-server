@@ -19,7 +19,7 @@
 package org.elaastic.questions.player.components.statement
 
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.Statement
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.attachment.Attachment
 
 data class StatementInfo(

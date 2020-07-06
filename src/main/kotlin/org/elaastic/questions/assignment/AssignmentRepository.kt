@@ -36,5 +36,4 @@ interface AssignmentRepository : JpaRepository<Assignment?, Long> {
 
     fun findByGlobalId(globalId: String): Assignment?
 
-    fun deleteByIdAndOwner(id: Long, user: User): Long
 }

@@ -16,12 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment
+package org.elaastic.questions.subject.statement
 
+import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.*
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.questions.subject.Subject
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -57,9 +60,14 @@ class Statement(
         var parentStatement: Statement? = null,
 
         @field:Column(name = "expected_explanation")
-        var expectedExplanation: String? = null
+        var expectedExplanation: String? = null,
 
-) : AbstractJpaPersistable<Long>() {
+        @field:ManyToOne( fetch = FetchType.LAZY)
+        var subject: Subject? = null,
+
+        var rank: Int = 0
+
+) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
     @Version
     var version: Long? = null
@@ -92,6 +100,10 @@ class Statement(
 
     @Transient
     fun hasChoices() = isMultipleChoice() || isExclusiveChoice()
+
+    override fun compareTo(other: Statement): Int {
+        return rank.compareTo(other.rank)
+    }
 
     fun title(value: String): Statement {
         this.title = value

@@ -16,13 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment
+package org.elaastic.questions.subject
 
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
-import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.statement.Statement
 import org.hibernate.annotations.SortNatural
+import org.hibernate.mapping.Bag
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -32,40 +33,35 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
 
-
 @Entity
 @NamedEntityGraph(
-        name = "Assignment.sequences",
+        name = "Subject.statements_assignments",
         attributeNodes = [
             NamedAttributeNode(
-                    value = "sequences",
-                    subgraph = "Sequence.statement"
-            )
-        ],
-        subgraphs = [
-            NamedSubgraph(
-                    name = "Sequence.statement",
-                    attributeNodes = [NamedAttributeNode("statement")]
-            )
+                    value = "statements"
+            ),
+            NamedAttributeNode(
+                    value = "assignments"
+                    )
         ]
 )
 @EntityListeners(AuditingEntityListener::class)
-class Assignment(
+class Subject (
+
+        @field:NotNull
         @field:NotBlank
         var title: String,
 
-        @field:NotNull
+        var course: String,
+
         @field:ManyToOne(fetch = FetchType.LAZY)
         var owner: User,
 
         @field:NotNull
         @field:NotBlank
-        var globalId: String = UUID.randomUUID().toString(),
+        var globalId: String = UUID.randomUUID().toString()
 
-        @field:ManyToOne( fetch = FetchType.EAGER)
-        var subject: Subject? = null
-
-) : AbstractJpaPersistable<Long>() {
+): AbstractJpaPersistable<Long>() {
 
     @Version
     var version: Long? = null
@@ -79,30 +75,48 @@ class Assignment(
     var lastUpdated: Date? = null
 
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "assignment",
-            targetEntity = Sequence::class)
+            mappedBy = "subject",
+            targetEntity = Assignment::class)
+    var assignments: MutableSet<Assignment> = mutableSetOf()
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "subject",
+            targetEntity = Statement::class)
     @OrderBy("rank ASC")
     @SortNatural
-    var sequences: MutableList<Sequence> = ArrayList()
+    var statements: MutableList<Statement> = ArrayList()
 
-    fun updateFrom(otherAssignment: Assignment) {
-        require(id == otherAssignment.id)
-        if (this.version != otherAssignment.version) {
+    fun updateFrom(otherSubject: Subject) {
+        require(id == otherSubject.id)
+        if (this.version != otherSubject.version) {
             throw OptimisticLockException()
         }
 
-        this.title = otherAssignment.title
+        this.title = otherSubject.title
+        this.course = otherSubject.course
     }
 
-    fun addSequence(sequence: Sequence): Sequence {
-        require(sequence.owner == owner) {
-            "The owner of the assignment cannot be different from the owner of sequence"
+    fun addStatement(statement: Statement): Statement {
+        require(statement.owner == owner) {
+            "The owner of the statement cannot be different from the owner of subject"
         }
 
-        sequences.add(sequence)
-        sequence.assignment = this
-        sequence.owner = owner
+        statements.add(statement);
+        statement.subject = this;
+        statement.owner = owner
 
-        return sequence
+        return statement
+    }
+
+    fun addAssignment(assignment: Assignment): Assignment {
+        require(assignment.owner == owner) {
+            "The owner of the assignment cannot be different from the owner of subject"
+        }
+
+        assignments.add(assignment);
+        assignment.subject = this;
+        assignment.owner = owner
+
+        return assignment
     }
 }

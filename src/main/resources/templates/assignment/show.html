@@ -17,107 +17,11 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
-      xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head>
-  <title th:text="|elaastic: ${assignment.title}|">elaastic: My assignments</title>
-</head>
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <body>
-<aside id="pageSpecificMenu">
-  <script>
-    var elaastic = elaastic || {}
-  </script>
-
-  <a class="item"
-     th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}"
-     href="addSequence"
-     th:attr="data-tooltip=#{assignment.action.addSequence.label}"
-     data-tooltip="Add a question"
-     data-position="right center"
-     data-inverted="">
-    <i class="yellow plus square outline icon"></i>
-  </a>
-
-  <a class="item"
-     th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
-     th:attr="data-tooltip=#{player.assignment.play}"
-     data-tooltip="Play the assignment"
-     data-position="right center"
-     data-inverted="">
-    <i class="yellow play icon"></i>
-  </a>
-
-  <div class="item"
-       onclick="elaastic.showLearnerAccessModal()"
-       th:attr="data-tooltip=#{assignment.learnerAccess.oneLine}"
-       data-tooltip="Link for learners"
-       data-position="right center"
-       data-inverted="">
-    <i class="yellow feed icon"></i>
-  </div>
-
-  <div class="item"
-       onclick="elaastic.showLtiParameterModal()"
-       th:attr="data-tooltip=#{assignment.ltiparameter.oneLine}"
-       data-tooltip="LTI Parameter"
-       data-position="right center"
-       data-inverted="">
-    <i class="yellow graduation icon"></i>
-  </div>
-
-  <div id="show-assignment-more-actions-dropdown"
-       class="ui dropdown item"
-       th:attr="data-tooltip=#{common.more.actions}"
-       data-tooltip="More actions..."
-       data-position="right center"
-       data-inverted="">
-    <i class="yellow sidebar icon"></i>
-
-    <div th:replace="assignment/_assignment_actions::assignmentActions"></div>
-  </div>
-
-  <script>
-
-    $(document)
-      .ready(function () {
-        // Initialize dropdown
-        $('#show-assignment-more-actions-dropdown').dropdown()
-      })
-
-    /*]]>*/
-  </script>
-</aside>
 
 <section>
-
-  <h2 class="ui header">
-    <i class="large icons">
-      <i class="book icon"></i>
-      <i class="corner pencil alternate  icon"></i>
-    </i>
-
-    <div class="content" style="vertical-align: middle;" th:text="#{assignment.page.show.title}">
-      Design an assignment
-      <div class="sub header" th:text="#{assignment.page.show.notice}">
-        This page allows you to add, remove, edit, and reorder questions.
-      </div>
-    </div>
-  </h2>
-
-  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-    Message
-  </div>
-
-  <h3 class="ui top attached block header">
-    <div class="content">
-    <span onclick="$('#assignment-editProperties-modal').modal('show');"
-          style="cursor: pointer" th:text="${assignment?.title}">
-      Assignment title
-    </span>
-    </div>
-  </h3>
 
   <div class="ui segment bottom attached" th:if="${#lists.isEmpty(assignment.sequences)}">
     <p th:text="#{assignment.empty}">
@@ -127,7 +31,8 @@
 
   <div th:each="sequence, i : ${assignment.sequences}"
        class="ui clearing segment attached large text"
-       th:id="|sequence_${sequence.id}|">
+       th:id="|sequence_${sequence.id}|"
+       style="padding: 1em;">
     <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
       <div
         th:replace="assignment/sequence/_sequence_actions.html :: sequenceActions(${sequence}, ${position}, ${i.size})"></div>
@@ -167,6 +72,16 @@
 
   <div th:replace="assignment/_modal_lti_parameter.html :: modalLtiParameter(${assignment})"></div>
 
+  <style>
+    .ui.header {
+      margin-top: calc(-0.142857em + 0.5rem);
+    }
+    .ui.segment {
+      margin-left : 1em;
+      padding-left : 0em;
+      padding-right: 0em;
+    }
+  </style>
 
   <script>
     $(document)
