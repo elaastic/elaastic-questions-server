@@ -22,6 +22,8 @@ import com.nhaarman.mockitokotlin2.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
+import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.SubjectService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -54,6 +56,9 @@ internal class AssignmentControllerTest(
 
     @MockBean
     lateinit var messageBuilder: MessageBuilder
+
+    @MockBean
+    lateinit var subjectService: SubjectService
 
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
@@ -92,11 +97,14 @@ internal class AssignmentControllerTest(
     fun `test save - valid`() {
         val assignmentId = 123L
         val title = "A title"
+        val subject = Subject("a","a",user)
+        subjectService.save(subject)
 
         val assignmentData = AssignmentController.AssignmentData(
                 id = assignmentId,
                 title = title,
-                owner = user
+                owner = user,
+                subject = subject
         )
 
         mockMvc.perform(
@@ -108,8 +116,8 @@ internal class AssignmentControllerTest(
                 .andExpect(status().isFound())
                 .andExpect(
                         redirectedUrlTemplate(
-                                "/assignment/{assignmentId}",
-                                assignmentId
+                                "subject/{subjectId}",
+                                subject.id
                         )
                 )
     }

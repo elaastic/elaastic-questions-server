@@ -1,5 +1,7 @@
 package org.elaastic.questions.subject
 
+import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.expression.spel.ast.Assign
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
@@ -24,6 +27,7 @@ class SubjectService (
         @Autowired val subjectRepository: SubjectRepository,
         @Autowired val statementService: StatementService,
         @Autowired val statementRepository: StatementRepository,
+        @Autowired val assignmentService: AssignmentService,
         @Autowired val entityManager: EntityManager
 
 ) {
@@ -153,4 +157,16 @@ class SubjectService (
         subject.statements.mapIndexed { index, statement -> statement.rank = index + 1 }
     }
 
+    // TODO TEST
+    fun addAssignment(subject: Subject, assignment: Assignment): Assignment {
+        assignment.subject = subject
+        assignmentService.save(assignment)
+        assignmentService.buildFromSubject(assignment, subject);
+        println("1 :"+subject.statements.size)
+        subject.assignments.add(assignment)
+        println("2 :"+subject.statements.size)
+        touch(subject)
+        println("3 :"+subject.statements.size)
+        return assignment
+    }
 }

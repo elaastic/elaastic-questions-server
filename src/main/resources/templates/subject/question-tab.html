@@ -17,19 +17,19 @@
   -->
 
 <!DOCTYPE html>
-<div th:fragment="subjectItem(subject)"
+<div th:fragment="subjectItem(subject, statements)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <section>
 
-        <div class="ui segment bottom attached" th:if="${subject.statements.isEmpty()}">
+        <div class="ui segment bottom attached" th:if="${statements.isEmpty()}">
             <p style="margin-left : 1em;" th:text="#{subject.statement.empty}">
                 This subject is empty
             </p>
         </div>
 
-        <div th:each="statement, i : ${subject.statements}"
+        <div th:each="statement, i : ${statements}"
              class="ui clearing segment attached large text"
              th:id="|statement_${statement.id}|"
              style="padding: 1em;">

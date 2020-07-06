@@ -24,6 +24,7 @@ import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -105,7 +106,7 @@ class AssignmentService(
         )
 
         assignment.addSequence(sequence)
-        statementService.save(sequence.statement)
+        //statementService.save(sequence.statement)
         sequenceRepository.save(sequence)
         touch(assignment)
 
@@ -276,6 +277,13 @@ class AssignmentService(
                     return it
                 }
             }
+        }
+    }
+
+    fun buildFromSubject(assignment: Assignment, subject: Subject) {
+        for (statement: Statement in subject.statements){
+            this.addSequence(assignment,statement)
+            touch(assignment)
         }
     }
 }

@@ -28,7 +28,6 @@
             </p>
         </div>
 
-        <!--
         <div th:each="assignment, i : ${subject.assignments}"
              class="ui clearing segment attached large text"
              th:id="|assignment_${assignment.id}|"
@@ -41,17 +40,17 @@
                 </h3>
             </div>
             <div class="ui hidden divider"></div>
-        </div>-->
+        </div>
 
-        <!-- TODO button adding an Assignment
+
         <div class="ui basic segment">
             <a class="ui primary button"
-               th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}">
+               th:href="@{/subject/{id}/addAssignment(id=${subject.id})}">
                 <i class="add icon"></i>
                 <span th:text="#{subject.assignment.addAssignment}">Add an assignment</span>
             </a>
         </div>
-        -->
+
 
         <style>
             .ui.header {

@@ -19,6 +19,7 @@
 package org.elaastic.questions.subject
 
 import org.elaastic.questions.assignment.AssignmentController
+import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.AttachmentService
@@ -51,7 +52,8 @@ class SubjectController(
         @Autowired val subjectService: SubjectService,
         @Autowired val statementService: StatementService,
         @Autowired val attachmentService: AttachmentService,
-        @Autowired val messageBuilder: MessageBuilder
+        @Autowired val messageBuilder: MessageBuilder,
+        @Autowired val assignmentService: AssignmentService
 ){
 
     @GetMapping(value = ["", "/", "/index"])
@@ -83,11 +85,16 @@ class SubjectController(
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(authentication: Authentication, model: Model, @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        model.addAttribute("user", user)
 
-        subjectService.get(user, id, fetchStatementsAndAssignments = true).let {
-            model.addAttribute("user", user)
-            model.addAttribute("subject", it)
+        var subject: Subject = subjectService.get(user, id, fetchStatementsAndAssignments = true)
+        model.addAttribute("subject",subject)
+
+        var statements: MutableList<Statement> = ArrayList()
+        for (statement:Statement in subject.statements){
+            if (!statements.contains(statement)) statements.add(statement)
         }
+        model.addAttribute("statements",statements)
 
         return "/subject/show"
     }
@@ -167,8 +174,8 @@ class SubjectController(
     fun addStatement(authentication: Authentication,
                     model: Model,
                     @PathVariable subjectId: Long): String {
-        val user: User = authentication.principal as User
 
+        val user: User = authentication.principal as User
         val subject = subjectService.get(user, subjectId)
 
         model.addAttribute("user", user)
@@ -182,6 +189,51 @@ class SubjectController(
         )
 
         return "/subject/statement/create"
+    }
+
+    @PostMapping("{subjectId}/addAssignment")
+    fun addAssignment(authentication: Authentication,
+                      @Valid @ModelAttribute assignmentData: AssignmentController.AssignmentData,
+                      result: BindingResult,
+                      model: Model,
+                      response: HttpServletResponse,
+                      @PathVariable subjectId: Long): String {
+        val user: User = authentication.principal as User
+        val subject = subjectService.get(user, subjectId)
+
+        model.addAttribute("user", user)
+        model.addAttribute("subject", subject)
+
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("user", user)
+            model.addAttribute("assignment", assignmentData)
+            "redirect:/subject/${subject.id}/addAssignment"
+        } else {
+            val assignment = assignmentData.toEntity()
+            assignmentService.save(assignment)
+            subjectService.addAssignment(subject,assignment)
+            println("just before :"+subject.statements.size)
+            "redirect:/subject/${subject.id}"
+        }
+
+    }
+
+    @GetMapping("{subjectId}/addAssignment")
+    fun addAssignment(authentication: Authentication,
+                      model: Model,
+                      @PathVariable subjectId: Long): String {
+
+        val user: User = authentication.principal as User
+        val subject = subjectService.get(user, subjectId)
+
+        model.addAttribute("user", user)
+        model.addAttribute("nbAssignments",subject.assignments.size)
+        if (!model.containsAttribute("assignment")) {
+            model.addAttribute("assignment", AssignmentController.AssignmentData(owner = user, subject=subject))
+        }
+
+        return "/assignment/create"
     }
 
     @PostMapping("{id}/update")
