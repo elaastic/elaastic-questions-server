@@ -30,18 +30,25 @@
 
         <div th:each="assignment, i : ${subject.assignments}"
              class="ui clearing segment attached large text"
-             th:id="|assignment_${assignment.id}|"
+             th:id="|assignment${assignment.id}|"
              style="padding: 1em;">
             <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
-                <div></div>
+                <div th:replace="subject/_assignment_actions.html :: assignmentActions(${assignment}, ${position}, ${i.size})"></div>
+
                 <h3 class="ui header">
+                    <a th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
+                       href="/sequence/123/edit"
+                       th:id="${assignment.id}">
+                        <div class="ui tiny circular label"
+                             style="margin-right: 1em;" th:text="${position}">
+                            3
+                        </div>
+
                         <span th:id="|assignment-title-${assignment.id}|" th:text="${assignment.title}">Title</span>
                     </a>
                 </h3>
             </div>
-            <div class="ui hidden divider"></div>
         </div>
-
 
         <div class="ui basic segment">
             <a class="ui primary button"
@@ -84,7 +91,50 @@
 
             var elaastic = elaastic || {}
 
+            elaastic.showConfirmDeleteAssignmentModal = function (assignmentId) {
+
+                let title = $('#assignment-title-' + assignmentId).text()
+                let sentenceTemplate = /*[[#{assignment.delete.confirm}]]*/ ''
+                let sentence = sentenceTemplate.replace('{0}', title)
+
+                $('#confirm-delete-assignment-modal-title').text(sentence)
+
+                let confirmDeleteAssignmentModal = $('#confirm-delete-assignment-modal')
+                confirmDeleteAssignmentModal.modal({
+                    onApprove: function () {
+                        let baseUrl = /*[[@{/assignment/}]]*/ ''
+                        window.location = baseUrl + assignmentId + '/delete'
+                    }
+                })
+
+                confirmDeleteAssignmentModal.modal('show')
+            }
         </script>
+
+        <!--  Delete confirm modal-->
+        <div>
+            <div id="confirm-delete-assignment-modal" class="ui tiny modal">
+                <div class="header" th:text="#{common.delete}">
+                    Delete
+                </div>
+
+                <div class="content">
+                    <p id="confirm-delete-assignment-modal-title">
+                        Do you really want to delete the question "{0}"?
+                    </p>
+                </div>
+
+                <div class="actions">
+                    <div class="ui red approve button" th:text="#{common.yes}">
+                        Yes
+                    </div>
+
+                    <div class="ui cancel button" th:text="#{common.no}">
+                        No
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </section>
 </div>

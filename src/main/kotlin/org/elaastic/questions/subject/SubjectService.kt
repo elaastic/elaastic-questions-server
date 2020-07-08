@@ -160,13 +160,51 @@ class SubjectService (
     // TODO TEST
     fun addAssignment(subject: Subject, assignment: Assignment): Assignment {
         assignment.subject = subject
+        assignment.rank = (subject.assignments.map { it.rank }.max() ?: 0) + 1
         assignmentService.save(assignment)
         assignmentService.buildFromSubject(assignment, subject);
-        println("1 :"+subject.statements.size)
         subject.assignments.add(assignment)
-        println("2 :"+subject.statements.size)
+        for (a:Assignment in subject.assignments){
+            println(a.title + " : " + a.rank)
+        }
         touch(subject)
-        println("3 :"+subject.statements.size)
         return assignment
+    }
+
+    fun moveUpAssignment(subject: Subject, assignmentId: Long) {
+        val idsArray = subject.assignments.map { it.id }.toTypedArray()
+        val pos = idsArray.indexOf(assignmentId)
+
+        if (pos == -1)
+            throw IllegalStateException("This assignment $assignmentId does not belong to subject ${subject.id}")
+        if (pos == 0)
+            return  // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE assignment SET rank = CASE " +
+                        "WHEN id=${assignmentId} THEN ${pos} " +
+                        "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
+                        " END " +
+                        "WHERE id in (${idsArray[pos - 1]}, ${assignmentId})"
+        ).executeUpdate()
+    }
+
+    fun moveDownAssignment(subject: Subject, assignmentId: Long) {
+        val idsArray = subject.assignments.map { it.id }.toTypedArray()
+        val pos = idsArray.indexOf(assignmentId)
+        val posValue = pos + 1
+
+        if (pos == -1)
+            throw IllegalStateException("This assignment $assignmentId does not belong to subject ${subject.id}")
+        if (pos == subject.assignments.size - 1)
+            return  // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE assignment SET rank = CASE " +
+                        "WHEN id=${assignmentId} THEN ${posValue + 1} " +
+                        "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
+                        " END " +
+                        "WHERE id in (${idsArray[pos + 1]}, ${assignmentId})"
+        ).executeUpdate()
     }
 }

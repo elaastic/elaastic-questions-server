@@ -181,7 +181,7 @@ class AssignmentController(
             )
         }
 
-        return "redirect:/assignment"
+        return "redirect:/subject/${assignment.subject!!.id}"
     }
 
     @GetMapping("duplicate/{id}")
@@ -228,6 +228,31 @@ class AssignmentController(
 
         return "/assignment/sequence/create"
     }
+
+    @GetMapping("{id}/up")
+    fun up(authentication: Authentication,
+           @PathVariable subjectId: Long,
+           @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        val subject = subjectService.get(user, subjectId, true)
+        subjectService.moveUpAssignment(subject, id)
+
+        return "redirect:/subject/$subjectId#assignment_${id}"
+    }
+
+    @GetMapping("{id}/down")
+    fun down(authentication: Authentication,
+             @PathVariable subjectId: Long,
+             @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        val subject = subjectService.get(user, subjectId, true)
+        subjectService.moveDownAssignment(subject, id)
+
+        return "redirect:/subject/$subjectId#assignment_${id}"
+    }
+
 
     data class AssignmentData(
             var id: Long? = null,

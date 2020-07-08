@@ -77,6 +77,7 @@ class Subject (
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "subject",
             targetEntity = Assignment::class)
+    @OrderBy("date_created DESC")
     var assignments: MutableSet<Assignment> = mutableSetOf()
 
     @OneToMany(fetch = FetchType.LAZY,

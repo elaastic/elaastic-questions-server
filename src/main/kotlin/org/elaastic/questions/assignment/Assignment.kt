@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.statement.Statement
 import org.hibernate.annotations.SortNatural
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -63,9 +64,11 @@ class Assignment(
         var globalId: String = UUID.randomUUID().toString(),
 
         @field:ManyToOne( fetch = FetchType.EAGER)
-        var subject: Subject? = null
+        var subject: Subject? = null,
 
-) : AbstractJpaPersistable<Long>() {
+        var rank: Int = 0
+
+) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
     @Version
     var version: Long? = null
@@ -84,6 +87,10 @@ class Assignment(
     @OrderBy("rank ASC")
     @SortNatural
     var sequences: MutableList<Sequence> = ArrayList()
+
+    override fun compareTo(other: Statement): Int {
+        return rank.compareTo(other.rank)
+    }
 
     fun updateFrom(otherAssignment: Assignment) {
         require(id == otherAssignment.id)

@@ -213,7 +213,6 @@ class SubjectController(
             val assignment = assignmentData.toEntity()
             assignmentService.save(assignment)
             subjectService.addAssignment(subject,assignment)
-            println("just before :"+subject.statements.size)
             "redirect:/subject/${subject.id}"
         }
 
