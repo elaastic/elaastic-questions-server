@@ -219,67 +219,6 @@ class AssignmentService(
         )
     }
 
-    /**
-     * Duplicate a assignment (create a copy of it, generating a new title, and assigning a
-     * new owner to the copy)
-     * @param user the user duplicating the assignment
-     * @param assignment the course to duplicate
-     * @return the duplicated course
-     */
-    fun duplicate(assignment: Assignment, user: User): Assignment {
-        if (assignment.owner != user) {
-            throw AccessDeniedException("You are not autorized to access to this assignment")
-        }
-        Assignment(
-                title = assignment.title + "-copy",
-                owner = assignment.owner
-        ).let { duplicatedAssignment ->
-            save(duplicatedAssignment)
-            assignment.sequences.forEach { sequence ->
-                duplicateSequenceInAssignment(sequence, duplicatedAssignment, user)
-            }
-            return duplicatedAssignment
-        }
-    }
-
-    /**
-     * Duplicate a sequence in an assignment (without interactions)
-     * @param sequence the sequence to duplicate
-     * @param duplicatedAssignment the target assignment
-     * @param user the user performing the operation
-     * @return the duplicated sequence
-     */
-    fun duplicateSequenceInAssignment(sequence: Sequence, duplicatedAssignment: Assignment, user: User): Sequence {
-        if (duplicatedAssignment.owner != user) {
-            throw AccessDeniedException("You are not autorized to access to this assignment")
-        }
-        with(sequence.statement) {
-            Statement(
-                    title = this.title,
-                    content = this.content,
-                    choiceSpecification = this.choiceSpecification,
-                    questionType = this.questionType,
-                    owner = this.owner,
-                    parentStatement = this,
-                    expectedExplanation = this.expectedExplanation
-            ).let { duplicatedStatement ->
-                this.attachment?.let { attachment ->
-                    attachmentService.duplicateAttachment(attachment).let { duplicatedAttachment ->
-                        attachmentService.addStatementToAttachment(duplicatedStatement, duplicatedAttachment)
-                    }
-                }
-                addSequence(duplicatedAssignment, duplicatedStatement).let {
-                    statementService.findAllFakeExplanationsForStatement(this).forEach { fakeExplanation ->
-                        statementService.addFakeExplanation(duplicatedStatement, FakeExplanationData(
-                                fakeExplanation
-                        ))
-                    }
-                    return it
-                }
-            }
-        }
-    }
-
     fun buildFromSubject(assignment: Assignment, subject: Subject) {
         for (statement: Statement in subject.statements){
             this.addSequence(assignment,statement)

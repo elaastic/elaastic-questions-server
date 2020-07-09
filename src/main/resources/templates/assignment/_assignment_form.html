@@ -40,6 +40,25 @@
            th:field="*{owner}"/>
   </div>
 
+  <div class="field" th:classappend="${#fields.hasErrors('audience')}? 'error'">
+    <label th:text="#{assignment.audience.label}">
+     Audience
+    </label>
+    <input type="text"
+           name="audience"
+           th:field="*{audience}"/>
+  </div>
+
+  <div class="field" th:classappend="${#fields.hasErrors('description')}? 'error'">
+    <label th:text="#{assignment.description.label}">
+      Description
+    </label>
+    <input type="text"
+           name="description"
+           th:field="*{description}"/>
+  </div>
+
+
   <script th:inline="javascript">
     $(document)
       .ready(function () {

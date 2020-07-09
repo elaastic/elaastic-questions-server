@@ -66,9 +66,27 @@ class Assignment(
         @field:ManyToOne( fetch = FetchType.EAGER)
         var subject: Subject? = null,
 
-        var rank: Int = 0
+        @field:NotNull
+        var rank: Int = 0,
+
+        @field:NotNull
+        var audience: String = "na",
+
+        var description: String? = null,
+
+        @Column(name = "scholar_year")
+        @field:NotNull
+        var scholarYear: String? = null
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
+
+    // initializer block
+    init {
+        if (dateCreated.month < 6) // Before July
+            scholarYear = "" + (dateCreated.year - 1) + " - " + (dateCreated.year)
+        else
+            scholarYear = "" + (dateCreated.year) + " - " + (dateCreated.year + 1)
+    }
 
     @Version
     var version: Long? = null

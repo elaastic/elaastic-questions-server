@@ -16,6 +16,28 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
--- Add column rank Default NULL
+-- Add new columns for assignment
 ALTER TABLE `assignment`
     ADD COLUMN `rank` INT(11) DEFAULT 0 ;
+
+ALTER TABLE `assignment`
+    ADD COLUMN `description` text ;
+
+ALTER TABLE `assignment`
+    ADD COLUMN `audience` text;
+
+ALTER TABLE `assignment`
+    ADD COLUMN `scholar_year` text;
+
+-- Fill data for migration
+UPDATE `assignment`
+SET `audience` = 'na'
+WHERE `audience` IS NULL;
+
+UPDATE `assignment`
+SET `scholar_year` = substring(`date_created`,1,4)
+WHERE  `scholar_year` IS NULL;
+
+-- Update rules on new columns
+ALTER TABLE `assignment` MODIFY `audience` TEXT NOT NULL;
+ALTER TABLE `assignment` MODIFY `scholar_year` TEXT NOT NULL;
