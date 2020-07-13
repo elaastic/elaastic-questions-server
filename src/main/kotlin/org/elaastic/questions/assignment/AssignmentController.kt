@@ -239,13 +239,15 @@ class AssignmentController(
             @field:NotNull var owner: User? = null,
             var subject: Subject,
             var audience: String = "na",
-            var description: String = ""
+            var description: String = "",
+            var scholarYear: String = ""
     ) {
         fun toEntity(): Assignment {
             return Assignment(
                     title = title!!,
                     owner = owner!!,
                     subject = subject,
+                    scholarYear = scholarYear,
                     audience = audience
             ).let {
                 it.id = id

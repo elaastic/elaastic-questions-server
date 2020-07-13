@@ -27,6 +27,8 @@ import org.hibernate.annotations.SortNatural
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -80,20 +82,22 @@ class Assignment(
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
-    // initializer block
-    init {
-        if (dateCreated.month < 6) // Before July
-            scholarYear = "" + (dateCreated.year - 1) + " - " + (dateCreated.year)
-        else
-            scholarYear = "" + (dateCreated.year) + " - " + (dateCreated.year + 1)
-    }
-
     @Version
     var version: Long? = null
 
     @Column(name = "date_created")
     @CreatedDate
-    lateinit var dateCreated: Date
+    var dateCreated: Date = Date()
+
+    // initializer block
+    init {
+        if (scholarYear.isNullOrBlank() ){
+            var localDate: LocalDate = dateCreated.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            var month = localDate.month.value
+            var year = localDate.year
+            scholarYear = if (month < 7) "" + (year - 1) + " - " + (year) else "" + (year) + " - " + (year + 1)
+        }
+    }
 
     @LastModifiedDate
     @Column(name = "last_updated")

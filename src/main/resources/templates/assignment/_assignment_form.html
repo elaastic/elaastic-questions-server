@@ -49,6 +49,15 @@
            th:field="*{audience}"/>
   </div>
 
+  <div class="field" th:classappend="${#fields.hasErrors('scholarYear')}? 'error'">
+    <label th:text="#{assignment.scholarYear.label}">
+      ScholarYear
+    </label>
+    <input type="text"
+           name="scholarYear"
+           th:field="*{scholarYear}"/>
+  </div>
+
   <div class="field" th:classappend="${#fields.hasErrors('description')}? 'error'">
     <label th:text="#{assignment.description.label}">
       Description
@@ -71,6 +80,16 @@
                   {
                     type: 'empty',
                     prompt: /*[[#{assignment.title.mandatory}]]*/ ''
+                  }
+                ]
+              },
+              scholarYear: {
+                identifier: 'scholarYear',
+                rules: [
+                  {
+                    type: 'regExp',
+                    value: "^$|([2][0-9]{3}[ ][-][ ][2][0-9]{3})",
+                    prompt: /*[[#{assignment.scholarYear.mandatory}]]*/ ''
                   }
                 ]
               }
