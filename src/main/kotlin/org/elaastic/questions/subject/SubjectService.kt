@@ -1,6 +1,7 @@
 package org.elaastic.questions.subject
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
@@ -28,6 +29,7 @@ class SubjectService (
         @Autowired val statementService: StatementService,
         @Autowired val statementRepository: StatementRepository,
         @Autowired val assignmentService: AssignmentService,
+        @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val entityManager: EntityManager
 
 ) {
@@ -206,5 +208,35 @@ class SubjectService (
                         " END " +
                         "WHERE id in (${idsArray[pos + 1]}, ${assignmentId})"
         ).executeUpdate()
+    }
+
+    fun removeAssignment(user: User, assignment: Assignment) {
+        require(user == assignment.owner) {
+            "Only the owner can delete an assignment"
+        }
+        val subject = assignment.subject!!
+        touch(subject)
+        subject.assignments.remove(assignment)
+        entityManager.flush()
+        assignmentRepository.delete(assignment) // all other linked entities are deletes by DB cascade
+        entityManager.flush()
+        entityManager.clear()
+        updateAllAssignmentRank(subject)
+    }
+
+    fun updateAllAssignmentRank(subject: Subject) {
+        val assignmentIds = subject.assignments.map { it.id }
+        if (assignmentIds.isEmpty()) return // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE assignment SET rank = CASE " +
+                        assignmentIds.mapIndexed { index, id ->
+                            "WHEN id=$id THEN $index"
+                        }.joinToString(" ") +
+                        " END " +
+                        "WHERE id in (${assignmentIds.joinToString(",")})"
+        ).executeUpdate()
+
+        subject.assignments.mapIndexed { index, assignment -> assignment.rank = index + 1 }
     }
 }

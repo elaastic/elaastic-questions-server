@@ -175,7 +175,7 @@ class AssignmentController(
         val user: User = authentication.principal as User
 
         val assignment = assignmentService.get(user, id)
-        assignmentService.delete(user, assignment)
+        subjectService.removeAssignment(user, assignment)
 
         with(messageBuilder) {
             success(
@@ -216,7 +216,7 @@ class AssignmentController(
 
     @GetMapping("{id}/up")
     fun up(authentication: Authentication,
-           @PathVariable subjectId: Long,
+           subjectId: Long,
            @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
@@ -228,7 +228,7 @@ class AssignmentController(
 
     @GetMapping("{id}/down")
     fun down(authentication: Authentication,
-             @PathVariable subjectId: Long,
+             subjectId: Long,
              @PathVariable id: Long): String {
         val user: User = authentication.principal as User
 
