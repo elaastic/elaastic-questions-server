@@ -121,6 +121,9 @@ class Assignment(
         }
 
         this.title = otherAssignment.title
+        this.audience = otherAssignment.audience
+        this.scholarYear = otherAssignment.scholarYear
+        this.description = otherAssignment.description
     }
 
     fun addSequence(sequence: Sequence): Sequence {

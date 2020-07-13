@@ -120,6 +120,7 @@ class AssignmentController(
         assignmentService.get(user, id).let {
             model.addAttribute("user", user)
             model.addAttribute("assignment", it)
+            model.addAttribute("subject", it.subject)
         }
 
         return "/assignment/edit"
@@ -133,13 +134,19 @@ class AssignmentController(
                @PathVariable id: Long,
                response: HttpServletResponse,
                redirectAttributes: RedirectAttributes): String {
+
         val user: User = authentication.principal as User
+        val assignment: Assignment = assignmentService.get(id)
 
         return if (result.hasErrors()) {
-            response.status = HttpStatus.BAD_REQUEST.value()
+
             model.addAttribute("user", user)
-            model.addAttribute("assignment", assignmentData)
-            "/assignment/edit"
+            model.addAttribute("nbAssignments",assignment.subject!!.assignments.size)
+            if (!model.containsAttribute("assignment")) {
+                model.addAttribute("assignment", AssignmentController.AssignmentData(owner = user, subject=assignment.subject!!))
+            }
+            return "/assignment/create"
+
         } else {
             assignmentService.get(user, id).let {
                 it.updateFrom(assignmentData.toEntity())
@@ -156,7 +163,7 @@ class AssignmentController(
                     )
                 }
 
-                "redirect:/assignment/$id"
+                "redirect:/subject/${assignment.subject!!.id}"
             }
         }
     }

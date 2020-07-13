@@ -49,7 +49,7 @@
     </a>
 
     <a class="ui right floated icon secondary tiny button"
-       th:href="@{/assignment/{id}/edit(subjectId=${assignment.subject.id},id=${assignment.id})}"
+       th:href="@{/assignment/{id}/edit(id=${assignment.id})}"
        href="/assignment/123/edit"
        th:attr="data-tooltip=#{common.update}"
        data-tooltip="$Update"
