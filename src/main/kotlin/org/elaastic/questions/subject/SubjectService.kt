@@ -3,6 +3,7 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -70,10 +71,18 @@ class SubjectService (
     fun addStatement(subject: Subject, statement: Statement): Statement {
         statement.subject = subject
         statement.rank = (subject.statements.map { it.rank }.max() ?: 0) + 1
+        println(statement.rank)
         statementService.save(statement)
         subject.statements.add(statement)
+        addStatementIfNotInAssignment(statement, subject);
         touch(subject)
         return statement
+    }
+
+    private fun addStatementIfNotInAssignment(statement: Statement ,subject: Subject) {
+        for (assignment:Assignment in subject.assignments){
+            assignmentService.addStatementIfNotInAssignment(statement, assignment)
+        }
     }
 
     fun countAllStatement(subject: Subject): Int {
@@ -99,10 +108,16 @@ class SubjectService (
         touch(subject)
         subject.statements.remove(statement)
         entityManager.flush()
-        statementRepository.delete(statement) // all other linked entities are deletes by DB cascade
-        entityManager.flush()
-        entityManager.clear()
+        statement.subject = null
+        statementService.save(statement)
+        deleteStatementIfNotUsed(statement, subject)
         updateAllStatementRank(subject)
+    }
+
+    private fun deleteStatementIfNotUsed(statement: Statement, subject: Subject) {
+        for (assignment:Assignment in subject.assignments) {
+            assignmentService.deleteStatementIfNotUsed(statement, assignment)
+        }
     }
 
     fun moveUpStatement(subject: Subject, statementId: Long) {

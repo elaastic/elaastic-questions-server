@@ -18,11 +18,13 @@
 
 package org.elaastic.questions.subject.statement
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
@@ -30,6 +32,7 @@ import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationSer
 import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.StatementService
 import org.springframework.beans.factory.annotation.Autowired
@@ -97,7 +100,6 @@ class StatementController(
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
-
             model.addAttribute("user", user)
             model.addAttribute("subject", subject)
             model.addAttribute("statementData",statementData)
@@ -105,21 +107,27 @@ class StatementController(
 
             "/subject/statement/edit"
         } else {
-            statementBase.let {
-                statementBase.updateFrom(statementData.toEntity(user))
-                statementService.save(it)
-                statementService.updateFakeExplanationList(it,statementData.fakeExplanations)
-                attachedFileIfAny(fileToAttached, it)
-            }
+            // if there is a sequence with results that uses the statement
+            if (isStatementUsed(statementBase)) {
+                val newStatement:Statement = statementService.duplicate(statementBase)
+                statementService.assignStatementToSequences(newStatement)
+            } else {
+                statementBase.let {
+                    statementBase.updateFrom(statementData.toEntity(user))
+                    statementService.save(it)
+                    statementService.updateFakeExplanationList(it,statementData.fakeExplanations)
+                    attachedFileIfAny(fileToAttached, it)
+                }
 
-            with(messageBuilder) {
-                success(
-                        redirectAttributes,
-                        message(
-                                "sequence.updated.message.variant",
-                                statementBase.title
-                        )
-                )
+                with(messageBuilder) {
+                    success(
+                            redirectAttributes,
+                            message(
+                                    "sequence.updated.message.variant",
+                                    statementBase.title
+                            )
+                    )
+                }
             }
 
             return if (statementData.returnOnSubject) {
@@ -128,6 +136,18 @@ class StatementController(
                 "redirect:/subject/$subjectId/statement/$id/edit"
             }
         }
+    }
+
+    private fun isStatementUsed(statement: Statement): Boolean{
+        val subject: Subject = statement.subject!!
+        var isUsed: Boolean = false
+        for (assignment: Assignment in subject.assignments){
+            for (sequence: Sequence in assignment.sequences){
+                if (sequence.statement == statement)
+                    isUsed = true
+            }
+        }
+        return isUsed
     }
 
     private fun attachedFileIfAny(fileToAttached: MultipartFile, it: Statement) {

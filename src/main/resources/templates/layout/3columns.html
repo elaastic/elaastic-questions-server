@@ -78,11 +78,11 @@
       <div class="ui divider"></div>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
-         th:href="@{/assignment}"
-         href="/assignment"
+         th:href="@{/subject}"
+         href="/subjects"
          class="item"
-         th:attr="data-tooltip=#{assignment.my.list.label}"
-         data-tooltip="My assignments"
+         th:attr="data-tooltip=#{subject.my.list.label}"
+         data-tooltip="My subjects"
          data-position="right center"
          data-inverted="">
         <i class="book icon"></i>

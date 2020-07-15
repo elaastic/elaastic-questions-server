@@ -35,6 +35,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
+import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -358,7 +359,8 @@ class PlayerController(
                                         sequence.statement.choiceSpecification
                                                 ?: error("The choice specification is undefined")
                                 )
-                            }
+                            },
+                            statement = sequence.statement
                     )
             )
             if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
@@ -408,7 +410,9 @@ class PlayerController(
                                     sequence.statement.choiceSpecification
                                             ?: error("The choice specification is undefined")
                             )
-                        }
+                        },
+                        statement = sequence.statement
+
                 )
                         .let {
                             val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)

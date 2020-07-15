@@ -27,6 +27,7 @@ import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -65,7 +66,11 @@ class Response(
         @field:Column(name = "is_a_fake")
         var fake: Boolean = false,
 
-        var evaluationCount: Int = 0
+        var evaluationCount: Int = 0,
+
+        @field:Column(name = "statement_id")
+        @field:ManyToOne
+        var statement: Statement
 
 ) : AbstractJpaPersistable<Long>() {
     @Version

@@ -203,7 +203,8 @@ class ResponseService(
                 interaction = interaction,
                 learnerChoice = learnerChoice,
                 score = score,
-                fake = true
+                fake = true,
+                statement = statement
         ))
     }
 
@@ -236,7 +237,8 @@ class ResponseService(
                         interaction = interaction,
                         learnerChoice = learnerChoice,
                         score = score,
-                        fake = true
+                        fake = true,
+                        statement = statement
                 )).let {
                     res.add(it)
                 }

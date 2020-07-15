@@ -113,6 +113,27 @@ class AssignmentService(
         return sequence
     }
 
+    fun deleteStatementIfNotUsed(statement: Statement, assignment: Assignment) {
+        var stillUsed = false
+        for (sequence: Sequence in assignment.sequences) {
+            if (statement == sequence.statement) stillUsed = true
+        }
+
+        if (!stillUsed) {
+            statementService.delete(statement) // all other linked entities are deletes by DB cascade
+            entityManager.flush()
+            entityManager.clear()
+        }
+    }
+
+    fun addStatementIfNotInAssignment(statement: Statement, assignment: Assignment) {
+        var toAdd:Boolean = true
+        for (sequence:Sequence in assignment.sequences){
+            if (statement == sequence.statement) toAdd = false
+        }
+        if (toAdd) addSequence(assignment, statement)
+    }
+
     fun removeSequence(user: User, sequence: Sequence) {
         require(user == sequence.owner) {
             "Only the owner can delete a sequence"
@@ -121,6 +142,7 @@ class AssignmentService(
         touch(assignment)
         assignment.sequences.remove(sequence)
         entityManager.flush()
+        deleteStatementIfNotUsed(sequence.statement, assignment)
         sequenceRepository.delete(sequence) // all other linked entities are deletes by DB cascade
         entityManager.flush()
         entityManager.clear()
