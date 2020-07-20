@@ -111,7 +111,7 @@ class StatementService(
                         statement.subject,
                         statement.rank
                 )
-        duplicatedStatement.version = statement.version!! + 1
+        duplicatedStatement.version = statement.version
         duplicatedStatement.attachment = statement.attachment
         return statementRepository.save(duplicatedStatement)
     }
@@ -120,7 +120,8 @@ class StatementService(
         val subject: Subject = newStatement.subject!!
         for (assignment: Assignment in subject.assignments){
             for (sequence: Sequence in assignment.sequences){
-                sequence.statement == newStatement
+                if (sequence.statement == newStatement.parentStatement)
+                    sequence.statement = newStatement
             }
         }
     }

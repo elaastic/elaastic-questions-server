@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.subject
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceController
@@ -211,6 +212,8 @@ class SubjectController(
             "redirect:/subject/${subject.id}/addAssignment"
         } else {
             val assignment = assignmentData.toEntity()
+            if (assignment.audience.isNullOrBlank())
+                assignment.audience = "na"
             assignmentService.save(assignment)
             subjectService.addAssignment(subject,assignment)
             "redirect:/subject/${subject.id}"
@@ -229,7 +232,10 @@ class SubjectController(
         model.addAttribute("user", user)
         model.addAttribute("nbAssignments",subject.assignments.size)
         if (!model.containsAttribute("assignment")) {
-            model.addAttribute("assignment", AssignmentController.AssignmentData(owner = user, subject=subject))
+            model.addAttribute("assignment", AssignmentController.AssignmentData(
+                    owner = user,
+                    subject = subject,
+                    title = "").toEntity())
         }
 
         return "/assignment/create"

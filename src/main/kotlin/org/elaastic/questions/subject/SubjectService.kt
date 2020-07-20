@@ -3,7 +3,7 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
-import org.springframework.expression.spel.ast.Assign
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
@@ -31,7 +30,8 @@ class SubjectService (
         @Autowired val statementRepository: StatementRepository,
         @Autowired val assignmentService: AssignmentService,
         @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val entityManager: EntityManager
+        @Autowired val entityManager: EntityManager,
+        @Autowired val sequenceService: SequenceService
 
 ) {
 
@@ -52,6 +52,10 @@ class SubjectService (
         }
     }
 
+    fun findByGlobalId(globalId: String): Subject? {
+        return subjectRepository.findByGlobalId(globalId)
+    }
+
     fun save(subject: Subject): Subject {
         return subjectRepository.save(subject)
     }
@@ -67,21 +71,19 @@ class SubjectService (
         subjectRepository.save(subject)
     }
 
-    // TODO TEST
     fun addStatement(subject: Subject, statement: Statement): Statement {
         statement.subject = subject
         statement.rank = (subject.statements.map { it.rank }.max() ?: 0) + 1
-        println(statement.rank)
         statementService.save(statement)
         subject.statements.add(statement)
-        addStatementIfNotInAssignment(statement, subject);
+        addCorrespondingSequenceIfNotInAssignment(statement, subject);
         touch(subject)
         return statement
     }
 
-    private fun addStatementIfNotInAssignment(statement: Statement ,subject: Subject) {
+    private fun addCorrespondingSequenceIfNotInAssignment(statement: Statement, subject: Subject) {
         for (assignment:Assignment in subject.assignments){
-            assignmentService.addStatementIfNotInAssignment(statement, assignment)
+            assignmentService.addSequenceForStatementIfNotInAssignment(statement, assignment)
         }
     }
 
@@ -102,22 +104,34 @@ class SubjectService (
 
     fun removeStatement(user: User, statement: Statement) {
         require(user == statement.owner) {
-            "Only the owner can delete a sequence"
+            "Only the owner can delete a statement"
         }
         val subject = statement.subject!!
         touch(subject)
         subject.statements.remove(statement)
         entityManager.flush()
-        statement.subject = null
-        statementService.save(statement)
         deleteStatementIfNotUsed(statement, subject)
         updateAllStatementRank(subject)
     }
 
     private fun deleteStatementIfNotUsed(statement: Statement, subject: Subject) {
-        for (assignment:Assignment in subject.assignments) {
-            assignmentService.deleteStatementIfNotUsed(statement, assignment)
+        var idsList: ArrayList<Long> = ArrayList()
+        if (subject.assignments.isEmpty()) {
+            statementService.delete(statement)
+            entityManager.flush()
+            entityManager.clear()
+        } else {
+            for (assignment: Assignment in subject.assignments) {
+                idsList = assignmentService.deleteStatementIfNotUsed(statement, assignment)
+                for (id:Long in idsList){
+                    sequenceService.loadInteractions(sequenceService.get(id))
+                    assignmentService.removeSequence(subject.owner, sequenceService.get(id))
+                }
+            }
+            statement.subject = null
+            statementService.save(statement)
         }
+
     }
 
     fun moveUpStatement(subject: Subject, statementId: Long) {
@@ -174,16 +188,12 @@ class SubjectService (
         subject.statements.mapIndexed { index, statement -> statement.rank = index + 1 }
     }
 
-    // TODO TEST
     fun addAssignment(subject: Subject, assignment: Assignment): Assignment {
         assignment.subject = subject
         assignment.rank = (subject.assignments.map { it.rank }.max() ?: 0) + 1
         assignmentService.save(assignment)
         assignmentService.buildFromSubject(assignment, subject);
         subject.assignments.add(assignment)
-        for (a:Assignment in subject.assignments){
-            println(a.title + " : " + a.rank)
-        }
         touch(subject)
         return assignment
     }

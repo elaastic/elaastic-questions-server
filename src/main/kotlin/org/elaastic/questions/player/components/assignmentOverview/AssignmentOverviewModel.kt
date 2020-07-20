@@ -21,6 +21,7 @@ package org.elaastic.questions.player.components.assignmentOverview
 data class AssignmentOverviewModel(
         val nbRegisteredUser: Int,
         val assignmentTitle: String,
+        val assignmentId: Long,
         val sequences: List<SequenceInfo>,
         val selectedSequenceId: Long? = null,
         val hideStatementContent: Boolean = false

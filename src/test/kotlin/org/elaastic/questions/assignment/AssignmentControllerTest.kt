@@ -79,7 +79,7 @@ internal class AssignmentControllerTest(
     }
 
     @Test
-    fun `test index - with  results`() {
+    fun `test index - with results`() {
         val assignmentPages =
                 PageImpl<Assignment>(
                         listOf(mock<Assignment>(), mock<Assignment>()),
@@ -91,45 +91,5 @@ internal class AssignmentControllerTest(
 
         mockMvc.perform(get("/assignment").with(csrf()))
                 .andExpect(status().isOk)
-    }
-
-    @Test
-    fun `test save - valid`() {
-        val assignmentId = 123L
-        val title = "A title"
-        val subject = Subject("a","a",user)
-        subjectService.save(subject)
-
-        val assignmentData = AssignmentController.AssignmentData(
-                id = assignmentId,
-                title = title,
-                owner = user,
-                subject = subject
-        )
-
-        mockMvc.perform(
-                post("/assignment/save")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .flashAttr("assignmentData", assignmentData)
-        )
-                .andExpect(status().isFound())
-                .andExpect(
-                        redirectedUrlTemplate(
-                                "subject/{subjectId}",
-                                subject.id
-                        )
-                )
-    }
-
-    @Test
-    fun `test save - invalid because of blank title`() {
-        mockMvc.perform(
-                post("/assignment/save")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("title", "")
-        )
-                .andExpect(status().isBadRequest()) // no redirect, the page is re-rendered with error messages
     }
 }

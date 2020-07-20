@@ -245,7 +245,7 @@ class AssignmentController(
             @field:NotBlank var title: String? = null,
             @field:NotNull var owner: User? = null,
             var subject: Subject,
-            var audience: String = "na",
+            var audience: String = "",
             var description: String = "",
             var scholarYear: String = ""
     ) {

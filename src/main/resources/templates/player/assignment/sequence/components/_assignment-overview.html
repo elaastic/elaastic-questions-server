@@ -47,7 +47,7 @@
        th:classappend="${sequence.id == model.selectedSequenceId ? 'selected' : ''}"
        th:id="|${context}-${sequence.id}|"
        style="padding-bottom: 1em; cursor: pointer; "
-       th:onclick="|window.location = '@{/player/sequence/{sequenceId}/play(sequenceId=${sequence.id})}'|">
+       th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${model.assignmentId}, sequenceId=${sequence.id})}'|">
 
     <div class="ui grid">
       <div class="twelve wide column">

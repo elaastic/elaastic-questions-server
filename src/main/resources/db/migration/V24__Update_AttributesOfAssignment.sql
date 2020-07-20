@@ -24,10 +24,10 @@ ALTER TABLE `assignment`
     ADD COLUMN `description` text ;
 
 ALTER TABLE `assignment`
-    ADD COLUMN `audience` text;
+    ADD COLUMN `audience` varchar(1024);
 
 ALTER TABLE `assignment`
-    ADD COLUMN `scholar_year` text;
+    ADD COLUMN `scholar_year` varchar(32);
 
 -- Fill data for migration
 UPDATE `assignment`
@@ -39,5 +39,5 @@ SET `scholar_year` = substring(`date_created`,1,4)
 WHERE  `scholar_year` IS NULL;
 
 -- Update rules on new columns
-ALTER TABLE `assignment` MODIFY `audience` TEXT NOT NULL;
-ALTER TABLE `assignment` MODIFY `scholar_year` TEXT NOT NULL;
+ALTER TABLE `assignment` MODIFY `audience` varchar(1024) NOT NULL;
+ALTER TABLE `assignment` MODIFY `scholar_year` varchar(32) NOT NULL;

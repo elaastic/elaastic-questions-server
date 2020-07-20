@@ -97,6 +97,7 @@ class StatementController(
         val user: User = authentication.principal as User
         val statementBase = statementService.get(user, id)
         val subject = statementBase.subject
+        var newStatement = statementBase
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
@@ -108,26 +109,29 @@ class StatementController(
             "/subject/statement/edit"
         } else {
             // if there is a sequence with results that uses the statement
-            if (isStatementUsed(statementBase)) {
-                val newStatement:Statement = statementService.duplicate(statementBase)
-                statementService.assignStatementToSequences(newStatement)
-            } else {
-                statementBase.let {
-                    statementBase.updateFrom(statementData.toEntity(user))
-                    statementService.save(it)
-                    statementService.updateFakeExplanationList(it,statementData.fakeExplanations)
-                    attachedFileIfAny(fileToAttached, it)
-                }
+            if (isStatementUsed(statementBase))
+                newStatement = statementService.duplicate(statementBase)
 
-                with(messageBuilder) {
-                    success(
-                            redirectAttributes,
-                            message(
-                                    "sequence.updated.message.variant",
-                                    statementBase.title
-                            )
-                    )
-                }
+            newStatement.let {
+                newStatement.updateFrom(statementData.toEntity(user))
+                statementService.save(it)
+                statementService.updateFakeExplanationList(it,statementData.fakeExplanations)
+                attachedFileIfAny(fileToAttached, it)
+            }
+
+            with(messageBuilder) {
+                success(
+                        redirectAttributes,
+                        message(
+                                "sequence.updated.message.variant",
+                                statementBase.title
+                        )
+                )
+            }
+
+            if (isStatementUsed(statementBase)) {
+                statementService.assignStatementToSequences(newStatement)
+                subjectService.removeStatement(statementBase.owner, statementBase)
             }
 
             return if (statementData.returnOnSubject) {

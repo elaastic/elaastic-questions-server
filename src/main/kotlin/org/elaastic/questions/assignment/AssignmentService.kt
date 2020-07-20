@@ -21,6 +21,9 @@ package org.elaastic.questions.assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
@@ -38,6 +41,7 @@ import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
+import kotlin.collections.ArrayList
 
 
 @Service
@@ -48,7 +52,8 @@ class AssignmentService(
         @Autowired val learnerAssignmentRepository: LearnerAssignmentRepository,
         @Autowired val statementService: StatementService,
         @Autowired val attachmentService: AttachmentService,
-        @Autowired val entityManager: EntityManager
+        @Autowired val entityManager: EntityManager,
+        @Autowired val responseService: ResponseService
 ) {
 
     fun findAllByOwner(owner: User,
@@ -106,27 +111,42 @@ class AssignmentService(
         )
 
         assignment.addSequence(sequence)
-        //statementService.save(sequence.statement)
         sequenceRepository.save(sequence)
         touch(assignment)
 
         return sequence
     }
 
-    fun deleteStatementIfNotUsed(statement: Statement, assignment: Assignment) {
-        var stillUsed = false
-        for (sequence: Sequence in assignment.sequences) {
-            if (statement == sequence.statement) stillUsed = true
+    fun deleteStatementIfNotUsed(statement: Statement, assignment: Assignment): ArrayList<Long> {
+        var idsList: ArrayList<Long> = ArrayList()
+        var stillUsed = statement.subject != null
+        val assignmentLoaded = get(assignment.owner, assignment.id!!, true )
+        for (sequence: Sequence in assignmentLoaded.sequences) {
+            if (statement == sequence.statement) {
+                if (sequence.isNotStarted()){
+                    idsList.add(sequence.id!!)
+                }
+                else {
+                    if (!sequence.interactions.isEmpty())
+                        if (responseService.findAll(sequence).isEmpty())
+                            idsList.add(sequence.id!!)
+                        else
+                            stillUsed = true
+                }
+            }
         }
-
+        if (statement.attachment != null){
+            stillUsed = true
+        }
         if (!stillUsed) {
             statementService.delete(statement) // all other linked entities are deletes by DB cascade
             entityManager.flush()
             entityManager.clear()
         }
+        return idsList
     }
 
-    fun addStatementIfNotInAssignment(statement: Statement, assignment: Assignment) {
+    fun addSequenceForStatementIfNotInAssignment(statement: Statement, assignment: Assignment) {
         var toAdd:Boolean = true
         for (sequence:Sequence in assignment.sequences){
             if (statement == sequence.statement) toAdd = false
@@ -147,7 +167,6 @@ class AssignmentService(
         entityManager.flush()
         entityManager.clear()
         updateAllSequenceRank(assignment)
-
     }
 
     fun moveUpSequence(assignment: Assignment, sequenceId: Long) {

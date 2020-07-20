@@ -17,10 +17,13 @@
 #
 
 INSERT INTO `subject` (`id`, `version`, `date_created`, `title`, `course`, `owner_id`, `last_updated`, `global_id`)
-VALUES (300,0,'2020-06-06 10:26:16','Sujet test','',300, '2020-06-06 10:26:16','c71b94b6-ad03-25a9-06d4-00163e3774aa');
+VALUES (1,0,'2020-06-06 10:26:16','Sujet test','',359, '2020-06-06 10:26:16','c71b94b6-ad03-25a9-06d4-00163e3774aa');
+# owner id 359 to match statements linked
 
 UPDATE `statement`
-SET subject_id = 300
+SET subject_id = 1
 WHERE `id`= 618
     OR `id`= 619
-    OR `id`= 620;
+    OR `id`= 620
+    OR `id`= 621
+    OR `id`= 622;

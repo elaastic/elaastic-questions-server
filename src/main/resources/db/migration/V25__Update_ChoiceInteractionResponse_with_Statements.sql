@@ -26,3 +26,7 @@ SET `choice_interaction_response`.`statement_id` = `sequence`.statement_id
 WHERE `choice_interaction_response`.`statement_id` IS NULL
 AND `choice_interaction_response`.interaction_id = `interaction`.id
 AND `interaction`.sequence_id = `sequence`.id;
+
+#Add column constraint not null
+ALTER TABLE `choice_interaction_response`
+    MODIFY COLUMN `statement_id` BIGINT(20) NOT NULL;

@@ -49,7 +49,8 @@ class ResponseRepositoryIntegrationTest(
         val interaction = testingService.getAnyInteraction()
         Response(
                 learner = learner,
-                interaction = interaction
+                interaction = interaction,
+                statement = interaction.sequence.statement
         ).tWhen {
             responseRepository.saveAndFlush(it)
             entityManager.refresh(it)
@@ -62,6 +63,7 @@ class ResponseRepositoryIntegrationTest(
             assertThat(it.version, equalTo(0L))
             assertThat(it.dateCreated, notNullValue())
             assertThat(it.lastUpdated, notNullValue())
+            assertThat(it.statement, notNullValue())
         }
     }
 
@@ -78,7 +80,8 @@ class ResponseRepositoryIntegrationTest(
                 confidenceDegree = ConfidenceDegree.CONFIDENT,
                 meanGrade = BigDecimal(1),
                 learnerChoice = choiceListSpecification,
-                score = BigDecimal(2)
+                score = BigDecimal(2),
+                statement = interaction.sequence.statement
         ).tWhen {
             responseRepository.saveAndFlush(it)
             entityManager.refresh(it)

@@ -36,8 +36,9 @@
                 <div th:replace="subject/_assignment_actions.html :: assignmentActions(${assignment}, ${position}, ${i.size})"></div>
 
                 <h3 class="ui header">
-                    <a th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
-                       href="/sequence/123/edit"
+                    <a th:if="${not #lists.isEmpty(assignment.sequences)}"
+                       th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
+                       href="/sequence/123/play"
                        th:id="${assignment.id}">
                         <div class="ui tiny circular label"
                              style="margin-right: 1em;" th:text="${position}">
@@ -46,9 +47,20 @@
 
                         <span th:id="|assignment-title-${assignment.id}|" th:text="${assignment.title}">Title</span>
                     </a>
+                    <a th:if="${#lists.isEmpty(assignment.sequences)}"
+                       th:href="@{/subject/{id}(id=${subject.id})}"
+                       href="/subject/123"
+                       th:id="${assignment.id}">
+                        <div class="ui tiny circular label"
+                             style="margin-right: 1em;" th:text="${position}">
+                            3
+                        </div>
+                        <span th:id="|assignment-title-${assignment.id}|" th:text="${assignment.title}">Title</span>
+                    </a>
                 </h3>
 
                 <div class="text">
+                    <p th:if="${#lists.isEmpty(assignment.sequences)}" th:text="#{assignment.empty}">No sequences</p>
                     <p th:id="|assignment-audience-${assignment.id}|" th:text="#{assignment.audience.create} + ${assignment.audience}">audience</p>
                     <p th:id="|assignment-date-${assignment.id}|" th:text="#{assignment.scholarYear.create} + ${assignment.scholarYear}">date_created</p>
                     <p th:id="|assignment-description-${assignment.id}|" th:text="#{assignment.description.create} + ${assignment.description}">description</p>

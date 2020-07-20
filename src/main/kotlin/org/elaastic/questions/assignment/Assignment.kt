@@ -72,7 +72,7 @@ class Assignment(
         var rank: Int = 0,
 
         @field:NotNull
-        var audience: String = "na",
+        var audience: String = "",
 
         var description: String? = null,
 

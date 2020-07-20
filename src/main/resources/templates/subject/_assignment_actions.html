@@ -57,7 +57,8 @@
         <i class="edit icon"></i>
     </a>
 
-    <a class="ui right floated icon tiny primary button"
+    <a th:if="${not #lists.isEmpty(assignment.sequences)}"
+       class="ui right floated icon tiny primary button"
        th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
        th:attr="data-tooltip=#{player.assignment.play}"
        data-inverted="">

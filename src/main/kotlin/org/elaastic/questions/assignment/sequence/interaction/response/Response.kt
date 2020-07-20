@@ -68,7 +68,6 @@ class Response(
 
         var evaluationCount: Int = 0,
 
-        @field:Column(name = "statement_id")
         @field:ManyToOne
         var statement: Statement
 
