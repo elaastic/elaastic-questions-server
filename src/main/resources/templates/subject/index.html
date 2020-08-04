@@ -21,7 +21,7 @@
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My assignments</title>
+    <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My Subjects</title>
 </head>
 
 <body>
@@ -101,7 +101,7 @@
 
     <div th:if="${#lists.isEmpty(subjectPage.content)}"
          class="ui info message" th:text="#{subject.you.have.none}">
-        You have no assignment.
+        You have no subject.
     </div>
 
     <div class="ui two column stackable grid">

@@ -21,9 +21,13 @@ package org.elaastic.questions.assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -37,6 +41,7 @@ import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
+import kotlin.collections.ArrayList
 
 
 @Service
@@ -47,7 +52,8 @@ class AssignmentService(
         @Autowired val learnerAssignmentRepository: LearnerAssignmentRepository,
         @Autowired val statementService: StatementService,
         @Autowired val attachmentService: AttachmentService,
-        @Autowired val entityManager: EntityManager
+        @Autowired val entityManager: EntityManager,
+        @Autowired val responseService: ResponseService
 ) {
 
     fun findAllByOwner(owner: User,
@@ -105,11 +111,47 @@ class AssignmentService(
         )
 
         assignment.addSequence(sequence)
-        statementService.save(sequence.statement)
         sequenceRepository.save(sequence)
         touch(assignment)
 
         return sequence
+    }
+
+    fun deleteStatementIfNotUsed(statement: Statement, assignment: Assignment): ArrayList<Long> {
+        var idsList: ArrayList<Long> = ArrayList()
+        var stillUsed = statement.subject != null
+        val assignmentLoaded = get(assignment.owner, assignment.id!!, true )
+        for (sequence: Sequence in assignmentLoaded.sequences) {
+            if (statement == sequence.statement) {
+                if (sequence.isNotStarted()){
+                    idsList.add(sequence.id!!)
+                }
+                else {
+                    if (!sequence.interactions.isEmpty())
+                        if (responseService.findAll(sequence).isEmpty())
+                            idsList.add(sequence.id!!)
+                        else
+                            stillUsed = true
+                }
+            }
+        }
+        if (statement.attachment != null){
+            stillUsed = true
+        }
+        if (!stillUsed) {
+            statementService.delete(statement) // all other linked entities are deletes by DB cascade
+            entityManager.flush()
+            entityManager.clear()
+        }
+        return idsList
+    }
+
+    fun addSequenceForStatementIfNotInAssignment(statement: Statement, assignment: Assignment) {
+        var toAdd:Boolean = true
+        for (sequence:Sequence in assignment.sequences){
+            if (statement == sequence.statement) toAdd = false
+        }
+        if (toAdd) addSequence(assignment, statement)
     }
 
     fun removeSequence(user: User, sequence: Sequence) {
@@ -120,11 +162,11 @@ class AssignmentService(
         touch(assignment)
         assignment.sequences.remove(sequence)
         entityManager.flush()
+        deleteStatementIfNotUsed(sequence.statement, assignment)
         sequenceRepository.delete(sequence) // all other linked entities are deletes by DB cascade
         entityManager.flush()
         entityManager.clear()
         updateAllSequenceRank(assignment)
-
     }
 
     fun moveUpSequence(assignment: Assignment, sequenceId: Long) {
@@ -218,64 +260,10 @@ class AssignmentService(
         )
     }
 
-    /**
-     * Duplicate a assignment (create a copy of it, generating a new title, and assigning a
-     * new owner to the copy)
-     * @param user the user duplicating the assignment
-     * @param assignment the course to duplicate
-     * @return the duplicated course
-     */
-    fun duplicate(assignment: Assignment, user: User): Assignment {
-        if (assignment.owner != user) {
-            throw AccessDeniedException("You are not autorized to access to this assignment")
-        }
-        Assignment(
-                title = assignment.title + "-copy",
-                owner = assignment.owner
-        ).let { duplicatedAssignment ->
-            save(duplicatedAssignment)
-            assignment.sequences.forEach { sequence ->
-                duplicateSequenceInAssignment(sequence, duplicatedAssignment, user)
-            }
-            return duplicatedAssignment
-        }
-    }
-
-    /**
-     * Duplicate a sequence in an assignment (without interactions)
-     * @param sequence the sequence to duplicate
-     * @param duplicatedAssignment the target assignment
-     * @param user the user performing the operation
-     * @return the duplicated sequence
-     */
-    fun duplicateSequenceInAssignment(sequence: Sequence, duplicatedAssignment: Assignment, user: User): Sequence {
-        if (duplicatedAssignment.owner != user) {
-            throw AccessDeniedException("You are not autorized to access to this assignment")
-        }
-        with(sequence.statement) {
-            Statement(
-                    title = this.title,
-                    content = this.content,
-                    choiceSpecification = this.choiceSpecification,
-                    questionType = this.questionType,
-                    owner = this.owner,
-                    parentStatement = this,
-                    expectedExplanation = this.expectedExplanation
-            ).let { duplicatedStatement ->
-                this.attachment?.let { attachment ->
-                    attachmentService.duplicateAttachment(attachment).let { duplicatedAttachment ->
-                        attachmentService.addStatementToAttachment(duplicatedStatement, duplicatedAttachment)
-                    }
-                }
-                addSequence(duplicatedAssignment, duplicatedStatement).let {
-                    statementService.findAllFakeExplanationsForStatement(this).forEach { fakeExplanation ->
-                        statementService.addFakeExplanation(duplicatedStatement, FakeExplanationData(
-                                fakeExplanation
-                        ))
-                    }
-                    return it
-                }
-            }
+    fun buildFromSubject(assignment: Assignment, subject: Subject) {
+        for (statement: Statement in subject.statements){
+            this.addSequence(assignment,statement)
+            touch(assignment)
         }
     }
 }

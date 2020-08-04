@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.player
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
@@ -35,6 +36,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
+import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -113,29 +115,24 @@ class PlayerController(
         }
     }
 
-    @GetMapping("/assignment/{id}/play")
+    @GetMapping("/assignment/{assignmentId}/play/sequence/{sequenceId}","/assignment/{assignmentId}/play")
     fun playAssignment(authentication: Authentication,
                        model: Model,
-                       @PathVariable id: Long): String {
+                       @PathVariable assignmentId: Long,
+                       @PathVariable sequenceId: Long?): String {
 
-        assignmentService.get(id, true).let { assignment ->
-
-            if (assignment.sequences.isEmpty()) {
-                throw IllegalStateException("Assignment $id has no sequences")
-            }
-
-            return "redirect:/player/sequence/${assignment.sequences.first().id}/play"
-        }
-    }
-
-    @GetMapping("/sequence/{id}/play")
-    fun playSequence(authentication: Authentication,
-                     model: Model,
-                     @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        val assignment: Assignment = assignmentService.get(assignmentId, true)
+
+        if (assignment.sequences.isEmpty()) {
+            return "redirect:/subject/${assignment.subject!!.id}"
+            throw IllegalStateException("Assignment $assignmentId has no sequences")
+        }
+
+        val sequenceIdValid:Long = if (sequenceId != null) sequenceId else assignment.sequences.first().id!!
 
         // TODO Improve data fetching (should start from the assignment)
-        sequenceService.get(id, true).let { sequence ->
+        sequenceService.get(sequenceIdValid, true).let { sequence ->
             model.addAttribute("user", user)
             val teacher = user == sequence.owner
             val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
@@ -147,7 +144,7 @@ class PlayerController(
                                 user = user,
                                 sequence = sequence,
                                 nbRegisteredUsers = nbRegisteredUsers,
-                                sequenceToUserActiveInteraction = sequence.assignment!!.sequences.associate { it to it.activeInteraction },
+                                sequenceToUserActiveInteraction = assignment.sequences.associate { it to it.activeInteraction },
                                 messageBuilder = messageBuilder,
                                 findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
                                 sequenceStatistics = sequenceService.getStatistics(sequence), userCanRefreshResults = { resultsService.canUpdateResults(user, sequence) }
@@ -156,7 +153,7 @@ class PlayerController(
                             user = user,
                             sequence = sequence,
                             nbRegisteredUsers = nbRegisteredUsers,
-                            sequenceToUserActiveInteraction = sequence.assignment!!.sequences.associate {
+                            sequenceToUserActiveInteraction = assignment.sequences.associate {
                                 it to if (it.executionIsFaceToFace())
                                     it.activeInteraction
                                 else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
@@ -205,6 +202,7 @@ class PlayerController(
                       @RequestParam studentsProvideExplanation: Boolean?,
                       @RequestParam responseToEvaluateCount: Int?): String {
         val user: User = authentication.principal as User
+        var assignment: Assignment? = null
 
         sequenceService.get(user, id, true)
                 .let {
@@ -216,9 +214,10 @@ class PlayerController(
                             responseToEvaluateCount ?: 0
                     )
                     autoReloadSessionHandler.broadcastReload(id)
+                    assignment = it.assignment!!
                 }
 
-        return "redirect:/player/sequence/${id}/play"
+        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
     @GetMapping("/interaction/{id}/start")
@@ -228,7 +227,7 @@ class PlayerController(
         val user: User = authentication.principal as User
         val interaction = interactionService.start(user, id)
         autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
-        return "redirect:/player/sequence/${interaction.sequence.id}/play"
+        return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
     }
 
     @GetMapping("/interaction/{id}/startNext")
@@ -241,7 +240,7 @@ class PlayerController(
             sequenceService.loadInteractions(it.sequence)
             val interaction = interactionService.startNext(user, it)
             autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
-            return "redirect:/player/sequence/${interaction.sequence.id}/play"
+            return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
         }
     }
 
@@ -255,7 +254,7 @@ class PlayerController(
             sequenceService.loadInteractions(it.sequence)
             interactionService.stop(user, id)
             autoReloadSessionHandler.broadcastReload(it.sequence.id!!)
-            return "redirect:/player/sequence/${it.sequence.id}/play"
+            return "redirect:/player/assignment/${it.sequence.assignment!!.id}/play/sequence/${it.sequence.id}"
         }
     }
 
@@ -264,13 +263,15 @@ class PlayerController(
                      model: Model,
                      @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        var assignment: Assignment? = null
 
         sequenceService.get(user, id).let {
             sequenceService.stop(user, it)
             autoReloadSessionHandler.broadcastReload(id)
+            assignment = it.assignment!!
         }
 
-        return "redirect:/player/sequence/${id}/play"
+        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
     @GetMapping("/sequence/{id}/reopen")
@@ -278,13 +279,15 @@ class PlayerController(
                        model: Model,
                        @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        var assignment: Assignment? = null
 
         sequenceService.get(user, id).let {
             sequenceService.reopen(user, it)
             autoReloadSessionHandler.broadcastReload(id)
+            assignment = it.assignment!!
         }
 
-        return "redirect:/player/sequence/${id}/play"
+        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
     @GetMapping("/sequence/{id}/publish-results")
@@ -292,13 +295,15 @@ class PlayerController(
                        model: Model,
                        @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        var assignment: Assignment? = null
 
         sequenceService.get(user, id, true).let {
             sequenceService.publishResults(user, it)
             autoReloadSessionHandler.broadcastReload(id)
+            assignment = it.assignment!!
         }
 
-        return "redirect:/player/sequence/${id}/play"
+        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
     @GetMapping("/sequence/{id}/refresh-results")
@@ -306,12 +311,14 @@ class PlayerController(
                        model: Model,
                        @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        var assignment: Assignment? = null
 
         sequenceService.get(id, true).let {
             sequenceService.refreshResults(user, it)
+            assignment = it.assignment!!
         }
 
-        return "redirect:/player/sequence/${id}/play"
+        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
     @GetMapping("/sequence/{id}/unpublish-results")
@@ -319,13 +326,15 @@ class PlayerController(
                          model: Model,
                          @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        var assignment: Assignment? = null
 
         sequenceService.get(user, id, true).let {
             sequenceService.unpublishResults(user, it)
             autoReloadSessionHandler.broadcastReload(id)
+            assignment = it.assignment!!
         }
 
-        return "redirect:/player/sequence/${id}/play"
+        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
     @PostMapping("/sequence/{id}/submit-response")
@@ -334,8 +343,10 @@ class PlayerController(
                        @ModelAttribute responseSubmissionData: ResponseSubmissionData,
                        @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        var assignment: Assignment? = null
 
         sequenceService.get(id, true).let { sequence ->
+            assignment = sequence.assignment!!
             val choiceListSpecification = responseSubmissionData.choiceList?.let {
                 LearnerChoice(it)
             }
@@ -358,7 +369,8 @@ class PlayerController(
                                         sequence.statement.choiceSpecification
                                                 ?: error("The choice specification is undefined")
                                 )
-                            }
+                            },
+                            statement = sequence.statement
                     )
             )
             if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
@@ -366,7 +378,7 @@ class PlayerController(
             }
         }
 
-        return "redirect:/player/sequence/${id}/play"
+        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
     data class ResponseSubmissionData(
@@ -383,8 +395,10 @@ class PlayerController(
                                          @ModelAttribute evaluationData: EvaluationData,
                                          @PathVariable id: Long): String {
         val user: User = authentication.principal as User
+        var assignment: Assignment? = null
 
         sequenceService.get(id, true).let { sequence ->
+            assignment = sequence.assignment!!
             evaluationData.getGrades().forEach {
                 peerGradingService.createOrUpdate(user, responseService.getOne(it.key), it.value.toBigDecimal())
             }
@@ -408,7 +422,9 @@ class PlayerController(
                                     sequence.statement.choiceSpecification
                                             ?: error("The choice specification is undefined")
                             )
-                        }
+                        },
+                        statement = sequence.statement
+
                 )
                         .let {
                             val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
@@ -427,7 +443,7 @@ class PlayerController(
                 sequenceService.nextInteractionForLearner(sequence, user)
             }
 
-            return "redirect:/player/sequence/${id}/play"
+            return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
         }
     }
 

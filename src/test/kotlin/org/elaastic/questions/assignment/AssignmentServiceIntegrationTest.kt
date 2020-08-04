@@ -18,10 +18,19 @@
 
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.assignment.sequence.FakeExplanationData
-import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.questions.assignment.sequence.*
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.interaction.specification.InteractionSpecification
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
 import org.elaastic.questions.test.TestingService
@@ -29,14 +38,19 @@ import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.hamcrest.CoreMatchers
 import org.springframework.beans.factory.annotation.Autowired
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
+import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.cache.support.NullValue
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
+import java.math.BigDecimal
 import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
@@ -52,9 +66,13 @@ internal class AssignmentServiceIntegrationTest(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val testingService: TestingService,
         @Autowired val entityManager: EntityManager,
-        @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val statementRepository: StatementRepository,
-        @Autowired val statementService: StatementService
+        @Autowired val subjectService: SubjectService,
+        @Autowired val statementService: StatementService,
+        @Autowired val responseService: ResponseService,
+        @Autowired val interactionService: InteractionService,
+        @Autowired val responseRepository: ResponseRepository,
+        @Autowired val sequenceService: SequenceService
 ) {
 
     val persistentUnitUtil: PersistenceUnitUtil by lazy {
@@ -189,19 +207,69 @@ internal class AssignmentServiceIntegrationTest(
     }
 
     @Test
-    fun `delete an existing assignment`() {
-        val teacher = testingService.getTestTeacher()
+    fun `delete an assignment with results`() {
+        val subject = testingService.getAnyTestSubject()
+        val teacher = subject.owner
         val initialNbAssignment = assignmentService.count()
-        val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
+        val initialNbStatement = subjectService.countAllStatement(subject)
+        val assignment = subjectService.addAssignment(subject,
+                Assignment("Foo",teacher))
+        val student = testingService.getTestStudent()
+
+        sequenceService.start(teacher, assignment.sequences.first(), ExecutionContext.FaceToFace, false,0)
+
+        val interaction =
+                Interaction(
+                        interactionType = InteractionType.ResponseSubmission,
+                        rank = 1,
+                        owner= student,
+                        sequence= assignment.sequences.first()
+                )
+        interactionService.interactionRepository.saveAndFlush(interaction)
+        interactionService.start(student, interaction.id!!)
+
+        val initialNbResponse = responseService.count(assignment.sequences.first(),1)
+
+        val choiceListSpecification = LearnerChoice(listOf<Int>(1, 3))
+        val response = Response(
+                learner = student,
+                interaction = interaction,
+                attempt = 1,
+                explanation = "explanation",
+                confidenceDegree = ConfidenceDegree.CONFIDENT,
+                meanGrade = BigDecimal(1),
+                learnerChoice = choiceListSpecification,
+                score = BigDecimal(2),
+                statement = interaction.sequence.statement
         )
+        responseRepository.save(response)
+
+        tWhen {
+            subjectService.removeAssignment(subject.owner, assignment)
+        }.tThen {
+            assertThat(assignmentService.count(), equalTo(initialNbAssignment))
+            assertThat(subjectService.countAllStatement(subject), equalTo((initialNbStatement)))
+            assertThat(responseService.count(assignment.sequences.first(),1),equalTo(initialNbResponse))
+        }
+    }
+
+    @Test
+    fun `delete an assignment without results`() {
+        val subject = testingService.getAnyTestSubject()
+        val teacher = subject.owner
+        val initialNbAssignment = assignmentService.count()
+        val initialNbStatement = subjectService.countAllStatement(subject)
+
+        val assignment = subjectService.addAssignment(subject,
+                Assignment("Foo",teacher))
 
         entityManager.clear()
 
         tWhen {
-            assignmentService.delete(teacher, assignment)
+            subjectService.removeAssignment(teacher, assignment)
         }.tThen {
             assertThat(assignmentService.count(), equalTo(initialNbAssignment))
+            assertThat(subjectService.countAllStatement(subject), equalTo((initialNbStatement)))
         }
     }
 
@@ -241,190 +309,127 @@ internal class AssignmentServiceIntegrationTest(
     }
 
     @Test
-    fun `add a sequence to an assignment - valid`() {
-        val teacher = testingService.getTestTeacher()
-        val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
-        )
+    fun `creating sequences for all statement upon assignment creation`() {
+        val subject = testingService.getAnyTestSubject()
+        val initialCount = subjectService.countAllStatement(subject)
 
         tWhen {
-            assignmentService.addSequence(
-                    assignment,
-                    Statement.createDefaultStatement(teacher)
-                            .title("Test")
-                            .content("Test content")
+            subjectService.addAssignment(
+                    subject,
+                    Assignment(title = "Foo", owner = subject.owner, subject = subject)
             )
         }.tThen {
             assertThat(it.id, notNullValue())
-            assertThat(it.statement.id, notNullValue())
+            assertThat(
+                    assignmentService.countAllSequence(it),
+                    equalTo(initialCount)
+            )
+            assertThat(
+                    subjectService.countAllStatement(subject),
+                    equalTo(initialCount)
+            ) // Should not add statement to subject
+        }
+    }
+
+    @Test
+    fun `add a sequence when a new statement is added to subject`() {
+        val subject = testingService.getAnyTestSubject()
+        val assignment =  subjectService.addAssignment(
+                subject,
+                Assignment(title = "Foo", owner = subject.owner, subject = subject)
+        )
+        val initialCount = assignmentService.countAllSequence(assignment)
+
+
+        tWhen {
+            subjectService.addStatement(
+                    subject,
+                    Statement.createDefaultStatement(subject.owner)
+                            .title("Sequence n°1")
+                            .content("Content 1")
+            )
+        }.tThen {
+            assertThat(it.id, notNullValue())
             assertThat(
                     assignmentService.countAllSequence(assignment),
-                    equalTo(1)
+                    equalTo(initialCount+1)
+            )
+            assertThat(
+                    subjectService.countAllStatement(subject),
+                    equalTo(initialCount+1)
             )
         }
     }
 
+    //TODO
     @Test
-    fun `remove a sequence to an assignment - valid`() {
-        val teacher = testingService.getTestTeacher()
-        val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
-        )
-        val sequence1 = assignmentService.addSequence(
-                assignment,
-                Statement.createDefaultStatement(teacher)
+    fun `remove a sequence without results when a statement is removed from subject`() {
+        val subject = testingService.getAnyTestSubject()
+        val statement1 = subjectService.addStatement(
+                subject,
+                Statement.createDefaultStatement(subject.owner)
                         .title("Sequence n°1")
                         .content("Content 1")
         )
-        val sequence2 = assignmentService.addSequence(
-                assignment,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°2")
-                        .content("Content 2")
+        val assignment =  subjectService.addAssignment(
+                subject,
+                Assignment(title = "Foo", owner = subject.owner, subject = subject)
         )
-        val sequence3 = assignmentService.addSequence(
-                assignment,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°3")
-                        .content("Content 3")
-        )
-        entityManager.flush()
-
-        val assignmentId = assignment.id
-        val sequenceId1 = sequence1.id
-        val statementId1 = sequence1.statement.id
-        val sequenceId2 = sequence2.id
-        val statementId2 = sequence2.statement.id
-        val sequenceId3 = sequence3.id
-        val statementId3 = sequence3.statement.id
-        val assignmentLastUpdated = assignment.lastUpdated
-        val assignmentVersion = assignment.version
-
-        assertThat(assignmentId, notNullValue())
-        assertThat(sequenceId1, notNullValue())
-        assertThat(statementId1, notNullValue())
-        assertThat(sequenceId2, notNullValue())
-        assertThat(statementId2, notNullValue())
-        assertThat(sequenceId3, notNullValue())
-        assertThat(statementId3, notNullValue())
+        val initialCount = assignmentService.countAllSequence(assignment)
+        val stmtId = statement1.id!!
 
         tWhen {
-            assignmentService.removeSequence(sequence2.owner, sequence2)
-            entityManager.flush()
-            entityManager.clear()
+            subjectService.removeStatement(subject.owner, statement1)
         }.tThen {
-            assignmentService.get(assignmentId!!, true).let {
-                assertThat(it.sequences.size, equalTo(2))
-                assertThat(it.version, equalTo(assignmentVersion!! + 1L))
-            }
-            assertThat(sequenceRepository.existsById(sequenceId2!!), equalTo(false))
-            assertThat(statementRepository.existsById(statementId2!!), equalTo(true)) // statement is not deleted
-        }.tWhen {
-            sequenceRepository.getOne(sequenceId1!!).let { sequence ->
-                assignmentService.removeSequence(sequence.owner, sequence)
-            }
-            sequenceRepository.getOne(sequenceId3!!).let { sequence ->
-                assignmentService.removeSequence(sequence.owner, sequence)
-            }
-            entityManager.flush()
+            assertThat(
+                    "1er",
+                    subjectService.countAllStatement(subject),
+                    equalTo(initialCount-1)
+            )
+            assertThat(
+                    "2eme",
+                    assignmentService.countAllSequence(assignment),
+                    equalTo(initialCount-1)
+            )
+
+        }
+    }
+
+    @Test
+    fun `not removing a sequence with result when a statement is removed from subject`() {
+        val subject = testingService.getAnyTestSubject()
+        val statement1 = statementService.get(618) // A statement linked to a sequence with results related
+        val assignment = assignmentService.get(382)
+        subject.addAssignment(assignment)
+
+        val initialCountStatements = subjectService.countAllStatement(subject)
+        val initialCount = assignmentService.countAllSequence(assignment)
+        val stmtId = statement1.id!!
+
+        tWhen {
+            assertThat(
+                    " Before ",
+                    assignmentService.countAllSequence(assignment),
+                    equalTo(initialCount)
+            )
+            subjectService.removeStatement(subject.owner, statement1)
         }.tThen {
-            assignmentService.get(assignmentId!!, true).let {
-                assertThat(it.sequences.size, equalTo(0))
-            }
+            assertThat(statementRepository.existsById(stmtId), equalTo(true))
+            assertThat(
+                    " First ",
+                    assignmentService.countAllSequence(assignment),
+                    equalTo(initialCount)
+            ) // The sequence must be kept
+            assertThat(
+                    " Second ",
+                    subjectService.countAllStatement(subject),
+                    equalTo(initialCountStatements-1)
+            )
         }
     }
 
-    @Test
-    fun `moveUp sequence - the 1st sequence`() {
-        val teacher = testingService.getTestTeacher()
-        val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
-        )
-        val sequence1 = assignmentService.addSequence(
-                assignment,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°1")
-                        .content("Content 1")
-        )
-        val sequence2 = assignmentService.addSequence(
-                assignment,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°2")
-                        .content("Content 2")
-        )
 
-        tWhen {
-            assignmentService.moveUpSequence(assignment, sequence1.id!!)
-            entityManager.clear()
-        }.tExpect {
-            assignmentService.get(assignment.id!!, true).let {
-                assertThat(it.sequences.size, equalTo(2))
-                assertThat(
-                        it.sequences[0].statement.title,
-                        equalTo("Sequence n°1")
-                )
-                assertThat(
-                        it.sequences[0].rank,
-                        equalTo(1)
-                )
-                assertThat(
-                        it.sequences[1].statement.title,
-                        equalTo("Sequence n°2")
-                )
-                assertThat(
-                        it.sequences[1].rank,
-                        equalTo(2)
-                )
-            }
-        }
 
-    }
-
-    @Test
-    fun `moveUp sequence - any sequence but not the 1st`() {
-        val teacher = testingService.getTestTeacher()
-        val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
-        )
-        val sequence1 = assignmentService.addSequence(
-                assignment,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°1")
-                        .content("Content 1")
-        )
-        val sequence2 = assignmentService.addSequence(
-                assignment,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°2")
-                        .content("Content 2")
-        )
-
-        tWhen {
-            assignmentService.moveUpSequence(assignment, sequence2.id!!)
-            entityManager.clear()
-        }.tExpect {
-            assignmentService.get(assignment.id!!, true).let {
-                assertThat(it.sequences.size, equalTo(2))
-                assertThat(
-                        it.sequences[0].statement.title,
-                        equalTo("Sequence n°2")
-                )
-                assertThat(
-                        it.sequences[0].rank,
-                        equalTo(1)
-                )
-                assertThat(
-                        it.sequences[1].statement.title,
-                        equalTo("Sequence n°1")
-                )
-                assertThat(
-                        it.sequences[1].rank,
-                        equalTo(2)
-                )
-            }
-        }
-
-    }
 
     @Test
     fun `findByGlobalId - not existing value`() {
@@ -475,112 +480,6 @@ internal class AssignmentServiceIntegrationTest(
             assertThat(it.content, equalTo(listOf(assignment)))
         }
 
-    }
-
-
-    @Test
-    fun testDuplicateSequenceInAssignment() {
-        val teacher = testingService.getTestTeacher()
-        val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
-        )
-        val duplicatedAssignment = assignmentService.save(
-                Assignment(title = "Foo duplicate", owner = teacher)
-        )
-        tGiven("a sequence in the original assignmnent") {
-            Statement.createDefaultStatement(teacher)
-                    .title("Test")
-                    .content("Test content")
-                    .expectedExplanation("because ...")
-                    .let {
-                        val seq = assignmentService.addSequence(
-                                assignment,
-                                it
-                        )
-                        statementService.addFakeExplanation(seq.statement, FakeExplanationData(1, "this  is 1"))
-                        statementService.addFakeExplanation(seq.statement, FakeExplanationData(2, "this  is 2"))
-                        seq
-                    }
-        }.tWhen("duplicate the sequence in the duplicated assignment") {
-            assignmentService.duplicateSequenceInAssignment(it, duplicatedAssignment, duplicatedAssignment.owner)
-        }.tThen("the sequence is duplicated as expected") { duplicatedSequence ->
-            val originalSequence = assignment.sequences[0]
-            assertThat(duplicatedSequence, not(equalTo(originalSequence)))
-            assertThat(duplicatedSequence.assignment, equalTo(duplicatedAssignment))
-            assertThat(duplicatedSequence.statement, not(equalTo(originalSequence.statement)))
-            assertThat(duplicatedSequence.statement.title, equalTo(originalSequence.statement.title))
-            assertThat(duplicatedSequence.statement.content, equalTo(originalSequence.statement.content))
-            assertThat(duplicatedSequence.statement.choiceSpecification, equalTo(originalSequence.statement.choiceSpecification))
-            assertThat(duplicatedSequence.statement.questionType, equalTo(originalSequence.statement.questionType))
-            assertThat(duplicatedSequence.statement.parentStatement, equalTo(originalSequence.statement))
-            assertThat(duplicatedSequence.statement.expectedExplanation, equalTo(originalSequence.statement.expectedExplanation))
-            statementService.findAllFakeExplanationsForStatement(originalSequence.statement).let { originalFExp ->
-                statementService.findAllFakeExplanationsForStatement(duplicatedSequence.statement).let { duplFExp ->
-                    assertThat(duplFExp.size, equalTo(originalFExp.size))
-                    assertThat(duplFExp[0], not(originalFExp[0]))
-                    assertThat(duplFExp[0].correspondingItem, equalTo(originalFExp[0].correspondingItem))
-                    assertThat(duplFExp[0].content, equalTo(originalFExp[0].content))
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testDuplicateAssignment() {
-        val teacher = testingService.getTestTeacher()
-        val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
-        )
-        tGiven("2 sequences in the original assignmnent") {
-            Statement.createDefaultStatement(teacher)
-                    .title("Test")
-                    .content("Test content")
-                    .expectedExplanation("because ...")
-                    .let {
-                        assignmentService.addSequence(
-                                assignment,
-                                it
-                        )
-                        statementService.addFakeExplanation(it, FakeExplanationData(1, "this  is 1"))
-                        statementService.addFakeExplanation(it, FakeExplanationData(2, "this  is 2"))
-                    }
-            Statement.createDefaultStatement(teacher)
-                    .title("Test2")
-                    .content("Test content2")
-                    .expectedExplanation("because 2...")
-                    .let {
-                        assignmentService.addSequence(
-                                assignment,
-                                it
-                        )
-                    }
-        }.tWhen("duplicate the assignment") {
-            assignmentService.duplicate(assignment, assignment.owner)
-        }.tThen("the sequence is duplicated as expected") { duplicatedAssignment ->
-
-            assertThat(duplicatedAssignment, not(equalTo(assignment)))
-            assertThat(duplicatedAssignment.title, equalTo(assignment.title + "-copy"))
-            assertThat(duplicatedAssignment.owner, equalTo(assignment.owner))
-            assertThat(duplicatedAssignment.sequences.size, equalTo(assignment.sequences.size))
-            for (i in 0..1) {
-                val duplicatedSequence = duplicatedAssignment.sequences[i]
-                val originalSequence = assignment.sequences[i]
-                assertThat(duplicatedSequence, not(equalTo(originalSequence)))
-                assertThat(duplicatedSequence.statement, not(equalTo(originalSequence.statement)))
-                assertThat(duplicatedSequence.statement.title, equalTo(originalSequence.statement.title))
-                assertThat(duplicatedSequence.statement.content, equalTo(originalSequence.statement.content))
-                assertThat(duplicatedSequence.statement.choiceSpecification, equalTo(originalSequence.statement.choiceSpecification))
-                assertThat(duplicatedSequence.statement.questionType, equalTo(originalSequence.statement.questionType))
-                assertThat(duplicatedSequence.statement.parentStatement, equalTo(originalSequence.statement))
-                assertThat(duplicatedSequence.statement.expectedExplanation, equalTo(originalSequence.statement.expectedExplanation))
-                statementService.findAllFakeExplanationsForStatement(originalSequence.statement).let { originalFExp ->
-                    statementService.findAllFakeExplanationsForStatement(duplicatedSequence.statement).let { duplFExp ->
-                        assertThat(duplFExp.size, equalTo(originalFExp.size))
-                    }
-                }
-            }
-
-        }
     }
 
     private fun createTestingData(owner: User, n: Int = 10) {

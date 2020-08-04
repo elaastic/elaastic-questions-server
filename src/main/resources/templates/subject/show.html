@@ -82,7 +82,7 @@
 
     <!-- Question Tab -->
     <div class="ui bottom attached tab active segment" data-tab="questions">
-        <div th:replace="|/subject/question-tab.html| :: subjectItem(${subject})"></div>
+        <div th:replace="|/subject/question-tab.html| :: subjectItem(${subject},${statements})"></div>
     </div>
 
     <!-- Assignments Tab -->

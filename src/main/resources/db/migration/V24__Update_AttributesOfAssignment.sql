@@ -16,14 +16,28 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-INSERT INTO `subject` (`id`, `version`, `date_created`, `title`, `course`, `owner_id`, `last_updated`, `global_id`)
-VALUES (1,0,'2020-06-06 10:26:16','Sujet test','',359, '2020-06-06 10:26:16','c71b94b6-ad03-25a9-06d4-00163e3774aa');
-# owner id 359 to match statements linked
+-- Add new columns for assignment
+ALTER TABLE `assignment`
+    ADD COLUMN `rank` INT(11) DEFAULT 0 ;
 
-UPDATE `statement`
-SET subject_id = 1
-WHERE `id`= 618
-    OR `id`= 619
-    OR `id`= 620
-    OR `id`= 621
-    OR `id`= 622;
+ALTER TABLE `assignment`
+    ADD COLUMN `description` text ;
+
+ALTER TABLE `assignment`
+    ADD COLUMN `audience` varchar(1024);
+
+ALTER TABLE `assignment`
+    ADD COLUMN `scholar_year` varchar(32);
+
+-- Fill data for migration
+UPDATE `assignment`
+SET `audience` = 'na'
+WHERE `audience` IS NULL;
+
+UPDATE `assignment`
+SET `scholar_year` = substring(`date_created`,1,4)
+WHERE  `scholar_year` IS NULL;
+
+-- Update rules on new columns
+ALTER TABLE `assignment` MODIFY `audience` varchar(1024) NOT NULL;
+ALTER TABLE `assignment` MODIFY `scholar_year` varchar(32) NOT NULL;

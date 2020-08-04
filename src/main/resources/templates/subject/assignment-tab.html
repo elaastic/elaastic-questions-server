@@ -28,30 +28,55 @@
             </p>
         </div>
 
-        <!--
         <div th:each="assignment, i : ${subject.assignments}"
              class="ui clearing segment attached large text"
-             th:id="|assignment_${assignment.id}|"
+             th:id="|assignment${assignment.id}|"
              style="padding: 1em;">
             <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
-                <div></div>
+                <div th:replace="subject/_assignment_actions.html :: assignmentActions(${assignment}, ${position}, ${i.size})"></div>
+
                 <h3 class="ui header">
+                    <a th:if="${not #lists.isEmpty(assignment.sequences)}"
+                       th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
+                       href="/sequence/123/play"
+                       th:id="${assignment.id}">
+                        <div class="ui tiny circular label"
+                             style="margin-right: 1em;" th:text="${position}">
+                            3
+                        </div>
+
+                        <span th:id="|assignment-title-${assignment.id}|" th:text="${assignment.title}">Title</span>
+                    </a>
+                    <a th:if="${#lists.isEmpty(assignment.sequences)}"
+                       th:href="@{/subject/{id}(id=${subject.id})}"
+                       href="/subject/123"
+                       th:id="${assignment.id}">
+                        <div class="ui tiny circular label"
+                             style="margin-right: 1em;" th:text="${position}">
+                            3
+                        </div>
                         <span th:id="|assignment-title-${assignment.id}|" th:text="${assignment.title}">Title</span>
                     </a>
                 </h3>
-            </div>
-            <div class="ui hidden divider"></div>
-        </div>-->
 
-        <!-- TODO button adding an Assignment
+                <div class="text">
+                    <p th:if="${#lists.isEmpty(assignment.sequences)}" th:text="#{assignment.empty}">No sequences</p>
+                    <p th:id="|assignment-audience-${assignment.id}|" th:text="#{assignment.audience.create} + ${assignment.audience}">audience</p>
+                    <p th:id="|assignment-date-${assignment.id}|" th:text="#{assignment.scholarYear.create} + ${assignment.scholarYear}">date_created</p>
+                    <p th:id="|assignment-description-${assignment.id}|" th:text="#{assignment.description.create} + ${assignment.description}">description</p>
+                </div>
+
+            </div>
+        </div>
+
         <div class="ui basic segment">
             <a class="ui primary button"
-               th:href="@{/assignment/{id}/addSequence(id=${assignment.id})}">
+               th:href="@{/subject/{id}/addAssignment(id=${subject.id})}">
                 <i class="add icon"></i>
                 <span th:text="#{subject.assignment.addAssignment}">Add an assignment</span>
             </a>
         </div>
-        -->
+
 
         <style>
             .ui.header {
@@ -85,7 +110,50 @@
 
             var elaastic = elaastic || {}
 
+            elaastic.showConfirmDeleteAssignmentModal = function (assignmentId) {
+
+                let title = $('#assignment-title-' + assignmentId).text()
+                let sentenceTemplate = /*[[#{assignment.delete.confirm}]]*/ ''
+                let sentence = sentenceTemplate.replace('{0}', title)
+
+                $('#confirm-delete-assignment-modal-title').text(sentence)
+
+                let confirmDeleteAssignmentModal = $('#confirm-delete-assignment-modal')
+                confirmDeleteAssignmentModal.modal({
+                    onApprove: function () {
+                        let baseUrl = /*[[@{/assignment/}]]*/ ''
+                        window.location = baseUrl + assignmentId + '/delete'
+                    }
+                })
+
+                confirmDeleteAssignmentModal.modal('show')
+            }
         </script>
+
+        <!--  Delete confirm modal-->
+        <div>
+            <div id="confirm-delete-assignment-modal" class="ui tiny modal">
+                <div class="header" th:text="#{common.delete}">
+                    Delete
+                </div>
+
+                <div class="content">
+                    <p id="confirm-delete-assignment-modal-title">
+                        Do you really want to delete the question "{0}"?
+                    </p>
+                </div>
+
+                <div class="actions">
+                    <div class="ui red approve button" th:text="#{common.yes}">
+                        Yes
+                    </div>
+
+                    <div class="ui cancel button" th:text="#{common.no}">
+                        No
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </section>
 </div>

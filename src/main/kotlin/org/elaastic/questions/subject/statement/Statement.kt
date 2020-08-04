@@ -121,7 +121,6 @@ class Statement(
     }
 
     fun updateFrom(otherStatement: Statement): Statement {
-        require(id == otherStatement.id)
         require(owner == otherStatement.owner)
         if (version != otherStatement.version) {
             throw OptimisticLockException()
@@ -133,7 +132,7 @@ class Statement(
         choiceSpecification = otherStatement.choiceSpecification
         parentStatement = otherStatement.parentStatement
         expectedExplanation = otherStatement.expectedExplanation
-
+        if (id != otherStatement.id ) parentStatement = otherStatement
         return this
     }
 

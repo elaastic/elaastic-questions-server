@@ -22,6 +22,8 @@ import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
+import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -45,7 +47,8 @@ import javax.validation.constraints.NotNull
 @Transactional
 class AssignmentController(
         @Autowired val assignmentService: AssignmentService,
-        @Autowired val messageBuilder: MessageBuilder
+        @Autowired val messageBuilder: MessageBuilder,
+        @Autowired val subjectService: SubjectService
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -86,18 +89,6 @@ class AssignmentController(
         return "/assignment/show"
     }
 
-    @GetMapping("create")
-    fun create(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
-
-        if (!model.containsAttribute("assignment")) {
-            model.addAttribute("assignment", AssignmentData(owner = user))
-        }
-        model.addAttribute("user", user)
-
-        return "/assignment/create"
-    }
-
     @PostMapping("save")
     fun save(authentication: Authentication,
              @Valid @ModelAttribute assignmentData: AssignmentData,
@@ -105,16 +96,18 @@ class AssignmentController(
              model: Model,
              response: HttpServletResponse): String {
         val user: User = authentication.principal as User
+        val subject: Subject = subjectService.get(assignmentData.subject.id!!)
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
             model.addAttribute("user", user)
             model.addAttribute("assignment", assignmentData)
-            "/assignment/create"
+            "/subject/${subject.id}/addAssignment"
         } else {
             val assignment = assignmentData.toEntity()
             assignmentService.save(assignment)
-            "redirect:/assignment/${assignment.id}"
+
+            "/subject/${subject.id}"
         }
     }
 
@@ -127,6 +120,7 @@ class AssignmentController(
         assignmentService.get(user, id).let {
             model.addAttribute("user", user)
             model.addAttribute("assignment", it)
+            model.addAttribute("subject", it.subject)
         }
 
         return "/assignment/edit"
@@ -140,13 +134,19 @@ class AssignmentController(
                @PathVariable id: Long,
                response: HttpServletResponse,
                redirectAttributes: RedirectAttributes): String {
+
         val user: User = authentication.principal as User
+        val assignment: Assignment = assignmentService.get(id)
 
         return if (result.hasErrors()) {
-            response.status = HttpStatus.BAD_REQUEST.value()
+
             model.addAttribute("user", user)
-            model.addAttribute("assignment", assignmentData)
-            "/assignment/edit"
+            model.addAttribute("nbAssignments",assignment.subject!!.assignments.size)
+            if (!model.containsAttribute("assignment")) {
+                model.addAttribute("assignment", AssignmentController.AssignmentData(owner = user, subject=assignment.subject!!))
+            }
+            return "/assignment/create"
+
         } else {
             assignmentService.get(user, id).let {
                 it.updateFrom(assignmentData.toEntity())
@@ -163,7 +163,7 @@ class AssignmentController(
                     )
                 }
 
-                "redirect:/assignment/$id"
+                "redirect:/subject/${assignment.subject!!.id}"
             }
         }
     }
@@ -175,7 +175,7 @@ class AssignmentController(
         val user: User = authentication.principal as User
 
         val assignment = assignmentService.get(user, id)
-        assignmentService.delete(user, assignment)
+        subjectService.removeAssignment(user, assignment)
 
         with(messageBuilder) {
             success(
@@ -188,31 +188,9 @@ class AssignmentController(
             )
         }
 
-        return "redirect:/assignment"
+        return "redirect:/subject/${assignment.subject!!.id}"
     }
 
-    @GetMapping("duplicate/{id}")
-    fun update(authentication: Authentication,
-               @PathVariable id: Long,
-               redirectAttributes: RedirectAttributes): String {
-        val user: User = authentication.principal as User
-
-        assignmentService.get(user, id, true).let {
-            assignmentService.duplicate(it, user).let { duplicatedAssignment ->
-                with(messageBuilder) {
-                    success(
-                            redirectAttributes,
-                            message(
-                                    "assignment.duplicate.message",
-                                    message("assignment.label"),
-                                    duplicatedAssignment.title
-                            )
-                    )
-                }
-                return "redirect:/assignment/${duplicatedAssignment.id}/edit"
-            }
-        }
-    }
 
     @GetMapping("{id}/addSequence")
     fun addSequence(authentication: Authentication,
@@ -236,19 +214,53 @@ class AssignmentController(
         return "/assignment/sequence/create"
     }
 
+    @GetMapping("{id}/up")
+    fun up(authentication: Authentication,
+           subjectId: Long,
+           @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        val subject = subjectService.get(user, subjectId, true)
+        subjectService.moveUpAssignment(subject, id)
+
+        return "redirect:/subject/$subjectId#assignment_${id}"
+    }
+
+    @GetMapping("{id}/down")
+    fun down(authentication: Authentication,
+             subjectId: Long,
+             @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+
+        val subject = subjectService.get(user, subjectId, true)
+        subjectService.moveDownAssignment(subject, id)
+
+        return "redirect:/subject/$subjectId#assignment_${id}"
+    }
+
+
     data class AssignmentData(
             var id: Long? = null,
             var version: Long? = null,
             @field:NotBlank var title: String? = null,
-            @field:NotNull var owner: User? = null
+            @field:NotNull var owner: User? = null,
+            var subject: Subject,
+            var audience: String = "",
+            var description: String = "",
+            var scholarYear: String = ""
     ) {
         fun toEntity(): Assignment {
             return Assignment(
                     title = title!!,
-                    owner = owner!!
+                    owner = owner!!,
+                    subject = subject,
+                    scholarYear = scholarYear,
+                    audience = audience
             ).let {
                 it.id = id
                 it.version = version
+                it.audience = audience
+                it.description = description
                 it
             }
         }

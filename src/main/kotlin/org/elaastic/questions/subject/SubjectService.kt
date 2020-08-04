@@ -1,5 +1,9 @@
 package org.elaastic.questions.subject
 
+import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.AssignmentRepository
+import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -24,7 +28,10 @@ class SubjectService (
         @Autowired val subjectRepository: SubjectRepository,
         @Autowired val statementService: StatementService,
         @Autowired val statementRepository: StatementRepository,
-        @Autowired val entityManager: EntityManager
+        @Autowired val assignmentService: AssignmentService,
+        @Autowired val assignmentRepository: AssignmentRepository,
+        @Autowired val entityManager: EntityManager,
+        @Autowired val sequenceService: SequenceService
 
 ) {
 
@@ -45,6 +52,10 @@ class SubjectService (
         }
     }
 
+    fun findByGlobalId(globalId: String): Subject? {
+        return subjectRepository.findByGlobalId(globalId)
+    }
+
     fun save(subject: Subject): Subject {
         return subjectRepository.save(subject)
     }
@@ -60,14 +71,20 @@ class SubjectService (
         subjectRepository.save(subject)
     }
 
-    // TODO TEST
     fun addStatement(subject: Subject, statement: Statement): Statement {
         statement.subject = subject
         statement.rank = (subject.statements.map { it.rank }.max() ?: 0) + 1
         statementService.save(statement)
         subject.statements.add(statement)
+        addCorrespondingSequenceIfNotInAssignment(statement, subject);
         touch(subject)
         return statement
+    }
+
+    private fun addCorrespondingSequenceIfNotInAssignment(statement: Statement, subject: Subject) {
+        for (assignment:Assignment in subject.assignments){
+            assignmentService.addSequenceForStatementIfNotInAssignment(statement, assignment)
+        }
     }
 
     fun countAllStatement(subject: Subject): Int {
@@ -87,16 +104,34 @@ class SubjectService (
 
     fun removeStatement(user: User, statement: Statement) {
         require(user == statement.owner) {
-            "Only the owner can delete a sequence"
+            "Only the owner can delete a statement"
         }
         val subject = statement.subject!!
         touch(subject)
         subject.statements.remove(statement)
         entityManager.flush()
-        statementRepository.delete(statement) // all other linked entities are deletes by DB cascade
-        entityManager.flush()
-        entityManager.clear()
+        deleteStatementIfNotUsed(statement, subject)
         updateAllStatementRank(subject)
+    }
+
+    private fun deleteStatementIfNotUsed(statement: Statement, subject: Subject) {
+        var idsList: ArrayList<Long> = ArrayList()
+        if (subject.assignments.isEmpty()) {
+            statementService.delete(statement)
+            entityManager.flush()
+            entityManager.clear()
+        } else {
+            for (assignment: Assignment in subject.assignments) {
+                idsList = assignmentService.deleteStatementIfNotUsed(statement, assignment)
+                for (id:Long in idsList){
+                    sequenceService.loadInteractions(sequenceService.get(id))
+                    assignmentService.removeSequence(subject.owner, sequenceService.get(id))
+                }
+            }
+            statement.subject = null
+            statementService.save(statement)
+        }
+
     }
 
     fun moveUpStatement(subject: Subject, statementId: Long) {
@@ -153,4 +188,80 @@ class SubjectService (
         subject.statements.mapIndexed { index, statement -> statement.rank = index + 1 }
     }
 
+    fun addAssignment(subject: Subject, assignment: Assignment): Assignment {
+        assignment.subject = subject
+        assignment.rank = (subject.assignments.map { it.rank }.max() ?: 0) + 1
+        assignmentService.save(assignment)
+        assignmentService.buildFromSubject(assignment, subject);
+        subject.assignments.add(assignment)
+        touch(subject)
+        return assignment
+    }
+
+    fun moveUpAssignment(subject: Subject, assignmentId: Long) {
+        val idsArray = subject.assignments.map { it.id }.toTypedArray()
+        val pos = idsArray.indexOf(assignmentId)
+
+        if (pos == -1)
+            throw IllegalStateException("This assignment $assignmentId does not belong to subject ${subject.id}")
+        if (pos == 0)
+            return  // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE assignment SET rank = CASE " +
+                        "WHEN id=${assignmentId} THEN ${pos} " +
+                        "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
+                        " END " +
+                        "WHERE id in (${idsArray[pos - 1]}, ${assignmentId})"
+        ).executeUpdate()
+    }
+
+    fun moveDownAssignment(subject: Subject, assignmentId: Long) {
+        val idsArray = subject.assignments.map { it.id }.toTypedArray()
+        val pos = idsArray.indexOf(assignmentId)
+        val posValue = pos + 1
+
+        if (pos == -1)
+            throw IllegalStateException("This assignment $assignmentId does not belong to subject ${subject.id}")
+        if (pos == subject.assignments.size - 1)
+            return  // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE assignment SET rank = CASE " +
+                        "WHEN id=${assignmentId} THEN ${posValue + 1} " +
+                        "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
+                        " END " +
+                        "WHERE id in (${idsArray[pos + 1]}, ${assignmentId})"
+        ).executeUpdate()
+    }
+
+    fun removeAssignment(user: User, assignment: Assignment) {
+        require(user == assignment.owner) {
+            "Only the owner can delete an assignment"
+        }
+        val subject = assignment.subject!!
+        touch(subject)
+        subject.assignments.remove(assignment)
+        entityManager.flush()
+        assignmentRepository.delete(assignment) // all other linked entities are deletes by DB cascade
+        entityManager.flush()
+        entityManager.clear()
+        updateAllAssignmentRank(subject)
+    }
+
+    fun updateAllAssignmentRank(subject: Subject) {
+        val assignmentIds = subject.assignments.map { it.id }
+        if (assignmentIds.isEmpty()) return // Nothing to do
+
+        entityManager.createNativeQuery(
+                "UPDATE assignment SET rank = CASE " +
+                        assignmentIds.mapIndexed { index, id ->
+                            "WHEN id=$id THEN $index"
+                        }.joinToString(" ") +
+                        " END " +
+                        "WHERE id in (${assignmentIds.joinToString(",")})"
+        ).executeUpdate()
+
+        subject.assignments.mapIndexed { index, assignment -> assignment.rank = index + 1 }
+    }
 }

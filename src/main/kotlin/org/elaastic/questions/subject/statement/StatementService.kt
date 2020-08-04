@@ -18,15 +18,22 @@
 
 package org.elaastic.questions.subject.statement
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.Subject
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import java.util.*
+import javax.persistence.Column
 import javax.persistence.EntityNotFoundException
+import javax.persistence.OneToOne
 import javax.transaction.Transactional
 
 @Service
@@ -89,5 +96,33 @@ class StatementService(
         return fakeExplanationRepository.findAllByStatement(
                 statement
         )
+    }
+
+    fun duplicate(statement: Statement): Statement {
+        var duplicatedStatement: Statement =
+                Statement(
+                        statement.owner,
+                        statement.title,
+                        statement.content,
+                        statement.questionType,
+                        statement.choiceSpecification,
+                        statement,
+                        statement.expectedExplanation,
+                        statement.subject,
+                        statement.rank
+                )
+        duplicatedStatement.version = statement.version
+        duplicatedStatement.attachment = statement.attachment
+        return statementRepository.save(duplicatedStatement)
+    }
+
+    fun assignStatementToSequences(newStatement: Statement) {
+        val subject: Subject = newStatement.subject!!
+        for (assignment: Assignment in subject.assignments){
+            for (sequence: Sequence in assignment.sequences){
+                if (sequence.statement == newStatement.parentStatement)
+                    sequence.statement = newStatement
+            }
+        }
     }
 }

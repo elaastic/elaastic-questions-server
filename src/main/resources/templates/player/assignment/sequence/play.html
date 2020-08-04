@@ -39,8 +39,8 @@
 
   <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
     <a class="item"
-       th:href="@{/assignment/{assignmentId}(assignmentId=${playerModel.assignment.id})}"
-       th:attr="data-tooltip=#{assignment.action.show.label}"
+       th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id})}"
+       th:attr="data-tooltip=#{subject.action.show.label}"
        data-position="right center"
        data-inverted="">
       <i class="yellow edit icon"></i>

@@ -22,10 +22,13 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.statement.Statement
 import org.hibernate.annotations.SortNatural
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -63,16 +66,38 @@ class Assignment(
         var globalId: String = UUID.randomUUID().toString(),
 
         @field:ManyToOne( fetch = FetchType.EAGER)
-        var subject: Subject? = null
+        var subject: Subject? = null,
 
-) : AbstractJpaPersistable<Long>() {
+        @field:NotNull
+        var rank: Int = 0,
+
+        @field:NotNull
+        var audience: String = "",
+
+        var description: String? = null,
+
+        @Column(name = "scholar_year")
+        @field:NotNull
+        var scholarYear: String? = null
+
+) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
     @Version
     var version: Long? = null
 
     @Column(name = "date_created")
     @CreatedDate
-    lateinit var dateCreated: Date
+    var dateCreated: Date = Date()
+
+    // initializer block
+    init {
+        if (scholarYear.isNullOrBlank() ){
+            var localDate: LocalDate = dateCreated.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            var month = localDate.month.value
+            var year = localDate.year
+            scholarYear = if (month < 7) "" + (year - 1) + " - " + (year) else "" + (year) + " - " + (year + 1)
+        }
+    }
 
     @LastModifiedDate
     @Column(name = "last_updated")
@@ -85,6 +110,10 @@ class Assignment(
     @SortNatural
     var sequences: MutableList<Sequence> = ArrayList()
 
+    override fun compareTo(other: Statement): Int {
+        return rank.compareTo(other.rank)
+    }
+
     fun updateFrom(otherAssignment: Assignment) {
         require(id == otherAssignment.id)
         if (this.version != otherAssignment.version) {
@@ -92,6 +121,9 @@ class Assignment(
         }
 
         this.title = otherAssignment.title
+        this.audience = otherAssignment.audience
+        this.scholarYear = otherAssignment.scholarYear
+        this.description = otherAssignment.description
     }
 
     fun addSequence(sequence: Sequence): Sequence {

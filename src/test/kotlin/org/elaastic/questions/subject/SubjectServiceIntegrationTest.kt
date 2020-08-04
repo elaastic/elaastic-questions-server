@@ -1,42 +1,40 @@
+package org.elaastic.questions.subject
+
 /*
- * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+* Elaastic - formative assessment system
+* Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as
+* published by the Free Software Foundation, either version 3 of the
+* License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 
-package org.elaastic.questions.assignment
-
-import com.nhaarman.mockitokotlin2.isNull
-import org.elaastic.questions.assignment.sequence.FakeExplanationData
+import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.subject.Subject
-import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
+import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tExpect
-import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.springframework.beans.factory.annotation.Autowired
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers
+import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
@@ -48,14 +46,12 @@ import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 import kotlin.collections.ArrayList
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class SubjectServiceIntegrationTest(
         @Autowired val subjectService: SubjectService,
         @Autowired val testingService: TestingService,
         @Autowired val entityManager: EntityManager,
-        @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val statementRepository: StatementRepository,
         @Autowired val statementService: StatementService
 ) {
@@ -69,8 +65,8 @@ internal class SubjectServiceIntegrationTest(
 
         subjectService.findAllByOwner(teacher)
                 .tExpect {
-                    assertThat(it.totalElements, equalTo(0L))
-                    assertThat(it.totalPages, equalTo(0))
+                    MatcherAssert.assertThat(it.totalElements, CoreMatchers.equalTo(0L))
+                    MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(0))
                 }
     }
 
@@ -81,52 +77,58 @@ internal class SubjectServiceIntegrationTest(
 
         subjectService.findAllByOwner(teacher)
                 .tExpect {
-                    assertThat(it.totalElements, equalTo(10L))
-                    assertThat(it.totalPages, equalTo(1))
+                    MatcherAssert.assertThat(it.totalElements, CoreMatchers.equalTo(10L))
+                    MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(1))
                 }
 
         subjectService.findAllByOwner(teacher, PageRequest.of(0, 5))
                 .tExpect {
-                    assertThat(it.totalPages, equalTo(2))
+                    MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(2))
                 }
     }
 
     @Test
-    fun `get an existing subject without fetching statements`() {
+    fun `get an existing subject without fetching statements and assignments`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject(title = "Foo", course ="New one" , owner = teacher)
+                Subject("Subject", "", teacher)
         ).id!!
 
         entityManager.clear()
 
         subjectService.get(subjectId).let {
-            assertThat(it.id, equalTo(subjectId))
-            assertThat(it.title, equalTo("Foo"))
-            assertThat(it.course, equalTo("New one"))
-            assertThat(
+            MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(subjectId))
+            MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("Subject"))
+            MatcherAssert.assertThat(
                     persistentUnitUtil.isLoaded(it, "statements"),
-                    equalTo(false)
+                    CoreMatchers.equalTo(false)
+            )
+            MatcherAssert.assertThat(
+                    persistentUnitUtil.isLoaded(it, "assignments"),
+                    CoreMatchers.equalTo(false)
             )
         }
     }
 
     @Test
-    fun `get an existing assignment fetching sequences`() {
+    fun `get an existing subject fetching statements and assignments`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject(title = "Foo", course ="New one" , owner = teacher)
+                Subject("Subject", "", teacher)
         ).id!!
 
         entityManager.clear()
 
         subjectService.get(subjectId, true).let {
-            assertThat(it.id, equalTo(subjectId))
-            assertThat(it.title, equalTo("Foo"))
-            assertThat(it.course, equalTo("New one"))
-            assertThat(
+            MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(subjectId))
+            MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("Subject"))
+            MatcherAssert.assertThat(
                     persistentUnitUtil.isLoaded(it, "statements"),
-                    equalTo(true)
+                    CoreMatchers.equalTo(true)
+            )
+            MatcherAssert.assertThat(
+                    persistentUnitUtil.isLoaded(it, "assignments"),
+                    CoreMatchers.equalTo(true)
             )
         }
     }
@@ -135,13 +137,13 @@ internal class SubjectServiceIntegrationTest(
     fun `get a subject for a user - OK`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject(title = "Foo", course ="New one" , owner = teacher)
+                Subject("Subject", "", teacher)
         ).id!!
 
         entityManager.clear()
 
         subjectService.get(teacher, subjectId).let {
-            assertThat(it.id, equalTo(subjectId))
+            MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(subjectId))
         }
     }
 
@@ -149,7 +151,7 @@ internal class SubjectServiceIntegrationTest(
     fun `try to get a subject for a user that is owned by another user`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject(title = "Foo", course ="New one" , owner = teacher)
+                Subject("Subject", "", teacher)
         ).id!!
 
         entityManager.clear()
@@ -168,28 +170,31 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `save a valid subject`() {
-        val subject = Subject("subject", "course", testingService.getTestTeacher())
+        val teacher = testingService.getTestTeacher()
+        val subject = subjectService.save( Subject("Subject", "", teacher))
         tWhen { subjectService.save(subject) }
                 .tThen {
-                    assertThat(it.id, notNullValue())
-                    assertThat(it.version, equalTo(0L))
-                    assertThat(UUID.fromString(it.globalId), notNullValue())
-                    assertThat(it.statements, equalTo(ArrayList()))
-                    assertThat(it.assignments, equalTo(mutableSetOf()))
-                    assertThat(it.owner, equalTo(testingService.getTestTeacher()))
+                    MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
+                    MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(0L))
+                    MatcherAssert.assertThat(UUID.fromString(it.globalId), CoreMatchers.notNullValue())
+                    MatcherAssert.assertThat(it.statements, CoreMatchers.equalTo(ArrayList()))
+                    MatcherAssert.assertThat(it.assignments, CoreMatchers.equalTo(mutableSetOf()))
+                    MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("Subject"))
+                    MatcherAssert.assertThat(it.course, CoreMatchers.equalTo(""))
+                    MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(testingService.getTestTeacher()))
                 }
     }
 
     @Test
     fun `a subject must have a not blank title`() {
         val exception = assertThrows<ConstraintViolationException> {
-            subjectService.save(Subject("", "course", testingService.getTestTeacher()))
+            subjectService.save(Subject("", "", testingService.getTestTeacher()))
         }
 
-        assertThat(exception.constraintViolations.size, equalTo(1))
-        assertThat(
+        MatcherAssert.assertThat(exception.constraintViolations.size, CoreMatchers.equalTo(1))
+        MatcherAssert.assertThat(
                 exception.constraintViolations.elementAt(0).propertyPath.toString(),
-                equalTo("title")
+                CoreMatchers.equalTo("title")
         )
     }
 
@@ -198,21 +203,26 @@ internal class SubjectServiceIntegrationTest(
         val teacher = testingService.getTestTeacher()
         val initialNbSubject = subjectService.count()
         val subject = subjectService.save(
-                Subject("subject", "course", owner = teacher))
+                Subject("Subject", "", teacher)
+        )
 
         entityManager.clear()
 
         tWhen {
             subjectService.delete(teacher, subject)
         }.tThen {
-            assertThat(subjectService.count(), equalTo(initialNbSubject))
+            MatcherAssert.assertThat(subjectService.count(), CoreMatchers.equalTo(initialNbSubject))
         }
     }
 
+    //
+
     @Test
     fun `try to delete a subject of another user`() {
+        val teacher = testingService.getTestTeacher()
         val subject = subjectService.save(
-                Subject("subject", "course", testingService.getTestTeacher()))
+                Subject(title = "Foo", course="", owner = teacher)
+        )
 
         assertThrows<IllegalArgumentException> {
             subjectService.delete(testingService.getAnotherTestTeacher(), subject)
@@ -221,310 +231,135 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `count statements of empty subject`() {
+        val teacher = testingService.getTestTeacher()
         val subject = subjectService.save(
-                Subject("subject", "course", testingService.getTestTeacher()))
+                Subject(title = "Foo", course="", owner = teacher)
+        )
 
-        assertThat(
+        MatcherAssert.assertThat(
                 subjectService.countAllStatement(subject),
-                equalTo(0)
+                CoreMatchers.equalTo(0)
         )
     }
 
     @Test
     fun `count statements of the provided test subject`() {
-        val teacher =  testingService.getTestTeacher()
-        val subject = subjectService.save(
-                Subject("subject", "course",teacher))
-        subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Test")
-                        .content("Test content")
-        )
-        subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Test2")
-                        .content("Test content")
-        )
+        val subject = subjectService.get(1)
 
-        assertThat(
-                subjectService.countAllStatement(
-                        subjectService.get(subject.id!!)
-                ),
-                equalTo(2)
+        MatcherAssert.assertThat(
+                subjectService.countAllStatement(subject),
+                CoreMatchers.equalTo(5)
         )
     }
 
     @Test
     fun `add a statement to a subject - valid`() {
         val teacher = testingService.getTestTeacher()
-        val subject = subjectService.save(
-                Subject(title = "Foo", course ="New one" , owner = teacher)
-        )
+        val subject = testingService.getAnyTestSubject()
+        val initialCount = subjectService.countAllStatement(subject)
 
         tWhen {
             subjectService.addStatement(
                     subject,
                     Statement.createDefaultStatement(teacher)
-                            .title("Test")
-                            .content("Test content")
+                            .title("Sequence n°1")
+                            .content("Content 1")
             )
         }.tThen {
-            assertThat(it.id, notNullValue())
-            assertThat(it.subject, notNullValue())
-            assertThat(
+            MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
+            MatcherAssert.assertThat(
                     subjectService.countAllStatement(subject),
-                    equalTo(1)
+                    CoreMatchers.equalTo(initialCount + 1)
             )
         }
     }
 
     @Test
-    fun `remove a statement to a subject - valid`() {
-        val teacher = testingService.getTestTeacher()
-        val subject = subjectService.save(
-                Subject(title = "Foo", course ="New one" , owner = teacher)
-        )
+    fun `remove unused statement from a subject - no duplicate`() {
+        val subject = testingService.getAnyTestSubject()
+        val initialCount = subjectService.countAllStatement(subject)
+
         val statement1 = subjectService.addStatement(
                 subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°1")
+                Statement.createDefaultStatement(subject.owner)
+                        .title("Statement n°1")
                         .content("Content 1")
         )
-        val statement2 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°2")
-                        .content("Content 2")
-        )
-        val statement3 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Sequence n°3")
-                        .content("Content 3")
-        )
+
+
         entityManager.flush()
 
-        val subjectId = subject.id
-        val statementId1 = statement1.id
-        val statementId2 = statement2.id
-        val statementId3 = statement3.id
-        val subjectLastUpdated = subject.lastUpdated
         val subjectVersion = subject.version
+        val statementId1 = statement1.id!!
 
-        assertThat(subjectId, notNullValue())
-        assertThat(statementId1, notNullValue())
-        assertThat(statementId2, notNullValue())
-        assertThat(statementId3, notNullValue())
+
+        MatcherAssert.assertThat(statement1.id, CoreMatchers.notNullValue())
 
         tWhen {
-            subjectService.removeStatement(statement2.owner, statement2)
+            subjectService.removeStatement(statement1.owner, statement1)
             entityManager.flush()
             entityManager.clear()
         }.tThen {
-            subjectService.get(subjectId!!, true).let {
-                assertThat(it.statements.size, equalTo(2))
-                assertThat(it.version, equalTo(subjectVersion!! + 1L))
-            }
-            assertThat(statementRepository.existsById(statementId2!!), equalTo(false)) // statement must be deleted
-        }.tWhen {
-            statementRepository.getOne(statementId1!!).let { statement ->
-                subjectService.removeStatement(statement.owner, statement)
-            }
-            statementRepository.getOne(statementId3!!).let { statement ->
-                subjectService.removeStatement(statement.owner, statement)
-            }
-            entityManager.flush()
+            subjectService.get(subject.id!!, true).let {
+                MatcherAssert.assertThat(
+                        subjectService.countAllStatement(subject),
+                        CoreMatchers.equalTo(initialCount)
+                )
+                MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(subjectVersion!! + 1L))
+            } // Statement must be erased because it has no more use
+            MatcherAssert.assertThat(statementRepository.existsById(statementId1), CoreMatchers.equalTo(false))
+        }
+    }
+
+    @Test
+    fun `remove used statement from a subject - keep the statement in database`() {
+        val subject = testingService.getAnyTestSubject()
+        val statement1 = statementService.get(618) // A statement linked to a sequence with results related
+        val assignment = subjectService.addAssignment(
+                subject,
+                Assignment(title = "Foo", owner = subject.owner, subject = subject)
+        )
+
+        val initialCount = subjectService.countAllStatement(subject)
+        val stmtId = statement1.id!!
+
+        tWhen {
+            subjectService.removeStatement(statement1.owner, statement1)
         }.tThen {
-            subjectService.get(subjectId!!, true).let {
-                assertThat(it.statements.size, equalTo(0))
+            MatcherAssert.assertThat(statementRepository.existsById(stmtId), CoreMatchers.equalTo(true))
+            subjectService.get(subject.id!!, true).let {
+                MatcherAssert.assertThat(
+                        subjectService.countAllStatement(subject),
+                        CoreMatchers.equalTo(initialCount - 1)
+                )
             }
         }
     }
 
+
     @Test
-    fun `moveUp statement - the 1st statement`() {
-        val teacher = testingService.getTestTeacher()
-        val subject = subjectService.save(
-                Subject(title = "Foo", course="Osef", owner = teacher)
+    fun `findByGlobalId - not existing value`() {
+        MatcherAssert.assertThat(
+                subjectService.findByGlobalId("not existing"),
+                CoreMatchers.nullValue()
         )
-        val statement1 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Statement n°1")
-                        .content("Content 1")
-        )
-        val statement2 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Statement n°2")
-                        .content("Content 2")
-        )
-
-        tWhen {
-            subjectService.moveUpStatement(subject, statement1.id!!)
-            entityManager.clear()
-        }.tExpect {
-            subjectService.get(subject.id!!, true).let {
-                assertThat(it.statements.size, equalTo(2))
-                assertThat(
-                        it.statements[0].title,
-                        equalTo("Statement n°1")
-                )
-                assertThat(
-                        it.statements[0].rank,
-                        equalTo(1)
-                )
-                assertThat(
-                        it.statements[1].title,
-                        equalTo("Statement n°2")
-                )
-                assertThat(
-                        it.statements[1].rank,
-                        equalTo(2)
-                )
-            }
-        }
-
     }
 
     @Test
-    fun `moveUp statement - any statement but not the 1st`() {
+    fun `findByGlobalId - existing value`() {
         val teacher = testingService.getTestTeacher()
-        val subject = subjectService.save(
-                Subject(title = "Foo", course="Osef", owner = teacher)
-        )
-        val statement1 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Statement n°1")
-                        .content("Content 1")
-        )
-        val statement2 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Statement n°2")
-                        .content("Content 2")
-        )
-
-        tWhen {
-            subjectService.moveUpStatement(subject, statement2.id!!)
-            entityManager.clear()
-        }.tExpect {
-            subjectService.get(subject.id!!, true).let {
-                assertThat(it.statements.size, equalTo(2))
-                assertThat(
-                        it.statements[0].title,
-                        equalTo("Statement n°2")
+        subjectService.save(
+               Subject(
+                        title = "An assignment",
+                        course = "",
+                        owner = teacher
                 )
-                assertThat(
-                        it.statements[0].rank,
-                        equalTo(1)
-                )
-                assertThat(
-                        it.statements[1].title,
-                        equalTo("Statement n°1")
-                )
-                assertThat(
-                        it.statements[1].rank,
-                        equalTo(2)
-                )
-            }
+        ).tExpect {
+            MatcherAssert.assertThat(
+                    subjectService.findByGlobalId(it.globalId),
+                    CoreMatchers.equalTo(it)
+            )
         }
-
-    }
-
-    @Test
-    fun `moveDown statement - the last statement`() {
-        val teacher = testingService.getTestTeacher()
-        val subject = subjectService.save(
-                Subject(title = "Foo", course="Osef", owner = teacher)
-        )
-        val statement1 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Statement n°1")
-                        .content("Content 1")
-        )
-        val statement2 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Statement n°2")
-                        .content("Content 2")
-        )
-
-        tWhen {
-            subjectService.moveDownStatement(subject, statement2.id!!)
-            entityManager.clear()
-        }.tExpect {
-            subjectService.get(subject.id!!, true).let {
-                assertThat(it.statements.size, equalTo(2))
-                assertThat(
-                        it.statements[0].title,
-                        equalTo("Statement n°1")
-                )
-                assertThat(
-                        it.statements[0].rank,
-                        equalTo(1)
-                )
-                assertThat(
-                        it.statements[1].title,
-                        equalTo("Statement n°2")
-                )
-                assertThat(
-                        it.statements[1].rank,
-                        equalTo(2)
-                )
-            }
-        }
-
-    }
-
-    @Test
-    fun `moveDown statement - any statement but not the last`() {
-        val teacher = testingService.getTestTeacher()
-        val subject = subjectService.save(
-                Subject(title = "Foo", course="Osef", owner = teacher)
-        )
-        val statement1 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Statement n°1")
-                        .content("Content 1")
-        )
-        val statement2 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(teacher)
-                        .title("Statement n°2")
-                        .content("Content 2")
-        )
-
-        tWhen {
-            subjectService.moveDownStatement(subject, statement1.id!!)
-            entityManager.clear()
-        }.tExpect {
-            subjectService.get(subject.id!!, true).let {
-                assertThat(it.statements.size, equalTo(2))
-                assertThat(
-                        it.statements[0].title,
-                        equalTo("Statement n°2")
-                )
-                assertThat(
-                        it.statements[0].rank,
-                        equalTo(1)
-                )
-                assertThat(
-                        it.statements[1].title,
-                        equalTo("Statement n°1")
-                )
-                assertThat(
-                        it.statements[1].rank,
-                        equalTo(2)
-                )
-            }
-        }
-
     }
 
 
@@ -532,11 +367,13 @@ internal class SubjectServiceIntegrationTest(
         (1..n).forEach {
             subjectService.save(
                     Subject(
-                            title = "Sujet n°$it",
-                            course = "no care",
+                            title = "Subject n°$it",
+                            course = "",
                             owner = owner
                     )
             )
         }
     }
 }
+
+

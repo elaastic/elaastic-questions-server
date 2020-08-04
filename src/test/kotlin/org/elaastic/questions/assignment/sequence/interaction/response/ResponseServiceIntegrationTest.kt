@@ -30,6 +30,8 @@ import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tGiven
@@ -56,21 +58,29 @@ internal class ResponseServiceIntegrationTest(
         @Autowired val statementService: StatementService,
         @Autowired val userService: UserService,
         @Autowired val peerGradingRepository: PeerGradingRepository,
-        @Autowired val entityManager: EntityManager
+        @Autowired val entityManager: EntityManager,
+        @Autowired val subjectService: SubjectService
 ) {
 
     @Test
     fun buildResponseBasedOnTeacherNullExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
+            val subject = testingService.getAnyTestSubject()
+            val assignment =  testingService.getAnyAssignment()
+            subject.owner = assignment.owner
+
+            val stmt1 = subjectService.addStatement( subject,
+                Statement(
+                owner = subject.owner,
+                title = "q1",
+                content = "question 1",
+                expectedExplanation = null,
+                questionType = QuestionType.OpenEnded,
+                subject = subject)
+            )
             assignmentService.addSequence(
-                    assignment = testingService.getAnyAssignment(),
-                    statement = Statement(
-                            owner = testingService.getAnyAssignment().owner,
-                            title = "q1",
-                            content = "question 1",
-                            expectedExplanation = null,
-                            questionType = QuestionType.OpenEnded
-                    )
+                    assignment = assignment,
+                    statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
                         it,
@@ -95,15 +105,25 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun buildResponseBasedOnTeacherEmptyExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            assignmentService.addSequence(
-                    assignment = testingService.getAnyAssignment(),
-                    statement = Statement(
-                            owner = testingService.getAnyAssignment().owner,
+            val subject = testingService.getAnyTestSubject()
+            val assignment =  testingService.getAnyAssignment()
+            subject.owner = assignment.owner
+
+            val stmt1 = subjectService.addStatement(
+                    subject,
+                    Statement(
+                            owner = assignment.owner,
                             title = "q1",
                             content = "question 1",
                             expectedExplanation = "",
-                            questionType = QuestionType.OpenEnded
+                            questionType = QuestionType.OpenEnded,
+                            subject = subject
                     )
+            )
+
+            assignmentService.addSequence(
+                    assignment = assignment,
+                    statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
                         it,
@@ -128,15 +148,25 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            assignmentService.addSequence(
-                    assignment = testingService.getAnyAssignment(),
-                    statement = Statement(
-                            owner = testingService.getAnyAssignment().owner,
+            val subject = testingService.getAnyTestSubject()
+            val assignment =  testingService.getAnyAssignment()
+            subject.owner = assignment.owner
+
+            val stmt1 = subjectService.addStatement(
+                    subject,
+                    Statement(
+                            owner = assignment.owner,
                             title = "q1",
                             content = "question 1",
                             expectedExplanation = "it is expected",
-                            questionType = QuestionType.OpenEnded
+                            questionType = QuestionType.OpenEnded,
+                            subject = subject
                     )
+            )
+
+            assignmentService.addSequence(
+                    assignment = assignment,
+                    statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
                         it,
@@ -167,10 +197,14 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceExclusiveChoiceBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            assignmentService.addSequence(
-                    assignment = testingService.getAnyAssignment(),
-                    statement = Statement(
-                            owner = testingService.getAnyAssignment().owner,
+            val subject = testingService.getAnyTestSubject()
+            val assignment =  testingService.getAnyAssignment()
+            subject.owner = assignment.owner
+
+            val stmt1 = subjectService.addStatement(
+                    subject,
+                    Statement(
+                            owner = assignment.owner,
                             title = "q1",
                             content = "question 1",
                             expectedExplanation = "it is expected",
@@ -178,8 +212,14 @@ internal class ResponseServiceIntegrationTest(
                             choiceSpecification = ExclusiveChoiceSpecification(
                                     nbCandidateItem = 3,
                                     expectedChoice = ChoiceItem(2, 100f)
-                            )
+                            ),
+                            subject = subject
                     )
+            )
+
+            assignmentService.addSequence(
+                    assignment = assignment,
+                    statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
                         it,
@@ -211,10 +251,14 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceMultipleChoiceFaceToFace() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            assignmentService.addSequence(
-                    assignment = testingService.getAnyAssignment(),
-                    statement = Statement(
-                            owner = testingService.getAnyAssignment().owner,
+            val subject = testingService.getAnyTestSubject()
+            val assignment =  testingService.getAnyAssignment()
+            subject.owner = assignment.owner
+
+            val stmt1 = subjectService.addStatement(
+                    subject,
+                    Statement(
+                            owner = assignment.owner,
                             title = "q1",
                             content = "question 1",
                             expectedExplanation = "it is expected",
@@ -225,8 +269,14 @@ internal class ResponseServiceIntegrationTest(
                                             ChoiceItem(4, 50f),
                                             ChoiceItem(2, 50f)
                                     )
-                            )
+                            ),
+                            subject = subject
                     )
+            )
+
+            assignmentService.addSequence(
+                    assignment = assignment,
+                    statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
                         it,
@@ -268,15 +318,26 @@ internal class ResponseServiceIntegrationTest(
                         content = "second fake"
                 )
         )
-        assignmentService.addSequence(
-                assignment = testingService.getAnyAssignment(),
-                statement = Statement(
-                        owner = testingService.getAnyAssignment().owner,
+
+        val subject = testingService.getAnyTestSubject()
+        val assignment =  testingService.getAnyAssignment()
+        subject.owner = assignment.owner
+
+        val stmt1 = subjectService.addStatement(
+                subject,
+                Statement(
+                        owner = assignment.owner,
                         title = "q1",
                         content = "question 1",
                         expectedExplanation = "it is expected",
-                        questionType = QuestionType.OpenEnded
+                        questionType = QuestionType.OpenEnded,
+                        subject = subject
                 )
+        )
+
+        assignmentService.addSequence(
+                assignment = assignment,
+                statement = stmt1
         ).let {
             statementService.updateFakeExplanationList(it.statement, fakeExplanations)
             sequenceService.initializeInteractionsForSequence(
@@ -324,10 +385,15 @@ internal class ResponseServiceIntegrationTest(
                         content = "third fake"
                 )
         )
-        assignmentService.addSequence(
-                assignment = testingService.getAnyAssignment(),
-                statement = Statement(
-                        owner = testingService.getAnyAssignment().owner,
+
+        val subject = testingService.getAnyTestSubject()
+        val assignment =  testingService.getAnyAssignment()
+        subject.owner = assignment.owner
+
+        val stmt1 = subjectService.addStatement(
+                subject,
+                Statement(
+                        owner = assignment.owner,
                         title = "q1",
                         content = "question 1",
                         expectedExplanation = "it is expected",
@@ -335,8 +401,14 @@ internal class ResponseServiceIntegrationTest(
                         choiceSpecification = ExclusiveChoiceSpecification(
                                 nbCandidateItem = 3,
                                 expectedChoice = ChoiceItem(2, 100f)
-                        )
+                        ),
+                        subject = subject
                 )
+        )
+
+        assignmentService.addSequence(
+                assignment = assignment,
+                statement = stmt1
         ).let {
             statementService.updateFakeExplanationList(it.statement, fakeExplanations)
             sequenceService.initializeInteractionsForSequence(
@@ -384,10 +456,15 @@ internal class ResponseServiceIntegrationTest(
                         content = "third fake"
                 )
         )
-        assignmentService.addSequence(
-                assignment = testingService.getAnyAssignment(),
-                statement = Statement(
-                        owner = testingService.getAnyAssignment().owner,
+
+        val subject = testingService.getAnyTestSubject()
+        val assignment =  testingService.getAnyAssignment()
+        subject.owner = assignment.owner
+
+        val stmt1 = subjectService.addStatement(
+                subject,
+                Statement(
+                        owner = assignment.owner,
                         title = "q1",
                         content = "question 1",
                         expectedExplanation = "it is expected",
@@ -398,8 +475,14 @@ internal class ResponseServiceIntegrationTest(
                                         ChoiceItem(4, 50f),
                                         ChoiceItem(2, 50f)
                                 )
-                        )
+                        ),
+                        subject = subject
                 )
+        )
+
+        assignmentService.addSequence(
+                assignment = assignment,
+                statement = stmt1
         ).let {
             statementService.updateFakeExplanationList(it.statement, fakeExplanations)
             sequenceService.initializeInteractionsForSequence(
@@ -432,23 +515,26 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun testUpgradeMeanGradeAndEvaluationCount() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            assignmentService.addSequence(
-                    assignment = testingService.getAnyAssignment(),
-                    statement = Statement(
-                            owner = testingService.getAnyAssignment().owner,
-                            title = "q1",
-                            content = "question 1",
-                            expectedExplanation = "it is expected",
-                            questionType = QuestionType.MultipleChoice,
-                            choiceSpecification = MultipleChoiceSpecification(
-                                    nbCandidateItem = 4,
-                                    expectedChoiceList = listOf(
-                                            ChoiceItem(4, 50f),
-                                            ChoiceItem(2, 50f)
-                                    )
+            statementService.save(Statement(
+                    owner = testingService.getAnyAssignment().owner,
+                    title = "q1",
+                    content = "question 1",
+                    expectedExplanation = "it is expected",
+                    questionType = QuestionType.MultipleChoice,
+                    choiceSpecification = MultipleChoiceSpecification(
+                            nbCandidateItem = 4,
+                            expectedChoiceList = listOf(
+                                    ChoiceItem(4, 50f),
+                                    ChoiceItem(2, 50f)
                             )
                     )
+                )
             ).let {
+                assignmentService.addSequence(
+                        assignment = testingService.getAnyAssignment(),
+                        statement = it
+                )
+            }.let {
                 sequenceService.initializeInteractionsForSequence(
                         it,
                         true,
@@ -497,23 +583,26 @@ internal class ResponseServiceIntegrationTest(
 
     @Test
     fun testUpgradeMeanGradeAndEvaluationCountWhenNoPeerGrading() {
+
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            assignmentService.addSequence(
-                    assignment = testingService.getAnyAssignment(),
-                    statement = Statement(
-                            owner = testingService.getAnyAssignment().owner,
-                            title = "q1",
-                            content = "question 1",
-                            expectedExplanation = "it is expected",
-                            questionType = QuestionType.MultipleChoice,
-                            choiceSpecification = MultipleChoiceSpecification(
-                                    nbCandidateItem = 4,
-                                    expectedChoiceList = listOf(
-                                            ChoiceItem(4, 50f),
-                                            ChoiceItem(2, 50f)
-                                    )
+            val statement = statementService.save(Statement(
+                    owner = testingService.getAnyAssignment().owner,
+                    title = "q1",
+                    content = "question 1",
+                    expectedExplanation = "it is expected",
+                    questionType = QuestionType.MultipleChoice,
+                    choiceSpecification = MultipleChoiceSpecification(
+                            nbCandidateItem = 4,
+                            expectedChoiceList = listOf(
+                                    ChoiceItem(4, 50f),
+                                    ChoiceItem(2, 50f)
                             )
                     )
+                )
+            )
+            assignmentService.addSequence(
+                    assignment = testingService.getAnyAssignment(),
+                    statement = statement
             ).let {
                 sequenceService.initializeInteractionsForSequence(
                         it,
