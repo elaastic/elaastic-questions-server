@@ -30,25 +30,35 @@
     var elaastic = elaastic || {}
   </script>
 
-  <div class="item"
+  <a class="item"
+       onclick="elaastic.showShareAccessModal()"
+       th:attr="data-tooltip=#{subject.share.linktitle}"
+       data-tooltip="Link to share with teachers"
+       data-position="right center"
+       data-inverted="">
+    <i class="yellow feed icon"></i>
+  </a>
+  <div th:replace="subject/_modal_share_subject.html :: modalShareAccess(${subject})"></div>
+
+  <a class="item"
        onclick="$('#subject-editProperties-modal').modal('show');"
        th:attr="data-tooltip=#{subject.action.propertiesEdition.label}"
        data-tooltip="Edit"
        data-position="right center"
        data-inverted="">
     <i class="setting icon"></i>
-  </div>
+  </a>
 
   <div class="divider"></div>
 
-  <div class="item"
+  <a class="item"
        onclick="$('#confirm-delete-subject-modal').modal('show');"
        th:attr="data-tooltip=#{subject.action.delete.label}"
        data-tooltip="Delete"
        data-position="right center"
        data-inverted="">
     <i class="big trash icon"></i>
-  </div>
+  </a>
 </aside>
 
 <section>
