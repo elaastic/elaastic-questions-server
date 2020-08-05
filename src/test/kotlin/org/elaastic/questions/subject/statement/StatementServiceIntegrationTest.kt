@@ -24,7 +24,7 @@ internal class StatementServiceIntegrationTest(
 ) {
 
     @Test
-    fun `get a statement - valid`() {
+    fun `get a statement as the owner - valid`() {
         val subject = testingService.getAnyTestSubject()
 
         MatcherAssert.assertThat(
@@ -42,8 +42,26 @@ internal class StatementServiceIntegrationTest(
     }
 
     @Test
-    fun `get a statement - error unauthorized`() {
-        val teacher: User = testingService.getTestTeacher()
+    fun `get a shared statement as a teacher but not the owner - valid`() {
+        val subject = testingService.getAnyTestSubject()
+        val teacher = testingService.getAnotherTestTeacher()
+        MatcherAssert.assertThat(
+                "The testing data are corrupted",
+                subject.statements.size,
+                CoreMatchers.equalTo(5)
+        )
+
+        val testingstatement = subject.statements.first()
+
+        MatcherAssert.assertThat(
+                statementService.get(teacher,testingstatement.id!!),
+                CoreMatchers.equalTo(testingstatement)
+        )
+    }
+
+    @Test
+    fun `get a statement as a learner - error unauthorized`() {
+        val learner: User = testingService.getTestStudent()
 
         val subject = testingService.getAnyTestSubject()
 
@@ -55,7 +73,7 @@ internal class StatementServiceIntegrationTest(
 
         val testingstatement = subject.statements.first()
         assertThrows<AccessDeniedException> {
-            statementService.get(teacher, testingstatement.id!!)
+            statementService.get(learner, testingstatement.id!!)
         }
     }
 

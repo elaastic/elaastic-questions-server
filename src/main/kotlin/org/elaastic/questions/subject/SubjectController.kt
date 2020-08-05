@@ -40,6 +40,8 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.lang.IllegalArgumentException
+import javax.persistence.EntityNotFoundException
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
@@ -299,6 +301,30 @@ class SubjectController(
         }
 
         return "redirect:/subject"
+    }
+
+    @GetMapping("/shared")
+    fun shared(authentication: Authentication,
+                 model: Model,
+                 @RequestParam("globalId") globalId: String?): String {
+        val user: User = authentication.principal as User
+
+        if (globalId == null || globalId == "") {
+            throw IllegalArgumentException(
+                    messageBuilder.message("subject.share.empty.globalId")
+            )
+        }
+
+        subjectService.findByGlobalId(globalId).let {
+            if (it == null) {
+                throw EntityNotFoundException(
+                        messageBuilder.message("subject.globalId.does.not.exist")
+                )
+            }
+
+            subjectService.sharedToTeacher(user, it)
+            return "redirect:/subject/${it.id}/show"
+        }
     }
 
     data class SubjectData(

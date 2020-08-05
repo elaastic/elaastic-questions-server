@@ -29,49 +29,63 @@
   <script>
     var elaastic = elaastic || {}
   </script>
+  <th:block th:if="${subject.owner == user}">
+    <a class="item"
+         onclick="elaastic.showShareAccessModal()"
+         th:attr="data-tooltip=#{subject.share.linktitle}"
+         data-tooltip="Link to share with teachers"
+         data-position="right center"
+         data-inverted="">
+      <i class="yellow feed icon"></i>
+    </a>
+    <div th:replace="subject/_modal_share_subject.html :: modalShareAccess(${subject})"></div>
 
-  <a class="item"
-       onclick="elaastic.showShareAccessModal()"
-       th:attr="data-tooltip=#{subject.share.linktitle}"
-       data-tooltip="Link to share with teachers"
-       data-position="right center"
-       data-inverted="">
-    <i class="yellow feed icon"></i>
-  </a>
-  <div th:replace="subject/_modal_share_subject.html :: modalShareAccess(${subject})"></div>
+    <a class="item"
+         onclick="$('#subject-editProperties-modal').modal('show');"
+         th:attr="data-tooltip=#{subject.action.propertiesEdition.label}"
+         data-tooltip="Edit"
+         data-position="right center"
+         data-inverted="">
+      <i class="setting icon"></i>
+    </a>
 
-  <a class="item"
-       onclick="$('#subject-editProperties-modal').modal('show');"
-       th:attr="data-tooltip=#{subject.action.propertiesEdition.label}"
-       data-tooltip="Edit"
-       data-position="right center"
-       data-inverted="">
-    <i class="setting icon"></i>
-  </a>
+    <div class="divider"></div>
 
-  <div class="divider"></div>
-
-  <a class="item"
-       onclick="$('#confirm-delete-subject-modal').modal('show');"
-       th:attr="data-tooltip=#{subject.action.delete.label}"
-       data-tooltip="Delete"
-       data-position="right center"
-       data-inverted="">
-    <i class="big trash icon"></i>
-  </a>
+    <a class="item"
+         onclick="$('#confirm-delete-subject-modal').modal('show');"
+         th:attr="data-tooltip=#{subject.action.delete.label}"
+         data-tooltip="Delete"
+         data-position="right center"
+         data-inverted="">
+      <i class="big trash icon"></i>
+    </a>
+  </th:block>
 </aside>
 
 <section>
 
   <div id="subjectPage">
 
-    <h1 class="content" style="vertical-align: middle;" th:text="#{subject.page.show.title}" >
-      Manage a subject
-    </h1>
-    <div class="sub header" th:text="#{subject.page.show.notice}">
-      This page allows you to add, remove, edit, and reorder questions of a subject. It also allows you to make
-      assignment with questions of the subject.
-    </div>
+    <th:block th:if="${subject.owner == user}">
+      <h1 class="content" style="vertical-align: middle;" th:text="#{subject.page.show.title}" >
+        Manage a subject
+      </h1>
+
+      <div class="sub header" th:text="#{subject.page.show.notice}">
+        This page allows you to add, remove, edit, and reorder questions of a subject. It also allows you to make
+        assignment with questions of the subject.
+      </div>
+    </th:block>
+    <th:block th:if="${subject.owner != user}">
+      <h1 class="content" style="vertical-align: middle;" th:text="#{subject.shared.title}" >
+        Reading a shared subject
+      </h1>
+
+      <div class="sub header" data-i18n="[html]content.body" th:text="#{subject.shared.notice}">
+        This page allows you to read statements of a subject that has been shared with you, and import the subject if you want to use it
+        You cannot modify nor delete any of the statements of this subject. You also don't have access to the assignments of the owner.
+      </div>
+    </th:block>
 
     <h2 class="ui header" style="margin-top: 1em;">
       <i class="large icons">
@@ -87,8 +101,20 @@
     <div class="ui top attached tabular menu">
       <div id="subject-managment-tab" class="item active" data-tab="questions"
            th:text="#{subject.page.show.questions-tab-title}">questions</div>
-      <div class="item" data-tab="assignments" th:text="#{subject.page.show.assignments-tab-title}">assignments</div>
+      <div class="item" data-tab="assignments" th:text="#{subject.page.show.assignments-tab-title}"
+           th:class="${subject.owner==user} ? item : noAccess ">assignments</div>
     </div>
+    <style>
+      .noAccess{
+        background-color: dimgrey !important;
+        border-radius: .28571429rem .28571429rem 0 0 !important;
+        border-bottom: none;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        border-top: 2px solid transparent;
+        padding: .92857143em 1.42857143em;
+      }
+    </style>
 
     <!-- Question Tab -->
     <div class="ui bottom attached tab active segment" data-tab="questions">

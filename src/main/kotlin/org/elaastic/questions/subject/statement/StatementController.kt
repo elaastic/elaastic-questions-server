@@ -71,7 +71,7 @@ class StatementController(
 
         val user: User = authentication.principal as User
         val statementBase = statementService.get(user, id)
-        val subject = statementBase.subject
+        val subject = statementBase.subject!!
         val fakeExplanations = fakeExplanationService.findAllByStatement(statementBase)
         val statement = SequenceController.StatementData(statementBase, fakeExplanations)
 

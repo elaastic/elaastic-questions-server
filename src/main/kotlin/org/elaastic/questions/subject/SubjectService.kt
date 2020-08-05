@@ -3,6 +3,7 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
@@ -31,7 +32,8 @@ class SubjectService (
         @Autowired val assignmentService: AssignmentService,
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val entityManager: EntityManager,
-        @Autowired val sequenceService: SequenceService
+        @Autowired val sequenceService: SequenceService,
+        @Autowired val sharedSubjectRepository: SharedSubjectRepository
 
 ) {
 
@@ -45,7 +47,7 @@ class SubjectService (
 
     fun get(user: User, id: Long, fetchStatementsAndAssignments : Boolean = false ): Subject {
         get(id, fetchStatementsAndAssignments).let {
-            if (it.owner != user) {
+            if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this subject")
             }
             return it
@@ -264,4 +266,18 @@ class SubjectService (
 
         subject.assignments.mapIndexed { index, assignment -> assignment.rank = index + 1 }
     }
+
+    fun sharedToTeacher(user: User, subject: Subject): SharedSubject? {
+        if (subject.owner == user) {
+            return null
+        }
+
+        return sharedSubjectRepository.findByTeacherAndSubject(
+                user,
+                subject
+        ) ?: sharedSubjectRepository.save(
+                SharedSubject(user, subject)
+        )
+    }
+
 }

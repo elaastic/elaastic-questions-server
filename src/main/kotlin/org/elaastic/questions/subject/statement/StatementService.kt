@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.subject.statement
 
+import javafx.beans.binding.Bindings.isNotNull
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
@@ -44,8 +45,14 @@ class StatementService(
 ) {
     fun get(user: User, id: Long): Statement {
         val statement:Statement = get(id)
-        if (statement.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
+
+        if (statement.owner != user)
+            if (!user.isTeacher()) {
+                throw AccessDeniedException("You are not authorized to access to this statement")
+            }
+
         return statement
+
     }
 
     fun get(statementId: Long): Statement{

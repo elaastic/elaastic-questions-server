@@ -21,7 +21,15 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <section>
+    <section th:if="${subject.owner != user}">
+        <div class="ui segment bottom attached">
+            <p style="margin-left : 1em;" th:text="#{subject.assignment.noAccess}">
+                You cannot see shared subject assignments
+            </p>
+        </div>
+    </section>
+
+    <section th:if="${subject.owner == user}">
         <div class="ui segment bottom attached" th:if="${subject.assignments.isEmpty()}">
             <p style="margin-left : 1em;" th:text="#{subject.assignment.empty}">
                 There is no assignment.

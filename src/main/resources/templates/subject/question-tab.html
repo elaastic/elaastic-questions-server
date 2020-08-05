@@ -36,7 +36,7 @@
             <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
                 <div th:replace="subject/statement/_statement_actions.html :: statementActions(${statement}, ${position}, ${i.size})"></div>
 
-
+                <!-- TODO Statements READ only-->
                 <h3 class="ui header">
                     <a th:href="@{/subject/{subjectId}/statement/{id}/edit(subjectId=${subject.id},id=${statement.id})}"
                        href="/statement/123/edit"
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="ui basic segment">
+        <div class="ui basic segment" th:if="${subject.owner == user}">
             <a class="ui primary button"
                th:href="@{/subject/{id}/addStatement(id=${subject.id})}">
                 <i class="add icon"></i>
@@ -61,10 +61,13 @@
             </a>
         </div>
 
-        <!--
-         <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${subject})"></div>
-
-         <div th:replace="assignment/_modal_lti_parameter.html :: modalLtiParameter(${subject})"></div>-->
+        <div class="ui basic segment" th:if="${subject.owner != user}">
+            <a class="ui primary button"
+               th:href="@{/subject/{id}/importSubject(id=${subject.id})}">
+                <i class="upload icon"></i>
+                <span th:text="#{subject.import}">Import the subject</span>
+            </a>
+        </div>
 
     <style>
          .ui.header {

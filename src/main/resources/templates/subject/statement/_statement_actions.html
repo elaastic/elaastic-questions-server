@@ -17,7 +17,8 @@
   -->
 
 <div th:fragment="statementActions(statement, position, nbStatement)"
-     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     th:if="${subject.owner == user}">
 
     <a class="ui right floated icon red tiny button"
        href="#"

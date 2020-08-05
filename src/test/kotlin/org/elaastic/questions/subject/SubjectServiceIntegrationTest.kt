@@ -144,11 +144,27 @@ internal class SubjectServiceIntegrationTest(
 
         subjectService.get(teacher, subjectId).let {
             MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(subjectId))
+            MatcherAssert.assertThat(it.owner,CoreMatchers.equalTo(teacher))
         }
     }
 
     @Test
-    fun `try to get a subject for a user that is owned by another user`() {
+    fun `try to get a subject for a user that is a teacher but not the owner`() {
+        val teacher = testingService.getTestTeacher()
+        val subjectId = subjectService.save(
+                Subject("Subject", "", teacher)
+        ).id!!
+
+        entityManager.clear()
+
+        subjectService.get(testingService.getAnotherTestTeacher(), subjectId).let {
+            MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(subjectId))
+            MatcherAssert.assertThat("Subject is shared to another teacher", it.owner != testingService.getAnotherTestTeacher())
+        }
+    }
+
+    @Test
+    fun `try to get a subject for a user that is a learner`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
                 Subject("Subject", "", teacher)
@@ -157,7 +173,7 @@ internal class SubjectServiceIntegrationTest(
         entityManager.clear()
 
         assertThrows<AccessDeniedException> {
-            subjectService.get(testingService.getAnotherTestTeacher(), subjectId)
+            subjectService.get(testingService.getTestStudent(), subjectId)
         }
     }
 

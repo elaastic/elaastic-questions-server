@@ -58,8 +58,11 @@
                v-bind:value="choiceQuestionSpec.interactionType">
 
         <div ref="choiceInteractionType"
-             class="ui inline dropdown">
-          <div class="text"></div>
+             id="dropdownInteractionType"
+             class="ui inline dropdown"
+             th:classappend="${subject.owner!=user} ? disabled ">
+
+        <div class="text"></div>
           <i class="dropdown icon"></i>
         </div>
 
@@ -73,7 +76,8 @@
                v-bind:value="choiceQuestionSpec.nbItem"/>
 
         <div ref="choiceNbItem"
-             class="ui inline dropdown">
+             class="ui inline dropdown"
+             th:classappend="${subject.owner!=user} ? disabled ">
           <div class="text"></div>
           <i class="dropdown icon"></i>
         </div>
@@ -97,6 +101,7 @@
           <div class="field" v-for="n in 10" v-show="n<=choiceQuestionSpec.nbItem">
             <div ref="choiceExclusiveAnswer" class="ui radio checkbox">
               <input type="radio"
+                     th:readonly="${subject.owner!=user}"
                      tabindex="0"
                      name="exclusiveChoice"
                      class="hidden"
@@ -112,6 +117,7 @@
           <div class="field" v-for="n in 10" v-show="n<=choiceQuestionSpec.nbItem">
             <div ref="choiceExclusiveAnswer" class="ui checkbox">
               <input type="checkbox"
+                     th:readonly="${subject.owner!=user}"
                      tabindex="0"
                      class="hidden"
                      name="expectedChoiceList"
@@ -125,11 +131,14 @@
     </div>
 
     <!-- /*/ Standard fields to submit values with the form /*/ -->
-    <input type="hidden" id="hasChoices" name="hasChoices" v-bind:value="hasChoices"/>
+    <input type="hidden"
+           id="hasChoices" name="hasChoices" v-bind:value="hasChoices"/>
 
   </div>
 
   <script th:inline="javascript">
+    var editAllowed = /*[[${subject.owner==user}]]*/ ''
+
     var QuestionTypeId = {
       OPEN: 'OPEN',
       CHOICE: 'CHOICE'
@@ -178,21 +187,24 @@
       },
       watch: {
         'choiceQuestionSpec.nbItem': function (val) {
-          if (this.choiceQuestionSpec.exclusiveAnswer > val) {
-            this.choiceQuestionSpec.exclusiveAnswer = val
-          }
-
-          this.choiceQuestionSpec.multipleAnswer = _.reject(
-            this.choiceQuestionSpec.multipleAnswer,
-            function (a) {
-              return a > val
+          if (editAllowed){
+            if (this.choiceQuestionSpec.exclusiveAnswer > val) {
+              this.choiceQuestionSpec.exclusiveAnswer = val
             }
-          )
+
+            this.choiceQuestionSpec.multipleAnswer = _.reject(
+                    this.choiceQuestionSpec.multipleAnswer,
+                    function (a) {
+                      return a > val
+                    }
+            )
+          }
         }
       },
       methods: {
         selectQuestionType: function (type) {
-          this.questionType = type
+          if (editAllowed)
+            this.questionType = type
         }
       },
       mounted: function () {
@@ -215,9 +227,10 @@
             }
           ),
           onChange: function (value) {
-            Vue.nextTick(function () {
-              that.choiceQuestionSpec.interactionType = value
-            })
+            if (editAllowed)
+              Vue.nextTick(function () {
+                that.choiceQuestionSpec.interactionType = value
+              })
           }
 
         })
@@ -236,9 +249,10 @@
             return item
           }),
           onChange: function (value) {
-            Vue.nextTick(function () {
-              that.choiceQuestionSpec.nbItem = value
-            })
+            if (editAllowed)
+              Vue.nextTick(function () {
+                that.choiceQuestionSpec.nbItem = value
+              })
           }
         })
 
