@@ -378,8 +378,86 @@ internal class SubjectServiceIntegrationTest(
         }
     }
 
+    @Test
+    fun `import a subject - valid`() {
+        val teacher = testingService.getTestTeacher()
+        val otherTeacher = testingService.getAnotherTestTeacher()
+        val subject = subjectService.save(
+                Subject(
+                        title = "An assignment",
+                        course = "",
+                        owner = teacher
+                ))
+        subjectService.addStatement(
+                subject,
+                Statement.createDefaultStatement(teacher)
+                        .title("Stmt n°1")
+                        .content("Content 1")
+        )
+        subjectService.addStatement(
+                subject,
+                Statement.createDefaultStatement(teacher)
+                        .title("Stmt n°2")
+                        .content("Content 2")
+        )
 
-    private fun createTestingData(owner: User, n: Int = 10) {
+        val nbSubjectTeacher = subjectService.findAllByOwner(teacher).totalElements
+        val nbSubjectOtherTeacher = subjectService.findAllByOwner(otherTeacher).totalElements
+        subjectService.sharedToTeacher(otherTeacher,subject)
+
+        subjectService.import(otherTeacher, subject)
+                .tExpect{
+                    MatcherAssert.assertThat(
+                            subjectService.findByGlobalId(it.globalId),
+                            CoreMatchers.equalTo(it)
+                    )
+                    MatcherAssert.assertThat(
+                            it.title,
+                            CoreMatchers.equalTo(subject.title)
+                    )
+                    MatcherAssert.assertThat(
+                            it.course,
+                            CoreMatchers.equalTo(subject.course)
+                    )
+                    MatcherAssert.assertThat(it.dateCreated, CoreMatchers.notNullValue())
+                    MatcherAssert.assertThat(it.lastUpdated, CoreMatchers.notNullValue())
+                    MatcherAssert.assertThat(
+                            it.statements.size,
+                            CoreMatchers.equalTo(subject.statements.size)
+                    )
+                    MatcherAssert.assertThat(
+                            it.owner,
+                            CoreMatchers.equalTo(otherTeacher)
+                    )
+                    MatcherAssert.assertThat(
+                            subjectService.findAllByOwner(teacher).totalElements,
+                            CoreMatchers.equalTo(nbSubjectTeacher)
+                    )
+                    MatcherAssert.assertThat(
+                            subjectService.findAllByOwner(otherTeacher).totalElements,
+                            CoreMatchers.equalTo(nbSubjectOtherTeacher + 1)
+                    )
+                }
+    }
+
+    @Test
+    fun `import a subject - not shared with you`() {
+        val teacher = testingService.getTestTeacher()
+        val otherTeacher = testingService.getAnotherTestTeacher()
+        val subject = subjectService.save(
+                Subject(
+                        title = "An assignment",
+                        course = "",
+                        owner = teacher
+                ))
+
+        assertThrows<EntityNotFoundException> {
+            subjectService.import(otherTeacher, subject)
+        }
+
+    }
+
+        private fun createTestingData(owner: User, n: Int = 10) {
         (1..n).forEach {
             subjectService.save(
                     Subject(

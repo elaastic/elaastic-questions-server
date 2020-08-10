@@ -362,6 +362,17 @@ class SubjectController(
         return "/subject/shared_index"
     }
 
+    @GetMapping(value = ["{id}/importSubject"])
+    fun importSubject(authentication: Authentication, model: Model, @PathVariable id: Long): String {
+        val user: User = authentication.principal as User
+        val sharedSubject = subjectService.get(user,id)
+        val importedSubject = subjectService.import(user, sharedSubject)
+
+        return "redirect:/subject/${importedSubject.id}/show"
+    }
+
+
+
     data class SubjectData(
             var id: Long? = null,
             var version: Long? = null,

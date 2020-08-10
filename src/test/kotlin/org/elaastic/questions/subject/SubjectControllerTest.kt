@@ -67,6 +67,9 @@ internal class SubjectControllerTest(
     @MockBean
     lateinit var assignmentService: AssignmentService
 
+    @MockBean
+    lateinit var sharedSubjectService: SharedSubjectService
+
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
     @Test

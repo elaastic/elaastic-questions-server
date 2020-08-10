@@ -303,4 +303,23 @@ class SubjectService (
         return sharedSubjectRepository.findAllSubjectsForTeacher(user, pageable)
     }
 
+    fun import(user: User, sharedSubject: Subject): Subject {
+        if (sharedSubjectRepository.findByTeacherAndSubject(user,sharedSubject) == null)
+            throw EntityNotFoundException("The subject \"${sharedSubject.title}\" is not shared with you")
+
+        val importedSubject = Subject(
+                sharedSubject.title,
+                sharedSubject.course,
+                user
+        )
+        save(importedSubject)
+        entityManager.flush()
+        for (statement:Statement in sharedSubject.statements){
+            var stmt = statementService.duplicate(statement)
+            stmt.owner = user
+            addStatement(importedSubject, stmt)
+        }
+        return importedSubject
+    }
+
 }
