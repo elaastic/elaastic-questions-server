@@ -30,6 +30,7 @@ import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
@@ -56,7 +57,8 @@ class SubjectController(
         @Autowired val statementService: StatementService,
         @Autowired val attachmentService: AttachmentService,
         @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val assignmentService: AssignmentService
+        @Autowired val assignmentService: AssignmentService,
+        @Autowired val sharedSubjectService: SharedSubjectService
 ){
 
     @GetMapping(value = ["", "/", "/index"])
@@ -325,6 +327,39 @@ class SubjectController(
             subjectService.sharedToTeacher(user, it)
             return "redirect:/subject/${it.id}/show"
         }
+    }
+
+
+    @GetMapping(value = ["/shared_index"])
+    fun shared_index(authentication: Authentication,
+                     model: Model,
+                     @RequestParam("page") page: Int?,
+                     @RequestParam("size") size: Int?): String {
+        val user: User = authentication.principal as User
+        var sharedSubjectPage: Page<Subject>? = null
+        subjectService.findAllSharedSubjects(
+                user,
+                PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+        ).let {
+            model.addAttribute("user", user)
+            sharedSubjectPage = it
+            model.addAttribute("sharedSubjectPage", sharedSubjectPage)
+            model.addAttribute(
+                    "pagination",
+                    PaginationUtil.buildInfo(
+                            it.totalPages,
+                            page,
+                            size
+                    )
+            )
+        }
+        val sharedInfos: MutableList<SharedSubject>? = ArrayList()
+        for (subject: Subject in sharedSubjectPage!!.content){
+             sharedInfos!!.add(sharedSubjectService.getSharedSubject(user,subject)!!)
+        }
+        model.addAttribute("sharedInfos", sharedInfos)
+
+        return "/subject/shared_index"
     }
 
     data class SubjectData(
