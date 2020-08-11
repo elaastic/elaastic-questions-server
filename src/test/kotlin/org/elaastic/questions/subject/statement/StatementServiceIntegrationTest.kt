@@ -106,6 +106,58 @@ internal class StatementServiceIntegrationTest(
                     statementRepository.countAllBySubject(testingStatement.subject!!),
                     CoreMatchers.equalTo(initialCount + 1)
             )
+            MatcherAssert.assertThat(
+                    it.owner,
+                    CoreMatchers.equalTo(testingStatement.owner)
+            )
+            MatcherAssert.assertThat(
+                    it.title,
+                    CoreMatchers.equalTo(testingStatement.title)
+            )
+            MatcherAssert.assertThat(
+                    it.content,
+                    CoreMatchers.equalTo(testingStatement.content)
+            )
+            MatcherAssert.assertThat(
+                    it.questionType,
+                    CoreMatchers.equalTo(testingStatement.questionType)
+            )
+            MatcherAssert.assertThat(
+                    it.questionType,
+                    CoreMatchers.equalTo(testingStatement.questionType)
+            )
+            MatcherAssert.assertThat(
+                    it.choiceSpecification,
+                    CoreMatchers.equalTo(testingStatement.choiceSpecification)
+            )
+            MatcherAssert.assertThat(
+                    it.parentStatement,
+                    CoreMatchers.equalTo(testingStatement)
+            )
+            MatcherAssert.assertThat(
+                    it.expectedExplanation,
+                    CoreMatchers.equalTo(testingStatement.expectedExplanation)
+            )
+            MatcherAssert.assertThat(
+                    it.subject,
+                    CoreMatchers.equalTo(testingStatement.subject)
+            )
+            MatcherAssert.assertThat(
+                    it.rank,
+                    CoreMatchers.equalTo(testingStatement.rank)
+            )
+            MatcherAssert.assertThat(
+                    it.version,
+                    CoreMatchers.equalTo(testingStatement.version)
+            )
+            MatcherAssert.assertThat(
+                    it.attachment,
+                    CoreMatchers.equalTo(testingStatement.attachment)
+            )
+            MatcherAssert.assertThat(
+                    statementService.findAllFakeExplanationsForStatement(it).size,
+                    CoreMatchers.equalTo(statementService.findAllFakeExplanationsForStatement(testingStatement).size)
+            )
         }
 
     }

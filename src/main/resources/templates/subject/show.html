@@ -60,6 +60,17 @@
       <i class="big trash icon"></i>
     </a>
   </th:block>
+  <th:block th:if="${subject.owner != user}">
+    <a th:href="@{/subject/{id}/importSubject(id=${subject.id})}"
+       href="import"
+       class="item"
+       th:attr="data-tooltip=#{subject.import}"
+       data-tooltip="Import the subject"
+       data-position="right center"
+       data-inverted="">
+      <i class="dimgrey upload icon"></i>
+    </a>
+  </th:block>
 </aside>
 
 <section>
@@ -96,7 +107,10 @@
       <span th:text="${subject.title}">Titre sujet</span>
       <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
     </h2>
-
+    <h3 class="ui sub header">
+      <span th:if="${subject.owner != user}" th:text="#{subject.sharedOwner}">Shared By</span>
+      <span th:if="${subject.owner != user}" th:text="| ${subject.owner.firstName + ' ' + subject.owner.lastName}|">Owner Name</span>
+    </h3>
 
     <div class="ui top attached tabular menu">
       <div id="subject-managment-tab" class="item active" data-tab="questions"
@@ -106,7 +120,8 @@
     </div>
     <style>
       .noAccess{
-        background-color: dimgrey !important;
+        background-color: #e0e1e2 !important;
+        color: rgba(0,0,0,.6) !important;
         border-radius: .28571429rem .28571429rem 0 0 !important;
         border-bottom: none;
         border-left: 1px solid transparent;

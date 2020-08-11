@@ -68,6 +68,9 @@ class SubjectService (
             if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this subject")
             }
+            if (user != it.owner)
+                if (sharedSubjectRepository.findByTeacherAndSubject(user,it) == null)
+                    throw AccessDeniedException("The subject \"${it.title}\" is not shared with you")
             return it
         }
     }
@@ -303,23 +306,28 @@ class SubjectService (
         return sharedSubjectRepository.findAllSubjectsForTeacher(user, pageable)
     }
 
+    fun duplicate(user:User, initialSubject: Subject): Subject{
+
+        val duplicateSubject = Subject(
+                initialSubject.title,
+                initialSubject.course,
+                user
+        )
+        save(duplicateSubject)
+        entityManager.flush()
+        for (statement:Statement in initialSubject.statements){
+            var stmt = statementService.duplicate(statement)
+            stmt.owner = user
+            addStatement(duplicateSubject, stmt)
+        }
+        return duplicateSubject
+    }
+
     fun import(user: User, sharedSubject: Subject): Subject {
         if (sharedSubjectRepository.findByTeacherAndSubject(user,sharedSubject) == null)
             throw EntityNotFoundException("The subject \"${sharedSubject.title}\" is not shared with you")
 
-        val importedSubject = Subject(
-                sharedSubject.title,
-                sharedSubject.course,
-                user
-        )
-        save(importedSubject)
-        entityManager.flush()
-        for (statement:Statement in sharedSubject.statements){
-            var stmt = statementService.duplicate(statement)
-            stmt.owner = user
-            addStatement(importedSubject, stmt)
-        }
-        return importedSubject
+        return duplicate(user, sharedSubject)
     }
 
 }

@@ -67,11 +67,28 @@
                     </a>
                 </h3>
 
-                <div class="text">
-                    <p th:if="${#lists.isEmpty(assignment.sequences)}" th:text="#{assignment.empty}">No sequences</p>
-                    <p th:id="|assignment-audience-${assignment.id}|" th:text="#{assignment.audience.create} + ${assignment.audience}">audience</p>
-                    <p th:id="|assignment-date-${assignment.id}|" th:text="#{assignment.scholarYear.create} + ${assignment.scholarYear}">date_created</p>
-                    <p th:id="|assignment-description-${assignment.id}|" th:text="#{assignment.description.create} + ${assignment.description}">description</p>
+                <div class="ui grid three row three column">
+                    <style>
+                        .ui.grid > .row {
+                            padding-top: 0.5rem;
+                            padding-bottom: 0.5rem;
+                        }
+                    </style>
+                    <div class="ui row">
+                        <span class="ui column" th:if="${#lists.isEmpty(assignment.sequences)}" th:text="#{assignment.empty}">No sequences</span>
+                    </div>
+                    <div class="ui row" >
+                        <span class="ui column" th:if="${assignment.audience != 'na'}"
+                              th:id="|assignment-audience-${assignment.id}|"
+                              th:text="#{assignment.audience.create} + ${assignment.audience} ">audience</span>
+                        <span class="ui column" th:id="|assignment-date-${assignment.id}|"
+                              th:text="#{assignment.scholarYear.create} + ${assignment.scholarYear}">date_created</span>
+                    </div>
+                    <div th:if="${assignment.description != ''}" class="ui row">
+                        <div class="ui sixteen wide column " style="font-size: smaller">
+                            <span style="font-size: smaller" th:text="${assignment.description}">content</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>

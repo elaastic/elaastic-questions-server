@@ -53,7 +53,8 @@ internal class SubjectServiceIntegrationTest(
         @Autowired val testingService: TestingService,
         @Autowired val entityManager: EntityManager,
         @Autowired val statementRepository: StatementRepository,
-        @Autowired val statementService: StatementService
+        @Autowired val statementService: StatementService,
+        @Autowired val sharedSubjectRepository: SharedSubjectRepository
 ) {
     val persistentUnitUtil: PersistenceUnitUtil by lazy {
         entityManager.entityManagerFactory.persistenceUnitUtil
@@ -149,7 +150,27 @@ internal class SubjectServiceIntegrationTest(
     }
 
     @Test
-    fun `try to get a subject for a user that is a teacher but not the owner`() {
+    fun `try to get a subject for a user that is a teacher with a shared access but not the owner`() {
+        val teacher = testingService.getTestTeacher()
+        val teacher2 = testingService.getAnotherTestTeacher()
+        val subjectId = subjectService.save(
+                Subject("Subject", "", teacher)
+        ).id!!
+        subjectService.sharedToTeacher(
+                teacher2,
+                subjectService.get(teacher, subjectId))
+
+        entityManager.clear()
+
+        subjectService.get(teacher2, subjectId).let {
+            MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(subjectId))
+            MatcherAssert.assertThat("Subject is shared to another teacher", sharedSubjectRepository.findByTeacherAndSubject(teacher2,it) != null)
+            MatcherAssert.assertThat("Subject is accessed by another teacher", it.owner != teacher2 )
+        }
+    }
+
+    @Test
+    fun `try to get a subject for a user that is a teacher without shared access`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
                 Subject("Subject", "", teacher)
@@ -157,9 +178,8 @@ internal class SubjectServiceIntegrationTest(
 
         entityManager.clear()
 
-        subjectService.get(testingService.getAnotherTestTeacher(), subjectId).let {
-            MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(subjectId))
-            MatcherAssert.assertThat("Subject is shared to another teacher", it.owner != testingService.getAnotherTestTeacher())
+        assertThrows<AccessDeniedException> {
+            subjectService.get(testingService.getAnotherTestTeacher(), subjectId)
         }
     }
 

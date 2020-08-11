@@ -45,7 +45,6 @@ class StatementService(
 ) {
     fun get(user: User, id: Long): Statement {
         val statement:Statement = get(id)
-
         if (statement.owner != user)
             if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this statement")
@@ -120,6 +119,12 @@ class StatementService(
                 )
         duplicatedStatement.version = statement.version
         duplicatedStatement.attachment = statement.attachment
+        for (fakeExplanation: FakeExplanation in findAllFakeExplanationsForStatement(statement)){
+            addFakeExplanation(
+                    duplicatedStatement,
+                    FakeExplanationData(fakeExplanation.correspondingItem, fakeExplanation.content)
+            )
+        }
         return statementRepository.save(duplicatedStatement)
     }
 

@@ -25,10 +25,6 @@
 </head>
 
 <body>
-<aside id="pageSpecificMenu">
-    <!-- TODO Import subject -->>
-</aside>
-
 <section>
     <h2 class="ui header">
         <i class="book icon"></i>
@@ -69,8 +65,8 @@
             <td>
                 <a th:href="@{/subject/{id}(id=${subject.id})}"
                    href="subject/123"
-                   th:attr="data-tooltip=#{subject.action.show.label}"
-                   data-tooltip="Read subject"
+                   th:attr="data-tooltip=#{subject.shared.title}"
+                   data-tooltip="Read shared subject"
                    data-inverted=""
                    th:text="${subject.title}">
                     Subject title

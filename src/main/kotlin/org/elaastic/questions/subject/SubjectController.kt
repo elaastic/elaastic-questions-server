@@ -239,7 +239,7 @@ class SubjectController(
             model.addAttribute("assignment", AssignmentController.AssignmentData(
                     owner = user,
                     subject = subject,
-                    title = "").toEntity())
+                    title = subject.title).toEntity())
         }
 
         return "/assignment/create"
