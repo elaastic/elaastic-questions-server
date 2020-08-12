@@ -97,7 +97,7 @@
       Create and return to assignment
     </button>
 
-    <a th:href="@{/subject/{id}(id=${subject.id})}"
+    <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
        class="ui button"
        th:text="#{common.cancel}">
       Cancel

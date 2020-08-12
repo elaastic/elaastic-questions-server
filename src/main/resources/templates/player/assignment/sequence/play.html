@@ -39,7 +39,7 @@
 
   <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
     <a class="item"
-       th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id})}"
+       th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='questions')}"
        th:attr="data-tooltip=#{subject.action.show.label}"
        data-position="right center"
        data-inverted="">

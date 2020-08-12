@@ -331,4 +331,8 @@ class SubjectService (
         return duplicate(user, sharedSubject)
     }
 
+    fun isUsedAsParentSubject(user: User, parentSubject: Subject): Boolean {
+        return subjectRepository.countAllByParentSubject(user, parentSubject) > 0
+    }
+
 }

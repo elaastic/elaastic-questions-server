@@ -63,7 +63,7 @@
 
         <div class="ui basic segment" th:if="${subject.owner != user}">
             <a class="ui primary button"
-               th:href="@{/subject/{id}/importSubject(id=${subject.id})}">
+               onclick="$('#confirm-import-subject-modal').modal('show');">
                 <i class="upload icon"></i>
                 <span th:text="#{subject.import}">Import the subject</span>
             </a>

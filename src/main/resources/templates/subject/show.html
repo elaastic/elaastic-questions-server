@@ -41,29 +41,28 @@
     <div th:replace="subject/_modal_share_subject.html :: modalShareAccess(${subject})"></div>
 
     <a class="item"
-         onclick="$('#subject-editProperties-modal').modal('show');"
-         th:attr="data-tooltip=#{subject.action.propertiesEdition.label}"
-         data-tooltip="Edit"
-         data-position="right center"
-         data-inverted="">
+       onclick="$('#subject-editProperties-modal').modal('show');"
+       th:attr="data-tooltip=#{subject.action.propertiesEdition.label}"
+       data-tooltip="Edit"
+       data-position="right center"
+       data-inverted="">
       <i class="setting icon"></i>
     </a>
 
     <div class="divider"></div>
 
     <a class="item"
-         onclick="$('#confirm-delete-subject-modal').modal('show');"
-         th:attr="data-tooltip=#{subject.action.delete.label}"
-         data-tooltip="Delete"
-         data-position="right center"
-         data-inverted="">
+       onclick="$('#confirm-delete-subject-modal').modal('show');"
+       th:attr="data-tooltip=#{subject.action.delete.label}"
+       data-tooltip="Delete"
+       data-position="right center"
+       data-inverted="">
       <i class="big trash icon"></i>
     </a>
   </th:block>
   <th:block th:if="${subject.owner != user}">
-    <a th:href="@{/subject/{id}/importSubject(id=${subject.id})}"
-       href="import"
-       class="item"
+    <a class="item"
+       onclick="$('#confirm-import-subject-modal').modal('show');"
        th:attr="data-tooltip=#{subject.import}"
        data-tooltip="Import the subject"
        data-position="right center"
@@ -78,45 +77,59 @@
   <div id="subjectPage">
 
     <th:block th:if="${subject.owner == user}">
-      <h1 class="content" style="vertical-align: middle;" th:text="#{subject.page.show.title}" >
-        Manage a subject
-      </h1>
+    <h2 class="ui header">
+      <i class="book icon"></i>
 
-      <div class="sub header" th:text="#{subject.page.show.notice}">
+      <div class="content">
+        <span th:text="#{subject.page.show.title}" >Manage a subject</span>
+        <span>"
+          <span th:text="${subject.title}">Titre sujet</span>
+          <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
+          "
+        </span>
+      </div>
+
+      <div class="sub header"  th:text="#{subject.page.show.notice}">
         This page allows you to add, remove, edit, and reorder questions of a subject. It also allows you to make
         assignment with questions of the subject.
       </div>
+
+    </h2>
     </th:block>
+
     <th:block th:if="${subject.owner != user}">
-      <h1 class="content" style="vertical-align: middle;" th:text="#{subject.shared.title}" >
-        Reading a shared subject
-      </h1>
+      <h2 class="ui header">
+        <i class="book icon"></i>
 
-      <div class="sub header" data-i18n="[html]content.body" th:text="#{subject.shared.notice}">
-        This page allows you to read statements of a subject that has been shared with you, and import the subject if you want to use it
-        You cannot modify nor delete any of the statements of this subject. You also don't have access to the assignments of the owner.
-      </div>
+        <div class="content">
+          <span th:text="#{subject.shared.title}">Reading a shared subject</span>
+          <span> "
+            <span th:text="${subject.title}">Titre sujet</span>
+            <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
+            "
+          </span>
+        </div>
+
+        <div class="sub header" data-i18n="[html]content.body" th:text="#{subject.shared.notice}">
+          This page allows you to read statements of a subject that has been shared with you, and import the subject if you want to use it
+          You cannot modify nor delete any of the statements of this subject. You also don't have access to the assignments of the owner.
+        </div>
+
+      </h2>
     </th:block>
 
-    <h2 class="ui header" style="margin-top: 1em;">
-      <i class="large icons">
-        <i class="book icon"></i>
-        <i class="corner pencil alternate  icon"></i>
-      </i>
-
-      <span th:text="${subject.title}">Titre sujet</span>
-      <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
     </h2>
     <h3 class="ui sub header">
       <span th:if="${subject.owner != user}" th:text="#{subject.sharedOwner}">Shared By</span>
       <span th:if="${subject.owner != user}" th:text="| ${subject.owner.firstName + ' ' + subject.owner.lastName}|">Owner Name</span>
     </h3>
 
-    <div class="ui top attached tabular menu">
-      <div id="subject-managment-tab" class="item active" data-tab="questions"
-           th:text="#{subject.page.show.questions-tab-title}">questions</div>
-      <div class="item" data-tab="assignments" th:text="#{subject.page.show.assignments-tab-title}"
-           th:class="${subject.owner==user} ? item : noAccess ">assignments</div>
+    <div class="ui attached tabular menu top">
+      <a class="item" th:classappend="${activeTab=='questions'} ? active" data-tab="questions"
+           th:text="#{subject.page.show.questions-tab-title}">questions</a>
+      <a class="item" th:classappend="${activeTab=='assignments'} ? active" data-tab="assignments"
+           th:text="#{subject.page.show.assignments-tab-title}"
+           th:class="${subject.owner==user} ? item : noAccess ">assignments</a>
     </div>
     <style>
       .noAccess{
@@ -132,12 +145,12 @@
     </style>
 
     <!-- Question Tab -->
-    <div class="ui bottom attached tab active segment" data-tab="questions">
+    <div th:classappend="${activeTab=='questions'} ? active" class="ui bottom attached tab segment" style="border-top: none !important;" data-tab="questions">
         <div th:replace="|/subject/question-tab.html| :: subjectItem(${subject},${statements})"></div>
     </div>
 
     <!-- Assignments Tab -->
-    <div class="ui bottom attached tab segment" data-tab="assignments">
+    <div th:classappend="${activeTab=='assignments'} ? active" class="ui bottom attached tab segment" style="border-top: none !important;" data-tab="assignments">
         <div th:replace="|/subject/assignment-tab.html| :: subjectItem(${subject})"></div>
     </div>
 
@@ -145,7 +158,7 @@
 
   </div>
   <script th:inline="javascript">
-    $('.menu .item').tab();
+    $('.ui.menu .item').tab();
   </script>
 
   <!--  Delete confirm modal-->
@@ -178,6 +191,46 @@
       $('#confirm-delete-subject-modal').modal({
         onApprove: function () {
           window.location = /*[[@{/subject/{id}/delete(id=${subject.id})}]]*/ '/subject/123/delete'
+        }
+      })
+    </script>
+  </div>
+
+  <!-- Import confirm modal-->
+  <div>
+    <div id="confirm-import-subject-modal" class="ui tiny modal">
+      <div class="header">
+        <span th:text="#{subject.import}">Import the subject</span>
+      </div>
+
+      <div class="content">
+        <p th:if="${alreadyImported}">
+          <span th:text="#{subject.import.alreadyExist.confirm(${subject.title})}">
+            You already have subject(s) imported from the subject "{0}", do you still want to import it ?
+          </span>
+        </p>
+        <p th:if="${!alreadyImported}">
+          <span th:text="#{subject.import.confirm(${subject.title})}">
+            Do you really want to import the subject "{0}"
+          </span>
+        </p>
+      </div>
+
+      <div class="actions">
+        <div class="ui primary approve button">
+          <span th:text="#{common.yes}">Yes</span>
+        </div>
+
+        <div class="ui cancel button">
+          <span th:text="#{common.no}">No</span>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      $('#confirm-import-subject-modal').modal({
+        onApprove: function () {
+          window.location = /*[[@{/subject/{id}/importSubject(id=${subject.id})}]]*/ '/subject/123/import'
         }
       })
     </script>

@@ -104,12 +104,12 @@
       Update and return to subject
     </button>
 
-    <a th:if="${subject.owner!=user}" th:href="@{/subject/{id}(id=${subject.id})}"
+    <a th:if="${subject.owner!=user}" th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
        class="ui primary button" name="returnOnSubject" value="true" th:text="#{question.returnToSubject}">
         Return to subject
     </a>
 
-    <a th:if="${subject.owner==user}" th:href="@{/subject/{id}(id=${subject.id})}"
+    <a th:if="${subject.owner==user}" th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
        class="ui button"
        th:text="#{common.cancel}">
       Cancel

@@ -19,5 +19,4 @@
 -- Add new columns for assignment
 ALTER TABLE `subject`
     ADD COLUMN `parent_subject_id` BIGINT(20) DEFAULT NULL,
-    ADD  CONSTRAINT `fk_parent_subject` FOREIGN KEY (`parent_subject_id`) REFERENCES `subject` (`id`) ON DELETE SET NULL;
-
+    ADD CONSTRAINT `fk_parent_subject` FOREIGN KEY (`parent_subject_id`) REFERENCES `subject` (`id`) ON DELETE SET NULL;

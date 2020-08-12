@@ -70,7 +70,7 @@
         <tr th:each="subject, i : ${subjectPage.content}">
             <td>
 
-                <a th:href="@{/subject/{id}(id=${subject.id})}"
+                <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
                    href="subject/123"
                    th:attr="data-tooltip=#{subject.action.show.label}"
                    data-tooltip="Modify subject"
@@ -80,7 +80,7 @@
                 </a>
 
                 &nbsp; [
-                <a th:href="@{/subject/{id}(id=${subject.id})}"
+                <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
                    href="subject/123"
                    th:attr="data-tooltip=#{subject.action.show.label}"
                    data-tooltip="Modify subject"

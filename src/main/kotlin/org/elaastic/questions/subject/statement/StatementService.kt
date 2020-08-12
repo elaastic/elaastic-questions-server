@@ -18,7 +18,6 @@
 
 package org.elaastic.questions.subject.statement
 
-import javafx.beans.binding.Bindings.isNotNull
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
@@ -27,14 +26,8 @@ import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRep
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.util.*
-import javax.persistence.Column
-import javax.persistence.EntityNotFoundException
-import javax.persistence.OneToOne
 import javax.transaction.Transactional
 
 @Service
@@ -119,6 +112,7 @@ class StatementService(
                 )
         duplicatedStatement.version = statement.version
         duplicatedStatement.attachment = statement.attachment
+        duplicatedStatement = save(duplicatedStatement)
         for (fakeExplanation: FakeExplanation in findAllFakeExplanationsForStatement(statement)){
             addFakeExplanation(
                     duplicatedStatement,

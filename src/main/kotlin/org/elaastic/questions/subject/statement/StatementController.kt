@@ -105,7 +105,6 @@ class StatementController(
             model.addAttribute("subject", subject)
             model.addAttribute("statementData",statementData)
             model.addAttribute("rank",statementBase.rank)
-
             "/subject/statement/edit"
         } else {
             // if there is a sequence with results that uses the statement
@@ -135,6 +134,7 @@ class StatementController(
             }
 
             return if (statementData.returnOnSubject) {
+                redirectAttributes.addAttribute("activeTab", "questions");
                 "redirect:/subject/$subjectId"
             } else {
                 "redirect:/subject/$subjectId/statement/$id/edit"
@@ -183,7 +183,7 @@ class StatementController(
                     )
             )
         }
-
+        redirectAttributes.addAttribute("activeTab", "questions");
         return "redirect:/subject/$subjectId"
     }
 
@@ -201,24 +201,26 @@ class StatementController(
     @GetMapping("{id}/up")
     fun up(authentication: Authentication,
            @PathVariable subjectId: Long,
-           @PathVariable id: Long): String {
+           @PathVariable id: Long,
+           redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveUpStatement(subject, id)
-
+        redirectAttributes.addAttribute("activeTab", "questions");
         return "redirect:/subject/$subjectId#statement_${id}"
     }
 
     @GetMapping("{id}/down")
     fun down(authentication: Authentication,
              @PathVariable subjectId: Long,
-             @PathVariable id: Long): String {
+             @PathVariable id: Long,
+             redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveDownStatement(subject, id)
-
+        redirectAttributes.addAttribute("activeTab", "questions");
         return "redirect:/subject/$subjectId#statement_${id}"
     }
 

@@ -18,11 +18,9 @@
 
 package org.elaastic.questions.subject
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceController
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
@@ -41,7 +39,6 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import java.lang.IllegalArgumentException
 import javax.persistence.EntityNotFoundException
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
@@ -88,7 +85,8 @@ class SubjectController(
     }
 
     @GetMapping(value = ["/{id}", "{id}/show"])
-    fun show(authentication: Authentication, model: Model, @PathVariable id: Long): String {
+    fun show(authentication: Authentication, model: Model, @PathVariable id: Long,
+             @RequestParam activeTab: String): String {
         val user: User = authentication.principal as User
         model.addAttribute("user", user)
 
@@ -100,6 +98,8 @@ class SubjectController(
             if (!statements.contains(statement)) statements.add(statement)
         }
         model.addAttribute("statements",statements)
+        model.addAttribute("alreadyImported", subjectService.isUsedAsParentSubject(user, subject))
+        model.addAttribute("activeTab", activeTab)
 
         return "/subject/show"
     }
@@ -121,7 +121,8 @@ class SubjectController(
              @Valid @ModelAttribute subjectData: SubjectData,
              result: BindingResult,
              model: Model,
-             response: HttpServletResponse): String {
+             response: HttpServletResponse,
+             redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
         return if (result.hasErrors()) {
@@ -132,6 +133,7 @@ class SubjectController(
         } else {
             val subject = subjectData.toEntity()
             subjectService.save(subject)
+            redirectAttributes.addAttribute("activeTab", "questions");
             "redirect:/subject/${subject.id}"
         }
     }
@@ -143,7 +145,8 @@ class SubjectController(
              result: BindingResult,
              model: Model,
              @PathVariable subjectId: Long,
-             response: HttpServletResponse): String {
+             response: HttpServletResponse,
+             redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, subjectId, fetchStatementsAndAssignments = true)
@@ -162,6 +165,7 @@ class SubjectController(
                     statementData.fakeExplanations
             )
             attachedFileIfAny(fileToAttached, statementSaved)
+            redirectAttributes.addAttribute("activeTab", "questions")
             return "redirect:/subject/${subject.id}"
         }
     }
@@ -202,7 +206,8 @@ class SubjectController(
                       result: BindingResult,
                       model: Model,
                       response: HttpServletResponse,
-                      @PathVariable subjectId: Long): String {
+                      @PathVariable subjectId: Long,
+                      redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
         val subject = subjectService.get(user, subjectId)
 
@@ -220,6 +225,7 @@ class SubjectController(
                 assignment.audience = "na"
             assignmentService.save(assignment)
             subjectService.addAssignment(subject,assignment)
+            redirectAttributes.addAttribute("activeTab", "assignments");
             "redirect:/subject/${subject.id}"
         }
 
@@ -260,7 +266,8 @@ class SubjectController(
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
             model.addAttribute("subject", subjectData)
-            "/subject/$id"
+            redirectAttributes.addAttribute("activeTab", "questions");
+            "redirect:/subject/$id"
         } else {
             subjectService.get(user, id).let {
                 it.updateFrom(subjectData.toEntity())
@@ -277,6 +284,7 @@ class SubjectController(
                     )
                 }
                 model.addAttribute("subject", it)
+                redirectAttributes.addAttribute("activeTab", "questions");
                 "redirect:/subject/$id"
             }
         }
@@ -308,7 +316,8 @@ class SubjectController(
     @GetMapping("/shared")
     fun shared(authentication: Authentication,
                  model: Model,
-                 @RequestParam("globalId") globalId: String?): String {
+                 @RequestParam("globalId") globalId: String?,
+                 redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
         if (globalId == null || globalId == "") {
@@ -325,6 +334,7 @@ class SubjectController(
             }
 
             subjectService.sharedToTeacher(user, it)
+            redirectAttributes.addAttribute("activeTab", "questions");
             return "redirect:/subject/${it.id}/show"
         }
     }
@@ -363,11 +373,12 @@ class SubjectController(
     }
 
     @GetMapping(value = ["{id}/importSubject"])
-    fun importSubject(authentication: Authentication, model: Model, @PathVariable id: Long): String {
+    fun importSubject(authentication: Authentication, model: Model, @PathVariable id: Long,
+                      redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
         val sharedSubject = subjectService.get(user,id)
         val importedSubject = subjectService.import(user, sharedSubject)
-
+        redirectAttributes.addAttribute("activeTab", "questions");
         return "redirect:/subject/${importedSubject.id}/show"
     }
 

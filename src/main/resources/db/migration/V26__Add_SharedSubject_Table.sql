@@ -27,6 +27,6 @@ CREATE TABLE `shared_subject` (
     UNIQUE KEY `learner_assignment_unique` (`teacher_id`,`subject_id`),
     KEY `idx_shared_subject_teacher_id` (`teacher_id`),
     KEY `idx_shared_subject_subject_id` (`subject_id`),
-    CONSTRAINT `fk_shared_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`),
+    CONSTRAINT `fk_shared_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_shared_subject_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
