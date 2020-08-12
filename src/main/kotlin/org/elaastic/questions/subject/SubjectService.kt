@@ -320,6 +320,7 @@ class SubjectService (
             stmt.owner = user
             addStatement(duplicateSubject, stmt)
         }
+        duplicateSubject.parentSubject = initialSubject
         return duplicateSubject
     }
 

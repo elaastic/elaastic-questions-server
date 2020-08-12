@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.statement.Statement
+import org.hibernate.annotations.ManyToAny
 import org.hibernate.annotations.SortNatural
 import org.hibernate.mapping.Bag
 import org.springframework.data.annotation.CreatedDate
@@ -59,7 +60,10 @@ class Subject (
 
         @field:NotNull
         @field:NotBlank
-        var globalId: String = UUID.randomUUID().toString()
+        var globalId: String = UUID.randomUUID().toString(),
+
+        @field:ManyToOne(fetch = FetchType.LAZY)
+        var parentSubject: Subject? = null
 
 ): AbstractJpaPersistable<Long>() {
 
