@@ -59,7 +59,17 @@
        data-inverted="">
       <i class="big trash icon"></i>
     </a>
+
+    <a class="item"
+       onclick="$('#confirm-duplicate-subject-modal').modal('show');"
+       th:attr="data-tooltip=#{subject.duplicate}"
+       data-tooltip="Duplicate the subject"
+       data-position="right center"
+       data-inverted="">
+      <i class="dimgrey copy icon"></i>
+    </a>
   </th:block>
+
   <th:block th:if="${subject.owner != user}">
     <a class="item"
        onclick="$('#confirm-import-subject-modal').modal('show');"
@@ -87,6 +97,12 @@
           <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
           "
         </span>
+        <br/>
+
+        <span style="font-size: small" th:text="#{subject.createdFrom}">Created from </span>
+        <span style="font-size: small">"
+          <span th:text="${subject.title}">Subject title</span>
+        "</span>
       </div>
 
       <div class="sub header"  th:text="#{subject.page.show.notice}">
@@ -108,6 +124,9 @@
             <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
             "
           </span>
+          <br/>
+          <span style="font-size: small" th:text="#{subject.sharedOwner}">Shared By</span>
+          <span style="font-size: small" th:text="| ${subject.owner.firstName + ' ' + subject.owner.lastName}|">Owner Name</span>
         </div>
 
         <div class="sub header" data-i18n="[html]content.body" th:text="#{subject.shared.notice}">
@@ -116,13 +135,9 @@
         </div>
 
       </h2>
-    </th:block>
 
-    </h2>
-    <h3 class="ui sub header">
-      <span th:if="${subject.owner != user}" th:text="#{subject.sharedOwner}">Shared By</span>
-      <span th:if="${subject.owner != user}" th:text="| ${subject.owner.firstName + ' ' + subject.owner.lastName}|">Owner Name</span>
-    </h3>
+
+    </th:block>
 
     <div class="ui attached tabular menu top">
       <a class="item" th:classappend="${activeTab=='questions'} ? active" data-tab="questions"
@@ -231,6 +246,41 @@
       $('#confirm-import-subject-modal').modal({
         onApprove: function () {
           window.location = /*[[@{/subject/{id}/importSubject(id=${subject.id})}]]*/ '/subject/123/import'
+        }
+      })
+    </script>
+  </div>
+
+  <!-- Duplicate confirm modal-->
+  <div>
+    <div id="confirm-duplicate-subject-modal" class="ui tiny modal">
+      <div class="header">
+        <span th:text="#{subject.import}">Import the subject</span>
+      </div>
+
+      <div class="content">
+        <p>
+          <span th:text="#{subject.duplicate.confirm(${subject.title})}">
+            Do you really want to import the subject "{0}"
+          </span>
+        </p>
+      </div>
+
+      <div class="actions">
+        <div class="ui primary approve button">
+          <span th:text="#{common.yes}">Yes</span>
+        </div>
+
+        <div class="ui cancel button">
+          <span th:text="#{common.no}">No</span>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      $('#confirm-duplicate-subject-modal').modal({
+        onApprove: function () {
+          window.location = /*[[@{/subject/{id}/duplicateSubject(id=${subject.id})}]]*/ '/subject/123/duplicate'
         }
       })
     </script>

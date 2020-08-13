@@ -448,7 +448,7 @@ internal class SubjectServiceIntegrationTest(
                     )
                     MatcherAssert.assertThat(
                             subjectService.findAllByOwner(teacher).totalElements,
-                            CoreMatchers.equalTo(nbSubjectTeacher)
+                            CoreMatchers.equalTo(nbSubjectTeacher+1)
                     )
                 }
     }

@@ -124,7 +124,7 @@ internal class SubjectControllerTest(
                 .andExpect(status().isFound())
                 .andExpect(
                         redirectedUrlTemplate(
-                                "/subject/{subjectId}",
+                                "/subject/{subjectId}?activeTab=questions",
                                 subjectId
                         )
                 )

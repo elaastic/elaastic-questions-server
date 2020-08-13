@@ -382,6 +382,16 @@ class SubjectController(
         return "redirect:/subject/${importedSubject.id}/show"
     }
 
+    @GetMapping(value = ["{id}/duplicateSubject"])
+    fun duplicateSubject(authentication: Authentication, model: Model, @PathVariable id: Long,
+                      redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+        val originalSubject = subjectService.get(user,id)
+        val duplicatedSubject = subjectService.duplicate(user, originalSubject)
+        redirectAttributes.addAttribute("activeTab", "questions");
+        return "redirect:/subject/${duplicatedSubject.id}/show"
+    }
+
 
 
     data class SubjectData(
