@@ -107,10 +107,8 @@ class StatementService(
                         statement.choiceSpecification,
                         statement,
                         statement.expectedExplanation,
-                        statement.subject,
-                        statement.rank
+                        statement.subject
                 )
-        duplicatedStatement.version = statement.version
         duplicatedStatement.attachment = statement.attachment
         duplicatedStatement = save(duplicatedStatement)
         for (fakeExplanation: FakeExplanation in findAllFakeExplanationsForStatement(statement)){
@@ -119,6 +117,7 @@ class StatementService(
                     FakeExplanationData(fakeExplanation.correspondingItem, fakeExplanation.content)
             )
         }
+        duplicatedStatement.version = 0L
         return statementRepository.save(duplicatedStatement)
     }
 
@@ -130,5 +129,12 @@ class StatementService(
                     sequence.statement = newStatement
             }
         }
+    }
+
+    fun import (statement: Statement, subject: Subject): Statement{
+        var duplicatedStatement = duplicate(statement)
+        duplicatedStatement.subject = subject
+        duplicatedStatement.owner = subject.owner
+        return statementRepository.save(duplicatedStatement)
     }
 }

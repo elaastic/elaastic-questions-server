@@ -436,6 +436,10 @@ internal class SubjectServiceIntegrationTest(
                             it.course,
                             CoreMatchers.equalTo(subject.course)
                     )
+                    MatcherAssert.assertThat(
+                            it.parentSubject,
+                            CoreMatchers.equalTo(subject)
+                    )
                     MatcherAssert.assertThat(it.dateCreated, CoreMatchers.notNullValue())
                     MatcherAssert.assertThat(it.lastUpdated, CoreMatchers.notNullValue())
                     MatcherAssert.assertThat(
@@ -493,6 +497,10 @@ internal class SubjectServiceIntegrationTest(
                     MatcherAssert.assertThat(
                             it.course,
                             CoreMatchers.equalTo(subject.course)
+                    )
+                    MatcherAssert.assertThat(
+                            it.parentSubject,
+                            CoreMatchers.equalTo(subject)
                     )
                     MatcherAssert.assertThat(it.dateCreated, CoreMatchers.notNullValue())
                     MatcherAssert.assertThat(it.lastUpdated, CoreMatchers.notNullValue())

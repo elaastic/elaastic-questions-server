@@ -36,7 +36,6 @@
             <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
                 <div th:replace="subject/statement/_statement_actions.html :: statementActions(${statement}, ${position}, ${i.size})"></div>
 
-                <!-- TODO Statements READ only-->
                 <h3 class="ui header">
                     <a th:href="@{/subject/{subjectId}/statement/{id}/edit(subjectId=${subject.id},id=${statement.id})}"
                        href="/statement/123/edit"

@@ -122,6 +122,12 @@ class SubjectService (
         require(user == subject.owner) {
             "Only the owner can delete an assignment"
         }
+        for(statement: Statement in subject.statements){
+            statementService.delete(statement)
+        }
+        for(assignment: Assignment in subject.assignments){
+            assignmentService.delete(subject.owner, assignment)
+        }
         subjectRepository.delete(subject) // all other linked entities are deletes by DB cascade
     }
 
@@ -316,9 +322,7 @@ class SubjectService (
         save(duplicateSubject)
         entityManager.flush()
         for (statement:Statement in initialSubject.statements){
-            var stmt = statementService.duplicate(statement)
-            stmt.owner = user
-            addStatement(duplicateSubject, stmt)
+            addStatement(duplicateSubject, statementService.import(statement, duplicateSubject))
         }
         duplicateSubject.parentSubject = initialSubject
         return duplicateSubject
@@ -334,5 +338,4 @@ class SubjectService (
     fun isUsedAsParentSubject(user: User, parentSubject: Subject): Boolean {
         return subjectRepository.countAllByParentSubject(user, parentSubject) > 0
     }
-
 }

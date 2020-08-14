@@ -86,7 +86,9 @@ class SubjectController(
 
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(authentication: Authentication, model: Model, @PathVariable id: Long,
-             @RequestParam activeTab: String): String {
+             @RequestParam ("activeTab") activeTab: String,
+             @RequestParam("page") page: Int?,
+             @RequestParam("size") size: Int?): String {
         val user: User = authentication.principal as User
         model.addAttribute("user", user)
 
@@ -100,6 +102,16 @@ class SubjectController(
         model.addAttribute("statements",statements)
         model.addAttribute("alreadyImported", subjectService.isUsedAsParentSubject(user, subject))
         model.addAttribute("activeTab", activeTab)
+        subjectService.findAllByOwner(
+                user,
+                PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+        ).let {
+            model.addAttribute("subjects",it.content)
+            var firstSubject = Subject("NoSubject","",user)
+            if (it.content.size != 0)
+                firstSubject = it.content.get(0)
+            model.addAttribute("firstSubject",firstSubject)
+        }
 
         return "/subject/show"
     }
@@ -378,6 +390,16 @@ class SubjectController(
         val user: User = authentication.principal as User
         val sharedSubject = subjectService.get(user,id)
         val importedSubject = subjectService.import(user, sharedSubject)
+        with(messageBuilder) {
+            success(
+                    redirectAttributes,
+                    message(
+                            "subject.imported.message",
+                            message("subject.label"),
+                            importedSubject.title
+                    )
+            )
+        }
         redirectAttributes.addAttribute("activeTab", "questions");
         return "redirect:/subject/${importedSubject.id}/show"
     }
@@ -388,6 +410,16 @@ class SubjectController(
         val user: User = authentication.principal as User
         val originalSubject = subjectService.get(user,id)
         val duplicatedSubject = subjectService.duplicate(user, originalSubject)
+        with(messageBuilder) {
+            success(
+                    redirectAttributes,
+                    message(
+                            "subject.duplicated.message",
+                            message("subject.label"),
+                            duplicatedSubject.title
+                    )
+            )
+        }
         redirectAttributes.addAttribute("activeTab", "questions");
         return "redirect:/subject/${duplicatedSubject.id}/show"
     }

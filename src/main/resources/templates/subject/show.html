@@ -91,18 +91,22 @@
       <i class="book icon"></i>
 
       <div class="content">
-        <span th:text="#{subject.page.show.title}" >Manage a subject</span>
-        <span>"
-          <span th:text="${subject.title}">Titre sujet</span>
-          <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
-          "
-        </span>
-        <br/>
+        <div>
+          <span th:text="#{subject.page.show.title}" >Manage a subject</span>
+          <span>"
+            <span th:text="${subject.title}">Titre sujet</span>
+            <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
+            "
+          </span>
+        </div>
 
-        <span style="font-size: small" th:text="#{subject.createdFrom}">Created from </span>
-        <span style="font-size: small">"
-          <span th:text="${subject.title}">Subject title</span>
-        "</span>
+        <div th:if="${subject.parentSubject != null}">
+          <span style="font-size: small" th:text="#{subject.createdFrom}">Created from </span>
+          <span style="font-size: small">
+            "<span th:text="${subject.parentSubject.title}">Subject title</span>"
+          </span>
+        </div>
+
       </div>
 
       <div class="sub header"  th:text="#{subject.page.show.notice}">
@@ -138,6 +142,10 @@
 
 
     </th:block>
+
+    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+      Message
+    </div>
 
     <div class="ui attached tabular menu top">
       <a class="item" th:classappend="${activeTab=='questions'} ? active" data-tab="questions"

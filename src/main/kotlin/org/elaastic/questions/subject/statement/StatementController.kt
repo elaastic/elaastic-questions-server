@@ -224,4 +224,31 @@ class StatementController(
         return "redirect:/subject/$subjectId#statement_${id}"
     }
 
+    @GetMapping("{id}/import/{newSubjectId}")
+    fun import(authentication: Authentication, model: Model,
+               @PathVariable subjectId: Long,
+               @PathVariable id: Long,
+               @PathVariable newSubjectId: Long,
+               redirectAttributes: RedirectAttributes): String{
+        val user: User = authentication.principal as User
+        val newSubject = subjectService.get(user, newSubjectId, false)
+        var statement = statementService.get(user,id)
+        statement = statementService.import(statement, newSubject)
+        subjectService.addStatement(newSubject, statement)
+
+        with(messageBuilder) {
+            success(
+                    redirectAttributes,
+                    message(
+                            "subject.import.statement.message",
+                            message("statement.label"),
+                            statement.title,
+                            newSubject.title
+                    )
+            )
+        }
+
+        redirectAttributes.addAttribute("activeTab", "questions");
+        return "redirect:/subject/$subjectId"
+    }
 }
