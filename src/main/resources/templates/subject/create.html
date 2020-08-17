@@ -34,11 +34,9 @@
   <div class="ui top attached label" th:text="#{subject.create.label}"></div>
   <form class="ui form"
         th:object="${subject}"
-        th:classappend="${#fields.hasErrors('*')}? 'error'"
+        th:classappend="${#fields.hasErrors('title')}? 'error'"
         method="POST"
         th:action="@{/subject/save}">
-
-    <div th:replace="layout/components/form-messages :: formMessages('')"></div>
 
     <div th:replace="subject/_subject_form :: subjectForm(${subject})"></div>
 

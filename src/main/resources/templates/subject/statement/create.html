@@ -54,11 +54,6 @@
 
     <input type="hidden" name="subject_id" th:value="${subject.id}"/>
 
-
-    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-      Message
-    </div>
-
     <div th:replace="layout/components/form-messages :: formMessages(#{statement.create.hasError.headerMessage})"></div>
 
     <h2 class="ui header">
@@ -82,8 +77,7 @@
     <div class="ui bottom attached segment">
 
       <div th:replace="/subject/statement/_statement_form :: statementForm(${statementData}, ${null})"></div>
-      <div
-              th:replace="/subject/statement/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
+      <div th:replace="/subject/statement/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
       <div th:replace="/subject/statement/_statement_explanations_form :: statementExplanationForm(${statementData}, ${null})"></div>
     </div>
 

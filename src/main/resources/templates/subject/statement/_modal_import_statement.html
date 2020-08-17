@@ -22,7 +22,7 @@
 
     <div id="confirm-import-statement-modal" class="ui modal">
         <div class="header">
-            <span th:text="#{subject.import.statement}">Import the statement</span>
+            <span th:text="#{subject.import.statement.title}">Import the statement</span>
         </div>
 
         <div class="content" th:if="${subjects.isEmpty()}">
@@ -35,17 +35,11 @@
 
         <div class="content" th:if="${not subjects.isEmpty()}">
             <div>
-                <div id="statement-selected">
-                    <span th:text="#{subject.import.statement.label}">
-                        Do you really want to import the statement "{0}" ?
-                    </span>
-                </div>
 
                 <div>
                     <span th:text="#{subject.import.statement.choice}">
-                        Choose the subject you want to import it
+                        Copy the statement into the subject
                     </span>
-
 
                     <input type="hidden"
                            id="subjectChosen"
@@ -70,7 +64,7 @@
 
         <div class="actions">
             <div id="approveButton" class="ui primary approve button" th:if="${not subjects.isEmpty()}">
-                <span th:text="#{common.yes}">Yes</span>
+                <span th:text="#{subject.import.statement.validate}">Copy in subject</span>
             </div>
 
             <div class="ui cancel button">

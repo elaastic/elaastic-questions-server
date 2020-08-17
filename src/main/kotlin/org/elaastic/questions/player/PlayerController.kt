@@ -115,7 +115,9 @@ class PlayerController(
         }
     }
 
-    @GetMapping("/assignment/{assignmentId}/play/sequence/{sequenceId}","/assignment/{assignmentId}/play")
+    @GetMapping("/assignment/{assignmentId}/play/sequence/{sequenceId}",
+            "/assignment/{assignmentId}/play",
+            "/assignment/{assignmentId}/{sequenceId}")
     fun playAssignment(authentication: Authentication,
                        model: Model,
                        @PathVariable assignmentId: Long,

@@ -52,16 +52,6 @@
     </a>
 
     <a class="ui right floated icon secondary tiny button"
-       th:if="${subject.owner == user}"
-       th:href="@{/subject/{subjectId}/statement/{id}/edit(subjectId=${subject.id},id=${statement.id})}"
-       href="/statement/123/edit"
-       th:attr="data-tooltip=#{common.update}"
-       data-tooltip="Update"
-       data-inverted="">
-        <i class="edit icon"></i>
-    </a>
-
-    <a class="ui right floated icon secondary tiny button"
        th:onclick="|elaastic.showConfirmImportStatementModal(${statement.id})|"
        href="#"
        th:attr="data-tooltip=#{subject.import.statement}"
@@ -71,6 +61,16 @@
     </a>
 
     <div th:replace="subject/statement/_modal_import_statement :: importStatement(${subjects})"></div>
+
+    <a class="ui right floated icon secondary tiny button"
+       th:if="${subject.owner == user}"
+       th:href="@{/subject/{subjectId}/statement/{id}/edit(subjectId=${subject.id},id=${statement.id})}"
+       href="/statement/123/edit"
+       th:attr="data-tooltip=#{common.update}"
+       data-tooltip="Update"
+       data-inverted="">
+        <i class="edit icon"></i>
+    </a>
 
 </div>
 
