@@ -56,6 +56,7 @@
           <vue-ckeditor v-bind:id="'expectedExplanation'"
                         v-bind:name="'expectedExplanation'"
                         th:placeholder="#{statement.expectedExplanation.type.here}"
+                        th:readonly="${subject.owner!=user}"
                         v-model="expectedExplanation"
                         v-bind:config="ckeditorConfig"></vue-ckeditor>
 
@@ -71,7 +72,7 @@
           <div class="ui attached segment" v-for="index in fakeExplanationList.length"
                v-if="fakeExplationIsNotNull(index-1)">
             <template v-if="isOpenEnded">
-              <button class="ui tiny negative icon right floated  button"
+              <button th:if="${subject.owner==user}" class="ui tiny negative icon right floated  button"
                       style="margin-left: 3em;"
                       type="button"
                       v-on:click="removeFakeExplanation(index-1)">
@@ -91,13 +92,14 @@
                 <label th:text="#{statement.fakeExplanation.correspondingItem}">
                   Fake explanation for item
                 </label>
-                <select v-model="fakeExplanationList[index-1].correspondingItem"
+                <select th:disabled="${subject.owner!=user}"
+                        v-model="fakeExplanationList[index-1].correspondingItem"
                         v-bind:name="'fakeExplanations['+(index-1)+'].correspondingItem'">
-                  <option v-for="choiceIndex in itemCount" v-bind:value="choiceIndex">
+                  <option th:readonly="${subject.owner!=user}" v-for="choiceIndex in itemCount" v-bind:value="choiceIndex">
                     {{ choiceIndex }}
                   </option>
                 </select>
-                <button class="ui tiny negative icon button"
+                <button th:if="${subject.owner==user}" class="ui tiny negative icon button"
                         style="margin-left: 3em;"
                         type="button"
                         v-on:click="removeFakeExplanation(index-1)">
@@ -115,7 +117,8 @@
 
           </div>
 
-          <button class="ui secondary bottom attached fluid button"
+          <button th:if="${subject.owner==user}"
+                  class="ui secondary bottom attached fluid button"
                   id="addFakeExplanationButton" type="button" v-on:click="addFakeExplanation()">
             <i class="plus icon"></i>
             <span th:text="#{statement.addFakeExplanation.label}">

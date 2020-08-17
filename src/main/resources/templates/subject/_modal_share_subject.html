@@ -1,0 +1,96 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="modalShareAccess(subject)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+
+  <div class="ui small modal" id="shareAccessModalApp">
+    <i class="close icon"></i>
+
+    <div class="header" th:text="#{subject.share.linktitle}">
+      Link to share with other teachers
+    </div>
+
+    <div class="content">
+      <div class="description">
+        <p th:text="#{subject.share.description(${subject.title})}">
+          Here is the link to share the subject "{0}" to your colleagues.
+        </p>
+
+        <div class="ui action fluid input">
+          <input id="shareUrl"
+                 type="text"
+                 v-model="shareSubjectUrl" readonly>
+          <button class="ui right icon button" onclick="document.execCommand('copy');">
+            <i class="copy icon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="ui cancel button">
+        OK
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" th:inline="javascript"
+          th:with="shareUrl=${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/subject/shared(globalId=${subject.globalId})}">
+    /*<![CDATA[*/
+
+    elaastic.showShareAccessModal = function () {
+      window.shareAccessModalApp.showShareAccessModal(
+        /*[[${shareUrl}]]*/ 'shareUrl',
+        /*[[${subject.title}]]*/ 'title'
+      )
+    }
+
+    $(document)
+      .ready(function () {
+
+        // Init VueJS app
+        window.shareAccessModalApp = new Vue({
+          el: '#shareAccessModalApp',
+          data: {
+            subjectTitle: null,
+            shareSubjectUrl: null
+          },
+          methods: {
+            showShareAccessModal: function (url, title) {
+              this.shareSubjectUrl = url
+              this.subjectTitle = title
+
+              $('#shareAccessModalApp').modal(
+                {
+                  onVisible: function () {
+                    $('#shareUrl').focus().select()
+                  }
+                }
+              ).modal('show')
+            }
+
+          }
+        })
+
+      })
+
+  </script>
+</div>

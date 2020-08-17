@@ -1,0 +1,119 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="importStatement(subjects)"
+   class="ui modal"
+   xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <div id="confirm-import-statement-modal" class="ui modal">
+        <div class="header">
+            <span th:text="#{subject.import.statement.title}">Import the statement</span>
+        </div>
+
+        <div class="content" th:if="${subjects.isEmpty()}">
+            <div>
+                <span th:text="#{subject.import.statement.noSubject}">
+                    You have no subjects to import the statement
+                </span>
+            </div>
+        </div>
+
+        <div class="content" th:if="${not subjects.isEmpty()}">
+            <div>
+
+                <div>
+                    <span th:text="#{subject.import.statement.choice}">
+                        Copy the statement into the subject
+                    </span>
+
+                    <input type="hidden"
+                           id="subjectChosen"
+                           name="subjectChosen"/>
+
+                    <select name="choiceSubject" id="choiceSubject" onchange="changeSubjectValue(this.value);">
+                        <option id="${firstSubject.id}" th:value="${firstSubject.id}" selected>
+                            <span th:text="${firstSubject.title}">Subject Title</span>
+                        </option>
+                        <div th:each="availableSubject, i : ${subjects}">
+                            <option th:if="${availableSubject.id != firstSubject.id}"
+                                    id="${availableSubject.id}"
+                                    th:value="${availableSubject.id}">
+                                <span th:text="${availableSubject.title}">Subject Title</span>
+                            </option>
+                        </div>
+                    </select>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div id="approveButton" class="ui primary approve button" th:if="${not subjects.isEmpty()}">
+                <span th:text="#{subject.import.statement.validate}">Copy in subject</span>
+            </div>
+
+            <div class="ui cancel button">
+                <span th:text="#{common.cancel}">Annuler</span>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+
+        var subjectsEmpty = [[${subjects.isEmpty()}]];
+        if(!subjectsEmpty) {
+            var subjectChosen = document.getElementById("subjectChosen").value;
+            subjectChosen = [[${firstSubject.id}]]
+            var subjectId = [[${subject.id}]];
+
+            function changeSubjectValue(subjectId){
+                subjectChosen = subjectId;
+            }
+
+            function init(){
+                changeSubjectValue(document.getElementById("choiceSubject").value)
+            }
+
+            $(document).ready(function () {
+                let selectedStatement = $(location.hash)
+            })
+        }
+
+        var elaastic = elaastic || {}
+
+        elaastic.showConfirmImportStatementModal = function (statementId) {
+
+            let title = $('#statement-title-' + statementId).text()
+            let sentenceTemplate = /*[[#{subject.import.statement.label}]]*/ ''
+            let sentence = sentenceTemplate.replace('{0}', title)
+
+            $('#statement-selected').text(sentence)
+
+            let confirmImportStatementModal = $('#confirm-import-statement-modal')
+            confirmImportStatementModal.modal({
+                onApprove: function () {
+                    var link ="/subject/" + subjectId + "/statement/" + statementId + "/import/"+ subjectChosen;
+                    window.location = link;
+                }
+            })
+
+            confirmImportStatementModal.modal('show')
+        }
+
+    </script>
+</div>

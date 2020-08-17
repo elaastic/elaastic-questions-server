@@ -39,7 +39,7 @@
 
   <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
     <a class="item"
-       th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id})}"
+       th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='questions')}"
        th:attr="data-tooltip=#{subject.action.show.label}"
        data-position="right center"
        data-inverted="">
@@ -91,7 +91,7 @@
     <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
       <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel})"></div>
     </th:block>
-    <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel})"></div>
+    <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
     <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
 
     <th:block th:if="${playerModel.showResponsePhase}">

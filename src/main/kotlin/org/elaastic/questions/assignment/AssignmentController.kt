@@ -94,7 +94,8 @@ class AssignmentController(
              @Valid @ModelAttribute assignmentData: AssignmentData,
              result: BindingResult,
              model: Model,
-             response: HttpServletResponse): String {
+             response: HttpServletResponse,
+             redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
         val subject: Subject = subjectService.get(assignmentData.subject.id!!)
 
@@ -102,11 +103,12 @@ class AssignmentController(
             response.status = HttpStatus.BAD_REQUEST.value()
             model.addAttribute("user", user)
             model.addAttribute("assignment", assignmentData)
+            redirectAttributes.addAttribute("activeTab", "assignments");
             "/subject/${subject.id}/addAssignment"
         } else {
             val assignment = assignmentData.toEntity()
             assignmentService.save(assignment)
-
+            redirectAttributes.addAttribute("activeTab", "assignments");
             "/subject/${subject.id}"
         }
     }
@@ -162,7 +164,7 @@ class AssignmentController(
                             )
                     )
                 }
-
+                redirectAttributes.addAttribute("activeTab", "assignments");
                 "redirect:/subject/${assignment.subject!!.id}"
             }
         }
@@ -187,7 +189,7 @@ class AssignmentController(
                     )
             )
         }
-
+        redirectAttributes.addAttribute("activeTab", "assignments");
         return "redirect:/subject/${assignment.subject!!.id}"
     }
 
@@ -217,24 +219,26 @@ class AssignmentController(
     @GetMapping("{id}/up")
     fun up(authentication: Authentication,
            subjectId: Long,
-           @PathVariable id: Long): String {
+           @PathVariable id: Long,
+           redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveUpAssignment(subject, id)
-
+        redirectAttributes.addAttribute("activeTab", "assignments");
         return "redirect:/subject/$subjectId#assignment_${id}"
     }
 
     @GetMapping("{id}/down")
     fun down(authentication: Authentication,
              subjectId: Long,
-             @PathVariable id: Long): String {
+             @PathVariable id: Long,
+             redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveDownAssignment(subject, id)
-
+        redirectAttributes.addAttribute("activeTab", "assignments");
         return "redirect:/subject/$subjectId#assignment_${id}"
     }
 

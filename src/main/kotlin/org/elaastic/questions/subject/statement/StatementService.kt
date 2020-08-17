@@ -26,14 +26,8 @@ import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRep
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.util.*
-import javax.persistence.Column
-import javax.persistence.EntityNotFoundException
-import javax.persistence.OneToOne
 import javax.transaction.Transactional
 
 @Service
@@ -44,8 +38,13 @@ class StatementService(
 ) {
     fun get(user: User, id: Long): Statement {
         val statement:Statement = get(id)
-        if (statement.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
+        if (statement.owner != user)
+            if (!user.isTeacher()) {
+                throw AccessDeniedException("You are not authorized to access to this statement")
+            }
+
         return statement
+
     }
 
     fun get(statementId: Long): Statement{
@@ -108,11 +107,17 @@ class StatementService(
                         statement.choiceSpecification,
                         statement,
                         statement.expectedExplanation,
-                        statement.subject,
-                        statement.rank
+                        statement.subject
                 )
-        duplicatedStatement.version = statement.version
         duplicatedStatement.attachment = statement.attachment
+        duplicatedStatement = save(duplicatedStatement)
+        for (fakeExplanation: FakeExplanation in findAllFakeExplanationsForStatement(statement)){
+            addFakeExplanation(
+                    duplicatedStatement,
+                    FakeExplanationData(fakeExplanation.correspondingItem, fakeExplanation.content)
+            )
+        }
+        duplicatedStatement.version = 0L
         return statementRepository.save(duplicatedStatement)
     }
 
@@ -124,5 +129,12 @@ class StatementService(
                     sequence.statement = newStatement
             }
         }
+    }
+
+    fun import (statement: Statement, subject: Subject): Statement{
+        var duplicatedStatement = duplicate(statement)
+        duplicatedStatement.subject = subject
+        duplicatedStatement.owner = subject.owner
+        return statementRepository.save(duplicatedStatement)
     }
 }

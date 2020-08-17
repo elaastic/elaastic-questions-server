@@ -35,6 +35,7 @@
                 <input type="text"
                        name="title"
                        id="title"
+                       th:readonly="${subject.owner!=user}"
                        th:value="${statementData?.title}"
                        v-bind:class="{onlyShow: !modeEdit && !shouldShowNotice}"
                        th:placeholder="#{statement.title.type.here}"
@@ -54,13 +55,13 @@
             <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{statement.attachment.label}">Pièce
                 jointe</a>
             <div id="attachment" v-show="anAttachmentIsSelected == false">
-                <input type="file"
+                <input type="file" th:if="${subject.owner==user}"
                        name="fileToAttached"
                        id="fileToAttached">
             </div>
             <div th:if="${statementData.attachment != null}" id="attachmentView" v-show="anAttachmentIsSelected">
                 <div th:replace="/subject/statement/_statement_attachment :: statementAttachment(${statementData.attachment},650,380)"></div>
-                <a style="margin-left: 2em;" class="ui tiny negative right floated button"
+                <a th:if="${subject.owner==user}" style="margin-left: 2em;" class="ui tiny negative right floated button"
                    v-on:click="removeAttachment">
                     <i class="trash icon"></i> Supprimer
                 </a>
@@ -83,13 +84,14 @@
                 <i class="edit icon"></i>
             </a>
 
-            <textarea ref="initialContent" style="display: none;" th:text="${statementData.content}">
+            <textarea ref="initialContent" style="display: none;" th:text="${statementData.content}" th:readonly="${subject.owner!=user}">
 
       </textarea>
 
             <vue-ckeditor v-bind:id="'content'"
                           v-bind:name="'content'"
                           v-model="content"
+                          th:readonly="${subject.owner!=user}"
                           th:placeholder="#{statement.content.type.here(@{/images/example/moon-picnic.jpg})}+#{statement.content.example}"
                           v-on:focus="startEditing"
                           v-on:blur="stopEditing"

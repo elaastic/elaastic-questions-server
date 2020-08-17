@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="sequenceInfo(model)"
+<div th:fragment="sequenceInfo(model, sequenceId)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
   <div class="ui bottom attached message"
@@ -25,7 +25,7 @@
 
 <!--    TODO partial reloading with updateSequenceDisplay -->
     <a th:if="${model.refreshable}"
-       href="./play"
+       th:href="@{./{id}(id=${sequenceId})}"
        th:title="#{common.refresh}">
       <i class="refresh icon"></i>
     </a>

@@ -1,8 +1,27 @@
+/*
+ * Elaastic - formative assessment system
+ * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package org.elaastic.questions.subject
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
@@ -31,7 +50,8 @@ class SubjectService (
         @Autowired val assignmentService: AssignmentService,
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val entityManager: EntityManager,
-        @Autowired val sequenceService: SequenceService
+        @Autowired val sequenceService: SequenceService,
+        @Autowired val sharedSubjectRepository: SharedSubjectRepository
 
 ) {
 
@@ -45,9 +65,12 @@ class SubjectService (
 
     fun get(user: User, id: Long, fetchStatementsAndAssignments : Boolean = false ): Subject {
         get(id, fetchStatementsAndAssignments).let {
-            if (it.owner != user) {
+            if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this subject")
             }
+            if (user != it.owner)
+                if (sharedSubjectRepository.findByTeacherAndSubject(user,it) == null)
+                    throw AccessDeniedException("The subject \"${it.title}\" is not shared with you")
             return it
         }
     }
@@ -98,6 +121,12 @@ class SubjectService (
     fun delete(user: User, subject: Subject) {
         require(user == subject.owner) {
             "Only the owner can delete an assignment"
+        }
+        for(statement: Statement in subject.statements){
+            statementService.delete(statement)
+        }
+        for(assignment: Assignment in subject.assignments){
+            assignmentService.delete(subject.owner, assignment)
         }
         subjectRepository.delete(subject) // all other linked entities are deletes by DB cascade
     }
@@ -263,5 +292,50 @@ class SubjectService (
         ).executeUpdate()
 
         subject.assignments.mapIndexed { index, assignment -> assignment.rank = index + 1 }
+    }
+
+    fun sharedToTeacher(user: User, subject: Subject): SharedSubject? {
+        if (subject.owner == user) {
+            return null
+        }
+
+        return sharedSubjectRepository.findByTeacherAndSubject(
+                user,
+                subject
+        ) ?: sharedSubjectRepository.save(
+                SharedSubject(user, subject)
+        )
+    }
+
+    fun findAllSharedSubjects(user: User,
+                                     pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))): Page<Subject> {
+        return sharedSubjectRepository.findAllSubjectsForTeacher(user, pageable)
+    }
+
+    fun duplicate(user:User, initialSubject: Subject): Subject{
+
+        val duplicateSubject = Subject(
+                initialSubject.title,
+                initialSubject.course,
+                user
+        )
+        save(duplicateSubject)
+        entityManager.flush()
+        for (statement:Statement in initialSubject.statements){
+            addStatement(duplicateSubject, statementService.import(statement, duplicateSubject))
+        }
+        duplicateSubject.parentSubject = initialSubject
+        return duplicateSubject
+    }
+
+    fun import(user: User, sharedSubject: Subject): Subject {
+        if (sharedSubjectRepository.findByTeacherAndSubject(user,sharedSubject) == null)
+            throw EntityNotFoundException("The subject \"${sharedSubject.title}\" is not shared with you")
+
+        return duplicate(user, sharedSubject)
+    }
+
+    fun isUsedAsParentSubject(user: User, parentSubject: Subject): Boolean {
+        return subjectRepository.countAllByParentSubject(user, parentSubject) > 0
     }
 }

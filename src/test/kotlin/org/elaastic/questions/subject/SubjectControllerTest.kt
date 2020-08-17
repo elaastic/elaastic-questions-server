@@ -67,6 +67,9 @@ internal class SubjectControllerTest(
     @MockBean
     lateinit var assignmentService: AssignmentService
 
+    @MockBean
+    lateinit var sharedSubjectService: SharedSubjectService
+
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
     @Test
@@ -121,7 +124,7 @@ internal class SubjectControllerTest(
                 .andExpect(status().isFound())
                 .andExpect(
                         redirectedUrlTemplate(
-                                "/subject/{subjectId}",
+                                "/subject/{subjectId}?activeTab=questions",
                                 subjectId
                         )
                 )

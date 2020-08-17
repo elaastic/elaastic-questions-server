@@ -25,26 +25,14 @@
 </head>
 
 <body>
-<aside id="pageSpecificMenu">
-    <a th:href="@{/subject/create}"
-       href="create"
-       class="item"
-       th:attr="data-tooltip=#{subject.create.label}"
-       data-tooltip="Create a subject"
-       data-position="right center"
-       data-inverted="">
-        <i class="yellow plus square outline icon"></i>
-    </a>
-</aside>
-
 <section>
     <h2 class="ui header">
         <i class="book icon"></i>
 
         <div class="content">
-            <span th:text="#{subject.my.list.label}">My assignments</span>
-            <div class="sub header" th:text="#{subject.my.list.description}">
-                This page lists all of your assignments
+            <span th:text="#{subject.shared.my.list.label}">Shared subjects</span>
+            <div class="sub header" th:text="#{subject.shared.my.list.description}">
+                This page lists subjects shared with you. You cannot modify them.
             </div>
         </div>
     </h2>
@@ -53,74 +41,57 @@
         Message
     </div>
 
-    <table th:if="${not #lists.isEmpty(subjectPage.content)}"
+    <table th:if="${not #lists.isEmpty(sharedSubjectPage.content)}"
            class="ui single selectable line unstackable table">
         <thead>
         <tr>
             <th th:text="#{common.title}">
-                Title
+                Subject Title
             </th>
             <th class="not mobile" th:text="#{common.lastUpdate}">
                 Last update
+            </th>
+            <th class="not mobile" th:text="#{common.owner}">
+                Owner
+            </th>
+            <th class="not mobile" th:text="#{subject.share.date}">
+                Share date
             </th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="subject, i : ${subjectPage.content}">
+        <tr th:each="subject, i : ${sharedSubjectPage.content}">
             <td>
-
-                <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
+                <a th:href="@{/subject/{id}(id=${subject.id},activeTab='questions')}"
                    href="subject/123"
-                   th:attr="data-tooltip=#{subject.action.show.label}"
-                   data-tooltip="Modify subject"
+                   th:attr="data-tooltip=#{subject.shared.title}"
+                   data-tooltip="Read shared subject"
                    data-inverted=""
                    th:text="${subject.title}">
                     Subject title
                 </a>
-
-                &nbsp; [
-                <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
-                   href="subject/123"
-                   th:attr="data-tooltip=#{subject.action.show.label}"
-                   data-tooltip="Modify subject"
-                   data-inverted="">
-                    <i class="edit outline icon" style="margin: 0;"></i>
-                </a>
-                ]
             </td>
 
             <td class="not mobile" th:text="${#dates.format(subject.lastUpdated, 'dd/MM/yyyy HH:mm')}">
                 25/07/2019
             </td>
 
+            <td th:text="${subject.owner.firstName}+' '+${subject.owner.lastName}">
+                Owner name
+            </td>
+
+            <td class="not mobile" th:text="${#dates.format(sharedInfos[i.getCount()-1].dateCreated, 'dd/MM/yyyy HH:mm')}">
+                25/07/2019
+            </td>
         </tr>
         </tbody>
     </table>
 
 
-    <div th:if="${#lists.isEmpty(subjectPage.content)}"
-         class="ui info message" th:text="#{subject.you.have.none}">
-        You have no subject.
-    </div>
-
-    <div class="ui two column stackable grid">
-        <div class="column">
-            <div class="ui basic segment">
-                <a th:href="@{/subject/create}"
-                   href="create"
-                   class="ui primary button">
-                    <i class="add icon"></i>
-                    <span th:text="#{subject.create.label}">
-        Create a subject
-      </span>
-                </a>
-            </div>
-        </div>
-        <div class="column">
-            <div th:replace="layout/components/paginate :: paginate(baseUrl='/subject/index')"></div>
-        </div>
-
+    <div th:if="${#lists.isEmpty(sharedSubjectPage.content)}"
+         class="ui info message" th:text="#{subject.shared.you.have.none}">
+        You have no shared subject.
     </div>
 
     <div class="ui hidden divider"></div>

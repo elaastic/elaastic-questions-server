@@ -16,31 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.subject;
+package org.elaastic.questions.subject
 
 import org.elaastic.questions.directory.User
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.EntityGraph
-import org.springframework.data.jpa.repository.JpaRepository
-import org.elaastic.questions.subject.Subject
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
 
-interface SubjectRepository : JpaRepository<Subject?, Long> {
+interface SharedSubjectRepository : JpaRepository<SharedSubject, Long> {
 
-    fun findAllByOwner(owner: User, pageable: Pageable): Page<Subject>
+    fun findByTeacherAndSubject(learner: User, subject:Subject): SharedSubject?
 
-    @EntityGraph(value = "Subject.statements_assignments", type = EntityGraph.EntityGraphType.LOAD)
-    fun findOneWithStatementsAndAssignmentsById(id: Long): Subject?
+    @Query("select shared.subject from SharedSubject as shared where shared.teacher = ?1")
+    fun findAllSubjectsForTeacher(user: User,
+                                     pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dateCreated"))): Page<Subject>
 
-    fun findOneById(id: Long): Subject?
-
-    fun findByGlobalId(globalId: String): Subject?
-
-    @Query("select count(s.id) from Subject as s where s.owner=?1 AND s.parentSubject = ?2")
-    fun countAllByParentSubject(owner: User, parentSubject: Subject): Int
-
+    fun countAllBySubject(subject: Subject): Int
 }

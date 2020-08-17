@@ -1,10 +1,11 @@
 package org.elaastic.questions.subject.statement
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.SubjectService
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Test
@@ -20,11 +21,12 @@ import javax.transaction.Transactional
 internal class StatementServiceIntegrationTest(
         @Autowired val statementService: StatementService,
         @Autowired val statementRepository: StatementRepository,
+        @Autowired val subjectService: SubjectService,
         @Autowired val testingService: TestingService
 ) {
 
     @Test
-    fun `get a statement - valid`() {
+    fun `get a statement as the owner - valid`() {
         val subject = testingService.getAnyTestSubject()
 
         MatcherAssert.assertThat(
@@ -42,8 +44,26 @@ internal class StatementServiceIntegrationTest(
     }
 
     @Test
-    fun `get a statement - error unauthorized`() {
-        val teacher: User = testingService.getTestTeacher()
+    fun `get a shared statement as a teacher but not the owner - valid`() {
+        val subject = testingService.getAnyTestSubject()
+        val teacher = testingService.getAnotherTestTeacher()
+        MatcherAssert.assertThat(
+                "The testing data are corrupted",
+                subject.statements.size,
+                CoreMatchers.equalTo(5)
+        )
+
+        val testingstatement = subject.statements.first()
+
+        MatcherAssert.assertThat(
+                statementService.get(teacher,testingstatement.id!!),
+                CoreMatchers.equalTo(testingstatement)
+        )
+    }
+
+    @Test
+    fun `get a statement as a learner - error unauthorized`() {
+        val learner: User = testingService.getTestStudent()
 
         val subject = testingService.getAnyTestSubject()
 
@@ -55,7 +75,7 @@ internal class StatementServiceIntegrationTest(
 
         val testingstatement = subject.statements.first()
         assertThrows<AccessDeniedException> {
-            statementService.get(teacher, testingstatement.id!!)
+            statementService.get(learner, testingstatement.id!!)
         }
     }
 
@@ -87,6 +107,58 @@ internal class StatementServiceIntegrationTest(
             MatcherAssert.assertThat(
                     statementRepository.countAllBySubject(testingStatement.subject!!),
                     CoreMatchers.equalTo(initialCount + 1)
+            )
+            MatcherAssert.assertThat(
+                    it.owner,
+                    CoreMatchers.equalTo(testingStatement.owner)
+            )
+            MatcherAssert.assertThat(
+                    it.title,
+                    CoreMatchers.equalTo(testingStatement.title)
+            )
+            MatcherAssert.assertThat(
+                    it.content,
+                    CoreMatchers.equalTo(testingStatement.content)
+            )
+            MatcherAssert.assertThat(
+                    it.questionType,
+                    CoreMatchers.equalTo(testingStatement.questionType)
+            )
+            MatcherAssert.assertThat(
+                    it.questionType,
+                    CoreMatchers.equalTo(testingStatement.questionType)
+            )
+            MatcherAssert.assertThat(
+                    it.choiceSpecification,
+                    CoreMatchers.equalTo(testingStatement.choiceSpecification)
+            )
+            MatcherAssert.assertThat(
+                    it.parentStatement,
+                    CoreMatchers.equalTo(testingStatement)
+            )
+            MatcherAssert.assertThat(
+                    it.expectedExplanation,
+                    CoreMatchers.equalTo(testingStatement.expectedExplanation)
+            )
+            MatcherAssert.assertThat(
+                    it.subject,
+                    CoreMatchers.equalTo(testingStatement.subject)
+            )
+            MatcherAssert.assertThat(
+                    it.rank,
+                    CoreMatchers.equalTo(testingStatement.rank)
+            )
+            MatcherAssert.assertThat(
+                    it.version,
+                    CoreMatchers.equalTo(0L)
+            )
+            MatcherAssert.assertThat(
+                    it.attachment,
+                    CoreMatchers.equalTo(testingStatement.attachment)
+            )
+            MatcherAssert.assertThat(
+                    statementService.findAllFakeExplanationsForStatement(it).size,
+                    CoreMatchers.equalTo(statementService.findAllFakeExplanationsForStatement(testingStatement).size)
             )
         }
 
@@ -129,4 +201,87 @@ internal class StatementServiceIntegrationTest(
         }
 
     }
+
+    @Test
+    fun `import a statement`() {
+        val subject = testingService.getAnyTestSubject()
+
+        MatcherAssert.assertThat(
+                "The testing data are corrupted",
+                subject.statements.size,
+                CoreMatchers.equalTo(5)
+        )
+        val newSubject = Subject("Yolo","",testingService.getAnotherTestTeacher())
+        subjectService.save(newSubject)
+
+        val testingStatement = subject.statements.first()
+        val initialCount = statementRepository.countAllBySubject(testingStatement.subject!!)
+
+        tWhen {
+            statementService.import(testingStatement,newSubject)
+        }.tThen {
+            MatcherAssert.assertThat(
+                    statementRepository.countAllBySubject(newSubject),
+                    CoreMatchers.equalTo(1)
+            ) // NewSubject has one more statement
+            MatcherAssert.assertThat(
+                    statementRepository.countAllBySubject(testingStatement.subject!!),
+                    CoreMatchers.equalTo(initialCount)
+            ) // OldSubject is unchanged
+            MatcherAssert.assertThat(
+                    it.owner,
+                    CoreMatchers.equalTo(newSubject.owner)
+            )
+            MatcherAssert.assertThat(
+                    it.title,
+                    CoreMatchers.equalTo(testingStatement.title)
+            )
+            MatcherAssert.assertThat(
+                    it.content,
+                    CoreMatchers.equalTo(testingStatement.content)
+            )
+            MatcherAssert.assertThat(
+                    it.questionType,
+                    CoreMatchers.equalTo(testingStatement.questionType)
+            )
+            MatcherAssert.assertThat(
+                    it.questionType,
+                    CoreMatchers.equalTo(testingStatement.questionType)
+            )
+            MatcherAssert.assertThat(
+                    it.choiceSpecification,
+                    CoreMatchers.equalTo(testingStatement.choiceSpecification)
+            )
+            MatcherAssert.assertThat(
+                    it.parentStatement,
+                    CoreMatchers.equalTo(testingStatement)
+            )
+            MatcherAssert.assertThat(
+                    it.expectedExplanation,
+                    CoreMatchers.equalTo(testingStatement.expectedExplanation)
+            )
+            MatcherAssert.assertThat(
+                    it.subject,
+                    CoreMatchers.equalTo(newSubject)
+            )
+            MatcherAssert.assertThat(
+                    it.rank,
+                    CoreMatchers.equalTo(0)
+            )
+            MatcherAssert.assertThat(
+                    it.version,
+                    CoreMatchers.equalTo(1L)
+            ) // Duplicate put version to 0, Import is made one step beyond duplicate, so version increased by 1
+            MatcherAssert.assertThat(
+                    it.attachment,
+                    CoreMatchers.equalTo(testingStatement.attachment)
+            )
+            MatcherAssert.assertThat(
+                    statementService.findAllFakeExplanationsForStatement(it).size,
+                    CoreMatchers.equalTo(statementService.findAllFakeExplanationsForStatement(testingStatement).size)
+            )
+        }
+
+    }
+
 }
