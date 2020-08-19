@@ -26,7 +26,7 @@ CREATE TABLE `subject`(
   `last_updated` datetime NOT NULL,
   `global_id` text NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_assignment_owner_id` (`owner_id`),
+  KEY `idx_subject_owner_id` (`owner_id`),
   CONSTRAINT `fk_subject_owner` FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
