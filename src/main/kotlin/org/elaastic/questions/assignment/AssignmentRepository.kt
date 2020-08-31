@@ -19,6 +19,7 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.Subject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
@@ -35,5 +36,8 @@ interface AssignmentRepository : JpaRepository<Assignment?, Long> {
     fun findOneById(id: Long): Assignment?
 
     fun findByGlobalId(globalId: String): Assignment?
+
+    @EntityGraph(value = "Assignment.sequences", type = EntityGraph.EntityGraphType.LOAD)
+    fun findAllBySubjectIsNull(): List<Assignment>
 
 }

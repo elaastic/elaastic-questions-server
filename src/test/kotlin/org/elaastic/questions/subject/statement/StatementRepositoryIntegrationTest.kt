@@ -91,7 +91,7 @@ internal class StatementRepositoryIntegrationTest(
     fun `read legacy data`() {
         assertThat(
                 statementRepository.findAll().count(),
-                equalTo(5)
+                equalTo(2)
         )
     }
 

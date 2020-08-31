@@ -19,9 +19,6 @@ package org.elaastic.questions.subject
 */
 
 import org.elaastic.questions.assignment.Assignment
-import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -36,6 +33,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
 import java.util.*
@@ -48,6 +46,7 @@ import kotlin.collections.ArrayList
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@Profile("test")
 internal class SubjectServiceIntegrationTest(
         @Autowired val subjectService: SubjectService,
         @Autowired val testingService: TestingService,
@@ -92,7 +91,7 @@ internal class SubjectServiceIntegrationTest(
     fun `get an existing subject without fetching statements and assignments`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject("Subject", "", teacher)
+                Subject("Subject", teacher)
         ).id!!
 
         entityManager.clear()
@@ -115,7 +114,7 @@ internal class SubjectServiceIntegrationTest(
     fun `get an existing subject fetching statements and assignments`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject("Subject", "", teacher)
+                Subject("Subject", teacher)
         ).id!!
 
         entityManager.clear()
@@ -138,7 +137,7 @@ internal class SubjectServiceIntegrationTest(
     fun `get a subject for a user - OK`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject("Subject", "", teacher)
+                Subject("Subject", teacher)
         ).id!!
 
         entityManager.clear()
@@ -154,7 +153,7 @@ internal class SubjectServiceIntegrationTest(
         val teacher = testingService.getTestTeacher()
         val teacher2 = testingService.getAnotherTestTeacher()
         val subjectId = subjectService.save(
-                Subject("Subject", "", teacher)
+                Subject("Subject", teacher)
         ).id!!
         subjectService.sharedToTeacher(
                 teacher2,
@@ -173,7 +172,7 @@ internal class SubjectServiceIntegrationTest(
     fun `try to get a subject for a user that is a teacher without shared access`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject("Subject", "", teacher)
+                Subject("Subject", teacher)
         ).id!!
 
         entityManager.clear()
@@ -187,7 +186,7 @@ internal class SubjectServiceIntegrationTest(
     fun `try to get a subject for a user that is a learner`() {
         val teacher = testingService.getTestTeacher()
         val subjectId = subjectService.save(
-                Subject("Subject", "", teacher)
+                Subject("Subject", teacher)
         ).id!!
 
         entityManager.clear()
@@ -207,7 +206,7 @@ internal class SubjectServiceIntegrationTest(
     @Test
     fun `save a valid subject`() {
         val teacher = testingService.getTestTeacher()
-        val subject = subjectService.save( Subject("Subject", "", teacher))
+        val subject = subjectService.save( Subject("Subject", teacher))
         tWhen { subjectService.save(subject) }
                 .tThen {
                     MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
@@ -216,7 +215,6 @@ internal class SubjectServiceIntegrationTest(
                     MatcherAssert.assertThat(it.statements, CoreMatchers.equalTo(ArrayList()))
                     MatcherAssert.assertThat(it.assignments, CoreMatchers.equalTo(mutableSetOf()))
                     MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("Subject"))
-                    MatcherAssert.assertThat(it.course, CoreMatchers.equalTo(""))
                     MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(testingService.getTestTeacher()))
                 }
     }
@@ -224,7 +222,7 @@ internal class SubjectServiceIntegrationTest(
     @Test
     fun `a subject must have a not blank title`() {
         val exception = assertThrows<ConstraintViolationException> {
-            subjectService.save(Subject("", "", testingService.getTestTeacher()))
+            subjectService.save(Subject("", testingService.getTestTeacher()))
         }
 
         MatcherAssert.assertThat(exception.constraintViolations.size, CoreMatchers.equalTo(1))
@@ -239,7 +237,7 @@ internal class SubjectServiceIntegrationTest(
         val teacher = testingService.getTestTeacher()
         val initialNbSubject = subjectService.count()
         val subject = subjectService.save(
-                Subject("Subject", "", teacher)
+                Subject("Subject", teacher)
         )
 
         entityManager.clear()
@@ -257,7 +255,7 @@ internal class SubjectServiceIntegrationTest(
     fun `try to delete a subject of another user`() {
         val teacher = testingService.getTestTeacher()
         val subject = subjectService.save(
-                Subject(title = "Foo", course="", owner = teacher)
+                Subject(title = "Foo", owner = teacher)
         )
 
         assertThrows<IllegalArgumentException> {
@@ -269,7 +267,7 @@ internal class SubjectServiceIntegrationTest(
     fun `count statements of empty subject`() {
         val teacher = testingService.getTestTeacher()
         val subject = subjectService.save(
-                Subject(title = "Foo", course="", owner = teacher)
+                Subject(title = "Foo", owner = teacher)
         )
 
         MatcherAssert.assertThat(
@@ -284,7 +282,7 @@ internal class SubjectServiceIntegrationTest(
 
         MatcherAssert.assertThat(
                 subjectService.countAllStatement(subject),
-                CoreMatchers.equalTo(5)
+                CoreMatchers.equalTo(2)
         )
     }
 
@@ -387,7 +385,6 @@ internal class SubjectServiceIntegrationTest(
         subjectService.save(
                Subject(
                         title = "An assignment",
-                        course = "",
                         owner = teacher
                 )
         ).tExpect {
@@ -404,7 +401,6 @@ internal class SubjectServiceIntegrationTest(
         val subject = subjectService.save(
                 Subject(
                         title = "An assignment",
-                        course = "",
                         owner = teacher
                 ))
         subjectService.addStatement(
@@ -431,10 +427,6 @@ internal class SubjectServiceIntegrationTest(
                     MatcherAssert.assertThat(
                             it.title,
                             CoreMatchers.equalTo(subject.title)
-                    )
-                    MatcherAssert.assertThat(
-                            it.course,
-                            CoreMatchers.equalTo(subject.course)
                     )
                     MatcherAssert.assertThat(
                             it.parentSubject,
@@ -464,7 +456,6 @@ internal class SubjectServiceIntegrationTest(
         val subject = subjectService.save(
                 Subject(
                         title = "An assignment",
-                        course = "",
                         owner = teacher
                 ))
         subjectService.addStatement(
@@ -493,10 +484,6 @@ internal class SubjectServiceIntegrationTest(
                     MatcherAssert.assertThat(
                             it.title,
                             CoreMatchers.equalTo(subject.title)
-                    )
-                    MatcherAssert.assertThat(
-                            it.course,
-                            CoreMatchers.equalTo(subject.course)
                     )
                     MatcherAssert.assertThat(
                             it.parentSubject,
@@ -530,7 +517,6 @@ internal class SubjectServiceIntegrationTest(
         val subject = subjectService.save(
                 Subject(
                         title = "An assignment",
-                        course = "",
                         owner = teacher
                 ))
 
@@ -545,11 +531,92 @@ internal class SubjectServiceIntegrationTest(
             subjectService.save(
                     Subject(
                             title = "Subject n°$it",
-                            course = "",
                             owner = owner
                     )
             )
         }
+    }
+
+    @Test
+    fun `import a statement`() {
+        val subject = testingService.getAnyTestSubject()
+
+        MatcherAssert.assertThat(
+                "The testing data are corrupted",
+                subject.statements.size,
+                CoreMatchers.equalTo(2)
+        )
+        val newSubject = Subject("Yolo",testingService.getAnotherTestTeacher())
+        subjectService.save(newSubject)
+
+        val testingStatement = subject.statements.first()
+        val initialCount = statementRepository.countAllBySubject(testingStatement.subject!!)
+
+        tWhen {
+            subjectService.importStatementInSubject(testingStatement,newSubject)
+        }.tThen {
+            MatcherAssert.assertThat(
+                    statementRepository.countAllBySubject(newSubject),
+                    CoreMatchers.equalTo(1)
+            ) // NewSubject has one more statement
+            MatcherAssert.assertThat(
+                    statementRepository.countAllBySubject(testingStatement.subject!!),
+                    CoreMatchers.equalTo(initialCount)
+            ) // OldSubject is unchanged
+            MatcherAssert.assertThat(
+                    it.owner,
+                    CoreMatchers.equalTo(newSubject.owner)
+            )
+            MatcherAssert.assertThat(
+                    it.title,
+                    CoreMatchers.equalTo(testingStatement.title)
+            )
+            MatcherAssert.assertThat(
+                    it.content,
+                    CoreMatchers.equalTo(testingStatement.content)
+            )
+            MatcherAssert.assertThat(
+                    it.questionType,
+                    CoreMatchers.equalTo(testingStatement.questionType)
+            )
+            MatcherAssert.assertThat(
+                    it.questionType,
+                    CoreMatchers.equalTo(testingStatement.questionType)
+            )
+            MatcherAssert.assertThat(
+                    it.choiceSpecification,
+                    CoreMatchers.equalTo(testingStatement.choiceSpecification)
+            )
+            MatcherAssert.assertThat(
+                    it.parentStatement,
+                    CoreMatchers.equalTo(testingStatement)
+            )
+            MatcherAssert.assertThat(
+                    it.expectedExplanation,
+                    CoreMatchers.equalTo(testingStatement.expectedExplanation)
+            )
+            MatcherAssert.assertThat(
+                    it.subject,
+                    CoreMatchers.equalTo(newSubject)
+            )
+            MatcherAssert.assertThat(
+                    it.rank,
+                    CoreMatchers.equalTo(1)
+            )
+            MatcherAssert.assertThat(
+                    it.version,
+                    CoreMatchers.equalTo(1L)
+            ) // Duplicate put version to 0, Import is made one step beyond duplicate, so version increased by 1
+            MatcherAssert.assertThat(
+                    it.attachment,
+                    CoreMatchers.equalTo(testingStatement.attachment)
+            )
+            MatcherAssert.assertThat(
+                    statementService.findAllFakeExplanationsForStatement(it).size,
+                    CoreMatchers.equalTo(statementService.findAllFakeExplanationsForStatement(testingStatement).size)
+            )
+        }
+
     }
 }
 

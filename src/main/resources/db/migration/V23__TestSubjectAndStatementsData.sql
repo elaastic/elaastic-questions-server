@@ -27,3 +27,7 @@ WHERE `id`= 618
     OR `id`= 620
     OR `id`= 621
     OR `id`= 622;
+
+UPDATE `assignment`
+SET subject_id = 1
+WHERE `id`= 382;

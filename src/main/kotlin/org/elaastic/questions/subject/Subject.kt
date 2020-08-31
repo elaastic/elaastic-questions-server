@@ -53,14 +53,8 @@ class Subject (
         @field:NotBlank
         var title: String,
 
-        var course: String,
-
         @field:ManyToOne(fetch = FetchType.LAZY)
         var owner: User,
-
-        @field:NotNull
-        @field:NotBlank
-        var globalId: String = UUID.randomUUID().toString(),
 
         @field:ManyToOne(fetch = FetchType.LAZY)
         var parentSubject: Subject? = null
@@ -91,6 +85,10 @@ class Subject (
     @SortNatural
     var statements: MutableList<Statement> = ArrayList()
 
+    @field:NotNull
+    @field:NotBlank
+    val globalId:String = UUID.randomUUID().toString()
+
     fun updateFrom(otherSubject: Subject) {
         require(id == otherSubject.id)
         if (this.version != otherSubject.version) {
@@ -98,7 +96,6 @@ class Subject (
         }
 
         this.title = otherSubject.title
-        this.course = otherSubject.course
     }
 
     fun addStatement(statement: Statement): Statement {

@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Profile
 import org.springframework.security.access.AccessDeniedException
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@Profile("test")
 internal class StatementServiceIntegrationTest(
         @Autowired val statementService: StatementService,
         @Autowired val statementRepository: StatementRepository,
@@ -32,7 +34,7 @@ internal class StatementServiceIntegrationTest(
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
                 subject.statements.size,
-                CoreMatchers.equalTo(5)
+                CoreMatchers.equalTo(2)
         )
 
         val testingstatement = subject.statements.first()
@@ -50,7 +52,7 @@ internal class StatementServiceIntegrationTest(
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
                 subject.statements.size,
-                CoreMatchers.equalTo(5)
+                CoreMatchers.equalTo(2)
         )
 
         val testingstatement = subject.statements.first()
@@ -70,7 +72,7 @@ internal class StatementServiceIntegrationTest(
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
                 subject.statements.size,
-                CoreMatchers.equalTo(5)
+                CoreMatchers.equalTo(2)
         )
 
         val testingstatement = subject.statements.first()
@@ -95,7 +97,7 @@ internal class StatementServiceIntegrationTest(
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
                 subject.statements.size,
-                CoreMatchers.equalTo(5)
+                CoreMatchers.equalTo(2)
         )
 
         val testingStatement = subject.statements.first()
@@ -171,7 +173,7 @@ internal class StatementServiceIntegrationTest(
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
                 subject.statements.size,
-                CoreMatchers.equalTo(5)
+                CoreMatchers.equalTo(2)
         )
 
         val testingStatement = subject.statements.first()
@@ -198,88 +200,6 @@ internal class StatementServiceIntegrationTest(
                 if (duplicatedStatement.parentStatement!!.id == id)
                     MatcherAssert.assertThat("double replaced old", duplicatedStatement.id != id)
             }
-        }
-
-    }
-
-    @Test
-    fun `import a statement`() {
-        val subject = testingService.getAnyTestSubject()
-
-        MatcherAssert.assertThat(
-                "The testing data are corrupted",
-                subject.statements.size,
-                CoreMatchers.equalTo(5)
-        )
-        val newSubject = Subject("Yolo","",testingService.getAnotherTestTeacher())
-        subjectService.save(newSubject)
-
-        val testingStatement = subject.statements.first()
-        val initialCount = statementRepository.countAllBySubject(testingStatement.subject!!)
-
-        tWhen {
-            statementService.import(testingStatement,newSubject)
-        }.tThen {
-            MatcherAssert.assertThat(
-                    statementRepository.countAllBySubject(newSubject),
-                    CoreMatchers.equalTo(1)
-            ) // NewSubject has one more statement
-            MatcherAssert.assertThat(
-                    statementRepository.countAllBySubject(testingStatement.subject!!),
-                    CoreMatchers.equalTo(initialCount)
-            ) // OldSubject is unchanged
-            MatcherAssert.assertThat(
-                    it.owner,
-                    CoreMatchers.equalTo(newSubject.owner)
-            )
-            MatcherAssert.assertThat(
-                    it.title,
-                    CoreMatchers.equalTo(testingStatement.title)
-            )
-            MatcherAssert.assertThat(
-                    it.content,
-                    CoreMatchers.equalTo(testingStatement.content)
-            )
-            MatcherAssert.assertThat(
-                    it.questionType,
-                    CoreMatchers.equalTo(testingStatement.questionType)
-            )
-            MatcherAssert.assertThat(
-                    it.questionType,
-                    CoreMatchers.equalTo(testingStatement.questionType)
-            )
-            MatcherAssert.assertThat(
-                    it.choiceSpecification,
-                    CoreMatchers.equalTo(testingStatement.choiceSpecification)
-            )
-            MatcherAssert.assertThat(
-                    it.parentStatement,
-                    CoreMatchers.equalTo(testingStatement)
-            )
-            MatcherAssert.assertThat(
-                    it.expectedExplanation,
-                    CoreMatchers.equalTo(testingStatement.expectedExplanation)
-            )
-            MatcherAssert.assertThat(
-                    it.subject,
-                    CoreMatchers.equalTo(newSubject)
-            )
-            MatcherAssert.assertThat(
-                    it.rank,
-                    CoreMatchers.equalTo(0)
-            )
-            MatcherAssert.assertThat(
-                    it.version,
-                    CoreMatchers.equalTo(1L)
-            ) // Duplicate put version to 0, Import is made one step beyond duplicate, so version increased by 1
-            MatcherAssert.assertThat(
-                    it.attachment,
-                    CoreMatchers.equalTo(testingStatement.attachment)
-            )
-            MatcherAssert.assertThat(
-                    statementService.findAllFakeExplanationsForStatement(it).size,
-                    CoreMatchers.equalTo(statementService.findAllFakeExplanationsForStatement(testingStatement).size)
-            )
         }
 
     }

@@ -98,7 +98,7 @@ class StatementService(
     }
 
     fun duplicate(statement: Statement): Statement {
-        var duplicatedStatement: Statement =
+        var duplicatedStatement =
                 Statement(
                         statement.owner,
                         statement.title,
@@ -110,6 +110,7 @@ class StatementService(
                         statement.subject
                 )
         duplicatedStatement.attachment = statement.attachment
+        duplicatedStatement.rank = statement.rank
         duplicatedStatement = save(duplicatedStatement)
         for (fakeExplanation: FakeExplanation in findAllFakeExplanationsForStatement(statement)){
             addFakeExplanation(
@@ -131,10 +132,5 @@ class StatementService(
         }
     }
 
-    fun import (statement: Statement, subject: Subject): Statement{
-        var duplicatedStatement = duplicate(statement)
-        duplicatedStatement.subject = subject
-        duplicatedStatement.owner = subject.owner
-        return statementRepository.save(duplicatedStatement)
-    }
+
 }
