@@ -24,6 +24,8 @@ import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.logging.Logger
@@ -41,6 +43,7 @@ class LmsService(
         @Autowired val userService: UserService,
         @Autowired val roleService: RoleService,
         @Autowired val assignmentService: AssignmentService,
+        @Autowired val subjectService: SubjectService,
         @Autowired val lmsUserAccountCreationService: LmsUserAccountCreationService,
         @Autowired val entityManager: EntityManager
 ) {
@@ -150,8 +153,12 @@ class LmsService(
         return if (ltiActivity.globalId != null) {
             findAssignmentWithIdFromLtiData(ltiActivity.globalId)
         } else {
-            Assignment(ltiActivity.title, lmsUser.user).let {
-                assignmentService.save(it)
+            Subject(ltiActivity.title, lmsUser.user).let {
+                subjectService.save(it)
+            }.let { subject ->
+                Assignment(ltiActivity.title, lmsUser.user, subject = subject).let {
+                    assignmentService.save(it)
+                }
             }
         }
     }

@@ -34,6 +34,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.util.*
 import java.util.logging.Logger
 import javax.servlet.http.HttpServletRequest
@@ -58,6 +59,7 @@ class LtiController(
                request: HttpServletRequest,
                response: HttpServletResponse,
                model: Model,
+               redirectAttributes: RedirectAttributes,
                locale: Locale): String {
         val session = startNewSession(request)
         return try {
@@ -75,7 +77,7 @@ class LtiController(
                     ltiUserId = ltiLaunchData.user_id)
             if (lmsUser != null) {
                 authenticateLmsUser(session, lmsUser)
-                redirectToAssignment(ltiLaunchData, lmsUser)
+                redirectToAssignment(ltiLaunchData, lmsUser, redirectAttributes)
             } else {
                 setLtiLaunchDataInSession(ltiLaunchData, session)
                 model.addAttribute("termsContent", termsService.getTermsContentByLanguage(locale.language))
@@ -93,13 +95,14 @@ class LtiController(
 
     @GetMapping("/launch/consent")
     fun collectConsent(request: HttpServletRequest,
-                       @RequestParam("withConsent") withConsent: Boolean = false): String {
+                       @RequestParam("withConsent") withConsent: Boolean = false,
+                        redirectAttributes: RedirectAttributes): String {
         val ltiLaunchData = getLtiLaunchDataFromSession(request.session)
         return try {
             if (withConsent) {
                 val lmsUser = lmsService.getLmsUser(ltiLaunchData.toLtiUser())
                 authenticateLmsUser(request.session, lmsUser)
-                redirectToAssignment(ltiLaunchData, lmsUser)
+                redirectToAssignment(ltiLaunchData, lmsUser, redirectAttributes)
             } else {
                 logger.severe("Consent not given")
                 "redirect:${ltiLaunchData.getRedirectUrlWithErrorMessage("no_consent_given_by_user")}"
@@ -121,7 +124,7 @@ class LtiController(
         }
     }
 
-    private fun redirectToAssignment(ltiLaunchData: LtiLaunchData, lmsUser: LmsUser): String {
+    private fun redirectToAssignment(ltiLaunchData: LtiLaunchData, lmsUser: LmsUser, redirectAttributes: RedirectAttributes): String {
         val assignment = lmsService.getLmsAssignment(
                 lmsUser = lmsUser,
                 ltiActivity = ltiLaunchData.toLtiActivity()
@@ -130,7 +133,10 @@ class LtiController(
         assignmentService.registerUser(user, assignment)
         return when {
             assignment.sequences.isNotEmpty() -> "redirect:/player/assignment/${assignment.id}/play"
-            user == assignment.owner -> "redirect:/assignment/${assignment.id}"
+            user == assignment.owner -> {
+                redirectAttributes.addAttribute("activeTab", "questions")
+                "redirect:/subject/${assignment.subject!!.id}"
+            }
             else -> {
                 logger.severe("Student cannot access empty assignment")
                 "redirect:${ltiLaunchData.getRedirectUrlWithErrorMessage("student_cannot_access_empty_assignment")}"
