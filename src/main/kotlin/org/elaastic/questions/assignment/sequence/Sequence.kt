@@ -103,6 +103,10 @@ class Sequence(
                     ?: throw IllegalStateException("The response submission interaction is not initialized")
 
     @Transient
+    fun responseSubmissionInteractionIsInitialized() =
+            interactions[InteractionType.ResponseSubmission] != null
+
+    @Transient
     fun getResponseSubmissionSpecification(): ResponseSubmissionSpecification =
             getResponseSubmissionInteraction().specification.let { specification ->
                 when (specification) {
@@ -140,6 +144,10 @@ class Sequence(
     @Transient
     fun isNotStarted(): Boolean =
             state == State.beforeStart
+
+    @Transient
+    fun hasStarted(): Boolean =
+            state != State.beforeStart
 
     @Transient
     fun isStopped(): Boolean =

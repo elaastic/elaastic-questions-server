@@ -21,8 +21,9 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.bootstrap.Bootstrap
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -36,6 +37,7 @@ import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
 import java.util.*
+import java.util.logging.Logger
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
@@ -51,9 +53,12 @@ class SubjectService (
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val entityManager: EntityManager,
         @Autowired val sequenceService: SequenceService,
+        @Autowired val responseService: ResponseService,
         @Autowired val sharedSubjectRepository: SharedSubjectRepository
 
 ) {
+
+    val LOG : Logger = Logger.getLogger(SubjectService::class.toString())
 
     fun get(id: Long, fetchStatementsAndAssignments: Boolean = false): Subject {
         // TODO (+) i18n error message
@@ -143,6 +148,7 @@ class SubjectService (
         updateAllStatementRank(subject)
     }
 
+    // TODO DOLL : something wrong in this method : why saving a statement after it could be removed ??
     private fun deleteStatementIfNotUsed(statement: Statement, subject: Subject) {
         var idsList: ArrayList<Long> = ArrayList()
         if (subject.assignments.isEmpty()) {
@@ -316,15 +322,14 @@ class SubjectService (
 
         val duplicateSubject = Subject(
                 initialSubject.title,
-                initialSubject.course,
                 user
         )
+        duplicateSubject.parentSubject = initialSubject
         save(duplicateSubject)
         entityManager.flush()
         for (statement:Statement in initialSubject.statements){
-            addStatement(duplicateSubject, statementService.import(statement, duplicateSubject))
+            importStatementInSubject(statement, duplicateSubject)
         }
-        duplicateSubject.parentSubject = initialSubject
         return duplicateSubject
     }
 
@@ -337,5 +342,43 @@ class SubjectService (
 
     fun isUsedAsParentSubject(user: User, parentSubject: Subject): Boolean {
         return subjectRepository.countAllByParentSubject(user, parentSubject) > 0
+    }
+
+    fun importStatementInSubject (statement: Statement, subject: Subject): Statement {
+        var duplicatedStatement = statementService.duplicate(statement)
+        duplicatedStatement.owner = subject.owner
+        return addStatement(subject,duplicatedStatement)
+    }
+
+    fun migrateAssignmentsTowardSubjects() {
+        // get all assignments without subject
+        assignmentRepository.findAllBySubjectIsNull().forEach { assignment ->
+            // create a subject
+            Subject(
+                    title = assignment.title,
+                    owner = assignment.owner
+            ).let { subject ->
+                save(subject)
+                // for each sequence
+                assignment.sequences.forEach { sequence ->
+                    // add the corresponding statement to the subject
+                    addStatement(subject, sequence.statement)
+                    // for all responses (both 1 and 2 attempts) attach statement to response
+                    if (sequence.responseSubmissionInteractionIsInitialized()) {
+                        responseService.findAll(sequence, false)[1].forEach { response ->
+                            response.statement = sequence.statement
+                            responseService.responseRepository.save(response)
+                        }
+                        responseService.findAll(sequence, false)[2].forEach { response ->
+                            response.statement = sequence.statement
+                            responseService.responseRepository.save(response)
+                        }
+                    }
+                }
+                // finally, attach the subject to the assignment
+                assignment.subject = subject
+                assignmentService.save(assignment)
+            }
+        }
     }
 }

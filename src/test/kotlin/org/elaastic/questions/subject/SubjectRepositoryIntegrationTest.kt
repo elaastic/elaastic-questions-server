@@ -50,9 +50,7 @@ class SubjectRepositoryIntegrationTest (
         // Given : a subject
         Subject(
                 "My test subject",
-                "My test course",
-                testingService.getAnyUser(),
-                UUID.randomUUID().toString()
+                testingService.getAnyUser()
         ).let {
             // When having it
             subjectRepository.saveAndFlush(it).let {
@@ -71,9 +69,7 @@ class SubjectRepositoryIntegrationTest (
         var randomUser = testingService.getAnyUser()
         var subject: Subject = Subject(
                 "My test subject",
-                "My test course",
-                randomUser,
-                UUID.randomUUID().toString()
+                randomUser
         )
 
         subjectRepository.saveAndFlush(subject)

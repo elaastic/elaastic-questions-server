@@ -21,7 +21,7 @@
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-  <title th:text="|elaastic: ${subject.title} - ${subject.course} |">elaastic: Subject edit</title>
+  <title th:text="|elaastic: ${subject.title} |">elaastic: Subject edit</title>
 </head>
 
 <body>
@@ -95,7 +95,6 @@
           <span th:text="#{subject.page.show.title}" >Manage a subject</span>
           <span>"
             <span th:text="${subject.title}">Titre sujet</span>
-            <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
             "
           </span>
         </div>
@@ -125,7 +124,6 @@
           <span th:text="#{subject.shared.title}">Reading a shared subject</span>
           <span> "
             <span th:text="${subject.title}">Titre sujet</span>
-            <span th:if="${subject.course != ''}" th:text="|- ${subject.course}|">Course title</span>
             "
           </span>
           <br/>

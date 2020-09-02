@@ -48,6 +48,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.cache.support.NullValue
+import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
 import java.math.BigDecimal
@@ -62,6 +63,7 @@ import kotlin.collections.ArrayList
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@Profile("test")
 internal class AssignmentServiceIntegrationTest(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val testingService: TestingService,

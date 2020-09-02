@@ -111,7 +111,6 @@ internal class SubjectControllerTest(
         val subjectData = SubjectController.SubjectData(
                 id = subjectId,
                 title = title,
-                course = "",
                 owner = user
         )
 

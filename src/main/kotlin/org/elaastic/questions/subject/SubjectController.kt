@@ -107,7 +107,7 @@ class SubjectController(
                 PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         ).let {
             model.addAttribute("subjects",it.content)
-            var firstSubject = Subject("NoSubject","",user)
+            var firstSubject = Subject("NoSubject", user)
             if (it.content.size != 0)
                 firstSubject = it.content.get(0)
             model.addAttribute("firstSubject",firstSubject)
@@ -430,14 +430,12 @@ class SubjectController(
             var id: Long? = null,
             var version: Long? = null,
             @field:NotBlank var title: String? = null,
-            var course: String? = null,
             @field:NotNull var owner: User? = null
     ) {
         fun toEntity(): Subject {
             return Subject(
                     title = title!!,
-                    owner = owner!!,
-                    course = course!!
+                    owner = owner!!
             ).let {
                 it.id = id
                 it.version = version

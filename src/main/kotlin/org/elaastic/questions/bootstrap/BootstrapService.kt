@@ -24,6 +24,7 @@ import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.lti.*
+import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -34,7 +35,8 @@ import javax.transaction.Transactional
 class BootstrapService(
         @Autowired val userService: UserService,
         @Autowired val roleService: RoleService,
-        @Autowired val ltiConsumerRepository: LtiConsumerRepository
+        @Autowired val ltiConsumerRepository: LtiConsumerRepository,
+        @Autowired val subjectService: SubjectService
 ) {
 
     var mailServer: GreenMail? = null
@@ -122,5 +124,8 @@ class BootstrapService(
 
     }
 
+    fun migrateTowardVersion400() {
+        subjectService.migrateAssignmentsTowardSubjects()
+    }
 
 }

@@ -20,21 +20,14 @@ package org.elaastic.questions.subject.statement
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.assignment.choice.*
-import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceController
-import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.StatementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
@@ -44,13 +37,9 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import java.lang.IllegalStateException
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
-import javax.validation.constraints.Max
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 
 @Controller
 @RequestMapping("/subject/{subjectId}/statement")
@@ -144,14 +133,13 @@ class StatementController(
 
     private fun isStatementUsed(statement: Statement): Boolean{
         val subject: Subject = statement.subject!!
-        var isUsed: Boolean = false
         for (assignment: Assignment in subject.assignments){
             for (sequence: Sequence in assignment.sequences){
                 if (sequence.statement == statement)
-                    isUsed = true
+                    return true
             }
         }
-        return isUsed
+        return false
     }
 
     private fun attachedFileIfAny(fileToAttached: MultipartFile, it: Statement) {
@@ -233,8 +221,7 @@ class StatementController(
         val user: User = authentication.principal as User
         val newSubject = subjectService.get(user, newSubjectId, false)
         var statement = statementService.get(user,id)
-        statement = statementService.import(statement, newSubject)
-        subjectService.addStatement(newSubject, statement)
+        statement = subjectService.importStatementInSubject(statement, newSubject)
 
         with(messageBuilder) {
             success(
