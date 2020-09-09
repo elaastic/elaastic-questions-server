@@ -124,7 +124,6 @@ class StatementService(
                     FakeExplanationData(fakeExplanation.correspondingItem, fakeExplanation.content)
             )
         }
-        duplicatedStatement.version = 0L
         return statementRepository.save(duplicatedStatement)
     }
 

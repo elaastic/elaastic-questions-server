@@ -23,7 +23,6 @@ import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.bootstrap.Bootstrap
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -344,8 +343,11 @@ class SubjectService (
         return subjectRepository.countAllByParentSubject(user, parentSubject) > 0
     }
 
-    fun importStatementInSubject (statement: Statement, subject: Subject): Statement {
+    fun importStatementInSubject (statement: Statement, subject: Subject, titleSuffixIfCopyInSameSubject: String = " (Copy)"): Statement {
         var duplicatedStatement = statementService.duplicate(statement)
+        if (subject == statement.subject ) {
+            duplicatedStatement.title += titleSuffixIfCopyInSameSubject
+        }
         duplicatedStatement.owner = subject.owner
         return addStatement(subject,duplicatedStatement)
     }

@@ -26,6 +26,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.questions.subject.statement.StatementController
 import org.elaastic.questions.subject.statement.StatementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -152,13 +153,13 @@ class SubjectController(
 
     @PostMapping("{subjectId}/addStatement")
     fun addStatement(authentication: Authentication,
-             @RequestParam("fileToAttached") fileToAttached: MultipartFile,
-             @Valid @ModelAttribute statementData: SequenceController.StatementData,
-             result: BindingResult,
-             model: Model,
-             @PathVariable subjectId: Long,
-             response: HttpServletResponse,
-             redirectAttributes: RedirectAttributes): String {
+                     @RequestParam("fileToAttached") fileToAttached: MultipartFile,
+                     @Valid @ModelAttribute statementData: StatementController.StatementData,
+                     result: BindingResult,
+                     model: Model,
+                     @PathVariable subjectId: Long,
+                     response: HttpServletResponse,
+                     redirectAttributes: RedirectAttributes): String {
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, subjectId, fetchStatementsAndAssignments = true)
@@ -204,7 +205,7 @@ class SubjectController(
         model.addAttribute("nbStatement",subject.statements.size)
         model.addAttribute(
                 "statementData",
-                SequenceController.StatementData(
+                StatementController.StatementData(
                         Statement.createDefaultStatement(user)
                 )
         )

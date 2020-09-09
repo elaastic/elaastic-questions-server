@@ -18,13 +18,13 @@
 
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.questions.subject.statement.StatementController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -207,8 +207,8 @@ class AssignmentController(
         model.addAttribute("assignment", assignment)
         model.addAttribute("nbSequence", nbSequence)
         model.addAttribute(
-                "statementData",            
-                SequenceController.StatementData(
+                "statementData",
+                StatementController.StatementData(
                         Statement.createDefaultStatement(user)
                 )
         )

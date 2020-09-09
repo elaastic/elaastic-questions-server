@@ -20,8 +20,12 @@ package org.elaastic.questions.subject.statement
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.assignment.choice.*
+import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceController
+import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
@@ -37,9 +41,13 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.lang.IllegalStateException
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
+import javax.validation.constraints.Max
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 @Controller
 @RequestMapping("/subject/{subjectId}/statement")
@@ -62,7 +70,7 @@ class StatementController(
         val statementBase = statementService.get(user, id)
         val subject = statementBase.subject!!
         val fakeExplanations = fakeExplanationService.findAllByStatement(statementBase)
-        val statement = SequenceController.StatementData(statementBase, fakeExplanations)
+        val statement = StatementData(statementBase, fakeExplanations)
 
         model.addAttribute("user", user)
         model.addAttribute("subject", subject)
@@ -75,7 +83,7 @@ class StatementController(
     @PostMapping("{id}/update")
     fun update(authentication: Authentication,
                @RequestParam("fileToAttached") fileToAttached: MultipartFile,
-               @Valid @ModelAttribute statementData: SequenceController.StatementData,
+               @Valid @ModelAttribute statementData: StatementData,
                result: BindingResult,
                model: Model,
                @PathVariable subjectId: Long,
@@ -98,7 +106,7 @@ class StatementController(
         } else {
             // if there is a sequence with results that uses the statement
             if (isStatementUsed(statementBase)) {
-                newStatement = statementService.duplicate(statementBase)
+                newStatement = subjectService.importStatementInSubject(statementBase, statementBase.subject!!)
             }
 
             newStatement.let {
@@ -238,5 +246,95 @@ class StatementController(
 
         redirectAttributes.addAttribute("activeTab", "questions");
         return "redirect:/subject/$subjectId"
+    }
+
+    // Note JT : would be nicer if we receive only the relevant data depending on QuestionType
+    // Moreover, the gap between the view model and the entities representation is too important
+    // The code below could be widely simplified by refactoring the view to use the same model as the backend
+    data class StatementData(
+            var id: Long? = null,
+            var version: Long? = null,
+            @field:NotBlank val title: String? = null,
+            @field:NotBlank val content: String? = null,
+            val attachment: Attachment? = null,
+            val hasChoices: Boolean = true,
+            val choiceInteractionType: ChoiceType? = null,
+            @field:NotNull @field:Max(10) val itemCount: Int? = null,
+            @field:NotNull var exclusiveChoice: Int = 1,
+            @field:NotNull var expectedChoiceList: List<Int> = listOf(1),
+            var returnOnSubject: Boolean = false,
+            var expectedExplanation: String?,
+            var fakeExplanations: List<FakeExplanationData> = ArrayList()
+    ) {
+        constructor(statement: Statement) : this(
+                id = statement.id,
+                version = statement.version,
+                title = statement.title,
+                content = statement.content,
+                hasChoices = statement.questionType != QuestionType.OpenEnded,
+                choiceInteractionType = statement.choiceSpecification?.getChoiceType(),
+                itemCount = statement.choiceSpecification?.nbCandidateItem ?: 2,
+                expectedChoiceList = listOf(1),
+                exclusiveChoice = 1,
+                expectedExplanation = statement.expectedExplanation,
+                fakeExplanations = ArrayList(),
+                attachment = statement.attachment
+
+        ) {
+            val choiceSpecification: ChoiceSpecification? = statement.choiceSpecification
+            when (choiceSpecification) {
+                is ExclusiveChoiceSpecification -> exclusiveChoice = choiceSpecification.expectedChoice.index
+                is MultipleChoiceSpecification -> expectedChoiceList = choiceSpecification.expectedChoiceList.map { it.index }
+            }
+        }
+
+        constructor(statement: Statement, fakeExplanations: List<FakeExplanation>) : this(statement) {
+            this.fakeExplanations = fakeExplanations.map { FakeExplanationData(it) }
+        }
+
+        fun toEntity(user: User): Statement {
+            val questionType: QuestionType =
+                    if (hasChoices) {
+                        when (choiceInteractionType) {
+                            ChoiceType.EXCLUSIVE -> QuestionType.ExclusiveChoice
+                            ChoiceType.MULTIPLE -> QuestionType.MultipleChoice
+                            null -> throw IllegalStateException("No choiceInteractionType defined")
+                        }
+                    } else QuestionType.OpenEnded
+
+            val choiceSpecification: ChoiceSpecification? =
+                    if (hasChoices) {
+                        when (choiceInteractionType) {
+                            null -> null
+
+                            ChoiceType.MULTIPLE -> MultipleChoiceSpecification(
+                                    itemCount!!,
+                                    expectedChoiceList.map { n ->
+                                        ChoiceItem(n, 100f / expectedChoiceList.size)
+                                    },
+                                    listOf()
+                            )
+
+                            ChoiceType.EXCLUSIVE -> ExclusiveChoiceSpecification(
+                                    itemCount!!,
+                                    ChoiceItem(exclusiveChoice, 100f)
+                            )
+                        }
+                    } else null
+
+
+            val statement = Statement(
+                    owner = user,
+                    title = title!!,
+                    content = content!!,
+                    questionType = questionType,
+                    choiceSpecification = choiceSpecification,
+                    expectedExplanation = expectedExplanation
+            )
+            statement.id = id
+            statement.version = version
+
+            return statement
+        }
     }
 }
