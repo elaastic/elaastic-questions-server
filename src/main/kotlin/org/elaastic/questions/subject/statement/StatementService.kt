@@ -23,6 +23,7 @@ import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
+import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,6 +34,7 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class StatementService(
+        @Autowired val attachmentService: AttachmentService,
         @Autowired val statementRepository: StatementRepository,
         @Autowired val fakeExplanationRepository: FakeExplanationRepository
 ) {
@@ -109,7 +111,11 @@ class StatementService(
                         statement.expectedExplanation,
                         statement.subject
                 )
-        duplicatedStatement.attachment = statement.attachment
+        statement.attachment?.let { attachment ->
+            attachmentService.duplicateAttachment(attachment).let { duplicatedAttachment ->
+                attachmentService.addStatementToAttachment(duplicatedStatement, duplicatedAttachment)
+            }
+        }
         duplicatedStatement.rank = statement.rank
         duplicatedStatement = save(duplicatedStatement)
         for (fakeExplanation: FakeExplanation in findAllFakeExplanationsForStatement(statement)){
