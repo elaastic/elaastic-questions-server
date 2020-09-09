@@ -117,35 +117,6 @@ class AssignmentService(
         return sequence
     }
 
-    fun deleteStatementIfNotUsed(statement: Statement, assignment: Assignment): ArrayList<Long> {
-        var idsList: ArrayList<Long> = ArrayList()
-        var stillUsed = statement.subject != null
-        val assignmentLoaded = get(assignment.owner, assignment.id!!, true )
-        for (sequence: Sequence in assignmentLoaded.sequences) {
-            if (statement == sequence.statement) {
-                if (sequence.isNotStarted()){
-                    idsList.add(sequence.id!!)
-                }
-                else {
-                    if (!sequence.interactions.isEmpty())
-                        if (responseService.findAll(sequence).isEmpty())
-                            idsList.add(sequence.id!!)
-                        else
-                            stillUsed = true
-                }
-            }
-        }
-        if (statement.attachment != null){
-            stillUsed = true
-        }
-        if (!stillUsed) {
-            statementService.delete(statement) // all other linked entities are deletes by DB cascade
-            entityManager.flush()
-            entityManager.clear()
-        }
-        return idsList
-    }
-
     fun removeSequence(user: User, sequence: Sequence) {
         require(user == sequence.owner) {
             "Only the owner can delete a sequence"
@@ -153,8 +124,6 @@ class AssignmentService(
         val assignment = sequence.assignment!!
         touch(assignment)
         assignment.sequences.remove(sequence)
-        entityManager.flush()
-        deleteStatementIfNotUsed(sequence.statement, assignment)
         sequenceRepository.delete(sequence) // all other linked entities are deletes by DB cascade
         entityManager.flush()
         entityManager.clear()

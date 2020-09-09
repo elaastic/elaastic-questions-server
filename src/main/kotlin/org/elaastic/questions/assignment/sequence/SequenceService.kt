@@ -266,6 +266,10 @@ class SequenceService(
         return sequenceRepository.findAllByStatementAndStateNot(statement, State.afterStop)
     }
 
+    fun findAllSequencesByStatement(statement: Statement): List<Sequence> {
+        return sequenceRepository.findAllByStatement(statement)
+    }
+
     fun save(sequence: Sequence) {
         sequenceRepository.save(sequence)
     }

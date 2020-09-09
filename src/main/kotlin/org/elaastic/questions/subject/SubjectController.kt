@@ -20,7 +20,6 @@ package org.elaastic.questions.subject
 
 import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
@@ -187,7 +186,7 @@ class SubjectController(
         if (!fileToAttached.isEmpty) {
             attachmentService.saveStatementAttachment(
                     it,
-                    SequenceController.createAttachment(fileToAttached),
+                    StatementController.createAttachment(fileToAttached),
                     fileToAttached.inputStream)
         }
     }

@@ -32,4 +32,6 @@ interface SequenceRepository : JpaRepository<Sequence, Long> {
     fun countAllByAssignment(assignment: Assignment) : Int
 
     fun findAllByStatementAndStateNot(statement: Statement, state:State) : List<Sequence>
+
+    fun findAllByStatement(statement: Statement) : List<Sequence>
 }

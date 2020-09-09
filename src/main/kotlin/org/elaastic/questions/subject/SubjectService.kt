@@ -136,36 +136,31 @@ class SubjectService (
     }
 
     fun removeStatement(user: User, statement: Statement) {
+        removeStatementFromSubject(user, statement)
+        deleteStatementIfNotUsed(statement)
+    }
+
+    fun removeStatementFromSubject(user: User, statement: Statement) {
         require(user == statement.owner) {
             "Only the owner can delete a statement"
         }
         val subject = statement.subject!!
         touch(subject)
         subject.statements.remove(statement)
+        statement.subject = null
+        statementService.save(statement)
         entityManager.flush()
-        deleteStatementIfNotUsed(statement, subject)
         updateAllStatementRank(subject)
     }
 
-    // TODO DOLL : something wrong in this method : why saving a statement after it could be removed ??
-    private fun deleteStatementIfNotUsed(statement: Statement, subject: Subject) {
-        var idsList: ArrayList<Long> = ArrayList()
-        if (subject.assignments.isEmpty()) {
-            statementService.delete(statement)
-            entityManager.flush()
-            entityManager.clear()
-        } else {
-            for (assignment: Assignment in subject.assignments) {
-                idsList = assignmentService.deleteStatementIfNotUsed(statement, assignment)
-                for (id:Long in idsList){
-                    sequenceService.loadInteractions(sequenceService.get(id))
-                    assignmentService.removeSequence(subject.owner, sequenceService.get(id))
-                }
+    private fun deleteStatementIfNotUsed(statement: Statement) {
+        val statementAlreadyUsed = statementService.responsesExistForStatement(statement)
+        if (!statementAlreadyUsed) {
+            sequenceService.findAllSequencesByStatement(statement).forEach {
+                assignmentService.removeSequence(statement.owner, it)
             }
-            statement.subject = null
-            statementService.save(statement)
+            statementService.delete(statement)
         }
-
     }
 
     fun moveUpStatement(subject: Subject, statementId: Long) {

@@ -18,19 +18,15 @@
 
 package org.elaastic.questions.subject.statement
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.SequenceController
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.*
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -129,7 +125,7 @@ class StatementController(
 
             if (statementAlreadyUsed) {
                 statementService.assignStatementToSequences(newStatement)
-                subjectService.removeStatement(user, statementBase)
+                subjectService.removeStatementFromSubject(user, statementBase)
             }
 
             return if (statementData.returnOnSubject) {
@@ -145,7 +141,7 @@ class StatementController(
         if (!fileToAttached.isEmpty) {
             attachmentService.saveStatementAttachment(
                     it,
-                    SequenceController.createAttachment(fileToAttached),
+                    createAttachment(fileToAttached),
                     fileToAttached.inputStream)
         }
     }
@@ -326,5 +322,18 @@ class StatementController(
 
             return statement
         }
+    }
+
+    companion object {
+
+        fun createAttachment(file: MultipartFile): Attachment {
+            return Attachment(
+                    name = file.name,
+                    size = file.size,
+                    originalFileName = file.originalFilename,
+                    mimeType = if (file.contentType.isNullOrBlank()) MimeType() else MimeType(file.contentType!!)
+            )
+        }
+
     }
 }
