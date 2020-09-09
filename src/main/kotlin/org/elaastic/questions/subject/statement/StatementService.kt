@@ -79,8 +79,8 @@ class StatementService(
 
     fun updateFakeExplanationList(statement: Statement,
                                   fakeExplanationDataList: List<FakeExplanationData>) {
+        removeAllFakeExplanation(statement)
         if(fakeExplanationDataList.isNotEmpty()) {
-            removeAllFakeExplanation(statement)
             fakeExplanationDataList.forEach {
                 addFakeExplanation(statement, it)
             }

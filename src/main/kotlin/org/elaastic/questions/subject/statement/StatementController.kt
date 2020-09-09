@@ -97,8 +97,9 @@ class StatementController(
             "/subject/statement/edit"
         } else {
             // if there is a sequence with results that uses the statement
-            if (isStatementUsed(statementBase))
+            if (isStatementUsed(statementBase)) {
                 newStatement = statementService.duplicate(statementBase)
+            }
 
             newStatement.let {
                 newStatement.updateFrom(statementData.toEntity(user))
