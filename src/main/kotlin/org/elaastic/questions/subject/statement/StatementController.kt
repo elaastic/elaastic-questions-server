@@ -104,8 +104,9 @@ class StatementController(
             model.addAttribute("rank",statementBase.rank)
             "/subject/statement/edit"
         } else {
-            // if there is a sequence with results that uses the statement
-            if (isStatementUsed(statementBase)) {
+            // if there are responses for this statement
+            val statementAlreadyUsed = statementService.responsesExistForStatement(statementBase)
+            if (statementAlreadyUsed) {
                 newStatement = subjectService.importStatementInSubject(statementBase, statementBase.subject!!)
             }
 
@@ -126,9 +127,9 @@ class StatementController(
                 )
             }
 
-            if (isStatementUsed(statementBase)) {
+            if (statementAlreadyUsed) {
                 statementService.assignStatementToSequences(newStatement)
-                subjectService.removeStatement(statementBase.owner, statementBase)
+                subjectService.removeStatement(user, statementBase)
             }
 
             return if (statementData.returnOnSubject) {
@@ -138,17 +139,6 @@ class StatementController(
                 "redirect:/subject/$subjectId/statement/$id/edit"
             }
         }
-    }
-
-    private fun isStatementUsed(statement: Statement): Boolean{
-        val subject: Subject = statement.subject!!
-        for (assignment: Assignment in subject.assignments){
-            for (sequence: Sequence in assignment.sequences){
-                if (sequence.statement == statement)
-                    return true
-            }
-        }
-        return false
     }
 
     private fun attachedFileIfAny(fileToAttached: MultipartFile, it: Statement) {

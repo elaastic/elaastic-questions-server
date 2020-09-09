@@ -21,6 +21,7 @@ package org.elaastic.questions.assignment.sequence.interaction.response
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.jpa.repository.JpaRepository
 
 
@@ -42,4 +43,6 @@ interface ResponseRepository : JpaRepository<Response, Long> {
 
     fun countByInteractionAndAttemptAndFakeIsFalse(interaction: Interaction,
                                                    attempt: AttemptNum): Int
+
+    fun countByStatement(statement: Statement): Int
 }

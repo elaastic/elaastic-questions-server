@@ -23,6 +23,7 @@ import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
@@ -36,6 +37,7 @@ import javax.transaction.Transactional
 class StatementService(
         @Autowired val attachmentService: AttachmentService,
         @Autowired val statementRepository: StatementRepository,
+        @Autowired val responseRepository: ResponseRepository,
         @Autowired val fakeExplanationRepository: FakeExplanationRepository
 ) {
     fun get(user: User, id: Long): Statement {
@@ -117,6 +119,7 @@ class StatementService(
             }
         }
         duplicatedStatement.rank = statement.rank
+        duplicatedStatement.parentStatement = statement
         duplicatedStatement = save(duplicatedStatement)
         for (fakeExplanation: FakeExplanation in findAllFakeExplanationsForStatement(statement)){
             addFakeExplanation(
@@ -137,5 +140,7 @@ class StatementService(
         }
     }
 
+    fun responsesExistForStatement(statement: Statement) =
+            responseRepository.countByStatement(statement) > 0
 
 }
