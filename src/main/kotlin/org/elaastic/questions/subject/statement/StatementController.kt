@@ -107,7 +107,7 @@ class StatementController(
             // if there are responses for this statement
             val statementAlreadyUsed = statementService.responsesExistForStatement(statementBase)
             if (statementAlreadyUsed) {
-                newStatement = subjectService.importStatementInSubject(statementBase, statementBase.subject!!)
+                newStatement = subjectService.newVersionOfStatementInSubject(statementBase)
             }
 
             newStatement.let {

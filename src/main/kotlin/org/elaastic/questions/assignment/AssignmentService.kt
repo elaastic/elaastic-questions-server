@@ -107,7 +107,7 @@ class AssignmentService(
         val sequence = Sequence(
                 owner = assignment.owner,
                 statement = statement,
-                rank = (assignment.sequences.map { it.rank }.max() ?: 0) + 1
+                rank = statement.rank
         )
 
         assignment.addSequence(sequence)
@@ -144,14 +144,6 @@ class AssignmentService(
             entityManager.clear()
         }
         return idsList
-    }
-
-    fun addSequenceForStatementIfNotInAssignment(statement: Statement, assignment: Assignment) {
-        var toAdd:Boolean = true
-        for (sequence:Sequence in assignment.sequences){
-            if (statement == sequence.statement) toAdd = false
-        }
-        if (toAdd) addSequence(assignment, statement)
     }
 
     fun removeSequence(user: User, sequence: Sequence) {

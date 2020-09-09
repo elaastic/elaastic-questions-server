@@ -103,14 +103,14 @@ class SubjectService (
         statement.rank = (subject.statements.map { it.rank }.max() ?: 0) + 1
         statementService.save(statement)
         subject.statements.add(statement)
-        addCorrespondingSequenceIfNotInAssignment(statement, subject);
+        addCorrespondingSequenceInAssignments(statement, subject);
         touch(subject)
         return statement
     }
 
-    private fun addCorrespondingSequenceIfNotInAssignment(statement: Statement, subject: Subject) {
-        for (assignment:Assignment in subject.assignments){
-            assignmentService.addSequenceForStatementIfNotInAssignment(statement, assignment)
+    private fun addCorrespondingSequenceInAssignments(statement: Statement, subject: Subject) {
+        subject.assignments.forEach {
+            assignmentService.addSequence(it, statement)
         }
     }
 
@@ -350,6 +350,16 @@ class SubjectService (
         }
         duplicatedStatement.owner = subject.owner
         return addStatement(subject,duplicatedStatement)
+    }
+
+    fun newVersionOfStatementInSubject (statement: Statement): Statement {
+        var duplicatedStatement = statementService.duplicate(statement)
+        // update sequences with new statement
+        sequenceService.findAllNotTerminatedSequencesByStatement(statement).forEach {
+            it.statement = duplicatedStatement
+            sequenceService.save(it)
+        }
+        return duplicatedStatement
     }
 
     fun migrateAssignmentsTowardSubjects() {

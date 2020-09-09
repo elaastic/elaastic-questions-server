@@ -33,6 +33,7 @@ import org.elaastic.questions.assignment.sequence.interaction.specification.Resp
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.steps.SequenceStatistics
+import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
@@ -260,5 +261,13 @@ class SequenceService(
             if(sequence.isNotStarted()) 0 else responseService.count(sequence, 2), // TODO should only compute this data if phase2 open or done
             if(sequence.isNotStarted()) 0 else peerGradingService.countEvaluations(sequence) // TODO should only compute this data if phase2 open or done
     )
+
+    fun findAllNotTerminatedSequencesByStatement(statement: Statement): List<Sequence> {
+        return sequenceRepository.findAllByStatementAndStateNot(statement, State.afterStop)
+    }
+
+    fun save(sequence: Sequence) {
+        sequenceRepository.save(sequence)
+    }
 
 }

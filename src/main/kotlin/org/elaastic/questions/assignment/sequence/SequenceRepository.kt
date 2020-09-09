@@ -19,6 +19,7 @@
 package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 
@@ -29,4 +30,6 @@ interface SequenceRepository : JpaRepository<Sequence, Long> {
     fun findOneById(id: Long) : Sequence?
 
     fun countAllByAssignment(assignment: Assignment) : Int
+
+    fun findAllByStatementAndStateNot(statement: Statement, state:State) : List<Sequence>
 }
