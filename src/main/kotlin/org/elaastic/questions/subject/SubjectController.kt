@@ -86,7 +86,7 @@ class SubjectController(
 
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(authentication: Authentication, model: Model, @PathVariable id: Long,
-             @RequestParam ("activeTab") activeTab: String,
+             @RequestParam ("activeTab", defaultValue = "questions") activeTab: String,
              @RequestParam("page") page: Int?,
              @RequestParam("size") size: Int?): String {
         val user: User = authentication.principal as User
