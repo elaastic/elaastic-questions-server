@@ -93,7 +93,10 @@
          data-tooltip="Shared subjects"
          data-position="right center"
          data-inverted="">
-        <i class="users icon"></i>
+        <i class="stacked icons">
+          <i class="large users icon"></i>
+          <i class="black bottom left attached book icon"></i>
+        </i>
       </a>
 
       <a sec:authorize="hasAnyAuthority('STUDENT_ROLE', 'ADMIN_ROLE')"

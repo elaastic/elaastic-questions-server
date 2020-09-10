@@ -88,6 +88,20 @@
         <i class="book icon"></i>
       </a>
 
+      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+         th:href="@{/subject/shared_index}"
+         href="/subject/shared_index"
+         class="item"
+         th:attr="data-tooltip=#{subject.shared.my.list.label}"
+         data-tooltip="Shared subjects"
+         data-position="right center"
+         data-inverted="">
+        <i class="stacked icons">
+          <i class="large users icon"></i>
+          <i class="black bottom left attached book icon"></i>
+        </i>
+      </a>
+
       <a sec:authorize="hasAnyAuthority('STUDENT_ROLE', 'ADMIN_ROLE')"
          th:href="@{/player}"
          href="/player"

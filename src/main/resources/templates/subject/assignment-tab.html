@@ -31,7 +31,7 @@
 
     <section th:if="${subject.owner == user}">
         <div class="ui segment bottom attached" th:if="${subject.assignments.isEmpty()}">
-            <p style="margin-left : 1em;" th:text="#{subject.assignment.empty}">
+            <p class="ui info message" th:text="#{subject.assignment.empty}">
                 There is no assignment.
             </p>
         </div>
@@ -75,7 +75,7 @@
                         }
                     </style>
                     <div class="ui row">
-                        <span class="ui column" th:if="${#lists.isEmpty(assignment.sequences)}" th:text="#{assignment.empty}">No sequences</span>
+                        <span class="ui tiny warning compact message" th:if="${#lists.isEmpty(assignment.sequences)}" th:text="#{assignment.empty}">No sequences</span>
                     </div>
                     <div class="ui row" >
                         <span class="ui column" th:if="${assignment.audience != 'na'}"
