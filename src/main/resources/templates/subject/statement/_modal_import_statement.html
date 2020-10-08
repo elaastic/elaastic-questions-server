@@ -100,6 +100,7 @@
 
             let title = $('#statement-title-' + statementId).text()
             let sentenceTemplate = /*[[#{subject.import.statement.label}]]*/ ''
+            let elaasticQuestionsUrl = /*[[${@environment.getProperty('elaastic.questions.url')}]]*/ ''
             let sentence = sentenceTemplate.replace('{0}', title)
 
             $('#statement-selected').text(sentence)
@@ -107,7 +108,7 @@
             let confirmImportStatementModal = $('#confirm-import-statement-modal')
             confirmImportStatementModal.modal({
                 onApprove: function () {
-                    var link ="/subject/" + subjectId + "/statement/" + statementId + "/import/"+ subjectChosen;
+                    var link = elaasticQuestionsUrl + "subject/" + subjectId + "/statement/" + statementId + "/import/"+ subjectChosen;
                     window.location = link;
                 }
             })
