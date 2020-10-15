@@ -36,7 +36,7 @@
         th:object="${assignment}"
         th:classappend="${#fields.hasErrors('*')}? 'error'"
         method="POST"
-        th:action="@{/subject/} + ${assignment.subject.id} + @{/addAssignment}">
+        th:action="@{/subject/{subjectId}/addAssignment(subjectId=${assignment.subject.id})}">
 
     <div th:replace="layout/components/form-messages :: formMessages('')"></div>
 
