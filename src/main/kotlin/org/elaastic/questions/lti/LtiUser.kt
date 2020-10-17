@@ -25,6 +25,6 @@ data class LtiUser(
         val lmsUserId: String,
         val firstName: String,
         val lastName: String,
-        val email: String,
+        val email: String? = null,
         val role: Role
 )

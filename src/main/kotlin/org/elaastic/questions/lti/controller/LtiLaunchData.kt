@@ -30,14 +30,14 @@ class LtiLaunchData(
         val user_id: String,
 
         val roles: String,
-        val lis_person_name_given: String,
-        val lis_person_name_family: String,
+        val lis_person_name_given: String? = null,
+        val lis_person_name_family: String? = null,
 
-        val lis_person_contact_email_primary: String,
+        val lis_person_contact_email_primary: String? = null,
         val context_id: String,
         val context_title: String,
         val resource_link_id: String,
-        val resource_link_title: String,
+        val resource_link_title: String = "Elaastic questions",
         val custom_assignmentid: String? = null,
         val lis_person_sourcedid: String? = null,
         val lis_person_name_full: String? = null,
@@ -83,8 +83,8 @@ class LtiLaunchData(
         return LtiUser(
                 lmsKey = oauth_consumer_key,
                 lmsUserId = user_id,
-                firstName = lis_person_name_given,
-                lastName = lis_person_name_family,
+                firstName = lis_person_name_given ?: "User",
+                lastName = lis_person_name_family ?: user_id,
                 email = lis_person_contact_email_primary,
                 role = getRole()
         )

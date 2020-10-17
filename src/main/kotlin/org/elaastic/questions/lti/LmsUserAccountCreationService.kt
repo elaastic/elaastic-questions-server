@@ -118,6 +118,9 @@ class LmsUserAccountCreationService(
         ).let {
             it.addRole(ltiUser.role)
         }.let {
+            if (it.email == null) {
+                it.owner = userService.getDefaultAdminUser()
+            }
             userService.addUser(
                     it,
                     "fr",

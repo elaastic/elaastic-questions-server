@@ -81,8 +81,8 @@ class LtiController(
             } else {
                 setLtiLaunchDataInSession(ltiLaunchData, session)
                 model.addAttribute("termsContent", termsService.getTermsContentByLanguage(locale.language))
-                model.addAttribute("firstName", ltiLaunchData.lis_person_name_given)
-                model.addAttribute("lastName", ltiLaunchData.lis_person_name_family)
+                model.addAttribute("firstName", ltiLaunchData.lis_person_name_given ?: "User")
+                model.addAttribute("lastName", ltiLaunchData.lis_person_name_family ?: ltiLaunchData.user_id)
                 "/terms/lti_terms_consent_form"
             }
         } catch (e: Exception) {

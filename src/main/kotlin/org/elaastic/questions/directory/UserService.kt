@@ -89,6 +89,16 @@ class UserService(
     }
 
     /**
+     * Get the default admin user
+     * @return the default admin user
+     */
+    fun getDefaultAdminUser(): User {
+        val user = findByUsername("admin")!!
+        assert(user.isAdmin())
+        return user
+    }
+
+    /**
      *  Find users by email
      *  @param email the email provided as input
      *  @return the found users
