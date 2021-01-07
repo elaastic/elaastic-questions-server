@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.io.FileReader
 import java.io.FileWriter
 import java.io.IOException
+import java.nio.charset.Charset
 import java.util.logging.Logger
 import javax.transaction.Transactional
 
@@ -41,7 +42,7 @@ internal class LtiConsumerServiceIntegrationTest(
     @Test
     fun generateLtiConsumerListFromCSVFile() {
         // given an input stream reader on a CSV file
-        val fileReader = FileReader("src/test/resources/lti-samples.csv")
+        val fileReader = FileReader("src/test/resources/lti-samples.csv", Charset.forName("UTF-8"))
         // and a suffix
         val suffix = ".elaastic.org"
         // when we trigger the list generation with a suffix
@@ -63,7 +64,7 @@ internal class LtiConsumerServiceIntegrationTest(
     @Test
     fun generateLtiConsumerListFromCSVFileWithExistingLtiConsumer() {
         // given an input stream reader on a CSV file
-        val fileReader = FileReader("src/test/resources/lti-samples.csv")
+        val fileReader = FileReader("src/test/resources/lti-samples.csv", Charset.forName("UTF-8"))
         // and a lti consumer already saved
         LtiConsumer("LP Simon LAZARD", "already saved secret", "0570100Z.elaastic.org" ).let {
             ltiConsumerRepository.save(it)
