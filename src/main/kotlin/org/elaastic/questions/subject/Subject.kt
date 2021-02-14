@@ -19,6 +19,7 @@
 package org.elaastic.questions.subject
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.statement.Statement
@@ -57,7 +58,10 @@ class Subject (
         var owner: User,
 
         @field:ManyToOne(fetch = FetchType.LAZY)
-        var parentSubject: Subject? = null
+        var parentSubject: Subject? = null,
+
+        @field:ManyToOne(fetch = FetchType.LAZY)
+        var course: Course? = null
 
 ): AbstractJpaPersistable<Long>() {
 

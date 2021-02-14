@@ -1,0 +1,139 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My Courses</title> -->
+</head>
+
+<body>
+<!--
+<aside id="pageSpecificMenu">
+    <a th:href="@{/course/create}"
+       href="create"
+       class="item"
+       th:attr="data-tooltip=#{course.create.label}"
+       data-tooltip="Create a course"
+       data-position="right center"
+       data-inverted="">
+        <i class="yellow plus square outline icon"></i>
+    </a>
+</aside>
+-->
+
+<section>
+    <!--
+    <h2 class="ui header">
+        <i class="book icon"></i>
+
+        <div class="content">
+            <span th:text="#{course.my.list.label}">My Subjects</span>
+            <div class="sub header" th:text="#{course.my.list.description}">
+                This page lists all of your courses
+            </div>
+        </div>
+    </h2>
+
+    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+        Message
+    </div>
+    -->
+
+    <!--
+    <table th:if="${not #lists.isEmpty(course.content)}"
+           class="ui single selectable line unstackable table">
+        <thead>
+        <tr>
+            <th th:text="#{common.title}">
+                Title
+            </th>
+            <th class="not mobile" th:text="#{common.lastUpdate}">
+                Last update
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="course, i : ${course.content}">
+            <td>
+
+                <a th:href="@{/course/{id}(id=${course.id}, activeTab='questions')}"
+                   href="course/123"
+                   th:attr="data-tooltip=#{course.action.show.label}"
+                   data-tooltip="Modify course"
+                   data-inverted=""
+                   th:text="${subjecoursect.title}">
+                   Course title
+                </a>
+
+                &nbsp; [
+                <a th:href="@{/course/{id}(id=${course.id}, activeTab='questions')}"
+                   href="course/123"
+                   th:attr="data-tooltip=#{course.action.show.label}"
+                   data-tooltip="Modify course"
+                   data-inverted="">
+                    <i class="edit outline icon" style="margin: 0;"></i>
+                </a>
+                ]
+            </td>
+
+            <td class="not mobile" th:text="${#dates.format(course.lastUpdated, 'dd/MM/yyyy HH:mm')}">
+                25/07/2019
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+    -->
+
+    <!--
+    <div th:if="${#lists.isEmpty(course.content)}"
+         class="ui info message" th:text="#{course.you.have.none}">
+        You have no courses.
+    </div>
+    -->
+
+    <!--
+    <div class="ui two column stackable grid">
+        <div class="column">
+            <div class="ui basic segment">
+                <a th:href="@{/course/create}"
+                   href="create"
+                   class="ui primary button">
+                    <i class="add icon"></i>
+                    <span th:text="#{course.create.label}">
+        Create a course
+      </span>
+                </a>
+            </div>
+        </div>
+        <div class="column">
+            <div th:replace="layout/components/paginate :: paginate(baseUrl='/course/index')"></div>
+        </div>
+
+    </div>
+    -->
+
+    <div class="ui hidden divider"></div>
+</section>
+
+</body>
+</html>
