@@ -1,18 +1,36 @@
+/*
+* Elaastic - formative assessment system
+* Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as
+* published by the Free Software Foundation, either version 3 of the
+* License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 package org.elaastic.questions.course;
 
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectController
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional;
@@ -26,6 +44,29 @@ import javax.validation.constraints.NotNull
 class CourseController(
         @Autowired val courseService: CourseService
 ) {
+
+    @GetMapping(value = ["", "/", "/index"])
+    fun index(authentication: Authentication,
+              model: Model,
+              @RequestParam("page") page: Int?,
+              @RequestParam("size") size: Int?): String {
+
+        val user : User = authentication.principal as User
+
+        courseService.findAllByOwner(user, PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
+                .let {
+                    model.addAttribute("user", user)
+                    model.addAttribute("coursePage", it)
+                    model.addAttribute("pagination",
+                            PaginationUtil.buildInfo(
+                                    it.totalPages,
+                                    page,
+                                    size
+                            )
+                    )
+                }
+        return "/course/index"
+    }
 
 
     @GetMapping("create")

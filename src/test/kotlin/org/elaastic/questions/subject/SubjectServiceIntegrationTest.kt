@@ -526,7 +526,7 @@ internal class SubjectServiceIntegrationTest(
 
     }
 
-        private fun createTestingData(owner: User, n: Int = 10) {
+    private fun createTestingData(owner: User, n: Int = 10) {
         (1..n).forEach {
             subjectService.save(
                     Subject(

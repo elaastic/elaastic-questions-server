@@ -11,6 +11,6 @@ interface CourseRepository : JpaRepository<Course?, Long> {
 
     fun findOneById(id: Long): Course
 
-    fun findByGlobalId(id: Long): Course
+    fun findByGlobalId(globalId: String): Course
 
 }

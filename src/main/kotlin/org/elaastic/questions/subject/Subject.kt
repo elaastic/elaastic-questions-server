@@ -58,9 +58,6 @@ class Subject (
         var owner: User,
 
         @field:ManyToOne(fetch = FetchType.LAZY)
-        var parentSubject: Subject? = null,
-
-        @field:ManyToOne(fetch = FetchType.LAZY)
         var course: Course? = null
 
 ): AbstractJpaPersistable<Long>() {
@@ -92,6 +89,7 @@ class Subject (
     @field:NotNull
     @field:NotBlank
     val globalId:String = UUID.randomUUID().toString()
+
 
     fun updateFrom(otherSubject: Subject) {
         require(id == otherSubject.id)

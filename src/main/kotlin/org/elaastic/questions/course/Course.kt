@@ -46,13 +46,11 @@ class Course (
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-    @OneToMany(fetch = FetchType.LAZY
-//            ,
-//            mappedBy = "subject",
-//            targetEntity = Subject::class
-    )
-    //@OrderBy("rank ASC")
-    var subjects: MutableSet<Subject> = mutableSetOf()
+        @OneToMany(fetch = FetchType.LAZY,
+                mappedBy = "course",
+                targetEntity = Subject::class)
+        @OrderBy("rank ASC")
+        var subjects: MutableSet<Subject> = mutableSetOf()
 
 
     @field:NotNull
@@ -67,19 +65,4 @@ class Course (
 
         this.title = otherCourse.title
     }
-
-    /*To add in a later version*/
-    /*
-        fun addSubject(subject: Subject): Subject {
-            require(subject.owner == owner) {
-                "The owner of the statement cannot be different from the owner of subject"
-            }
-
-            subjects.add(subject)
-            subject.course = this
-            subject.owner = owner
-
-            return subject
-        }
-        */
 }
