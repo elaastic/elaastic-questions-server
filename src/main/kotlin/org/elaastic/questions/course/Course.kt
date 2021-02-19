@@ -26,47 +26,49 @@ import javax.validation.constraints.NotNull
 
 class Course (
 
-    @field:NotNull
-    @field:NotBlank
-    var title: String,
-
-    @field:ManyToOne(fetch = FetchType.LAZY)
-    var owner: User
-
-    ): AbstractJpaPersistable<Long>() {
-
-        @Version
-        var version: Long? = null
-
-        @Column(name = "date_created")
-        @CreatedDate
-        lateinit var dateCreated: Date
-
-        @LastModifiedDate
-        @Column(name = "last_updated")
-        var lastUpdated: Date? = null
-
-        @OneToMany(fetch = FetchType.LAZY,
-                mappedBy = "subject",
-                targetEntity = Subject::class)
-        @OrderBy("rank ASC")
-        var subjects: MutableSet<Subject> = mutableSetOf()
-
-
         @field:NotNull
         @field:NotBlank
-        val globalId:String = UUID.randomUUID().toString()
+        var title: String,
 
-        fun updateFrom(otherCourse: Course) {
-            require(id == otherCourse.id)
-            if (this.version != otherCourse.version) {
-                throw OptimisticLockException()
-            }
+        @field:ManyToOne(fetch = FetchType.LAZY)
+        var owner: User
 
-            this.title = otherCourse.title
+): AbstractJpaPersistable<Long>() {
+
+    @Version
+    var version: Long? = null
+
+    @Column(name = "date_created")
+    @CreatedDate
+    lateinit var dateCreated: Date
+
+    @LastModifiedDate
+    @Column(name = "last_updated")
+    var lastUpdated: Date? = null
+
+    @OneToMany(fetch = FetchType.LAZY
+//            ,
+//            mappedBy = "subject",
+//            targetEntity = Subject::class
+    )
+    //@OrderBy("rank ASC")
+    var subjects: MutableSet<Subject> = mutableSetOf()
+
+
+    @field:NotNull
+    @field:NotBlank
+    val globalId:String = UUID.randomUUID().toString()
+
+    fun updateFrom(otherCourse: Course) {
+        require(id == otherCourse.id)
+        if (this.version != otherCourse.version) {
+            throw OptimisticLockException()
         }
 
-        /*To add in a later version*/
+        this.title = otherCourse.title
+    }
+
+    /*To add in a later version*/
     /*
         fun addSubject(subject: Subject): Subject {
             require(subject.owner == owner) {

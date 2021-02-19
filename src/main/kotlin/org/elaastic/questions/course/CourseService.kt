@@ -10,6 +10,10 @@ class CourseService (
         @Autowired val entityManager: EntityManager
 ){
 
+    fun save(course: Course): Course {
+        return courseRepository.save(course)
+    }
+
     fun count(): Long {
         return courseRepository.count()
     }
