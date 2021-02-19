@@ -74,6 +74,7 @@
 
       <div class="ui divider"></div>
 
+      <!-- old subject button
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
          th:href="@{/subject}"
          href="/subject"
@@ -83,6 +84,37 @@
          data-position="right center"
          data-inverted="">
         <i class="book icon"></i>
+      </a>
+      -->
+      <!-- full template recent button
+      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+         th:href="@{/subject/recent}"
+         href="/subject/recent"
+         class="item"
+         th:attr="data-tooltip=#{subject.recent.my.list.label}"
+         data-tooltip="Recent subjects"
+         data-position="right center"
+         data-inverted="">
+        <i class="clock icon"></i>
+      </a>
+      -->
+      <a>
+        <i class="clock icon"></i>
+      </a>
+      <!-- full template course button
+      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+         th:href="@{/course}"
+         href="/course"
+         class="item"
+         th:attr="data-tooltip=#{course.my.list.label}"
+         data-tooltip="My courses"
+         data-position="right center"
+         data-inverted="">
+        <i class="folder open icon"></i>
+      </a>
+      -->
+      <a>
+        <i class="folder open icon"></i>
       </a>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"

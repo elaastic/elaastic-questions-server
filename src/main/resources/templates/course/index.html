@@ -22,6 +22,7 @@
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <!-- <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My Courses</title> -->
+    <title>elaastic: My Courses</title>
 </head>
 
 <body>
@@ -38,6 +39,11 @@
     </a>
 </aside>
 -->
+<aside id="pageSpecificMenu">
+    <a>
+        <i class="yellow plus square outline icon"></i>
+    </a>
+</aside>
 
 <section>
     <!--
@@ -56,7 +62,16 @@
         Message
     </div>
     -->
+    <h2 class="ui header">
+        <i class="folder open icon"></i>
 
+        <div class="content">
+            <span>My Subjects</span>
+            <div class="sub header">
+                This page lists all of your courses
+            </div>
+        </div>
+    </h2>
     <!--
     <table th:if="${not #lists.isEmpty(course.content)}"
            class="ui single selectable line unstackable table">
@@ -110,6 +125,9 @@
         You have no courses.
     </div>
     -->
+    <div class="ui info message">
+        You have no courses.
+    </div>
 
     <!--
     <div class="ui two column stackable grid">
@@ -131,6 +149,19 @@
 
     </div>
     -->
+    <div class="ui two column stackable grid">
+        <div class="column">
+            <div class="ui basic segment">
+                <a href="create"
+                   class="ui primary button">
+                    <i class="add icon"></i>
+                    <span>
+                        Create a course
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <div class="ui hidden divider"></div>
 </section>
