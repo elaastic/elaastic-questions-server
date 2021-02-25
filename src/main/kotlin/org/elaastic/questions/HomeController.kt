@@ -39,7 +39,7 @@ class HomeController {
         return ModelAndView(
                 when {
                     user.isLearner() -> "forward:/player/index"
-                    else -> "forward:/subject/index"
+                    else -> "forward:/course/index"
                 }
 
         )
