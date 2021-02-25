@@ -23,6 +23,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectController
+import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -45,6 +46,7 @@ import javax.validation.constraints.NotNull
 class CourseController(
         @Autowired val courseService: CourseService,
         @Autowired val messageBuilder: MessageBuilder
+        /* @Autowired val subjectService: SubjectService */
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -54,6 +56,16 @@ class CourseController(
               @RequestParam("size") size: Int?): String {
 
         val user : User = authentication.principal as User
+
+        /*
+        val courseNonVide = Course("Course pas vide test", user)
+        val subject = Subject("Sujet pour cours non vide", user)
+        subject.course = courseNonVide
+        subjectService.save(subject)
+
+        courseNonVide.subjects.add(subject)
+        courseService.save(courseNonVide)
+        */
 
         courseService.findAllByOwner(user, PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
                 .let {
@@ -121,7 +133,6 @@ class CourseController(
         } else {
             val course = courseData.toEntity()
             courseService.save(course)
-            redirectAttributes.addAttribute("activeTab", "questions");
             "redirect:/course/${course.id}"
         }
     }
