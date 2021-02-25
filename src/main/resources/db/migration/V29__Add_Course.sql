@@ -32,3 +32,6 @@ CREATE TABLE `course`(
 ALTER TABLE `subject`
     ADD COLUMN `course_id` bigint(20) DEFAULT NULL,
     ADD CONSTRAINT `fk_subject_course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`)  ON DELETE CASCADE;
+
+/*ALTER TABLE `subject`
+    DROP COLUMN course;*/

@@ -58,6 +58,9 @@ class Subject (
         var owner: User,
 
         @field:ManyToOne(fetch = FetchType.LAZY)
+        var parentSubject: Subject? = null,
+
+        @field:ManyToOne(fetch = FetchType.LAZY)
         var course: Course? = null
 
 ): AbstractJpaPersistable<Long>() {
