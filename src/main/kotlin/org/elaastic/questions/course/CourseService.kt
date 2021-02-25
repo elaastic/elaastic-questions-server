@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
@@ -42,6 +43,28 @@ class CourseService (
             true -> courseRepository.findOneWithSubjectsById(id)
             false -> courseRepository.findOneById(id)
         } ?: throw EntityNotFoundException("There is no course for id \"$id\"")
+    }
+
+    fun get (user : User, id: Long) : Course{
+        get(id).let{
+            if (!user.isTeacher()) {
+                throw AccessDeniedException("You are not authorized to access to this course")
+            }
+            if(user != it.owner){
+                throw AccessDeniedException("This course doesn't belong to you")
+            }
+            return it
+        }
+    }
+
+    fun delete(user: User, course: Course) {
+        require(user == course.owner) {
+            "Only the owner can delete an assignment"
+        }
+        require(course.subjects.size == 0) {
+            "The course must be empty to be deleted"
+        }
+        courseRepository.delete(course)
     }
 
     fun save(course: Course): Course {

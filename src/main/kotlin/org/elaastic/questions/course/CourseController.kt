@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.course;
 
+import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.Subject
@@ -42,7 +43,8 @@ import javax.validation.constraints.NotNull
 @RequestMapping("/course")
 @Transactional
 class CourseController(
-        @Autowired val courseService: CourseService
+        @Autowired val courseService: CourseService,
+        @Autowired val messageBuilder: MessageBuilder
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -122,6 +124,29 @@ class CourseController(
             redirectAttributes.addAttribute("activeTab", "questions");
             "redirect:/course/${course.id}"
         }
+    }
+
+    @GetMapping("{id}/delete")
+    fun delete(authentication: Authentication,
+               @PathVariable id: Long,
+               redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        val course = courseService.get(user, id)
+        courseService.delete(user, course)
+
+        with(messageBuilder) {
+            success(
+                redirectAttributes,
+                message(
+                    "course.deleted.message",
+                    message("course.label"),
+                    course.title
+                )
+            )
+        }
+
+        return "redirect:/course"
     }
 
     data class CourseData(
