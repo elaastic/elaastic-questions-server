@@ -81,6 +81,27 @@ class CourseController(
         return "/course/create"
     }
 
+    @GetMapping(value = ["/{id}", "{id}/show"])
+    fun show(authentication: Authentication, model: Model,
+             @PathVariable id: Long): String {
+
+        val user: User = authentication.principal as User
+        model.addAttribute("user", user)
+
+        var course: Course = courseService.get(id, fetchSubjects = true)
+        model.addAttribute("course", course)
+
+        var subjects: MutableList<Subject> = ArrayList()
+        for(subject: Subject in course.subjects){
+            if(!subjects.contains(subject)){
+                subjects.add(subject)
+            }
+        }
+        model.addAttribute("subjects", subjects)
+
+        return "/course/show"
+    }
+
     @PostMapping("save")
     fun save(authentication: Authentication,
              @Valid @ModelAttribute courseData: CourseData,

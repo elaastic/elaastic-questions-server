@@ -27,6 +27,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import javax.persistence.EntityManager
+import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
 @Service
@@ -35,6 +36,13 @@ class CourseService (
         @Autowired val courseRepository: CourseRepository,
         @Autowired val entityManager: EntityManager
 ){
+
+    fun get(id: Long, fetchSubjects: Boolean = false): Course {
+        return when (fetchSubjects){
+            true -> courseRepository.findOneWithSubjectsById(id)
+            false -> courseRepository.findOneById(id)
+        } ?: throw EntityNotFoundException("There is no course for id \"$id\"")
+    }
 
     fun save(course: Course): Course {
         return courseRepository.save(course)
