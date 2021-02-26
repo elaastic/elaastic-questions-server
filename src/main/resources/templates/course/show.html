@@ -59,6 +59,16 @@
         <i class="yellow big trash icon"></i>
     </a>
 
+    <a th:if="${not #lists.isEmpty(subjects)}"
+       class="item"
+       onclick=""
+       th:attr="data-tooltip=#{course.action.delete.inactive.label}"
+       data-tooltip="Delete not possible"
+       data-position="right center"
+       data-inverted="">
+        <i class="grey big trash icon"></i>
+    </a>
+
 </aside>
 
 <section>

@@ -50,7 +50,7 @@
     </h2>
 
     <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-        Message
+        Message subject delete confirmation
     </div>
 
     <table th:if="${not #lists.isEmpty(subjectPage.content)}"
