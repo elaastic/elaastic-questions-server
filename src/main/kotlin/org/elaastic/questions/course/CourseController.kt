@@ -105,13 +105,7 @@ class CourseController(
         var course: Course = courseService.get(id, fetchSubjects = true)
         model.addAttribute("course", course)
 
-        var subjects: MutableList<Subject> = ArrayList()
-        for(subject: Subject in course.subjects){
-            if(!subjects.contains(subject)){
-                subjects.add(subject)
-            }
-        }
-        model.addAttribute("subjects", subjects)
+        model.addAttribute("subjects", course.subjects.toList())
 
         return "/course/show"
     }
