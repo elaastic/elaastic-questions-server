@@ -46,11 +46,11 @@ class Course (
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-        @OneToMany(fetch = FetchType.LAZY,
-                mappedBy = "course",
-                targetEntity = Subject::class)
-        @OrderBy("rank ASC")
-        var subjects: MutableSet<Subject> = mutableSetOf()
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "course",
+            targetEntity = Subject::class)
+    @OrderBy("lastUpdated ASC")
+    var subjects: MutableSet<Subject> = mutableSetOf()
 
 
     @field:NotNull

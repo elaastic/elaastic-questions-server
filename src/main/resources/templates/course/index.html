@@ -50,6 +50,10 @@
         </div>
     </h2>
 
+    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+        Message course delete confirmation
+    </div>
+
     <table th:if="${not #lists.isEmpty(coursePage.content)}"
            class="ui single selectable line unstackable table">
         <thead>
