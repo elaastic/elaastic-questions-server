@@ -46,7 +46,6 @@ import javax.validation.constraints.NotNull
 class CourseController(
         @Autowired val courseService: CourseService,
         @Autowired val messageBuilder: MessageBuilder
-        /* @Autowired val subjectService: SubjectService */
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -56,16 +55,6 @@ class CourseController(
               @RequestParam("size") size: Int?): String {
 
         val user : User = authentication.principal as User
-
-        /*
-        val courseNonVide = Course("Course pas vide test", user)
-        val subject = Subject("Sujet pour cours non vide", user)
-        subject.course = courseNonVide
-        subjectService.save(subject)
-
-        courseNonVide.subjects.add(subject)
-        courseService.save(courseNonVide)
-        */
 
         courseService.findAllByOwner(user, PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
                 .let {

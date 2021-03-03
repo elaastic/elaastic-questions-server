@@ -22,6 +22,8 @@ import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.questions.course.Course
+import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.statement.Statement
@@ -50,12 +52,13 @@ import javax.validation.constraints.NotNull
 @RequestMapping("/subject")
 @Transactional
 class SubjectController(
-        @Autowired val subjectService: SubjectService,
-        @Autowired val statementService: StatementService,
-        @Autowired val attachmentService: AttachmentService,
-        @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val sharedSubjectService: SharedSubjectService
+    @Autowired val subjectService: SubjectService,
+    @Autowired val courseService: CourseService,
+    @Autowired val statementService: StatementService,
+    @Autowired val attachmentService: AttachmentService,
+    @Autowired val messageBuilder: MessageBuilder,
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val sharedSubjectService: SharedSubjectService
 ){
 
     @GetMapping(value = ["", "/", "/index"])
@@ -287,12 +290,12 @@ class SubjectController(
 
                 with(messageBuilder) {
                     success(
-                            redirectAttributes,
-                            message(
-                                    "subject.updated.message",
-                                    message("subject.label"),
-                                    it.title
-                            )
+                        redirectAttributes,
+                        message(
+                            "subject.updated.message",
+                            message("subject.label"),
+                            it.title
+                        )
                     )
                 }
                 model.addAttribute("subject", it)
@@ -309,16 +312,16 @@ class SubjectController(
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, id)
-        subjectService.delete(user, subject)
+        courseService.removeSubject(user, subject)
 
         with(messageBuilder) {
             success(
-                    redirectAttributes,
-                    message(
-                            "subject.deleted.message",
-                            message("subject.label"),
-                            subject.title
-                    )
+                redirectAttributes,
+                message(
+                    "subject.deleted.message",
+                    message("subject.label"),
+                    subject.title
+                )
             )
         }
 
@@ -427,15 +430,17 @@ class SubjectController(
 
 
     data class SubjectData(
-            var id: Long? = null,
-            var version: Long? = null,
-            @field:NotBlank var title: String? = null,
-            @field:NotNull var owner: User? = null
+        var id: Long? = null,
+        var version: Long? = null,
+        @field:NotBlank var title: String? = null,
+        @field:NotNull var owner: User? = null,
+        @field:NotNull var course: Course? = null
     ) {
         fun toEntity(): Subject {
             return Subject(
-                    title = title!!,
-                    owner = owner!!
+                title = title!!,
+                owner = owner!!,
+                course = course!!
             ).let {
                 it.id = id
                 it.version = version

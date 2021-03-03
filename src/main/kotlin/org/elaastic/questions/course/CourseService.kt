@@ -19,14 +19,16 @@
 package org.elaastic.questions.course
 
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.Subject
+import org.elaastic.questions.subject.SubjectRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
@@ -34,9 +36,14 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class CourseService (
-        @Autowired val courseRepository: CourseRepository,
-        @Autowired val entityManager: EntityManager
+    @Autowired val courseRepository: CourseRepository,
+    @Autowired val subjectRepository: SubjectRepository,
+    @Autowired val entityManager: EntityManager
 ){
+
+    /*fun save(course: Course): Course {
+        return courseRepository.save(course)
+    }*/
 
     fun get(id: Long, fetchSubjects: Boolean = false): Course {
         return when (fetchSubjects){
@@ -46,7 +53,7 @@ class CourseService (
     }
 
     fun get (user : User, id: Long) : Course{
-        get(id).let{
+        courseRepository.findOneById(id).let{
             if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this course")
             }
@@ -65,6 +72,24 @@ class CourseService (
             "The course must be empty to be deleted"
         }
         courseRepository.delete(course)
+    }
+
+    fun touch(course: Course) {
+        course.lastUpdated = Date()
+        courseRepository.save(course)
+    }
+
+    fun removeSubject(user : User, subject: Subject){
+        require(user == subject.owner) {
+            "Only the owner can delete a subject"
+        }
+        val course = subject.course!!
+        touch(course)
+        course.subjects.remove(subject)
+        entityManager.flush()
+        subjectRepository.delete(subject) // all other linked entities are deleted by DB cascade
+        entityManager.flush()
+        entityManager.clear()
     }
 
     fun save(course: Course): Course {
