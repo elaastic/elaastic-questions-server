@@ -87,7 +87,7 @@
         Message
     </div>
 
-    <table th:if="${not #lists.isEmpty(subjects)}" class="ui single selectable line unstackable table">
+    <table th:if="${not #lists.isEmpty(subjects)}" class="ui selectable unstackable table">
         <thead>
         <tr>
             <th th:text="#{common.title}">
@@ -96,13 +96,11 @@
             <th class="not mobile" th:text="#{common.lastUpdate}">
                 Last update
             </th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="subject, i : ${subjects}">
             <td>
-
                 <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}" href="subject/123"
                    th:attr="data-tooltip=#{subject.action.show.label}" data-tooltip="Modify subject"
                    data-inverted="" th:text="${subject.title}">
@@ -113,7 +111,6 @@
             <td class="not mobile" th:text="${#dates.format(subject.lastUpdated, 'dd/MM/yyyy HH:mm')}">
                 25/07/2019
             </td>
-
         </tr>
         </tbody>
     </table>
@@ -128,17 +125,11 @@
                 <a th:href="@{/subject/create}" href="create" class="ui primary button">
                     <i class="add icon"></i>
                     <span th:text="#{subject.create.label}">
-                            Create a subject
-                        </span>
+                        Create a subject
+                    </span>
                 </a>
             </div>
         </div>
-        <!--- TODO paginate
-    <div class="column">
-        <div th:replace="layout/components/paginate :: paginate(baseUrl='/subject/index')"></div>
-    </div>
-    -->
-
     </div>
 
     <div class="ui hidden divider"></div>

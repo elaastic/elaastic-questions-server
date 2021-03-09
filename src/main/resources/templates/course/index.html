@@ -55,7 +55,7 @@
     </div>
 
     <table th:if="${not #lists.isEmpty(coursePage.content)}"
-           class="ui single selectable line unstackable table">
+           class="ui selectable unstackable table">
         <thead>
         <tr>
             <th th:text="#{common.title}">
@@ -64,13 +64,11 @@
             <th class="not mobile" th:text="#{common.lastUpdate}">
                 Last update
             </th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="course, i : ${coursePage.content}">
             <td>
-
                 <a th:href="@{/course/{id}(id=${course.id})}"
                    href="course/123"
                    th:attr="data-tooltip=#{course.action.show.label}"
@@ -84,7 +82,6 @@
             <td class="not mobile" th:text="${#dates.format(course.lastUpdated, 'dd/MM/yyyy HH:mm')}">
                 25/07/2019
             </td>
-
         </tr>
         </tbody>
     </table>
@@ -101,15 +98,14 @@
                    class="ui primary button">
                     <i class="add icon"></i>
                     <span th:text="#{course.create.label}">
-        Create a course
-      </span>
+                        Create a course
+                    </span>
                 </a>
             </div>
         </div>
         <div class="column">
             <div th:replace="layout/components/paginate :: paginate(baseUrl='/course/index')"></div>
         </div>
-
     </div>
 
     <div class="ui hidden divider"></div>

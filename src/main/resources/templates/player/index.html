@@ -43,6 +43,55 @@
   Message
 </div>
 
+<table class="ui selectable table unstackable fixed">
+  <thead>
+    <!-- <tr th:each="course : ${listCourse}"> -->
+    <tr>
+      <!-- <th th:text="${course.title}">Course Name</th> -->
+      <th>Course Name</th>
+      <!-- <th th:text="#{assignment.lastupdated.label}">Last update</th> -->
+      <th>Last update</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- <tr th:each="assignment : ${listAssignment}"> -->
+    <tr>
+      <!-- <td th:text="${assignment.title}">Titre du sujet</td> -->
+      <td>Titre du sujet</td>
+      <!-- <td th:text="${assignment.lastUpdated}">Last modified date</td> -->
+      <td>Last modified date</td>
+      <td>
+        <a class="ui compact icon primary button">
+          <i class="play icon"></i>
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <!-- <td th:text="${assignment.title}">Titre du sujet</td> -->
+      <td>Titre du sujet</td>
+      <!-- <td th:text="${assignment.lastUpdated}">Last modified date</td> -->
+      <td>Last modified date</td>
+      <td>
+        <a class="ui compact icon primary button">
+          <i class="play icon"></i>
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <!-- <td th:text="${assignment.title}">Titre du sujet</td> -->
+      <td>Titre du sujet</td>
+      <!-- <td th:text="${assignment.lastUpdated}">Last modified date</td> -->
+      <td>Last modified date</td>
+      <td>
+        <a class="ui compact icon primary button">
+          <i class="play icon"></i>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 
 <table class="ui single selectable line unstackable table">
   <thead>
@@ -81,9 +130,9 @@
 
 <div class="ui hidden divider"></div>
 
-<div class="column">
+<!-- <div class="column">
   <div th:replace="layout/components/paginate :: paginate(baseUrl='/player/index')"></div>
-</div>
+</div> -->
 
 </body>
 </html>

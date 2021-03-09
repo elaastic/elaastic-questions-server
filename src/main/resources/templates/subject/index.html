@@ -54,7 +54,7 @@
     </div>
 
     <table th:if="${not #lists.isEmpty(subjectPage.content)}"
-           class="ui single selectable line unstackable table">
+           class="ui selectable unstackable table">
         <thead>
         <tr>
             <th th:text="#{common.title}">
@@ -63,13 +63,11 @@
             <th class="not mobile" th:text="#{common.lastUpdate}">
                 Last update
             </th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="subject, i : ${subjectPage.content}">
             <td>
-
                 <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
                    href="subject/123"
                    th:attr="data-tooltip=#{subject.action.show.label}"
@@ -78,7 +76,6 @@
                    th:text="${subject.title}">
                     Subject title
                 </a>
-
                 &nbsp; [
                 <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
                    href="subject/123"
@@ -93,7 +90,6 @@
             <td class="not mobile" th:text="${#dates.format(subject.lastUpdated, 'dd/MM/yyyy HH:mm')}">
                 25/07/2019
             </td>
-
         </tr>
         </tbody>
     </table>
@@ -112,15 +108,14 @@
                    class="ui primary button">
                     <i class="add icon"></i>
                     <span th:text="#{subject.create.label}">
-        Create a subject
-      </span>
+                        Create a subject
+                    </span>
                 </a>
             </div>
         </div>
         <div class="column">
             <div th:replace="layout/components/paginate :: paginate(baseUrl='/subject/index')"></div>
         </div>
-
     </div>
 
     <div class="ui hidden divider"></div>
