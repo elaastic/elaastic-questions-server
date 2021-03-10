@@ -106,18 +106,24 @@ class TestingPlayerController(
                                         explanation {
                                             nbEvaluations = 1
                                             meanGrade = BigDecimal(3)
-                                            author = "Joe"
+                                            author = "Jwal"
+                                            firstName = "Joe"
+                                            lastName  = "Walson"
                                             content = "Explication B"
                                         }
                                         explanation {
                                             nbEvaluations = 4
                                             meanGrade = BigDecimal(5)
-                                            author = "Bob"
+                                            author = "Bhar"
+                                            firstName = "Bob"
+                                            lastName = "Hart"
                                             content = "Explication C"
                                         }
                                         explanation {
                                             nbEvaluations = 0
-                                            author = "Arthur"
+                                            author = "Arod"
+                                            firstName = "Arthur"
+                                            lastName = "Rodriguez"
                                             content = "Explication D"
                                         }
                                     }
@@ -125,7 +131,9 @@ class TestingPlayerController(
                                         explanation {
                                             nbEvaluations = 2
                                             meanGrade = BigDecimal(1.33)
-                                            author = "Bill"
+                                            author = "Bgat"
+                                            firstName = "Bill"
+                                            lastName = "Gates"
                                             content = "Explication A"
                                         }
                                     }
@@ -147,13 +155,17 @@ class TestingPlayerController(
                                         explanation {
                                             nbEvaluations = 1
                                             meanGrade = BigDecimal(3)
-                                            author = "Joe"
+                                            author = "Jwal"
+                                            firstName = "Joe"
+                                            lastName = "Walson"
                                             content = "Explication B"
                                         }
                                         explanation {
                                             nbEvaluations = 4
                                             meanGrade = BigDecimal(5)
-                                            author = "Bob"
+                                            author = "Bhar"
+                                            firstName = "Bob"
+                                            lastName = "Hart"
                                             content = "Explication C"
                                         }
                                     }
@@ -168,13 +180,17 @@ class TestingPlayerController(
                                         explanation {
                                             nbEvaluations = 1
                                             meanGrade = BigDecimal(3)
-                                            author = "Joe"
+                                            author = "Jwal"
+                                            firstName = "Joe"
+                                            lastName = "Walson"
                                             content = "Explication B"
                                         }
                                         explanation {
                                             nbEvaluations = 4
                                             meanGrade = BigDecimal(5)
-                                            author = "Bob"
+                                            author = "Bhar"
+                                            firstName = "Bob"
+                                            lastName = "Hart"
                                             content = "Explication C"
                                         }
                                     }
@@ -187,24 +203,32 @@ class TestingPlayerController(
                                     explanation {
                                         nbEvaluations = 2
                                         meanGrade = BigDecimal(1.33)
-                                        author = "Bill"
+                                        author = "Bgat"
+                                        firstName = "Bill"
+                                        lastName = "Gates"
                                         content = "Explication A"
                                     }
                                     explanation {
                                         nbEvaluations = 1
                                         meanGrade = BigDecimal(3)
-                                        author = "Joe"
+                                        author = "Jwal"
+                                        firstName = "Joe"
+                                        lastName = "Walson"
                                         content = "Explication B"
                                     }
                                     explanation {
                                         nbEvaluations = 4
                                         meanGrade = BigDecimal(5)
-                                        author = "Bob"
+                                        author = "Bhar"
+                                        firstName = "Bob"
+                                        lastName = "Hart"
                                         content = "Explication C"
                                     }
                                     explanation {
                                         nbEvaluations = 0
-                                        author = "Arthur"
+                                        author = "Arod"
+                                        firstName = "Arthur"
+                                        lastName = "Rodriguez"
                                         content = "Explication D"
                                     }
                                 }
@@ -217,18 +241,24 @@ class TestingPlayerController(
                                         explanation {
                                             nbEvaluations = 1
                                             meanGrade = BigDecimal(3)
-                                            author = "Joe"
+                                            author = "Jwal"
+                                            firstName = "Joe"
+                                            lastName = "Walson"
                                             content = "Explication B"
                                         }
                                         explanation {
                                             nbEvaluations = 4
                                             meanGrade = BigDecimal(5)
-                                            author = "Bob"
+                                            author = "Bhar"
+                                            firstName = "Bob"
+                                            lastName = "Hart"
                                             content = "Explication C"
                                         }
                                         explanation {
                                             nbEvaluations = 0
-                                            author = "Arthur"
+                                            author = "Arod"
+                                            firstName = "Arthur"
+                                            lastName = "Rodriguez"
                                             content = "Explication D"
                                         }
                                     }
@@ -236,7 +266,9 @@ class TestingPlayerController(
                                         explanation {
                                             nbEvaluations = 2
                                             meanGrade = BigDecimal(1.33)
-                                            author = "Bill"
+                                            author = "Bgat"
+                                            firstName = "Bill"
+                                            lastName = "Gates"
                                             content = "Explication A"
                                         }
                                     }
@@ -244,25 +276,33 @@ class TestingPlayerController(
                                         explanation {
                                             nbEvaluations = 2
                                             meanGrade = BigDecimal(1.33)
-                                            author = "Bill"
+                                            author = "Bgat"
+                                            firstName = "Bill"
+                                            lastName = "Gates"
                                             content = "Explication E"
                                         }
                                         explanation {
                                             nbEvaluations = 0
                                             meanGrade = null
-                                            author = "Bill"
+                                            author = "Bgat"
+                                            firstName = "Bill"
+                                            lastName = "Gates"
                                             content = "Explication F"
                                         }
                                         explanation {
                                             nbEvaluations = 1
                                             meanGrade = BigDecimal(5)
-                                            author = "Bill"
+                                            author = "Bgat"
+                                            firstName = "Bill"
+                                            lastName = "Gates"
                                             content = "Explication G"
                                         }
                                         explanation {
                                             nbEvaluations = 4
                                             meanGrade = BigDecimal(2)
-                                            author = "Bill"
+                                            author = "Bgat"
+                                            firstName = "Bill"
+                                            lastName = "Gates"
                                             content = "Explication H"
                                         }
                                     }
@@ -554,11 +594,15 @@ class TestingPlayerController(
                                                                 to listOf(
                                                                 ExplanationData(
                                                                         "explication 1",
-                                                                        "Joe"
+                                                                        "Jwal",
+                                                                        "Joe",
+                                                                        "Walson"
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 2",
-                                                                        "Jack"
+                                                                        "Jdic",
+                                                                        "Jack",
+                                                                        "DiCaprio"
                                                                 )
                                                         ),
                                                         ResponseData(
@@ -569,11 +613,15 @@ class TestingPlayerController(
                                                                 to listOf(
                                                                 ExplanationData(
                                                                         "explication 3",
-                                                                        "William"
+                                                                        "Wsha",
+                                                                        "William",
+                                                                        "Shakespear"
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 4",
-                                                                        "Averell"
+                                                                        "Acol",
+                                                                        "Averell",
+                                                                        "Collignon"
                                                                 )
                                                         )
                                                 )
@@ -589,20 +637,28 @@ class TestingPlayerController(
                                                 explanations = listOf(
                                                         ExplanationData(
                                                                 "explication 1",
-                                                                "Joe"
+                                                                "Jwal",
+                                                                "Joe",
+                                                                "Walson"
                                                         ),
                                                         ExplanationData(
                                                                 "explication 2",
-                                                                "Jack"
+                                                                "Jdic",
+                                                                "Jack",
+                                                                "DiCaprio"
                                                         ),
 
                                                         ExplanationData(
                                                                 "explication 3",
-                                                                "William"
+                                                                "Wsha",
+                                                                "William",
+                                                                "Shakespear"
                                                         ),
                                                         ExplanationData(
                                                                 "explication 4",
-                                                                "Averell"
+                                                                "Acol",
+                                                                "Averell",
+                                                                "Collignon"
                                                         )
                                                 )
                                         )
