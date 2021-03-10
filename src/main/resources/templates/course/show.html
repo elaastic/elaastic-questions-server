@@ -28,8 +28,7 @@
 <body>
 <aside id="pageSpecificMenu">
     <a class="item"
-       th:href="@{/subject/create}"
-       href="create"
+       th:href="@{/course/{id}/addSubject(id=${course.id})}"
        th:attr="data-tooltip=#{subject.create.label}"
        data-tooltip="Create a subject"
        data-position="right center"
@@ -125,7 +124,7 @@
     <div class="ui two column stackable grid">
         <div class="column">
             <div class="ui basic segment">
-                <a th:href="@{/subject/create}" href="create" class="ui primary button">
+                <a th:href="@{/course/{id}/addSubject(id=${course.id})}" class="ui primary button">
                     <i class="add icon"></i>
                     <span th:text="#{subject.create.label}">
                             Create a subject
