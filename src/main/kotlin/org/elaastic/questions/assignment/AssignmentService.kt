@@ -26,6 +26,7 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
+import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
@@ -187,6 +188,10 @@ class AssignmentService(
         return learnerAssignmentRepository.findAllAssignmentsForLearner(user, pageable)
     }
 
+    fun findAllAssignmentsForLearnerWithoutPage(user: User): List<Assignment> {
+        return learnerAssignmentRepository.findAllAssignmentsForLearnerWithoutPage(user)
+    }
+
     fun findByGlobalId(globalId: String): Assignment? {
         return assignmentRepository.findByGlobalId(globalId)
     }
@@ -226,5 +231,21 @@ class AssignmentService(
             this.addSequence(assignment,statement)
             touch(assignment)
         }
+    }
+
+    fun getCoursesAssignmentsMap(assignments : List<Assignment>) : MutableMap<Course, MutableList<Assignment>> {
+
+        var mapResult : MutableMap<Course, MutableList<Assignment>> = mutableMapOf()
+        for(assignment in assignments) {
+            val course : Course? = assignment.subject?.course
+            if(course != null){
+                if(!mapResult.containsKey(course)) {
+                    mapResult[course] = mutableListOf(assignment)
+                } else {
+                    mapResult[course]!!.add(assignment)
+                }
+            }
+        }
+        return mapResult
     }
 }
