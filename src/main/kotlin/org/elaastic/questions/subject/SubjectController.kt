@@ -123,8 +123,8 @@ class SubjectController(
     fun create(authentication: Authentication, model: Model): String {
         val user: User = authentication.principal as User
 
-        if (!model.containsAttribute("subject")) {
-            model.addAttribute("subject", SubjectData(owner = user))
+        if (!model.containsAttribute("subjectData")) {
+            model.addAttribute("subjectData", SubjectData(owner = user))
         }
         model.addAttribute("user", user)
         model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
@@ -435,13 +435,13 @@ class SubjectController(
         var version: Long? = null,
         @field:NotBlank var title: String? = null,
         @field:NotNull var owner: User? = null,
-        @field:NotNull var course: Course? = null
+        var course: Course? = null
     ) {
         fun toEntity(): Subject {
             return Subject(
                 title = title!!,
                 owner = owner!!,
-                course = course!!
+                course = course
             ).let {
                 it.id = id
                 it.version = version

@@ -49,7 +49,7 @@ class Course (
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "course",
             targetEntity = Subject::class)
-    @OrderBy("lastUpdated ASC")
+    @OrderBy("lastUpdated DESC")
     var subjects: MutableSet<Subject> = mutableSetOf()
 
 
