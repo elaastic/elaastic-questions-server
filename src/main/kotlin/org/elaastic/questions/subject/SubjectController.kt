@@ -127,7 +127,7 @@ class SubjectController(
             model.addAttribute("subject", SubjectData(owner = user))
         }
         model.addAttribute("user", user)
-        model.addAttribute("listeCours", courseService.findAllByOwner(user).toList())
+        model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
 
         return "/subject/create"
     }
