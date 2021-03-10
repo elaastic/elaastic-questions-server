@@ -34,6 +34,14 @@
         <input type="hidden"
                name="owner"
                th:field="*{owner}"/>
+
+        <select th:field="*{course}">
+            <option th:value="null"></option>
+            <option th:each="course: ${listCourse}"
+                    th:value="${course.id}"
+                    th:text="${course.title}"
+                    th:selected="${course==course.id}"></option>
+        </select>
     </div>
 
     <script th:inline="javascript">
