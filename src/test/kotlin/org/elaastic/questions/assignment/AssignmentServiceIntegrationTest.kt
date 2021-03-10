@@ -472,14 +472,14 @@ internal class AssignmentServiceIntegrationTest(
         tWhen {
             assignmentService.findAllAssignmentsForLearner(student)
         }.tExpect {
-            assertThat(it.isEmpty, equalTo(true))
+            assertThat(it.isEmpty(), equalTo(true))
         }
 
         tWhen {
             assignmentService.registerUser(student, assignment)
             assignmentService.findAllAssignmentsForLearner(student)
         }.tExpect {
-            assertThat(it.content, equalTo(listOf(assignment)))
+            assertThat(it, equalTo(listOf(assignment)))
         }
 
     }

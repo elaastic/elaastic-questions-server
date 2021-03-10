@@ -33,6 +33,7 @@ import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
@@ -67,26 +68,16 @@ class PlayerController(
 
     @GetMapping(value = ["", "/", "/index"])
     fun index(authentication: Authentication,
-              model: Model,
-              @RequestParam("page") page: Int?,
-              @RequestParam("size") size: Int?): String {
+              model: Model): String {
         val user: User = authentication.principal as User
 
-        assignmentService.findAllAssignmentsForLearner(
-                user,
-                PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
-        ).let {
-            model.addAttribute("user", user)
-            model.addAttribute("learnerAssignmentPage", it)
-            model.addAttribute(
-                    "pagination",
-                    PaginationUtil.buildInfo(
-                            it.totalPages,
-                            page,
-                            size
-                    )
-            )
-        }
+        val assignments : List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
+        val mapCourseAssignments : Map<Course, MutableList<Assignment>> =
+                assignmentService.getCoursesAssignmentsMap(assignments)
+        val assignmentsWithoutCourse : List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
+        model.addAttribute("user", user)
+        model.addAttribute("mapCourseAssignments", mapCourseAssignments)
+        model.addAttribute("assignmentsWithoutCourse", assignmentsWithoutCourse)
 
         return "/player/index"
     }

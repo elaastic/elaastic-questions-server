@@ -43,96 +43,73 @@
   Message
 </div>
 
+<!-- subject with courses -->
+<div th:each="pairCourseAssignments : ${mapCourseAssignments}">
+  <table class="ui selectable table unstackable fixed">
+    <thead>
+      <tr>
+        <th th:text="${pairCourseAssignments.key.title}">Course Name</th>
+        <th th:text="#{assignment.lastupdated.label}">Last update</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="assignment : ${pairCourseAssignments.value}">
+        <td>
+          <a th:href="@{/player/assignment/{assignmentId}/play(assignmentId=${assignment.id})}"
+             th:text="${assignment.title}">
+            Titre du sujet
+          </a>
+        </td>
+        <td th:text="${assignment.lastUpdated}">Last modified date</td>
+        <td>
+          <a class="ui compact icon primary button"
+            th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
+            th:attr="data-tooltip=#{player.assignment.play}"
+            data-position="right center"
+            data-inverted="">
+            <i class="play icon"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top: 10px;"></div>
+</div>
+
+<!-- subject without course -->
 <table class="ui selectable table unstackable fixed">
   <thead>
-    <!-- <tr th:each="course : ${listCourse}"> -->
     <tr>
-      <!-- <th th:text="${course.title}">Course Name</th> -->
-      <th>Course Name</th>
-      <!-- <th th:text="#{assignment.lastupdated.label}">Last update</th> -->
-      <th>Last update</th>
+      <th th:text="#{assignments.no.course.label}">Assignments without courses</th>
+      <th th:text="#{assignment.lastupdated.label}">Last update</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <!-- <tr th:each="assignment : ${listAssignment}"> -->
-    <tr>
-      <!-- <td th:text="${assignment.title}">Titre du sujet</td> -->
-      <td>Titre du sujet</td>
-      <!-- <td th:text="${assignment.lastUpdated}">Last modified date</td> -->
-      <td>Last modified date</td>
+    <tr th:each="assignment : ${assignmentsWithoutCourse}">
       <td>
-        <a class="ui compact icon primary button">
-          <i class="play icon"></i>
+        <a th:href="@{/player/assignment/{assignmentId}/play(assignmentId=${assignment.id})}"
+            th:text="${assignment.title}">
+          Titre du sujet
         </a>
       </td>
-    </tr>
-    <tr>
-      <!-- <td th:text="${assignment.title}">Titre du sujet</td> -->
-      <td>Titre du sujet</td>
-      <!-- <td th:text="${assignment.lastUpdated}">Last modified date</td> -->
-      <td>Last modified date</td>
+      <td th:text="${assignment.lastUpdated}">Last modified date</td>
       <td>
-        <a class="ui compact icon primary button">
-          <i class="play icon"></i>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <!-- <td th:text="${assignment.title}">Titre du sujet</td> -->
-      <td>Titre du sujet</td>
-      <!-- <td th:text="${assignment.lastUpdated}">Last modified date</td> -->
-      <td>Last modified date</td>
-      <td>
-        <a class="ui compact icon primary button">
+        <a class="ui compact icon primary button"
+          th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
+          th:attr="data-tooltip=#{player.assignment.play}"
+          data-position="right center"
+          data-inverted="">
           <i class="play icon"></i>
         </a>
       </td>
     </tr>
   </tbody>
 </table>
-
-
-<table class="ui single selectable line unstackable table">
-  <thead>
-  <tr>
-    <th th:text="#{player.assignment.label}">Work</th>
-    <th th:text="#{assignment.lastupdated.label}">Last update</th>
-    <th></th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="assignment, i : ${learnerAssignmentPage.content}"
-      th:classappend="${i.odd} ? 'odd' : 'even'">
-
-    <td>
-      <a th:href="@{/player/assignment/{assignmentId}/play(assignmentId=${assignment.id})}"
-         th:text="${assignment.title}">
-        [Assignment title]
-      </a>
-    </td>
-
-    <td th:text="${#dates.format(assignment.lastUpdated, 'dd/MM/yyyy HH:mm')}">
-    </td>
-
-    <td>
-      <a class="ui compact icon primary button"
-         th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
-         th:attr="data-tooltip=#{player.assignment.play}"
-         data-inverted="">
-        <i class="play icon"></i>
-      </a>
-    </td>
-
-  </tr>
-  </tbody>
-</table>
+<div style="margin-top: 10px;"></div>
 
 <div class="ui hidden divider"></div>
-
-<!-- <div class="column">
-  <div th:replace="layout/components/paginate :: paginate(baseUrl='/player/index')"></div>
-</div> -->
 
 </body>
 </html>
