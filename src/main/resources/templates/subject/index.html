@@ -69,7 +69,6 @@
         <tbody>
         <tr th:each="subject, i : ${subjectPage.content}">
             <td>
-
                 <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
                    href="subject/123"
                    th:attr="data-tooltip=#{subject.action.show.label}"
@@ -93,11 +92,9 @@
             <td class="not mobile" th:text="${#dates.format(subject.lastUpdated, 'dd/MM/yyyy HH:mm')}">
                 25/07/2019
             </td>
-
         </tr>
         </tbody>
     </table>
-
 
     <div th:if="${#lists.isEmpty(subjectPage.content)}"
          class="ui info message" th:text="#{subject.you.have.none}">
@@ -112,8 +109,8 @@
                    class="ui primary button">
                     <i class="add icon"></i>
                     <span th:text="#{subject.create.label}">
-        Create a subject
-      </span>
+                        Create a subject
+                    </span>
                 </a>
             </div>
         </div>
