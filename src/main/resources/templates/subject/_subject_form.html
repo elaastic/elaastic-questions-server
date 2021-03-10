@@ -34,19 +34,31 @@
         <input type="hidden"
                name="owner"
                th:field="*{owner}"/>
+    </div>
 
-        <select th:field="*{course}">
-            <option th:value="null"></option>
-            <option th:each="course: ${listCourse}"
-                    th:value="${course.id}"
-                    th:text="${course.title}"
-                    th:selected="${course==course.id}"></option>
-        </select>
+    <div class="field" style="margin-top: 10px;">
+        <label th:text="#{course.create.action.label}">
+            Select the associated course :
+        </label>
+
+        <div style="margin-top: 5px">
+            <select class="ui dropdown fluid" th:field="*{course}">
+                <option th:text="#{course.not.associate.choice}"
+                        th:value="-1">
+                </option>
+                <option th:each="courseIt: ${listCourse}"
+                        th:value="${courseIt.id}"
+                        th:text="${courseIt.title}">
+                </option>
+            </select>
+        </div>
     </div>
 
     <script th:inline="javascript">
         $(document)
             .ready(function () {
+                $('.ui.dropdown')
+                    .dropdown();
                 $('.ui.form')
                     .form({
                         fields: {
