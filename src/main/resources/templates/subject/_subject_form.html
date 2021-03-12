@@ -34,15 +34,24 @@
         <input type="hidden"
                name="owner"
                th:field="*{owner}"/>
+    </div>
 
-        <select th:field="*{course}">
-            <option th:value="null"></option>
+    <label th:text="#{course.create.action.label}" style="margin-top: 10px;">
+        Select the associated course :
+    </label>
+
+    <select th:field="*{course}">
+        <div th:field="*{course}">
+            <option th:text="#{course.not.associate.choice}"
+                    th:value="null">
+                (Do not associate with a course)
+            </option>
             <option th:each="course: ${listCourse}"
                     th:value="${course.id}"
                     th:text="${course.title}"
                     th:selected="${course==course.id}"></option>
-        </select>
-    </div>
+        </div>
+    </select>
 
     <script th:inline="javascript">
         $(document)
