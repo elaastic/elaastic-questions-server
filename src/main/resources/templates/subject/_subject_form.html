@@ -40,10 +40,22 @@
         Select the associated course :
     </label>
 
-    <div th:field="*{course}" style="margin-top: 5px">
+    <!-- <div th:field="*{course}" style="margin-top: 5px">
         <select class="ui dropdown fluid" th:field="*{course}">
             <option th:text="#{course.not.associate.choice}"
                     th:value="-1">
+            </option>
+            <option th:each="course: ${listCourse}"
+                    th:value="${course.id}"
+                    th:text="${course.title}"
+                    th:selected="${course==course.id}">
+            </option>
+        </select>
+    </div> -->
+    <div th:field="*{course}" style="margin-top: 5px">
+        <select class="" th:field="*{course}">
+            <option th:text="#{course.not.associate.choice}"
+                    th:value="null">
             </option>
             <option th:each="course: ${listCourse}"
                     th:value="${course.id}"
