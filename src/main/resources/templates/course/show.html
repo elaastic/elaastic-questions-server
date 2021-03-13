@@ -34,19 +34,16 @@
        data-tooltip="Create a subject"
        data-position="right center"
        data-inverted="">
-        <i class="yellow plus square outline icon"></i>
+       <i class="yellow plus square outline icon"></i>
     </a>
 
-    <!-- <a class="item"
-        onclick="$('#course-editProperties-modal').modal('show');"
-        th:attr="data-tooltip=#{course.action.propertiesEdition.label}"
-        data-tooltip="Edit"
-        data-position="right center"
-        data-inverted="">
-        <i class="yellow setting icon"></i>
-    </a> -->
-    <a class="item">
-        <i class="yellow setting icon"></i>
+    <a class="item"
+       onclick="$('#course-editProperties-modal').modal('show');"
+       th:attr="data-tooltip=#{course.action.propertiesEdition.label}"
+       data-tooltip="Edit"
+       data-position="right center"
+       data-inverted="">
+       <i class="yellow setting icon"></i>
     </a>
 
     <a th:if="${#lists.isEmpty(subjects)}"
@@ -142,6 +139,8 @@
     </div>
 
     <div class="ui hidden divider"></div>
+
+    <div th:replace="course/_modal_edit_properties :: modalEditProperties(${course})"></div>
 
     <!--  Delete confirm modal-->
     <div>
