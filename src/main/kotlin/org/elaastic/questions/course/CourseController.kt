@@ -50,8 +50,7 @@ import javax.validation.constraints.NotNull
 @Transactional
 class CourseController(
         @Autowired val courseService: CourseService,
-        @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val subjectService: SubjectService
+        @Autowired val messageBuilder: MessageBuilder
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -103,6 +102,43 @@ class CourseController(
         model.addAttribute("subjects", course.subjects.toList())
 
         return "/course/show"
+    }
+
+    @PostMapping("{id}/update")
+    fun update(authentication: Authentication,
+               @Valid @ModelAttribute courseData: CourseData,
+               result: BindingResult,
+               model: Model,
+               @PathVariable id: Long,
+               response: HttpServletResponse,
+               redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("course", courseData)
+            "redirect:/course/$id"
+        } else {
+            courseService.get(user, id).let {
+                it.updateFrom(courseData.toEntity())
+                courseService.save(it)
+
+                with(messageBuilder) {
+                    success(
+                            redirectAttributes,
+                            message(
+                                    "course.updated.message",
+                                    message("course.label"),
+                                    it.title
+                            )
+                    )
+                }
+                model.addAttribute("course", it)
+                "redirect:/course/$id"
+            }
+        }
     }
 
     @PostMapping("save")

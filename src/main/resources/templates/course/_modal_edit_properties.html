@@ -1,0 +1,62 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="modalEditProperties(course)"
+     id="course-editProperties-modal"
+     class="ui modal"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="header" th:text="#{course.propertiesEdition.label}">
+    Edit properties
+  </div>
+
+  <div class="content" style="padding:0rem !important">
+    <form class="ui form"
+          action="#"
+          id="editProperties-form"
+          th:object="${course}"
+          th:classappend="${#fields.hasErrors('*')}? 'error'"
+          th:action="@{/course/{id}/update(id=${course.id})}"
+          method="POST">
+
+      <div style = "padding: 1.5rem" >
+        <div th:replace="layout/components/form-messages :: formMessages('')"></div>
+
+        <input type="hidden" name="version" th:value="*{version}"/>
+
+        <div th:replace="course/_course_form :: courseForm(${course})"></div>
+      </div>
+
+
+      <div class="actions">
+        <style>
+          .actions {
+            background: #f9fafb !important;
+            padding: 1rem 1rem !important;
+            border-top: 1px solid rgba(34,36,38,.15) !important;
+            text-align: right !important;
+          }
+        </style>
+        <input type="submit" class="ui primary button" th:value="#{default.button.update.label}"/>
+        <div class="ui cancel button" th:text="#{common.cancel}">
+          Cancel
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
