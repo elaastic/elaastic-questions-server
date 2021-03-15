@@ -101,6 +101,7 @@ class Subject (
         }
 
         this.title = otherSubject.title
+        this.course = otherSubject.course
     }
 
     fun addStatement(statement: Statement): Statement {

@@ -103,7 +103,9 @@ class SubjectController(
             if (!statements.contains(statement)) statements.add(statement)
         }
         model.addAttribute("statements",statements)
+        model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
         model.addAttribute("alreadyImported", subjectService.isUsedAsParentSubject(user, subject))
+        model.addAttribute("subjectData", SubjectData(owner = user))
         model.addAttribute("activeTab", activeTab)
         subjectService.findAllByOwner(
                 user,
