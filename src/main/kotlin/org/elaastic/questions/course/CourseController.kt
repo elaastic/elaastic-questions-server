@@ -165,49 +165,6 @@ class CourseController(
         return "/subject/create"
     }
 
-    @PostMapping("{courseId}/addSubject")
-    fun addSubject(authentication: Authentication,
-                     @Valid @ModelAttribute subjectData: SubjectController.SubjectData,
-                     result: BindingResult,
-                     model: Model,
-                     @PathVariable courseId: Long,
-                     response: HttpServletResponse,
-                     redirectAttributes: RedirectAttributes): String {
-        println("ITS POST OCLOCK")
-
-        val user: User = authentication.principal as User
-
-        val associatedCourse = if (subjectData.course != null) subjectData.course!!.id?.let {courseService.get(user, it)} else null
-
-        if (result.hasErrors()) {
-            println("A KEL MOMENT")
-
-            for (obj: ObjectError in result.allErrors) {
-                if(obj is FieldError) {
-                    val fieldError : FieldError = obj
-
-                    println(fieldError.code)
-                }
-
-                if(obj is ObjectError) {
-                    val objectError : ObjectError = obj
-
-                    println(objectError.code);
-                }
-            }
-
-            response.status = HttpStatus.BAD_REQUEST.value()
-            model.addAttribute("subject", subjectData)
-            model.addAttribute("user", user)
-            model.addAttribute("course", courseId)
-            return "redirect:/course/${courseId}/addSubject"
-        } else {
-            courseService.addSubject(associatedCourse, subjectData.toEntity())
-            redirectAttributes.addAttribute("activeTab", "subjects");
-            return "redirect:/course/${courseId}"
-        }
-    }
-
     data class CourseData(
             var id: Long? = null,
             var version: Long? = null,
