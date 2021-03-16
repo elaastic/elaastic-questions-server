@@ -43,10 +43,6 @@ class CourseService (
     @Autowired val entityManager: EntityManager
 ){
 
-    /*fun save(course: Course): Course {
-        return courseRepository.save(course)
-    }*/
-
     fun get(id: Long, fetchSubjects: Boolean = false): Course {
         return when (fetchSubjects){
             true -> courseRepository.findOneWithSubjectsById(id)
@@ -54,7 +50,7 @@ class CourseService (
         } ?: throw EntityNotFoundException("There is no course for id \"$id\"")
     }
 
-    fun get (user : User, id: Long) : Course{
+    fun get(user : User, id: Long) : Course{
         courseRepository.findOneById(id).let{
             if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this course")
