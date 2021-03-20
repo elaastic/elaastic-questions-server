@@ -73,6 +73,7 @@ class WebSecurityConfig(
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
                 authorize("/login", permitAll)
+                authorize("/player/start-anonymous-session", permitAll)
                 authorize("/userAccount/beginPasswordReset", permitAll)
                 authorize("/userAccount/resetPassword", permitAll)
                 authorize("/userAccount/processPasswordResetRequest", permitAll)
@@ -81,6 +82,7 @@ class WebSecurityConfig(
                 authorize("/userAccount/activate", permitAll)
                 authorize("/terms", permitAll)
                 authorize("/launch/consent", permitAll)
+                authorize("/player/register", permitAll)
                 authorize("/ltiConsumer/**", hasAuthority(Role.RoleId.ADMIN.roleName))
                 authorize(anyRequest, authenticated)
             }

@@ -42,7 +42,7 @@
 
   <div class="field" th:classappend="${#fields.hasErrors('audience')}? 'error'">
     <label th:text="#{assignment.audience.label}">
-     Audience
+      Audience
     </label>
     <input type="text"
            name="audience"
@@ -67,6 +67,17 @@
            th:field="*{description}"/>
   </div>
 
+  <div class="field">
+    <label th:text="#{assignment.access}">Accès au devoir</label>
+    <div class="ui toggle checkbox">
+      <label th:text="#{assignment.autorize.anonymous.sessions}">Autoriser les sessions anonymes ?</label>
+      <input type="checkbox"
+             name="acceptAnonymousUsers"
+             th:field="*{acceptAnonymousUsers}"
+             th:checked="${assignment.acceptAnonymousUsers}" />
+    </div>
+  </div>
+
 
   <script th:inline="javascript">
     $(document)
@@ -88,14 +99,16 @@
                 rules: [
                   {
                     type: 'regExp',
-                    value: "^$|([2][0-9]{3}[ ][-][ ][2][0-9]{3})",
+                    value: '^$|([2][0-9]{3}[ ][-][ ][2][0-9]{3})',
                     prompt: /*[[#{assignment.scholarYear.mandatory}]]*/ ''
                   }
                 ]
               }
             }
           })
-      })
+      });
+
+    $('.ui.checkbox').checkbox();
   </script>
 </div>
 

@@ -35,6 +35,7 @@ rsion.
       </div>
 
       <a th:href="@{/userAccount/edit}"
+         th:if="${!user.isAnonymous()}"
          href="/userAccount/edit"
          class="item">
         <i class="address card outline icon"></i>

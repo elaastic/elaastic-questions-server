@@ -78,7 +78,11 @@ class Assignment(
 
         @Column(name = "scholar_year")
         @field:NotNull
-        var scholarYear: String? = null
+        var scholarYear: String? = null,
+
+        @Column(name = "accept_anonymous_users")
+        @field:NotNull
+        var acceptAnonymousUsers: Boolean = false
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
@@ -124,6 +128,7 @@ class Assignment(
         this.audience = otherAssignment.audience
         this.scholarYear = otherAssignment.scholarYear
         this.description = otherAssignment.description
+        this.acceptAnonymousUsers = otherAssignment.acceptAnonymousUsers
     }
 
     fun addSequence(sequence: Sequence): Sequence {

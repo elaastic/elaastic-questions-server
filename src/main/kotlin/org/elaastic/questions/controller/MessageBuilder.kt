@@ -40,6 +40,13 @@ class MessageBuilder(
         redirectAttributes.addFlashAttribute("messageContent", message)
     }
 
+    fun error(redirectAttributes: RedirectAttributes,
+              message: String) {
+
+        redirectAttributes.addFlashAttribute("messageType", "error")
+        redirectAttributes.addFlashAttribute("messageContent", message)
+    }
+
     fun message(code: String, vararg args: String): String {
         return internalMessage(code, arrayOf(*args))
     }

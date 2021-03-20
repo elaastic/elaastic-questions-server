@@ -129,7 +129,7 @@
           </span>
           <br/>
           <span style="font-size: small" th:text="#{subject.sharedOwner}">Shared By</span>
-          <span style="font-size: small" th:text="| ${subject.owner.firstName + ' ' + subject.owner.lastName}|">Owner Name</span>
+          <span style="font-size: small" th:text="| ${subject.owner.getFullname()}|">Owner Name</span>
         </div>
 
         <div class="sub header" data-i18n="[html]content.body" th:text="#{subject.shared.notice}">

@@ -18,9 +18,10 @@
 
 package org.elaastic.questions.directory
 
-interface HasEmailOrHasOwner {
+interface HasEmailOrHasOwnerOrIsAnonymous {
 
     fun hasEmail():Boolean
     fun hasOwner():Boolean
+    fun isAnonymous(): Boolean
 
 }

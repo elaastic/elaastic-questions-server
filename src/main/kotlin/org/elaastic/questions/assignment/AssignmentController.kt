@@ -46,31 +46,33 @@ import javax.validation.constraints.NotNull
 @RequestMapping("/assignment")
 @Transactional
 class AssignmentController(
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val subjectService: SubjectService
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val messageBuilder: MessageBuilder,
+    @Autowired val subjectService: SubjectService
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
-    fun index(authentication: Authentication,
-              model: Model,
-              @RequestParam("page") page: Int?,
-              @RequestParam("size") size: Int?): String {
+    fun index(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam("page") page: Int?,
+        @RequestParam("size") size: Int?
+    ): String {
         val user: User = authentication.principal as User
 
         assignmentService.findAllByOwner(
-                user,
-                PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+            user,
+            PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         ).let {
             model.addAttribute("user", user)
             model.addAttribute("assignmentPage", it)
             model.addAttribute(
-                    "pagination",
-                    PaginationUtil.buildInfo(
-                            it.totalPages,
-                            page,
-                            size
-                    )
+                "pagination",
+                PaginationUtil.buildInfo(
+                    it.totalPages,
+                    page,
+                    size
+                )
             )
         }
 
@@ -90,12 +92,14 @@ class AssignmentController(
     }
 
     @PostMapping("save")
-    fun save(authentication: Authentication,
-             @Valid @ModelAttribute assignmentData: AssignmentData,
-             result: BindingResult,
-             model: Model,
-             response: HttpServletResponse,
-             redirectAttributes: RedirectAttributes): String {
+    fun save(
+        authentication: Authentication,
+        @Valid @ModelAttribute assignmentData: AssignmentData,
+        result: BindingResult,
+        model: Model,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val user: User = authentication.principal as User
         val subject: Subject = subjectService.get(assignmentData.subject.id!!)
 
@@ -114,9 +118,11 @@ class AssignmentController(
     }
 
     @GetMapping("{id}/edit")
-    fun edit(authentication: Authentication,
-             model: Model,
-             @PathVariable id: Long): String {
+    fun edit(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
+    ): String {
         val user: User = authentication.principal as User
 
         assignmentService.get(user, id).let {
@@ -129,13 +135,15 @@ class AssignmentController(
     }
 
     @PostMapping("{id}/update")
-    fun update(authentication: Authentication,
-               @Valid @ModelAttribute assignmentData: AssignmentData,
-               result: BindingResult,
-               model: Model,
-               @PathVariable id: Long,
-               response: HttpServletResponse,
-               redirectAttributes: RedirectAttributes): String {
+    fun update(
+        authentication: Authentication,
+        @Valid @ModelAttribute assignmentData: AssignmentData,
+        result: BindingResult,
+        model: Model,
+        @PathVariable id: Long,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes
+    ): String {
 
         val user: User = authentication.principal as User
         val assignment: Assignment = assignmentService.get(id)
@@ -143,9 +151,12 @@ class AssignmentController(
         return if (result.hasErrors()) {
 
             model.addAttribute("user", user)
-            model.addAttribute("nbAssignments",assignment.subject!!.assignments.size)
+            model.addAttribute("nbAssignments", assignment.subject!!.assignments.size)
             if (!model.containsAttribute("assignment")) {
-                model.addAttribute("assignment", AssignmentController.AssignmentData(owner = user, subject=assignment.subject!!))
+                model.addAttribute(
+                    "assignment",
+                    AssignmentController.AssignmentData(owner = user, subject = assignment.subject!!)
+                )
             }
             return "/assignment/create"
 
@@ -156,12 +167,12 @@ class AssignmentController(
 
                 with(messageBuilder) {
                     success(
-                            redirectAttributes,
-                            message(
-                                    "assignment.updated.message",
-                                    message("assignment.label"),
-                                    it.title
-                            )
+                        redirectAttributes,
+                        message(
+                            "assignment.updated.message",
+                            message("assignment.label"),
+                            it.title
+                        )
                     )
                 }
                 redirectAttributes.addAttribute("activeTab", "assignments");
@@ -171,9 +182,11 @@ class AssignmentController(
     }
 
     @GetMapping("{id}/delete")
-    fun delete(authentication: Authentication,
-               @PathVariable id: Long,
-               redirectAttributes: RedirectAttributes): String {
+    fun delete(
+        authentication: Authentication,
+        @PathVariable id: Long,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val user: User = authentication.principal as User
 
         val assignment = assignmentService.get(user, id)
@@ -181,12 +194,12 @@ class AssignmentController(
 
         with(messageBuilder) {
             success(
-                    redirectAttributes,
-                    message(
-                            "assignment.deleted.message",
-                            message("assignment.label"),
-                            assignment.title
-                    )
+                redirectAttributes,
+                message(
+                    "assignment.deleted.message",
+                    message("assignment.label"),
+                    assignment.title
+                )
             )
         }
         redirectAttributes.addAttribute("activeTab", "assignments");
@@ -195,9 +208,11 @@ class AssignmentController(
 
 
     @GetMapping("{id}/addSequence")
-    fun addSequence(authentication: Authentication,
-                    model: Model,
-                    @PathVariable id: Long): String {
+    fun addSequence(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
+    ): String {
         val user: User = authentication.principal as User
 
         val assignment = assignmentService.get(user, id)
@@ -207,20 +222,22 @@ class AssignmentController(
         model.addAttribute("assignment", assignment)
         model.addAttribute("nbSequence", nbSequence)
         model.addAttribute(
-                "statementData",
-                StatementController.StatementData(
-                        Statement.createDefaultStatement(user)
-                )
+            "statementData",
+            StatementController.StatementData(
+                Statement.createDefaultStatement(user)
+            )
         )
 
         return "/assignment/sequence/create"
     }
 
     @GetMapping("{id}/up")
-    fun up(authentication: Authentication,
-           subjectId: Long,
-           @PathVariable id: Long,
-           redirectAttributes: RedirectAttributes): String {
+    fun up(
+        authentication: Authentication,
+        subjectId: Long,
+        @PathVariable id: Long,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, subjectId, true)
@@ -230,10 +247,12 @@ class AssignmentController(
     }
 
     @GetMapping("{id}/down")
-    fun down(authentication: Authentication,
-             subjectId: Long,
-             @PathVariable id: Long,
-             redirectAttributes: RedirectAttributes): String {
+    fun down(
+        authentication: Authentication,
+        subjectId: Long,
+        @PathVariable id: Long,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val user: User = authentication.principal as User
 
         val subject = subjectService.get(user, subjectId, true)
@@ -244,22 +263,24 @@ class AssignmentController(
 
 
     data class AssignmentData(
-            var id: Long? = null,
-            var version: Long? = null,
-            @field:NotBlank var title: String? = null,
-            @field:NotNull var owner: User? = null,
-            var subject: Subject,
-            var audience: String = "",
-            var description: String = "",
-            var scholarYear: String = ""
+        var id: Long? = null,
+        var version: Long? = null,
+        @field:NotBlank var title: String? = null,
+        @field:NotNull var owner: User? = null,
+        var subject: Subject,
+        var audience: String = "",
+        var description: String = "",
+        var scholarYear: String = "",
+        var acceptAnonymousUsers: Boolean = false
     ) {
         fun toEntity(): Assignment {
             return Assignment(
-                    title = title!!,
-                    owner = owner!!,
-                    subject = subject,
-                    scholarYear = scholarYear,
-                    audience = audience
+                title = title!!,
+                owner = owner!!,
+                subject = subject,
+                scholarYear = scholarYear,
+                audience = audience,
+                acceptAnonymousUsers = acceptAnonymousUsers
             ).let {
                 it.id = id
                 it.version = version
