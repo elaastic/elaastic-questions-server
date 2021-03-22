@@ -93,11 +93,8 @@
 
       <div class="content">
         <div>
-          <span th:text="#{subject.page.show.title}" >Manage a subject</span>
-          <span>"
-            <span th:text="${subject.title}">Titre sujet</span>
-            "
-          </span>
+          <span th:if="${subject.course != null}" th:text="${subject.course.title} + ' > ' + ${subject.title}" >Course title  > subject title</span>
+          <span th:unless="${subject.course != null}" th:text="${subject.title} + ' (Aucun cours associé)'" >Subject title (Not assigned)</span>
         </div>
 
         <div th:if="${subject.parentSubject != null}">
@@ -106,7 +103,6 @@
             "<span th:text="${subject.parentSubject.title}">Subject title</span>"
           </span>
         </div>
-
       </div>
 
       <div class="sub header"  th:text="#{subject.page.show.notice}">

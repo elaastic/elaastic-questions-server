@@ -18,12 +18,14 @@
 
 package org.elaastic.questions.course;
 
+import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectController
 import org.elaastic.questions.subject.SubjectService
+import org.elaastic.questions.subject.statement.StatementController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -32,7 +34,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
+import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional;
@@ -45,7 +50,9 @@ import javax.validation.constraints.NotNull
 @Transactional
 class CourseController(
         @Autowired val courseService: CourseService,
-        @Autowired val messageBuilder: MessageBuilder
+        @Autowired val messageBuilder: MessageBuilder,
+        @Autowired val subjectService: SubjectService
+
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -178,6 +185,22 @@ class CourseController(
         }
 
         return "redirect:/course"
+    }
+
+    @GetMapping("{courseId}/addSubject")
+    fun addSubject(authentication: Authentication,
+                      model: Model,
+                      @PathVariable courseId: Long): String {
+
+        val user: User = authentication.principal as User
+        val course = courseService.get(user, courseId)
+
+        model.addAttribute("user", user)
+        model.addAttribute("course", course)
+        model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
+        model.addAttribute("subjectData", SubjectController.SubjectData(owner = user))
+
+        return "/subject/create"
     }
 
     data class CourseData(

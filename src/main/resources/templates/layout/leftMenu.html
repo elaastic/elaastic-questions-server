@@ -59,7 +59,6 @@
   </head>
 
   <body>
-
     <div class="ui left vertical inverted visible sidebar labeled icon menu"
          style="background-color: #4f7691; overflow: visible !important;">
 
@@ -76,13 +75,13 @@
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
          th:href="@{/subject/}"
-         href="/subject/recent"
+         href="/subject/"
          class="item"
-         th:attr="data-tooltip=#{subject.recent.my.list.label}"
-         data-tooltip="Recent subjects"
+         th:attr="data-tooltip=#{subject.my.list.label}"
+         data-tooltip="My subjects"
          data-position="right center"
          data-inverted="">
-        <i class="clock icon"></i>
+        <i class="book icon"></i>
       </a>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
@@ -148,7 +147,6 @@
           <div th:replace="layout/components/footer :: footer"></div>
         </div>
       </div>
-
     </div>
 
   </body>

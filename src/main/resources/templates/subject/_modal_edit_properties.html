@@ -32,6 +32,12 @@
           th:classappend="${#fields.hasErrors('*')}? 'error'"
           th:action="@{/subject/{id}/update(id=${subject.id})}"
           method="POST">
+      <!-- <form class="ui form"
+          id="editProperties-form"
+          method="POST"
+          th:object="${subjectData}"
+          th:classappend="${#fields.hasErrors('*')}? 'error'"
+          th:action="@{subject/{id}/update(id=${subject.id})}"> -->
 
       <div style = "padding: 1.5rem" >
         <div th:replace="layout/components/form-messages :: formMessages('')"></div>
@@ -40,7 +46,6 @@
 
         <div th:replace="subject/_subject_form :: subjectForm(${subject})"></div>
       </div>
-
 
       <div class="actions">
         <style>

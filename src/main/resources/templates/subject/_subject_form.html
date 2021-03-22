@@ -36,9 +36,29 @@
                th:field="*{owner}"/>
     </div>
 
+    <div class="field" style="margin-top: 10px;">
+        <label th:text="#{course.create.action.label}">
+            Select the associated course :
+        </label>
+
+        <div style="margin-top: 5px">
+            <select class="ui dropdown fluid" th:field="*{course}">
+                <option th:text="#{course.not.associate.choice}"
+                        th:value="-1">
+                </option>
+                <option th:each="courseIt: ${listCourse}"
+                        th:value="${courseIt.id}"
+                        th:text="${courseIt.title}">
+                </option>
+            </select>
+        </div>
+    </div>
+
     <script th:inline="javascript">
         $(document)
             .ready(function () {
+                $('.ui.dropdown')
+                    .dropdown();
                 $('.ui.form')
                     .form({
                         fields: {
