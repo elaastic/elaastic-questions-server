@@ -81,10 +81,13 @@ class CourseService (
         require(user == subject.owner) {
             "Only the owner can delete a subject"
         }
-        val course = subject.course!!
-        touch(course)
-        course.subjects.remove(subject)
-        entityManager.flush()
+
+        if (subject.course != null){
+            val course = subject.course!!
+            touch(course)
+            course.subjects.remove(subject)
+            entityManager.flush()
+        }
         subjectRepository.delete(subject) // all other linked entities are deleted by DB cascade
         entityManager.flush()
         entityManager.clear()
