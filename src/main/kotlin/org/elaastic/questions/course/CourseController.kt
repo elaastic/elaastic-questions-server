@@ -198,7 +198,7 @@ class CourseController(
         model.addAttribute("user", user)
         model.addAttribute("course", course)
         model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
-        model.addAttribute("subjectData", SubjectController.SubjectData(owner = user))
+        model.addAttribute("subjectData", SubjectController.SubjectData(owner = user, course = course))
 
         return "/subject/create"
     }
