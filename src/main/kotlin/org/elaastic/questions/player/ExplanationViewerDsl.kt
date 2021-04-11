@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.player
 
+import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.explanationViewer.ChoiceExplanationViewerModel
 import org.elaastic.questions.player.components.explanationViewer.ExplanationData
 import org.elaastic.questions.player.components.explanationViewer.OpenExplanationViewerModel
@@ -121,12 +122,16 @@ class Explanations : ArrayList<ExplanationData>() {
 class ExplanationDataBuilder {
     var content: String? = null
     var author: String? = null
+    var firstName: String? = null
+    var lastName: String? = null
     var nbEvaluations: Int = 0
     var meanGrade: BigDecimal? = null
 
     fun build() = ExplanationData(
             content = content,
             author = author,
+            firstName = firstName,
+            lastName = lastName,
             nbEvaluations = nbEvaluations,
             meanGrade = meanGrade
     )
