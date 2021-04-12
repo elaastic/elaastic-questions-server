@@ -32,17 +32,33 @@
          style="font-size: 1rem;"
          th:id="|sequence_${resultsModel.sequenceId}_result|">
 
-
       <div th:if="${resultsModel.hasChoices}">
-
-        <th:block
-          th:if="${resultsModel.hasAnyResult}">
-          <div
-            th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${resultsModel.responseDistributionChartModel})"></div>
+        <th:block th:if="${resultsModel.hasAnyResult}">
+          <div th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${resultsModel.responseDistributionChartModel})"></div>
         </th:block>
+
+        <a th:if="${user.isTeacher()}"
+             id="hide-name"
+             onclick="nameStudents.hide()"
+             th:attr="data-tooltip=#{common.hide-name}"
+             data-position="right center"
+             data-inverted=""
+             style="margin-bottom: 5px; cursor: pointer;">
+          <i class="toggle off icon big teal"></i>
+        </a>
+
+        <a th:if="${user.isTeacher()}"
+             id="show-name"
+             onclick="nameStudents.show()"
+             th:attr="data-tooltip=#{common.show-name}"
+             data-position="right center"
+             data-inverted=""
+             style="margin-bottom: 5px; cursor: pointer; display: none;">
+          <i class="toggle on icon big teal"></i>
+        </a>
+
         <th:block th:if="${resultsModel.hasExplanations && resultsModel.hasAnyResult}">
-          <div
-            th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
+          <div th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
         </th:block>
         <th:block th:if="${!resultsModel.hasAnyResult}">
           <div th:replace="::noContribution"></div>
@@ -50,10 +66,8 @@
       </div>
 
       <div th:if="${!resultsModel.hasChoices}">
-        <th:block
-          th:if="${resultsModel.hasExplanations}">
-          <div
-            th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
+        <th:block th:if="${resultsModel.hasExplanations}">
+          <div th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
         </th:block>
         <th:block th:if="${!resultsModel.hasExplanations}">
           <div th:replace="::noContribution"></div>
@@ -81,6 +95,49 @@
   <script th:inline="javascript">
     $(document).ready(function () {
       $('#result-accordion-[[${resultsModel.sequenceId}]]').accordion()
+    });
+
+    /**
+     * if the URL param 'hideName' has the value 'true' then the name will be hidden by default
+     * The name visibility may be controlled with show/hide button in the toggle button. Name state is stored in a cookie.
+     */
+
+    let nameStudents = {}
+
+    $(document).ready(function () {
+      let listNames = $('.name-explanation');
+      let showName = $('#show-name')
+      let hideName = $('#hide-name')
+      let urlParams = new URLSearchParams(location.search)
+
+      nameStudents.show = function () {
+        listNames.show()
+        showName.hide()
+        hideName.show()
+        urlParams.delete('hideName')
+        window.location.search = urlParams.toString()
+        Cookies.set('hideName', 'false')
+      }
+
+      nameStudents.hide = function () {
+        listNames.hide()
+        showName.show()
+        hideName.hide()
+        urlParams.set('hideName', 'true')
+        Cookies.set('hideName', 'true')
+      }
+
+      if (urlParams.has('hideName')) {
+        if (urlParams.get('hideName') === 'true') {
+          Cookies.set('hideName', 'true')
+        } else {
+          Cookies.remove('hideName')
+        }
+      }
+
+      if (Cookies.get('hideName') === 'true') {
+        nameStudents.hide()
+      }
     })
   </script>
 </div>
