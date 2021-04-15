@@ -21,7 +21,7 @@
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-  <title th:text="#{course.creation.label(#{course.label})}"></title>
+  <title th:text="#{course.create.label(#{course.label})}"></title>
 </head>
 
 <body>
@@ -44,7 +44,6 @@
            name="create"
            class="ui primary button"
            th:value="#{default.button.create.label}"/>
-
 
     <a th:href="@{/course}" class="ui button" th:text="#{common.cancel}">
       Cancel

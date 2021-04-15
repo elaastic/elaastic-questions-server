@@ -16,11 +16,11 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="modalEditProperties(subject)"
-     id="subject-editProperties-modal"
+<div th:fragment="modalEditProperties(course)"
+     id="course-editProperties-modal"
      class="ui modal"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-  <div class="header" th:text="#{subject.propertiesEdition.label}">
+  <div class="header" th:text="#{course.propertiesEdition.label}">
     Edit properties
   </div>
 
@@ -28,9 +28,9 @@
     <form class="ui form"
           action="#"
           id="editProperties-form"
-          th:object="${subject}"
+          th:object="${course}"
           th:classappend="${#fields.hasErrors('*')}? 'error'"
-          th:action="@{/subject/{id}/update(id=${subject.id})}"
+          th:action="@{/course/{id}/update(id=${course.id})}"
           method="POST">
 
       <div style = "padding: 1.5rem" >
@@ -38,8 +38,9 @@
 
         <input type="hidden" name="version" th:value="*{version}"/>
 
-        <div th:replace="subject/_subject_form :: subjectForm(${subject}, ${listCourse})"></div>
+        <div th:replace="course/_course_form :: courseForm(${course})"></div>
       </div>
+
 
       <div class="actions">
         <style>

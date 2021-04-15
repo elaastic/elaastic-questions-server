@@ -20,8 +20,10 @@ package org.elaastic.questions.course
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
+import org.elaastic.questions.subject.SubjectService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -50,6 +52,12 @@ internal class CourseControllerTest(
 ){
     @MockBean
     lateinit var courseService: CourseService
+
+    @MockBean
+    lateinit var subjectService: SubjectService
+
+    @MockBean
+    lateinit var messageBuilder: MessageBuilder
 
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
@@ -104,7 +112,7 @@ internal class CourseControllerTest(
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(
                         MockMvcResultMatchers.redirectedUrlTemplate(
-                                "/course/{courseId}?activeTab=questions",
+                                "/course/{courseId}",
                                 courseId
                         )
                 )

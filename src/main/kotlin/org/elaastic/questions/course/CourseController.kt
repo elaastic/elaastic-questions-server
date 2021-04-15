@@ -18,12 +18,14 @@
 
 package org.elaastic.questions.course;
 
+import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectController
 import org.elaastic.questions.subject.SubjectService
+import org.elaastic.questions.subject.statement.StatementController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -32,7 +34,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
+import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional;
@@ -46,7 +51,6 @@ import javax.validation.constraints.NotNull
 class CourseController(
         @Autowired val courseService: CourseService,
         @Autowired val messageBuilder: MessageBuilder
-        /* @Autowired val subjectService: SubjectService */
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
@@ -56,16 +60,6 @@ class CourseController(
               @RequestParam("size") size: Int?): String {
 
         val user : User = authentication.principal as User
-
-        /*
-        val courseNonVide = Course("Course pas vide test", user)
-        val subject = Subject("Sujet pour cours non vide", user)
-        subject.course = courseNonVide
-        subjectService.save(subject)
-
-        courseNonVide.subjects.add(subject)
-        courseService.save(courseNonVide)
-        */
 
         courseService.findAllByOwner(user, PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
                 .let {
@@ -110,6 +104,43 @@ class CourseController(
         return "/course/show"
     }
 
+    @PostMapping("{id}/update")
+    fun update(authentication: Authentication,
+               @Valid @ModelAttribute courseData: CourseData,
+               result: BindingResult,
+               model: Model,
+               @PathVariable id: Long,
+               response: HttpServletResponse,
+               redirectAttributes: RedirectAttributes): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+
+        return if (result.hasErrors()) {
+            response.status = HttpStatus.BAD_REQUEST.value()
+            model.addAttribute("course", courseData)
+            "redirect:/course/$id"
+        } else {
+            courseService.get(user, id).let {
+                it.updateFrom(courseData.toEntity())
+                courseService.save(it)
+
+                with(messageBuilder) {
+                    success(
+                            redirectAttributes,
+                            message(
+                                    "course.updated.message",
+                                    message("course.label"),
+                                    it.title
+                            )
+                    )
+                }
+                model.addAttribute("course", it)
+                "redirect:/course/$id"
+            }
+        }
+    }
+
     @PostMapping("save")
     fun save(authentication: Authentication,
              @Valid @ModelAttribute courseData: CourseData,
@@ -152,6 +183,22 @@ class CourseController(
         }
 
         return "redirect:/course"
+    }
+
+    @GetMapping("{courseId}/addSubject")
+    fun addSubject(authentication: Authentication,
+                      model: Model,
+                      @PathVariable courseId: Long): String {
+
+        val user: User = authentication.principal as User
+        val course = courseService.get(user, courseId)
+
+        model.addAttribute("user", user)
+        model.addAttribute("course", course)
+        model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
+        model.addAttribute("subjectData", SubjectController.SubjectData(owner = user, course = course))
+
+        return "/subject/create"
     }
 
     data class CourseData(

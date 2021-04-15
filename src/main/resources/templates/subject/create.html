@@ -33,18 +33,19 @@
 <div class="ui segment">
   <div class="ui top attached label" th:text="#{subject.create.label}"></div>
   <form class="ui form"
-        th:object="${subject}"
+        th:object="${subjectData}"
         th:classappend="${#fields.hasErrors('title')}? 'error'"
         method="POST"
-        th:action="@{/subject/save}">
+        th:action = "${#httpServletRequest.requestURI == '/course/{id}/addSubject(id=${course.id})'}
+        ? @{/course/{id}/addSubject(id=${course.id})}
+        : @{/subject/save}" >
 
-    <div th:replace="subject/_subject_form :: subjectForm(${subject})"></div>
+    <div th:replace="subject/_subject_form :: subjectForm(${subject}, ${listCourse})"></div>
 
     <input type="submit"
            name="create"
            class="ui primary button"
            th:value="#{default.button.create.label}"/>
-
 
     <a th:href="@{/course}" class="ui button" th:text="#{common.cancel}">
       Cancel

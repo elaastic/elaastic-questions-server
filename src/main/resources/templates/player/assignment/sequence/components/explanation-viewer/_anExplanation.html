@@ -29,9 +29,9 @@
     <span class="detail" th:if="${explanation.nbEvaluations > 1}"
           th:text="${explanation.nbEvaluations}+' '+#{common.evaluations}"></span>
   </div>
+  <b>
+    <span class="name-explanation" th:if="${user.isTeacher()}" th:text="${explanation.author}"></span>
+  </b>
 
-  <strong th:text="|@${explanation.author}|"></strong>
-
-  <br/>
   <span th:utext="${explanation.content}"></span>
 </div>

@@ -19,18 +19,19 @@
 package org.elaastic.questions.player.components.explanationViewer
 
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.directory.User
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 class ExplanationData(
-        val content: String? = null,
-        val author: String? = null,
-        val nbEvaluations: Int = 0,
-        meanGrade: BigDecimal? = null
+    val content: String? = null,
+    val author: String? = null,
+    val nbEvaluations: Int = 0,
+    meanGrade: BigDecimal? = null
 ) {
     constructor(response: Response) : this(
             content = response.explanation,
-            author = response.learner.username,
+            author = response.learner.firstName + " " + response.learner.lastName + " (@" + response.learner.username + ")",
             nbEvaluations = response.evaluationCount,
             meanGrade = response.meanGrade
     )

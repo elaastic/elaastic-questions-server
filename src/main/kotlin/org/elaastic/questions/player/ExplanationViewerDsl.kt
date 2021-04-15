@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.player
 
+import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.explanationViewer.ChoiceExplanationViewerModel
 import org.elaastic.questions.player.components.explanationViewer.ExplanationData
 import org.elaastic.questions.player.components.explanationViewer.OpenExplanationViewerModel
