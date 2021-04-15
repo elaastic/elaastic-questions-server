@@ -89,6 +89,17 @@
       </a>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+         th:href="@{/course/}"
+         href="/course"
+         class="item"
+         th:attr="data-tooltip=#{course.my.list.label}"
+         data-tooltip="My courses"
+         data-position="right center"
+         data-inverted="">
+        <i class="folder open icon"></i>
+      </a>
+
+      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
          th:href="@{/subject/shared_index}"
          href="/subject/shared_index"
          class="item"

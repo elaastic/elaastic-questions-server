@@ -22,6 +22,7 @@ import com.nhaarman.mockitokotlin2.*
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.statement.StatementService
@@ -69,6 +70,9 @@ internal class SubjectControllerTest(
 
     @MockBean
     lateinit var sharedSubjectService: SharedSubjectService
+
+    @MockBean
+    lateinit var courseService: CourseService
 
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
