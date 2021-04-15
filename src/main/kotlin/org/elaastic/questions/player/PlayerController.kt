@@ -249,6 +249,9 @@ class PlayerController(
                     getFirstAttemptResponse = {
                         responseService.find(user, sequence)
                     },
+                        getSecondAttemptResponse = {
+                            responseService.find(user, sequence, 2)
+                        },
                     userCanRefreshResults = {
                         resultsService.canUpdateResults(user, sequence)
                     }

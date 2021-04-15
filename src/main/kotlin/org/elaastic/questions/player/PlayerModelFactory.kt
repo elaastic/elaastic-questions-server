@@ -96,6 +96,7 @@ object PlayerModelFactory {
                         findAllRecommandedResponsesForUser: () -> List<Response>,
                         userHasPerformedEvaluation: () -> Boolean,
                         getFirstAttemptResponse: () -> Response?,
+                        getSecondAttemptResponse: () -> Response?,
                         userCanRefreshResults: () -> Boolean): LearnerPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResponsePhase = sequence.state == State.show &&
