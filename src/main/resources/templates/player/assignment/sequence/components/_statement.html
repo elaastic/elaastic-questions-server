@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="statement(statementPanelModel, statement)"
+<div th:fragment="statement(statementPanelModel, statement, resultsModel, playerResultsModel)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div class="ui accordion segment" id="statement-accordion" style="padding-bottom: 0;">
@@ -38,8 +38,13 @@
                 <div th:if="${statement.attachment != null}" th:remove="tag">
                     <div th:replace="/subject/statement/_statement_attachment :: statementAttachment(${statement.attachment},650,380)"></div>
                 </div>
-                <p th:utext="${statement.content}"></p>
+                <p th:utext="${statement.content}">Question content</p>
             </div>
+
+            <!-- Play Results display -->
+            <th:block th:if="${playerModel.showResults and !user.isTeacher()}">
+                <div th:replace="|/player/assignment/sequence/components/_player-results.html| :: playerResults(${playerModel.statement}, ${playerModel.playerResultsModel})"></div>
+            </th:block>
         </div>
 
     </div>

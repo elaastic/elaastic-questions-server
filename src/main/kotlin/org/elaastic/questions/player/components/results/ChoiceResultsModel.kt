@@ -29,6 +29,6 @@ data class ChoiceResultsModel(
         override val hasExplanations: Boolean,
         override val explanationViewerModel: ExplanationViewerModel? = null,
         override val userCanRefreshResults: Boolean = true
-) : ResultsModel {
+        ) : ResultsModel {
     override fun getHasChoices() = true
 }

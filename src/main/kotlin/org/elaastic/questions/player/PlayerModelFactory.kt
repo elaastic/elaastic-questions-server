@@ -29,6 +29,7 @@ import org.elaastic.questions.player.components.assignmentOverview.AssignmentOve
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.ResponseData
+import org.elaastic.questions.player.components.playerResults.PlayerResultsModelFactory
 import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModelFactory
 import org.elaastic.questions.player.components.results.ResultsModelFactory
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
@@ -165,6 +166,11 @@ object PlayerModelFactory {
                             findAllResponses(),
                             userCanRefreshResults()
                     )
+                else null,
+                playerResultsModel =
+                if(showResults){
+                    PlayerResultsModelFactory.build(getFirstAttemptResponse(), getSecondAttemptResponse(), sequence.statement)
+                }
                 else null
         )
     }

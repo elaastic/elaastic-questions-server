@@ -92,7 +92,7 @@
       <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel})"></div>
     </th:block>
     <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
-    <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
+    <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement}, ${playerModel.playerResultsModel}, ${playerModel.showResults})"></div>
 
     <th:block th:if="${playerModel.showResponsePhase}">
       <div th:replace="|${components}/_response-phase.html| :: responsePhase(${playerModel.responsePhaseModel})"></div>

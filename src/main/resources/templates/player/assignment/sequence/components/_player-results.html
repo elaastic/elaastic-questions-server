@@ -1,0 +1,89 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="playerResults(statement, playerResultsModel)"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+            <div th:if="${playerResultsModel.hasAnswered()}">
+                <div class="ui section divider"></div>
+                <div class="ui header small">Mon Résultat</div>
+                <div class="ui tiny header">Phase 1</div>
+                <div th:if="${playerResultsModel.statementHasChoice}">
+                    <div class="small" style="margin-bottom: 5px;">Choix</div>
+                    <div th:each="i : ${#numbers.sequence(1, playerResultsModel.statementNbItems)}" class="ui left labeled button small" tabindex="0" style="margin-right: 10px;">
+                        <a th:text="${i}" class="ui label" th:classappend="${#lists.contains(playerResultsModel.statementExpectedChoiceList, i) ? 'green' : 'red'}">itemID</a>
+                        <div class="ui button compact">
+                            <i th:class="${#lists.contains(playerResultsModel.responseFirstTry.learnerChoice, i)? 'check icon' : 'icon'}"></i>
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <div class="small" style="margin-top: 15px; margin-bottom: 5px">Score</div>
+                        <div th:switch="${playerResultsModel.responseFirstTry.score}">
+                            <div th:case="0.00" th:text="${playerResultsModel.responseFirstTry.score + '%'}" class="ui medium label red">SCORE</div>
+                            <div th:case="100.00" th:text="${playerResultsModel.responseFirstTry.score + '%'}" class="ui medium label green">SCORE</div>
+                            <div th:case="*" th:text="${playerResultsModel.responseFirstTry.score + '%'}" class="ui medium label orange">SCORE</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui info message explanation"
+                     th:styleappend="${playerResultsModel.responseFirstTry.explanation != null ? 'padding-top: 3em;' : ''}"
+                     th:if="${!#strings.isEmpty(playerResultsModel.responseFirstTry.explanation)}">
+                    <div class="ui top left attached teal label">
+                        <span th:text="${playerResultsModel.responseFirstTry.meanGrade}">SCORE</span>/5
+                        <span class="detail" th:if="${playerResultsModel.responseFirstTry.evaluationCount <= 1}"
+                              th:text="${playerResultsModel.responseFirstTry.evaluationCount} + ' ' + #{common.evaluation}">
+                            NUMBER EVALUATION
+                        </span>
+                        <span class="detail" th:if="${playerResultsModel.responseFirstTry.evaluationCount > 1}"
+                              th:text="${playerResultsModel.responseFirstTry.evaluationCount} + ' ' + #{common.evaluations}">
+                              NUMBER EVALUATION
+                        </span>
+                    </div>
+                    <span th:utext="${playerResultsModel.responseFirstTry.explanation}">EXPLANATION CONTENT</span>
+                </div>
+
+                <div th:if="${playerResultsModel.hasAnsweredSecondPhase()}" style="margin-top: 10px;">
+                    <div class="ui tiny header">Phase 2</div>
+                    <div class="small" style="margin-bottom: 5px;">Choix</div>
+                    <div th:if="${playerResultsModel.statementHasChoice}">
+                        <div th:each="i : ${#numbers.sequence(1, playerResultsModel.statementNbItems)}" class="ui left labeled button small" tabindex="0" style="margin-right: 10px;">
+                            <a th:text="${i}" class="ui label" th:classappend="${#lists.contains(playerResultsModel.statementExpectedChoiceList, i) ? 'green' : 'red'}">itemID</a>
+                            <div class="ui button compact">
+                                <i th:class="${#lists.contains(playerResultsModel.responseSecondTry.learnerChoice, i)? 'check icon' : 'icon'}"></i>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div>
+                            <div class="small" style="margin-top: 15px; margin-bottom: 5px;">Score</div>
+                            <div th:switch="${playerResultsModel.responseSecondTry.score}">
+                                <div th:case="0.00" th:text="${playerResultsModel.responseSecondTry.score + '%'}" class="ui medium label red">SCORE</div>
+                                <div th:case="100.00" th:text="${playerResultsModel.responseSecondTry.score + '%'}" class="ui medium label green">SCORE</div>
+                                <div th:case="*" th:text="${playerResultsModel.responseSecondTry.score + '%'}" class="ui medium label orange">SCORE</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui info message explanation" th:if="${!#strings.isEmpty(playerResultsModel.responseSecondTry.explanation)}">
+                        <span th:utext="${playerResultsModel.responseSecondTry.explanation}">EXPLANATION CONTENT</span>
+                    </div>
+                </div>
+            </div>
+</div>

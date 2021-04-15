@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
+import org.elaastic.questions.player.components.playerResults.PlayerResultsModel
 import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
@@ -42,7 +43,8 @@ open class PlayerModel(
         val showResponsePhase: Boolean,
         val showEvaluationPhase: Boolean,
         val showResults: Boolean,
-        val resultsModel: ResultsModel?
+        val resultsModel: ResultsModel?,
+        val playerResultsModel: PlayerResultsModel?
 )
 
 class TeacherPlayerModel(
@@ -69,7 +71,8 @@ class TeacherPlayerModel(
         showResponsePhase = false,
         showEvaluationPhase = false,
         showResults = showResults,
-        resultsModel = resultsModel
+        resultsModel = resultsModel,
+        playerResultsModel = null
 )
 
 class LearnerPlayerModel(
@@ -85,7 +88,8 @@ class LearnerPlayerModel(
         showEvaluationPhase: Boolean,
         val evaluationPhaseModel: EvaluationPhaseModel?,
         showResults: Boolean,
-        resultsModel: ResultsModel?
+        resultsModel: ResultsModel?,
+        playerResultsModel: PlayerResultsModel?
 ) : PlayerModel(
         assignment = assignment,
         sequence = sequence,
@@ -98,7 +102,8 @@ class LearnerPlayerModel(
         showResponsePhase = showResponsePhase,
         showEvaluationPhase = showEvaluationPhase,
         showResults = showResults,
-        resultsModel = resultsModel
+        resultsModel = resultsModel,
+        playerResultsModel = playerResultsModel
 )
 
 enum class UserRole {
