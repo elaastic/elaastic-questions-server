@@ -12,8 +12,6 @@ interface CourseRepository : JpaRepository<Course?, Long> {
 
     fun findOneById(id: Long): Course
 
-    fun findByGlobalId(globalId: String): Course
-
     @EntityGraph(value = "Course_subjects", type = EntityGraph.EntityGraphType.LOAD)
     fun findOneWithSubjectsById(id: Long): Course?
 

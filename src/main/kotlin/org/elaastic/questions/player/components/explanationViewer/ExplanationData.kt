@@ -26,16 +26,12 @@ import java.math.RoundingMode
 class ExplanationData(
     val content: String? = null,
     val author: String? = null,
-    val firstName: String? = null,
-    val lastName: String? = null,
     val nbEvaluations: Int = 0,
     meanGrade: BigDecimal? = null
 ) {
     constructor(response: Response) : this(
             content = response.explanation,
-            author = response.learner.username,
-            firstName = response.learner.firstName,
-            lastName = response.learner.lastName,
+            author = response.learner.firstName + " " + response.learner.lastName + " (@" + response.learner.username + ")",
             nbEvaluations = response.evaluationCount,
             meanGrade = response.meanGrade
     )

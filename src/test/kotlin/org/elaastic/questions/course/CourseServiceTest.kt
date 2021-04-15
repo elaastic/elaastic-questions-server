@@ -10,11 +10,17 @@ import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import java.util.*
+import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 import kotlin.collections.ArrayList
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
+@Profile("test")
 class CourseServiceTest(
         @Autowired val courseService: CourseService,
         @Autowired val testingService: TestingService
@@ -22,7 +28,7 @@ class CourseServiceTest(
 
     @Test
     fun `findAllByOwner - no subject`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = testingService.getAnotherTestTeacher()
 
         courseService.findAllByOwner(teacher)
                 .tExpect {
@@ -33,7 +39,7 @@ class CourseServiceTest(
 
     @Test
     fun `findAllByOwner - with subjects`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = testingService.getAnotherTestTeacher()
         createTestingData(teacher)
 
         courseService.findAllByOwner(teacher)
@@ -73,30 +79,6 @@ class CourseServiceTest(
                 exception.constraintViolations.elementAt(0).propertyPath.toString(),
                 CoreMatchers.equalTo("title")
         )
-    }
-
-    @Test
-    fun `findByGlobalId - not existing value`() {
-        MatcherAssert.assertThat(
-                courseService.findByGlobalId("not existing"),
-                CoreMatchers.nullValue()
-        )
-    }
-
-    @Test
-    fun `findByGlobalId - existing value`() {
-        val teacher = testingService.getTestTeacher()
-        courseService.save(
-                Course(
-                        title = "An assignment",
-                        owner = teacher
-                )
-        ).tExpect {
-            MatcherAssert.assertThat(
-                    courseService.findByGlobalId(it.globalId),
-                    CoreMatchers.equalTo(it)
-            )
-        }
     }
 
     private fun createTestingData(owner: User, n: Int = 10) {

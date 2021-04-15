@@ -40,7 +40,7 @@
         ? @{/course/{id}/addSubject(id=${course.id})}
         : @{/subject/save}" >
 
-    <div th:replace="subject/_subject_form :: subjectForm(${subject})"></div>
+    <div th:replace="subject/_subject_form :: subjectForm(${subject}, ${listCourse})"></div>
 
     <input type="submit"
            name="create"

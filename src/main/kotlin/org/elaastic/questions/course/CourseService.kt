@@ -88,7 +88,7 @@ class CourseService (
             course.subjects.remove(subject)
             entityManager.flush()
         }
-        subjectRepository.delete(subject) // all other linked entities are deleted by DB cascade
+        subjectService.delete(user, subject)
         entityManager.flush()
         entityManager.clear()
     }
@@ -99,10 +99,6 @@ class CourseService (
 
     fun count(): Long {
         return courseRepository.count()
-    }
-
-    fun findByGlobalId(globalId: String) : Course {
-        return courseRepository.findByGlobalId(globalId)
     }
 
     fun findOneById(id: Long) : Course {

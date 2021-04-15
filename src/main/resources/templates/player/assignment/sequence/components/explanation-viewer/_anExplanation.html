@@ -30,7 +30,7 @@
           th:text="${explanation.nbEvaluations}+' '+#{common.evaluations}"></span>
   </div>
   <b>
-    <span class="name-explanation" th:if="${user.isTeacher()}" th:text="${explanation.firstName}+' '+${explanation.lastName}+' : '"></span>
+    <span class="name-explanation" th:if="${user.isTeacher()}" th:text="${explanation.author}"></span>
   </b>
 
   <span th:utext="${explanation.content}"></span>
