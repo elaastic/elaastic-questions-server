@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest
 import java.util.*
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
-import kotlin.collections.ArrayList
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional

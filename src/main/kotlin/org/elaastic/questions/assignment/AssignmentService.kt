@@ -232,7 +232,8 @@ class AssignmentService(
 
     fun getCoursesAssignmentsMap(assignments : List<Assignment>) : MutableMap<Course, MutableList<Assignment>> {
 
-        var mapResult : MutableMap<Course, MutableList<Assignment>> = mutableMapOf()
+        // TODO rewrite this code in a more functional way
+        val mapResult : MutableMap<Course, MutableList<Assignment>> = mutableMapOf()
         for(assignment in assignments) {
             val course : Course? = assignment.subject?.course
             if(course != null){

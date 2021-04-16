@@ -24,7 +24,6 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.SubjectService
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -97,7 +96,7 @@ internal class CourseControllerTest(
         val courseId = 301L
         val title = "A random Title"
 
-        val CourseData = CourseController.CourseData(
+        val courseData = CourseController.CourseData(
                 id = courseId,
                 title = title,
                 owner = user
@@ -107,9 +106,9 @@ internal class CourseControllerTest(
                 MockMvcRequestBuilders.post("/course/save")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .flashAttr("courseData", CourseData)
+                        .flashAttr("courseData", courseData)
         )
-                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.status().isFound)
                 .andExpect(
                         MockMvcResultMatchers.redirectedUrlTemplate(
                                 "/course/{courseId}",
@@ -126,7 +125,7 @@ internal class CourseControllerTest(
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("title", "")
         )
-                .andExpect(MockMvcResultMatchers.status().isBadRequest()) // no redirect, the page is re-rendered with error messages
+                .andExpect(MockMvcResultMatchers.status().isBadRequest) // no redirect, the page is re-rendered with error messages
     }
 }
 

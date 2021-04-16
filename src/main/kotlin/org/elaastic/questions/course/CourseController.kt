@@ -16,31 +16,24 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package org.elaastic.questions.course;
+package org.elaastic.questions.course
 
-import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
-import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectController
-import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.StatementController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
-import org.springframework.validation.FieldError
-import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import javax.servlet.http.HttpServletResponse
-import javax.transaction.Transactional;
+import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -49,30 +42,36 @@ import javax.validation.constraints.NotNull
 @RequestMapping("/course")
 @Transactional
 class CourseController(
-        @Autowired val courseService: CourseService,
-        @Autowired val messageBuilder: MessageBuilder
+    @Autowired val courseService: CourseService,
+    @Autowired val messageBuilder: MessageBuilder
 ) {
 
     @GetMapping(value = ["", "/", "/index"])
-    fun index(authentication: Authentication,
-              model: Model,
-              @RequestParam("page") page: Int?,
-              @RequestParam("size") size: Int?): String {
+    fun index(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam("page") page: Int?,
+        @RequestParam("size") size: Int?
+    ): String {
 
-        val user : User = authentication.principal as User
+        val user: User = authentication.principal as User
 
-        courseService.findAllByOwner(user, PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
-                .let {
-                    model.addAttribute("user", user)
-                    model.addAttribute("coursePage", it)
-                    model.addAttribute("pagination",
-                            PaginationUtil.buildInfo(
-                                    it.totalPages,
-                                    page,
-                                    size
-                            )
+        courseService.findAllByOwner(
+            user,
+            PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+        )
+            .let {
+                model.addAttribute("user", user)
+                model.addAttribute("coursePage", it)
+                model.addAttribute(
+                    "pagination",
+                    PaginationUtil.buildInfo(
+                        it.totalPages,
+                        page,
+                        size
                     )
-                }
+                )
+            }
         return "/course/index"
     }
 
@@ -90,13 +89,15 @@ class CourseController(
     }
 
     @GetMapping(value = ["/{id}", "{id}/show"])
-    fun show(authentication: Authentication, model: Model,
-             @PathVariable id: Long): String {
+    fun show(
+        authentication: Authentication, model: Model,
+        @PathVariable id: Long
+    ): String {
 
         val user: User = authentication.principal as User
         model.addAttribute("user", user)
 
-        var course: Course = courseService.get(id, fetchSubjects = true)
+        val course: Course = courseService.get(id, fetchSubjects = true)
         model.addAttribute("course", course)
 
         model.addAttribute("subjects", course.subjects.toList())
@@ -105,13 +106,15 @@ class CourseController(
     }
 
     @PostMapping("{id}/update")
-    fun update(authentication: Authentication,
-               @Valid @ModelAttribute courseData: CourseData,
-               result: BindingResult,
-               model: Model,
-               @PathVariable id: Long,
-               response: HttpServletResponse,
-               redirectAttributes: RedirectAttributes): String {
+    fun update(
+        authentication: Authentication,
+        @Valid @ModelAttribute courseData: CourseData,
+        result: BindingResult,
+        model: Model,
+        @PathVariable id: Long,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
@@ -127,12 +130,12 @@ class CourseController(
 
                 with(messageBuilder) {
                     success(
-                            redirectAttributes,
-                            message(
-                                    "course.updated.message",
-                                    message("course.label"),
-                                    it.title
-                            )
+                        redirectAttributes,
+                        message(
+                            "course.updated.message",
+                            message("course.label"),
+                            it.title
+                        )
                     )
                 }
                 model.addAttribute("course", it)
@@ -142,12 +145,14 @@ class CourseController(
     }
 
     @PostMapping("save")
-    fun save(authentication: Authentication,
-             @Valid @ModelAttribute courseData: CourseData,
-             result: BindingResult,
-             model: Model,
-             response: HttpServletResponse,
-             redirectAttributes: RedirectAttributes): String {
+    fun save(
+        authentication: Authentication,
+        @Valid @ModelAttribute courseData: CourseData,
+        result: BindingResult,
+        model: Model,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val user: User = authentication.principal as User
 
         return if (result.hasErrors()) {
@@ -163,9 +168,11 @@ class CourseController(
     }
 
     @GetMapping("{id}/delete")
-    fun delete(authentication: Authentication,
-               @PathVariable id: Long,
-               redirectAttributes: RedirectAttributes): String {
+    fun delete(
+        authentication: Authentication,
+        @PathVariable id: Long,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val user: User = authentication.principal as User
 
         val course = courseService.get(user, id)
@@ -186,9 +193,11 @@ class CourseController(
     }
 
     @GetMapping("{courseId}/addSubject")
-    fun addSubject(authentication: Authentication,
-                      model: Model,
-                      @PathVariable courseId: Long): String {
+    fun addSubject(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable courseId: Long
+    ): String {
 
         val user: User = authentication.principal as User
         val course = courseService.get(user, courseId)
@@ -202,15 +211,15 @@ class CourseController(
     }
 
     data class CourseData(
-            var id: Long? = null,
-            var version: Long? = null,
-            @field:NotBlank var title: String? = null,
-            @field:NotNull var owner: User? = null
+        var id: Long? = null,
+        var version: Long? = null,
+        @field:NotBlank var title: String? = null,
+        @field:NotNull var owner: User? = null
     ) {
         fun toEntity(): Course {
             return Course(
-                    title = title!!,
-                    owner = owner!!
+                title = title!!,
+                owner = owner!!
             ).let {
                 it.id = id
                 it.version = version

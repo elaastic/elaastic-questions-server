@@ -30,7 +30,7 @@ class Course (
         @field:NotBlank
         var title: String,
 
-        @field:ManyToOne(fetch = FetchType.LAZY)
+        @field:ManyToOne(fetch = FetchType.LAZY) // TODO Lazy ?
         var owner: User
 
 ): AbstractJpaPersistable<Long>() {

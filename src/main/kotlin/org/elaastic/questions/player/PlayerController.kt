@@ -73,6 +73,7 @@ class PlayerController(
               model: Model): String {
         val user: User = authentication.principal as User
 
+        // TODO N+1 SELECT (Assignment => Course)
         val assignments : List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
         val mapCourseAssignments : Map<Course, MutableList<Assignment>> =
                 assignmentService.getCoursesAssignmentsMap(assignments)

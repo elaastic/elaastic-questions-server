@@ -20,7 +20,6 @@ package org.elaastic.questions.course
 
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
-import org.elaastic.questions.subject.SubjectRepository
 import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -38,7 +37,6 @@ import javax.transaction.Transactional
 @Transactional
 class CourseService (
     @Autowired val courseRepository: CourseRepository,
-    @Autowired val subjectRepository: SubjectRepository,
     @Autowired val subjectService: SubjectService,
     @Autowired val entityManager: EntityManager
 ){
@@ -101,27 +99,9 @@ class CourseService (
         return courseRepository.count()
     }
 
-    fun findOneById(id: Long) : Course {
-        return courseRepository.findOneById(id)
-    }
-
     fun findAllByOwner(owner: User,
                        pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
             : Page<Course> {
         return courseRepository.findAllByOwner(owner, pageable)
-    }
-
-    fun addSubject(course: Course?, subject: Subject): Subject {
-        if (course == null) {
-            subjectService.save(subject)
-            subject.course = null
-        } else {
-            subject.course = course
-            subjectService.save(subject)
-            course.subjects.add(subject)
-            touch(course)
-        }
-        return subject
-
     }
 }
