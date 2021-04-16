@@ -18,13 +18,13 @@
 
 package org.elaastic.questions.directory.controller.command
 
-import org.elaastic.questions.directory.HasEmailOrHasOwner
+import org.elaastic.questions.directory.HasEmailOrHasOwnerOrIsAnonymous
 import org.elaastic.questions.directory.HasPasswords
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.validation.PasswordsMustBeIdentical
 import org.elaastic.questions.directory.validation.UserHasGivenConsent
-import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwner
+import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.validation.BindingResult
 import javax.validation.constraints.Email
@@ -32,7 +32,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
-@ValidateHasEmailOrHasOwner
+@ValidateHasEmailOrHasOwnerOrIsAnonymous
 @PasswordsMustBeIdentical
 @UserHasGivenConsent
 data class UserData(
@@ -53,7 +53,7 @@ data class UserData(
 
         @field:NotNull
         var userHasGivenConsent: Boolean = false
-) : HasEmailOrHasOwner, HasPasswords {
+) : HasEmailOrHasOwnerOrIsAnonymous, HasPasswords {
 
     constructor(user: User, userHasGivenConsent: Boolean) : this(
             user.id,
@@ -65,6 +65,10 @@ data class UserData(
             user.hasOwner(),
             userHasGivenConsent = userHasGivenConsent
     )
+
+    override fun isAnonymous(): Boolean {
+        return false
+    }
 
     fun populateUser(user: User, roleService: RoleService): User {
         user.firstName = firstName

@@ -18,9 +18,8 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
-import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwner
+import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -32,24 +31,26 @@ import kotlin.jvm.Transient
 
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
-@ValidateHasEmailOrHasOwner
+@ValidateHasEmailOrHasOwnerOrIsAnonymous
 @PlainTextPasswordIsTooShort
 class User(
-        @field:NotBlank var firstName: String,
-        @field:NotBlank var lastName: String,
+    @field:NotBlank var firstName: String,
+    @field:NotBlank var lastName: String,
 
-        @field:NotBlank
-        @field:Column(unique = true, length = 16)
-        @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
+    @field:NotBlank
+        @field:Column(unique = true, length = 32)
+        @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,31}$")
         private var username: String,
 
-        @Transient
+    @Transient
         var plainTextPassword: String?,
 
-        @field:Column(unique = true)
+    @field:Column(unique = true)
         @field:Email
-        var email: String? = null
-) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwner {
+        var email: String? = null,
+
+    private var isAnonymous: Boolean = false
+) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrIsAnonymous {
 
     @Version
     var version: Long? = null
@@ -70,7 +71,7 @@ class User(
     var owner: User? = null
 
     fun getFullname(): String {
-        return "${this.firstName} ${this.lastName}"
+        return if(isAnonymous) firstName else "${firstName} ${lastName}"
     }
 
     override fun hasEmail(): Boolean {
@@ -79,6 +80,10 @@ class User(
 
     override fun hasOwner(): Boolean {
         return owner != null
+    }
+
+    override fun isAnonymous(): Boolean {
+        return isAnonymous
     }
 
     @ManyToMany(cascade = [CascadeType.ALL],

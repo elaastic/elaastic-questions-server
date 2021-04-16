@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.directory.validation
 
-import org.elaastic.questions.directory.HasEmailOrHasOwner
+import org.elaastic.questions.directory.HasEmailOrHasOwnerOrIsAnonymous
 import org.elaastic.questions.directory.HasPasswords
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.controller.command.UserData
@@ -30,17 +30,17 @@ import kotlin.reflect.KClass
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-@Constraint(validatedBy = [HasEmailOrHasOwnerValidator::class])
-annotation class ValidateHasEmailOrHasOwner(
+@Constraint(validatedBy = [HasEmailOrHasOwnerValidatorOrIsAnonymous::class])
+annotation class ValidateHasEmailOrHasOwnerOrIsAnonymous(
         val message: String = "user.hasEmailOrHasOwner",
         val groups: Array<KClass<*>> = [],
         val payload: Array<KClass<out Payload>> = []
 )
 
-class HasEmailOrHasOwnerValidator : ConstraintValidator<ValidateHasEmailOrHasOwner, HasEmailOrHasOwner> {
+class HasEmailOrHasOwnerValidatorOrIsAnonymous : ConstraintValidator<ValidateHasEmailOrHasOwnerOrIsAnonymous, HasEmailOrHasOwnerOrIsAnonymous> {
 
-    override fun isValid(user: HasEmailOrHasOwner?, context: ConstraintValidatorContext?): Boolean {
-        return user?.let { it.hasEmail() || it.hasOwner() } ?: false
+    override fun isValid(user: HasEmailOrHasOwnerOrIsAnonymous?, context: ConstraintValidatorContext?): Boolean {
+        return user?.let { it.hasEmail() || it.hasOwner() || it.isAnonymous() } ?: false
     }
 }
 

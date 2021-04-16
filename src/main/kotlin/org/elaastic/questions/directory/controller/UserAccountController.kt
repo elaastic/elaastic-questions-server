@@ -36,6 +36,7 @@ import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.lang.IllegalStateException
 import java.util.*
 import java.util.logging.Logger
 import javax.servlet.http.HttpServletResponse
@@ -63,6 +64,8 @@ class UserAccountController(
     @GetMapping("/userAccount/edit")
     fun edit(authentication: Authentication, model: Model): String {
         val user: User = authentication.principal as User
+        if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+
         val userToUpdate = userService.get(user.id!!)!!
         model.addAttribute("userData", UserData(userToUpdate, userHasGivenConsent = true))
         model.addAttribute("user", userToUpdate)
@@ -79,6 +82,7 @@ class UserAccountController(
                redirectAttributes: RedirectAttributes,
                locale: Locale): String {
         val authUser: User = authentication.principal as User
+        if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         if (!result.hasErrors()) {
             val updatedUser = userService.get(userData.id!!)!!
             userData.populateUser(updatedUser, roleService)
@@ -105,6 +109,7 @@ class UserAccountController(
     @GetMapping("/userAccount/editPassword")
     fun editPassword(authentication: Authentication, model: Model): String {
         val user: User = authentication.principal as User
+        if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         model.addAttribute("passwordData", PasswordData(user))
         model.addAttribute("user", user)
         return "/userAccount/editPassword"
@@ -119,6 +124,7 @@ class UserAccountController(
                redirectAttributes: RedirectAttributes,
                locale: Locale): String {
         val authUser: User = authentication.principal as User
+        if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         if (!result.hasErrors()) {
             val updatedUser = userService.get(authUser, passwordData.id!!)
             try {
@@ -164,6 +170,8 @@ class UserAccountController(
     @GetMapping("/userAccount/unsubscribe")
     fun unsubscribe(authentication: Authentication, model: Model, locale: Locale):String {
         val authUser: User = authentication.principal as User
+        if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+
         model.addAttribute("user", authUser)
         messageSource.getMessage("UnsubscribtionWarning.user", emptyArray(), locale).let {
             model.addAttribute("messageContent", it)
@@ -178,6 +186,8 @@ class UserAccountController(
             redirectAttributes.addFlashAttribute("message", it)
         }
         val authUser: User = authentication.principal as User
+        if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+
         userService.disableUser(authUser)
         return "redirect:/logout"
     }

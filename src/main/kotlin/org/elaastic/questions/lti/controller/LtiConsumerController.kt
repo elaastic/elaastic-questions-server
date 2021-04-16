@@ -132,7 +132,7 @@ class LtiConsumerController(
             "/ltiConsumer/import"
         } else {
             csvFile?.let {
-                val isr = InputStreamReader(it.inputStream)
+                val isr = InputStreamReader(it.inputStream, "UTF-8")
                 ltiConsumerService.generateLtiConsumerListFromCSVFile(isr, ltiConsumersImport.suffix).let {
                     with(response) {
                         contentType = "text/csv"
