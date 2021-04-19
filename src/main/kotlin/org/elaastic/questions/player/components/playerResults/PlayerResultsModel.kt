@@ -1,25 +1,17 @@
 package org.elaastic.questions.player.components.playerResults
 
-import org.elaastic.questions.assignment.choice.ChoiceItem
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.player.components.explanationViewer.ExplanationData
 
-class PlayerResultsModel (
-        val responseFirstTry: Response?,
-        val responseSecondTry: Response?,
-        val areBothResponsesEqual: Boolean?,
-        val statementHasChoice : Boolean,
-        val statementNbItems: Int?,
-        var statementExpectedChoiceList: List<Int>?) {
+interface PlayerResultsModel
+{
+        val statementType: QuestionType
+        val explanationFirstTry : ExplanationData?
+        val explanationSecondTry: ExplanationData?
 
-    fun buildStatementExpectedChoiceList(choices: List<ChoiceItem>) {
-        var expectedChoice: MutableList<Int> = mutableListOf()
-        for(choiceItem: ChoiceItem in choices) {
-            expectedChoice.add(choiceItem.index)
-        }
-        this.statementExpectedChoiceList = expectedChoice
-    }
+    fun areBothResponsesEqual() : Boolean?
 
-    fun hasAnswered() : Boolean = responseFirstTry!=null
+    fun hasAnswered() : Boolean = explanationFirstTry!=null
 
-    fun hasAnsweredSecondPhase() : Boolean = responseSecondTry!=null
+    fun hasAnsweredSecondPhase() : Boolean = explanationSecondTry!=null
 }

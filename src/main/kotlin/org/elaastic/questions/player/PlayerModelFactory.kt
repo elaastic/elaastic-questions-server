@@ -17,6 +17,7 @@
  */
 package org.elaastic.questions.player
 
+import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
@@ -105,6 +106,7 @@ object PlayerModelFactory {
                 getActiveInteractionForLearner()?.isEvaluation() == true
         val showResults =
                 sequence.resultsArePublished && getActiveInteractionForLearner()?.isRead() == true
+        val statement = sequence.statement
 
         LearnerPlayerModel(
                 assignment = assignment,
@@ -170,7 +172,11 @@ object PlayerModelFactory {
                 else null,
                 playerResultsModel =
                 if(showResults){
-                    PlayerResultsModelFactory.build(getFirstAttemptResponse(), getSecondAttemptResponse(), sequence.statement)
+                    when(statement.questionType){
+                        QuestionType.OpenEnded -> PlayerResultsModelFactory.buildOpenResult(getFirstAttemptResponse(), getSecondAttemptResponse())
+                        QuestionType.ExclusiveChoice -> PlayerResultsModelFactory.buildExclusiveChoiceResult(getFirstAttemptResponse(), getSecondAttemptResponse(), statement)
+                        QuestionType.MultipleChoice -> PlayerResultsModelFactory.buildMultipleChoiceResult(getFirstAttemptResponse(), getSecondAttemptResponse(), statement)
+                    }
                 }
                 else null
         )

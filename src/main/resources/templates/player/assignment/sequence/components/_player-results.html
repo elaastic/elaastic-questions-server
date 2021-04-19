@@ -21,68 +21,36 @@
 
             <div th:if="${playerResultsModel.hasAnswered()}">
                 <div class="ui section divider"></div>
-                <div class="ui header small">Mon Résultat</div>
-                <div class="ui tiny header">Phase 1</div>
-                <div th:if="${playerResultsModel.statementHasChoice}">
-                    <div class="small" style="margin-bottom: 5px;">Choix</div>
-                    <div th:each="i : ${#numbers.sequence(1, playerResultsModel.statementNbItems)}" class="ui left labeled button small" tabindex="0" style="margin-right: 10px;">
-                        <a th:text="${i}" class="ui label" th:classappend="${#lists.contains(playerResultsModel.statementExpectedChoiceList, i) ? 'green' : 'red'}">itemID</a>
-                        <div class="ui button compact">
-                            <i th:class="${#lists.contains(playerResultsModel.responseFirstTry.learnerChoice, i)? 'check icon' : 'icon'}"></i>
-                        </div>
-                    </div>
-                    <br>
-                    <div>
-                        <div class="small" style="margin-top: 15px; margin-bottom: 5px">Score</div>
-                        <div th:switch="${playerResultsModel.responseFirstTry.score}">
-                            <div th:case="0.00" th:text="${playerResultsModel.responseFirstTry.score + '%'}" class="ui medium label red">SCORE</div>
-                            <div th:case="100.00" th:text="${playerResultsModel.responseFirstTry.score + '%'}" class="ui medium label green">SCORE</div>
-                            <div th:case="*" th:text="${playerResultsModel.responseFirstTry.score + '%'}" class="ui medium label orange">SCORE</div>
-                        </div>
+                <div class="ui header small" th:text="#{player.sequence.playerResults.myResults}">My results</div>
+                <div class="ui tiny header" th:text="#{sequence.phase.1}">Phase 1</div>
+                <div th:if="${playerResultsModel.statementType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
+                              playerResultsModel.statementType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
+                              !playerResultsModel.isFirstChoiceEmpty()}">
+
+                    <div th:replace="|/player/assignment/sequence/components/_player-results-choice.html|
+                        :: playerResultsChoice(${playerResultsModel},
+                        ${playerResultsModel.choiceFirstTry},
+                        ${playerResultsModel.scoreFirstTry})">
                     </div>
                 </div>
-
-                <div class="ui info message explanation"
-                     th:styleappend="${playerResultsModel.responseFirstTry.explanation != null ? 'padding-top: 3em;' : ''}"
-                     th:if="${!#strings.isEmpty(playerResultsModel.responseFirstTry.explanation)}">
-                    <div class="ui top left attached teal label">
-                        <span th:text="${playerResultsModel.responseFirstTry.meanGrade}">SCORE</span>/5
-                        <span class="detail" th:if="${playerResultsModel.responseFirstTry.evaluationCount <= 1}"
-                              th:text="${playerResultsModel.responseFirstTry.evaluationCount} + ' ' + #{common.evaluation}">
-                            NUMBER EVALUATION
-                        </span>
-                        <span class="detail" th:if="${playerResultsModel.responseFirstTry.evaluationCount > 1}"
-                              th:text="${playerResultsModel.responseFirstTry.evaluationCount} + ' ' + #{common.evaluations}">
-                              NUMBER EVALUATION
-                        </span>
-                    </div>
-                    <span th:utext="${playerResultsModel.responseFirstTry.explanation}">EXPLANATION CONTENT</span>
+                <div    th:if="${!playerResultsModel.explanationFirstTry.content.isNullOrBlank()}"
+                        th:replace="|/player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
+                        :: anExplanation(${playerResultsModel.explanationFirstTry})">
                 </div>
 
-                <div th:if="${playerResultsModel.hasAnsweredSecondPhase()}" style="margin-top: 10px;">
-                    <div class="ui tiny header">Phase 2</div>
-                    <div class="small" style="margin-bottom: 5px;">Choix</div>
-                    <div th:if="${playerResultsModel.statementHasChoice}">
-                        <div th:each="i : ${#numbers.sequence(1, playerResultsModel.statementNbItems)}" class="ui left labeled button small" tabindex="0" style="margin-right: 10px;">
-                            <a th:text="${i}" class="ui label" th:classappend="${#lists.contains(playerResultsModel.statementExpectedChoiceList, i) ? 'green' : 'red'}">itemID</a>
-                            <div class="ui button compact">
-                                <i th:class="${#lists.contains(playerResultsModel.responseSecondTry.learnerChoice, i)? 'check icon' : 'icon'}"></i>
-                            </div>
-                        </div>
-
-                        <br>
-                        <div>
-                            <div class="small" style="margin-top: 15px; margin-bottom: 5px;">Score</div>
-                            <div th:switch="${playerResultsModel.responseSecondTry.score}">
-                                <div th:case="0.00" th:text="${playerResultsModel.responseSecondTry.score + '%'}" class="ui medium label red">SCORE</div>
-                                <div th:case="100.00" th:text="${playerResultsModel.responseSecondTry.score + '%'}" class="ui medium label green">SCORE</div>
-                                <div th:case="*" th:text="${playerResultsModel.responseSecondTry.score + '%'}" class="ui medium label orange">SCORE</div>
-                            </div>
+                <div th:if="${playerResultsModel.hasAnsweredSecondPhase() and !playerResultsModel.areBothResponsesEqual()}" style="margin-top: 10px;">
+                    <div class="ui tiny header" th:text="#{sequence.phase.2}">Phase 2</div>
+                    <div th:if="${playerResultsModel.statementType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
+                                  playerResultsModel.statementType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
+                                  !playerResultsModel.isSecondChoiceEmpty()}">
+                        <div th:replace="|/player/assignment/sequence/components/_player-results-choice.html|
+                            :: playerResultsChoice(${playerResultsModel},
+                            ${playerResultsModel.choiceSecondTry},
+                            ${playerResultsModel.scoreSecondTry})">
                         </div>
                     </div>
-
-                    <div class="ui info message explanation" th:if="${!#strings.isEmpty(playerResultsModel.responseSecondTry.explanation)}">
-                        <span th:utext="${playerResultsModel.responseSecondTry.explanation}">EXPLANATION CONTENT</span>
+                    <div class="ui info message explanation" th:if="${!#strings.isEmpty(playerResultsModel.explanationSecondTry.content)}">
+                        <span th:utext="${playerResultsModel.explanationSecondTry.content}">EXPLANATION CONTENT</span>
                     </div>
                 </div>
             </div>

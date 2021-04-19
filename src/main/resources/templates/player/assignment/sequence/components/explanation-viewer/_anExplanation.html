@@ -17,6 +17,7 @@
   -->
 
 <div th:fragment="anExplanation(explanation)"
+     th:if="${!explanation.content.isBlank()}"
      class="ui info message explanation"
      th:styleappend="${explanation.meanGrade != null ? 'padding-top: 3em;' : ''}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
