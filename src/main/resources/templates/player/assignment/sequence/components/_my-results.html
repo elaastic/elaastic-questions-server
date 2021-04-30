@@ -1,0 +1,76 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="myResults(resultId,studentResultsModel)"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+  <div class="ui accordion segment" th:id="|my-results-accordion-${resultId}|" style="padding-bottom: 0;">
+    <div class="ui active title header">
+      <i class="dropdown icon"></i> <span th:text="#{player.sequence.studentResults.myResults}"></span>
+    </div>
+
+    <div class="ui basic padded large text segment content active">
+      <div th:if="${studentResultsModel.hasAnsweredPhase1()}">
+        <div class="ui tiny header" th:text="#{sequence.phase.1}">Phase 1</div>
+        <div th:if="${studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
+                              studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
+                              !studentResultsModel.isFirstChoiceEmpty()}">
+
+          <div th:replace="|/player/assignment/sequence/components/my-results/_student-results-choice.html|
+                        :: studentResultsChoice(${studentResultsModel},
+                        ${studentResultsModel.choiceFirstTry},
+                        ${studentResultsModel.scoreFirstTry})">
+          </div>
+        </div>
+        <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content)}">
+          <div
+            th:replace="|/player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
+                        :: anExplanation(${studentResultsModel.explanationFirstTry})">
+          </div>
+        </th:block>
+      </div>
+
+      <div th:if="${studentResultsModel.hasAnsweredPhase2() and !studentResultsModel.areBothResponsesEqual()}"
+           style="margin-top: 2.5em;">
+        <div class="ui tiny header" th:text="#{sequence.phase.2}">Phase 2</div>
+        <div th:if="${studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
+                                  studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
+                                  !studentResultsModel.isSecondChoiceEmpty()}">
+          <div th:replace="|/player/assignment/sequence/components/my-results/_student-results-choice.html|
+                            :: studentResultsChoice(${studentResultsModel},
+                            ${studentResultsModel.choiceSecondTry},
+                            ${studentResultsModel.scoreSecondTry})">
+          </div>
+        </div>
+        <div class="ui info message explanation"
+             th:if="${!#strings.isEmpty(studentResultsModel.explanationSecondTry?.content)}">
+          <span th:utext="${studentResultsModel.explanationSecondTry?.content}">EXPLANATION CONTENT</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /*<![CDATA[*/
+    $(document).ready(function () {
+      $('#my-results-accordion-[[${resultId}]]').accordion()
+    })
+    /*]]>*/
+  </script>
+</div>

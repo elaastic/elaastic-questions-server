@@ -16,12 +16,12 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="playerResultsChoice(playerResultsModel, choiceTry, scoreTry)"
+<div th:fragment="studentResultsChoice(studentResultsModel, choiceTry, scoreTry)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <div class="small" th:text="#{player.sequence.playerResults.choice}" style="margin-bottom: 5px;">Choice</div>
-    <div th:each="i : ${#numbers.sequence(1, playerResultsModel.expectedChoice.nbCandidateItem)}" class="ui left labeled button small" tabindex="0" style="margin-right: 10px;">
-      <a th:text="${i}" class="ui label" th:classappend="${playerResultsModel.isCorrectAnswer(i) ? 'green' : 'red'}">itemID</a>
+  <div class="small" th:text="#{player.sequence.studentResults.choice}" style="margin-bottom: 5px;">Choice</div>
+    <div th:each="i : ${#numbers.sequence(1, studentResultsModel.expectedChoice.nbCandidateItem)}" class="ui left labeled button small" tabindex="0" style="margin-right: 10px;">
+      <a th:text="${i}" class="ui label" th:classappend="${studentResultsModel.isCorrectAnswer(i) ? 'green' : 'red'}">itemID</a>
       <div class="ui button compact">
           <i th:class="${#lists.contains(choiceTry, i)? 'check icon' : 'icon'}"></i>
       </div>
@@ -29,7 +29,7 @@
   <br>
 
   <div>
-    <div class="small" style="margin-top: 15px; margin-bottom: 5px" th:text="#{player.sequence.playerResults.score}">Score</div>
+    <div class="small" style="margin-top: 15px; margin-bottom: 5px" th:text="#{player.sequence.studentResults.score}">Score</div>
     <div th:switch="${scoreTry}">
       <div th:case="0" th:text="${scoreTry + '%'}" class="ui medium label red">SCORE</div>
       <div th:case="100" th:text="${scoreTry + '%'}" class="ui medium label green">SCORE</div>

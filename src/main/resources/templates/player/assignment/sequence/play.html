@@ -83,7 +83,8 @@
   <div th:if="${playerModel.sequence}"
        th:id="|sequence_${playerModel.sequence.id}|">
     <th:block th:if="${playerModel instanceof T(org.elaastic.questions.player.TeacherPlayerModel)}">
-      <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
+      <div
+        th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
     </th:block>
     <th:block th:unless="${playerModel instanceof T(org.elaastic.questions.player.TeacherPlayerModel)}">
       <div th:replace="|${components}/_steps.html| :: steps(${playerModel.stepsModel}, ~{})"></div>
@@ -91,15 +92,22 @@
     <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
       <div th:replace="|${components}/_command.html| :: command(${playerModel.commandModel})"></div>
     </th:block>
-    <div th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
-    <div th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement}, ${playerModel.playerResultsModel}, ${playerModel.showResults})"></div>
+    <div
+      th:replace="|${components}/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
+    <div
+      th:replace="|${components}/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
+
+    <th:block th:if="${playerModel.showResults && playerModel.userRole.name() == 'Learner'}">
+    <div th:replace="|${components}/_my-results.html| :: myResults('id', ${playerModel.learnerResultsModel})"></div>
+    </th:block>
 
     <th:block th:if="${playerModel.showResponsePhase}">
       <div th:replace="|${components}/_response-phase.html| :: responsePhase(${playerModel.responsePhaseModel})"></div>
     </th:block>
 
     <th:block th:if="${playerModel.showEvaluationPhase}">
-      <div th:replace="|${components}/_evaluation-phase.html| :: evaluationPhase(${playerModel.evaluationPhaseModel})"></div>
+      <div
+        th:replace="|${components}/_evaluation-phase.html| :: evaluationPhase(${playerModel.evaluationPhaseModel})"></div>
     </th:block>
 
     <div th:if="${playerModel.showResults}" th:remove="tag">

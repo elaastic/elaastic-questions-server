@@ -30,7 +30,7 @@ import org.elaastic.questions.player.components.assignmentOverview.AssignmentOve
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.ResponseData
-import org.elaastic.questions.player.components.playerResults.PlayerResultsModelFactory
+import org.elaastic.questions.player.components.studentResults.StudentResultsModelFactory
 import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModelFactory
 import org.elaastic.questions.player.components.results.ResultsModelFactory
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
@@ -170,12 +170,12 @@ object PlayerModelFactory {
                             userCanRefreshResults()
                     )
                 else null,
-                playerResultsModel =
+                learnerResultsModel =
                 if(showResults){
                     when(statement.questionType){
-                        QuestionType.OpenEnded -> PlayerResultsModelFactory.buildOpenResult(getFirstAttemptResponse(), getSecondAttemptResponse())
-                        QuestionType.ExclusiveChoice -> PlayerResultsModelFactory.buildExclusiveChoiceResult(getFirstAttemptResponse(), getSecondAttemptResponse(), statement)
-                        QuestionType.MultipleChoice -> PlayerResultsModelFactory.buildMultipleChoiceResult(getFirstAttemptResponse(), getSecondAttemptResponse(), statement)
+                        QuestionType.OpenEnded -> StudentResultsModelFactory.buildOpenResult(getFirstAttemptResponse(), getSecondAttemptResponse())
+                        QuestionType.ExclusiveChoice -> StudentResultsModelFactory.buildExclusiveChoiceResult(getFirstAttemptResponse(), getSecondAttemptResponse(), statement)
+                        QuestionType.MultipleChoice -> StudentResultsModelFactory.buildMultipleChoiceResult(getFirstAttemptResponse(), getSecondAttemptResponse(), statement)
                     }
                 }
                 else null

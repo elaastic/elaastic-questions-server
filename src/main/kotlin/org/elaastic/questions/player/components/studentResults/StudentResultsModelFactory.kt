@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.playerResults
+package org.elaastic.questions.player.components.studentResults
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
@@ -7,21 +7,19 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.player.components.explanationViewer.ExplanationData
 import org.elaastic.questions.subject.statement.Statement
 
-object PlayerResultsModelFactory {
+object StudentResultsModelFactory {
 
     fun buildOpenResult(responseFirstTry: Response?,
-                        responseSecondTry: Response?) : PlayerOpenResults =
-            PlayerOpenResults(
-                    statementType = QuestionType.OpenEnded,
+                        responseSecondTry: Response?) : LearnerOpenResults =
+            LearnerOpenResults(
                     explanationFirstTry = if(responseFirstTry != null) ExplanationData(responseFirstTry) else null,
                     explanationSecondTry = if(responseSecondTry != null) ExplanationData(responseSecondTry) else null
             )
 
     fun buildMultipleChoiceResult(responseFirstTry: Response?,
                                   responseSecondTry: Response?,
-                                  statement: Statement) : PlayerMultipleChoiceResults =
-            PlayerMultipleChoiceResults(
-                    statementType = QuestionType.MultipleChoice,
+                                  statement: Statement) : LearnerMultipleChoiceResults =
+            LearnerMultipleChoiceResults(
                     explanationFirstTry = if(responseFirstTry != null) ExplanationData(responseFirstTry) else null,
                     explanationSecondTry = if(responseSecondTry != null) ExplanationData(responseSecondTry) else null,
                     choiceFirstTry = responseFirstTry?.learnerChoice,
@@ -36,9 +34,8 @@ object PlayerResultsModelFactory {
 
     fun buildExclusiveChoiceResult(responseFirstTry: Response?,
                                    responseSecondTry: Response?,
-                                   statement: Statement) : PlayerExclusiveChoiceResults =
-            PlayerExclusiveChoiceResults(
-                    statementType = QuestionType.ExclusiveChoice,
+                                   statement: Statement) : LearnerExclusiveChoiceResults =
+            LearnerExclusiveChoiceResults(
                     explanationFirstTry = if(responseFirstTry != null) ExplanationData(responseFirstTry) else null,
                     explanationSecondTry = if(responseSecondTry != null) ExplanationData(responseSecondTry) else null,
                     choiceFirstTry = responseFirstTry?.learnerChoice,
