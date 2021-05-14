@@ -5,10 +5,9 @@ _elaastic_ est un EIAH (Environnement Informatique pour l’Apprentissage Humain
 _elaastic_ est développé avec le framework spring-boot et le langage Kotlin.
 
 ### Prérequis
-* Java
-* Docker
+* Java (version 11)
 * Gradle
-
+* Docker
 
 ### Installation
 
