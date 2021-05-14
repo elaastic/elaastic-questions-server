@@ -53,7 +53,7 @@
     <div class="ui hidden divider"></div>
     <div th:if="${sequence.statement.attachment != null}">
       <div
-        th:replace="/subject/statement/_statement_attachment :: statementAttachment(${sequence.statement.attachment},650,380)"></div>
+        th:replace="subject/statement/_statement_attachment :: statementAttachment(${sequence.statement.attachment},650,380)"></div>
       <div class="ui hidden divider"></div>
     </div>
     <div th:utext="${sequence.statement.content}" th:remove="tag"></div>

@@ -69,17 +69,17 @@
   </th:block>
 </div>
 
-<aside id="layout-aside" th:with="components=${'/player/assignment/sequence/components'}">
+<aside id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
   <div
     th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 </aside>
 
-<div id="modal-aside" th:with="components=${'/player/assignment/sequence/components'}">
+<div id="modal-aside" th:with="components=${'player/assignment/sequence/components'}">
   <div
     th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, modal-aside)"></div>
 </div>
 
-<section th:with="components=${'/player/assignment/sequence/components'}">
+<section th:with="components=${'player/assignment/sequence/components'}">
   <div th:if="${playerModel.sequence}"
        th:id="|sequence_${playerModel.sequence.id}|">
     <th:block th:if="${playerModel instanceof T(org.elaastic.questions.player.TeacherPlayerModel)}">

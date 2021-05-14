@@ -76,7 +76,7 @@ class AssignmentController(
             )
         }
 
-        return "/assignment/index"
+        return "assignment/index"
     }
 
     @GetMapping(value = ["/{id}", "{id}/show"])
@@ -88,7 +88,7 @@ class AssignmentController(
             model.addAttribute("assignment", it)
         }
 
-        return "/assignment/show"
+        return "assignment/show"
     }
 
     @PostMapping("save")
@@ -131,7 +131,7 @@ class AssignmentController(
             model.addAttribute("subject", it.subject)
         }
 
-        return "/assignment/edit"
+        return "assignment/edit"
     }
 
     @PostMapping("{id}/update")
@@ -158,7 +158,7 @@ class AssignmentController(
                     AssignmentController.AssignmentData(owner = user, subject = assignment.subject!!)
                 )
             }
-            return "/assignment/create"
+            return "assignment/create"
 
         } else {
             assignmentService.get(user, id).let {
@@ -228,7 +228,7 @@ class AssignmentController(
             )
         )
 
-        return "/assignment/sequence/create"
+        return "assignment/sequence/create"
     }
 
     @GetMapping("{id}/up")

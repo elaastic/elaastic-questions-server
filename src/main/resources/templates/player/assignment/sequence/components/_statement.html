@@ -36,7 +36,7 @@
              th:classappend="${statementPanelModel.panelClosed ? '' : 'active'}">
             <div th:unless="${statementPanelModel.hideStatement}">
                 <div th:if="${statement.attachment != null}" th:remove="tag">
-                    <div th:replace="/subject/statement/_statement_attachment :: statementAttachment(${statement.attachment},650,380)"></div>
+                    <div th:replace="subject/statement/_statement_attachment :: statementAttachment(${statement.attachment},650,380)"></div>
                 </div>
                 <p th:utext="${statement.content}">Question content</p>
             </div>

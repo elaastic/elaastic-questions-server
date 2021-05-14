@@ -27,7 +27,7 @@ class LoginController {
 
     @GetMapping("/login")
     fun displayLoginForm(): String {
-        return "/login"
+        return "login"
     }
 
 

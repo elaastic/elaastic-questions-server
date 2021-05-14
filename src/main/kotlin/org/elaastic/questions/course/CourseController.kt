@@ -72,7 +72,7 @@ class CourseController(
                     )
                 )
             }
-        return "/course/index"
+        return "course/index"
     }
 
 
@@ -85,7 +85,7 @@ class CourseController(
         }
         model.addAttribute("user", user)
 
-        return "/course/create"
+        return "course/create"
     }
 
     @GetMapping(value = ["/{id}", "{id}/show"])
@@ -102,7 +102,7 @@ class CourseController(
 
         model.addAttribute("subjects", course.subjects.toList())
 
-        return "/course/show"
+        return "course/show"
     }
 
     @PostMapping("{id}/update")
@@ -207,7 +207,7 @@ class CourseController(
         model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
         model.addAttribute("subjectData", SubjectController.SubjectData(owner = user, course = course))
 
-        return "/subject/create"
+        return "subject/create"
     }
 
     data class CourseData(

@@ -95,7 +95,7 @@ class TestingPlayerController(
         )
         model.addAttribute("sequenceStatistics", SequenceStatistics(10, 8, 5))
 
-        return "/player/assignment/sequence/components/test-steps"
+        return "player/assignment/sequence/components/test-steps"
     }
 
     @GetMapping("/explanation-viewer")
@@ -284,7 +284,7 @@ class TestingPlayerController(
             }
         )
 
-        return "/player/assignment/sequence/components/test-explanation-viewer"
+        return "player/assignment/sequence/components/test-explanation-viewer"
     }
 
     class ExplanationViewerSituation(
@@ -440,7 +440,7 @@ class TestingPlayerController(
 
         )
 
-        return "/player/assignment/sequence/components/test-response-distribution-chart"
+        return "player/assignment/sequence/components/test-response-distribution-chart"
     }
 
     data class ResponseDistributionChartSituation(
@@ -476,7 +476,7 @@ class TestingPlayerController(
             )
         )
 
-        return "/player/assignment/sequence/components/test-statement"
+        return "player/assignment/sequence/components/test-statement"
     }
 
     @GetMapping("/my-results")
@@ -592,7 +592,7 @@ class TestingPlayerController(
             )
         )
 
-        return "/player/assignment/sequence/components/test-my-results"
+        return "player/assignment/sequence/components/test-my-results"
     }
 
     data class MyResultsSituation(
@@ -749,7 +749,7 @@ class TestingPlayerController(
             )
         )
 
-        return "/player/assignment/sequence/components/test-results"
+        return "player/assignment/sequence/components/test-results"
     }
 
     data class ResultsSituation(
@@ -777,7 +777,7 @@ class TestingPlayerController(
                 }
         )
 
-        return "/player/assignment/sequence/components/test-sequence-info"
+        return "player/assignment/sequence/components/test-sequence-info"
     }
 
     data class SequenceInfoSituation(
@@ -814,7 +814,7 @@ class TestingPlayerController(
                 }
         )
 
-        return "/player/assignment/sequence/components/test-command"
+        return "player/assignment/sequence/components/test-command"
     }
 
     data class CommandSituation(
@@ -856,7 +856,7 @@ class TestingPlayerController(
             )
         )
 
-        return "/player/assignment/sequence/components/test-response-phase"
+        return "player/assignment/sequence/components/test-response-phase"
     }
 
     @GetMapping("/evaluation-phase")
@@ -909,6 +909,6 @@ class TestingPlayerController(
             )
         )
 
-        return "/player/assignment/sequence/components/test-evaluation-phase"
+        return "player/assignment/sequence/components/test-evaluation-phase"
     }
 }

@@ -84,7 +84,7 @@ class SubjectController(
             )
         }
 
-        return "/subject/index"
+        return "subject/index"
     }
 
     @GetMapping(value = ["/{id}", "{id}/show"])
@@ -118,7 +118,7 @@ class SubjectController(
             model.addAttribute("firstSubject",firstSubject)
         }
 
-        return "/subject/show"
+        return "subject/show"
     }
 
     @GetMapping("create")
@@ -131,7 +131,7 @@ class SubjectController(
         model.addAttribute("user", user)
         model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
 
-        return "/subject/create"
+        return "subject/create"
     }
 
     @PostMapping("save")
@@ -175,7 +175,7 @@ class SubjectController(
             model.addAttribute("subject", subject)
             model.addAttribute("statement", statementData)
             model.addAttribute("nbStatement",subject.statements.size)
-            return "/subject/statement/create"
+            return "subject/statement/create"
         } else {
             val statementSaved = subjectService.addStatement(subject, statementData.toEntity(user))
             statementService.updateFakeExplanationList(
@@ -215,7 +215,7 @@ class SubjectController(
                 )
         )
 
-        return "/subject/statement/create"
+        return "subject/statement/create"
     }
 
     @PostMapping("{subjectId}/addAssignment")
@@ -266,7 +266,7 @@ class SubjectController(
                     title = subject.title).toEntity())
         }
 
-        return "/assignment/create"
+        return "assignment/create"
     }
 
     @PostMapping("{id}/update")
@@ -387,7 +387,7 @@ class SubjectController(
         }
         model.addAttribute("sharedInfos", sharedInfos)
 
-        return "/subject/shared_index"
+        return "subject/shared_index"
     }
 
     @GetMapping(value = ["{id}/importSubject"])

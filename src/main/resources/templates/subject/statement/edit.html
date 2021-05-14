@@ -86,13 +86,13 @@
     <div class="ui bottom attached segment">
 
 
-      <div th:replace="/subject/statement/_statement_form :: statementForm(${statementData}, @{/subject/{subjectId}/statement/{statementId}/removeAttachment(subjectId=${subject.id}, statementId=${statementData.id})})"></div>
+      <div th:replace="subject/statement/_statement_form :: statementForm(${statementData}, @{/subject/{subjectId}/statement/{statementId}/removeAttachment(subjectId=${subject.id}, statementId=${statementData.id})})"></div>
 
-      <div th:replace="/subject/statement/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
+      <div th:replace="subject/statement/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
 
       <div class="ui hidden divider"></div>
 
-      <div th:replace="/subject/statement/_statement_explanations_form :: statementExplanationForm(${statementData}, @{/api/assignment/{assignmentId}/sequence/{statementId}/findAllFakeExplanation(subjectId=${subject.id}, statementId=${statementData.id})})"></div>
+      <div th:replace="subject/statement/_statement_explanations_form :: statementExplanationForm(${statementData}, @{/api/assignment/{assignmentId}/sequence/{statementId}/findAllFakeExplanation(subjectId=${subject.id}, statementId=${statementData.id})})"></div>
 
     </div>
 

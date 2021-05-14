@@ -82,7 +82,7 @@ class PlayerController(
         model.addAttribute("mapCourseAssignments", mapCourseAssignments)
         model.addAttribute("assignmentsWithoutCourse", assignmentsWithoutCourse)
 
-        return "/player/index"
+        return "player/index"
     }
 
     private fun findAssignment(globalId: String?): Assignment {
@@ -259,7 +259,7 @@ class PlayerController(
             )
         }
 
-        return "/player/assignment/sequence/play"
+        return "player/assignment/sequence/play"
     }
 
     @GetMapping("/assignment/{id}/nbRegisteredUsers")

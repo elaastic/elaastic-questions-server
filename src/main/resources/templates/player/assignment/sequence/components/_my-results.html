@@ -31,7 +31,7 @@
                               studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
                               !studentResultsModel.isFirstChoiceEmpty()}">
 
-          <div th:replace="|/player/assignment/sequence/components/my-results/_student-results-choice.html|
+          <div th:replace="|player/assignment/sequence/components/my-results/_student-results-choice.html|
                         :: studentResultsChoice(${studentResultsModel},
                         ${studentResultsModel.choiceFirstTry},
                         ${studentResultsModel.scoreFirstTry})">
@@ -39,7 +39,7 @@
         </div>
         <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content)}">
           <div
-            th:replace="|/player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
+            th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
                         :: anExplanation(${studentResultsModel.explanationFirstTry})">
           </div>
         </th:block>
@@ -51,7 +51,7 @@
         <div th:if="${studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
                                   studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
                                   !studentResultsModel.isSecondChoiceEmpty()}">
-          <div th:replace="|/player/assignment/sequence/components/my-results/_student-results-choice.html|
+          <div th:replace="|player/assignment/sequence/components/my-results/_student-results-choice.html|
                             :: studentResultsChoice(${studentResultsModel},
                             ${studentResultsModel.choiceSecondTry},
                             ${studentResultsModel.scoreSecondTry})">

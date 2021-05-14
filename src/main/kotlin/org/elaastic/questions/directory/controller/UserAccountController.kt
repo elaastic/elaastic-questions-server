@@ -58,7 +58,7 @@ class UserAccountController(
     @GetMapping("/register")
     fun showSubscribeForm(model: Model): String {
         model.addAttribute("checkEmail", checkEmail)
-        return "/userAccount/showSubscribeForm"
+        return "userAccount/showSubscribeForm"
     }
 
     @GetMapping("/userAccount/edit")
@@ -69,7 +69,7 @@ class UserAccountController(
         val userToUpdate = userService.get(user.id!!)!!
         model.addAttribute("userData", UserData(userToUpdate, userHasGivenConsent = true))
         model.addAttribute("user", userToUpdate)
-        return "/userAccount/edit"
+        return "userAccount/edit"
     }
 
 
@@ -112,7 +112,7 @@ class UserAccountController(
         if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         model.addAttribute("passwordData", PasswordData(user))
         model.addAttribute("user", user)
-        return "/userAccount/editPassword"
+        return "userAccount/editPassword"
     }
 
     @PostMapping("/userAccount/updatePassword")
@@ -177,7 +177,7 @@ class UserAccountController(
             model.addAttribute("messageContent", it)
             model.addAttribute("messageType", "error")
         }
-        return "/userAccount/unsubscribe"
+        return "userAccount/unsubscribe"
     }
 
     @GetMapping("/userAccount/processUnsubscription")
@@ -195,7 +195,7 @@ class UserAccountController(
     @GetMapping("/terms")
     fun terms(model: Model, locale: Locale):String {
         model.addAttribute("termsContent",termsService.getTermsContentByLanguage(locale.language))
-        return "/terms/terms"
+        return "terms/terms"
     }
 
 }
