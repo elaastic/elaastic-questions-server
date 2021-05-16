@@ -61,7 +61,10 @@ class ChoiceExplanationStore(choiceSpecification: ChoiceSpecification) : Explana
     constructor(choiceSpecification: ChoiceSpecification,
                 alreadySorted: Boolean,
                 responseList: List<Response>) : this(choiceSpecification) {
-        // TODO Handle sorting
+        if(!alreadySorted) {
+            TODO("Sorting here is not handled yet...")
+        }
+
         responseList.forEach { add(it) }
     }
 

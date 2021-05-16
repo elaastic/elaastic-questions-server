@@ -405,8 +405,8 @@ class FileDataStore : DataStore {
                     // (in this or another process), then setting the last modified date
                     // doesn't work - see also JCR-2872
                     val r = RandomAccessFile(file, "rw")
-                    r.use { r ->
-                        r.setLength(r.length())
+                    r.use {
+                        it.setLength(it.length())
                     }
                 } catch (e: IOException) {
                     throw DataStoreException("An IO Exception occurred while trying to set the last modified date: " + file.absolutePath, e)

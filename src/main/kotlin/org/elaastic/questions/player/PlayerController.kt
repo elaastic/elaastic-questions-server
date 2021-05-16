@@ -192,7 +192,6 @@ class PlayerController(
 
         if (assignment.sequences.isEmpty()) {
             return "redirect:/subject/${assignment.subject!!.id}"
-            throw IllegalStateException("Assignment $assignmentId has no sequences")
         }
 
         val sequenceIdValid: Long = if (sequenceId != null) sequenceId else assignment.sequences.first().id!!
@@ -217,7 +216,6 @@ class PlayerController(
                         userCanRefreshResults = { resultsService.canUpdateResults(user, sequence) }
                     )
                 else PlayerModelFactory.buildForLearner(
-                    user = user,
                     sequence = sequence,
                     nbRegisteredUsers = nbRegisteredUsers,
                     sequenceToUserActiveInteraction = assignment.sequences.associate {
@@ -279,7 +277,7 @@ class PlayerController(
         @RequestParam responseToEvaluateCount: Int?
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment? = null
+        var assignment: Assignment?
 
         sequenceService.get(user, id, true)
             .let {
@@ -348,7 +346,7 @@ class PlayerController(
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment? = null
+        var assignment: Assignment?
 
         sequenceService.get(user, id).let {
             sequenceService.stop(user, it)
@@ -366,7 +364,7 @@ class PlayerController(
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment? = null
+        var assignment: Assignment?
 
         sequenceService.get(user, id).let {
             sequenceService.reopen(user, it)
@@ -384,7 +382,7 @@ class PlayerController(
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment? = null
+        var assignment: Assignment?
 
         sequenceService.get(user, id, true).let {
             sequenceService.publishResults(user, it)
@@ -402,7 +400,7 @@ class PlayerController(
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment? = null
+        var assignment: Assignment?
 
         sequenceService.get(id, true).let {
             sequenceService.refreshResults(user, it)
@@ -419,7 +417,7 @@ class PlayerController(
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment? = null
+        var assignment: Assignment?
 
         sequenceService.get(user, id, true).let {
             sequenceService.unpublishResults(user, it)
@@ -438,7 +436,7 @@ class PlayerController(
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment? = null
+        var assignment: Assignment?
 
         sequenceService.get(id, true).let { sequence ->
             assignment = sequence.assignment!!
@@ -492,7 +490,7 @@ class PlayerController(
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment? = null
+        var assignment: Assignment?
 
         sequenceService.get(id, true).let { sequence ->
             assignment = sequence.assignment!!

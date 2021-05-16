@@ -86,8 +86,7 @@ object PlayerModelFactory {
     }
 
 
-    fun buildForLearner(user: User,
-                        sequence: Sequence,
+    fun buildForLearner(sequence: Sequence,
                         nbRegisteredUsers: Int,
                         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
                         messageBuilder: MessageBuilder,

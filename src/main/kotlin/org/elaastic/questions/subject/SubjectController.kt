@@ -364,7 +364,7 @@ class SubjectController(
                      @RequestParam("page") page: Int?,
                      @RequestParam("size") size: Int?): String {
         val user: User = authentication.principal as User
-        var sharedSubjectPage: Page<Subject>? = null
+        var sharedSubjectPage: Page<Subject>?
         subjectService.findAllSharedSubjects(
                 user,
                 PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
