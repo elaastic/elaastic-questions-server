@@ -36,13 +36,10 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.features.ElaasticFeatures
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
-import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.recommendation.*
 import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
-import org.elaastic.questions.player.components.responsePhase.ResponseFormModel
-import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
 import org.elaastic.questions.player.components.results.OpenResultsModel
 import org.elaastic.questions.player.components.results.ResultsModel
@@ -56,6 +53,12 @@ import org.elaastic.questions.player.components.studentResults.LearnerExclusiveC
 import org.elaastic.questions.player.components.studentResults.LearnerMultipleChoiceResults
 import org.elaastic.questions.player.components.studentResults.LearnerOpenResults
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
+import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
+import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
+import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhase
+import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhaseViewModel
+import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
+import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -118,7 +121,7 @@ class TestingPlayerController(
         )
         model.addAttribute("sequenceStatistics", SequenceStatistics(10, 8, 5))
 
-        return "player/assignment/sequence/components/test-steps"
+        return "player/assignment/sequence/components/steps/test-steps"
     }
 
     @GetMapping("/explanation-viewer")
@@ -327,7 +330,7 @@ class TestingPlayerController(
                 }
         )
 
-        return "player/assignment/sequence/components/test-explanation-viewer"
+        return "player/assignment/sequence/components/explanation-viewer/test-explanation-viewer"
     }
 
     class ExplanationViewerSituation(
@@ -483,7 +486,7 @@ class TestingPlayerController(
 
         )
 
-        return "player/assignment/sequence/components/test-response-distribution-chart"
+        return "player/assignment/sequence/components/response-distribution-chart/test-response-distribution-chart"
     }
 
     data class ResponseDistributionChartSituation(
@@ -519,7 +522,7 @@ class TestingPlayerController(
                 )
         )
 
-        return "player/assignment/sequence/components/test-statement"
+        return "player/assignment/sequence/components/statement/test-statement"
     }
 
     @GetMapping("/my-results")
@@ -642,7 +645,7 @@ class TestingPlayerController(
                 )
         )
 
-        return "player/assignment/sequence/components/test-my-results"
+        return "player/assignment/sequence/components/my-results/test-my-results"
     }
 
     data class MyResultsSituation(
@@ -1165,7 +1168,7 @@ class TestingPlayerController(
         )
 
 
-        return "player/assignment/sequence/components/test-results"
+        return "player/assignment/sequence/components/results/test-results"
     }
 
     data class ResultsSituation(
@@ -2000,46 +2003,46 @@ class TestingPlayerController(
 
     @GetMapping("/sequence-info")
     fun testSequenceInfo(
-            authentication: Authentication,
-            model: Model
+        authentication: Authentication,
+        model: Model
     ): String {
 
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
         model.addAttribute(
-                "sequenceInfoSituations",
-                SequenceGenerator.generateAllTypes(user)
-                        .map {
-                            SequenceInfoSituation(
-                                    describeSequence(it),
-                                    SequenceInfoResolver.resolve(true, it, messageBuilder)
-                            )
-                        }
+            "sequenceInfoSituations",
+            SequenceGenerator.generateAllTypes(user)
+                .map {
+                    SequenceInfoSituation(
+                        describeSequence(it),
+                        SequenceInfoResolver.resolve(true, it, messageBuilder)
+                    )
+                }
         )
 
-        return "player/assignment/sequence/components/test-sequence-info"
+        return "player/assignment/sequence/components/sequence-info/test-sequence-info"
     }
 
     data class SequenceInfoSituation(
-            val description: String,
-            val model: SequenceInfoModel
+        val description: String,
+        val model: SequenceInfoModel
     )
 
     private fun describeSequence(sequence: Sequence): String =
-            "sequenceState=${sequence.state}, " +
-                    "executionContext=${sequence.executionContext}, " +
-                    "resultsArePublished=${sequence.resultsArePublished}" +
+        "sequenceState=${sequence.state}, " +
+                "executionContext=${sequence.executionContext}, " +
+                "resultsArePublished=${sequence.resultsArePublished}" +
 
-                    (sequence.activeInteraction?.let {
-                        ", interaction=(${it.interactionType},${it.state} )"
-                    } ?: "")
+                (sequence.activeInteraction?.let {
+                    ", interaction=(${it.interactionType},${it.state} )"
+                } ?: "")
 
 
     @GetMapping("/command")
     fun testCommand(
-            authentication: Authentication,
-            model: Model
+        authentication: Authentication,
+        model: Model
     ): String {
         val user: User = authentication.principal as User
 
@@ -2055,7 +2058,7 @@ class TestingPlayerController(
                         }
         )
 
-        return "player/assignment/sequence/components/test-command"
+        return "player/assignment/sequence/components/command/test-command"
     }
 
     data class CommandSituation(
@@ -2072,85 +2075,146 @@ class TestingPlayerController(
 
         model.addAttribute("user", user)
         model.addAttribute(
-                "responsePhaseModel",
-                ResponsePhaseModel(
-                        sequenceId = 622L,
-                        interactionId = 1731L,
-                        userActiveInteractionState = State.show,
-                        responseSubmitted = false,
-                        responseFormModel = ResponseFormModel(
-                                interactionId = 1731L,
-                                attempt = 1,
-                                responseSubmissionSpecification = ResponseSubmissionSpecification(
-                                        studentsProvideExplanation = true,
-                                        studentsProvideConfidenceDegree = true
-                                ),
-                                timeToProvideExplanation = true,
-                                hasChoices = true,
-                                multipleChoice = true,
-                                firstAttemptChoices = arrayOf(2),
-                                firstAttemptExplanation = "Hello World",
-                                firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
-                                nbItem = 3
-                        )
-
+            "responsePhaseModel",
+            LearnerResponsePhaseViewModel(
+                sequenceId = 622L,
+                interactionId = 1731L,
+                learnerPhaseState = State.show,
+                responseSubmitted = false,
+                responseFormModel = LearnerResponseFormViewModel(
+                    interactionId = 1731L,
+                    attempt = 1,
+                    responseSubmissionSpecification = ResponseSubmissionSpecification(
+                        studentsProvideExplanation = true,
+                        studentsProvideConfidenceDegree = true
+                    ),
+                    timeToProvideExplanation = true,
+                    hasChoices = true,
+                    multipleChoice = true,
+                    firstAttemptChoices = arrayOf(2),
+                    firstAttemptExplanation = "Hello World",
+                    firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
+                    nbItem = 3
                 )
+
+            )
         )
 
-        return "player/assignment/sequence/components/test-response-phase"
+        return "player/assignment/sequence/phase/response/test-response-phase"
     }
 
     @GetMapping("/evaluation-phase")
     fun testEvaluationPhase(
-            authentication: Authentication,
-            model: Model
+        authentication: Authentication,
+        model: Model
     ): String {
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
+        return "player/assignment/sequence/phase/evaluation/test-evaluation-phase-index"
+    }
+
+    @GetMapping("/evaluation-phase/one-by-one")
+    fun testEvaluationPhaseOneByOne(
+        authentication: Authentication,
+        model: Model
+    ): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute("phaseTemplate", OneByOneLearnerEvaluationPhase.TEMPLATE)
+
         model.addAttribute(
-                "evaluationPhaseModel",
-                EvaluationPhaseModel(
-                        sequenceId = 12,
-                        interactionId = 123,
-                        choices = true,
-                        activeInteractionRank = 2,
-                        userHasCompletedPhase2 = false,
-                        responsesToGrade = listOf(
-                                org.elaastic.questions.player.components.evaluationPhase.ResponseData(
-                                        id = 1,
-                                        choiceList = LearnerChoice(listOf(1)),
-                                        explanation = "1st explanation"
-                                ),
-                                org.elaastic.questions.player.components.evaluationPhase.ResponseData(
-                                        id = 2,
-                                        choiceList = listOf(2),
-                                        explanation = "2nd explanation"
-                                )
-                        ),
-                        secondAttemptAllowed = true,
-                        secondAttemptAlreadySubmitted = false,
-                        responseFormModel = ResponseFormModel(
-                                interactionId = 1731L,
-                                attempt = 2,
-                                responseSubmissionSpecification = ResponseSubmissionSpecification(
-                                        studentsProvideExplanation = true,
-                                        studentsProvideConfidenceDegree = true
-                                ),
-                                timeToProvideExplanation = true,
-                                hasChoices = true,
-                                multipleChoice = true,
-                                firstAttemptChoices = arrayOf(2),
-                                firstAttemptExplanation = "Hello World",
-                                firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
-                                nbItem = 3
-                        ),
-                        userActiveInteractionState = State.show,
-                        userHasPerformedEvaluation = false
-                )
+            "evaluationPhaseViewModel",
+            OneByOneLearnerEvaluationPhaseViewModel(
+                sequenceId = 12,
+                interactionId = 123,
+                choices = true,
+                activeInteractionRank = 2,
+                userHasCompletedPhase2 = false,
+                nextResponseToGrade =
+                org.elaastic.questions.player.phase.evaluation.ResponseData(
+                    id = 1,
+                    choiceList = listOf(1),
+                    explanation = "1st explanation"
+                ),
+                secondAttemptAllowed = true,
+                secondAttemptAlreadySubmitted = false,
+                responseFormModel = LearnerResponseFormViewModel(
+                    interactionId = 1731L,
+                    attempt = 2,
+                    responseSubmissionSpecification = ResponseSubmissionSpecification(
+                        studentsProvideExplanation = true,
+                        studentsProvideConfidenceDegree = true
+                    ),
+                    timeToProvideExplanation = true,
+                    hasChoices = true,
+                    multipleChoice = true,
+                    firstAttemptChoices = arrayOf(2),
+                    firstAttemptExplanation = "Hello World",
+                    firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
+                    nbItem = 3
+                ),
+                userActiveInteractionState = State.show,
+            )
         )
 
-        return "player/assignment/sequence/components/test-evaluation-phase"
+        return "player/assignment/sequence/phase/evaluation/test-evaluation-phase"
+    }
+
+    @GetMapping("/evaluation-phase/all-at-once")
+    fun testEvaluationPhaseAllAtOnce(
+        authentication: Authentication,
+        model: Model
+    ): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute("phaseTemplate", AllAtOnceLearnerEvaluationPhase.TEMPLATE)
+
+        model.addAttribute(
+            "evaluationPhaseViewModel",
+            AllAtOnceLearnerEvaluationPhaseViewModel(
+                sequenceId = 12,
+                interactionId = 123,
+                choices = true,
+                activeInteractionRank = 2,
+                userHasCompletedPhase2 = false,
+                responsesToGrade = listOf(
+                    org.elaastic.questions.player.phase.evaluation.ResponseData(
+                        id = 1,
+                        choiceList = listOf(1),
+                        explanation = "1st explanation"
+                    ),
+                    org.elaastic.questions.player.phase.evaluation.ResponseData(
+                        id = 2,
+                        choiceList = listOf(2),
+                        explanation = "2nd explanation"
+                    )
+                ),
+                secondAttemptAllowed = true,
+                secondAttemptAlreadySubmitted = false,
+                responseFormModel = LearnerResponseFormViewModel(
+                    interactionId = 1731L,
+                    attempt = 2,
+                    responseSubmissionSpecification = ResponseSubmissionSpecification(
+                        studentsProvideExplanation = true,
+                        studentsProvideConfidenceDegree = true
+                    ),
+                    timeToProvideExplanation = true,
+                    hasChoices = true,
+                    multipleChoice = true,
+                    firstAttemptChoices = arrayOf(2),
+                    firstAttemptExplanation = "Hello World",
+                    firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
+                    nbItem = 3
+                ),
+                userActiveInteractionState = State.show,
+                userHasPerformedEvaluation = false
+            )
+        )
+
+        return "player/assignment/sequence/phase/evaluation/test-evaluation-phase"
     }
 
     @GetMapping("/recommendations")
@@ -2158,6 +2222,6 @@ class TestingPlayerController(
         val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
 
         return  ResponseEntity.ok("Recommendation feature : ${if(recommendationIsActive) "active" else "Inactive"}")
-
+        
     }
 }

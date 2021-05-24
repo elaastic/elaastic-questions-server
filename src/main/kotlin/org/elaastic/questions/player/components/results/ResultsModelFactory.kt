@@ -34,6 +34,8 @@ import org.elaastic.questions.player.components.responseDistributionChart.Choice
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
 import org.togglz.core.manager.FeatureManager
 import org.togglz.core.Feature
+import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
+import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 
 object ResultsModelFactory {
 
@@ -43,25 +45,26 @@ object ResultsModelFactory {
               responseSet: ResponseSet,
               userCanRefreshResults: Boolean,
               messageBuilder: MessageBuilder,
-              peerGradings: List<PeerGrading>? = null): ResultsModel =
-            if (sequence.statement.hasChoices()) {
-                val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
-                val recommendationModel = if (recommendationIsActive)
-                    RecommendationResolver.resolve(responseSet,
-                            peerGradings,
-                            sequence,
-                            messageBuilder) else null
-                ChoiceResultsModel(
-                        sequenceIsStopped = sequence.isStopped(),
-                        sequenceId = sequence.id ?: error("This sequence has no ID"),
-                        responseDistributionChartModel = buildResponseDistributionChartModel(sequence, responseSet),
-                        confidenceDistributionChartModel = buildConfidenceDistributionChartModel(sequence, responseSet),
-                        evaluationDistributionChartModel = if (peerGradings != null && peerGradings.isNotEmpty()) buildEvaluationDistributionChartModel(sequence, peerGradings) else null,
-                        recommendationModel = recommendationModel,
-                        explanationViewerModel = createChoiceExplanationViewerModel(teacher, sequence, responseSet, recommendationModel?.recommendedExplanationsComparator),
-                        userCanRefreshResults = userCanRefreshResults,
-                        userCanDisplayStudentsIdentity = teacher
-                )
+              peerGradings: List<PeerGrading>? = null
+    ): ResultsModel =
+        if (sequence.statement.hasChoices()) {
+            val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
+            val recommendationModel = if (recommendationIsActive)
+                RecommendationResolver.resolve(responseSet,
+                    peerGradings,
+                    sequence,
+                    messageBuilder) else null
+            ChoiceResultsModel(
+                sequenceIsStopped = sequence.isStopped(),
+                sequenceId = sequence.id ?: error("This sequence has no ID"),
+                responseDistributionChartModel = buildResponseDistributionChartModel(sequence, responseSet),
+                confidenceDistributionChartModel = buildConfidenceDistributionChartModel(sequence, responseSet),
+                evaluationDistributionChartModel = if (peerGradings != null && peerGradings.isNotEmpty()) buildEvaluationDistributionChartModel(sequence, peerGradings) else null,
+                recommendationModel = recommendationModel,
+                explanationViewerModel = createChoiceExplanationViewerModel(teacher, sequence, responseSet, recommendationModel?.recommendedExplanationsComparator),
+                userCanRefreshResults = userCanRefreshResults,
+                userCanDisplayStudentsIdentity = teacher
+            )
             }
             else OpenResultsModel(
                     sequenceIsStopped = sequence.isStopped(),

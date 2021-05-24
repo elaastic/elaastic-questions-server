@@ -1,0 +1,190 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<div th:fragment="evaluationPhase(model)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <div class="ui segment">
+    <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
+      Comparing viewpoints
+    </div>
+
+    <form th:unless="${model.userHasCompletedPhase2 || model.userActiveInteractionState.name() == 'afterStop'}"
+          th:action="@{/player/sequence/{sequenceId}/phase/evaluation/one-by-one/submit-evaluation(sequenceId=${model.sequenceId})}"
+          class="ui form"
+          method="post">
+      <input type="hidden" name="interactionId" th:value="${model.interactionId}"/>
+      <th:block th:if="${model.nextResponseToGrade}">
+        <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.oneByOne.intro}">
+          Here is presented an alternative response. Please indicate how much you agree with this answer.
+        </div>
+
+        <div id="phase2-evaluation-app">
+          <div class="ui attached segment">
+            <th:block th:if="${model.choices}">
+              <strong th:text="#{player.sequence.interaction.choice.label}">Choice</strong>
+              <strong th:text="${model.nextResponseToGrade.choiceList}"></strong>
+              <br/>
+            </th:block>
+            <span th:utext="${model.nextResponseToGrade.explanation}"></span>
+
+
+            <input type="hidden" name="responseId" th:value="${model.nextResponseToGrade.id}"/>
+            <evaluation-input th:attr="current-response-id=${model.nextResponseToGrade.id}"
+                              value="-1"></evaluation-input>
+
+          </div>
+        </div>
+
+        <div class="ui hidden divider"></div>
+
+      </th:block>
+
+
+      <th:block th:if="${model.secondAttemptAllowed && model.nextResponseToGrade != null}">
+        <div th:if="${model.secondAttemptAlreadySubmitted}"
+             class="ui blue message"
+             th:text="#{player.sequence.interaction.secondAttemptSubmitted}">
+          Your second response has been registered.
+        </div>
+        <th:block th:unless="${model.secondAttemptAlreadySubmitted}">
+          <div class="ui blue message"
+               th:text="#{player.sequence.phase.evaluation.oneByOne.changeAnswer.notice}">
+            You may change your answer if you wish.
+          </div>
+
+          <div class="ui segment">
+            <div class="inline fields" style="margin-bottom: 0;">
+              <label for="change-answer">Souhaitez-vous changer d'avis ?</label>
+              <div class="field">
+                <div id="change-answer-radio" class="ui radio checkbox">
+                  <input type="radio" name="changeAnswer" checked="" tabindex="0" class="hidden" value="true">
+                  <label th:text="#{common.yes}">Yes</label>
+                </div>
+              </div>
+              <div class="field">
+                <div id="dont-change-answer-radio" class="ui radio checkbox">
+                  <input type="radio" name="changeAnswer" tabindex="0" class="hidden" checked="checked" value="false">
+                  <label th:text="#{common.no}">No</label>
+                </div>
+              </div>
+            </div>
+
+            <div id="response-div" class="ui basic segment" style="display: none;">
+              <div
+                th:replace="player/assignment/sequence/phase/response/_response-form.html :: responseForm(${model.responseFormModel})"></div>
+            </div>
+          </div>
+          <script>
+            $('.ui.radio.checkbox').checkbox();
+            $('#change-answer-radio').checkbox({
+              onChecked: function() {
+                $('#response-div').show();
+              }
+            });
+            $('#dont-change-answer-radio').checkbox({
+              onChecked: function() {
+                $('#response-div').hide();
+              }
+            })
+          </script>
+
+
+        </th:block>
+      </th:block>
+
+      <th:block th:if="${!model.userHasCompletedPhase2}">
+        <div class="ui hidden divider"></div>
+
+        <div class="ui basic segment">
+          <input type="submit"
+                 class="ui primary button"
+                 onclick="onSubmitResponse()"
+                 th:value="#{player.sequence.interaction.submitResponse}"/>
+        </div>
+      </th:block>
+
+    </form>
+
+    <div th:if="${model.userHasCompletedPhase2}"
+         class="ui blue message"
+         th:text="#{player.sequence.phase.completedByUser(${model.activeInteractionRank})}">
+    </div>
+
+    <div th:if="${!model.userHasCompletedPhase2 && model.userActiveInteractionState.name() == 'afterStop'}"
+         class="ui blue message"
+         th:text="#{player.sequence.interaction.evaluation.tooLate}">
+    </div>
+
+
+  </div>
+
+
+  <style>
+      .fieldgrade .active.item {
+          background-color: #dff0ff !important;
+          color: #0e6eb8 !important;
+      }
+  </style>
+
+  <script th:inline="javascript">
+
+    new Vue({
+      el: '#phase2-evaluation-app',
+      components: {
+        'evaluation-input': {
+          props: ['currentResponseId', 'value'],
+          template: `
+    <div class="field grade">
+      <input type="hidden" id="grade" name="grade" v-model="grade" />` +
+            '<label>' + [[#{player.sequence.interaction.your.evaluation}]] + '</label>' +
+            `<div class="ui stackable pagination menu" >
+        <a class="item" v-bind:class="{ active: grade === -1 }" v-on:click="grade = -1">` +
+            [[#{player.sequence.interaction.grade.-1}]] +
+            `</a>
+        <div class="disabled item"></div>` +
+            /*[# th:each="grade : ${#numbers.sequence(1, 5)}"]*/
+            '<a class="item"' +
+            'v-bind:class="{ active: grade === [[${grade}]] }"' +
+            'v-on:click="grade=[[${grade}]]"' +
+            'data-inverted=""' +
+            'data-tooltip="' + [[#{|player.sequence.interaction.grade.${grade} |
+        }
+    ]]
+    +'"' +
+    'data-position="top center">' +
+    '[[${grade}]]' +
+    '</a>' +
+    [/]
+      `
+      </div>
+    </div>`,
+      data
+    :
+
+    function () {
+      return {
+        grade: this.value
+      }
+    }
+    }
+    }
+    })
+
+  </script>
+
+</div>

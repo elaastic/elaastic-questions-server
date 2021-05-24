@@ -24,6 +24,7 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
@@ -37,6 +38,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.*
+import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
@@ -57,15 +59,16 @@ import kotlin.IllegalStateException
 @Controller
 @RequestMapping("/player")
 class PlayerController(
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val sequenceService: SequenceService,
-        @Autowired val learnerSequenceService: LearnerSequenceService,
-        @Autowired val interactionService: InteractionService,
-        @Autowired val responseService: ResponseService,
-        @Autowired val peerGradingService: PeerGradingService,
-        @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val resultsService: ResultsService,
-        @Autowired val anonymousUserService: AnonymousUserService,
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val learnerSequenceService: LearnerSequenceService,
+    @Autowired val interactionService: InteractionService,
+    @Autowired val responseService: ResponseService,
+    @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val messageBuilder: MessageBuilder,
+    @Autowired val resultsService: ResultsService,
+    @Autowired val anonymousUserService: AnonymousUserService,
+    @Autowired val learnerPhaseService: LearnerPhaseService,
         @Autowired val userService: UserService,
         @Autowired val featureManager: FeatureManager
         ) {
@@ -83,7 +86,7 @@ class PlayerController(
         val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
         val mapCourseAssignments: Map<Course, MutableList<Assignment>> =
                 assignmentService.getCoursesAssignmentsMap(assignments)
-        val assignmentsWithoutCourse: List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
+        val assignmentsWithoutCourse : List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
         model.addAttribute("user", user)
         model.addAttribute("mapCourseAssignments", mapCourseAssignments)
         model.addAttribute("assignmentsWithoutCourse", assignmentsWithoutCourse)
@@ -195,6 +198,7 @@ class PlayerController(
 
         val user: User = authentication.principal as User
         val assignment: Assignment = assignmentService.get(assignmentId, true)
+        model.addAttribute("user", user)
 
         if (assignment.sequences.isEmpty()) {
             return "redirect:/subject/${assignment.subject!!.id}"
@@ -208,65 +212,77 @@ class PlayerController(
             val teacher = user == sequence.owner
             val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
 
-            model.addAttribute(
-                    "playerModel",
-                    if (teacher)
-                        PlayerModelFactory.buildForTeacher(
-                                user = user,
-                                sequence = sequence,
-                                featureManager = featureManager,
-                                nbRegisteredUsers = nbRegisteredUsers,
-                                sequenceToUserActiveInteraction = assignment.sequences.associate { it to it.activeInteraction },
-                                messageBuilder = messageBuilder,
-                                findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
-                                findAllPeerGrading = { peerGradingService.findAll(sequence) },
-                                sequenceStatistics = sequenceService.getStatistics(sequence),
-                                userCanRefreshResults = { resultsService.canUpdateResults(user, sequence) }
-                        )
-                    else PlayerModelFactory.buildForLearner(
-
-                            sequence = sequence,
-                            nbRegisteredUsers = nbRegisteredUsers,
-                            featureManager = featureManager,
-                            sequenceToUserActiveInteraction = assignment.sequences.associate {
-                                it to if (it.executionIsFaceToFace())
-                                    it.activeInteraction
-                                else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
-                            },
-                            messageBuilder = messageBuilder,
-                            getActiveInteractionForLearner = {
-                                learnerSequenceService.getActiveInteractionForLearner(
-                                        user,
-                                        sequence
-                                )
-                            },
-                            hasResponseForUser = { attemptNum: AttemptNum ->
-                                responseService.hasResponseForUser(user, sequence, attemptNum)
-                            },
-                            findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
-                            findAllRecommandedResponsesForUser = {
-                                responseService.findAllRecommandedResponsesForUser(
-                                        sequence = sequence,
-                                        attempt = sequence.whichAttemptEvaluate(),
-                                        user = user
-                                )
-                            },
-                            userHasPerformedEvaluation = {
-                                peerGradingService.userHasPerformedEvaluation(user, sequence)
-                            },
-                            getFirstAttemptResponse = {
-                                responseService.find(user, sequence)},
-                            getSecondAttemptResponse = {
-                                responseService.find(user, sequence, 2)
-                            },
-                            userCanRefreshResults = {
-                                resultsService.canUpdateResults(user, sequence)
-                            }
-                    )
-            )
+            return if (teacher)
+                playAssignmentForTeacher(user, model, sequence)
+            else playAssignmentForLearner(user, model, sequence)
         }
 
-        return "player/assignment/sequence/play"
+    }
+
+
+    private fun playAssignmentForTeacher(
+        user: User,
+        model: Model,
+        sequence: Sequence
+    ): String {
+
+        val assignment = sequence.assignment!!
+        val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
+
+        model.addAttribute(
+            "playerModel",
+            PlayerModelFactory.buildForTeacher(
+                user = user,
+                sequence = sequence,
+                featureManager = featureManager,
+                nbRegisteredUsers = nbRegisteredUsers,
+                sequenceToUserActiveInteraction = assignment.sequences.associate { it to it.activeInteraction },
+                messageBuilder = messageBuilder,
+                findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
+                findAllPeerGrading = { peerGradingService.findAll(sequence) },
+                sequenceStatistics = sequenceService.getStatistics(sequence),
+                userCanRefreshResults = { resultsService.canUpdateResults(user, sequence) }
+            )
+        )
+
+        return "player/assignment/sequence/play-teacher"
+    }
+
+    private fun playAssignmentForLearner(
+        user: User,
+        model: Model,
+        sequence: Sequence
+    ): String {
+
+        val assignment = sequence.assignment!!
+        val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
+
+        val learnerSequence = learnerSequenceService.getLearnerSequence(user, sequence)
+        learnerPhaseService.loadPhaseList(learnerSequence)
+
+        model.addAttribute(
+            "playerModel",
+            PlayerModelFactory.buildForLearner(
+                sequence = sequence,
+                nbRegisteredUsers = nbRegisteredUsers,
+                featureManager = featureManager,
+                sequenceToUserActiveInteraction = assignment.sequences.associate {
+                    it to if (it.executionIsFaceToFace())
+                        it.activeInteraction
+                    else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
+                },
+                messageBuilder = messageBuilder,
+                getActiveInteractionForLearner = {
+                    learnerSequenceService.getActiveInteractionForLearner(
+                        user,
+                        sequence
+                    )
+                },
+                learnerSequence = learnerSequence
+            )
+        )
+
+        return "player/assignment/sequence/play-learner"
     }
 
     @GetMapping("/assignment/{id}/nbRegisteredUsers")
@@ -524,10 +540,10 @@ class PlayerController(
     }
 
     class EvaluationData(
-            val id: Long,
-            val choiceList: List<ItemIndex>?,
-            val confidenceDegree: ConfidenceDegree?,
-            val explanation: String?
+        val id: Long,
+        val choiceList: List<ItemIndex>?,
+        val confidenceDegree: ConfidenceDegree?,
+        val explanation: String?
     ) {
         private var grades = HashMap<Long, Int>()
 
@@ -537,5 +553,4 @@ class PlayerController(
             grades = value
         }
     }
-
 }

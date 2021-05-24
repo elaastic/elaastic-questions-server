@@ -25,6 +25,4 @@ data class ResponsePhaseModel(
         val userActiveInteractionState: State,
         val responseSubmitted: Boolean,
         val responseFormModel: ResponseFormModel
-) {
-
-}
+)
