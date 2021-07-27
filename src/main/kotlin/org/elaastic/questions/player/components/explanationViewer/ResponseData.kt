@@ -29,7 +29,7 @@ class ResponseData(
 ) {
     constructor(response: Response) : this(
             choices = response.learnerChoice ?: error("The learner choice is undefined"),
-            score = ((response.score ?: error("The score is undefined")) * BigDecimal(100)).toInt(),
+            score = ((response.score ?: error("The score is undefined"))).toInt(),
             correct = response.score == BigDecimal(100)
     )
 
