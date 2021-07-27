@@ -319,6 +319,7 @@ class SubjectService (
                 user
         )
         duplicateSubject.parentSubject = initialSubject
+        duplicateSubject.course = initialSubject.course
         save(duplicateSubject)
         entityManager.flush()
         for (statement:Statement in initialSubject.statements){
