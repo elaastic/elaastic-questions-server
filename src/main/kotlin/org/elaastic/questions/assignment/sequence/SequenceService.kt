@@ -249,9 +249,13 @@ class SequenceService(
 
     fun nextInteractionForLearner(sequence: Sequence, learner: User) {
         learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).let { learnerSequence ->
-            learnerSequence.activeInteraction = sequence.getInteractionAt(
+            if (sequence.executionIsBlended() && sequence.resultsArePublished) {
+                learnerSequence.activeInteraction = sequence.interactions[InteractionType.Read]
+            } else {
+                learnerSequence.activeInteraction = sequence.getInteractionAt(
                     (learnerSequence.activeInteraction ?: error("No active interaction, cannot select the next one") ).rank + 1
-            )
+                )
+            }
             learnerSequenceRepository.save(learnerSequence)
         }
     }
