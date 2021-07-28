@@ -285,7 +285,7 @@ class PlayerController(
                     user,
                     it,
                     executionContext,
-                    studentsProvideExplanation ?: true,
+                    studentsProvideExplanation ?: false,
                     responseToEvaluateCount ?: 0
                 )
                 autoReloadSessionHandler.broadcastReload(id)

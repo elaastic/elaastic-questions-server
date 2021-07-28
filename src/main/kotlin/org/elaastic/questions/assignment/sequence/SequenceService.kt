@@ -111,13 +111,13 @@ class SequenceService(
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
             sequenceRepository.save(it)
         }
-
-        responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
+        if (studentsProvideExplanation) {
+            responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
                 sequence = sequence,
                 teacher = sequence.owner
-        )
-        responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(sequence)
-
+            )
+            responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(sequence)
+        }
         return sequence
     }
 

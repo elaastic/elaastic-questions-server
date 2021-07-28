@@ -225,12 +225,12 @@
         switch (sourceEvent.val()) {
           case 'FaceToFace':
             configurationPanel.show()
-            studentsProvideExplanation.prop('disabled', false)
+            studentsProvideExplanation.prop('readonly', false)
             manageConfigurationChange(sequenceId, questionType, studentsProvideExplanation)
             break
           default:
             studentsProvideExplanation.prop('checked', true)
-            studentsProvideExplanation.prop('disabled', true)
+            studentsProvideExplanation.prop('readonly', true)
             manageConfigurationChange(sequenceId, questionType, studentsProvideExplanation)
             break
         }
