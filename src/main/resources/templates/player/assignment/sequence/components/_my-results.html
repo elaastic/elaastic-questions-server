@@ -57,10 +57,12 @@
                             ${studentResultsModel.scoreSecondTry})">
           </div>
         </div>
-        <div class="ui info message explanation"
-             th:if="${!#strings.isEmpty(studentResultsModel.explanationSecondTry?.content)}">
-          <span th:utext="${studentResultsModel.explanationSecondTry?.content}">EXPLANATION CONTENT</span>
-        </div>
+        <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationSecondTry?.content)}">
+          <div
+                  th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
+                        :: anExplanation(${studentResultsModel.explanationSecondTry})">
+          </div>
+        </th:block>
       </div>
 
     </div>
