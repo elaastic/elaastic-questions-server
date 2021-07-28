@@ -33,36 +33,25 @@
          th:id="|sequence_${resultsModel.sequenceId}_result|">
 
       <div th:if="${resultsModel.hasChoices}">
-        <th:block th:if="${resultsModel.hasAnyResult}">
           <div th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${resultsModel.responseDistributionChartModel})"></div>
-        </th:block>
-
-        <a th:if="${user.isTeacher()}"
+      </div>
+      <div>
+        <th:block th:if="${resultsModel.hasExplanations}">
+          <a th:if="${user.isTeacher()}"
              id="hide-name"
              onclick="nameStudents.hide()"
              style="margin-bottom: 10px; cursor: pointer;">
-          <i class="toggle off icon big teal"></i>
-          <span class="small teal" th:text="#{common.hide-name}">Hide student names</span>
-        </a>
+            <i class="toggle off icon big teal"></i>
+            <span class="small teal" th:text="#{common.hide-name}">Hide student names</span>
+          </a>
 
-        <a th:if="${user.isTeacher()}"
+          <a th:if="${user.isTeacher()}"
              id="show-name"
              onclick="nameStudents.show()"
              style="margin-bottom: 10px; cursor: pointer; display: none;">
-          <i class="toggle on icon big teal"></i>
-          <span class="small teal" th:text="#{common.show-name}">Show student names</span>
-        </a>
-
-        <th:block th:if="${resultsModel.hasExplanations && resultsModel.hasAnyResult}">
-          <div th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
-        </th:block>
-        <th:block th:if="${!resultsModel.hasAnyResult}">
-          <div th:replace="::noContribution"></div>
-        </th:block>
-      </div>
-
-      <div th:if="${!resultsModel.hasChoices}">
-        <th:block th:if="${resultsModel.hasExplanations}">
+            <i class="toggle on icon big teal"></i>
+            <span class="small teal" th:text="#{common.show-name}">Show student names</span>
+          </a>
           <div th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
         </th:block>
         <th:block th:if="${!resultsModel.hasExplanations}">

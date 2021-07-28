@@ -34,8 +34,6 @@ object ResultsModelFactory {
                 ChoiceResultsModel(
                         sequenceIsStopped = sequence.isStopped(),
                         sequenceId = sequence.id ?: error("This sequence has no ID"),
-                        hasExplanations = sequence.getResponseSubmissionSpecification().studentsProvideExplanation,
-                        hasAnyResult = !responseSet.isEmpty(),
                         responseDistributionChartModel =
                         buildResponseDistributionChartModel(sequence, responseSet),
                         explanationViewerModel =

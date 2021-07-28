@@ -22,13 +22,12 @@ import org.elaastic.questions.player.components.explanationViewer.ExplanationVie
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
 
 data class ChoiceResultsModel(
-        override val sequenceIsStopped: Boolean,
-        override val sequenceId: Long,
-        val hasAnyResult: Boolean,
-        val responseDistributionChartModel: ResponseDistributionChartModel? = null,
-        override val hasExplanations: Boolean,
-        override val explanationViewerModel: ExplanationViewerModel? = null,
-        override val userCanRefreshResults: Boolean = true
-        ) : ResultsModel {
+    override val sequenceIsStopped: Boolean,
+    override val sequenceId: Long,
+    val responseDistributionChartModel: ResponseDistributionChartModel? = null,
+    override val explanationViewerModel: ExplanationViewerModel? = null,
+    override val userCanRefreshResults: Boolean = true
+) : ResultsModel {
+    override val hasExplanations = explanationViewerModel?.nbExplanations ?: 0 > 0
     override fun getHasChoices() = true
 }
