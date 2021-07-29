@@ -313,9 +313,10 @@ class SubjectService (
     }
 
     fun duplicate(user:User, initialSubject: Subject): Subject{
-
+        val indexTitle = subjectRepository.countAllStartingWithTitle(user,initialSubject.title) + 1
+        val duplicateTitle = if (indexTitle == 1) initialSubject.title else initialSubject.title + " ($indexTitle) "
         val duplicateSubject = Subject(
-                initialSubject.title,
+                duplicateTitle,
                 user
         )
         duplicateSubject.parentSubject = initialSubject

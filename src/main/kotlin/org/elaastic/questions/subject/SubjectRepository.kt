@@ -43,4 +43,7 @@ interface SubjectRepository : JpaRepository<Subject?, Long> {
     @Query("select count(s.id) from Subject as s where s.owner=?1 AND s.parentSubject = ?2")
     fun countAllByParentSubject(owner: User, parentSubject: Subject): Int
 
+    @Query("select count(s.id) from Subject as s where s.owner=?1 AND s.title like ?2%")
+    fun countAllStartingWithTitle(owner: User, title: String): Int
+
 }

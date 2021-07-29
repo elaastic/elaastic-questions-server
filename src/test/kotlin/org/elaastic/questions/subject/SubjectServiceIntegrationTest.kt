@@ -439,7 +439,7 @@ internal class SubjectServiceIntegrationTest(
                 )
                 MatcherAssert.assertThat(
                     it.title,
-                    CoreMatchers.equalTo(subject.title)
+                    CoreMatchers.equalTo(subject.title + " (2) ")
                 )
                 MatcherAssert.assertThat(
                     it.course,
@@ -472,7 +472,7 @@ internal class SubjectServiceIntegrationTest(
         val otherTeacher = testingService.getAnotherTestTeacher()
         val subject = subjectService.save(
             Subject(
-                title = "An assignment",
+                title = "A subject",
                 owner = teacher
             )
         )
