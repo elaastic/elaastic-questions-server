@@ -7,7 +7,7 @@ tags:
   - Formative assessment system
   - Peer Instruction
 authors:
-  - name: Franck Silvestre^[co-first author]
+  - name: Franck Silvestre^[co-first author] ^[corresponding author]
     orcid: 0000-0002-1134-8200
     affiliation: "1, 2" 
   - name: John Tranier^[co-first author]
@@ -30,27 +30,28 @@ bibliography: paper.bib
 
 # Summary
 
-`Elaastic` is a web-based application that allows teachers and students to implement formative assessment sequences in 
+[Elaastic](https://www.irit.fr/elaastic/) is a web-based application that allows teachers and students to implement formative assessment sequences in 
 contexts (large groups of students, distance or hybrid learning) where these would be difficult to set up  without the 
 help of technology.
 The application implements different workflows depending on the context. These workflows allow: (1) the teacher to ask a
 choice or open-ended question to his/her group of students, (2) the students to answer the question by providing a 
-written justification. The system then organises a peer review of the various contributions and processes all the data 
-entered so that each student receives feedback on their answer presented by the system. The sequence then usually ends 
-(face-to-face or hybrid context) with a discussion between teacher and students.  
+written justification. The system then organises a peer review of the various contributions and processes all the collected data 
+so that each student receives feedback on their answer (\autoref{fig:elaastic}). The sequence then usually ends with a discussion between teacher 
+and students.  
 
 ![Elaastic - Interface presenting feedback to a student at the end of a sequence.\label{fig:elaastic}](elaastic.png)
 
 # Statement of need
 
-`Elaastic` has been developed in the context of research conducted by the 
+`Elaastic` and its ancestor `Tsaap-Notes`, have been developed in the context of research conducted by the 
 [TALENT team at IRIT](https://www.irit.fr/en/departement/dep-interaction-collective-intelligence/talent-team/) on the 
-design and implementation of formative assessment processes. Inspired by the work on Peer Instruction[@crouch2001peer], 
-we mobilise the technology to improve the formative assessment processes on different dimensions: context of use, 
-interaction modalities, students engagement in complex tasks or even the improvement of feedbacks for online tests[@silvestre2017new; @silvestre2015reflexive]. 
+design and implementation of formative assessment systems. First inspired by the Peer Instruction process[@crouch2001peer], 
+we use technology to improve formative assessment processes on different dimensions: context of use, 
+types of interactions or students engagement in complex tasks such as written argumentation[@silvestre2015conception]. New designed processes has also been used to 
+improve feedbacks for online tests[@silvestre2017nouveau; @silvestre2015reflexive]. 
 Finally, recently, we are using learning analytics on data collected since 2015 to elicit links between the different 
 variables characterising a formative assessment sequence. We exploit the results to help teachers in their decision 
-making during sequences orchestrated with `Elaastic`[andriamiseza2021vers; @andriamiseza2021data].
+making during sequences orchestrated with `Elaastic`[@andriamiseza2021vers; @andriamiseza2021data].
 
 For all these research works, we use `Elaastic` to conduct our experiments in ecological contexts in different 
 institutions of higher education and recently in secondary schools. Since 2015, the platform has been used by more than 
@@ -61,7 +62,7 @@ Since 2020, the `Elaastic` platform is [labelled by IRIT](https://www.irit.fr/en
 
 # Acknowledgements
 
-We acknowledge the French government which is currently funding the [B4MATIVE!](https://www.irit.fr/b4mative/) project 
+We acknowledge the French government which is currently funding the [B4MATIVE!](https://www.irit.fr/b4mative/) project (2019-2023)
 in partnership with the Nancy-Metz Academy to actively pursue research work based on `Elaastic`.
 
 # References
