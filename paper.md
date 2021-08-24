@@ -1,5 +1,5 @@
 ---
-title: 'Elaastic: A web application for implementing active learning processes'
+title: 'Elaastic: A web application for the orchestration of formative assessment sequences'
 tags:
   - Spring Boot
   - MySQL
@@ -14,15 +14,22 @@ authors:
     affiliation: 4
   - name: Rialy Andriamiseza
     affiliation: "1, 3"
+  - name: Jean-François Parmentier
+    affiliation: 5
+  - name: Julien Broisin
+    orcid: 0000-0001-8713-6282
+    affiliation: "1, 3"
 affiliations:
- - name: Institut de Recheche en Informatique de Toulouse (IRIT)
-   index: 1
- - name: Université Toulouse Capitole
-   index: 2
- - name: Université Toulouse Paul Sabatier
-   index: 3
- - name: Independent Researcher
-   index: 4
+  - name: Institut de Recheche en Informatique de Toulouse (IRIT)
+    index: 1
+  - name: Université Toulouse Capitole
+    index: 2
+  - name: Université Toulouse Paul Sabatier
+    index: 3
+  - name: Independent Researcher
+    index: 4
+  - name: Toulouse INP
+    index: 5
 date: 24 August 2021
 bibliography: paper.bib
 
@@ -45,13 +52,13 @@ and students.
 
 `Elaastic` and its ancestor `Tsaap-Notes`, have been developed in the context of research conducted by the 
 [TALENT team at IRIT](https://www.irit.fr/en/departement/dep-interaction-collective-intelligence/talent-team/) on the 
-design and implementation of formative assessment systems. First inspired by the Peer Instruction process[@crouch2001peer], 
+design and implementation of formative assessment systems. First inspired by the Peer Instruction process [@crouch2001peer], 
 we use technology to improve formative assessment processes on different dimensions: context of use, 
-types of interactions or students engagement in complex tasks such as written argumentation[@silvestre2015conception]. New designed processes has also been used to 
-improve feedbacks for online tests[@silvestre2017nouveau; @silvestre2015reflexive]. 
+types of interactions or students engagement in complex tasks such as written argumentation [@silvestre2015conception]. New designed processes has also been used to 
+improve feedbacks for online tests [@silvestre2017nouveau; @silvestre2015reflexive]. 
 Finally, recently, we are using learning analytics on data collected since 2015 to elicit links between the different 
 variables characterising a formative assessment sequence. We exploit the results to help teachers in their decision 
-making during sequences orchestrated with `Elaastic`[@andriamiseza2021vers; @andriamiseza2021data].
+making during sequences orchestrated with `Elaastic` [@andriamiseza2021vers; @andriamiseza2021data].
 
 For all these research works, we use `Elaastic` to conduct our experiments in ecological contexts in different 
 institutions of higher education and recently in secondary schools. Since 2015, the platform has been used by more than 
