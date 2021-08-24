@@ -7,19 +7,19 @@ tags:
   - Formative assessment system
   - Peer Instruction
 authors:
-  - name: Franck Silvestre[co-first author] 
+  - name: Franck Silvestre^[Corresponding author]^[co-first author] 
     orcid: 0000-0002-1134-8200
     affiliation: "1, 2" 
-  - name: John Tranier[co-first author]
+  - name: John Tranier^[co-first author]
     affiliation: 4
   - name: Rialy Andriamiseza
     affiliation: "1, 3"
 affiliations:
  - name: Institut de Recheche en Informatique de Toulouse (IRIT)
    index: 1
- - name: Université Toulouse 1 Capitole
+ - name: Université Toulouse Capitole
    index: 2
- - name: Université Toulouse 3 Paul Sabatier
+ - name: Université Toulouse Paul Sabatier
    index: 3
  - name: Independent Researcher
    index: 4
