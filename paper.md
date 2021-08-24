@@ -44,9 +44,7 @@ The application implements different workflows depending on the context. These w
 choice or open-ended question to his/her group of students, (2) the students to answer the question by providing a 
 written justification. The system then organises a peer review of the various contributions and processes all the collected data 
 so that each student receives feedback on their answer (\autoref{fig:elaastic}). The sequence then usually ends with a discussion between teacher 
-and students.  
-
-![Elaastic - Interface presenting feedback to a student at the end of a sequence.\label{fig:elaastic}](elaastic.png)
+and students.
 
 # Statement of need
 
@@ -66,6 +64,8 @@ institutions of higher education and recently in secondary schools. Since 2015, 
 activities orchestrated by `Elaastic`.
 
 Since 2020, the `Elaastic` platform is [labelled by IRIT](https://www.irit.fr/en/plateformes/elaastic-platform/).  
+
+![Elaastic - Interface presenting feedback to a student at the end of a sequence.\label{fig:elaastic}](elaastic.png)
 
 # Acknowledgements
 
