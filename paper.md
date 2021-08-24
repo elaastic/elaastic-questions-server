@@ -7,7 +7,7 @@ tags:
   - Formative assessment system
   - Peer Instruction
 authors:
-  - name: Franck Silvestre^[Corresponding author]^[co-first author] 
+  - name: Franck Silvestre^[co-first author] 
     orcid: 0000-0002-1134-8200
     affiliation: "1, 2" 
   - name: John Tranier^[co-first author]
