@@ -1,63 +1,66 @@
 # elaastic
-_elaastic_ est un EIAH (Environnement Informatique pour l’Apprentissage Humain) dédiée à l’orchestration de séquences d’évaluations formatives pendant les cours en face à face ou à distance.
-          
-## Pour commencer
-_elaastic_ est développé avec le framework spring-boot et le langage Kotlin.
+_elaastic_ is an interactive system dedicated to the orchestration of formative assessment sequences during face-to-face or distance learning.        
+_elaastic_ is developed in the context of research
+conducted by the [TALENT team at IRIT](https://www.irit.fr/en/departement/dep-interaction-collective-intelligence/talent-team/) on the design and implementation of formative
+assessment systems.
 
-### Prérequis
+## Getting started
+_elaastic_ is developed with the spring-boot framework and the Kotlin language.
+
+### Prerequisites
 * Java (version 11)
 * Gradle
 * Docker
 
-### Lancer la base de données
-Le fichier `docker-compose` permet de lancer les services de base de données MySQL 5 utilisés pour lancer l'application ou pour exécuter les tests. 
+### Launching the database
+The `docker-compose` file is used to start the MySQL 5 database services used to run the application or to run tests. 
 
-Lancer la base de données pour l'application :  
+Launch the database for the application: 
 ````
 docker-compose start elaastic-questions-db
 ````
 
-Lancer la base de données pour les tests : 
+Launch the database for the tests: 
 ````
 docker-compose start elaastic-questions-db-test
 ```` 
 
 
-### Lancer l'application
-Pour lancer l'application en mode développement :
+### Launching the application
+To launch the application in development mode:
 ````
 gradle bootRun
 ````
-            
-L'application est alors accessible sur `http://localhost:8080`.
+
+The application is then accessible at `http://localhost:8080`.
                      
 
-## Déployer l'application
-_elaastic_ peut être déployé en mode _stand-alone_ (avec un serveur Tomcat embarqué) ou bien dans un serveur Tomcat.
+## Deploying the application
+_elaastic_ can be deployed in _stand-alone_ mode (with an embedded Tomcat server) or in a Tomcat server.
 
-### Packager l'application en mode _stand-alone_
+### Packaging the application in _stand-alone_ mode
 ````
 gradle bootJar
 ````
-Récupérer le fichier `elaastic-questions-server.jar` dans le dossier `build/libs`.
+Get the `elaastic-questions-server.jar` file from the `build/libs` folder.
 
-Il est possible de tester ce mode packagé en lançant les services du fichier `docker-compose-standalone.yml`.
-L'application sera disponible sur `http://localhost:8081/elaastic-questions`.
+It is possible to test this packaged mode by running the services in the `docker-compose-standalone.yml` file.
+The application will be available at `http://localhost:8081/elaastic-questions`.
 
-### Packager l'application pour Tomcat
+### Packaging the application for Tomcat
 ````
 gradle bootWar
 ````
-Récupérer le fichier `elaastic-questions-server.war` dans le dossier `build/libs`.
+Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 
-Il est possible de tester le package pour Tomcat en lançant les services du fichier `docker-compose.tomcat.yml`.
-L'application sera disponible sur `http://localhost:8088`.
+It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
+The application will be available at `http://localhost:8088`.
 
  
 ## Licence
 
 Elaastic - formative assessment system
-Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+Copyright (C) 2019. Université Toulouse 1 Capitole, Université Toulouse 3 Paul Sabatier
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
