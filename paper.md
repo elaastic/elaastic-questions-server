@@ -38,7 +38,7 @@ bibliography: paper.bib
 # Summary
 
 [Elaastic](https://www.irit.fr/elaastic/) is a web-based application that allows teachers and students to implement formative assessment sequences in 
-contexts (large groups of students, distance or hybrid learning) where these would be difficult to set up  without the 
+different contexts (large groups of students, distance or hybrid learning) where these would be difficult to set up  without the 
 help of technology.
 The application implements different workflows depending on the context. These workflows allow: (1) the teacher to ask a
 choice or open-ended question to his/her group of students, (2) the students to answer the question by providing a 
