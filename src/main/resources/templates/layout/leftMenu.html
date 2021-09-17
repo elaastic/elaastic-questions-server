@@ -74,17 +74,6 @@
       <div class="ui divider"></div>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
-         th:href="@{/subject/}"
-         href="/subject/"
-         class="item"
-         th:attr="data-tooltip=#{subject.my.list.label}"
-         data-tooltip="My subjects"
-         data-position="right center"
-         data-inverted="">
-        <i class="book icon" th:classappend="${#strings.equals(currentSection, 'my-subjects')} ? 'orange' : ''"></i>
-      </a>
-
-      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
          th:href="@{/course/}"
          href="/course"
          class="item"
@@ -93,6 +82,17 @@
          data-position="right center"
          data-inverted="">
         <i class="folder open icon" th:classappend="${#strings.equals(currentSection, 'my-courses')} ? 'orange' : ''"></i>
+      </a>
+
+      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+         th:href="@{/subject/}"
+         href="/subject/"
+         class="item"
+         th:attr="data-tooltip=#{subject.my.list.label}"
+         data-tooltip="My subjects"
+         data-position="right center"
+         data-inverted="">
+        <i class="book icon" th:classappend="${#strings.equals(currentSection, 'my-subjects')} ? 'orange' : ''"></i>
       </a>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
