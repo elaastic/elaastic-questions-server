@@ -56,7 +56,7 @@ class CourseController(
 
         val user: User = authentication.principal as User
 
-        courseService.findAllByOwner(
+        courseService.findAllWithSubjectsByOwner(
             user,
             PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         )
