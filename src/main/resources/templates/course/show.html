@@ -72,7 +72,7 @@
         <i class="folder open icon"></i>
 
         <div class="content">
-            <span th:text="#{course.my.list.label} + ' > ' + ${course.title}">Course > course.title</span>
+            <span th:text="${course.title}">Course > course.title</span>
             <div class="sub header" th:text="#{course.my.list.path.label(${course.title})}">
                 This page lists subjects of the course :
             </div>

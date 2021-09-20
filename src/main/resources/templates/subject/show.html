@@ -93,8 +93,7 @@
 
       <div class="content">
         <div>
-          <span th:if="${subject.course != null}" th:text="${subject.course.title} + ' > ' + ${subject.title}" >Course title  > subject title</span>
-          <span th:unless="${subject.course != null}" th:text="${subject.title} + ' (Aucun cours associé)'" >Subject title (Not assigned)</span>
+          <span th:text="${subject.title}">Subject title</span>
         </div>
 
         <div th:if="${subject.parentSubject != null}">
@@ -109,9 +108,26 @@
         This page allows you to add, remove, edit, and reorder questions of a subject. It also allows you to make
         assignment with questions of the subject.
       </div>
+      <div class="sub header">
+        <div class="ui breadcrumb" th:if="${subject.course != null}">
+          <a class="section" th:text="#{course.my.list.label}" th:href="@{/course/}">My courses</a>
+          <div class="divider"> / </div>
+          <a class="section" th:text="${subject.course.title}" th:href="@{/course/{id}(id=${subject.course.id})}">Course title</a>
+          <div class="divider"> / </div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
+        </div>
+
+        <div class="ui breadcrumb" th:unless="${subject.course != null}">
+          <a class="section" th:text="#{subject.my.list.label}" th:href="@{/subject/}">My subjects</a>
+          <div class="divider"> / </div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
+        </div>
+      </div>
 
     </h2>
     </th:block>
+
+    
 
     <th:block th:if="${subject.owner != user}">
       <h2 class="ui header">
