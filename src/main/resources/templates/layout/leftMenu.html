@@ -78,10 +78,11 @@
          href="/course"
          class="item"
          th:attr="data-tooltip=#{course.my.list.label}"
+         th:styleappend="|background-color: ${#strings.equals(currentSection, 'my-courses') ? 'white' : ''} |"
          data-tooltip="My courses"
          data-position="right center"
          data-inverted="">
-        <i class="folder open icon" th:classappend="${#strings.equals(currentSection, 'my-courses')} ? 'orange' : ''"></i>
+        <i class="folder open icon" th:styleappend="|color: ${#strings.equals(currentSection, 'my-courses') ? '#4f7691' : ''}|"></i>
       </a>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
@@ -91,8 +92,9 @@
          th:attr="data-tooltip=#{subject.my.list.label}"
          data-tooltip="My subjects"
          data-position="right center"
+         th:styleappend="|background-color: ${#strings.equals(currentSection, 'my-subjects') ? 'white' : ''}|"
          data-inverted="">
-        <i class="book icon" th:classappend="${#strings.equals(currentSection, 'my-subjects')} ? 'orange' : ''"></i>
+        <i class="book icon" th:styleappend="|color: ${#strings.equals(currentSection, 'my-subjects') ? '#4f7691' : ''} |"></i>
       </a>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
@@ -100,12 +102,13 @@
          href="/subject/shared_index"
          class="item"
          th:attr="data-tooltip=#{subject.shared.my.list.label}"
+         th:styleappend="|background-color: ${#strings.equals(currentSection, 'shared-subjects') ? 'white' : ''}|"
          data-tooltip="Shared subjects"
          data-position="right center"
          data-inverted="">
         <i class="stacked icons">
-          <i class="large users icon" th:classappend="${#strings.equals(currentSection, 'shared-subjects')} ? 'orange' : ''"></i>
-          <i class="black bottom left attached book icon"></i>
+          <i class="large users icon" th:styleappend="|color: ${#strings.equals(currentSection, 'shared-subjects') ? '#4f7691' : ''} |"></i>
+          <i class="bottom left attached book icon" th:classappend="${#strings.equals(currentSection, 'shared-subjects') ? '#white' : 'black'}"></i>
         </i>
       </a>
 
