@@ -79,6 +79,14 @@
         </div>
     </h2>
 
+    <div class="ui basic segment">
+        <div class="ui breadcrumb" >
+            <a class="active section" th:text="#{course.my.list.label}" th:href="@{/course/}">My courses</a>
+            <div class="divider"> /</div>
+            <div class="active section" th:text="${course.title}">course title</div>
+        </div>
+    </div>
+
     <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
         Message
     </div>
