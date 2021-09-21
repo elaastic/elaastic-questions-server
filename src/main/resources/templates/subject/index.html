@@ -60,6 +60,9 @@
             <th th:text="#{common.title}">
                 Title
             </th>
+            <th th:text="#{course.label}">
+                Course
+            </th>
             <th class="not mobile" th:text="#{common.lastUpdate}">
                 Last update
             </th>
@@ -85,6 +88,15 @@
                     <i class="edit outline icon" style="margin: 0;"></i>
                 </a>
                 ]
+            </td>
+
+            <td>
+                <a th:if="${subject.course != null}"
+                   th:href="@{/course/{id}(id=${subject.course.id})}"
+                   th:text="${subject.course?.title}">
+                    Course title
+                </a>
+                <span th:if="${subject.course == null}">-</span>
             </td>
 
             <td class="not mobile" th:text="${#dates.format(subject.lastUpdated, 'dd/MM/yyyy HH:mm')}">

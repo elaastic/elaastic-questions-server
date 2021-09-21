@@ -60,7 +60,7 @@ class Subject (
         @field:ManyToOne(fetch = FetchType.LAZY)
         var parentSubject: Subject? = null,
 
-        @field:ManyToOne(fetch = FetchType.LAZY)
+        @field:ManyToOne(fetch = FetchType.EAGER)
         var course: Course? = null
 
 ): AbstractJpaPersistable<Long>() {
