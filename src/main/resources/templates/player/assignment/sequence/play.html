@@ -46,6 +46,14 @@
       <i class="yellow edit icon"></i>
     </a>
 
+    <a class="item"
+       th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='assignments')}"
+       th:attr="data-tooltip=#{subject.assignment.change.action}"
+       data-position="right center"
+       data-inverted="">
+      <i class="yellow file alternate outline icon"></i>
+    </a>
+
     <div class="item"
          onclick="elaastic.showLearnerAccessModal()"
          th:attr="data-tooltip=#{assignment.learnerAccess.oneLine}"

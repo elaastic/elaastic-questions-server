@@ -30,7 +30,7 @@
          data-position="bottom left">
       <i class="users icon"></i> <span th:text="${model.nbRegisteredUser}"></span>
     </div>
-    <i class="book icon"></i>
+    <i class="file alternate outline icon"></i>
 
     <div class="content" th:text="${model.assignmentTitle}"></div>
   </h3>
@@ -42,6 +42,12 @@
         <i class="folder icon"></i> <span th:text="#{course.label}">Cours</span>
       </td>
       <td th:text="${model.courseTitle ?: '-'}"></td>
+    </tr>
+    <tr>
+      <td class="collapsing">
+        <i class="book icon"></i> <span th:text="#{subject.label}">Subject</span>
+      </td>
+      <td th:text="${model.subjectTitle}"></td>
     </tr>
     <tr th:if="${!#strings.isEmpty(model.audience)}">
       <td class="collapsing">
