@@ -23,9 +23,7 @@ import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.statement.Statement
-import org.hibernate.annotations.ManyToAny
 import org.hibernate.annotations.SortNatural
-import org.hibernate.mapping.Bag
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

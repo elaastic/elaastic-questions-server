@@ -28,6 +28,8 @@ object AssignmentOverviewModelFactory {
     fun build(teacher: Boolean,
               nbRegisteredUser: Int,
               assignmentTitle: String,
+              courseTitle: String?,
+              audience: String?,
               assignmentId: Long,
               sequences: List<Sequence>,
               sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
@@ -35,6 +37,8 @@ object AssignmentOverviewModelFactory {
     ): AssignmentOverviewModel = AssignmentOverviewModel(
             nbRegisteredUser = nbRegisteredUser,
             assignmentTitle = assignmentTitle,
+            courseTitle = courseTitle,
+            audience = audience,
             assignmentId = assignmentId,
             sequences = sequences.map {
                 AssignmentOverviewModel.SequenceInfo(
