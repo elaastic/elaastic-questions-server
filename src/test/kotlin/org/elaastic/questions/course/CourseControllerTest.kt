@@ -65,7 +65,7 @@ internal class CourseControllerTest(
         val coursePages =
                 PageImpl<Course>(listOf(), PageRequest.of(0, 10), 0)
 
-        whenever(courseService.findAllByOwner(user)).thenReturn(
+        whenever(courseService.findAllWithSubjectsByOwner(user)).thenReturn(
                 coursePages
         )
 
@@ -83,7 +83,7 @@ internal class CourseControllerTest(
                         listOf(mock<Course>(), mock<Course>()),
                         PageRequest.of(0, 2), 4)
 
-        whenever(courseService.findAllByOwner(user)).thenReturn(
+        whenever(courseService.findAllWithSubjectsByOwner(user)).thenReturn(
                 coursePages
         )
 
