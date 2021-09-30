@@ -91,6 +91,19 @@ class CourseService (
         entityManager.clear()
     }
 
+    fun addSubjectToCourse(user: User, subject: Subject, course: Course) {
+        require(user == course.owner) {
+            "Only the owner can add a subject"
+        }
+        subject.course?.let {
+            touch(it)
+            it.subjects.remove(subject)
+        }
+        subject.course = course
+        course.subjects.add(subject)
+        subjectService.save(subject)
+    }
+
     fun save(course: Course): Course {
         return courseRepository.save(course)
     }

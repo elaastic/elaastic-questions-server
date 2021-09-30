@@ -19,35 +19,29 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.assignment.sequence.*
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.interaction.specification.InteractionSpecification
-import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
+import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.TestingService
 import org.elaastic.questions.test.directive.tExpect
-import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.hamcrest.CoreMatchers
-import org.springframework.beans.factory.annotation.Autowired
-import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
-import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.cache.support.NullValue
 import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
@@ -58,7 +52,6 @@ import javax.persistence.EntityNotFoundException
 import javax.persistence.PersistenceUnitUtil
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
-import kotlin.collections.ArrayList
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

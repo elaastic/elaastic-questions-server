@@ -84,7 +84,12 @@ class SubjectService (
     }
 
     fun save(subject: Subject): Subject {
-        return subjectRepository.save(subject)
+        subjectRepository.save(subject).let { savedSubject ->
+            savedSubject.course?.let { course ->
+                course.subjects.add(savedSubject)
+            }
+            return savedSubject
+        }
     }
 
     fun findAllByOwner(owner: User,

@@ -39,8 +39,8 @@ import javax.transaction.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LmsServiceIntegrationTest(
-        @Autowired val lmsService: LmsService,
-        @Autowired val testingService: TestingService
+    @Autowired val lmsService: LmsService,
+    @Autowired val testingService: TestingService
 ) {
 
     lateinit var ltiData: LtiLaunchData
@@ -76,11 +76,14 @@ internal class LmsServiceIntegrationTest(
     @Test
     fun testGetLmsAssignment() {
         tGiven("lti data and corresponding lms user") {
-            lmsService.getLmsUser(ltiData.toLtiUser())
+            val lmsUser = lmsService.getLmsUser(ltiData.toLtiUser())
+            val lmsCourse = lmsService.getLmsCourse(lmsUser, ltiData.toLtiActivity())
+            Pair<LmsUser, LmsCourse>(lmsUser, lmsCourse)
         }.tWhen("assignment is asked") {
             lmsService.getLmsAssignment(
-                    lmsUser = it,
-                    ltiActivity = ltiData.toLtiActivity()
+                lmsUser = it.first,
+                lmsCourse = it.second,
+                ltiActivity = ltiData.toLtiActivity()
             )
         }.tThen("a new assignment is created and returned") {
             assertThat(it.lms, equalTo(testingService.getAnyLtiConsumer()))
@@ -89,12 +92,14 @@ internal class LmsServiceIntegrationTest(
             assertThat(it.assignment.owner, equalTo(lmsService.getLmsUser(ltiData.toLtiUser()).user))
             assertThat(it.lmsCourseTitle, equalTo(ltiData.context_title))
             assertThat(it.assignment.title, equalTo(ltiData.resource_link_title))
+            assertThat(it.assignment.subject?.course?.title, equalTo(ltiData.toLtiActivity().lmsCourseTitle))
             it
         }.tWhen("assignment with same lti data is asked") {
             lmsService.getLmsUser(ltiData.toLtiUser()).let { lmsuser ->
                 lmsService.getLmsAssignment(
-                        lmsUser = lmsuser,
-                        ltiActivity = ltiData.toLtiActivity()
+                    lmsUser = lmsuser,
+                    lmsCourse = lmsService.getLmsCourse(lmsuser, ltiData.toLtiActivity()),
+                    ltiActivity = ltiData.toLtiActivity()
                 ).tThen { newLmsAssignment ->
                     assertThat(newLmsAssignment, equalTo(it))
                     assertThat(newLmsAssignment.assignment, equalTo(it.assignment))
@@ -106,8 +111,9 @@ internal class LmsServiceIntegrationTest(
         }.tExpect("Esception is thrown") {
             assertThrows<IllegalArgumentException> {
                 lmsService.getLmsAssignment(
-                        lmsUser = it,
-                        ltiActivity = ltiDataWithBadGlobalId.toLtiActivity()
+                    lmsUser = it,
+                    lmsCourse = lmsService.getLmsCourse(it, ltiDataWithBadGlobalId.toLtiActivity()),
+                    ltiActivity = ltiDataWithBadGlobalId.toLtiActivity()
                 )
             }
         }

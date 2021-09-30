@@ -21,6 +21,8 @@ package org.elaastic.questions.lti
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.course.Course
+import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
@@ -36,16 +38,18 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class LmsService(
-        @Autowired val ltiConsumerRepository: LtiConsumerRepository,
-        @Autowired val lmsUserRepository: LmsUserRepository,
-        @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val lmsAssignmentRepository: LmsAssignmentRepository,
-        @Autowired val userService: UserService,
-        @Autowired val roleService: RoleService,
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val subjectService: SubjectService,
-        @Autowired val lmsUserAccountCreationService: LmsUserAccountCreationService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val ltiConsumerRepository: LtiConsumerRepository,
+    @Autowired val lmsUserRepository: LmsUserRepository,
+    @Autowired val lmsCourseRepository: LmsCourseRepository,
+    @Autowired val assignmentRepository: AssignmentRepository,
+    @Autowired val lmsAssignmentRepository: LmsAssignmentRepository,
+    @Autowired val userService: UserService,
+    @Autowired val roleService: RoleService,
+    @Autowired val courseService: CourseService,
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val subjectService: SubjectService,
+    @Autowired val lmsUserAccountCreationService: LmsUserAccountCreationService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     internal val logger = Logger.getLogger(LmsService::class.java.name)
@@ -87,9 +91,10 @@ class LmsService(
      * @param user the elaastic user correponding to the lms user
      */
     fun createLmsUserFromLtiDataLmsAndUser(
-            ltiUserId: String,
-            lms: LtiConsumer,
-            user: User): LmsUser {
+        ltiUserId: String,
+        lms: LtiConsumer,
+        user: User
+    ): LmsUser {
         LmsUser(ltiUserId, lms, user).let {
             return lmsUserRepository.save(it)
         }
@@ -103,13 +108,14 @@ class LmsService(
      * @return the lms assignment
      */
     fun getLmsAssignment(
-            lmsUser: LmsUser,
-            ltiActivity: LtiActivity
+        lmsUser: LmsUser,
+        lmsCourse: LmsCourse,
+        ltiActivity: LtiActivity
     ): LmsAssignment {
         var lmsAssignment = lmsAssignmentRepository.findByLmsActivityIdAndLmsCourseIdAndLms(
-                ltiActivity.lmsActivityId,
-                ltiActivity.lmsCourseId,
-                lmsUser.lms
+            ltiActivity.lmsActivityId,
+            ltiActivity.lmsCourseId,
+            lmsUser.lms
         )
         if (lmsAssignment == null) {
             if (!lmsUser.user.isTeacher()) {
@@ -117,43 +123,101 @@ class LmsService(
                 throw IllegalArgumentException("Only teacher can create an assignment")
             }
             findOrCreateAssignmentFromLtiData(
-                    lmsUser = lmsUser,
-                    ltiActivity = ltiActivity
+                lmsUser = lmsUser,
+                lmsCourse,
+                ltiActivity = ltiActivity
             ).let {
                 lmsAssignment = createLmsAssignment(
-                        ltiActivity,
-                        lmsUser.lms,
-                        it)
+                    ltiActivity,
+                    lmsUser.lms,
+                    it
+                )
             }
+        }
+        // in the case assignment is not associated with a course
+        // linked it to the course created from the LMS
+        if (lmsAssignment?.assignment?.subject?.course == null) {
+            courseService.addSubjectToCourse(
+                lmsUser.user,
+                lmsAssignment!!.assignment.subject!!,
+                lmsCourse.course
+            )
         }
         return lmsAssignment!!
     }
 
+    /**
+     * Get lms course based on tool provider information. Create a new one if required
+     *
+     * @param lmsUser the lms user
+     * @param ltiActivity activity built from lti consumer information
+     * @return the lms course
+     */
+    fun getLmsCourse(
+        lmsUser: LmsUser,
+        ltiActivity: LtiActivity
+    ): LmsCourse {
+        var lmsCourse = lmsCourseRepository.findByLmsCourseIdAndLms(
+            ltiActivity.lmsCourseId,
+            lmsUser.lms
+        )
+        if (lmsCourse == null) {
+            createCourseFromLtiData(lmsUser, ltiActivity).let {
+                lmsCourse = createLmsCourse(ltiActivity, lmsUser.lms, it)
+            }
+        }
+        return lmsCourse!!
+    }
+
+    private fun createCourseFromLtiData(
+        lmsUser: LmsUser,
+        ltiActivity: LtiActivity
+    ): Course {
+        Course(ltiActivity.lmsCourseTitle, lmsUser.user).let {
+            return courseService.save(it)
+        }
+    }
+
+    private fun createLmsCourse(
+        ltiActivity: LtiActivity,
+        lms: LtiConsumer,
+        course: Course
+    ): LmsCourse {
+        LmsCourse(
+            lms = lms,
+            lmsCourseId = ltiActivity.lmsCourseId,
+            lmsCourseTitle = ltiActivity.lmsCourseTitle,
+            course = course
+        ). let {
+            return lmsCourseRepository.save(it)
+        }
+    }
 
     private fun createLmsAssignment(
-            ltiActivity: LtiActivity,
-            lms: LtiConsumer,
-            assignment: Assignment
+        ltiActivity: LtiActivity,
+        lms: LtiConsumer,
+        assignment: Assignment
     ): LmsAssignment {
         LmsAssignment(
-                lms = lms,
-                lmsActivityId = ltiActivity.lmsActivityId,
-                lmsCourseId = ltiActivity.lmsCourseId,
-                lmsCourseTitle = ltiActivity.lmsCourseTitle,
-                assignment = assignment
+            lms = lms,
+            lmsActivityId = ltiActivity.lmsActivityId,
+            lmsCourseId = ltiActivity.lmsCourseId,
+            lmsCourseTitle = ltiActivity.lmsCourseTitle,
+            assignment = assignment
         ).let {
             return lmsAssignmentRepository.save(it)
         }
     }
 
     private fun findOrCreateAssignmentFromLtiData(
-            lmsUser: LmsUser,
-            ltiActivity: LtiActivity
+        lmsUser: LmsUser,
+        lmsCourse: LmsCourse,
+        ltiActivity: LtiActivity
     ): Assignment {
         return if (ltiActivity.globalId != null) {
             findAssignmentWithIdFromLtiData(ltiActivity.globalId)
         } else {
-            Subject(ltiActivity.title, lmsUser.user).let {
+            Subject(ltiActivity.title, lmsUser.user, course = lmsCourse.course).let {
                 subjectService.save(it)
             }.let { subject ->
                 Assignment(ltiActivity.title, lmsUser.user, subject = subject).let {
@@ -162,6 +226,7 @@ class LmsService(
             }
         }
     }
+
 
     private fun findAssignmentWithIdFromLtiData(ltiGlobalId: String): Assignment {
         assignmentRepository.findByGlobalId(ltiGlobalId).let {
