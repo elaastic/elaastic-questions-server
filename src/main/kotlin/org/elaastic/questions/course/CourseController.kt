@@ -22,6 +22,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.SubjectController
+import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -43,6 +44,7 @@ import javax.validation.constraints.NotNull
 @Transactional
 class CourseController(
     @Autowired val courseService: CourseService,
+    @Autowired val subjectService: SubjectService,
     @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -58,11 +60,12 @@ class CourseController(
 
         courseService.findAllWithSubjectsByOwner(
             user,
-            PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+            PageRequest.of((page ?: 1) - 1, size ?: 8, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         )
             .let {
                 model.addAttribute("user", user)
                 model.addAttribute("coursePage", it)
+                model.addAttribute("nbSubjectsWithoutCourse", subjectService.countWithoutCourse(user))
                 model.addAttribute(
                     "pagination",
                     PaginationUtil.buildInfo(
@@ -97,12 +100,16 @@ class CourseController(
         val user: User = authentication.principal as User
         model.addAttribute("user", user)
 
-        val course: Course = courseService.get(id, fetchSubjects = true)
-        model.addAttribute("course", course)
-
-        model.addAttribute("subjects", course.subjects.toList())
-
-        return "course/show"
+        if(id != -1L) {
+            val course = courseService.get(id, fetchSubjects = true)
+            model.addAttribute("course", course)
+            model.addAttribute("subjects", course.subjects.toList())
+            return "course/show"
+        }
+        else {
+            model.addAttribute("subjects", subjectService.findAllWithoutCourseByOwner(user))
+            return "course/show-without-course"
+        }
     }
 
     @PostMapping("{id}/update")

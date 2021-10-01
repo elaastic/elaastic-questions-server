@@ -49,27 +49,44 @@
       </div>
     </div>
   </h2>
-  
+
   <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
     Message course delete confirmation
   </div>
 
-  <div class="ui three column grid" th:if="${not #lists.isEmpty(coursePage.content)}">
-    <div class="column" th:each="course, i : ${coursePage.content}">
-        <div class="ui fluid card">
-          <div class="content">
-            <div class="header" th:text="${course.title}">Title</div>
-            <div class="meta">
-              <span class="right floated time" th:text="${#dates.format(course.lastUpdated, 'dd/MM/yyyy HH:mm')}">Last updated</span>
-              <span class="category" th:text="${course.subjects.size() + ' sujet(s)'}">Nb Subjects</span>
-            </div>
-          </div>
-          
-          <div class="extra content">
-            <a th:href="@{/course/{id}(id=${course.id})}" class="ui button" th:text="#{course.action.show.label}">Access
-              to the course</a>
+
+  <div class="ui three column grid" th:if="${not #lists.isEmpty(coursePage.content) or (nbSubjectsWithoutCourse > 0)}">
+    <div class="column" th:if="${pagination.currentPage == null || pagination.currentPage == 1 && nbSubjectsWithoutCourse > 0}">
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="header" th:text="#{subject.withoutCourse.label}">No course</div>
+          <div class="meta">
+            <span class="category" th:text="|${nbSubjectsWithoutCourse} sujet(s)|">Nb Subjects</span>
           </div>
         </div>
+
+        <div class="extra content">
+          <a th:href="@{/course/{id}(id=${-1})}" class="ui button" th:text="#{subject.withoutCourse.access}">Access
+            to the course</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="column" th:each="course, i : ${coursePage.content}">
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="header" th:text="${course.title}">Title</div>
+          <div class="meta">
+            <span class="right floated time" th:text="${#dates.format(course.lastUpdated, 'dd/MM/yyyy HH:mm')}">Last updated</span>
+            <span class="category" th:text="${course.subjects.size() + ' sujet(s)'}">Nb Subjects</span>
+          </div>
+        </div>
+
+        <div class="extra content">
+          <a th:href="@{/course/{id}(id=${course.id})}" class="ui button" th:text="#{course.action.show.label}">Access
+            to the course</a>
+        </div>
+      </div>
     </div>
   </div>
 
