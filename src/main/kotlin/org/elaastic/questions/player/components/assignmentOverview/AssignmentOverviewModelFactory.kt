@@ -31,7 +31,7 @@ object AssignmentOverviewModelFactory {
         assignmentTitle: String,
         courseTitle: String?,
         courseId: Long?,
-        subjectTitle: String,
+        subjectTitle: String?,
         subjectId: Long?,
         audience: String?,
         assignmentId: Long,

@@ -23,7 +23,7 @@ data class AssignmentOverviewModel(
         val assignmentTitle: String,
         val courseTitle: String?,
         val courseId: Long?,
-        val subjectTitle: String,
+        val subjectTitle: String?,
         val subjectId: Long?,
         val audience: String?,
         val assignmentId: Long,

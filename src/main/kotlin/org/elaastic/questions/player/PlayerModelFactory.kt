@@ -127,12 +127,9 @@ object PlayerModelFactory {
                 assignmentTitle = assignment.title,
                 courseTitle = null,
                 courseId = null,
-                subjectTitle = assignment.subject!!.title,
+                subjectTitle = null,
                 subjectId = null,
-                audience = "assignment.audience" +
-                        if (assignment.scholarYear != null) {
-                            "(${assignment.scholarYear})"
-                        } else "",
+                audience = null,
                 assignmentId = assignment.id!!,
                 sequences = assignment.sequences,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,

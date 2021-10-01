@@ -45,7 +45,7 @@
         <a th:href="@{/course/{id}(id=${model.courseId})}" th:text="${model.courseTitle}"></a>
       </td>
     </tr>
-    <tr>
+    <tr th:if="${model.subjectTitle != null}">
       <td class="collapsing">
         <i class="book icon"></i> <span th:text="#{subject.label}">Subject</span>
       </td>
