@@ -63,6 +63,7 @@ object PlayerModelFactory {
                 courseTitle = assignment.subject?.course?.title,
                 courseId = assignment.subject?.course?.id,
                 subjectTitle = assignment.subject!!.title,
+                subjectId = assignment.subject!!.id,
                 audience = assignment.audience +
                         if (assignment.scholarYear != null) {
                             " (${assignment.scholarYear})"
@@ -127,6 +128,7 @@ object PlayerModelFactory {
                 courseTitle = null,
                 courseId = null,
                 subjectTitle = assignment.subject!!.title,
+                subjectId = null,
                 audience = "assignment.audience" +
                         if (assignment.scholarYear != null) {
                             "(${assignment.scholarYear})"

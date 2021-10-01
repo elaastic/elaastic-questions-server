@@ -49,7 +49,10 @@
       <td class="collapsing">
         <i class="book icon"></i> <span th:text="#{subject.label}">Subject</span>
       </td>
-      <td th:text="${model.subjectTitle}"></td>
+      <td th:if="${model.subjectId == null}" th:text="${model.subjectTitle}"></td>
+      <td th:if="${model.subjectId != null}">
+        <a th:href="@{/subject/{id}(id=${model.subjectId})}" th:text="${model.subjectTitle}">Subject link</a>
+      </td>
     </tr>
     <tr th:if="${!#strings.isEmpty(model.audience)}">
       <td class="collapsing">

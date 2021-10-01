@@ -24,6 +24,7 @@ data class AssignmentOverviewModel(
         val courseTitle: String?,
         val courseId: Long?,
         val subjectTitle: String,
+        val subjectId: Long?,
         val audience: String?,
         val assignmentId: Long,
         val sequences: List<SequenceInfo>,

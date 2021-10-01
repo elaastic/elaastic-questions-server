@@ -32,6 +32,7 @@ object AssignmentOverviewModelFactory {
         courseTitle: String?,
         courseId: Long?,
         subjectTitle: String,
+        subjectId: Long?,
         audience: String?,
         assignmentId: Long,
         sequences: List<Sequence>,
@@ -43,6 +44,7 @@ object AssignmentOverviewModelFactory {
         courseTitle = courseTitle,
         courseId = courseId,
         subjectTitle = subjectTitle,
+        subjectId = subjectId,
         audience = audience,
         assignmentId = assignmentId,
         sequences = sequences.map {
