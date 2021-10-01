@@ -37,11 +37,13 @@
 
   <table class="ui table bottom attached">
     <tbody>
-    <tr>
+    <tr th:if="${not #strings.isEmpty(model.courseTitle)}">
       <td class="collapsing">
         <i class="folder icon"></i> <span th:text="#{course.label}">Cours</span>
       </td>
-      <td th:text="${model.courseTitle ?: '-'}"></td>
+      <td>
+        <a th:href="@{/course/{id}(id=${model.courseId})}" th:text="${model.courseTitle}"></a>
+      </td>
     </tr>
     <tr>
       <td class="collapsing">

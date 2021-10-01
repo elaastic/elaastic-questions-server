@@ -61,6 +61,7 @@ object PlayerModelFactory {
                 nbRegisteredUser = nbRegisteredUsers,
                 assignmentTitle = assignment.title,
                 courseTitle = assignment.subject?.course?.title,
+                courseId = assignment.subject?.course?.id,
                 subjectTitle = assignment.subject!!.title,
                 audience = assignment.audience +
                         if (assignment.scholarYear != null) {
@@ -123,7 +124,8 @@ object PlayerModelFactory {
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
                 assignmentTitle = assignment.title,
-                courseTitle = assignment.subject?.course?.title,
+                courseTitle = null,
+                courseId = null,
                 subjectTitle = assignment.subject!!.title,
                 audience = "assignment.audience" +
                         if (assignment.scholarYear != null) {
