@@ -94,7 +94,9 @@ class CourseController(
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(
         authentication: Authentication, model: Model,
-        @PathVariable id: Long
+        @PathVariable id: Long,
+        @RequestParam("page") page: Int?,
+        @RequestParam("size") size: Int?,
     ): String {
 
         val user: User = authentication.principal as User
@@ -107,7 +109,22 @@ class CourseController(
             return "course/show"
         }
         else {
-            model.addAttribute("subjects", subjectService.findAllWithoutCourseByOwner(user))
+            subjectService.findAllWithoutCourseByOwner(
+                user,
+                PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+            ).let {
+                model.addAttribute("subjectsPage", it)
+                model.addAttribute(
+                    "pagination",
+                    PaginationUtil.buildInfo(
+                        it.totalPages,
+                        page,
+                        size
+                    )
+                )
+            }
+
+
             return "course/show-without-course"
         }
     }

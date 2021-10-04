@@ -57,7 +57,7 @@
         Message
     </div>
 
-    <table th:if="${not #lists.isEmpty(subjects)}" class="ui selectable unstackable table">
+    <table th:if="${not #lists.isEmpty(subjectsPage.content)}" class="ui selectable unstackable table">
         <thead>
         <tr>
             <th th:text="#{subject.label}">
@@ -69,7 +69,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="subject, i : ${subjects}">
+        <tr th:each="subject, i : ${subjectsPage.content}">
             <td>
                 <a th:href="@{/subject/{id}(id=${subject?.id}, activeTab='questions')}" href="subject/123"
                    th:attr="data-tooltip=#{subject.action.show.label}" data-tooltip="Modify subject"
@@ -86,8 +86,16 @@
     </table>
 
 
-    <div th:if="${#lists.isEmpty(subjects)}" class="ui info message" th:text="#{subject.you.have.none}">
+    <div th:if="${#lists.isEmpty(subjectsPage.content)}" class="ui info message" th:text="#{subject.you.have.none}">
         This course has no subjects.
+    </div>
+
+    <div class="ui two column stackable grid">
+        <div class="column">&nbsp;</div>
+        <div class="column">
+            <div th:replace="layout/components/paginate :: paginate(baseUrl='/course/-1')"></div>
+        </div>
+
     </div>
 
 </section>
