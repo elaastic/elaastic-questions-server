@@ -58,7 +58,22 @@
       <td class="collapsing">
         <i class="podcast icon"></i> <span th:text="#{assignment.audience.label}">Audience</span>
       </td>
-      <td th:text="${model.audience}">The audience</td>
+      <td>
+         <a th:href="@{/subject/{subjectId}(subjectId=${model.subjectId}, activeTab='assignments')}"
+            th:text="${model.audience}"
+            th:attr="data-tooltip=#{subject.assignment.change.action}"
+            data-tooltip="Change assignment"
+            data-inverted="">The audience</a>
+        [
+        <a th:href="@{/assignment/{id}/edit(id=${model.assignmentId})}"
+           href="subject/123/edit"
+           th:attr="data-tooltip=#{subject.propertiesEdition.label}"
+           data-tooltip="Modify subject"
+           data-inverted="">
+          <i class="edit outline icon" style="margin: 0;"></i>
+        </a>
+        ]
+      </td>
     </tr>
     </tbody>
   </table>
