@@ -19,6 +19,7 @@
 package org.elaastic.questions.player.components.assignmentOverview
 
 data class AssignmentOverviewModel(
+        val teacher: Boolean,
         val nbRegisteredUser: Int,
         val assignmentTitle: String,
         val courseTitle: String?,

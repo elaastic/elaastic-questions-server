@@ -39,6 +39,7 @@ object AssignmentOverviewModelFactory {
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         selectedSequenceId: Long? = null
     ): AssignmentOverviewModel = AssignmentOverviewModel(
+        teacher = teacher,
         nbRegisteredUser = nbRegisteredUser,
         assignmentTitle = assignmentTitle,
         courseTitle = courseTitle,
