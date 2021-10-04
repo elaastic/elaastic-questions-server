@@ -18,6 +18,8 @@
 
 package org.elaastic.questions.course
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.elaastic.questions.controller.MessageBuilder
@@ -65,9 +67,11 @@ internal class CourseControllerTest(
         val coursePages =
                 PageImpl<Course>(listOf(), PageRequest.of(0, 10), 0)
 
-        whenever(courseService.findAllByOwner(user)).thenReturn(
+        whenever(courseService.findAllWithSubjectsByOwner(eq(user), any())).thenReturn(
                 coursePages
         )
+
+        whenever(subjectService.countWithoutCourse(user)).thenReturn(3)
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/course")
@@ -83,7 +87,7 @@ internal class CourseControllerTest(
                         listOf(mock<Course>(), mock<Course>()),
                         PageRequest.of(0, 2), 4)
 
-        whenever(courseService.findAllByOwner(user)).thenReturn(
+        whenever(courseService.findAllWithSubjectsByOwner(eq(user), any())).thenReturn(
                 coursePages
         )
 

@@ -18,97 +18,101 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section}, currentSection='my-courses')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <title th:text="|elaastic: #{course.my.list.label}|">elaastic: My Courses</title>
+  <title th:text="|elaastic: #{course.my.list.label}|">elaastic: My Courses</title>
 </head>
 
 <body>
 
 <aside id="pageSpecificMenu">
-    <a th:href="@{/course/create}"
-       href="create"
-       class="item"
-       th:attr="data-tooltip=#{course.create.label}"
-       data-tooltip="Create a course"
-       data-position="right center"
-       data-inverted="">
-        <i class="yellow plus square outline icon"></i>
-    </a>
+  <a th:href="@{/course/create}"
+     href="create"
+     class="item"
+     th:attr="data-tooltip=#{course.create.label}"
+     data-tooltip="Create a course"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow plus square outline icon"></i>
+  </a>
 </aside>
 
 <section>
-    <h2 class="ui header">
-        <i class="folder open icon"></i>
+  <h2 class="ui header">
+    <i class="folder open icon"></i>
 
+    <div class="content">
+      <span th:text="#{course.my.list.label}">My Courses</span>
+      <div class="sub header" th:text="#{course.my.list.description}">
+        This page lists all of your courses
+      </div>
+    </div>
+  </h2>
+
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message course delete confirmation
+  </div>
+
+
+  <div class="ui three column grid" th:if="${not #lists.isEmpty(coursePage.content) or (nbSubjectsWithoutCourse > 0)}">
+    <div class="column" th:if="${pagination.currentPage == null || pagination.currentPage == 1 && nbSubjectsWithoutCourse > 0}">
+      <div class="ui fluid card">
         <div class="content">
-            <span th:text="#{course.my.list.label}">My Courses</span>
-            <div class="sub header" th:text="#{course.my.list.description}">
-                This page lists all of your courses
-            </div>
+          <div class="header" th:text="#{subject.withoutCourse.label}">No course</div>
+          <div class="meta">
+            <span class="category" th:text="|${nbSubjectsWithoutCourse} sujet(s)|">Nb Subjects</span>
+          </div>
         </div>
-    </h2>
 
-    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-        Message course delete confirmation
+        <div class="extra content">
+          <a th:href="@{/course/{id}(id=${-1})}" class="ui button" th:text="#{subject.withoutCourse.access}">Access
+            to the course</a>
+        </div>
+      </div>
     </div>
 
-    <table th:if="${not #lists.isEmpty(coursePage.content)}"
-           class="ui selectable unstackable table">
-        <thead>
-        <tr>
-            <th th:text="#{common.title}">
-                Title
-            </th>
-            <th class="not mobile" th:text="#{common.lastUpdate}">
-                Last update
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="course, i : ${coursePage.content}">
-            <td>
-                <a th:href="@{/course/{id}(id=${course.id})}"
-                   href="course/123"
-                   th:attr="data-tooltip=#{course.action.show.label}"
-                   data-tooltip="Access course"
-                   data-inverted=""
-                   th:text="${course.title}">
-                   Course title
-                </a>
-            </td>
+    <div class="column" th:each="course, i : ${coursePage.content}">
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="header" th:text="${course.title}">Title</div>
+          <div class="meta">
+            <span class="right floated time" th:text="${#dates.format(course.lastUpdated, 'dd/MM/yyyy HH:mm')}">Last updated</span>
+            <span class="category" th:text="${course.subjects.size() + ' sujet(s)'}">Nb Subjects</span>
+          </div>
+        </div>
 
-            <td class="not mobile" th:text="${#dates.format(course.lastUpdated, 'dd/MM/yyyy HH:mm')}">
-                25/07/2019
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <div th:if="${#lists.isEmpty(coursePage.content)}" class="ui info message" th:text="#{course.you.have.none}">
-        You have no courses.
+        <div class="extra content">
+          <a th:href="@{/course/{id}(id=${course.id})}" class="ui button" th:text="#{course.action.show.label}">Access
+            to the course</a>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="ui two column stackable grid">
-        <div class="column">
-            <div class="ui basic segment">
-                <a th:href="@{/course/create}"
-                   href="create"
-                   class="ui primary button">
-                    <i class="add icon"></i>
-                    <span th:text="#{course.create.label}">
+  <div th:if="${#lists.isEmpty(coursePage.content)}" class="ui info message" th:text="#{course.you.have.none}">
+    You have no courses.
+  </div>
+
+  <div class="ui two column stackable grid">
+    <div class="column">
+      <div class="ui basic segment">
+        <a th:href="@{/course/create}"
+           href="create"
+           class="ui primary button">
+          <i class="add icon"></i>
+          <span th:text="#{course.create.label}">
                         Create a course
                     </span>
-                </a>
-            </div>
-        </div>
-        <div class="column">
-            <div th:replace="layout/components/paginate :: paginate(baseUrl='/course/index')"></div>
-        </div>
+        </a>
+      </div>
     </div>
+    <div class="column">
+      <div th:replace="layout/components/paginate :: paginate(baseUrl='/course/index')"></div>
+    </div>
+  </div>
 
-    <div class="ui hidden divider"></div>
+  <div class="ui hidden divider"></div>
 </section>
 
 </body>

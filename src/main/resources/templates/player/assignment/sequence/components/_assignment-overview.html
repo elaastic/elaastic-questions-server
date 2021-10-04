@@ -30,13 +30,56 @@
          data-position="bottom left">
       <i class="users icon"></i> <span th:text="${model.nbRegisteredUser}"></span>
     </div>
-    <i class="book icon"></i>
+    <i class="file alternate outline icon"></i>
 
     <div class="content" th:text="${model.assignmentTitle}"></div>
-
   </h3>
 
-  <div class="ui segment bottom attached"
+  <table class="ui table bottom attached">
+    <tbody>
+    <tr th:if="${not #strings.isEmpty(model.courseTitle)}">
+      <td class="collapsing">
+        <i class="folder icon"></i> <span th:text="#{course.label}">Cours</span>
+      </td>
+      <td>
+        <a th:href="@{/course/{id}(id=${model.courseId})}" th:text="${model.courseTitle}"></a>
+      </td>
+    </tr>
+    <tr th:if="${model.subjectTitle != null}">
+      <td class="collapsing">
+        <i class="book icon"></i> <span th:text="#{subject.label}">Subject</span>
+      </td>
+      <td th:if="${model.subjectId == null}" th:text="${model.subjectTitle}"></td>
+      <td th:if="${model.subjectId != null}">
+        <a th:href="@{/subject/{id}(id=${model.subjectId})}" th:text="${model.subjectTitle}">Subject link</a>
+      </td>
+    </tr>
+    <tr th:if="${!#strings.isEmpty(model.audience)}">
+      <td class="collapsing">
+        <i class="podcast icon"></i> <span th:text="#{assignment.audience.label}">Audience</span>
+      </td>
+      <td>
+         <a th:href="@{/subject/{subjectId}(subjectId=${model.subjectId}, activeTab='assignments')}"
+            th:text="${model.audience}"
+            th:attr="data-tooltip=#{subject.assignment.change.action}"
+            data-tooltip="Change assignment"
+            data-inverted="">The audience</a>
+        [
+        <a th:href="@{/assignment/{id}/edit(id=${model.assignmentId})}"
+           href="subject/123/edit"
+           th:attr="data-tooltip=#{subject.propertiesEdition.label}"
+           data-tooltip="Modify subject"
+           data-inverted="">
+          <i class="edit outline icon" style="margin: 0;"></i>
+        </a>
+        ]
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <div class="ui segment top attached"
        th:if="${#lists.isEmpty(model.sequences)}"
        th:text="#{assignment.empty}">
     This assignment is empty.
@@ -44,7 +87,7 @@
 
   <div th:each="sequence, i : ${model.sequences}"
        class="ui clearing attached segment"
-       th:classappend="${sequence.id == model.selectedSequenceId ? 'selected' : ''}"
+       th:classappend="|${sequence.id == model.selectedSequenceId ? 'selected' : ''} ${i.index == 0 ? 'top' : ''}|"
        th:id="|${context}-${sequence.id}|"
        style="padding-bottom: 1em; cursor: pointer; "
        th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${model.assignmentId}, sequenceId=${sequence.id})}'|">

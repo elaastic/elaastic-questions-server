@@ -18,26 +18,27 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body}, extraHeader=~{::head/script})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
   <meta charset="UTF-8">
-  <title>Test results</title>
-  <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
-  <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
-  <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+  <title>Index of test components page</title>
 </head>
 <body>
 <section>
-  <h2>Results</h2>
-
-  <th:block th:each="situation,i : ${resultsSituations}">
-    <h3 th:text="${situation.description}"></h3>
-
-    <div
-      th:replace="player/assignment/sequence/components/_results.html :: results(resultsModel=${situation.resultsModel},id=${i.index})"></div>
-  </th:block>
+  <h2>Index of test components page</h2>
+  <ul>
+    <li><a th:href="@{/player/test/steps}">Steps</a> </li>
+    <li><a th:href="@{/player/test/response-distribution-chart}">Response distribution chart</a> </li>
+    <li><a th:href="@{/player/test/my-results}">My results</a> </li>
+    <li><a th:href="@{/player/test/command}">Command</a> </li>
+    <li><a th:href="@{/player/test/response-phase}">Response phase</a> </li>
+    <li><a th:href="@{/player/test/evaluation-phase}">Evaluation phase</a> </li>
+    <li><a th:href="@{/player/test/results}">Results</a> </li>
+    <li><a th:href="@{/player/test/explanation-viewer}">Explanation viewer</a> </li>
+    <li><a th:href="@{/player/test/sequence-info}">Sequence info</a> </li>
+  </ul>
 </section>
 </body>
 </html>

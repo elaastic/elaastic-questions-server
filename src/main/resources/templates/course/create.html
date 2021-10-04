@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body}, currentSection='my-courses')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="#{course.create.label(#{course.label})}"></title>

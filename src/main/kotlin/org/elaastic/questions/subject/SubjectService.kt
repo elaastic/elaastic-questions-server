@@ -44,36 +44,36 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class SubjectService (
-        @Autowired val subjectRepository: SubjectRepository,
-        @Autowired val statementService: StatementService,
-        @Autowired val statementRepository: StatementRepository,
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val entityManager: EntityManager,
-        @Autowired val sequenceService: SequenceService,
-        @Autowired val responseService: ResponseService,
-        @Autowired val sharedSubjectRepository: SharedSubjectRepository
+class SubjectService(
+    @Autowired val subjectRepository: SubjectRepository,
+    @Autowired val statementService: StatementService,
+    @Autowired val statementRepository: StatementRepository,
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val assignmentRepository: AssignmentRepository,
+    @Autowired val entityManager: EntityManager,
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val responseService: ResponseService,
+    @Autowired val sharedSubjectRepository: SharedSubjectRepository
 
 ) {
 
-    val LOG : Logger = Logger.getLogger(SubjectService::class.toString())
+    val LOG: Logger = Logger.getLogger(SubjectService::class.toString())
 
     fun get(id: Long, fetchStatementsAndAssignments: Boolean = false): Subject {
         // TODO (+) i18n error message
-        return when (fetchStatementsAndAssignments){
+        return when (fetchStatementsAndAssignments) {
             true -> subjectRepository.findOneWithStatementsAndAssignmentsById(id)
             false -> subjectRepository.findOneById(id)
         } ?: throw EntityNotFoundException("There is no subject for id \"$id\"")
     }
 
-    fun get(user: User, id: Long, fetchStatementsAndAssignments : Boolean = false ): Subject {
+    fun get(user: User, id: Long, fetchStatementsAndAssignments: Boolean = false): Subject {
         get(id, fetchStatementsAndAssignments).let {
             if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this subject")
             }
             if (user != it.owner)
-                if (sharedSubjectRepository.findByTeacherAndSubject(user,it) == null)
+                if (sharedSubjectRepository.findByTeacherAndSubject(user, it) == null)
                     throw AccessDeniedException("The subject \"${it.title}\" is not shared with you")
             return it
         }
@@ -92,11 +92,22 @@ class SubjectService (
         }
     }
 
-    fun findAllByOwner(owner: User,
-                       pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
+    fun findAllByOwner(
+        owner: User,
+        pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+    )
             : Page<Subject> {
         return subjectRepository.findAllByOwner(owner, pageable)
     }
+
+    fun findAllWithoutCourseByOwner(
+        owner: User,
+        pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+    )
+            : Page<Subject> {
+        return subjectRepository.findAllByOwnerAndCourseIsNull(owner, pageable)
+    }
+
 
     fun touch(subject: Subject) {
         subject.lastUpdated = Date()
@@ -127,14 +138,18 @@ class SubjectService (
         return subjectRepository.count()
     }
 
+    fun countWithoutCourse(owner: User) : Long {
+        return subjectRepository.countByCourseIsNullAndOwner(owner)
+    }
+
     fun delete(user: User, subject: Subject) {
         require(user == subject.owner) {
             "Only the owner can delete an assignment"
         }
-        for(statement: Statement in subject.statements){
+        for (statement: Statement in subject.statements) {
             statementService.delete(statement)
         }
-        for(assignment: Assignment in subject.assignments){
+        for (assignment: Assignment in subject.assignments) {
             assignmentService.delete(subject.owner, assignment)
         }
         subjectRepository.delete(subject) // all other linked entities are deletes by DB cascade
@@ -178,11 +193,11 @@ class SubjectService (
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE statement SET rank = CASE " +
-                        "WHEN id=${statementId} THEN ${pos} " +
-                        "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
-                        " END " +
-                        "WHERE id in (${idsArray[pos - 1]}, ${statementId})"
+            "UPDATE statement SET rank = CASE " +
+                    "WHEN id=${statementId} THEN ${pos} " +
+                    "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
+                    " END " +
+                    "WHERE id in (${idsArray[pos - 1]}, ${statementId})"
         ).executeUpdate()
     }
 
@@ -197,11 +212,11 @@ class SubjectService (
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE statement SET rank = CASE " +
-                        "WHEN id=${statementId} THEN ${posValue + 1} " +
-                        "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
-                        " END " +
-                        "WHERE id in (${idsArray[pos + 1]}, ${statementId})"
+            "UPDATE statement SET rank = CASE " +
+                    "WHEN id=${statementId} THEN ${posValue + 1} " +
+                    "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
+                    " END " +
+                    "WHERE id in (${idsArray[pos + 1]}, ${statementId})"
         ).executeUpdate()
     }
 
@@ -211,12 +226,12 @@ class SubjectService (
         if (statementIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE statement SET rank = CASE " +
-                        statementIds.mapIndexed { index, id ->
-                            "WHEN id=$id THEN $index"
-                        }.joinToString(" ") +
-                        " END " +
-                        "WHERE id in (${statementIds.joinToString(",")})"
+            "UPDATE statement SET rank = CASE " +
+                    statementIds.mapIndexed { index, id ->
+                        "WHEN id=$id THEN $index"
+                    }.joinToString(" ") +
+                    " END " +
+                    "WHERE id in (${statementIds.joinToString(",")})"
         ).executeUpdate()
 
         subject.statements.mapIndexed { index, statement -> statement.rank = index + 1 }
@@ -242,11 +257,11 @@ class SubjectService (
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE assignment SET rank = CASE " +
-                        "WHEN id=${assignmentId} THEN ${pos} " +
-                        "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
-                        " END " +
-                        "WHERE id in (${idsArray[pos - 1]}, ${assignmentId})"
+            "UPDATE assignment SET rank = CASE " +
+                    "WHEN id=${assignmentId} THEN ${pos} " +
+                    "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
+                    " END " +
+                    "WHERE id in (${idsArray[pos - 1]}, ${assignmentId})"
         ).executeUpdate()
     }
 
@@ -261,11 +276,11 @@ class SubjectService (
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE assignment SET rank = CASE " +
-                        "WHEN id=${assignmentId} THEN ${posValue + 1} " +
-                        "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
-                        " END " +
-                        "WHERE id in (${idsArray[pos + 1]}, ${assignmentId})"
+            "UPDATE assignment SET rank = CASE " +
+                    "WHEN id=${assignmentId} THEN ${posValue + 1} " +
+                    "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
+                    " END " +
+                    "WHERE id in (${idsArray[pos + 1]}, ${assignmentId})"
         ).executeUpdate()
     }
 
@@ -288,12 +303,12 @@ class SubjectService (
         if (assignmentIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE assignment SET rank = CASE " +
-                        assignmentIds.mapIndexed { index, id ->
-                            "WHEN id=$id THEN $index"
-                        }.joinToString(" ") +
-                        " END " +
-                        "WHERE id in (${assignmentIds.joinToString(",")})"
+            "UPDATE assignment SET rank = CASE " +
+                    assignmentIds.mapIndexed { index, id ->
+                        "WHEN id=$id THEN $index"
+                    }.joinToString(" ") +
+                    " END " +
+                    "WHERE id in (${assignmentIds.joinToString(",")})"
         ).executeUpdate()
 
         subject.assignments.mapIndexed { index, assignment -> assignment.rank = index + 1 }
@@ -305,37 +320,39 @@ class SubjectService (
         }
 
         return sharedSubjectRepository.findByTeacherAndSubject(
-                user,
-                subject
+            user,
+            subject
         ) ?: sharedSubjectRepository.save(
-                SharedSubject(user, subject)
+            SharedSubject(user, subject)
         )
     }
 
-    fun findAllSharedSubjects(user: User,
-                                     pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))): Page<Subject> {
+    fun findAllSharedSubjects(
+        user: User,
+        pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+    ): Page<Subject> {
         return sharedSubjectRepository.findAllSubjectsForTeacher(user, pageable)
     }
 
-    fun duplicate(user:User, initialSubject: Subject): Subject{
-        val indexTitle = subjectRepository.countAllStartingWithTitle(user,initialSubject.title) + 1
+    fun duplicate(user: User, initialSubject: Subject): Subject {
+        val indexTitle = subjectRepository.countAllStartingWithTitle(user, initialSubject.title) + 1
         val duplicateTitle = if (indexTitle == 1) initialSubject.title else initialSubject.title + " ($indexTitle) "
         val duplicateSubject = Subject(
-                duplicateTitle,
-                user
+            duplicateTitle,
+            user
         )
         duplicateSubject.parentSubject = initialSubject
         duplicateSubject.course = initialSubject.course
         save(duplicateSubject)
         entityManager.flush()
-        for (statement:Statement in initialSubject.statements){
+        for (statement: Statement in initialSubject.statements) {
             importStatementInSubject(statement, duplicateSubject)
         }
         return duplicateSubject
     }
 
     fun import(user: User, sharedSubject: Subject): Subject {
-        if (sharedSubjectRepository.findByTeacherAndSubject(user,sharedSubject) == null)
+        if (sharedSubjectRepository.findByTeacherAndSubject(user, sharedSubject) == null)
             throw EntityNotFoundException("The subject \"${sharedSubject.title}\" is not shared with you")
 
         return duplicate(user, sharedSubject)
@@ -345,16 +362,20 @@ class SubjectService (
         return subjectRepository.countAllByParentSubject(user, parentSubject) > 0
     }
 
-    fun importStatementInSubject (statement: Statement, subject: Subject, titleSuffixIfCopyInSameSubject: String = " (Copy)"): Statement {
+    fun importStatementInSubject(
+        statement: Statement,
+        subject: Subject,
+        titleSuffixIfCopyInSameSubject: String = " (Copy)"
+    ): Statement {
         var duplicatedStatement = statementService.duplicate(statement)
-        if (subject == statement.subject ) {
+        if (subject == statement.subject) {
             duplicatedStatement.title += titleSuffixIfCopyInSameSubject
         }
         duplicatedStatement.owner = subject.owner
-        return addStatement(subject,duplicatedStatement)
+        return addStatement(subject, duplicatedStatement)
     }
 
-    fun newVersionOfStatementInSubject (statement: Statement): Statement {
+    fun newVersionOfStatementInSubject(statement: Statement): Statement {
         var duplicatedStatement = statementService.duplicate(statement)
         // update sequences with new statement
         sequenceService.findAllNotTerminatedSequencesByStatement(statement).forEach {
@@ -369,8 +390,8 @@ class SubjectService (
         assignmentRepository.findAllBySubjectIsNull().forEach { assignment ->
             // create a subject
             Subject(
-                    title = assignment.title,
-                    owner = assignment.owner
+                title = assignment.title,
+                owner = assignment.owner
             ).let { subject ->
                 save(subject)
                 // for each sequence

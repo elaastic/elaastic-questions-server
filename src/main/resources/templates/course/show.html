@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section}, currentSection='my-courses')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
@@ -72,12 +72,20 @@
         <i class="folder open icon"></i>
 
         <div class="content">
-            <span th:text="#{course.my.list.label} + ' > ' + ${course.title}">Course > course.title</span>
+            <span th:text="${course.title}">Course > course.title</span>
             <div class="sub header" th:text="#{course.my.list.path.label(${course.title})}">
                 This page lists subjects of the course :
             </div>
         </div>
     </h2>
+
+    <div class="ui basic segment">
+        <div class="ui breadcrumb" >
+            <a class="active section" th:text="#{course.my.list.label}" th:href="@{/course/}">My courses</a>
+            <div class="divider"> /</div>
+            <div class="active section" th:text="${course.title}">course title</div>
+        </div>
+    </div>
 
     <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
         Message
@@ -86,7 +94,7 @@
     <table th:if="${not #lists.isEmpty(subjects)}" class="ui selectable unstackable table">
         <thead>
         <tr>
-            <th th:text="#{common.title}">
+            <th th:text="#{subject.label}">
                 Title
             </th>
             <th class="not mobile" th:text="#{common.lastUpdate}">

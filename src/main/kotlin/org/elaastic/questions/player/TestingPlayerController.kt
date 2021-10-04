@@ -69,6 +69,17 @@ class TestingPlayerController(
     val messageBuilder: MessageBuilder
 ) {
 
+    @GetMapping("/index", "/", "")
+    fun index(
+        authentication: Authentication,
+        model: Model,
+    ): String {
+        val user: User = authentication.principal as User
+        model.addAttribute("user", user)
+
+        return "player/test-index"
+    }
+
 
     @GetMapping("/steps")
     fun testSteps(
