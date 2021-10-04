@@ -91,7 +91,18 @@
     </div>
 
     <div class="ui two column stackable grid">
-        <div class="column">&nbsp;</div>
+        <div class="column">
+            <div class="ui basic segment">
+                <a th:href="@{/subject/create}"
+                   href="create"
+                   class="ui primary button">
+                    <i class="add icon"></i>
+                    <span th:text="#{subject.create.label}">
+                        Create a subject
+                    </span>
+                </a>
+            </div>
+        </div>
         <div class="column">
             <div th:replace="layout/components/paginate :: paginate(baseUrl='/course/-1')"></div>
         </div>
