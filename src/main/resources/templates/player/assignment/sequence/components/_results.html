@@ -32,9 +32,12 @@
          style="font-size: 1rem;"
          th:id="|sequence_${resultsModel.sequenceId}_result|">
 
-      <div th:if="${resultsModel.hasChoices}">
+
+      <div th:if="${resultsModel.hasChoices && resultsModel.responseDistributionChartModel != null}">
           <div th:replace="player/assignment/sequence/components/_response-distribution-chart::responseDistributionChart(${resultsModel.responseDistributionChartModel})"></div>
       </div>
+
+
       <div>
         <th:block th:if="${resultsModel.hasExplanations}">
           <a th:if="${user.isTeacher()}"

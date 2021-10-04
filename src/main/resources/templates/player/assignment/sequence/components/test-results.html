@@ -36,7 +36,7 @@
     <h3 th:text="${situation.description}"></h3>
 
     <div
-      th:replace="player/assignment/sequence/components/_results.html :: results(studentResultsModel=${situation.resultsModel},id=${i.index})"></div>
+      th:replace="player/assignment/sequence/components/_results.html :: results(resultsModel=${situation.resultsModel},id=${i.index})"></div>
   </th:block>
 </section>
 </body>
