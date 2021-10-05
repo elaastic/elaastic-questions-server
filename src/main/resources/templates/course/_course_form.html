@@ -27,8 +27,10 @@
             Title
         </label>
         <input type="text"
+               class=".course-creation"
                name="title"
                th:field="*{title}"
+               th:attr="data-intro=#{onboarding.content.course_creation.4}, data-step='1'"
                autofocus="autofocus"/>
 
         <input type="hidden"

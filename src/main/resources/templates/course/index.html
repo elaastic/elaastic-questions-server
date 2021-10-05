@@ -22,7 +22,6 @@
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="|elaastic: #{course.my.list.label}|">elaastic: My Courses</title>
-  <script type="text/javascript" th:src="@{/js/intro.min.js}"></script>
 </head>
 
 <body>
@@ -39,11 +38,17 @@
   </a>
 </aside>
 
-<section th:onclick="introJs().start()">
-  <h2 class="ui header">
+<section class="introduction" th:attr="data-title=#{onboarding.introduction.title}, data-intro=#{onboarding.introduction.content}, data-step='1'">
+  <script th:inline="javascript">
+    $(document)
+            .ready(function () {
+              introJs().start(".introduction, .course-creation")
+            })
+  </script>
+  <h2 class="ui header introduction course-creation" th:attr="data-intro=#{onboarding.content.course_creation.2}, data-step='3'">
     <i class="folder open icon"></i>
 
-    <div data-intro="Hello step one !" class="content">
+    <div class="content">
       <span th:text="#{course.my.list.label}">My Courses</span>
       <div class="sub header" th:text="#{course.my.list.description}">
         This page lists all of your courses
@@ -54,7 +59,6 @@
   <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
     Message course delete confirmation
   </div>
-
 
   <div class="ui three column grid" th:if="${not #lists.isEmpty(coursePage.content) or (nbSubjectsWithoutCourse > 0)}">
     <div class="column" th:if="${pagination.currentPage == null || pagination.currentPage == 1 && nbSubjectsWithoutCourse > 0}">
@@ -100,7 +104,7 @@
       <div class="ui basic segment">
         <a th:href="@{/course/create}"
            href="create"
-           class="ui primary button">
+           class="ui primary button .course-creation"  th:attr="data-intro=#{onboarding.content.course_creation.3}, data-step='4'">
           <i class="add icon"></i>
           <span th:text="#{course.create.label}">
                         Create a course
