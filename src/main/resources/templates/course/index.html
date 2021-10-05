@@ -22,6 +22,7 @@
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="|elaastic: #{course.my.list.label}|">elaastic: My Courses</title>
+  <script type="text/javascript" th:src="@{/js/intro.min.js}"></script>
 </head>
 
 <body>
@@ -38,11 +39,11 @@
   </a>
 </aside>
 
-<section>
+<section th:onclick="introJs().start()">
   <h2 class="ui header">
     <i class="folder open icon"></i>
 
-    <div class="content">
+    <div data-intro="Hello step one !" class="content">
       <span th:text="#{course.my.list.label}">My Courses</span>
       <div class="sub header" th:text="#{course.my.list.description}">
         This page lists all of your courses
