@@ -106,10 +106,7 @@
          data-tooltip="Shared subjects"
          data-position="right center"
          data-inverted="">
-        <i class="stacked icons">
-          <i class="large users icon" th:styleappend="|color: ${#strings.equals(currentSection, 'shared-subjects') ? '#4f7691' : ''} |"></i>
-          <i class="bottom left attached book icon" th:classappend="${#strings.equals(currentSection, 'shared-subjects') ? '#white' : 'black'}"></i>
-        </i>
+        <i class="slideshare icon" th:styleappend="|color: ${#strings.equals(currentSection, 'shared-subjects') ? '#4f7691' : ''} |"></i>
       </a>
 
       <a sec:authorize="hasAnyAuthority('STUDENT_ROLE', 'ADMIN_ROLE')"
