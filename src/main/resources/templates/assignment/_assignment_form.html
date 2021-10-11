@@ -22,7 +22,7 @@
 
   <div class="ui error message"></div>
 
-  <div class="required field" th:classappend="${#fields.hasErrors('title')}? 'error'">
+  <div class="required field ob-assignment-creation-8" th:classappend="${#fields.hasErrors('title')}? 'error'">
     <label th:text="#{assignment.title.label}">
       Title
     </label>
@@ -40,7 +40,7 @@
            th:field="*{owner}"/>
   </div>
 
-  <div class="field" th:classappend="${#fields.hasErrors('audience')}? 'error'">
+  <div class="field ob-assignment-creation-9" th:classappend="${#fields.hasErrors('audience')}? 'error'">
     <label th:text="#{assignment.audience.label}">
       Audience
     </label>
@@ -49,7 +49,7 @@
            th:field="*{audience}"/>
   </div>
 
-  <div class="field" th:classappend="${#fields.hasErrors('scholarYear')}? 'error'">
+  <div class="field ob-assignment-creation-10" th:classappend="${#fields.hasErrors('scholarYear')}? 'error'">
     <label th:text="#{assignment.scholarYear.label}">
       ScholarYear
     </label>
@@ -58,7 +58,7 @@
            th:field="*{scholarYear}"/>
   </div>
 
-  <div class="field" th:classappend="${#fields.hasErrors('description')}? 'error'">
+  <div class="field ob-assignment-creation-11" th:classappend="${#fields.hasErrors('description')}? 'error'">
     <label th:text="#{assignment.description.label}">
       Description
     </label>

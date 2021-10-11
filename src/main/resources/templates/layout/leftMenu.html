@@ -79,7 +79,7 @@
   <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
      th:href="@{/course/}"
      href="/course"
-     class="item"
+     class="item ob-course-creation-1"
      th:attr="data-tooltip=#{course.my.list.label}"
      th:styleappend="|background-color: ${#strings.equals(currentSection, 'my-courses') ? 'white' : ''} |"
      data-tooltip="My courses"
@@ -89,11 +89,10 @@
        th:styleappend="|color: ${#strings.equals(currentSection, 'my-courses') ? '#4f7691' : ''}|"></i>
   </a>
 
-  <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
-     th:href="@{/subject/}"
-     href="/subject/"
-     class="item"
-     th:attr="data-tooltip=#{subject.my.list.label}"
+      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+         th:href="@{/subject/}"
+         href="/subject/"
+         class="item ob-subject-creation-1"
      data-tooltip="My subjects"
      data-position="right center"
      th:styleappend="|background-color: ${#strings.equals(currentSection, 'my-subjects') ? 'white' : ''}|"

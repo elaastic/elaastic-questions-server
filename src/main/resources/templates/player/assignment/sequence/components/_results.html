@@ -20,7 +20,7 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <div class="ui accordion segment"
+  <div class="ui accordion segment ob-play-sequence-1"
        th:id="|result-accordion-${resultsModel.sequenceId}|">
 
     <div class="ui dividing active title header"style="margin-right: 1.25em;">
@@ -77,6 +77,7 @@
        style="position: absolute; top: 0.5em; right: 1em; font-size: 1.2em"
        th:attr="data-tooltip=#{player.sequence.readinteraction.updateAllResults}"
        data-inverted=""
+       class="ob-play-sequence-2"
        data-position="top right">
       <i class="small refresh icon"></i></a>
   </div>

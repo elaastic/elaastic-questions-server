@@ -27,7 +27,7 @@
   <div id="section-questionType" class="required field" v-cloak>
     <div class="ui hidden divider"></div>
 
-    <div class="ui stackable secondary menu">
+    <div class="ui stackable secondary menu ob-question-creation-7">
       <div class="item">
         <div class="ui big button el-radio-button"
              v-bind:class="{ selected: questionType == 'CHOICE', secondary: questionType == 'CHOICE' }"
@@ -50,7 +50,8 @@
     <div ref="questionChoiceSetup"
          v-bind:style="{visibility: questionType === 'CHOICE' ? 'visible' : 'hidden'}">
 
-      <div style="margin-bottom: 1em;">
+      <div style="margin-bottom: 1em;"
+           class="ob-question-creation-8">
         <span style="margin-right: 0.5em;" th:text="#{sequence.interaction.studentsSelect}">Students select</span>
 
         <input type="hidden"
@@ -84,7 +85,7 @@
         items.
       </div>
 
-      <div class="field">
+      <div class="field ob-question-creation-9">
         <label>
         <span
           v-if="choiceQuestionSpec.interactionType === ChoiceInteractionTypeDefinition.EXCLUSIVE.id"

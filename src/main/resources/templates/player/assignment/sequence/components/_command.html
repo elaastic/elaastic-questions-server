@@ -17,14 +17,14 @@
   -->
 
 <div th:fragment="command(model)"
-     class="ui attached stackable icon menu"
+     class="ui attached stackable icon menu ob-start-sequence-5 ob-play-sequence-3"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
   <a class="item"
      th:if="${model.actionStartSequence.name() == 'ENABLED'}"
      style="width: 100%; text-align: center; display: block; outline: none;"
      href="#"
-     th:onclick="|$('#sequenceSpec_${model.sequenceId}').modal('show');|">
+     th:onclick="|$('#sequenceSpec_${model.sequenceId}').modal('show');setTimeout(function(){introSequenceStart()}, 500)|">
     <i class="green play icon"></i>
     &nbsp;<span th:text="#{player.sequence.start}">Start sequence</span>
   </a>
@@ -77,7 +77,7 @@
     <!-- TODO partial reload -       th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/stop}')|">-->
     <a th:href="@{/player/sequence/{sequenceId}/stop(sequenceId=${model.sequenceId})}"
        th:unless="${model.actionStopSequence.name() == 'HIDDEN'}"
-       class="item">
+       class="item ob-end-sequence-1">
       <i class="red stop icon"></i>
       &nbsp; <span th:text="#{player.sequence.readinteraction.stopSequence}">Stop sequence</span>
     </a>
@@ -85,7 +85,7 @@
     <!--   TODO load partiel template th:onclick="|$('#sequence_${model.sequenceId}').load('@{/player/sequence/{sequenceId}/publishResults}')|"-->
     <a th:href="@{/player/sequence/{sequenceId}/publish-results(sequenceId=${model.sequenceId})}"
        th:unless="${model.actionPublishResults.name() == 'HIDDEN'}"
-       class="item">
+       class="item ob-end-sequence-2">
       <i class="feed icon"></i>
       &nbsp; <span th:text="#{player.sequence.publishResults}">Publish results</span>
     </a>

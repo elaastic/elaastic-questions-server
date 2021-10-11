@@ -19,7 +19,7 @@
 <div th:fragment="assignmentActions(assignment, position, nbAssignment)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <a class="ui right floated icon red tiny button"
+    <a class="ui right floated icon red tiny button ob-assignment-creation-15"
        href="#"
        th:onclick="|elaastic.showConfirmDeleteAssignmentModal(${assignment.id})|"
        th:attr="data-tooltip=#{common.delete}"
@@ -48,7 +48,7 @@
         <i class="arrow up icon"></i>
     </a>
 
-    <a class="ui right floated icon secondary tiny button"
+    <a class="ui right floated icon secondary tiny button ob-assignment-creation-14"
        th:href="@{/assignment/{id}/edit(id=${assignment.id})}"
        href="/assignment/123/edit"
        th:attr="data-tooltip=#{common.update}"
@@ -58,7 +58,7 @@
     </a>
 
     <a th:if="${not #lists.isEmpty(assignment.sequences)}"
-       class="ui right floated icon tiny primary button"
+       class="ui right floated icon tiny primary button ob-assignment-creation-16"
        th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
        th:attr="data-tooltip=#{player.assignment.play}"
        data-inverted="">

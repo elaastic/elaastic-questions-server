@@ -42,8 +42,7 @@
 
     <input type="submit"
            name="create"
-           class="ui primary button .course-creation"
-           th:attr="data-intro=#{onboarding.content.course_creation.5}, data-step='2'"
+           class="ui primary button ob-course-creation-5"
            th:value="#{default.button.create.label}"/>
 
     <a th:href="@{/course}" class="ui button" th:text="#{common.cancel}">
@@ -54,7 +53,18 @@
 <script th:inline="javascript">
   $(document)
           .ready(function () {
-            introJs().start(".course-creation")
+            introJs().setOptions({
+              steps: [
+                {
+                  element: document.querySelector('.ob-course-creation-4'),
+                  intro: [[#{onboarding.content.course_creation.4}]]
+                },
+                {
+                  element: document.querySelector('.ob-course-creation-5'),
+                  intro: [[#{onboarding.content.course_creation.5}]]
+                }
+              ]
+            }).start();
           })
 </script>
 

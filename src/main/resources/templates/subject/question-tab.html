@@ -30,7 +30,7 @@
         </div>
 
         <div th:each="statement, i : ${statements}"
-             class="ui clearing segment attached large text"
+             class="ui clearing segment attached large text ob-assignment-creation-1"
              th:id="|statement_${statement.id}|"
              style="padding: 1em;">
             <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
@@ -53,7 +53,7 @@
         </div>
 
         <div class="ui basic segment" th:if="${subject.owner == user}">
-            <a class="ui primary button"
+            <a class="ui primary button ob-question-creation-2"
                th:href="@{/subject/{id}/addStatement(id=${subject.id})}">
                 <i class="add icon"></i>
                 <span th:text="#{subject.statement.addStatement}">Add a statement</span>

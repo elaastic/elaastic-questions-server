@@ -26,8 +26,85 @@
 
 <body>
 <aside id="pageSpecificMenu">
-  <script>
+  <script th:inline="javascript">
+
     var elaastic = elaastic || {}
+    $(document)
+            .ready(function () {
+              /* when a course has been created */
+              // introJs().setOptions({
+              //   steps: [
+              //     {
+              //       element: document.querySelector('.ob-question-creation-1'),
+              //       intro: [[#{onboarding.content.question_creation.1}]]
+              //     },
+              //     {
+              //       element: document.querySelector('.ob-question-creation-2'),
+              //       intro: [[#{onboarding.content.question_creation.2}]]
+              //     }
+              //   ]
+              // }).start();
+              /* when a statement has been created */
+              introJs().setOptions({
+                steps: [
+                  {
+                    element: document.querySelector('.ob-assignment-creation-1'),
+                    intro: [[#{onboarding.content.assignment_creation.1}]]
+                  },
+                  {
+                    element: document.querySelector('.ob-assignment-creation-2'),
+                    intro: [[#{onboarding.content.assignment_creation.2}]]
+                  },
+                  {
+                    element: document.querySelector('.ob-assignment-creation-3'),
+                    intro: [[#{onboarding.content.assignment_creation.3}]]
+                  },
+                  {
+                    element: document.querySelector('.ob-assignment-creation-4'),
+                    intro: [[#{onboarding.content.assignment_creation.4}]]
+                  },
+                  {
+                    element: document.querySelector('.ob-assignment-creation-5'),
+                    intro: [[#{onboarding.content.assignment_creation.5}]]
+                  }
+                ]
+              }).start();
+              /* when an assignment has been created */
+              introJs().setOptions({
+                steps: [
+                  {
+                    element: document.querySelector('.ob-assignment-creation-13'),
+                    intro: [[#{onboarding.content.assignment_creation.13}]]
+                  },
+                  {
+                    element: document.querySelector('.ob-assignment-creation-14'),
+                    intro: [[#{onboarding.content.assignment_creation.14}]]
+                  },
+                  {
+                    element: document.querySelector('.ob-assignment-creation-15'),
+                    intro: [[#{onboarding.content.assignment_creation.15}]]
+                  },
+                  {
+                    element: document.querySelector('.ob-assignment-creation-16'),
+                    intro: [[#{onboarding.content.assignment_creation.16}]]
+                  }
+                ]
+              }).start();
+            })
+            function introAssignmentCreation()
+            {
+              introJs().setOptions({
+                steps: [
+                  {
+                    intro: [[#{onboarding.content.assignment_creation.6}]]
+                  },
+                  {
+                    element: document.querySelector('.ob-assignment-creation-7'),
+                    intro: [[#{onboarding.content.assignment_creation.7}]]
+                  }
+                ]
+              }).start();
+            }
   </script>
   <th:block th:if="${subject.owner == user}">
 
@@ -163,11 +240,14 @@
     </div>
 
     <div class="ui attached tabular menu top">
-      <a class="item" th:classappend="${activeTab=='questions'} ? active" data-tab="questions"
+      <a class="item ob-question-creation-1"
+         th:classappend="${activeTab=='questions'} ? active" data-tab="questions"
          th:text="#{subject.page.show.questions-tab-title}">questions</a>
-      <a class="item" th:classappend="${activeTab=='assignments'} ? active" data-tab="assignments"
+      <a class="item"
+         th:classappend="${activeTab=='assignments'} ? active" data-tab="assignments"
+         th:onclick="introAssignmentCreation()"
          th:text="#{subject.page.show.assignments-tab-title}"
-         th:class="${subject.owner==user} ? item : noAccess ">assignments</a>
+         th:class="${subject.owner==user} ? 'item ob-assignment-creation-5' : 'noAccess ob-assignment-creation-5'">assignments</a>
     </div>
     
     <style>

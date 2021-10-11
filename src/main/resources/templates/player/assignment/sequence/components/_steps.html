@@ -21,11 +21,11 @@
   th:remove="tag"
   xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <div class="ui three top attached steps">
+  <div class="ui three top attached steps ob-start-sequence-3">
     <div class="step"
          th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.responseSubmissionState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.responseSubmissionState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
       <div th:if="${stepsModel.showStatistics == true && stepsModel.responseSubmissionState.name() != 'DISABLED'}"
-           class="floating ui grey label" style="left: 3em;" data-inverted=""
+           class="floating ui grey label ob-play-sequence-4" style="left: 3em;" data-inverted=""
            th:attr="data-tooltip=#{'player.sequence.interaction.responseCount'(1)}"
            data-position="bottom left"><i
         class="comment outline icon"></i>

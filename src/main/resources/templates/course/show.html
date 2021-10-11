@@ -68,7 +68,7 @@
 </aside>
 
 <section>
-    <h2 class="ui header">
+    <h2 class="ui header ob-subject-creation-2">
         <i class="folder open icon"></i>
 
         <div class="content">
@@ -126,7 +126,8 @@
     <div class="ui two column stackable grid">
         <div class="column">
             <div class="ui basic segment">
-                <a th:href="@{/course/{id}/addSubject(id=${course.id})}" class="ui primary button">
+                <a th:href="@{/course/{id}/addSubject(id=${course.id})}"
+                   class="ui primary button ob-subject-creation-3">
                     <i class="add icon"></i>
                     <span th:text="#{subject.create.label}">
                         Create a subject
@@ -172,6 +173,25 @@
                     window.location = /*[[@{/course/{id}/delete(id=${course.id})}]]*/ '/course/123/delete'
                 }
             })
+            $(document)
+                .ready(function () {
+                    introJs().setOptions({
+                        steps: [
+                            {
+                                element: document.querySelector('.ob-subject-creation-1'),
+                                intro: [[#{onboarding.content.subject_creation.1}]]
+                            },
+                            {
+                                element: document.querySelector('.ob-subject-creation-2'),
+                                intro: [[#{onboarding.content.subject_creation.2}]]
+                            },
+                            {
+                                element: document.querySelector('.ob-subject-creation-3'),
+                                intro: [[#{onboarding.content.subject_creation.3}]]
+                            }
+                        ]
+                    }).start();
+                })
         </script>
     </div>
 

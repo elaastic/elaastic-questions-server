@@ -33,8 +33,85 @@
 <body>
 
 <div id="pageSpecificMenu">
-  <script>
+  <script th:inline="javascript">
     var elaastic = elaastic || {}
+    $(document)
+            .ready(function () {
+              introJs().setOptions({
+                steps: [
+                  /* first arrival */
+                  // {
+                  //   intro: [[#{onboarding.content.start_sequence.1}]]
+                  // },
+                  // {
+                  //   element: document.querySelector('.ob-start-sequence-2'),
+                  //   intro: [[#{onboarding.content.start_sequence.2}]]
+                  // },
+                  // {
+                  //   element: document.querySelector('.ob-start-sequence-3'),
+                  //   intro: [[#{onboarding.content.start_sequence.3}]]
+                  // },
+                  // {
+                  //   element: document.querySelector('.ob-start-sequence-4'),
+                  //   intro: [[#{onboarding.content.start_sequence.4}]]
+                  // },
+                  // {
+                  //   element: document.querySelector('.ob-start-sequence-5'),
+                  //   intro: [[#{onboarding.content.start_sequence.5}]]
+                  // }
+                  /* when sequence started */
+                  // {
+                  //   element: document.querySelector('.ob-play-sequence-1'),
+                  //   intro: [[#{onboarding.content.play_sequence.1}]]
+                  // },
+                  // {
+                  //   element: document.querySelector('.ob-play-sequence-2'),
+                  //   intro: [[#{onboarding.content.play_sequence.2}]]
+                  // },
+                  // {
+                  //   element: document.querySelector('.ob-play-sequence-3'),
+                  //   intro: [[#{onboarding.content.play_sequence.3}]]
+                  // },
+                  // {
+                  //   element: document.querySelector('.ob-play-sequence-4'),
+                  //   intro: [[#{onboarding.content.play_sequence.4}]]
+                  // },
+                  // {
+                  //   element: document.querySelector('.ob-end-sequence-1'),
+                  //   intro: [[#{onboarding.content.end_sequence.1}]]
+                  // },
+                  /* when sequence ended */
+                  {
+                    element: document.querySelector('.ob-end-sequence-2'),
+                    intro: [[#{onboarding.content.end_sequence.2}]]
+                  },
+                  /* when onboarding ended */
+                  {
+                    title: [[#{onboarding.content.end.title}]],
+                    intro: [[#{onboarding.content.end.content}]]
+                  }
+                ]
+              }).start();
+            })
+              function introSequenceStart()
+              {
+                introJs().setOptions({
+                  steps: [
+                    {
+                      element: document.querySelector('.ob-start-sequence-6'),
+                      intro: [[#{onboarding.content.start_sequence.6}]]
+                    },
+                    {
+                      element: document.querySelector('.ob-start-sequence-7'),
+                      intro: [[#{onboarding.content.start_sequence.7}]]
+                    },
+                    {
+                      element: document.querySelector('.ob-start-sequence-8'),
+                      intro: [[#{onboarding.content.start_sequence.8}]]
+                    }
+                  ]
+                }).start().onChange();
+              }
   </script>
 
   <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">
@@ -77,7 +154,7 @@
   </th:block>
 </div>
 
-<aside id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
+<aside class="ob-start-sequence-2" id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
   <div
     th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 </aside>

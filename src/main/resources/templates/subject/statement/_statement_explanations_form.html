@@ -22,7 +22,7 @@
 
   <div class="ui hidden divider"></div>
 
-  <div id="explanation-section">
+  <div id="explanation-section" class="ob-question-creation-10">
     <a id="label-explanations"
        v-on:click="toggleSection"
        class="ui ribbon label"
@@ -48,7 +48,7 @@
           Expected explanation
         </h5>
 
-        <div class="ui bottom attached segment" id="expectedExplanationBloc">
+        <div class="ui bottom attached segment ob-question-creation-11" id="expectedExplanationBloc">
         <textarea ref="initialExpectedExplanation"
                   style="display: none;"
                   th:text="${statement?.expectedExplanation}">
@@ -72,7 +72,7 @@
           <div class="ui attached segment" v-for="index in fakeExplanationList.length"
                v-if="fakeExplationIsNotNull(index-1)">
             <template v-if="isOpenEnded">
-              <button th:if="${subject.owner==user}" class="ui tiny negative icon right floated  button"
+              <button th:if="${subject.owner==user}" class="ui tiny negative icon right floated button"
                       style="margin-left: 3em;"
                       type="button"
                       v-on:click="removeFakeExplanation(index-1)">
@@ -87,14 +87,15 @@
 
             </template>
             <template v-else>
-
               <div class="ui inline field">
                 <label th:text="#{statement.fakeExplanation.correspondingItem}">
                   Fake explanation for item
                 </label>
                 <select th:disabled="${subject.owner!=user}"
                         v-model="fakeExplanationList[index-1].correspondingItem"
+                        class="ob-question-creation-13"
                         v-bind:name="'fakeExplanations['+(index-1)+'].correspondingItem'">
+
                   <option th:readonly="${subject.owner!=user}" v-for="choiceIndex in itemCount" v-bind:value="choiceIndex">
                     {{ choiceIndex }}
                   </option>
@@ -118,7 +119,7 @@
           </div>
 
           <button th:if="${subject.owner==user}"
-                  class="ui secondary bottom attached fluid button"
+                  class="ui secondary bottom attached fluid button ob-question-creation-12"
                   id="addFakeExplanationButton" type="button" v-on:click="addFakeExplanation()">
             <i class="plus icon"></i>
             <span th:text="#{statement.addFakeExplanation.label}">
@@ -186,6 +187,7 @@
           this.isSectionOpen = !this.isSectionOpen
           if (this.isSectionOpen) {
             this.accordion.accordion('open', 0)
+            introFakeExplanation()
           } else {
             this.accordion.accordion('close', 0)
           }
