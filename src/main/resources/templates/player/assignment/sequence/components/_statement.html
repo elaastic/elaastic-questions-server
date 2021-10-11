@@ -19,7 +19,7 @@
 <div th:fragment="statement(statementPanelModel, statement)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-    <div class="ui accordion segment" id="statement-accordion" style="padding-bottom: 0;">
+    <div class="ui accordion segment ob-start-sequence-4" id="statement-accordion" style="padding-bottom: 0;">
         <div class="ui ${isClosed ? '' : 'active'} title header"
              th:classappend="${statementPanelModel.panelClosed ? '' : 'active'}">
             <i class="dropdown icon"></i> <span th:text="${statement.title}"></span>

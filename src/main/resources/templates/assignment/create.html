@@ -25,7 +25,35 @@
 </head>
 
 <body>
-
+<script th:inline="javascript">
+  $(document)
+          .ready(function () {
+            introJs().setOptions({
+              steps: [
+                {
+                  element: document.querySelector('.ob-assignment-creation-8'),
+                  intro: [[#{onboarding.content.assignment_creation.8}]]
+                },
+                {
+                  element: document.querySelector('.ob-assignment-creation-9'),
+                  intro: [[#{onboarding.content.assignment_creation.9}]]
+                },
+                {
+                  element: document.querySelector('.ob-assignment-creation-10'),
+                  intro: [[#{onboarding.content.assignment_creation.10}]]
+                },
+                {
+                  element: document.querySelector('.ob-assignment-creation-11'),
+                  intro: [[#{onboarding.content.assignment_creation.11}]]
+                },
+                {
+                  element: document.querySelector('.ob-assignment-creation-12'),
+                  intro: [[#{onboarding.content.assignment_creation.12}]]
+                },
+              ]
+            }).start();
+          })
+</script>
 <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
   Message
 </div>
@@ -44,7 +72,7 @@
 
     <input type="submit"
            name="create"
-           class="ui primary button"
+           class="ui primary button ob-assignment-creation-12"
            th:value="#{default.button.create.label}"/>
 
 

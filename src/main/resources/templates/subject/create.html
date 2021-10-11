@@ -39,12 +39,32 @@
         th:action = "${#httpServletRequest.requestURI == '/course/{id}/addSubject(id=${course.id})'}
         ? @{/course/{id}/addSubject(id=${course.id})}
         : @{/subject/save}" >
-
+    <script th:inline="javascript">
+      $(document)
+              .ready(function () {
+                introJs().setOptions({
+                  steps: [
+                    {
+                      element: document.querySelector('.ob-subject-creation-4'),
+                      intro: [[#{onboarding.content.subject_creation.4}]]
+                    },
+                    {
+                      element: document.querySelector('.ob-subject-creation-5'),
+                      intro: [[#{onboarding.content.subject_creation.5}]]
+                    },
+                    {
+                      element: document.querySelector('.ob-subject-creation-6'),
+                      intro: [[#{onboarding.content.subject_creation.6}]]
+                    }
+                  ]
+                }).start();
+              })
+    </script>
     <div th:replace="subject/_subject_form :: subjectForm(${subject}, ${listCourse})"></div>
 
     <input type="submit"
            name="create"
-           class="ui primary button"
+           class="ui primary button ob-subject-creation-6"
            th:value="#{default.button.create.label}"/>
 
     <a th:href="@{/course}" class="ui button" th:text="#{common.cancel}">

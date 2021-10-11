@@ -21,16 +21,31 @@
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <div class="ui error message"></div>
-
+    <script th:inline="javascript">
+        $(document)
+            .ready(function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-course-creation-4'),
+                            intro: [[#{onboarding.content.course_creation.4}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-course-creation-5'),
+                            intro: [[#{onboarding.content.course_creation.5}]]
+                        }
+                    ]
+                }).start();
+            })
+    </script>
     <div class="required field" th:classappend="${#fields.hasErrors('title')}? 'error'">
         <label th:text="#{course.title.label}">
             Title
         </label>
         <input type="text"
-               class=".course-creation"
                name="title"
                th:field="*{title}"
-               th:attr="data-intro=#{onboarding.content.course_creation.4}, data-step='1'"
+               class = "ob-course-creation-4"
                autofocus="autofocus"/>
 
         <input type="hidden"

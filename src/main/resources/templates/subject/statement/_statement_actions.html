@@ -19,7 +19,7 @@
 <div th:fragment="statementActions(statement, position, nbStatement)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <a class="ui right floated icon red tiny button"
+    <a class="ui right floated icon red tiny button ob-assignment-creation-4"
        th:if="${subject.owner == user}"
        href="#"
        th:onclick="|elaastic.showConfirmDeleteModal(${statement.id})|"
@@ -51,7 +51,7 @@
         <i class="arrow up icon"></i>
     </a>
 
-    <a class="ui right floated icon secondary tiny button"
+    <a class="ui right floated icon secondary tiny button ob-assignment-creation-3"
        th:onclick="|elaastic.showConfirmImportStatementModal(${statement.id})|"
        href="#"
        th:attr="data-tooltip=#{subject.import.statement}"
@@ -62,7 +62,7 @@
 
     <div th:replace="subject/statement/_modal_import_statement :: importStatement(${subjects})"></div>
 
-    <a class="ui right floated icon secondary tiny button"
+    <a class="ui right floated icon secondary tiny button ob-assignment-creation-2"
        th:if="${subject.owner == user}"
        th:href="@{/subject/{subjectId}/statement/{id}/edit(subjectId=${subject.id},id=${statement.id})}"
        href="/statement/123/edit"
