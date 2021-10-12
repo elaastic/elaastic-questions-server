@@ -1,1 +1,3 @@
-Quatre concepts clés sont importants cpour comprendre le fonctionnement d'Elaastic.
+# Concepts clés
+
+Quatre concepts clés sont importants pour comprendre le fonctionnement d'Elaastic.
