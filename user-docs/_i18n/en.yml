@@ -1,4 +1,7 @@
+global:
+  table_of_contents: "Table of contents"
 introduction:
   introduction: "Introduction"
 key_concepts:
   key_concepts: "Key concepts"
+  subjects: "Subjects"
