@@ -32,6 +32,12 @@ github_username:  elaastic
 languages: ["fr", "en"]
 exclude_from_localizations: ["javascript", "images", "css"]
 
+aux_links:
+  "elaastic":
+    - "//elaastic.irit.fr/"
+  "elaastic on Github":
+    - "//github.com/elaastic/elaastic-questions-server"
+
 # Build settings
 theme: "just-the-docs"
 plugins:
