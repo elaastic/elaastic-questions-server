@@ -1,1 +1,1 @@
-Four key concepts are at the core of Elaastic.
+Four key concepts are important to understand the way Elaastic works.
