@@ -18,7 +18,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Elaastic - Documentation
+title: global.site_title
 #email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
   Documentation utilisateur pour la plateforme [elaastic](https://www.irit.fr/elaastic/).

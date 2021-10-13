@@ -1,5 +1,7 @@
 global:
   table_of_contents: "Sommaire"
+  site_title: "Documentation utilisateur Elaastic"
+  search: "Rechercher dans"
 introduction:
   introduction: "Introduction"
 key_concepts:
@@ -12,4 +14,4 @@ key_concepts:
 requirements:
   requirements: "Conditions d'accès"
   teachers: "Pour les enseignants"
-  learners: "pour les apprenants"
+  learners: "Pour les apprenants"

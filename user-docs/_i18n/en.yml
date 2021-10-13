@@ -1,5 +1,7 @@
 global:
   table_of_contents: "Table of contents"
+  site_title: "Elaastic User Documentation"
+  search: "Search in"
 introduction:
   introduction: "Introduction"
 key_concepts:
