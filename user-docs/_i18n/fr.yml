@@ -9,3 +9,7 @@ key_concepts:
   questions: "Les questions"
   assignments: "Les devoirs"
   summary: "En synthèse"
+requirements:
+  requirements: "Conditions d'accès"
+  teachers: "Pour les enseignants"
+  learners: "pour les apprenants"

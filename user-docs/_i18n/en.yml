@@ -9,3 +9,7 @@ key_concepts:
   questions: "Questions"
   assignments: "Assignments"
   summary: "Summary"
+requirements:
+  requirements: "Access requirements"
+  teachers: "For teachers"
+  learners: "For learners"
