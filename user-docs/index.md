@@ -6,7 +6,7 @@ permalink_en: /overview/
 nav_order: 1
 ---
 
-[fr]({{ page.permalink }}){: .btn .float-left}  [en](/en{{ page.permalink_en }}){: .btn }
+[fr]({{ page.permalink | relative_url }}){: .btn .float-left}  [en]({{ "/en" | append: page.permalink_en | relative_url }}){: .btn }
 
 
 {% tf Introduction/Introduction.md %}

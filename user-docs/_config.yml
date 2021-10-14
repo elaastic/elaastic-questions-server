@@ -24,7 +24,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   Documentation utilisateur pour la plateforme [elaastic](https://www.irit.fr/elaastic/).
 description_en: >-
   User documentation for the [elaastic](https://www.irit.fr/elaastic/) platform.
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/elaastic-questions-server" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
 github_username:  elaastic

@@ -4,7 +4,7 @@ Les apprenants peuvent participer à un [devoir]({% link KeyConcepts/Assignments
 Ils participent alors de manière complètement anonyme à l'activité proposée.
 
 Les apprenants peuvent se créer un compte sur la plateforme en utilisant le [formulaire d'inscription](https://elaastic.irit.fr/elaastic-questions/register).
-![Formulaire d'inscription à la plateforme](/images/requirements/register_as_learner.png)
+![Formulaire d'inscription à la plateforme]({{ "/images/requirements/register_as_learner.png" | relative_url }})
 Lorsqu'un apprenant participe à un devoir en étant authentifié, alors l'enseignant responsable du devoir dispose des informations
 nominatives sur cet apprenant.
 
