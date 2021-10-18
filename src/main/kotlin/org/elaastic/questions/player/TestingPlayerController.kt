@@ -669,21 +669,21 @@ class TestingPlayerController(
                                 description = "1. Sequence running, hasChoices, no results, no explanations",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
-                                        sequenceId = 1
+                        sequenceId = 1
                                 )
                         ),
                         ResultsSituation(
                                 description = "2. Sequence stopped, hasChoices, no results, no explanations",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = true,
-                                        sequenceId = 2
+                        sequenceId = 2
                                 )
                         ),
                         ResultsSituation(
                                 description = "3. Sequence running, Open question, no results, no explanations",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
-                                        sequenceId = 3
+                        sequenceId = 3
                                 )
                         ),
                         ResultsSituation(

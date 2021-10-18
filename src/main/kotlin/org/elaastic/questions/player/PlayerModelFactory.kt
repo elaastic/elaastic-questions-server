@@ -51,38 +51,38 @@ object PlayerModelFactory {
         val showResults = sequence.state != State.beforeStart
 
         TeacherPlayerModel(
-                sequence = sequence,
-                assignmentOverviewModel = AssignmentOverviewModelFactory.build(
-                        nbRegisteredUser = nbRegisteredUsers,
-                        assignmentTitle = assignment.title,
+            sequence = sequence,
+            assignmentOverviewModel = AssignmentOverviewModelFactory.build(
+                nbRegisteredUser = nbRegisteredUsers,
                 assignmentTitle = assignment.title,
-                    courseId = assignment.subject?.course?.id,
-                    subjectTitle = assignment.subject!!.title,
-                    subjectId = assignment.subject!!.id,
-                    audience = assignment.audience +
-                            if (assignment.scholarYear != null) {
-                                " (${assignment.scholarYear})"
-                            } else "",
-                        assignmentId = assignment.id!!,
-                        sequences = assignment.sequences,
-                        sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
-                        selectedSequenceId = sequence.id,
-                        teacher = true
-                ),
-                stepsModel = StepsModelFactory.buildForTeacher(sequence),
-                sequenceStatistics = sequenceStatistics,
-                commandModel = CommandModelFactory.build(user, sequence),
-                sequenceInfoModel = SequenceInfoResolver.resolve(true, sequence, messageBuilder),
-                statementPanelModel = StatementPanelModel(
-                        hideStatement = false,
-                        panelClosed = sequence.state != State.beforeStart
-                ),
-                statement = StatementInfo(sequence.statement),
-                showResults = showResults,
-                resultsModel = if (showResults)
-                    ResultsModelFactory.build(
-                            true,
-                            sequence,
+                courseId = assignment.subject?.course?.id,
+                courseTitle = assignment.subject?.course?.title,
+                subjectTitle = assignment.subject!!.title,
+                subjectId = assignment.subject!!.id,
+                audience = assignment.audience +
+                        if (assignment.scholarYear != null) {
+                            " (${assignment.scholarYear})"
+                        } else "",
+                assignmentId = assignment.id!!,
+                sequences = assignment.sequences,
+                sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
+                selectedSequenceId = sequence.id,
+                teacher = true
+            ),
+            stepsModel = StepsModelFactory.buildForTeacher(sequence),
+            sequenceStatistics = sequenceStatistics,
+            commandModel = CommandModelFactory.build(user, sequence),
+            sequenceInfoModel = SequenceInfoResolver.resolve(true, sequence, messageBuilder),
+            statementPanelModel = StatementPanelModel(
+                hideStatement = false,
+                panelClosed = sequence.state != State.beforeStart
+            ),
+            statement = StatementInfo(sequence.statement),
+            showResults = showResults,
+            resultsModel = if (showResults)
+                ResultsModelFactory.build(
+                    true,
+                    sequence,
                             featureManager,
                             findAllResponses(),
                             userCanRefreshResults(),
@@ -94,42 +94,43 @@ object PlayerModelFactory {
     }
 
 
-    fun buildForLearner(sequence: Sequence,
-                        nbRegisteredUsers: Int,
+    fun buildForLearner(
+        sequence: Sequence,
+        nbRegisteredUsers: Int,
             featureManager: FeatureManager,
-                        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
-                        messageBuilder: MessageBuilder,
-                        getActiveInteractionForLearner: () -> Interaction?,
-                        learnerSequence: ILearnerSequence,
+        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
+        messageBuilder: MessageBuilder,
+        getActiveInteractionForLearner: () -> Interaction?,
+        learnerSequence: ILearnerSequence,
     ): LearnerPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
 
         LearnerPlayerModel(
-                sequence = sequence,
-                assignmentOverviewModel = AssignmentOverviewModelFactory.build(
-                        nbRegisteredUser = nbRegisteredUsers,
-                        assignmentTitle = assignment.title,
-                    courseTitle = null,
-                    courseId = null,
-                    subjectTitle = null,
-                    subjectId = null,
-                    audience = null,
-                        assignmentId = assignment.id!!,
-                        sequences = assignment.sequences,
-                        sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
-                        selectedSequenceId = sequence.id,
-                        teacher = false
-                ),
-                stepsModel = StepsModelFactory.buildForLearner(
-                        sequence,
-                        getActiveInteractionForLearner()
-                ),
-                sequenceInfoModel = SequenceInfoResolver.resolve(false, sequence, messageBuilder),
-                statementPanelModel = StatementPanelModel(
-                        hideStatement = sequence.state == State.beforeStart,
-                        panelClosed = false
-                ),
-                statement = StatementInfo(sequence.statement),
+            sequence = sequence,
+            assignmentOverviewModel = AssignmentOverviewModelFactory.build(
+                nbRegisteredUser = nbRegisteredUsers,
+                assignmentTitle = assignment.title,
+                courseTitle = null,
+                courseId = null,
+                subjectTitle = null,
+                subjectId = null,
+                audience = null,
+                assignmentId = assignment.id!!,
+                sequences = assignment.sequences,
+                sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
+                selectedSequenceId = sequence.id,
+                teacher = false
+            ),
+            stepsModel = StepsModelFactory.buildForLearner(
+                sequence,
+                getActiveInteractionForLearner()
+            ),
+            sequenceInfoModel = SequenceInfoResolver.resolve(false, sequence, messageBuilder),
+            statementPanelModel = StatementPanelModel(
+                hideStatement = sequence.state == State.beforeStart,
+                panelClosed = false
+            ),
+            statement = StatementInfo(sequence.statement),
             phaseList = learnerSequence.phaseList.filterNotNull()
         )
     }

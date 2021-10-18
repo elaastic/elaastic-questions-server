@@ -121,15 +121,15 @@
                 </th:block>
             </div>
 
-                <div>
-                    <th:block th:if="${resultsModel.hasExplanations}">
-                        <a th:if="${resultsModel.userCanDisplayStudentsIdentity}"
-                           id="hide-name"
-                           onclick="nameStudents.hide()"
-                           style="margin-bottom: 10px; cursor: pointer;">
-                            <i class="toggle off icon big teal"></i>
-                            <span class="small teal" th:text="#{common.hide-name}">Hide student names</span>
-                        </a>
+      <div>
+        <th:block th:if="${resultsModel.hasExplanations}">
+          <a th:if="${resultsModel.userCanDisplayStudentsIdentity}"
+             id="hide-name"
+             onclick="nameStudents.hide()"
+             style="margin-bottom: 10px; cursor: pointer;">
+            <i class="toggle off icon big teal"></i>
+            <span class="small teal" th:text="#{common.hide-name}">Hide student names</span>
+          </a>
 
                         <a th:if="${resultsModel.userCanDisplayStudentsIdentity}"
                            id="show-name"
@@ -137,8 +137,8 @@
                            style="margin-bottom: 10px; cursor: pointer; display: none;">
                             <i class="toggle on icon big teal"></i>
                             <span class="small teal" th:text="#{common.show-name}">Show student names</span>
-                        </a>
-                        <div th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
+          </a>
+          <div th:replace="player/assignment/sequence/components/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
                     </th:block>
                     <th:block th:if="${!resultsModel.hasExplanations}">
                         <div th:replace="::noContribution"></div>
