@@ -18,55 +18,46 @@ rsion.
   -->
 
 
-<div th:fragment="userMenu(user)"
+<div th:fragment="helpMenu()"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-  <div id="user-menu-dropdown"
-       class="ui dropdown item user-menu"
-       th:attr="data-tooltip=#{layout.main.account}"
-       data-tooltip="My account"
+  <div id="help-menu-dropdown"
+       class="ui dropdown item help-menu"
+       th:attr="data-tooltip=#{common.Help}"
+       data-tooltip="Help"
        data-position="right center"
        data-inverted="">
-    <i class="user icon"></i>
+    <i class="question circle icon"></i>
 
     <div class="ui vertical menu">
       <div class="header" style="text-align: center; text-overflow: ellipsis; overflow: hidden;">
-        <span sec:authentication="principal.fullname">John Lennon</span>
+        <span th:text="#{common.Help}">Help</span>
       </div>
 
-      <a th:href="@{/userAccount/edit}"
-         th:if="${!user.isAnonymous()}"
-         href="/userAccount/edit"
+      <a href="#" class="item" onclick="alert('Work in progress...');">
+        <i class="clock outline icon"></i>
+        <span th:text="#{common.quick-start}">Quick start</span>
+      </a>
+
+      <a th:href="#{common.online-help.url}"
+         target="_blank"
          class="item">
-        <i class="address card outline icon"></i>
-        <span th:text="#{layout.main.account}">My account</span>
+        <i class="question circle outline icon"></i>
+        <span th:text="#{common.online-help}">Online help</span>
       </a>
 
-      <div th:if="${user.canBeUserOwner}" th:remove="tag">
-        <div class="ui divider"></div>
-        <a th:href="@{/userAccountBatchCreation}"
-           href="/userAccountBatchCreation"
-          class="item">
-          <i class="add user icon"></i>
-          <span th:text="#{layout.main.goUserAccountCreation}">Create accounts</span>
-        </a>
-        <div class="ui divider"></div>
-      </div>
 
-      <a th:href="@{/logout}" href="/logout" class="item">
-        <i class="sign out icon"></i>
-        <span th:text="#{layout.main.disconnect}">Disconnect</span>
-      </a>
     </div>
   </div>
+
 
   <script>
     $(document)
       .ready(function () {
 
         // Initialize dropdown
-        $('#user-menu-dropdown').dropdown()
+        $('#help-menu-dropdown').dropdown()
       })
   </script>
 </div>
