@@ -23,6 +23,13 @@
       Comparing viewpoints
     </div>
 
+    <style>
+
+        .ui.pagination.menu .active.item {
+            background-color: #dff0ff;
+            color: #0e6eb8;
+        }
+    </style>
 
     <form th:unless="${model.userHasCompletedPhase2 || model.userActiveInteractionState.name() == 'afterStop'}"
           th:action="@{/player/sequence/{sequenceId}/submit-evaluation-and-second-attempt(sequenceId=${model.sequenceId})}"
