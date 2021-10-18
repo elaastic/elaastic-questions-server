@@ -20,13 +20,14 @@ package org.elaastic.questions.directory
 
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
-import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
+import java.time.LocalDate
 import javax.persistence.*
 import javax.validation.constraints.*
+import kotlin.collections.HashSet
 import kotlin.jvm.Transient
 
 
@@ -71,6 +72,8 @@ class User(
 
     @ManyToOne(fetch = FetchType.LAZY)
     var owner: User? = null
+
+    var activeSince: LocalDate? = null
 
     fun getFullname(): String {
         return if(isAnonymous) firstName else "${firstName} ${lastName}"

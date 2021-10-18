@@ -32,6 +32,7 @@ import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesD
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.features.ElaasticFeatures
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
@@ -54,19 +55,25 @@ import org.elaastic.questions.player.components.studentResults.LearnerMultipleCh
 import org.elaastic.questions.player.components.studentResults.LearnerOpenResults
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.togglz.core.Feature
+import org.togglz.core.manager.FeatureManager
 import java.math.BigDecimal
 
 @Controller
 @RequestMapping("/player/test")
 class TestingPlayerController(
     @Autowired
-    val messageBuilder: MessageBuilder
+    val messageBuilder: MessageBuilder,
+
+    @Autowired
+    val featureManager: FeatureManager,
 ) {
 
     @GetMapping("/index", "/", "")
@@ -911,5 +918,13 @@ class TestingPlayerController(
         )
 
         return "player/assignment/sequence/components/test-evaluation-phase"
+    }
+
+    @GetMapping("/recommendations")
+    fun testRecommendations(): ResponseEntity<String> {
+        val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
+
+        return  ResponseEntity.ok("Recommendation feature : ${if(recommendationIsActive) "active" else "Inactive"}")
+        
     }
 }

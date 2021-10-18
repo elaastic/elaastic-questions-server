@@ -47,6 +47,9 @@ dependencies {
     implementation("commons-io:commons-io:2.6")
     implementation("org.apache.commons:commons-csv:1.5")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.togglz:togglz-spring-boot-starter:3.0.0")
+    implementation("org.togglz:togglz-spring-security:3.0.0")
+    implementation("org.togglz:togglz-kotlin:3.0.0")
 
     runtimeOnly("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
