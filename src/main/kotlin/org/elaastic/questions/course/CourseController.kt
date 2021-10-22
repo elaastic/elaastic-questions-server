@@ -58,6 +58,7 @@ class CourseController(
 
         val user: User = authentication.principal as User
 
+        System.out.println(user.getOnboardingChapter())
         courseService.findAllWithSubjectsByOwner(
             user,
             PageRequest.of((page ?: 1) - 1, size ?: 8, Sort.by(Sort.Direction.DESC, "lastUpdated"))
@@ -96,7 +97,7 @@ class CourseController(
         authentication: Authentication, model: Model,
         @PathVariable id: Long,
         @RequestParam("page") page: Int?,
-        @RequestParam("size") size: Int?,
+        @RequestParam("size") size: Int?
     ): String {
 
         val user: User = authentication.principal as User
