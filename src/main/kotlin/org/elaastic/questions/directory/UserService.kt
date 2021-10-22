@@ -19,6 +19,7 @@
 package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
+import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
@@ -406,5 +407,20 @@ class UserService(
             }
         }
     }
+
+    fun updateOnboardingChapter(newChapter: OnboardingChapter, userId: Long?) {
+        userId?.let {
+            var u = userRepository.findById(it).get()
+            u.setOnboardingChapter(newChapter)
+            userRepository.save(u)
+        }
+    }
+
+    fun getOnboardingChapter(id: Long?): OnboardingChapter? =
+        if (id != null) {
+            userRepository.findById(id).get().getOnboardingChapter()
+        } else {
+            null
+        }
 }
 

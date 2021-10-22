@@ -42,26 +42,37 @@
     <script th:inline="javascript">
         $(document)
             .ready(function () {
-                introJs().setOptions({
-                    steps: [
-                        {
-                            title: [[#{onboarding.introduction.title}]],
-                            intro: [[#{onboarding.introduction.content}]]
-                        },
-                        {
-                            element: document.querySelector('.ob-course-creation-1'),
-                            intro: [[#{onboarding.content.course_creation.1}]]
-                        },
-                        {
-                            element: document.querySelector('.ob-course-creation-2'),
-                            intro: [[#{onboarding.content.course_creation.2}]]
-                        },
-                        {
-                            element: document.querySelector('.ob-course-creation-3'),
-                            intro: [[#{onboarding.content.course_creation.3}]]
+                fetch("/userAccount/getOnboardingChapter").then(function(response) {
+                    return response.text().then(function(text) {
+                        switch (text) {
+                            case 'INTRODUCTION':
+                                introJs().setOptions({
+                                    steps: [
+                                        {
+                                            title: [[#{onboarding.introduction.title}]],
+                                            intro: [[#{onboarding.introduction.content}]]
+                                        },
+                                        {
+                                            element: document.querySelector('.ob-course-creation-1'),
+                                            intro: [[#{onboarding.content.course_creation.1}]]
+                                        },
+                                        {
+                                            element: document.querySelector('.ob-course-creation-2'),
+                                            intro: [[#{onboarding.content.course_creation.2}]]
+                                        },
+                                        {
+                                            element: document.querySelector('.ob-course-creation-3'),
+                                            intro: [[#{onboarding.content.course_creation.3}]]
+                                        }
+                                    ]
+                                }).onchange(function (targetElement) {
+                                    if (targetElement.classList.contains('ob-course-creation-3')) {
+                                        fetch('/userAccount/updateOnboardingChapter/course_creation')
+                                    }
+                                }).start()
                         }
-                    ]
-                }).start();
+                    });
+                });
             })
     </script>
     <h2 class="ui header ob-course-creation-2">

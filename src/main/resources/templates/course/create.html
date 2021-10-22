@@ -50,23 +50,6 @@
     </a>
   </form>
 </div>
-<script th:inline="javascript">
-  $(document)
-          .ready(function () {
-            introJs().setOptions({
-              steps: [
-                {
-                  element: document.querySelector('.ob-course-creation-4'),
-                  intro: [[#{onboarding.content.course_creation.4}]]
-                },
-                {
-                  element: document.querySelector('.ob-course-creation-5'),
-                  intro: [[#{onboarding.content.course_creation.5}]]
-                }
-              ]
-            }).start();
-          })
-</script>
 
 </body>
 </html>

@@ -20,6 +20,7 @@ package org.elaastic.questions.directory
 
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
+import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -49,7 +50,10 @@ class User(
         @field:Email
         var email: String? = null,
 
-    private var isAnonymous: Boolean = false
+    private var isAnonymous: Boolean = false,
+
+    @field:Enumerated(EnumType.STRING)
+    private var onboardingChapter: OnboardingChapter? = OnboardingChapter.INTRODUCTION
 ) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrIsAnonymous {
 
     @Version
@@ -84,6 +88,14 @@ class User(
 
     override fun isAnonymous(): Boolean {
         return isAnonymous
+    }
+
+    fun getOnboardingChapter(): OnboardingChapter? {
+        return onboardingChapter
+    }
+
+    fun setOnboardingChapter(value: OnboardingChapter?) {
+        onboardingChapter = value
     }
 
     @ManyToMany(cascade = [CascadeType.ALL],

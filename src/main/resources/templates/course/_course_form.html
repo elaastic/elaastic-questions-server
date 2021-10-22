@@ -19,25 +19,7 @@
 <div th:fragment="courseForm(course)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-
     <div class="ui error message"></div>
-    <script th:inline="javascript">
-        $(document)
-            .ready(function () {
-                introJs().setOptions({
-                    steps: [
-                        {
-                            element: document.querySelector('.ob-course-creation-4'),
-                            intro: [[#{onboarding.content.course_creation.4}]]
-                        },
-                        {
-                            element: document.querySelector('.ob-course-creation-5'),
-                            intro: [[#{onboarding.content.course_creation.5}]]
-                        }
-                    ]
-                }).start();
-            })
-    </script>
     <div class="required field" th:classappend="${#fields.hasErrors('title')}? 'error'">
         <label th:text="#{course.title.label}">
             Title
@@ -70,6 +52,28 @@
                             }
                         }
                     })
+                fetch("/userAccount/getOnboardingChapter").then(function(response) {
+                    return response.text().then(function (text) {
+                        if (text === 'COURSE_CREATION') {
+                            introJs().setOptions({
+                                steps: [
+                                    {
+                                        element: document.querySelector('.ob-course-creation-4'),
+                                        intro: [[#{onboarding.content.course_creation.4}]]
+                                    },
+                                    {
+                                        element: document.querySelector('.ob-course-creation-5'),
+                                        intro: [[#{onboarding.content.course_creation.5}]]
+                                    }
+                                ]
+                            }).onchange(function (targetElement) {
+                                if (targetElement.classList.contains('ob-course-creation-5')) {
+                                    fetch('/userAccount/updateOnboardingChapter/subject_creation')
+                                }
+                            }).start();
+                        }
+                    })
+                })
             })
     </script>
 </div>

@@ -37,81 +37,98 @@
     var elaastic = elaastic || {}
     $(document)
             .ready(function () {
-              introJs().setOptions({
-                steps: [
-                  /* first arrival */
-                  // {
-                  //   intro: [[#{onboarding.content.start_sequence.1}]]
-                  // },
-                  // {
-                  //   element: document.querySelector('.ob-start-sequence-2'),
-                  //   intro: [[#{onboarding.content.start_sequence.2}]]
-                  // },
-                  // {
-                  //   element: document.querySelector('.ob-start-sequence-3'),
-                  //   intro: [[#{onboarding.content.start_sequence.3}]]
-                  // },
-                  // {
-                  //   element: document.querySelector('.ob-start-sequence-4'),
-                  //   intro: [[#{onboarding.content.start_sequence.4}]]
-                  // },
-                  // {
-                  //   element: document.querySelector('.ob-start-sequence-5'),
-                  //   intro: [[#{onboarding.content.start_sequence.5}]]
-                  // }
-                  /* when sequence started */
-                  // {
-                  //   element: document.querySelector('.ob-play-sequence-1'),
-                  //   intro: [[#{onboarding.content.play_sequence.1}]]
-                  // },
-                  // {
-                  //   element: document.querySelector('.ob-play-sequence-2'),
-                  //   intro: [[#{onboarding.content.play_sequence.2}]]
-                  // },
-                  // {
-                  //   element: document.querySelector('.ob-play-sequence-3'),
-                  //   intro: [[#{onboarding.content.play_sequence.3}]]
-                  // },
-                  // {
-                  //   element: document.querySelector('.ob-play-sequence-4'),
-                  //   intro: [[#{onboarding.content.play_sequence.4}]]
-                  // },
-                  // {
-                  //   element: document.querySelector('.ob-end-sequence-1'),
-                  //   intro: [[#{onboarding.content.end_sequence.1}]]
-                  // },
-                  /* when sequence ended */
-                  {
-                    element: document.querySelector('.ob-end-sequence-2'),
-                    intro: [[#{onboarding.content.end_sequence.2}]]
-                  },
-                  /* when onboarding ended */
-                  {
-                    title: [[#{onboarding.content.end.title}]],
-                    intro: [[#{onboarding.content.end.content}]]
+              fetch("/userAccount/getOnboardingChapter").then(function (response) {
+                return response.text().then(function (text) {
+                  switch (text) {
+                    case 'PREPARE_SEQUENCE':
+                      /* first arrival on play perspective*/
+                      introJs().setOptions({
+                        steps: [
+                          {
+                            intro: [[#{onboarding.content.prepare_sequence.1}]]
+                          },
+                          {
+                            element: document.querySelector('.ob-start-sequence-2'),
+                            intro: [[#{onboarding.content.prepare_sequence.2}]]
+                          },
+                          {
+                            element: document.querySelector('.ob-start-sequence-3'),
+                            intro: [[#{onboarding.content.prepare_sequence.3}]]
+                          },
+                          {
+                            element: document.querySelector('.ob-start-sequence-4'),
+                            intro: [[#{onboarding.content.prepare_sequence.4}]]
+                          },
+                          {
+                            element: document.querySelector('.ob-start-sequence-5'),
+                            intro: [[#{onboarding.content.prepare_sequence.5}]]
+                          }]
+                      }).onchange(function (targetElement) {
+                        if (targetElement.classList.contains('ob-start-sequence-5')) {
+                          fetch('/userAccount/updateOnboardingChapter/configure_sequence')
+                        }
+                      }).start();
+                      break;
+                    case "PLAY_SEQUENCE":
+                      // /* when sequence started */
+                      introJs().setOptions({
+                        steps: [
+                          {
+                            element: document.querySelector('.ob-play-sequence-1'),
+                            intro: [[#{onboarding.content.play_sequence.1}]]
+                          },
+                          {
+                            element: document.querySelector('.ob-play-sequence-2'),
+                            intro: [[#{onboarding.content.play_sequence.2}]]
+                          },
+                          {
+                            element: document.querySelector('.ob-play-sequence-3'),
+                            intro: [[#{onboarding.content.play_sequence.3}]]
+                          },
+                          {
+                            element: document.querySelector('.ob-play-sequence-4'),
+                            intro: [[#{onboarding.content.play_sequence.4}]]
+                          },
+                          {
+                            title: [[#{onboarding.content.end.title}]],
+                            intro: [[#{onboarding.content.end.content}]]
+                          }
+                        ]
+                      }).onchange(function (targetElement) {
+                        fetch('/userAccount/updateOnboardingChapter/done')
+                      }).start();
                   }
-                ]
-              }).start();
+                })
+              })
             })
-              function introSequenceStart()
-              {
-                introJs().setOptions({
-                  steps: [
-                    {
-                      element: document.querySelector('.ob-start-sequence-6'),
-                      intro: [[#{onboarding.content.start_sequence.6}]]
-                    },
-                    {
-                      element: document.querySelector('.ob-start-sequence-7'),
-                      intro: [[#{onboarding.content.start_sequence.7}]]
-                    },
-                    {
-                      element: document.querySelector('.ob-start-sequence-8'),
-                      intro: [[#{onboarding.content.start_sequence.8}]]
-                    }
-                  ]
-                }).start().onChange();
+    function introSequenceStart() {
+      fetch("/userAccount/getOnboardingChapter").then(function (response) {
+        return response.text().then(function (text) {
+          if (text === 'CONFIGURE_SEQUENCE') {
+            introJs().setOptions({
+              steps: [
+                {
+                  element: document.querySelector('.ob-start-sequence-6'),
+                  intro: [[#{onboarding.content.prepare_sequence.6}]]
+                },
+                {
+                  element: document.querySelector('.ob-start-sequence-7'),
+                  intro: [[#{onboarding.content.prepare_sequence.7}]]
+                },
+                {
+                  element: document.querySelector('.ob-start-sequence-8'),
+                  intro: [[#{onboarding.content.prepare_sequence.8}]]
+                }
+              ]
+            }).onchange(function (targetElement) {
+              if (targetElement.classList.contains('ob-start-sequence-8')) {
+                fetch('/userAccount/updateOnboardingChapter/play_sequence')
               }
+            }).start();
+          }
+        })
+      })
+    }
   </script>
 
   <th:block th:if="${playerModel.userRole.name() == 'Teacher'}">

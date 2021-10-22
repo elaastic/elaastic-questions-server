@@ -24,6 +24,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.directory.controller.command.PasswordData
 import org.elaastic.questions.directory.controller.command.UserData
+import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -117,12 +118,12 @@ class UserAccountController(
 
     @PostMapping("/userAccount/updatePassword")
     fun updatePassword(authentication: Authentication,
-               @Valid @ModelAttribute passwordData: PasswordData,
-               result: BindingResult,
-               model: Model,
-               response: HttpServletResponse,
-               redirectAttributes: RedirectAttributes,
-               locale: Locale): String {
+                       @Valid @ModelAttribute passwordData: PasswordData,
+                       result: BindingResult,
+                       model: Model,
+                       response: HttpServletResponse,
+                       redirectAttributes: RedirectAttributes,
+                       locale: Locale): String {
         val authUser: User = authentication.principal as User
         if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         if (!result.hasErrors()) {
@@ -145,6 +146,20 @@ class UserAccountController(
             }
             "redirect:/userAccount/edit"
         }
+    }
+
+    @ResponseBody
+    @GetMapping("/userAccount/updateOnboardingChapter/{newChapter}")
+    fun updateOnboardingChapter(authentication: Authentication, @PathVariable newChapter: String){
+        val user: User = authentication.principal as User
+        userService.updateOnboardingChapter(OnboardingChapter.from(newChapter), user.id)
+    }
+
+    @ResponseBody
+    @GetMapping("/userAccount/getOnboardingChapter")
+    fun getOnboardingChapter(authentication: Authentication): String? {
+        val user: User = authentication.principal as User
+        return userService.getOnboardingChapter(user.id).toString()
     }
 
     @GetMapping("/userAccount/activate")

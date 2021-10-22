@@ -25,8 +25,11 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.validation.PasswordsMustBeIdentical
 import org.elaastic.questions.directory.validation.UserHasGivenConsent
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
+import org.elaastic.questions.onboarding.OnboardingChapter
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.validation.BindingResult
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -52,7 +55,11 @@ data class UserData(
         val language:String = "fr",
 
         @field:NotNull
-        var userHasGivenConsent: Boolean = false
+        var userHasGivenConsent: Boolean = false,
+
+        @field:Enumerated(EnumType.STRING)
+        var onboardingChapter: OnboardingChapter? = OnboardingChapter.INTRODUCTION
+
 ) : HasEmailOrHasOwnerOrIsAnonymous, HasPasswords {
 
     constructor(user: User, userHasGivenConsent: Boolean) : this(
@@ -63,7 +70,8 @@ data class UserData(
             user.username,
             user.email,
             user.hasOwner(),
-            userHasGivenConsent = userHasGivenConsent
+            userHasGivenConsent = userHasGivenConsent,
+            onboardingChapter = user.getOnboardingChapter()
     )
 
     override fun isAnonymous(): Boolean {
