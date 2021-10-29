@@ -6,4 +6,4 @@ the teacher has created 3 assignments in order to be able to use her "Product Ow
 (e.g. 3 different classes).
 The teacher will be able to keep track of the different results he or she has obtained with the different audiences.
 
-![List of assignments associated with a subject]({{ "/images/key_concepts/assignments.png" | relative_url }})
+![List of assignments associated with a subject]({{ "images/eng/key_concepts/assignments.png"  | relative_url }})

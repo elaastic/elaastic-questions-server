@@ -15,3 +15,16 @@ requirements:
   requirements: "Conditions d'accès"
   teachers: "Pour les enseignants"
   learners: "Pour les apprenants"
+resources_creation:
+  resources_creation: "Création de ressources"
+  course_creation: "Création d'un cours"
+  subject_creation: "Création d'un sujet"
+  question_creation: "Création d'une question"
+  assignment_creation: "Création d'un devoir"
+play_assignment:
+  play_assignment: "Lancer un devoir"
+  start_sequence: "Démarrer une sequence"
+  phase_1: "Phase 1"
+  phase_2: "Phase 2"
+  phase_3: "Phase 3"
+  player_perspective_summary: "Récapitulatif de la perspective player"

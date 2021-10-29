@@ -6,4 +6,4 @@ l’enseignant•e a créé 3 devoirs afin de pouvoir utiliser son sujet « Prod
 (comme par exemple 3 classes différentes). Elle ou il pourra ainsi garder une trace des différents 
 résultats qu’elle ou il a obtenu avec les différentes audiences.
 
-![Liste de devoirs associés à un sujet]({{ "/images/key_concepts/assignments.png" | relative_url }})
+![Liste de devoirs associés à un sujet]({{ "images/fr/key_concepts/assignments.png" | relative_url }})

@@ -4,7 +4,7 @@ Learners can participate in an elaastic [assignment]({% link KeyConcepts/Assignm
 on the platform. They then participate in the activity completely anonymously.
 
 Learners can create an account on the platform using the [registration form](https://elaastic.irit.fr/elaastic-questions/register).
-![Formulaire d'inscription à la plateforme]({{ "/images/requirements/register_as_learner.png" | relative_url }})
+![Formulaire d'inscription à la plateforme]({{ "images/fr/requirements/register_as-learner.png" | relative_url }})
 When a learner participates in an assignment by being authenticated, then the teacher in charge of the assignment has the nominative
 information about the learner.
 
