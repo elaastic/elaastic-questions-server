@@ -67,7 +67,9 @@
                         if (targetElement.classList.contains('ob-start-sequence-5')) {
                           fetch('/userAccount/updateOnboardingChapter/configure_sequence')
                         }
-                      }).start();
+                      }).onexit(function() {
+                    fetch('/userAccount/updateOnboardingChapter/done');
+                  }).start();
                       break;
                     case "PLAY_SEQUENCE":
                       // /* when sequence started */
@@ -96,7 +98,9 @@
                         ]
                       }).onchange(function (targetElement) {
                         fetch('/userAccount/updateOnboardingChapter/done')
-                      }).start();
+                      }).onexit(function() {
+                    fetch('/userAccount/updateOnboardingChapter/done');
+                  }).start();
                   }
                 })
               })
@@ -124,7 +128,9 @@
               if (targetElement.classList.contains('ob-start-sequence-8')) {
                 fetch('/userAccount/updateOnboardingChapter/play_sequence')
               }
-            }).start();
+            }).onexit(function() {
+                    fetch('/userAccount/updateOnboardingChapter/done');
+                  }).start();
           }
         })
       })

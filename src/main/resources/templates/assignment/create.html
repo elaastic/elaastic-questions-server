@@ -35,29 +35,31 @@
                     steps: [
                       {
                         element: document.querySelector('.ob-assignment-creation-8'),
-                        intro: [[#{onboarding.content.assignment_creation.8}]]
+                        intro: [[#{onboarding.content.assignment_creation.4}]]
                       },
                       {
                         element: document.querySelector('.ob-assignment-creation-9'),
-                        intro: [[#{onboarding.content.assignment_creation.9}]]
+                        intro: [[#{onboarding.content.assignment_creation.5}]]
                       },
                       {
                         element: document.querySelector('.ob-assignment-creation-10'),
-                        intro: [[#{onboarding.content.assignment_creation.10}]]
+                        intro: [[#{onboarding.content.assignment_creation.6}]]
                       },
                       {
                         element: document.querySelector('.ob-assignment-creation-11'),
-                        intro: [[#{onboarding.content.assignment_creation.11}]]
+                        intro: [[#{onboarding.content.assignment_creation.7}]]
                       },
                       {
                         element: document.querySelector('.ob-assignment-creation-12'),
-                        intro: [[#{onboarding.content.assignment_creation.12}]]
+                        intro: [[#{onboarding.content.assignment_creation.8}]]
                       },
                     ]
                   }).onchange(function (targetElement) {
                     if (targetElement.classList.contains('ob-assignment-creation-12')) {
                       fetch('/userAccount/updateOnboardingChapter/assignment_creation_3')
                     }
+                  }).onexit(function() {
+                    fetch('/userAccount/updateOnboardingChapter/done');
                   }).start();
                 }
               })

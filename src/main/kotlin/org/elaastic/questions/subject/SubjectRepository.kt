@@ -50,4 +50,6 @@ interface SubjectRepository : JpaRepository<Subject?, Long> {
 
     fun countByCourseIsNullAndOwner(owner: User): Long
 
+    fun findFirstByOwner(owner: User): Subject?
+
 }

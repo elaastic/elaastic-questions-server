@@ -1,0 +1,254 @@
+{"0": {
+    "doc": "resources_creation.assignment_creation",
+    "title": "Assignment creation",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/assignment_creation#assignment-creation",
+    "relUrl": "/resources_creation/assignment_creation#assignment-creation"
+  },"1": {
+    "doc": "resources_creation.assignment_creation",
+    "title": "resources_creation.assignment_creation",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/assignment_creation",
+    "relUrl": "/resources_creation/assignment_creation"
+  },"2": {
+    "doc": "key_concepts.assignments",
+    "title": "Assignments",
+    "content": "An assignment is the instance of a subject for a designated audience (a class or a group of learners). To run a subject, the teacher must create an assignment. In the example below, the teacher has created 3 assignments in order to be able to use her “Product Owner” subject with 3 different audiences (e.g. 3 different classes). The teacher will be able to keep track of the different results he or she has obtained with the different audiences. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/assignments#assignments",
+    "relUrl": "/key_concepts/assignments#assignments"
+  },"3": {
+    "doc": "key_concepts.assignments",
+    "title": "key_concepts.assignments",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/assignments",
+    "relUrl": "/key_concepts/assignments"
+  },"4": {
+    "doc": "resources_creation.course_creation",
+    "title": "Course creation",
+    "content": "To create a course, you need to go to the course management page. It can be accessed by clicking on the folder icon on the left menu. It is also the home page. Once you are on the page to manage your course, click on the green button “Course create”. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/course_creation#course-creation",
+    "relUrl": "/resources_creation/course_creation#course-creation"
+  },"5": {
+    "doc": "resources_creation.course_creation",
+    "title": "resources_creation.course_creation",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/course_creation",
+    "relUrl": "/resources_creation/course_creation"
+  },"6": {
+    "doc": "key_concepts.courses",
+    "title": "Courses",
+    "content": "A course allows resources such as subjects to be grouped together by topic. When a teacher has authenticated to the elaastic platform, the page presented is the page listing the courses created by the teacher. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/courses#courses",
+    "relUrl": "/key_concepts/courses#courses"
+  },"7": {
+    "doc": "key_concepts.courses",
+    "title": "key_concepts.courses",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/courses",
+    "relUrl": "/key_concepts/courses"
+  },"8": {
+    "doc": "key_concepts.key_concepts",
+    "title": "Key concepts",
+    "content": "Four key concepts are important to understand the way Elaastic works. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/#key-concepts",
+    "relUrl": "/key_concepts/#key-concepts"
+  },"9": {
+    "doc": "key_concepts.key_concepts",
+    "title": "key_concepts.key_concepts",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/",
+    "relUrl": "/key_concepts/"
+  },"10": {
+    "doc": "requirements.learners",
+    "title": "For learners",
+    "content": "Learners can participate in an elaastic assignment without having an account on the platform. They then participate in the activity completely anonymously. Learners can create an account on the platform using the registration form. When a learner participates in an assignment by being authenticated, then the teacher in charge of the assignment has the nominative information about the learner. In the case of using Elaastic via an online course platform such as Moodle, when a learner starts an elaastic assignment for the first time, then an account is created in elaastic automatically with information from that learner’s Moodle account. In this configuration, the teacher can access to the nominative information about the participants of an assignment. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/requirements/for_learners#for-learners",
+    "relUrl": "/requirements/for_learners#for-learners"
+  },"11": {
+    "doc": "requirements.learners",
+    "title": "requirements.learners",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/requirements/for_learners",
+    "relUrl": "/requirements/for_learners"
+  },"12": {
+    "doc": "play_assignment.phase_1",
+    "title": "Phase 1",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/phase_1/#phase-1",
+    "relUrl": "/play_assignment/phase_1/#phase-1"
+  },"13": {
+    "doc": "play_assignment.phase_1",
+    "title": "play_assignment.phase_1",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/phase_1/",
+    "relUrl": "/play_assignment/phase_1/"
+  },"14": {
+    "doc": "play_assignment.phase_2",
+    "title": "Phase 2",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/phase_2/#phase-2",
+    "relUrl": "/play_assignment/phase_2/#phase-2"
+  },"15": {
+    "doc": "play_assignment.phase_2",
+    "title": "play_assignment.phase_2",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/phase_2/",
+    "relUrl": "/play_assignment/phase_2/"
+  },"16": {
+    "doc": "play_assignment.phase_3",
+    "title": "Phase 1",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/phase_3/#phase-1",
+    "relUrl": "/play_assignment/phase_3/#phase-1"
+  },"17": {
+    "doc": "play_assignment.phase_3",
+    "title": "play_assignment.phase_3",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/phase_3/",
+    "relUrl": "/play_assignment/phase_3/"
+  },"18": {
+    "doc": "play_assignment.play_assignment",
+    "title": "Play an assignment",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/#play-an-assignment",
+    "relUrl": "/play_assignment/#play-an-assignment"
+  },"19": {
+    "doc": "play_assignment.play_assignment",
+    "title": "play_assignment.play_assignment",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/",
+    "relUrl": "/play_assignment/"
+  },"20": {
+    "doc": "play_assignment.player_perspective_summary",
+    "title": "Récapitulatif de la perspective player",
+    "content": "Pour basculer sur la perspective d’exécution d’un devoir, cliquez sur le bouton vert à droite de votre devoir. Vous êtes désormais sur la page d’exécution d’un devoir. Elle vous permettra de piloter votre séquence. | Récapitulatif de votre sujet | Récapitulatif de la question sélectionnée | Frise chronologique décrivant l’évolution de votre séquence | Section pour piloter la séquence, cliquez ici pour démarrer votre séquence. | . Pour démarrer une séquence, cliquez sur sur ce bouton. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/player_perspective_summary/#r%C3%A9capitulatif-de-la-perspective-player",
+    "relUrl": "/play_assignment/player_perspective_summary/#récapitulatif-de-la-perspective-player"
+  },"21": {
+    "doc": "play_assignment.player_perspective_summary",
+    "title": "play_assignment.player_perspective_summary",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/player_perspective_summary/",
+    "relUrl": "/play_assignment/player_perspective_summary/"
+  },"22": {
+    "doc": "key_concepts.questions",
+    "title": "Questions",
+    "content": "A subject consists of questions. The questions can be of different types: multiple choice, exclusive choice or open-ended questions. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/questions#questions",
+    "relUrl": "/key_concepts/questions#questions"
+  },"23": {
+    "doc": "key_concepts.questions",
+    "title": "key_concepts.questions",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/questions",
+    "relUrl": "/key_concepts/questions"
+  },"24": {
+    "doc": "requirements.requirements",
+    "title": "Access requirements",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/requirements/#access-requirements",
+    "relUrl": "/requirements/#access-requirements"
+  },"25": {
+    "doc": "requirements.requirements",
+    "title": "requirements.requirements",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/requirements/",
+    "relUrl": "/requirements/"
+  },"26": {
+    "doc": "resources_creation.resources_creation",
+    "title": "Resources creation",
+    "content": "To ask questions to an audience, you need to create and manage your resources. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/#resources-creation",
+    "relUrl": "/resources_creation/#resources-creation"
+  },"27": {
+    "doc": "resources_creation.resources_creation",
+    "title": "resources_creation.resources_creation",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/",
+    "relUrl": "/resources_creation/"
+  },"28": {
+    "doc": "play_assignment.start_sequence",
+    "title": "Lancer une séquence",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/start_sequence/#lancer-une-s%C3%A9quence",
+    "relUrl": "/play_assignment/start_sequence/#lancer-une-séquence"
+  },"29": {
+    "doc": "play_assignment.start_sequence",
+    "title": "play_assignment.start_sequence",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/play_assignment/start_sequence/",
+    "relUrl": "/play_assignment/start_sequence/"
+  },"30": {
+    "doc": "resources_creation.question_creation",
+    "title": "Statement creation",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/statement_creation#statement-creation",
+    "relUrl": "/resources_creation/statement_creation#statement-creation"
+  },"31": {
+    "doc": "resources_creation.question_creation",
+    "title": "resources_creation.question_creation",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/statement_creation",
+    "relUrl": "/resources_creation/statement_creation"
+  },"32": {
+    "doc": "resources_creation.subject_creation",
+    "title": "Subject creation",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/subject_creation#subject-creation",
+    "relUrl": "/resources_creation/subject_creation#subject-creation"
+  },"33": {
+    "doc": "resources_creation.subject_creation",
+    "title": "resources_creation.subject_creation",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/resources_creation/subject_creation",
+    "relUrl": "/resources_creation/subject_creation"
+  },"34": {
+    "doc": "key_concepts.subjects",
+    "title": "Subjects",
+    "content": "A subject is composed of a title and a list of questions. In the example below, the teacher has created 2 subjects in her/his course titled “Prise de décision et rationnalité”. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/subjects#subjects",
+    "relUrl": "/key_concepts/subjects#subjects"
+  },"35": {
+    "doc": "key_concepts.subjects",
+    "title": "key_concepts.subjects",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/subjects",
+    "relUrl": "/key_concepts/subjects"
+  },"36": {
+    "doc": "key_concepts.summary",
+    "title": "Summary",
+    "content": "A subject is composed of questions. Subjects can be associated with a course. A course is just a way of grouping subjects into topics. An assignment is the instance of a subject for a given audience (a class or group of learners). Learners always respond to the questions of a subject by signing up for the assignment that concerns them. ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/summary#summary",
+    "relUrl": "/key_concepts/summary#summary"
+  },"37": {
+    "doc": "key_concepts.summary",
+    "title": "key_concepts.summary",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/key_concepts/summary",
+    "relUrl": "/key_concepts/summary"
+  },"38": {
+    "doc": "requirements.teachers",
+    "title": "For teachers",
+    "content": "Teachers must have an account on the platform in order to use it. An account for a teacher can be created in two different ways: . | By completing the registration form. | By automatic account creation when an elaastic assignment is created for the first time from an online course platform such as Moodle. | . ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/requirements/for_teachers#for-teachers",
+    "relUrl": "/requirements/for_teachers#for-teachers"
+  },"39": {
+    "doc": "requirements.teachers",
+    "title": "requirements.teachers",
+    "content": " ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/requirements/for_teachers",
+    "relUrl": "/requirements/for_teachers"
+  },"40": {
+    "doc": "introduction.introduction",
+    "title": "Introduction",
+    "content": "This document is a tutorial on how to use the Elaastic platform. Elaastic is an online application that facilitates the implementation of formative assessment sequences during a face-to-face or distance learning course. An Elaastic sequence traditionally proceeds as follows: . | The teacher asks the students a question. | Each student responds to the question by providing a written justification and their confidence in the answer. | Students participate in a confrontation of point of views. | Students answer the question a second time, possibly modifying their initial answer. | A discussion between the teacher and the pupils concludes the sequence. | . ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/overview/#introduction",
+    "relUrl": "/overview/#introduction"
+  },"41": {
+    "doc": "introduction.introduction",
+    "title": "introduction.introduction",
+    "content": "fr en . ",
+    "url": "http://localhost:4000/elaastic-questions-server/en/overview/",
+    "relUrl": "/overview/"
+  }
+}

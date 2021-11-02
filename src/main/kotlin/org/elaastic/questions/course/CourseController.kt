@@ -58,7 +58,6 @@ class CourseController(
 
         val user: User = authentication.principal as User
 
-        System.out.println(user.getOnboardingChapter())
         courseService.findAllWithSubjectsByOwner(
             user,
             PageRequest.of((page ?: 1) - 1, size ?: 8, Sort.by(Sort.Direction.DESC, "lastUpdated"))
@@ -191,6 +190,22 @@ class CourseController(
             "redirect:/course/${course.id}"
         }
     }
+
+    @GetMapping("firstCourse")
+    fun firstCourse(
+            authentication: Authentication,
+            model: Model,
+            @RequestParam("page") page: Int?,
+            @RequestParam("size") size: Int?
+    ): String {
+        val user: User = authentication.principal as User
+        var firstCourse = courseService.findFirstCourseByOwner(user)
+        if(firstCourse == null)
+            firstCourse = createExampleCourse(user)
+        return "redirect:/course/${firstCourse.id}"
+    }
+
+    private fun createExampleCourse(user: User): Course = courseService.save(CourseData(title = "Example Course", owner = user).toEntity())
 
     @GetMapping("{id}/delete")
     fun delete(

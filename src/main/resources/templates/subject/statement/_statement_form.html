@@ -165,7 +165,9 @@
                                 if (targetElement.classList.contains('ob-question-creation-14')) {
                                     fetch('/userAccount/updateOnboardingChapter/assignment_creation')
                                 }
-                            }).start();
+                            }).onexit(function() {
+                    fetch('/userAccount/updateOnboardingChapter/done');
+                  }).start();
                         }
                     })
                 })
@@ -191,9 +193,11 @@
                             ]
                         }).onchange(function (targetElement) {
                             if (targetElement.classList.contains('ob-question-creation-14')) {
-                                fetch('/userAccount/updateOnboardingChapter/assignment_creation')
+                                fetch('/userAccount/updateOnboardingChapter/question_creation_3')
                             }
-                        }).start();
+                        }).onexit(function() {
+                    fetch('/userAccount/updateOnboardingChapter/done');
+                  }).start();
                     }
                 })
             })

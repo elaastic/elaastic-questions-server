@@ -146,6 +146,18 @@ class Statement(
                     )
             )
         }
+        fun createExampleStatement(user: User): Statement {
+            return Statement(
+                    owner = user,
+                    questionType = QuestionType.ExclusiveChoice,
+                    choiceSpecification = ExclusiveChoiceSpecification(
+                            nbCandidateItem = 2,
+                            expectedChoice = ChoiceItem(1, 1f)
+                    ),
+                    content = "Blabla...",
+                    title = "Title"
+            )
+        }
     }
 }
 

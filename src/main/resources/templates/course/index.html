@@ -69,7 +69,9 @@
                                     if (targetElement.classList.contains('ob-course-creation-3')) {
                                         fetch('/userAccount/updateOnboardingChapter/course_creation')
                                     }
-                                }).start()
+                                }).onexit(function() {
+                    fetch('/userAccount/updateOnboardingChapter/done');
+                  }).start()
                         }
                     });
                 });

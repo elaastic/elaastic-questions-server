@@ -1,0 +1,12 @@
+I"Œ<h2 id="for-teachers">For teachers</h2>
+
+<p>Teachers must have an account on the platform in order to use it.<br />
+An account for a teacher can be created in two different ways:</p>
+
+<ol>
+  <li>By completing the <a href="https://elaastic.irit.fr/elaastic-questions/register">registration form</a>.
+<img src="/elaastic-questions-server/en/images/fr/requirements/register_as_learner.png" alt="The register form of elaastic" /></li>
+  <li>By automatic account creation when an elaastic <a href="/elaastic-questions-server/en/key_concepts/assignments">assignment</a> is created for the
+first time from an online course platform such as Moodle.</li>
+</ol>
+:ET

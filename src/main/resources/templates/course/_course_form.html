@@ -70,7 +70,9 @@
                                 if (targetElement.classList.contains('ob-course-creation-5')) {
                                     fetch('/userAccount/updateOnboardingChapter/subject_creation')
                                 }
-                            }).start();
+                            }).onexit(function() {
+                    fetch('/userAccount/updateOnboardingChapter/done');
+                  }).start();
                         }
                     })
                 })

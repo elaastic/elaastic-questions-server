@@ -18,4 +18,6 @@ interface CourseRepository : JpaRepository<Course?, Long> {
     @EntityGraph(value = "Course_subjects", type = EntityGraph.EntityGraphType.LOAD)
     fun findOneWithSubjectsById(id: Long): Course?
 
+    fun findFirstByOwner(owner: User): Course?
+
 }

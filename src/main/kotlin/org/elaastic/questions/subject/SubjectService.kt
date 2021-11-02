@@ -416,4 +416,8 @@ class SubjectService(
             }
         }
     }
+
+    fun findFirstSubjectByOwner(owner: User) : Subject? {
+        return subjectRepository.findFirstByOwner(owner)
+    }
 }

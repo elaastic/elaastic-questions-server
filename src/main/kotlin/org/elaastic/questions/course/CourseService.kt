@@ -127,4 +127,8 @@ class CourseService(
             : Page<Course> {
         return courseRepository.findAllWithSubjectsByOwner(owner, pageable)
     }
+
+    fun findFirstCourseByOwner(owner: User) : Course? {
+        return courseRepository.findFirstByOwner(owner)
+    }
 }
