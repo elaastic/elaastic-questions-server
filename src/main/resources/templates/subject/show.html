@@ -51,8 +51,10 @@
                       if (targetElement.classList.contains('ob-question-creation-2')) {
                         fetch('/userAccount/updateOnboardingChapter/question_creation_2')
                       }
-                    }).onexit(function() {
-                    fetch('/userAccount/updateOnboardingChapter/done');
+                    }).onexit(function(targetElement) {
+                      if (!targetElement.classList.contains('ob-question-creation-2')) {
+                        fetch('/userAccount/updateOnboardingChapter/done');
+                      }
                   }).start();
                     break;
                     case 'ASSIGNMENT_CREATION':
@@ -98,11 +100,11 @@
                       if (targetElement.classList.contains('ob-assignment-creation-1')) {
                         document.getElementsByClassName('ob-assignment-creation-1')[0].click()
                       }
-                    }).onexit(function() {
-                      fetch('/userAccount/updateOnboardingChapter/done');
-                    }).onexit(function() {
-                    fetch('/userAccount/updateOnboardingChapter/done');
-                  }).start();
+                    }).onexit(function(targetElement) {
+                      if (!targetElement.classList.contains('ob-assignment-creation-1')) {
+                        fetch('/userAccount/updateOnboardingChapter/done');
+                      }
+                    }).start();
                     break;
                   case 'ASSIGNMENT_CREATION_3':
                     /* when an assignment has been created */
@@ -133,8 +135,10 @@
                       if (targetElement.classList.contains('ob-assignment-creation-13')) {
                         document.getElementsByClassName('ob-assignment-creation-1')[0].click()
                       }
-                    }).onexit(function() {
-                    fetch('/userAccount/updateOnboardingChapter/done');
+                    }).onexit(function(targetElement) {
+                      if (!targetElement.classList.contains('ob-assignment-creation-13')) {
+                        fetch('/userAccount/updateOnboardingChapter/done');
+                      }
                   }).start();
                     break;
                   }
@@ -164,8 +168,10 @@
                 if (targetElement.classList.contains('ob-assignment-creation-1')) {
                   document.getElementsByClassName('ob-assignment-creation-1')[0].click()
                 }
-              }).onexit(function() {
-                    fetch('/userAccount/updateOnboardingChapter/done');
+              }).onexit(function(targetElement) {
+                if (!targetElement.classList.contains('ob-assignment-creation-1')) {
+                  fetch('/userAccount/updateOnboardingChapter/done');
+                }
                   }).start();
             }
   </script>

@@ -6,7 +6,9 @@ import javax.persistence.EntityListeners
 enum class OnboardingChapter(val propertyString: String) {
     INTRODUCTION("introduction"),
     COURSE_CREATION("course_creation"),
+    COURSE_CREATION_2("course_creation_2"),
     SUBJECT_CREATION("subject_creation"),
+    SUBJECT_CREATION_2("subject_creation_2"),
     QUESTION_CREATION("question_creation"),
     QUESTION_CREATION_2("question_creation_2"),
     QUESTION_CREATION_3("question_creation_3"),

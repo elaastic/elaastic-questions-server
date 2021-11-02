@@ -66,12 +66,44 @@
                                         }
                                     ]
                                 }).onchange(function (targetElement) {
-                                    if (targetElement.classList.contains('ob-course-creation-3')) {
+                                    if (targetElement.classList.contains('ob-course-creation-1')) {
                                         fetch('/userAccount/updateOnboardingChapter/course_creation')
                                     }
-                                }).onexit(function() {
-                    fetch('/userAccount/updateOnboardingChapter/done');
+                                    if (targetElement.classList.contains('ob-course-creation-2')) {
+                                        fetch('/userAccount/updateOnboardingChapter/course_creation_2')
+                                    }
+                                }).onexit(function (targetElement) {
+                                    if (!targetElement.classList.contains('ob-course-creation-3')) {
+                                        fetch('/userAccount/updateOnboardingChapter/done');
+                                    }
                   }).start()
+                                break;
+                            case 'COURSE_CREATION':
+                                introJs().setOptions({
+                                    steps: [
+                                        {
+                                            element: document.querySelector('.ob-course-creation-1'),
+                                            intro: [[#{onboarding.content.course_creation.1}]]
+                                        },
+                                        {
+                                            element: document.querySelector('.ob-course-creation-2'),
+                                            intro: [[#{onboarding.content.course_creation.2}]]
+                                        },
+                                        {
+                                            element: document.querySelector('.ob-course-creation-3'),
+                                            intro: [[#{onboarding.content.course_creation.3}]]
+                                        }
+                                    ]
+                                }).onchange(function (targetElement) {
+                                    if (targetElement.classList.contains('ob-course-creation-2')) {
+                                        fetch('/userAccount/updateOnboardingChapter/course_creation_2')
+                                    }
+                                }).onexit(function (targetElement) {
+                                    if (!targetElement.classList.contains('ob-course-creation-3')) {
+                                        fetch('/userAccount/updateOnboardingChapter/done');
+                                    }
+                                }).start()
+                                break;
                         }
                     });
                 });

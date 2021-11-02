@@ -35,7 +35,7 @@ rsion.
         <span th:text="#{common.Help}">Help</span>
       </div>
 
-      <div class="ui dropdown item">
+      <div class="item">
         <i class="clock outline icon"></i>
         <span th:text="#{common.quick-start}">Quick start</span>
         <i class="dropdown icon"></i>
@@ -50,56 +50,62 @@ rsion.
             <span th:text="#{common.chapter.1}">Introduction</span>
           </a>
           <a class="item"
-             th:href="@{/course/create}"
+             th:href="@{/course}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/course_creation')"
              href="/create">
             <span th:text="#{common.chapter.2}">Course creation</span>
           </a>
+          <a class="item"
+             th:href="@{/course/create}"
+             th:onclick="fetch('/userAccount/updateOnboardingChapter/course_creation_2')"
+             href="/create">
+            <span th:text="#{common.chapter.3}">Course creation</span>
+          </a>
           <a class="item" id="chapter-subject-creation"
              th:href="@{/course/firstCourse}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/subject_creation')">
-          <span th:text="#{common.chapter.3}"
+          <span th:text="#{common.chapter.4}"
                 data-position="right center">Subject creation</span>
           </a>
           <a class="item"
              th:href="@{/subject/create}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/subject_creation_2')">
-            <span th:text="#{common.chapter.4}">Subject creation</span>
+            <span th:text="#{common.chapter.5}">Subject creation</span>
           </a>
           <a class="item"
              th:href="@{/subject/firstSubject}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/question_creation')">
-            <span th:text="#{common.chapter.5}">Question creation</span>
+            <span th:text="#{common.chapter.6}">Question creation</span>
           </a>
           <a class="item"
              th:href="@{/subject/statementExample}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/question_creation_2')">
-            <span th:text="#{common.chapter.6}">Question creation 2</span>
+            <span th:text="#{common.chapter.7}">Question creation 2</span>
           </a>
           <a class="item"
              th:href="@{/subject/statementCreated}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/question_creation_3')">
-            <span th:text="#{common.chapter.7}">Question creation 3</span>
+            <span th:text="#{common.chapter.8}">Question creation 3</span>
           </a>
           <a class="item"
              th:href="@{/subject/firstSubject}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/assignment_creation')">
-            <span th:text="#{common.chapter.8}">Assignment creation</span>
+            <span th:text="#{common.chapter.9}">Assignment creation</span>
           </a>
           <a class="item"
              th:href="@{/subject/assignmentExample}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/assignment_creation_2')">
-            <span th:text="#{common.chapter.9}">Assignment creation 2</span>
+            <span th:text="#{common.chapter.10}">Assignment creation 2</span>
           </a>
           <a class="item"
              th:href="@{/subject/assignmentCreated}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/assignment_creation_3')">
-            <span th:text="#{common.chapter.10}">Assignment creation 3</span>
+            <span th:text="#{common.chapter.11}">Assignment creation 3</span>
           </a>
           <a class="item"
              th:href="@{/subject/assignmentPlayExample}"
              th:onclick="fetch('/userAccount/updateOnboardingChapter/prepare_sequence')">
-            <span th:text="#{common.chapter.11}">Play assignment</span>
+            <span th:text="#{common.chapter.12}">Play assignment</span>
           </a>
         </div>
       </div>

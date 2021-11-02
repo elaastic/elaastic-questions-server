@@ -197,8 +197,10 @@
                                     if (targetElement.classList.contains('ob-subject-creation-3')) {
                                         fetch('/userAccount/updateOnboardingChapter/question_creation')
                                     }
-                                }).onexit(function() {
-                    fetch('/userAccount/updateOnboardingChapter/done');
+                                }).onexit(function(targetElement) {
+                                    if (!targetElement.classList.contains('ob-subject-creation-3')) {
+                                        fetch('/userAccount/updateOnboardingChapter/done');
+                                    }
                   }).start();
                             }
                         })

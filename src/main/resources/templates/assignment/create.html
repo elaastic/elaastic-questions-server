@@ -59,8 +59,10 @@
                     if (targetElement.classList.contains('ob-assignment-creation-12')) {
                       fetch('/userAccount/updateOnboardingChapter/assignment_creation_3')
                     }
-                  }).onexit(function() {
-                    fetch('/userAccount/updateOnboardingChapter/done');
+                  }).onexit(function (targetElement) {
+                    if (!targetElement.classList.contains('ob-assignment-creation-12')) {
+                      fetch('/userAccount/updateOnboardingChapter/done');
+                    }
                   }).start();
                 }
               })
