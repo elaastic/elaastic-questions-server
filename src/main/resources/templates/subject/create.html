@@ -44,7 +44,6 @@
               .ready(function () {
                 fetch("/userAccount/getOnboardingChapter").then(function (response) {
                   return response.text().then(function (text) {
-                    if (text === 'SUBJECT_CREATION') {
 
                       introJs().setOptions({
                         steps: [
@@ -67,7 +66,6 @@
                         }
                       }).onexit(function() {
                     fetch('/userAccount/updateOnboardingChapter/done');
-                  }).start();
                     }
                   })
                 })
