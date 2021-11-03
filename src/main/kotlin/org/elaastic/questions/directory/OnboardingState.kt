@@ -34,15 +34,14 @@ final class OnboardingState(
         @field:OneToOne
         var user: User,
 
-        val introduction: Boolean = false,
-        val course_page: Boolean = false,
-        val course_creation_page: Boolean = false,
-        val subject_page: Boolean = false,
-        val subject_creation_page: Boolean = false,
-        val subject_edition_page: Boolean = false,
-        val question_creation_page: Boolean = false,
-        val assignment_creation_page: Boolean = false,
-        val player_page: Boolean = false
+        var course_page: Boolean = false,
+        var course_creation_page: Boolean = false,
+        var subject_page: Boolean = false,
+        var subject_creation_page: Boolean = false,
+        var subject_edition_page: Boolean = false,
+        var question_creation_page: Boolean = false,
+        var assignment_creation_page: Boolean = false,
+        var player_page: Boolean = false
 
 ): AbstractJpaPersistable<Long>()  {
 

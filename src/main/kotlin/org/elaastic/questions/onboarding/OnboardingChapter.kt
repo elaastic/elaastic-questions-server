@@ -4,16 +4,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import javax.persistence.EntityListeners
 
 enum class OnboardingChapter(val propertyString: String) {
-    INTRODUCTION("introduction"),
     COURSE_PAGE("course_page"),
-    COURSE_PAGE_PAGE("course_creation_page"),
+    COURSE_CREATION_PAGE("course_creation_page"),
     SUBJECT_PAGE("subject_page"),
     SUBJECT_CREATION_PAGE("subject_creation_page"),
-    QUESTION_PAGE("question_page"),
     QUESTION_CREATION_PAGE("question_creation_page"),
-    ASSIGNMENT_PAGE("assignment_page"),
+    SUBJECT_EDITION_PAGE("subject_edition_page"),
     ASSIGNMENT_CREATION_PAGE("assignment_creation_page"),
-    PLAYER_PAGE("play_sequence");
+    PLAYER_PAGE("player_page");
 
     companion object {
         fun from(findValue: String): OnboardingChapter = values().first { it.propertyString == findValue }

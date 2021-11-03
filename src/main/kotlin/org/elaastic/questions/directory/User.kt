@@ -118,6 +118,9 @@ class User(
     var settings: Settings? = null
 
     @OneToOne(mappedBy = "user")
+    var onboardingState: OnboardingState? = null
+
+    @OneToOne(mappedBy = "user")
     var unsubscribeKey: UnsubscribeKey? = null
 
     @OneToOne(mappedBy = "user")

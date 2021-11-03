@@ -19,6 +19,7 @@
 package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
+import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
@@ -413,12 +414,23 @@ class UserService(
     }
 
     @Transactional
-    fun updateOnboardingChapter(chapterToUpdate: String, userId: Long?) {
+    fun updateOnboardingChapter(chapterToUpdate: OnboardingChapter, user: User?) {
+        when(chapterToUpdate){
+            OnboardingChapter.COURSE_PAGE -> user?.onboardingState?.course_page = true
+            OnboardingChapter.COURSE_CREATION_PAGE -> user?.onboardingState?.course_creation_page = true
+            OnboardingChapter.SUBJECT_PAGE -> user?.onboardingState?.subject_page = true
+            OnboardingChapter.SUBJECT_CREATION_PAGE -> user?.onboardingState?.subject_creation_page = true
+            OnboardingChapter.QUESTION_CREATION_PAGE -> user?.onboardingState?.question_creation_page = true
+            OnboardingChapter.SUBJECT_EDITION_PAGE -> user?.onboardingState?.subject_edition_page = true
+            OnboardingChapter.ASSIGNMENT_CREATION_PAGE -> user?.onboardingState?.assignment_creation_page = true
+            OnboardingChapter.PLAYER_PAGE -> user?.onboardingState?.player_page = true
+        }
         entityManager.createNativeQuery(
                 "UPDATE onboarding_state\n" +
                         "SET " + chapterToUpdate + " = b'1'\n" +
-                        "WHERE user_id = " + userId
+                        "WHERE user_id = " + user?.id
         ).executeUpdate()
+
     }
 
     fun getOnboardingState(userId: Long?): OnboardingState {

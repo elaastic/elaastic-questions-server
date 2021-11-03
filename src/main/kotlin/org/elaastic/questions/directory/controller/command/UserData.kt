@@ -55,10 +55,7 @@ data class UserData(
         val language:String = "fr",
 
         @field:NotNull
-        var userHasGivenConsent: Boolean = false,
-
-        @field:Enumerated(EnumType.STRING)
-        var onboardingChapter: OnboardingChapter? = OnboardingChapter.INTRODUCTION
+        var userHasGivenConsent: Boolean = false
 
 ) : HasEmailOrHasOwnerOrIsAnonymous, HasPasswords {
 

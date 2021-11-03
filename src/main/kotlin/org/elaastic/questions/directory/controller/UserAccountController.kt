@@ -152,7 +152,7 @@ class UserAccountController(
     @GetMapping("/userAccount/updateOnboardingChapter/{chapterToUpdate}")
     fun updateOnboardingChapter(authentication: Authentication, @PathVariable chapterToUpdate: String){
         val user: User = authentication.principal as User
-        userService.updateOnboardingChapter(chapterToUpdate, user.id)
+        userService.updateOnboardingChapter(OnboardingChapter.from(chapterToUpdate), user)
     }
 
     @ResponseBody

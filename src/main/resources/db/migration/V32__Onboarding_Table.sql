@@ -20,7 +20,6 @@
 CREATE TABLE `onboarding_state` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `user_id` bigint(20) NOT NULL,
-    `introduction` bit(1) NOT NULL DEFAULT b'0',
     `course_page` bit(1) NOT NULL DEFAULT b'0',
     `course_creation_page` bit(1) NOT NULL DEFAULT b'0',
     `subject_page` bit(1) NOT NULL DEFAULT b'0',

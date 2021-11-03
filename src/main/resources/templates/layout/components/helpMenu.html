@@ -35,7 +35,7 @@ rsion.
         <span th:text="#{common.Help}">Help</span>
       </div>
 
-      <a href="#" class="item" th:onclick="startObDependingOnPage()">
+      <a href="#" class="item" th:onclick="startContextualOb(true)">
         <i class="clock outline icon"></i>
         <span th:text="#{common.quick-start}">Quick start</span>
       </a>
@@ -58,23 +58,16 @@ rsion.
 
               // Initialize dropdown
               $('#help-menu-dropdown').dropdown()
+              startContextualOb(false)
             })
-    obIntro = function() {
+
+    obCoursePage = function() {
       introJs().setOptions({
         steps: [
           {
             title: [[#{onboarding.introduction.title}]],
             intro: [[#{onboarding.introduction.content}]]
-          }
-        ]
-      }).onchange(function (targetElement) {
-        fetch('/userAccount/updateOnboardingChapter/introduction')
-      }).start()
-    }
-
-    obCoursePage = function() {
-      introJs().setOptions({
-        steps: [
+          },
           {
             element: document.querySelector('.ob-course-creation-1'),
             intro: [[#{onboarding.content.course_creation.1}]]
@@ -354,26 +347,29 @@ rsion.
       }).start();
     }
 
-    startObDependingOnPage = function(){
-      if (document.getElementsByClassName('ob-course-creation-2').length != 0) {
+    startContextualOb = function(manuallyActivated){
+      if ((manuallyActivated || [[${!user.onboardingState.course_page}]]) && document.getElementsByClassName('ob-course-creation-2').length !== 0) {
         obCoursePage()
       }
-      if (document.getElementsByClassName('ob-course-creation-4').length != 0) {
+      if ((manuallyActivated || [[${!user.onboardingState.course_creation_page}]]) && document.getElementsByClassName('ob-course-creation-4').length !== 0) {
         obCourseCreationPage()
       }
-      if (document.getElementsByClassName('ob-subject-creation-2').length != 0) {
+      if ((manuallyActivated || [[${!user.onboardingState.subject_page}]]) && document.getElementsByClassName('ob-subject-creation-2').length !== 0) {
         obSubjectPage()
       }
-      if (document.getElementsByClassName('ob-subject-creation-4').length != 0) {
+      if ((manuallyActivated || [[${!user.onboardingState.subject_creation_page}]]) && document.getElementsByClassName('ob-subject-creation-4').length !== 0) {
         obSubjectCreationPage()
       }
-      if (document.getElementsByClassName('ob-question-creation-1').length != 0) {
+      if ((manuallyActivated || [[${!user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-question-creation-1').length !== 0) {
         obSubjectEditionPage()
       }
-      if (document.getElementsByClassName('ob-question-creation-3').length != 0) {
+      if ((manuallyActivated || [[${!user.onboardingState.question_creation_page}]]) && document.getElementsByClassName('ob-question-creation-3').length !== 0) {
         obQuestionCreationPage()
       }
-      if (document.getElementsByClassName('ob-start-sequence-2').length != 0) {
+      if ((manuallyActivated || [[${!user.onboardingState.assignment_creation_page}]]) && document.getElementsByClassName('ob-assignment-creation-8').length !== 0) {
+        obAssignmentCreationPage()
+      }
+      if ((manuallyActivated || [[${!user.onboardingState.player_page}]]) && document.getElementsByClassName('ob-start-sequence-2').length !== 0) {
         obPlayerPage()
       }
     }
