@@ -48,6 +48,11 @@
                         <span th:id="|statement-title-${statement.id}|" th:text="${statement.title}">Title</span>
                     </a>
                 </h3>
+                <div th:if="${statement.attachment != null}">
+                    <div
+                            th:replace="subject/statement/_statement_attachment :: statementAttachment(${statement.attachment},650,380)"></div>
+                    <div class="ui hidden divider"></div>
+                </div>
                 <div th:utext="${statement.content}" th:remove="tag"></div>
             </div>
         </div>
