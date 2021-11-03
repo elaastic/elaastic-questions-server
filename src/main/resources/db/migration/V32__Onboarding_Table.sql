@@ -19,7 +19,7 @@
 # Add table for onboarding chapters (0 = chapter has not been not played yet, 1 = chapter has been played)
 CREATE TABLE `onboarding_state` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
-    `user_id` bigint(20) NOT NULL,
+    `user_id` bigint(20) NOT NULL UNIQUE,
     `course_page` bit(1) NOT NULL DEFAULT b'0',
     `course_creation_page` bit(1) NOT NULL DEFAULT b'0',
     `subject_page` bit(1) NOT NULL DEFAULT b'0',
@@ -32,3 +32,7 @@ CREATE TABLE `onboarding_state` (
     KEY `idx_onboarding_state_user_id` (`user_id`),
     CONSTRAINT `fk_onboarding_state_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO onboarding_state (user_id)
+SELECT id
+FROM user

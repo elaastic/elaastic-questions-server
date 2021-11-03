@@ -117,7 +117,7 @@ class UserAccountController(
     }
 
     @PostMapping("/userAccount/updatePassword")
-    fun updatePassword(authentication: Authentication,
+    fun  updatePassword(authentication: Authentication,
                        @Valid @ModelAttribute passwordData: PasswordData,
                        result: BindingResult,
                        model: Model,

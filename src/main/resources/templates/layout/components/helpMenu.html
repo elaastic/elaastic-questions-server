@@ -80,7 +80,7 @@ rsion.
             element: document.querySelector('.ob-course-creation-3'),
             intro: [[#{onboarding.content.course_creation.3}]]
           }
-        ]
+        ].filter(function(obj) { return $(obj.element).length; })
       }).onchange(function (targetElement) {
         if (targetElement.classList.contains('ob-course-creation-3')) {
           fetch('/userAccount/updateOnboardingChapter/course_page')
@@ -99,7 +99,7 @@ rsion.
             element: document.querySelector('.ob-course-creation-5'),
             intro: [[#{onboarding.content.course_creation.5}]]
           }
-        ]
+        ].filter(function(obj) { return $(obj.element).length; })
       }).onchange(function (targetElement) {
         if (targetElement.classList.contains('ob-course-creation-5')) {
           fetch('/userAccount/updateOnboardingChapter/course_creation_page')
@@ -122,7 +122,7 @@ rsion.
             element: document.querySelector('.ob-subject-creation-3'),
             intro: [[#{onboarding.content.subject_creation.3}]]
           }
-        ]
+        ].filter(function(obj) { return $(obj.element).length; })
       }).onchange(function (targetElement) {
         if (targetElement.classList.contains('ob-subject-creation-3')) {
           fetch('/userAccount/updateOnboardingChapter/subject_page')
@@ -145,7 +145,7 @@ rsion.
             element: document.querySelector('.ob-subject-creation-6'),
             intro: [[#{onboarding.content.subject_creation.6}]]
           }
-        ]
+        ].filter(function(obj) { return $(obj.element).length; })
       }).onchange(function (targetElement) {
         if (targetElement.classList.contains('ob-subject-creation-6')) {
           fetch('/userAccount/updateOnboardingChapter/subject_creation_page')
@@ -266,7 +266,7 @@ rsion.
             element: document.querySelector('.ob-question-creation-14'),
             intro: [[#{onboarding.content.question_creation.14}]]
           }
-        ]
+        ].filter(function(obj) { return $(obj.element).length; })
       }).onchange(function (targetElement) {
         if (targetElement.classList.contains('ob-question-creation-14')) {
           fetch('/userAccount/updateOnboardingChapter/question_creation_page')
@@ -298,7 +298,7 @@ rsion.
             intro: [[#{onboarding.content.assignment_creation.8}]]
 
           },
-        ]
+        ].filter(function(obj) { return $(obj.element).length; })
       }).onchange(function (targetElement) {
         if (targetElement.classList.contains('ob-assignment-creation-12')) {
           fetch('/userAccount/updateOnboardingChapter/assignment_creation_page')
@@ -347,29 +347,29 @@ rsion.
       }).start();
     }
 
-    startContextualOb = function(manuallyActivated){
-        if ((manuallyActivated || [[${!user.onboardingState.course_page}]]) && document.getElementsByClassName('ob-course-creation-2').length !== 0) {
+    startContextualOb = function(manuallyActivated) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_page}]]) && document.getElementsByClassName('ob-course-creation-2').length !== 0) {
           obCoursePage()
         }
-        if ((manuallyActivated || [[${!user.onboardingState.course_creation_page}]]) && document.getElementsByClassName('ob-course-creation-4').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_creation_page}]]) && document.getElementsByClassName('ob-course-creation-4').length !== 0) {
           obCourseCreationPage()
         }
-        if ((manuallyActivated || [[${!user.onboardingState.subject_page}]]) && document.getElementsByClassName('ob-subject-creation-2').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_page}]]) && document.getElementsByClassName('ob-subject-creation-2').length !== 0) {
           obSubjectPage()
         }
-        if ((manuallyActivated || [[${!user.onboardingState.subject_creation_page}]]) && document.getElementsByClassName('ob-subject-creation-4').length !== 0) {
-          obSubjectCreationPage()
-        }
-        if ((manuallyActivated || [[${!user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-question-creation-1').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-question-creation-1').length !== 0) {
           obSubjectEditionPage()
         }
-        if ((manuallyActivated || [[${!user.onboardingState.question_creation_page}]]) && document.getElementsByClassName('ob-question-creation-3').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_creation_page}]]) && document.getElementsByClassName('ob-subject-creation-4').length !== 0) {
+          obSubjectCreationPage()
+        }
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.question_creation_page}]]) && document.getElementsByClassName('ob-question-creation-3').length !== 0) {
           obQuestionCreationPage()
         }
-        if ((manuallyActivated || [[${!user.onboardingState.assignment_creation_page}]]) && document.getElementsByClassName('ob-assignment-creation-8').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.assignment_creation_page}]]) && document.getElementsByClassName('ob-assignment-creation-8').length !== 0) {
           obAssignmentCreationPage()
         }
-        if ((manuallyActivated || [[${!user.onboardingState.player_page}]]) && document.getElementsByClassName('ob-start-sequence-2').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.player_page}]]) && document.getElementsByClassName('ob-start-sequence-2').length !== 0) {
           obPlayerPage()
         }
     }
