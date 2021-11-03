@@ -39,40 +39,7 @@
         th:action = "${#httpServletRequest.requestURI == '/course/{id}/addSubject(id=${course.id})'}
         ? @{/course/{id}/addSubject(id=${course.id})}
         : @{/subject/save}" >
-    <script th:inline="javascript">
-      $(document)
-              .ready(function () {
-                fetch("/userAccount/getOnboardingChapter").then(function (response) {
-                  return response.text().then(function (text) {
 
-                      introJs().setOptions({
-                        steps: [
-                          {
-                            element: document.querySelector('.ob-subject-creation-4'),
-                            intro: [[#{onboarding.content.subject_creation.4}]]
-                          },
-                          {
-                            element: document.querySelector('.ob-subject-creation-5'),
-                            intro: [[#{onboarding.content.subject_creation.5}]]
-                          },
-                          {
-                            element: document.querySelector('.ob-subject-creation-6'),
-                            intro: [[#{onboarding.content.subject_creation.6}]]
-                          }
-                        ]
-                      }).onchange(function (targetElement) {
-                        if (targetElement.classList.contains('ob-subject-creation-6')) {
-                          fetch('/userAccount/updateOnboardingChapter/question_creation')
-                        }
-                      }).onexit(function(targetElement) {
-                        if (!targetElement.classList.contains('ob-subject-creation-6')) {
-                          fetch('/userAccount/updateOnboardingChapter/done');
-                        }
-                    }
-                  })
-                })
-              })
-    </script>
     <div th:replace="subject/_subject_form :: subjectForm(${subject}, ${listCourse})"></div>
 
     <input type="submit"

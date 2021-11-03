@@ -156,78 +156,6 @@ class SubjectController(
         }
     }
 
-    @GetMapping("firstSubject")
-    fun firstSubject(
-            authentication: Authentication,
-            model: Model
-    ): String {
-        val user: User = authentication.principal as User
-        var firstSubjectId = getFirstSubject(user).id
-        return "redirect:/subject/${firstSubjectId}"
-    }
-
-    @GetMapping("statementCreated")
-    fun statementCreated(
-            authentication: Authentication,
-            model: Model
-    ): String {
-        val user: User = authentication.principal as User
-        var firstSubject = getFirstSubject(user)
-        if(firstSubject.statements.isEmpty()){
-            val statementData = StatementController.StatementData(
-                    Statement.createExampleStatement(user)
-            )
-            subjectService.addStatement(firstSubject, statementData.toEntity(user))
-        }
-        return "redirect:/subject/${firstSubject.id}"
-    }
-
-    @GetMapping("assignmentCreated")
-    fun assignmentCreated(
-            authentication: Authentication,
-            model: Model
-    ): String {
-        val user: User = authentication.principal as User
-        var firstSubject = getFirstSubject(user)
-        this.fillSubjectIfEmpty(firstSubject)
-        return "redirect:/subject/${firstSubject.id}"
-    }
-
-    @GetMapping("assignmentPlayExample")
-    fun assignmentPlayExample(
-            authentication: Authentication,
-            model: Model
-    ): String {
-        val user: User = authentication.principal as User
-        var firstSubject = getFirstSubject(user)
-        this.fillSubjectIfEmpty(firstSubject)
-        val firstAssignment = firstSubject.assignments.first()
-        return "redirect:/player/assignment/" + firstAssignment.id+ "/play"
-    }
-
-    fun fillSubjectIfEmpty(subject : Subject){
-        if(subject.assignments.isEmpty()){
-            val assignmentData = AssignmentController.AssignmentData(title = "Example assignment", owner = subject.owner, subject = subject)
-            subjectService.addAssignment(subject, assignmentData.toEntity())
-        }
-        if(subject.statements.isEmpty()){
-            val statementData = StatementController.StatementData(
-                    Statement.createExampleStatement(subject.owner)
-            )
-            subjectService.addStatement(subject, statementData.toEntity(subject.owner))
-        }
-    }
-
-    private fun getFirstSubject(user : User) : Subject {
-        var firstSubject = subjectService.findFirstSubjectByOwner(user)
-        if(firstSubject == null)
-            firstSubject = createExampleSubject(user)
-        return firstSubject
-    }
-
-    private fun createExampleSubject(user: User): Subject = subjectService.save(SubjectData(title = "Example Subject", owner = user).toEntity())
-
-
     @PostMapping("{subjectId}/addStatement")
     fun addStatement(authentication: Authentication,
                      @RequestParam("fileToAttached") fileToAttached: MultipartFile,
@@ -290,15 +218,6 @@ class SubjectController(
         return "subject/statement/create"
     }
 
-    @GetMapping("statementExample")
-    fun statementExample(authentication: Authentication,
-                     model: Model): String {
-
-        val user: User = authentication.principal as User
-        val firstSubjectId = this.getFirstSubject(user).id
-        return this.addStatement(authentication, model, firstSubjectId!!)
-    }
-
     @PostMapping("{subjectId}/addAssignment")
     fun addAssignment(authentication: Authentication,
                       @Valid @ModelAttribute assignmentData: AssignmentController.AssignmentData,
@@ -348,15 +267,6 @@ class SubjectController(
         }
 
         return "assignment/create"
-    }
-
-    @GetMapping("assignmentExample")
-    fun assignmentExample(authentication: Authentication,
-                         model: Model): String {
-
-        val user: User = authentication.principal as User
-        val firstSubject = this.getFirstSubject(user)
-        return this.addAssignment(authentication, model, firstSubject.id!!)
     }
 
     @PostMapping("{id}/update")
