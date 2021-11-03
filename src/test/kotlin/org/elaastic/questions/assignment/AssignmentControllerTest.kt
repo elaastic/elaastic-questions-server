@@ -20,6 +20,7 @@ package org.elaastic.questions.assignment
 
 import com.nhaarman.mockitokotlin2.*
 import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.questions.directory.OnboardingState
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.Subject
@@ -70,6 +71,7 @@ internal class AssignmentControllerTest(
         whenever(assignmentService.findAllByOwner(user)).thenReturn(
                 assignmentPages
         )
+        user.onboardingState = OnboardingState(user)
 
         mockMvc.perform(
                 get("/assignment")

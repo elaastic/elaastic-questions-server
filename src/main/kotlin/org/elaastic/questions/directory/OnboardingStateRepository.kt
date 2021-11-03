@@ -23,4 +23,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface OnboardingStateRepository : JpaRepository<OnboardingState, Long> {
     fun findFirstByUserId(userId: Long?): OnboardingState
+
+    fun deleteAllByUser(user: User?)
 }

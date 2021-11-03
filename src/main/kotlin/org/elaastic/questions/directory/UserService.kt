@@ -348,6 +348,7 @@ class UserService(
             unsubscribeKeyRepository.findByUser(user).let { unsubscribeKey ->
                 unsubscribeKeyRepository.delete(unsubscribeKey)
             }
+            onboardingStateRepository.deleteAllByUser(user)
             userRepository.delete(user)
         }
     }

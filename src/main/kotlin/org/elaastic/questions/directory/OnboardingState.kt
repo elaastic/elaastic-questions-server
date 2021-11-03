@@ -43,6 +43,8 @@ final class OnboardingState(
         var assignment_creation_page: Boolean = false,
         var player_page: Boolean = false
 
+
+
 ): AbstractJpaPersistable<Long>()  {
 
 }

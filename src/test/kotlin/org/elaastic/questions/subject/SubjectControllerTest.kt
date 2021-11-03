@@ -23,6 +23,7 @@ import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.CourseService
+import org.elaastic.questions.directory.OnboardingState
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.statement.StatementService
@@ -84,6 +85,7 @@ internal class SubjectControllerTest(
         whenever(subjectService.findAllByOwner(user)).thenReturn(
                 subjectPages
         )
+        user.onboardingState = OnboardingState(user)
 
         mockMvc.perform(
                 get("/subject")
@@ -102,6 +104,7 @@ internal class SubjectControllerTest(
         whenever(subjectService.findAllByOwner(user)).thenReturn(
                 subjectPages
         )
+        user.onboardingState = OnboardingState(user)
 
         mockMvc.perform(get("/subject").with(csrf()))
                 .andExpect(status().isOk)
