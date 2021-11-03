@@ -19,7 +19,6 @@
 package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
@@ -28,7 +27,8 @@ import org.springframework.stereotype.Service
 import java.util.*
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
-import javax.transaction.Transactional
+import javax.persistence.EntityManager
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -40,7 +40,9 @@ class UserService(
         @Autowired val activationKeyRepository: ActivationKeyRepository,
         @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
         @Autowired val termsService: TermsService,
-        @Autowired val userConsentRepository: UserConsentRepository
+        @Autowired val userConsentRepository: UserConsentRepository,
+        @Autowired val onboardingStateRepository: OnboardingStateRepository,
+        @Autowired val entityManager: EntityManager
 ) {
 
     val FAKE_USER_PREFIX = "John_Doe___"
@@ -138,6 +140,8 @@ class UserService(
                 if (addUserConsent) {
                     addUserConsentToActiveTerms(user.username)
                 }
+                val onboardingState = OnboardingState(user)
+                onboardingStateRepository.save(onboardingState)
                 return it
             }
         }
@@ -408,19 +412,17 @@ class UserService(
         }
     }
 
-    fun updateOnboardingChapter(newChapter: OnboardingChapter, userId: Long?) {
-        userId?.let {
-            var u = userRepository.findById(it).get()
-            u.setOnboardingChapter(newChapter)
-            userRepository.save(u)
-        }
+    @Transactional
+    fun updateOnboardingChapter(chapterToUpdate: String, userId: Long?) {
+        entityManager.createNativeQuery(
+                "UPDATE onboarding_state\n" +
+                        "SET " + chapterToUpdate + " = b'1'\n" +
+                        "WHERE user_id = " + userId
+        ).executeUpdate()
     }
 
-    fun getOnboardingChapter(id: Long?): OnboardingChapter? =
-        if (id != null) {
-            userRepository.findById(id).get().getOnboardingChapter()
-        } else {
-            null
-        }
+    fun getOnboardingState(userId: Long?): OnboardingState {
+        return onboardingStateRepository.findFirstByUserId(userId)
+    }
 }
 

@@ -149,17 +149,17 @@ class UserAccountController(
     }
 
     @ResponseBody
-    @GetMapping("/userAccount/updateOnboardingChapter/{newChapter}")
-    fun updateOnboardingChapter(authentication: Authentication, @PathVariable newChapter: String){
+    @GetMapping("/userAccount/updateOnboardingChapter/{chapterToUpdate}")
+    fun updateOnboardingChapter(authentication: Authentication, @PathVariable chapterToUpdate: String){
         val user: User = authentication.principal as User
-        userService.updateOnboardingChapter(OnboardingChapter.from(newChapter), user.id)
+        userService.updateOnboardingChapter(chapterToUpdate, user.id)
     }
 
     @ResponseBody
     @GetMapping("/userAccount/getOnboardingChapter")
     fun getOnboardingChapter(authentication: Authentication): String? {
         val user: User = authentication.principal as User
-        return userService.getOnboardingChapter(user.id).toString()
+        return userService.getOnboardingState(user.id).toString()
     }
 
     @GetMapping("/userAccount/activate")

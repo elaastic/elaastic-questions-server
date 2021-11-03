@@ -70,8 +70,7 @@ data class UserData(
             user.username,
             user.email,
             user.hasOwner(),
-            userHasGivenConsent = userHasGivenConsent,
-            onboardingChapter = user.getOnboardingChapter()
+            userHasGivenConsent = userHasGivenConsent
     )
 
     override fun isAnonymous(): Boolean {

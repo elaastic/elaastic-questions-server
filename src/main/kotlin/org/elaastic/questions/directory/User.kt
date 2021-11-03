@@ -50,10 +50,8 @@ class User(
         @field:Email
         var email: String? = null,
 
-    private var isAnonymous: Boolean = false,
+    private var isAnonymous: Boolean = false
 
-    @field:Enumerated(EnumType.STRING)
-    private var onboardingChapter: OnboardingChapter? = OnboardingChapter.INTRODUCTION
 ) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrIsAnonymous {
 
     @Version
@@ -88,14 +86,6 @@ class User(
 
     override fun isAnonymous(): Boolean {
         return isAnonymous
-    }
-
-    fun getOnboardingChapter(): OnboardingChapter? {
-        return onboardingChapter
-    }
-
-    fun setOnboardingChapter(value: OnboardingChapter?) {
-        onboardingChapter = value
     }
 
     @ManyToMany(cascade = [CascadeType.ALL],
