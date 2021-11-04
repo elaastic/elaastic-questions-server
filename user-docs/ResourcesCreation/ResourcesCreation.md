@@ -3,7 +3,7 @@ layout: page
 title: resources_creation.resources_creation
 permalink: /creation_ressources/
 permalink_en: /resources_creation/
-nav_order: 4
+nav_order: 3
 has_children: true  
 ---
 
