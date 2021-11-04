@@ -81,10 +81,8 @@ rsion.
             intro: [[#{onboarding.content.course_creation.3}]]
           }
         ].filter(function(obj) { return $(obj.element).length; })
-      }).onchange(function (targetElement) {
-        if (targetElement.classList.contains('ob-course-creation-3')) {
+      }).onexit(function () {
           fetch('/userAccount/updateOnboardingChapter/course_page')
-        }
       }).start()
     }
 
@@ -100,10 +98,8 @@ rsion.
             intro: [[#{onboarding.content.course_creation.5}]]
           }
         ].filter(function(obj) { return $(obj.element).length; })
-      }).onchange(function (targetElement) {
-        if (targetElement.classList.contains('ob-course-creation-5')) {
+      }).onexit(function () {
           fetch('/userAccount/updateOnboardingChapter/course_creation_page')
-        }
       }).start();
     }
 
@@ -123,10 +119,8 @@ rsion.
             intro: [[#{onboarding.content.subject_creation.3}]]
           }
         ].filter(function(obj) { return $(obj.element).length; })
-      }).onchange(function (targetElement) {
-        if (targetElement.classList.contains('ob-subject-creation-3')) {
+      }).onexit(function () {
           fetch('/userAccount/updateOnboardingChapter/subject_page')
-        }
       }).start()
     }
 
@@ -146,10 +140,8 @@ rsion.
             intro: [[#{onboarding.content.subject_creation.6}]]
           }
         ].filter(function(obj) { return $(obj.element).length; })
-      }).onchange(function (targetElement) {
-        if (targetElement.classList.contains('ob-subject-creation-6')) {
+      }).onexit(function () {
           fetch('/userAccount/updateOnboardingChapter/subject_creation_page')
-        }
       }).start()
     }
 
@@ -224,10 +216,8 @@ rsion.
             intro: [[#{onboarding.content.assignment_creation.3}]]
           }
         ].filter(function(obj) { return $(obj.element).length; })
-      }).onchange(function (targetElement) {
-        if (targetElement.classList.contains('ob-assignment-creation-7')) {
+      }).onexit(function () {
           fetch('/userAccount/updateOnboardingChapter/subject_edition_page')
-        }
       }).onbeforechange(function (targetElement) {
         if(targetElement){
           if (targetElement.classList.contains('ob-assignment-creation-1')) {
@@ -283,10 +273,8 @@ rsion.
             intro: [[#{onboarding.content.question_creation.14}]]
           }
         ].filter(function(obj) { return $(obj.element).length; })
-      }).onchange(function (targetElement) {
-        if (targetElement.classList.contains('ob-question-creation-14')) {
+      }).onexit(function () {
           fetch('/userAccount/updateOnboardingChapter/question_creation_page')
-        }
       }).start()
     }
 
@@ -315,10 +303,8 @@ rsion.
 
           },
         ].filter(function(obj) { return $(obj.element).length; })
-      }).onchange(function (targetElement) {
-        if (targetElement.classList.contains('ob-assignment-creation-12')) {
+      }).onexit(function () {
           fetch('/userAccount/updateOnboardingChapter/assignment_creation_page')
-        }
       }).start();
     }
 
@@ -356,37 +342,82 @@ rsion.
             element: document.querySelector('.ob-play-sequence-4'),
             intro: [[#{onboarding.content.play_sequence.4}]]
           }].filter(function(obj) { return $(obj.element).length; })
-      }).onchange(function (targetElement) {
-        if (targetElement.classList.contains('ob-start-sequence-5') || targetElement.classList.contains('ob-play-sequence-4')) {
+      }).onexit(function () {
           fetch('/userAccount/updateOnboardingChapter/player_page')
-        }
+      }).start();
+    }
+
+    obSharedSubjectsPage = function(){
+      introJs().setOptions({
+        steps: [
+          {
+            element: document.querySelector('.ob-shared-subjects-1'),
+            intro: [[#{onboarding.content.shared_subjects.1}]]
+          },
+          {
+            element: document.querySelector('.ob-shared-subjects-2'),
+            intro: [[#{onboarding.content.shared_subjects.2}]]
+          },
+          {
+            element: document.querySelector('.ob-shared-subjects-3'),
+            intro: [[#{onboarding.content.shared_subjects.3}]]
+          }].filter(function(obj) { return $(obj.element).length; })
+      }).onexit(function () {
+          fetch('/userAccount/updateOnboardingChapter/shared_subjects_page')
+      }).start();
+    }
+
+    obOneSharedSubjectPage = function(){
+      introJs().setOptions({
+        steps: [
+          {
+            element: document.querySelector('.ob-one-shared-subjects-1'),
+            intro: [[#{onboarding.content.one_shared_subject.1}]]
+          },
+          {
+            element: document.querySelector('.ob-one-shared-subjects-2'),
+            intro: [[#{onboarding.content.one_shared_subject.2}]]
+          },
+          {
+            element: document.querySelector('.ob-one-shared-subjects-3'),
+            intro: [[#{onboarding.content.one_shared_subject.3}]]
+          }].filter(function(obj) { return $(obj.element).length; })
+      }).onexit(function () {
+          fetch('/userAccount/updateOnboardingChapter/one_shared_subject_page')
       }).start();
     }
 
     startContextualOb = function(manuallyActivated) {
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_page}]]) && document.getElementsByClassName('ob-course-creation-2').length !== 0) {
+        var pageUrl = window.location.href
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_page}]]) && document.getElementsByClassName('ob-course-creation-2').length !== 0 && (pageUrl.match("/course/$") !== null || pageUrl.match("/home$") !== null)) {
           obCoursePage()
         }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_creation_page}]]) && document.getElementsByClassName('ob-course-creation-4').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_creation_page}]]) && document.getElementsByClassName('ob-course-creation-4').length !== 0 && pageUrl.match("/course/create$") !== null) {
           obCourseCreationPage()
         }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_page}]]) && document.getElementsByClassName('ob-subject-creation-2').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_page}]]) && document.getElementsByClassName('ob-subject-creation-2').length !== 0 && pageUrl.match("/subject/$") !== null) {
           obSubjectPage()
         }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_creation_page}]]) && document.getElementsByClassName('ob-subject-creation-4').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_creation_page}]]) && document.getElementsByClassName('ob-subject-creation-4').length !== 0 && pageUrl.match("/subject/create$") !== null) {
           obSubjectCreationPage()
         }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-subject-creation-7').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-subject-creation-7').length !== 0 && document.getElementsByClassName('ob-one-shared-subjects-3').length === 0 && pageUrl.match("/subject/[0-9]*\\?activeTab=") !== null) {
           obSubjectEditionPage()
         }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.question_creation_page}]]) && document.getElementsByClassName('ob-question-creation-3').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.question_creation_page}]]) && document.getElementsByClassName('ob-question-creation-3').length !== 0 && pageUrl.match("addStatement") !== null) {
           obQuestionCreationPage()
         }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.assignment_creation_page}]]) && document.getElementsByClassName('ob-assignment-creation-8').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.assignment_creation_page}]]) && document.getElementsByClassName('ob-assignment-creation-8').length !== 0 && pageUrl.match("addAssignment") !== null) {
           obAssignmentCreationPage()
         }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.player_page}]]) && document.getElementsByClassName('ob-start-sequence-2').length !== 0) {
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.player_page}]]) && document.getElementsByClassName('ob-start-sequence-2').length !== 0 && pageUrl.match("play") !== null) {
           obPlayerPage()
+        }
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.shared_subjects_page}]]) && document.getElementsByClassName('ob-shared-subjects-1').length !== 0 && pageUrl.match("shared_index") !== null) {
+          obSharedSubjectsPage()
+        }
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.one_shared_subject_page}]]) && document.getElementsByClassName('ob-one-shared-subjects-3').length !== 0) {
+          obOneSharedSubjectPage()
         }
     }
   </script>

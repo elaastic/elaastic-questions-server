@@ -21,7 +21,7 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <section>
+    <section class="ob-one-shared-subjects-1">
 
         <div class="ui segment bottom attached" th:if="${statements.isEmpty()}">
             <p class="ui info message" th:text="#{subject.statement.empty}">
@@ -66,7 +66,7 @@
         </div>
 
         <div class="ui basic segment" th:if="${subject.owner != user}">
-            <a class="ui primary button"
+            <a class="ui primary button ob-one-shared-subjects-3 onexit(function ()"
                onclick="$('#confirm-import-subject-modal').modal('show');">
                 <i class="upload icon"></i>
                 <span th:text="#{subject.import}">Import the subject</span>

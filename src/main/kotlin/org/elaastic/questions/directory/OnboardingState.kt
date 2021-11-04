@@ -41,9 +41,9 @@ final class OnboardingState(
         var subject_edition_page: Boolean = false,
         var question_creation_page: Boolean = false,
         var assignment_creation_page: Boolean = false,
-        var player_page: Boolean = false
-
-
+        var player_page: Boolean = false,
+        var shared_subjects_page: Boolean = false,
+        var one_shared_subject_page: Boolean = false
 
 ): AbstractJpaPersistable<Long>()  {
 

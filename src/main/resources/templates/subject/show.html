@@ -169,7 +169,7 @@
       <a class="item"
          th:classappend="${activeTab=='assignments'} ? active" data-tab="assignments"
          th:text="#{subject.page.show.assignments-tab-title}"
-         th:class="${subject.owner==user} ? 'item ob-assignment-creation-1' : 'noAccess ob-assignment-creation-1'">assignments</a>
+         th:class="${subject.owner==user} ? 'item ob-assignment-creation-1 ob-one-shared-subjects-2' : 'noAccess ob-assignment-creation-1 ob-one-shared-subjects-2'">assignments</a>
     </div>
     
     <style>

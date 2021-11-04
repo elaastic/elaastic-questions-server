@@ -28,6 +28,8 @@ CREATE TABLE `onboarding_state` (
     `question_creation_page` bit(1) NOT NULL DEFAULT b'0',
     `assignment_creation_page` bit(1) NOT NULL DEFAULT b'0',
     `player_page` bit(1) NOT NULL DEFAULT b'0',
+    `shared_subjects_page` bit(1) NOT NULL DEFAULT b'0',
+    `one_shared_subject_page` bit(1) NOT NULL DEFAULT b'0',
     PRIMARY KEY (`id`),
     KEY `idx_onboarding_state_user_id` (`user_id`),
     CONSTRAINT `fk_onboarding_state_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)

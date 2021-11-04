@@ -149,7 +149,7 @@
           }
       </style>
       <div class="bottom-menu">
-        <div th:replace="layout/components/helpMenu :: helpMenu()"></div>
+        <div sec:authorize="hasAnyAuthority('TEACHER_ROLE')" th:replace="layout/components/helpMenu :: helpMenu()"></div>
         <div th:replace="layout/components/userMenu :: userMenu(user=${user})"></div>
       </div>
 

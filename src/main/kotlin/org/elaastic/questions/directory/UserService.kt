@@ -425,6 +425,8 @@ class UserService(
             OnboardingChapter.SUBJECT_EDITION_PAGE -> user?.onboardingState?.subject_edition_page = true
             OnboardingChapter.ASSIGNMENT_CREATION_PAGE -> user?.onboardingState?.assignment_creation_page = true
             OnboardingChapter.PLAYER_PAGE -> user?.onboardingState?.player_page = true
+            OnboardingChapter.SHARED_SUBJECTS_PAGE -> user?.onboardingState?.shared_subjects_page = true
+            OnboardingChapter.ONE_SHARED_SUBJECT_PAGE -> user?.onboardingState?.one_shared_subject_page = true
         }
         entityManager.createNativeQuery(
                 "UPDATE onboarding_state\n" +
