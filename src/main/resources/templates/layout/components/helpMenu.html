@@ -157,8 +157,24 @@ rsion.
       introJs().setOptions({
         steps: [
           {
-            element: document.querySelector('.ob-question-creation-1'),
-            intro: [[#{onboarding.content.question_creation.1}]]
+            element: document.querySelector('.ob-subject-creation-7'),
+            intro: [[#{onboarding.content.subject_creation.7}]]
+          },
+          {
+            element: document.querySelector('.ob-subject-creation-8'),
+            intro: [[#{onboarding.content.subject_creation.8}]]
+          },
+          {
+            element: document.querySelector('.ob-subject-creation-9'),
+            intro: [[#{onboarding.content.subject_creation.9}]]
+          },
+          {
+            element: document.querySelector('.ob-subject-creation-10'),
+            intro: [[#{onboarding.content.subject_creation.10}]]
+          },
+          {
+            element: document.querySelector('.ob-subject-creation-11'),
+            intro: [[#{onboarding.content.subject_creation.11}]]
           },
           {
             element: document.querySelector('.ob-question-creation-2'),
@@ -217,10 +233,10 @@ rsion.
           if (targetElement.classList.contains('ob-assignment-creation-1')) {
             document.getElementsByClassName('ob-assignment-creation-1')[0].click()
           }
-          if (targetElement.classList.contains('ob-question-creation-1')
+          if (targetElement.classList.contains('ob-subject-creation-7')
                   || targetElement.classList.contains('ob-question-creation-2')
                           || targetElement.classList.contains('ob-question-creation-18')) {
-            document.getElementsByClassName('ob-question-creation-1')[0].click()
+            document.getElementsByClassName('ob-subject-creation-7')[0].click()
           }
         }
 
@@ -357,11 +373,11 @@ rsion.
         if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_page}]]) && document.getElementsByClassName('ob-subject-creation-2').length !== 0) {
           obSubjectPage()
         }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-question-creation-1').length !== 0) {
-          obSubjectEditionPage()
-        }
         if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_creation_page}]]) && document.getElementsByClassName('ob-subject-creation-4').length !== 0) {
           obSubjectCreationPage()
+        }
+        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-subject-creation-7').length !== 0) {
+          obSubjectEditionPage()
         }
         if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.question_creation_page}]]) && document.getElementsByClassName('ob-question-creation-3').length !== 0) {
           obQuestionCreationPage()
