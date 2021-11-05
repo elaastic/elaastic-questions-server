@@ -1,0 +1,37 @@
+global:
+  table_of_contents: "Table of contents"
+  site_title: "Elaastic User Documentation"
+  search: "Search in"
+introduction:
+  introduction: "1. Introduction"
+key_concepts:
+  key_concepts: "2. Key concepts"
+  subjects: "2.2. Subjects"
+  courses: "2.1. Courses"
+  questions: "2.3. Questions"
+  assignments: "2.4. Assignments"
+  sequences: "2.5. Sequences"
+  summary: "2.6. Summary"
+requirements:
+  requirements: "6. Access requirements"
+  teachers: "6.1. For teachers"
+  learners: "6.2. For learners"
+resources_creation:
+  resources_creation: "3. Resources creation"
+  course_creation: "3.1. Course creation"
+  subject_creation: "3.2. Subject creation"
+  question_creation: "3.3. Question creation"
+  assignment_creation: "3.4. Assignment creation"
+play_assignment:
+  play_assignment: "4. Play an assignment"
+  start_sequence: "4.1. Start a sequence"
+  phase_1: "4.2. Phase 1"
+  phase_2: "4.3. Phase 2"
+  phase_3: "4.4. Phase 3"
+  player_perspective_summary: "4.5. Player perspective summary"
+share_subject:
+  share_subject: "5. Share a subject"
+  get_share_link: "5.1. Get the link to share"
+  view_shared_subject: "5.2. View a shared subject"
+  copy_shared_subject: "5.3. Copy a shared subject"
+  copy_shared_question: "5.4. Copy a shared question"
