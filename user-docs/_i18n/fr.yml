@@ -36,3 +36,10 @@ share_subject:
   view_shared_subject: "5.2. Consulter un sujet partagé"
   copy_shared_subject: "5.3. Copier un sujet partagé"
   copy_shared_question: "5.4. Copier une question partagée"
+create_moodle_activity :
+  create_moodle_activity : "7. Création d’une activité Elaastic depuis Moodle"
+  access_moodle : "7.1. Accès à Moodle depuis l’ENT"
+  select_course : "7.2. Sélection du cours"
+  activate_edition_mode : "7.3. Activer le mode édition"
+  add_activity : "7.4. Ajout de l’activité"
+  access_elaastic : "7.5. Accès à la plateforme Elaastic"
