@@ -43,3 +43,7 @@ create_moodle_activity :
   activate_edition_mode : "7.3. Activer le mode édition"
   add_activity : "7.4. Ajout de l’activité"
   access_elaastic : "7.5. Accès à la plateforme Elaastic"
+create_moodle_activity_from_existing_assignment :
+  create_moodle_activity_from_existing_assignment : "8. Utiliser un devoir existant dans Elaastic depuis Moodle"
+  get_lti_parameter : "8.1. Récupération des paramètres LTI"
+  use_lti_parameter : "8.2. Utilisation des paramètres LTI"

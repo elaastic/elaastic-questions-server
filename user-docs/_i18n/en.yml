@@ -35,3 +35,14 @@ share_subject:
   view_shared_subject: "5.2. View a shared subject"
   copy_shared_subject: "5.3. Copy a shared subject"
   copy_shared_question: "5.4. Copy a shared question"
+create_moodle_activity :
+  create_moodle_activity : "7. Create an Elaastic activity from Oodle"
+  access_moodle : "7.1. Go to Moodle from the ENT"
+  select_course : "7.2. Select the course"
+  activate_edition_mode : "7.3. Activate edition mode"
+  add_activity : "7.4. Add an activity"
+  access_elaastic : "7.5. Access Elaastic"
+create_moodle_activity_from_existing_assignment :
+  create_moodle_activity_from_existing_assignment : "8. Use an existing assignment on Elaastic from Moodle"
+  get_lti_parameter : "8.1. Get LTI Parameter"
+  use_lti_parameter : "8.2. Use LTI Parameter"
