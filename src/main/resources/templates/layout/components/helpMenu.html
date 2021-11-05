@@ -22,403 +22,434 @@ rsion.
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-  <div id="help-menu-dropdown"
-       class="ui dropdown item help-menu"
-       th:attr="data-tooltip=#{common.Help}"
-       data-tooltip="Help"
-       data-position="right center"
-       data-inverted="">
-    <i class="question circle icon"></i>
+    <div id="help-menu-dropdown"
+         class="ui dropdown item help-menu"
+         th:attr="data-tooltip=#{common.Help}"
+         data-tooltip="Help"
+         data-position="right center"
+         data-inverted="">
+        <i class="question circle icon"></i>
 
-    <div class="ui vertical menu">
-      <div class="header" style="text-align: center; text-overflow: ellipsis; overflow: hidden;">
-        <span th:text="#{common.Help}">Help</span>
-      </div>
+        <div class="ui vertical menu">
+            <div class="header" style="text-align: center; text-overflow: ellipsis; overflow: hidden;">
+                <span th:text="#{common.Help}">Help</span>
+            </div>
 
-      <a href="#" class="item" th:onclick="startContextualOb(true)">
-        <i class="clock outline icon"></i>
-        <span th:text="#{common.quick-start}">Quick start</span>
-      </a>
+            <a href="#" class="item" th:onclick="elaastic.startContextualOb(true)">
+                <i class="clock outline icon"></i>
+                <span th:text="#{common.quick-start}">Quick start</span>
+            </a>
 
-      <a th:href="#{common.online-help.url}"
-         target="_blank"
-         class="item">
-        <i class="question circle outline icon"></i>
-        <span th:text="#{common.online-help}">Online help</span>
-      </a>
+            <a th:href="#{common.online-help.url}"
+               target="_blank"
+               class="item">
+                <i class="question circle outline icon"></i>
+                <span th:text="#{common.online-help}">Online help</span>
+            </a>
 
 
+        </div>
     </div>
-  </div>
 
 
-  <script th:inline="javascript">
-    $(document)
+    <script th:inline="javascript">
+        $(document)
             .ready(function () {
 
-              // Initialize dropdown
-              $('#help-menu-dropdown').dropdown()
-              startContextualOb(false)
+                // Initialize dropdown
+                $('#help-menu-dropdown').dropdown();
+                elaastic.manageOnboarding();
+                elaastic.startContextualOb(false);
             })
 
-    obCoursePage = function() {
-      introJs().setOptions({
-        steps: [
-          {
-            title: [[#{onboarding.introduction.title}]],
-            intro: [[#{onboarding.introduction.content}]]
-          },
-          {
-            element: document.querySelector('.ob-course-creation-1'),
-            intro: [[#{onboarding.content.course_creation.1}]]
-          },
-          {
-            element: document.querySelector('.ob-course-creation-2'),
-            intro: [[#{onboarding.content.course_creation.2}]]
-          },
-          {
-            element: document.querySelector('.ob-course-creation-3'),
-            intro: [[#{onboarding.content.course_creation.3}]]
-          }
-        ].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/course_page')
-      }).start()
-    }
+        var elaastic = elaastic || {}
 
-    obCourseCreationPage = function() {
-      introJs().setOptions({
-        steps: [
-          {
-            element: document.querySelector('.ob-course-creation-4'),
-            intro: [[#{onboarding.content.course_creation.4}]]
-          },
-          {
-            element: document.querySelector('.ob-course-creation-5'),
-            intro: [[#{onboarding.content.course_creation.5}]]
-          }
-        ].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/course_creation_page')
-      }).start();
-    }
+        elaastic.manageOnboarding = function() {
+            let elaasticQuestionsUrl = /*[[${@environment.getProperty('elaastic.questions.url')}]]*/ '' ;
 
-    obSubjectPage = function(){
-      introJs().setOptions({
-        steps: [
-          {
-            element: document.querySelector('.ob-subject-creation-1'),
-            intro: [[#{onboarding.content.subject_creation.1}]]
-          },
-          {
-            element: document.querySelector('.ob-subject-creation-2'),
-            intro: [[#{onboarding.content.subject_creation.2}]]
-          },
-          {
-            element: document.querySelector('.ob-subject-creation-3'),
-            intro: [[#{onboarding.content.subject_creation.3}]]
-          }
-        ].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/subject_page')
-      }).start()
-    }
+            let obCoursePage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            title: [[#{onboarding.introduction.title}]],
+                            intro: [[#{onboarding.introduction.content}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-course-creation-1'),
+                            intro: [[#{onboarding.content.course_creation.1}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-course-creation-2'),
+                            intro: [[#{onboarding.content.course_creation.2}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-course-creation-3'),
+                            intro: [[#{onboarding.content.course_creation.3}]]
+                        }
+                    ].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/course_page')
+                }).start()
+            }
 
-    obSubjectCreationPage = function(){
-      introJs().setOptions({
-        steps: [
-          {
-            element: document.querySelector('.ob-subject-creation-4'),
-            intro: [[#{onboarding.content.subject_creation.4}]]
-          },
-          {
-            element: document.querySelector('.ob-subject-creation-5'),
-            intro: [[#{onboarding.content.subject_creation.5}]]
-          },
-          {
-            element: document.querySelector('.ob-subject-creation-6'),
-            intro: [[#{onboarding.content.subject_creation.6}]]
-          }
-        ].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/subject_creation_page')
-      }).start()
-    }
+            let obCourseCreationPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-course-creation-4'),
+                            intro: [[#{onboarding.content.course_creation.4}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-course-creation-5'),
+                            intro: [[#{onboarding.content.course_creation.5}]]
+                        }
+                    ].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/course_creation_page')
+                }).start();
+            }
 
-    obSubjectEditionPage = function(){
-      introJs().setOptions({
-        steps: [
-          {
-            element: document.querySelector('.ob-subject-creation-7'),
-            intro: [[#{onboarding.content.subject_creation.7}]]
-          },
-          {
-            element: document.querySelector('.ob-subject-creation-8'),
-            intro: [[#{onboarding.content.subject_creation.8}]]
-          },
-          {
-            element: document.querySelector('.ob-subject-creation-9'),
-            intro: [[#{onboarding.content.subject_creation.9}]]
-          },
-          {
-            element: document.querySelector('.ob-subject-creation-10'),
-            intro: [[#{onboarding.content.subject_creation.10}]]
-          },
-          {
-            element: document.querySelector('.ob-subject-creation-11'),
-            intro: [[#{onboarding.content.subject_creation.11}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-2'),
-            intro: [[#{onboarding.content.question_creation.2}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-15'),
-            intro: [[#{onboarding.content.question_creation.15}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-16'),
-            intro: [[#{onboarding.content.question_creation.16}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-17'),
-            intro: [[#{onboarding.content.question_creation.17}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-18'),
-            intro: [[#{onboarding.content.question_creation.18}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-1'),
-            intro: [[#{onboarding.content.assignment_creation.1}]]
-          },
-          {
-            intro: [[#{onboarding.content.assignment_creation.2}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-13'),
-            intro: [[#{onboarding.content.assignment_creation.9}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-14'),
-            intro: [[#{onboarding.content.assignment_creation.10}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-15'),
-            intro: [[#{onboarding.content.assignment_creation.11}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-16'),
-            intro: [[#{onboarding.content.assignment_creation.12}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-7'),
-            intro: [[#{onboarding.content.assignment_creation.3}]]
-          }
-        ].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/subject_edition_page')
-      }).onbeforechange(function (targetElement) {
-        if(targetElement){
-          if (targetElement.classList.contains('ob-assignment-creation-1')) {
-            document.getElementsByClassName('ob-assignment-creation-1')[0].click()
-          }
-          if (targetElement.classList.contains('ob-subject-creation-7')
-                  || targetElement.classList.contains('ob-question-creation-2')
-                          || targetElement.classList.contains('ob-question-creation-18')) {
-            document.getElementsByClassName('ob-subject-creation-7')[0].click()
-          }
-        }
+            let obSubjectPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-subject-creation-1'),
+                            intro: [[#{onboarding.content.subject_creation.1}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-subject-creation-2'),
+                            intro: [[#{onboarding.content.subject_creation.2}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-subject-creation-3'),
+                            intro: [[#{onboarding.content.subject_creation.3}]]
+                        }
+                    ].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/subject_page')
+                }).start()
+            }
 
-      }).start()
-    }
+            let obSubjectCreationPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-subject-creation-4'),
+                            intro: [[#{onboarding.content.subject_creation.4}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-subject-creation-5'),
+                            intro: [[#{onboarding.content.subject_creation.5}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-subject-creation-6'),
+                            intro: [[#{onboarding.content.subject_creation.6}]]
+                        }
+                    ].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/subject_creation_page')
+                }).start()
+            }
 
-    obQuestionCreationPage = function(){
-      introJs().setOptions({
-        steps: [
-          {
-            element: document.querySelector('.ob-question-creation-3'),
-            intro: [[#{onboarding.content.question_creation.3}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-4'),
-            intro: [[#{onboarding.content.question_creation.4}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-5'),
-            intro: [[#{onboarding.content.question_creation.5}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-6'),
-            intro: [[#{onboarding.content.question_creation.6}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-7'),
-            intro: [[#{onboarding.content.question_creation.7}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-8'),
-            intro: [[#{onboarding.content.question_creation.8}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-9'),
-            intro: [[#{onboarding.content.question_creation.9}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-10'),
-            intro: [[#{onboarding.content.question_creation.10}]]
-          },
-          {
-            element: document.querySelector('.ob-question-creation-14'),
-            intro: [[#{onboarding.content.question_creation.14}]]
-          }
-        ].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/question_creation_page')
-      }).start()
-    }
+            let obSubjectEditionPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-subject-creation-7'),
+                            intro: [[#{onboarding.content.subject_creation.7}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-subject-creation-8'),
+                            intro: [[#{onboarding.content.subject_creation.8}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-subject-creation-9'),
+                            intro: [[#{onboarding.content.subject_creation.9}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-subject-creation-10'),
+                            intro: [[#{onboarding.content.subject_creation.10}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-subject-creation-11'),
+                            intro: [[#{onboarding.content.subject_creation.11}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-2'),
+                            intro: [[#{onboarding.content.question_creation.2}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-15'),
+                            intro: [[#{onboarding.content.question_creation.15}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-16'),
+                            intro: [[#{onboarding.content.question_creation.16}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-17'),
+                            intro: [[#{onboarding.content.question_creation.17}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-18'),
+                            intro: [[#{onboarding.content.question_creation.18}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-1'),
+                            intro: [[#{onboarding.content.assignment_creation.1}]]
+                        },
+                        {
+                            intro: [[#{onboarding.content.assignment_creation.2}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-13'),
+                            intro: [[#{onboarding.content.assignment_creation.9}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-14'),
+                            intro: [[#{onboarding.content.assignment_creation.10}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-15'),
+                            intro: [[#{onboarding.content.assignment_creation.11}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-16'),
+                            intro: [[#{onboarding.content.assignment_creation.12}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-7'),
+                            intro: [[#{onboarding.content.assignment_creation.3}]]
+                        }
+                    ].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/subject_edition_page')
+                }).onbeforechange(function (targetElement) {
+                    if (targetElement) {
+                        if (targetElement.classList.contains('ob-assignment-creation-1')) {
+                            document.getElementsByClassName('ob-assignment-creation-1')[0].click()
+                        }
+                        if (targetElement.classList.contains('ob-subject-creation-7')
+                            || targetElement.classList.contains('ob-question-creation-2')
+                            || targetElement.classList.contains('ob-question-creation-18')) {
+                            document.getElementsByClassName('ob-subject-creation-7')[0].click()
+                        }
+                    }
 
-    obAssignmentCreationPage = function(){
-      introJs().setOptions({
-        steps: [
-          {
-            element: document.querySelector('.ob-assignment-creation-8'),
-            intro: [[#{onboarding.content.assignment_creation.4}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-9'),
-            intro: [[#{onboarding.content.assignment_creation.5}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-10'),
-            intro: [[#{onboarding.content.assignment_creation.6}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-11'),
-            intro: [[#{onboarding.content.assignment_creation.7}]]
-          },
-          {
-            element: document.querySelector('.ob-assignment-creation-12'),
-            intro: [[#{onboarding.content.assignment_creation.8}]]
+                }).start()
+            }
 
-          },
-        ].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/assignment_creation_page')
-      }).start();
-    }
+            let obQuestionCreationPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-question-creation-3'),
+                            intro: [[#{onboarding.content.question_creation.3}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-4'),
+                            intro: [[#{onboarding.content.question_creation.4}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-5'),
+                            intro: [[#{onboarding.content.question_creation.5}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-6'),
+                            intro: [[#{onboarding.content.question_creation.6}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-7'),
+                            intro: [[#{onboarding.content.question_creation.7}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-8'),
+                            intro: [[#{onboarding.content.question_creation.8}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-9'),
+                            intro: [[#{onboarding.content.question_creation.9}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-10'),
+                            intro: [[#{onboarding.content.question_creation.10}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-question-creation-14'),
+                            intro: [[#{onboarding.content.question_creation.14}]]
+                        }
+                    ].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/question_creation_page')
+                }).start()
+            }
 
-    obPlayerPage = function(){
-      introJs().setOptions({
-        steps: [
-          {
-            intro: [[#{onboarding.content.prepare_sequence.1}]]
-          },
-          {
-            element: document.querySelector('.ob-start-sequence-2'),
-            intro: [[#{onboarding.content.prepare_sequence.2}]]
-          },
-          {
-            element: document.querySelector('.ob-start-sequence-3'),
-            intro: [[#{onboarding.content.prepare_sequence.3}]]
-          },
-          {
-            element: document.querySelector('.ob-start-sequence-4'),
-            intro: [[#{onboarding.content.prepare_sequence.4}]]
-          },
-          {
-            element: document.querySelector('.ob-play-sequence-1'),
-            intro: [[#{onboarding.content.play_sequence.1}]]
-          },
-          {
-            element: document.querySelector('.ob-play-sequence-2'),
-            intro: [[#{onboarding.content.play_sequence.2}]]
-          },
-          {
-            element: document.querySelector('.ob-play-sequence-3'),
-            intro: [[#{onboarding.content.play_sequence.3}]]
-          },
-          {
-            element: document.querySelector('.ob-play-sequence-4'),
-            intro: [[#{onboarding.content.play_sequence.4}]]
-          }].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/player_page')
-      }).start();
-    }
+            let obAssignmentCreationPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-assignment-creation-8'),
+                            intro: [[#{onboarding.content.assignment_creation.4}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-9'),
+                            intro: [[#{onboarding.content.assignment_creation.5}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-10'),
+                            intro: [[#{onboarding.content.assignment_creation.6}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-11'),
+                            intro: [[#{onboarding.content.assignment_creation.7}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-assignment-creation-12'),
+                            intro: [[#{onboarding.content.assignment_creation.8}]]
 
-    obSharedSubjectsPage = function(){
-      introJs().setOptions({
-        steps: [
-          {
-            element: document.querySelector('.ob-shared-subjects-1'),
-            intro: [[#{onboarding.content.shared_subjects.1}]]
-          },
-          {
-            element: document.querySelector('.ob-shared-subjects-2'),
-            intro: [[#{onboarding.content.shared_subjects.2}]]
-          },
-          {
-            element: document.querySelector('.ob-shared-subjects-3'),
-            intro: [[#{onboarding.content.shared_subjects.3}]]
-          }].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/shared_subjects_page')
-      }).start();
-    }
+                        },
+                    ].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/assignment_creation_page')
+                }).start();
+            }
 
-    obOneSharedSubjectPage = function(){
-      introJs().setOptions({
-        steps: [
-          {
-            element: document.querySelector('.ob-one-shared-subjects-1'),
-            intro: [[#{onboarding.content.one_shared_subject.1}]]
-          },
-          {
-            element: document.querySelector('.ob-one-shared-subjects-2'),
-            intro: [[#{onboarding.content.one_shared_subject.2}]]
-          },
-          {
-            element: document.querySelector('.ob-one-shared-subjects-3'),
-            intro: [[#{onboarding.content.one_shared_subject.3}]]
-          }].filter(function(obj) { return $(obj.element).length; })
-      }).onexit(function () {
-          fetch('/userAccount/updateOnboardingChapter/one_shared_subject_page')
-      }).start();
-    }
+            let obPlayerPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            intro: [[#{onboarding.content.prepare_sequence.1}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-start-sequence-2'),
+                            intro: [[#{onboarding.content.prepare_sequence.2}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-start-sequence-3'),
+                            intro: [[#{onboarding.content.prepare_sequence.3}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-start-sequence-4'),
+                            intro: [[#{onboarding.content.prepare_sequence.4}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-play-sequence-1'),
+                            intro: [[#{onboarding.content.play_sequence.1}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-play-sequence-2'),
+                            intro: [[#{onboarding.content.play_sequence.2}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-play-sequence-3'),
+                            intro: [[#{onboarding.content.play_sequence.3}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-play-sequence-4'),
+                            intro: [[#{onboarding.content.play_sequence.4}]]
+                        }].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/player_page')
+                }).start();
+            }
 
-    startContextualOb = function(manuallyActivated) {
-        var pageUrl = window.location.href
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_page}]]) && document.getElementsByClassName('ob-course-creation-2').length !== 0 && (pageUrl.match("/course/$") !== null || pageUrl.match("/home$") !== null)) {
-          obCoursePage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_creation_page}]]) && document.getElementsByClassName('ob-course-creation-4').length !== 0 && pageUrl.match("/course/create$") !== null) {
-          obCourseCreationPage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_page}]]) && document.getElementsByClassName('ob-subject-creation-2').length !== 0 && pageUrl.match("/subject/$") !== null) {
-          obSubjectPage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_creation_page}]]) && document.getElementsByClassName('ob-subject-creation-4').length !== 0 && pageUrl.match("/subject/create$") !== null) {
-          obSubjectCreationPage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-subject-creation-7').length !== 0 && document.getElementsByClassName('ob-one-shared-subjects-3').length === 0 && pageUrl.match("/subject/[0-9]*\\?activeTab=") !== null) {
-          obSubjectEditionPage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.question_creation_page}]]) && document.getElementsByClassName('ob-question-creation-3').length !== 0 && pageUrl.match("addStatement") !== null) {
-          obQuestionCreationPage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.assignment_creation_page}]]) && document.getElementsByClassName('ob-assignment-creation-8').length !== 0 && pageUrl.match("addAssignment") !== null) {
-          obAssignmentCreationPage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.player_page}]]) && document.getElementsByClassName('ob-start-sequence-2').length !== 0 && pageUrl.match("play") !== null) {
-          obPlayerPage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.shared_subjects_page}]]) && document.getElementsByClassName('ob-shared-subjects-1').length !== 0 && pageUrl.match("shared_index") !== null) {
-          obSharedSubjectsPage()
-        }
-        if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.one_shared_subject_page}]]) && document.getElementsByClassName('ob-one-shared-subjects-3').length !== 0) {
-          obOneSharedSubjectPage()
-        }
-    }
-  </script>
+            let obSharedSubjectsPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-shared-subjects-1'),
+                            intro: [[#{onboarding.content.shared_subjects.1}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-shared-subjects-2'),
+                            intro: [[#{onboarding.content.shared_subjects.2}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-shared-subjects-3'),
+                            intro: [[#{onboarding.content.shared_subjects.3}]]
+                        }].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/shared_subjects_page')
+                }).start();
+            }
+
+            let obOneSharedSubjectPage = function () {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: document.querySelector('.ob-one-shared-subjects-1'),
+                            intro: [[#{onboarding.content.one_shared_subject.1}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-one-shared-subjects-2'),
+                            intro: [[#{onboarding.content.one_shared_subject.2}]]
+                        },
+                        {
+                            element: document.querySelector('.ob-one-shared-subjects-3'),
+                            intro: [[#{onboarding.content.one_shared_subject.3}]]
+                        }].filter(function (obj) {
+                        return $(obj.element).length;
+                    })
+                }).onexit(function () {
+                    fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/one_shared_subject_page')
+                }).start();
+            }
+
+            let startContextualOb = function (manuallyActivated) {
+                let pageUrl = window.location.href
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_page}]]) && document.getElementsByClassName('ob-course-creation-2').length !== 0 && (pageUrl.match("/course/$") !== null || pageUrl.match("/home$") !== null)) {
+                    obCoursePage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.course_creation_page}]]) && document.getElementsByClassName('ob-course-creation-4').length !== 0 && pageUrl.match("/course/create$") !== null) {
+                    obCourseCreationPage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_page}]]) && document.getElementsByClassName('ob-subject-creation-2').length !== 0 && pageUrl.match("/subject/$") !== null) {
+                    obSubjectPage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_creation_page}]]) && document.getElementsByClassName('ob-subject-creation-4').length !== 0 && pageUrl.match("/subject/create$") !== null) {
+                    obSubjectCreationPage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.subject_edition_page}]]) && document.getElementsByClassName('ob-subject-creation-7').length !== 0 && document.getElementsByClassName('ob-one-shared-subjects-3').length === 0 && pageUrl.match("/subject/[0-9]*\\?activeTab=") !== null) {
+                    obSubjectEditionPage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.question_creation_page}]]) && document.getElementsByClassName('ob-question-creation-3').length !== 0 && pageUrl.match("addStatement") !== null) {
+                    obQuestionCreationPage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.assignment_creation_page}]]) && document.getElementsByClassName('ob-assignment-creation-8').length !== 0 && pageUrl.match("addAssignment") !== null) {
+                    obAssignmentCreationPage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.player_page}]]) && document.getElementsByClassName('ob-start-sequence-2').length !== 0 && pageUrl.match("play") !== null) {
+                    obPlayerPage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.shared_subjects_page}]]) && document.getElementsByClassName('ob-shared-subjects-1').length !== 0 && pageUrl.match("shared_index") !== null) {
+                    obSharedSubjectsPage()
+                }
+                if ((manuallyActivated || [[${user.isTeacher() && !user.onboardingState.one_shared_subject_page}]]) && document.getElementsByClassName('ob-one-shared-subjects-3').length !== 0) {
+                    obOneSharedSubjectPage()
+                }
+            }
+
+            elaastic.startContextualOb = startContextualOb;
+            elaastic.elaasticQuestionsUrl = elaasticQuestionsUrl;
+        };
+
+    </script>
 </div>
