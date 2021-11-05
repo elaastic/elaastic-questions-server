@@ -8,4 +8,4 @@ nav_order: 2
 has_children: false
 ---
 
-{% tf Requirements/Teachers.md %}
+{% tf ShareSubject/ViewSharedSubjects.md %}

@@ -1,4 +1,4 @@
-## Les devoirs
+## 2.4. Les devoirs
 
 Un devoir est l’instance d’un sujet pour une audience désignée (une classe ou un 
 groupe d'apprenants). Pour exécuter un sujet, l'enseignant•e doit obligatoirement créer un devoir. Dans l’exemple ci-dessous, 

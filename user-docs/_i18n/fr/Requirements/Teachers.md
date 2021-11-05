@@ -1,4 +1,4 @@
-## Pour les enseignants
+## 6.1. Pour les enseignants
 
 Les enseignant•es doivent disposer d'un compte sur la plateforme pour pouvoir l'utiliser.  
 Un compte pour un enseignant peut être créé de deux manières différentes :

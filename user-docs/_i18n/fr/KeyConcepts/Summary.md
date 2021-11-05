@@ -1,4 +1,4 @@
-## En synthèse
+## 2.6. En synthèse
 
 Un *sujet* est composé de *questions*. 
 
@@ -7,3 +7,5 @@ est juste un moyen de regrouper des sujets par thèmes.
 
 Un *devoir* est l'instance d'un sujet pour une audience donnée (une classe ou un groupe d'apprenants).
 Les apprenants répondent toujours aux questions d'un sujet en s'inscrivant au devoir qui les concernent. 
+
+Lorsqu'on lance un *devoir*, on lance pour chaque question une *séquence*.

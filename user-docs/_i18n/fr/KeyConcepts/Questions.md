@@ -1,4 +1,4 @@
-## Les questions
+## 2.3. Les questions
 
 Un sujet est composé de questions. Les questions peuvent être des questions à choix multiple, à choix exclusif ou des questions ouvertes.
 

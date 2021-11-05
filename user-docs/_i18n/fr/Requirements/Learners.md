@@ -1,4 +1,4 @@
-## Pour les étudiants
+## 6.2. Pour les étudiants
 
 Les apprenants peuvent participer à un [devoir]({% link KeyConcepts/Assignments.md %}) elaastic sans avoir de compte sur la plateforme. 
 Ils participent alors de manière complètement anonyme à l'activité proposée.

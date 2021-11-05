@@ -6,11 +6,12 @@ introduction:
   introduction: "1. Introduction"
 key_concepts:
   key_concepts: "2. Concepts clés"
-  subjects: "2.1. Les sujets"
-  courses: "2.2. Les cours"
+  subjects: "2.2. Les sujets"
+  courses: "2.1. Les cours"
   questions: "2.3. Les questions"
   assignments: "2.4. Les devoirs"
-  summary: "2.5. En synthèse"
+  sequences: "2.5. Les séquences"
+  summary: "2.6. En synthèse"
 requirements:
   requirements: "6. Conditions d'accès"
   teachers: "6.1. Pour les enseignants"

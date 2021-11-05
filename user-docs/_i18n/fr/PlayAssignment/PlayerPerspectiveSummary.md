@@ -1,4 +1,4 @@
-# Récapitulatif de la perspective player
+## 4.5. Récapitulatif de la perspective player
 
 Ce chapitre a pour objectif de fournir plus de détails sur la perspective "Player" ainsi que son fonctionnement.
 
@@ -15,11 +15,11 @@ Vous êtes désormais sur la page d'exécution d'un devoir. Elle vous permettra 
 10. Nombre d'apprenant ayant fourni une réponse lors de la phase 2
 11. Bouton pour afficher toutes les explications
 
-![Views on player summary]({{ "images/fr/play_assignment/player_summary.png"| relative_url }})
+![Vue sur player summary]({{ "images/fr/play_assignment/player_summary.png"| relative_url }})
 
 En cliquant sur le bouton "Afficher toutes les explications", un popup apparait. Il contient toutes les explications des apprenants ainsi que celles que vous avez rédigées. Dans le cas d'une question à choix, ces explications sont regroupées par choix.
 
-![Views on player summary 2]({{ "images/fr/play_assignment/explanation_popup.png"| relative_url }})
+![Vue sur player summary 2]({{ "images/fr/play_assignment/explanation_popup.png"| relative_url }})
 
 Pour chaque réponse, vous disposez des informations suivantes :
 1. Contenu de l'explication
@@ -27,4 +27,4 @@ Pour chaque réponse, vous disposez des informations suivantes :
 3. Nombre d'apprenant ayant fourni une note
 
 
-![Views on player summary 3]({{ "images/fr/play_assignment/an_explanation.png"| relative_url }})
+![Vue sur player summary 3]({{ "images/fr/play_assignment/an_explanation.png"| relative_url }})
