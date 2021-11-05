@@ -24,11 +24,12 @@ resources_creation:
   assignment_creation: "3.4. Création d'un devoir"
 play_assignment:
   play_assignment: "4. Lancer un devoir"
+  subscribe: "4.2. Inscrire des apprenants à votre devoir"
   start_sequence: "4.1. Démarrer une sequence"
-  phase_1: "4.2. Phase 1"
-  phase_2: "4.3. Phase 2"
-  phase_3: "4.4. Phase 3"
-  player_perspective_summary: "4.5. Récapitulatif de la perspective player"
+  phase_1: "4.3. Phase 1"
+  phase_2: "4.4. Phase 2"
+  phase_3: "4.5. Phase 3"
+  player_perspective_summary: "4.6. Récapitulatif de la perspective player"
 share_subject:
   share_subject: "5. Partager un sujet"
   get_share_link: "5.1. Obtenir le lien de partage"
