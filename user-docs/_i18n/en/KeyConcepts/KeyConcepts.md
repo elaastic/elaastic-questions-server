@@ -1,3 +1,3 @@
-# Key concepts
+# 2. Key concepts
 
-Four key concepts are important to understand the way Elaastic works.
+Five key concepts are important to understand the way Elaastic works.

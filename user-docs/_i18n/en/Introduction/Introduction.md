@@ -1,4 +1,4 @@
-# Introduction
+# 1. Introduction
 
 This document is a tutorial on how to use the [Elaastic](https://www.irit.fr/elaastic/) platform. [Elaastic](https://www.irit.fr/elaastic/)
 is an online application that facilitates the implementation of formative assessment sequences during a face-to-face or distance learning course.

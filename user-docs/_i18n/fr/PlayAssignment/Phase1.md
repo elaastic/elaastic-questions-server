@@ -1,9 +1,9 @@
 ## 4.2. Phase 1
 
 Lors de la phase 1, chaque apprenant devra répondre à la question que vous avez posée en...
-1. ...cochant le ou les bons choix (si ce n'est pas une question ouverte)
-2. ...fournissant une explication écrite (si vous avez coché cette option lors de la configuration de la séquence avant son lancement)
-3. ...fournissant son degré de confiance sur une échelle de "Pas du tout confiant" à "Tout à fait confiant"
+1. ...cochant le ou les bons choix (si ce n'est pas une question ouverte).
+2. ...fournissant une explication écrite (si vous avez coché cette option lors de la configuration de la séquence avant son lancement).
+3. ...fournissant son degré de confiance sur une échelle de "Pas du tout confiant" à "Tout à fait confiant".
 
 ![Vue sur phase 1]({{ "images/fr/play_assignment/phase_1_learner.png"| relative_url }})
 

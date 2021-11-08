@@ -2,8 +2,8 @@
 
 Lors de la phase 2, chaque apprenant devra évaluer une ou plusieurs des réponses fournies par ses camarades (en plus de fausses explications que vous avez éventuellement définies lors de la création de votre question). Pour cela, ils doivent...
 1. ...noter chaque explication qui leur est présentée sur une échelle de 1 (Pas du tout d'accord) à 5 (Tout à fait d'accord).
-2. ...cocher à nouveau le ou les bons choix (si ce n'est pas une question ouverte)
-3. ...fournir à nouveau leur degré de confiance sur une échelle de "Pas du tout confiant" à "Tout à fait confiant"
+2. ...cocher à nouveau le ou les bons choix (si ce n'est pas une question ouverte).
+3. ...fournir à nouveau leur degré de confiance sur une échelle de "Pas du tout confiant" à "Tout à fait confiant".
 
 ![Vue sur phase 2]({{ "images/fr/play_assignment/phase_2_learner.png"| relative_url }})
 
