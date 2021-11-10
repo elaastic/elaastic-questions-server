@@ -1,4 +1,4 @@
-## 4.4. Phase 3
+## 4.5. Phase 3
 
 Lors de la phase 3, vous et les apprenants allez échanger sur le déroulement des phases 1 et 2. Les résultats apparaissent sur les écrans des apprenants. Pour ces derniers, chaque réponse est anonyme.
 

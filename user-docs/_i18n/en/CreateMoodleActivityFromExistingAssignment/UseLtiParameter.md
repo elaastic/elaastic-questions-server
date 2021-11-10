@@ -1,19 +1,19 @@
-## 8.2. Utilisation du paramètre LTI
+## 8.2. Use LTI parameter
 
-Depuis Moodle, créez une activité Elaastic comme vu dans le chapitre 7. . Sur la page du formulaire de création de l'activité, cliquez sur "Afficher plus".
+From Moodle, create an Elaastic activity as seen in chapter 7. . On the activity creation form, click on "Show more".
 
 ![Vue sur lti use]({{ "images/fr/create_moodle_activity_from_existing_assignment/show_more.png"| relative_url }})
 
-Dans le formulaire qui apparaît, repérez le champ "Paramètres personnalisés.
+In the foloowing form, notice the field called "Personnalised parameters".
 
 ![Vue sur lti use 2]({{ "images/fr/create_moodle_activity_from_existing_assignment/advanced.png"| relative_url }})
 
-Dans ce champ, collez le texte que vous avez copié grâce à la méthode décrite dans le chapitre 8.1. .
+In this field, paste the text that you copied thanks to the method described in chapter 8.1. .
 
 ![Vue sur lti use 3]({{ "images/fr/create_moodle_activity_from_existing_assignment/fill_advanced.png"| relative_url }})
 
-Cliquez sur Enregistrer et revenir au cours.
+Click on "Save and go back to the course"
 
 ![Vue sur lti use 4]({{ "images/fr/create_moodle_activity_from_existing_assignment/activity_from_elaastic_linked.png"| relative_url }})
 
-Enfin, cliquez sur l’activité pour démarrer le sujet.
+Finally, click on the activity to laucnh you assignment;

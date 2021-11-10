@@ -1,4 +1,4 @@
-## 4.2. Phase 1
+## 4.3. Phase 1
 
 Lors de la phase 1, chaque apprenant devra répondre à la question que vous avez posée en...
 1. ...cochant le ou les bons choix (si ce n'est pas une question ouverte).
@@ -19,4 +19,4 @@ Vous pouvez alors relancer la phase 1 ou démarrer la phase 2. Dès que vous dé
 
 ![Vue sur phase 1 4]({{ "images/fr/play_assignment/phase_1_stopped.png"| relative_url }})
 
-Pour voir comment piloter la phase 2, rendez-vous au chapitre 4.3. .
+Pour voir comment piloter la phase 2, rendez-vous au chapitre 4.4. .

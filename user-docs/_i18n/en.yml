@@ -25,9 +25,10 @@ resources_creation:
 play_assignment:
   play_assignment: "4. Play an assignment"
   start_sequence: "4.1. Start a sequence"
-  phase_1: "4.2. Phase 1"
-  phase_2: "4.3. Phase 2"
-  phase_3: "4.4. Phase 3"
+  subscribe: "4.2. Assign learners to an assignment"
+  phase_1: "4.3. Phase 1"
+  phase_2: "4.4. Phase 2"
+  phase_3: "4.5. Phase 3"
   player_perspective_summary: "4.5. Player perspective summary"
 share_subject:
   share_subject: "5. Share a subject"
@@ -36,7 +37,7 @@ share_subject:
   copy_shared_subject: "5.3. Copy a shared subject"
   copy_shared_question: "5.4. Copy a shared question"
 create_moodle_activity :
-  create_moodle_activity : "7. Create an Elaastic activity from Oodle"
+  create_moodle_activity : "7. Create an Elaastic activity from Moodle"
   access_moodle : "7.1. Go to Moodle from the ENT"
   select_course : "7.2. Select the course"
   activate_edition_mode : "7.3. Activate edition mode"
@@ -44,5 +45,5 @@ create_moodle_activity :
   access_elaastic : "7.5. Access Elaastic"
 create_moodle_activity_from_existing_assignment :
   create_moodle_activity_from_existing_assignment : "8. Use an existing assignment on Elaastic from Moodle"
-  get_lti_parameter : "8.1. Get LTI Parameter"
-  use_lti_parameter : "8.2. Use LTI Parameter"
+  get_lti_parameter : "8.1. Get LTI parameter"
+  use_lti_parameter : "8.2. Use LTI parameter"

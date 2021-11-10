@@ -1,4 +1,4 @@
-## 4.3. Phase 2
+## 4.4. Phase 2
 
 Lors de la phase 2, chaque apprenant devra évaluer une ou plusieurs des réponses fournies par ses camarades (en plus de fausses explications que vous avez éventuellement définies lors de la création de votre question). Pour cela, ils doivent...
 1. ...noter chaque explication qui leur est présentée sur une échelle de 1 (Pas du tout d'accord) à 5 (Tout à fait d'accord).
@@ -7,7 +7,7 @@ Lors de la phase 2, chaque apprenant devra évaluer une ou plusieurs des répons
 
 ![Vue sur phase 2]({{ "images/fr/play_assignment/phase_2_learner.png"| relative_url }})
 
-De votre côté vous pouvez consulter l'ensemble de ces réponses à n'importe quel moment en rafraichissant la page.
+De votre côté vous pouvez consulter l'ensemble de ces réponses et évaluations à n'importe quel moment en rafraichissant la page.
 
 ![Vue sur phase 2 2]({{ "images/fr/play_assignment/phase_2_refresh.png"| relative_url }})
 
@@ -19,4 +19,4 @@ Vous pouvez alors la relancer ou démarrer la phase 3 en cliquant sur "Publier l
 
 ![Vue sur phase 2 4]({{ "images/fr/play_assignment/phase_2_stopped.png"| relative_url }})
 
-Pour voir comment piloter la phase 3, rendez-vous au chapitre 4.4. .
+Pour voir comment piloter la phase 3, rendez-vous au chapitre 4.5. .

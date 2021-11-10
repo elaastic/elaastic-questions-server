@@ -45,5 +45,5 @@ create_moodle_activity :
   access_elaastic : "7.5. Accès à la plateforme Elaastic"
 create_moodle_activity_from_existing_assignment :
   create_moodle_activity_from_existing_assignment : "8. Utiliser un devoir existant dans Elaastic depuis Moodle"
-  get_lti_parameter : "8.1. Récupération des paramètres LTI"
-  use_lti_parameter : "8.2. Utilisation des paramètres LTI"
+  get_lti_parameter : "8.1. Récupération du paramètre LTI"
+  use_lti_parameter : "8.2. Utilisation du paramètre LTI"

@@ -1,6 +1,6 @@
 ## 5.1. Obtenir le lien de partage
 
-Pour obtenir le lien de partage, rendez-vous sur la page de gestion de votre sujet et sélectionnez l'icône contenant une flèche sur le menu à gauche.
+Pour obtenir le lien de partage de votre sujet, rendez-vous sur la page de gestion de votre sujet et sélectionnez l'icône contenant une flèche sur le menu à gauche.
 
 ![Vue sur get link]({{ "images/fr/share_subject/share_icon.png"| relative_url }})
 
