@@ -1,4 +1,4 @@
-## For teachers
+## 6.1. For teachers
 
 Teachers must have an account on the platform in order to use it.  
 An account for a teacher can be created in two different ways:

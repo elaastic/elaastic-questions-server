@@ -8,12 +8,12 @@ Cliquez sur le bouton vert "Ajouter un devoir".
 
 ![Vue sur assignment creation 2]({{ "images/fr/resources_creation/create_assignment.png"| relative_url }})
 
-1. Nommez le devoir (obligatoire)
-2. Nommez votre audience, c'est-à-dire l'ensemble d'apprenant sur qui va répondre à vos questions
-3. Définissez l'année scolaire
-4. Rajoutez une description
+1. Nommez le devoir (obligatoire).
+2. Nommez votre audience, c'est-à-dire l'ensemble d'apprenant sur qui va répondre à vos questions.
+3. Définissez l'année scolaire.
+4. Rajoutez une description.
 5. Si vous le désirez, des utilisateurs anonymes (via des comptes invités) peuvent participer au devoir.
-Lorsque vous avez terminé, cliquez sur le bouton vert "Créer"
+Lorsque vous avez terminé, cliquez sur le bouton vert "Créer".
 
 ![Vue sur assignment creation 3]({{ "images/fr/resources_creation/create_assignment_form.png"| relative_url }})
 

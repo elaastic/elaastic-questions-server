@@ -1,6 +1,6 @@
 ## 3.3. Création d'une question
 
-Pour créer un question, vous devez être situé sur la page de gestion de votre sujet. Elle est accessible depuis la page de modification de votre sujets. Cliquez sur "Créer un question".
+Pour créer un question, vous devez être situé sur la page de gestion de votre sujet. Cliquez sur "Ajouter une question".
 
 ![Vue sur question creation]({{ "images/fr/resources_creation/question_creation_page.png"| relative_url }})
 
@@ -11,7 +11,7 @@ Remplir le formulaire de création de question.
 4. Choisissez le type de question.
 5. Dans le cas d'une question à choix, décidez si les choix sont sélectionnés de manière exclusive ou non.
 6. Définissez le nombre d'item, c'est-à-dire le nombre de choix possibles.
-7. Définissez le ou les bon(s) choix
+7. Définissez le ou les bon(s) choix.
 8. En déroulant ce volet, vous pouvez définir des explications qui vont se mélanger à celles rédigées par vos apprenants lors de la phase de confrontation.
 
 ![Vue sur question creation 2]({{ "images/fr/resources_creation/question_creation_form.png"| relative_url }})

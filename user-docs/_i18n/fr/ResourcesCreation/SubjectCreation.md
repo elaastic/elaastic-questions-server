@@ -23,21 +23,21 @@ Une fois cela fait, vous êtes automatiquement redirigé sur la page d'édition 
 Comme vous venez de créer votre sujet, il ne contient pour le moment aucune question. Pour créer une question, rendez vous sur le tutoriel de création d'une question qui est le chapitre 3.3. .
 
 Lorsque votre sujet contient plusieurs questions, vous pouvez les organiser avec les boutons à droite de chacune d'entre elles.
-1. Modifier la question
-2. Copier la question
-3. Faire monter la question d'un cran dans la liste
-4. Faire descendre la question d'un cran dans la liste
-5. Supprimer la question
+1. Modifier la question.
+2. Copier la question.
+3. Faire monter la question d'un cran dans la liste.
+4. Faire descendre la question d'un cran dans la liste.
+5. Supprimer la question.
 
 ![Vue sur subject 6]({{ "images/fr/resources_creation/question_management.png" | relative_url }})
 
-De plus, votre sujet ne contient pour le moment aucune question. Pour créer un devoir, rendez vous sur le tutoriel de création d'un devoir.
+De plus, votre sujet ne contient pour le moment aucun devoir. Pour créer un devoir, rendez vous sur le tutoriel de création d'un devoir qui est le chapitre 3.4. .
 
-Lorsque votre sujet contient plusieurs devoir, vous pouvez les gérer avec les boutons à droite de chacun d'entre eux.
-1. Lancer le devoir
-2. Modifier le devoir
-3. Faire monter le devoir d'un cran dans la liste
-4. Faire descendre le devoir d'un cran dans la liste
-3. Supprimer le devoir
+Lorsque votre sujet contient plusieurs devoirs, vous pouvez les gérer avec les boutons à droite de chacun d'entre eux.
+1. Lancer le devoir.
+2. Modifier le devoir.
+3. Faire monter le devoir d'un cran dans la liste.
+4. Faire descendre le devoir d'un cran dans la liste.
+3. Supprimer le devoir.
 
 ![Vue sur subject 7]({{ "images/fr/resources_creation/assignment_management.png" | relative_url }})

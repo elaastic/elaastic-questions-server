@@ -1,4 +1,4 @@
-## For learners
+## 6.2. For learners
 
 Learners can participate in an elaastic [assignment]({% link KeyConcepts/Assignments.md %}) without having an account
 on the platform. They then participate in the activity completely anonymously.
