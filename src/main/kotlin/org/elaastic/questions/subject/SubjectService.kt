@@ -334,7 +334,7 @@ class SubjectService(
         return sharedSubjectRepository.findAllSubjectsForTeacher(user, pageable)
     }
 
-    fun duplicate(user: User, initialSubject: Subject): Subject {
+    fun duplicate(user: User, initialSubject: Subject, inSameCourse: Boolean = true): Subject {
         val indexTitle = subjectRepository.countAllStartingWithTitle(user, initialSubject.title) + 1
         val duplicateTitle = if (indexTitle == 1) initialSubject.title else initialSubject.title + " ($indexTitle) "
         val duplicateSubject = Subject(
@@ -342,7 +342,9 @@ class SubjectService(
             user
         )
         duplicateSubject.parentSubject = initialSubject
-        duplicateSubject.course = initialSubject.course
+        if (inSameCourse) {
+            duplicateSubject.course = initialSubject.course
+        }
         save(duplicateSubject)
         entityManager.flush()
         for (statement: Statement in initialSubject.statements) {
@@ -355,7 +357,7 @@ class SubjectService(
         if (sharedSubjectRepository.findByTeacherAndSubject(user, sharedSubject) == null)
             throw EntityNotFoundException("The subject \"${sharedSubject.title}\" is not shared with you")
 
-        return duplicate(user, sharedSubject)
+        return duplicate(user, sharedSubject, false)
     }
 
     fun isUsedAsParentSubject(user: User, parentSubject: Subject): Boolean {
