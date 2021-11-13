@@ -81,8 +81,8 @@ class LtiController(
             )
             if (lmsUser != null) {
                 authenticateLmsUser(session, lmsUser)
-                val lmsCourse = lmsService.getLmsCourse(lmsUser,ltiLaunchData.toLtiActivity())
-                redirectToAssignment(ltiLaunchData, lmsUser, lmsCourse, redirectAttributes)
+                //val lmsCourse = lmsService.getLmsCourse(lmsUser,ltiLaunchData.toLtiActivity())
+                redirectToAssignment(ltiLaunchData, lmsUser, redirectAttributes)
             } else {
                 setLtiLaunchDataInSession(ltiLaunchData, session)
                 model.addAttribute("termsContent", termsService.getTermsContentByLanguage(locale.language))
@@ -109,8 +109,8 @@ class LtiController(
             if (withConsent) {
                 val lmsUser = lmsService.getLmsUser(ltiLaunchData.toLtiUser())
                 authenticateLmsUser(request.session, lmsUser)
-                val lmsCourse = lmsService.getLmsCourse(lmsUser, ltiLaunchData.toLtiActivity())
-                redirectToAssignment(ltiLaunchData, lmsUser, lmsCourse, redirectAttributes)
+                //val lmsCourse = lmsService.getLmsCourse(lmsUser, ltiLaunchData.toLtiActivity())
+                redirectToAssignment(ltiLaunchData, lmsUser, redirectAttributes)
             } else {
                 logger.severe("Consent not given")
                 "redirect:${ltiLaunchData.getRedirectUrlWithErrorMessage("no_consent_given_by_user")}"
@@ -135,12 +135,10 @@ class LtiController(
     private fun redirectToAssignment(
         ltiLaunchData: LtiLaunchData,
         lmsUser: LmsUser,
-        lmsCourse: LmsCourse,
         redirectAttributes: RedirectAttributes
     ): String {
         val assignment = lmsService.getLmsAssignment(
             lmsUser = lmsUser,
-            lmsCourse = lmsCourse,
             ltiActivity = ltiLaunchData.toLtiActivity()
         ).assignment
         val user = lmsUser.user

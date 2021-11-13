@@ -82,7 +82,6 @@ internal class LmsServiceIntegrationTest(
         }.tWhen("assignment is asked") {
             lmsService.getLmsAssignment(
                 lmsUser = it.first,
-                lmsCourse = it.second,
                 ltiActivity = ltiData.toLtiActivity()
             )
         }.tThen("a new assignment is created and returned") {
@@ -98,7 +97,6 @@ internal class LmsServiceIntegrationTest(
             lmsService.getLmsUser(ltiData.toLtiUser()).let { lmsuser ->
                 lmsService.getLmsAssignment(
                     lmsUser = lmsuser,
-                    lmsCourse = lmsService.getLmsCourse(lmsuser, ltiData.toLtiActivity()),
                     ltiActivity = ltiData.toLtiActivity()
                 ).tThen { newLmsAssignment ->
                     assertThat(newLmsAssignment, equalTo(it))
@@ -112,7 +110,6 @@ internal class LmsServiceIntegrationTest(
             assertThrows<IllegalArgumentException> {
                 lmsService.getLmsAssignment(
                     lmsUser = it,
-                    lmsCourse = lmsService.getLmsCourse(it, ltiDataWithBadGlobalId.toLtiActivity()),
                     ltiActivity = ltiDataWithBadGlobalId.toLtiActivity()
                 )
             }

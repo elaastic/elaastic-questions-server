@@ -109,7 +109,6 @@ class LmsService(
      */
     fun getLmsAssignment(
         lmsUser: LmsUser,
-        lmsCourse: LmsCourse,
         ltiActivity: LtiActivity
     ): LmsAssignment {
         var lmsAssignment = lmsAssignmentRepository.findByLmsActivityIdAndLmsCourseIdAndLms(
@@ -124,7 +123,6 @@ class LmsService(
             }
             findOrCreateAssignmentFromLtiData(
                 lmsUser = lmsUser,
-                lmsCourse,
                 ltiActivity = ltiActivity
             ).let {
                 lmsAssignment = createLmsAssignment(
@@ -140,7 +138,7 @@ class LmsService(
             courseService.addSubjectToCourse(
                 lmsUser.user,
                 lmsAssignment!!.assignment.subject!!,
-                lmsCourse.course
+                getLmsCourse(lmsUser, ltiActivity).course
             )
         }
         return lmsAssignment!!
@@ -211,12 +209,12 @@ class LmsService(
 
     private fun findOrCreateAssignmentFromLtiData(
         lmsUser: LmsUser,
-        lmsCourse: LmsCourse,
         ltiActivity: LtiActivity
     ): Assignment {
         return if (ltiActivity.globalId != null) {
             findAssignmentWithIdFromLtiData(ltiActivity.globalId)
         } else {
+            val lmsCourse = getLmsCourse(lmsUser, ltiActivity)
             Subject(ltiActivity.title, lmsUser.user, course = lmsCourse.course).let {
                 subjectService.save(it)
             }.let { subject ->
