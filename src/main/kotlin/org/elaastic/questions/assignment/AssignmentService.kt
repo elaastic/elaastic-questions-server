@@ -127,7 +127,6 @@ class AssignmentService(
         assignment.sequences.remove(sequence)
         sequenceRepository.delete(sequence) // all other linked entities are deletes by DB cascade
         entityManager.flush()
-        entityManager.clear()
         updateAllSequenceRank(assignment)
     }
 
