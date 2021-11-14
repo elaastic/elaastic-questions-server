@@ -109,9 +109,24 @@
           assignment with questions of the subject.
         </div>
       </h2>
+
+      <div class="ui basic segment">
+        <div class="ui breadcrumb" th:if="${subject.course != null}">
+          <a class="section" th:text="#{course.my.list.label}" th:href="@{/course/}">My courses</a>
+          <div class="divider"> /</div>
+          <a class="section" th:text="${subject.course.title}" th:href="@{/course/{id}(id=${subject.course.id})}">Course
+            title</a>
+          <div class="divider"> /</div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
+        </div>
+
+        <div class="ui breadcrumb" th:unless="${subject.course != null}">
+          <a class="section" th:text="#{subject.my.list.label}" th:href="@{/subject/}">My subjects</a>
+          <div class="divider"> /</div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
+        </div>
+      </div>
     </th:block>
-
-
 
 
     <th:block th:if="${subject.owner != user}">
@@ -138,25 +153,23 @@
 
       </h2>
 
+      <div class="ui basic segment">
+        <div class="ui breadcrumb" th:if="${subject.course != null}">
+          <a class="section" th:text="#{course.my.list.label}" th:href="@{/course/}">My courses</a>
+          <div class="divider"> /</div>
+          <a class="section" th:text="${subject.course.title}" th:href="@{/course/{id}(id=${subject.course.id})}">Course
+            title</a>
+          <div class="divider"> /</div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
+        </div>
 
+        <div class="ui breadcrumb" th:unless="${subject.course != null}">
+          <a class="section" th:text="#{subject.shared.my.list.label}" th:href="@{/subject/shared_index/}">My subjects</a>
+          <div class="divider"> /</div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
+        </div>
+      </div>
     </th:block>
-
-    <div class="ui basic segment">
-      <div class="ui breadcrumb" th:if="${subject.course != null}">
-        <a class="section" th:text="#{course.my.list.label}" th:href="@{/course/}">My courses</a>
-        <div class="divider"> /</div>
-        <a class="section" th:text="${subject.course.title}" th:href="@{/course/{id}(id=${subject.course.id})}">Course
-          title</a>
-        <div class="divider"> /</div>
-        <div class="active section" th:text="${subject.title}">Subject title</div>
-      </div>
-
-      <div class="ui breadcrumb" th:unless="${subject.course != null}">
-        <a class="section" th:text="#{subject.my.list.label}" th:href="@{/subject/}">My subjects</a>
-        <div class="divider"> /</div>
-        <div class="active section" th:text="${subject.title}">Subject title</div>
-      </div>
-    </div>
 
     <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
       Message
@@ -171,7 +184,7 @@
          th:text="#{subject.page.show.assignments-tab-title}"
          th:class="${subject.owner==user} ? 'item ob-assignment-creation-1 ob-one-shared-subjects-2' : 'noAccess ob-assignment-creation-1 ob-one-shared-subjects-2'">assignments</a>
     </div>
-    
+
     <style>
         .noAccess {
             background-color: #e0e1e2 !important;
