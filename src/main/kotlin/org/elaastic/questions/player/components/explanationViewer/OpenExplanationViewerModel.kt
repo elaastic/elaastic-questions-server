@@ -19,7 +19,8 @@
 package org.elaastic.questions.player.components.explanationViewer
 
 class OpenExplanationViewerModel(explanations: List<ExplanationData>,
-                                 alreadySorted: Boolean = false) : ExplanationViewerModel {
+                                 alreadySorted: Boolean = false,
+                                 override val studentsIdentitiesAreDisplayable: Boolean = false) : ExplanationViewerModel {
     val explanations =
             if (alreadySorted) explanations
             else explanations.sortedWith(

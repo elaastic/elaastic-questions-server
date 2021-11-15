@@ -26,7 +26,8 @@ data class ChoiceResultsModel(
     override val sequenceId: Long,
     val responseDistributionChartModel: ResponseDistributionChartModel? = null,
     override val explanationViewerModel: ExplanationViewerModel? = null,
-    override val userCanRefreshResults: Boolean = true
+    override val userCanRefreshResults: Boolean = true,
+    override val userCanDisplayStudentsIdentity: Boolean = false,
 ) : ResultsModel {
     override val hasExplanations = explanationViewerModel?.nbExplanations ?: 0 > 0
     override fun getHasChoices() = true

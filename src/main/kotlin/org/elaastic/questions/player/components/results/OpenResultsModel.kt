@@ -24,7 +24,8 @@ data class OpenResultsModel(
         override val sequenceIsStopped: Boolean,
         override val sequenceId: Long,
         override val explanationViewerModel: ExplanationViewerModel? = null,
-        override val userCanRefreshResults: Boolean = true
+        override val userCanRefreshResults: Boolean = true,
+        override val userCanDisplayStudentsIdentity: Boolean = false,
 ) : ResultsModel {
     override val hasExplanations = explanationViewerModel?.nbExplanations ?: 0 > 0
     override fun getHasChoices() = false

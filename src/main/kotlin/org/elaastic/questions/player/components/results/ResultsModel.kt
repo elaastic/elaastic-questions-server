@@ -27,4 +27,5 @@ interface ResultsModel {
     val hasExplanations: Boolean
     val explanationViewerModel: ExplanationViewerModel?
     val userCanRefreshResults : Boolean
+    val userCanDisplayStudentsIdentity: Boolean
 }

@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="anExplanation(explanation)"
+<div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable)"
      th:if="${!explanation.content.isBlank()}"
      class="ui info message explanation"
      th:styleappend="${explanation.meanGrade != null ? 'padding-top: 3em;' : ''}"
@@ -31,7 +31,7 @@
           th:text="${explanation.nbEvaluations}+' '+#{common.evaluations}"></span>
   </div>
   <b>
-    <span class="name-explanation" th:if="${user.isTeacher()}" th:text="${explanation.author}"></span>
+    <span class="name-explanation" th:if="${studentsIdentitiesAreDisplayable}" th:text="${explanation.author}"></span>
   </b>
 
   <span th:utext="${explanation.content}"></span>

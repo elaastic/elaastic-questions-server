@@ -25,7 +25,7 @@
   <div th:each="explanation : ${explanationViewerModel.explanationsExcerpt}"
        th:remove="tag">
     <div
-      th:replace="|${components}/_anExplanation|::anExplanation(${explanation})"></div>
+      th:replace="|${components}/_anExplanation|::anExplanation(${explanation}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
   </div>
 
   <!--  Message if there is no explanations -->

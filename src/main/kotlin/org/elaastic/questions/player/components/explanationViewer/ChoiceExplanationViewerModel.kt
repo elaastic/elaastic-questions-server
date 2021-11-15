@@ -21,7 +21,8 @@ package org.elaastic.questions.player.components.explanationViewer
 class ChoiceExplanationViewerModel(
         explanationsByResponse: Map<ResponseData, List<ExplanationData>>,
         val showOnlyCorrectResponse: Boolean = false,
-        alreadySorted: Boolean = false
+        alreadySorted: Boolean = false,
+        override val studentsIdentitiesAreDisplayable: Boolean = false
 ) : ExplanationViewerModel {
     override val hasChoice = true
     val explanationsByResponse =

@@ -23,4 +23,5 @@ interface ExplanationViewerModel {
     val explanationsExcerpt: List<ExplanationData>
     val hasMoreThanExcerpt: Boolean
     val nbExplanations: Int
+    val studentsIdentitiesAreDisplayable: Boolean
 }

@@ -44,16 +44,18 @@ object ResultsModelFactory {
                                     responseList = responseSet[sequence.whichAttemptEvaluate()]
                             )
                         else null,
-                        userCanRefreshResults = userCanRefreshResults
+                        userCanRefreshResults = userCanRefreshResults,
+                        userCanDisplayStudentsIdentity = teacher
                 )
             else OpenResultsModel(
                     sequenceIsStopped = sequence.isStopped(),
                     sequenceId = sequence.id ?: error("This sequence has no ID"),
                     explanationViewerModel =
-                    ExplanationViewerModelFactory.buildOpen(
+                    ExplanationViewerModelFactory.buildOpen(teacher,
                             responseSet[sequence.whichAttemptEvaluate()]
                     ),
-                    userCanRefreshResults = userCanRefreshResults
+                    userCanRefreshResults = userCanRefreshResults,
+                    userCanDisplayStudentsIdentity = teacher
             )
 
     private fun buildResponseDistributionChartModel(sequence: Sequence,
