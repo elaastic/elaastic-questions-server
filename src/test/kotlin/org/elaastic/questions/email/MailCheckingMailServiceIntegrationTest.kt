@@ -98,7 +98,13 @@ internal class MailCheckingMailServiceIntegrationTest(
         // when:  triggering emails sending to check validity
         mailCheckingMailService.sendEmailsToAccountActivation()
         // then: 3 messages have been received
-        assertThat(smtpServer.receivedMessages.size, equalTo(3))
+        if(smtpServer.waitForIncomingEmail(1000, 3)) {
+            assertThat(smtpServer.receivedMessages.size, equalTo(3))
+        }
+        else {
+            fail("The 3 messages have not been received")
+        }
+
         smtpServer.receivedMessages.forEachIndexed { index, message ->
             logger.info("""
                 Content of  message $index:
