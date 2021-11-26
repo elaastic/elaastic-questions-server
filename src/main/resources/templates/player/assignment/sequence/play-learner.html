@@ -38,7 +38,7 @@
   </script>
 </div>
 
-<aside id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
+<aside class="ob-start-sequence-2" id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
   <div
     th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 </aside>
