@@ -110,11 +110,6 @@ object PlayerModelFactory {
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
                 assignmentTitle = assignment.title,
-                courseTitle = null,
-                courseId = null,
-                subjectTitle = null,
-                subjectId = null,
-                audience = null,
                 assignmentId = assignment.id!!,
                 sequences = assignment.sequences,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
