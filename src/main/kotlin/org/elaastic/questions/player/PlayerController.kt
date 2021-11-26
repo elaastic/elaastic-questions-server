@@ -272,12 +272,10 @@ class PlayerController(
                     else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
                 },
                 messageBuilder = messageBuilder,
-                getActiveInteractionForLearner = {
-                    learnerSequenceService.getActiveInteractionForLearner(
-                        user,
-                        sequence
-                    )
-                },
+                activeInteraction = learnerSequenceService.getActiveInteractionForLearner(
+                    user,
+                    sequence
+                ),
                 learnerSequence = learnerSequence
             )
         )

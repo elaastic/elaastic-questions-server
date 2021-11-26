@@ -100,7 +100,7 @@ object PlayerModelFactory {
             featureManager: FeatureManager,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
-        getActiveInteractionForLearner: () -> Interaction?,
+        activeInteraction: Interaction?,
         learnerSequence: ILearnerSequence,
     ): LearnerPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
@@ -121,10 +121,7 @@ object PlayerModelFactory {
                 selectedSequenceId = sequence.id,
                 teacher = false
             ),
-            stepsModel = StepsModelFactory.buildForLearner(
-                sequence,
-                getActiveInteractionForLearner()
-            ),
+            stepsModel = StepsModelFactory.buildForLearner(sequence, activeInteraction),
             sequenceInfoModel = SequenceInfoResolver.resolve(false, sequence, messageBuilder),
             statementPanelModel = StatementPanelModel(
                 hideStatement = sequence.state == State.beforeStart,
