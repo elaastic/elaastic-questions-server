@@ -91,7 +91,7 @@ class OneByOneEvaluationPhaseExecutionController(
         val responseId: Long,
         val grade: Int,
 
-        val changeAnswer: Boolean,
+        val changeAnswer: Boolean = false,
         val choiceList: List<ItemIndex>?,
         val confidenceDegree: ConfidenceDegree?,
         val explanation: String?
