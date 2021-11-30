@@ -9,18 +9,12 @@ class TransientLearnerSequence(
     override val learner: User,
     override val sequence: Sequence
 ) : ILearnerSequence, ISequence by sequence {
+    @Suppress("UNUSED_PARAMETER")
     override var activeInteraction: Interaction?
         get() = sequence.activeInteraction
-        set(v) = throw IllegalStateException("Setting activeInteraction is not allowed on TransientLearnerSequence")
+        set(ignore) = throw IllegalStateException("Setting activeInteraction is not allowed on TransientLearnerSequence")
 
-    // TODO Should be factorized with LearnerSequence class
     override var phaseList: Array<LearnerPhase?> = arrayOf<LearnerPhase?>(null, null, null)
-        get() { // Needed because of JPA using a default empty constructor that bypass the var initialization...
-            if (field == null) {
-                field = arrayOf<LearnerPhase?>(null, null, null)
-            }
-            return field
-        }
 
     override fun loadPhase(learnerPhase: LearnerPhase) {
         phaseList[learnerPhase.index - 1] = learnerPhase
