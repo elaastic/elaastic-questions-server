@@ -5,7 +5,6 @@ import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.player.phase.LearnerPhase
 import org.elaastic.questions.player.phase.LearnerPhaseFactory
 import org.elaastic.questions.player.phase.descriptor.PhaseConfig
-import org.elaastic.questions.player.phase.response.LearnerResponsePhase
 
 class LearnerResultPhaseFactory : LearnerPhaseFactory {
 
@@ -16,7 +15,7 @@ class LearnerResultPhaseFactory : LearnerPhaseFactory {
         state: State,
         phaseConfig: PhaseConfig?
     ): LearnerPhase =
-        LearnerResponsePhase(
+        LearnerResultPhase(
             learnerSequence,
             phaseIndex,
             active,
