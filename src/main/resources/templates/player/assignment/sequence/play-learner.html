@@ -59,11 +59,6 @@
     <div
       th:replace="|${components}/statement/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
 
-<!--    TODO integrate LearnerResult into result phase -->
-<!--    <th:block th:if="${playerModel.showResults}">-->
-<!--      <div th:replace="|${components}/my-results/_my-results.html| :: myResults('id', ${playerModel.learnerResultsModel})"></div>-->
-<!--    </th:block>-->
-
     <th:block th:each="phase : ${playerModel.phaseList}">
       <th:block th:if="${phase.isVisible()}">
         <div
