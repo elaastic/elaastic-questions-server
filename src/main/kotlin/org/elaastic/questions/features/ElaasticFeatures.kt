@@ -6,6 +6,10 @@ import org.togglz.core.annotation.EnabledByDefault
 import org.togglz.core.context.FeatureContext
 
 enum class ElaasticFeatures {
+    /**
+     * If the file togglz.features-file.properties is defined at the root classpath, it will overload
+     * the default configuration defined bellow
+     */
     @EnabledByDefault
     @DefaultActivationStrategy(
         id = ShowRecommendationsActivationStrategy.ID,
