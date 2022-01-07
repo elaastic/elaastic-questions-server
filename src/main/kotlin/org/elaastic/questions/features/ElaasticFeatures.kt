@@ -8,8 +8,11 @@ import org.togglz.core.context.FeatureContext
 enum class ElaasticFeatures {
     @EnabledByDefault
     @DefaultActivationStrategy(
-        id = TeacherBecameActiveAfterActivationStrategy.ID,
-        parameters = [ActivationParameter(name = "becameActiveAfter", value = "01/01/2022")]
+        id = ShowRecommendationsActivationStrategy.ID,
+        parameters = [
+            ActivationParameter(name = "becameActiveAfter", value = "01/01/2022"),
+            ActivationParameter(name = "users", value = ""),
+        ]
     )
     RECOMMENDATIONS;
 
