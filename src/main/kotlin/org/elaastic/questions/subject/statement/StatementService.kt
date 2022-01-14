@@ -86,7 +86,9 @@ class StatementService(
         removeAllFakeExplanation(statement)
         if(fakeExplanationDataList.isNotEmpty()) {
             fakeExplanationDataList.forEach {
-                addFakeExplanation(statement, it)
+                if(it.content?.isNotEmpty() == true) {
+                    addFakeExplanation(statement, it)
+                }
             }
         }
     }
