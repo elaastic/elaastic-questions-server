@@ -35,7 +35,6 @@ object RecommendationResolver {
                 messageBuilder: MessageBuilder): RecommendationModel? {
         var result: RecommendationModel? = null
         val firstResponses = responseSet[1].filter { response -> !response.fake }
-        System.out.println(peerGradings)
         if (firstResponses.size >= 10) {
             if (sequence.recommendableAfterPhase1()) {
                 val p1 = IndicatorCalculator.computeP(firstResponses)
