@@ -19,7 +19,7 @@
 package org.elaastic.questions.lti
 
 import org.elaastic.questions.lti.controller.LtiLaunchData
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
@@ -40,7 +40,7 @@ import javax.transaction.Transactional
 @Transactional
 internal class LmsServiceIntegrationTest(
     @Autowired val lmsService: LmsService,
-    @Autowired val testingService: TestingService
+    @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     lateinit var ltiData: LtiLaunchData
@@ -48,8 +48,8 @@ internal class LmsServiceIntegrationTest(
 
     @BeforeEach
     fun setup() {
-        ltiData = testingService.getLtiLaunchDataComingFromBoBDeniroTeacher()
-        ltiDataWithBadGlobalId = testingService.getLtiLaunchDataWithBadGlobalId()
+        ltiData = integrationTestingService.getLtiLaunchDataComingFromBoBDeniroTeacher()
+        ltiDataWithBadGlobalId = integrationTestingService.getLtiLaunchDataWithBadGlobalId()
     }
 
     @Test
@@ -61,7 +61,7 @@ internal class LmsServiceIntegrationTest(
         }.tThen("lms user is obtained with its corresponding user") {
             assertThat(it.id, notNullValue())
             assertThat(it.user, notNullValue())
-            assertThat(it.lms, equalTo(testingService.getAnyLtiConsumer()))
+            assertThat(it.lms, equalTo(integrationTestingService.getAnyLtiConsumer()))
             assertThat(it.user.lastName, equalTo("Deniro"))
             assertTrue(it.user.isTeacher())
             it
@@ -85,7 +85,7 @@ internal class LmsServiceIntegrationTest(
                 ltiActivity = ltiData.toLtiActivity()
             )
         }.tThen("a new assignment is created and returned") {
-            assertThat(it.lms, equalTo(testingService.getAnyLtiConsumer()))
+            assertThat(it.lms, equalTo(integrationTestingService.getAnyLtiConsumer()))
             assertThat(it.lmsActivityId, equalTo(ltiData.resource_link_id))
             assertThat(it.lmsCourseId, equalTo(ltiData.context_id))
             assertThat(it.assignment.owner, equalTo(lmsService.getLmsUser(ltiData.toLtiUser()).user))

@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.lti
 
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -34,9 +34,9 @@ import org.hamcrest.MatcherAssert.assertThat
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LmsUserRepositoryIntegrationTest(
-        @Autowired val entityManager: EntityManager,
-        @Autowired val testingService: TestingService,
-        @Autowired val lmsUserRepository: LmsUserRepository
+    @Autowired val entityManager: EntityManager,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val lmsUserRepository: LmsUserRepository
 ) {
 
     @Test
@@ -45,17 +45,17 @@ internal class LmsUserRepositoryIntegrationTest(
             // a valid lms user
             LmsUser(
                     "lms user id",
-                    testingService.getAnyLtiConsumer(),
-                    testingService.getTestStudent()
+                    integrationTestingService.getAnyLtiConsumer(),
+                    integrationTestingService.getTestStudent()
             ).tWhen {
                 // saving the lms user
                 lmsUserRepository.saveAndFlush(it)
             }.tThen {
                 entityManager.refresh(it)
                 assertThat(it.id, notNullValue())
-                assertThat(it.user, equalTo(testingService.getTestStudent()))
+                assertThat(it.user, equalTo(integrationTestingService.getTestStudent()))
                 assertThat(it.lmsUserId, equalTo("lms user id"))
-                assertThat(it.lms, equalTo(testingService.getAnyLtiConsumer()))
+                assertThat(it.lms, equalTo(integrationTestingService.getAnyLtiConsumer()))
             }
         }
 

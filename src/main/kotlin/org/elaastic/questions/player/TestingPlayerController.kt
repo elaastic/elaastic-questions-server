@@ -56,6 +56,7 @@ import org.elaastic.questions.player.components.studentResults.LearnerOpenResult
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -68,6 +69,7 @@ import java.math.BigDecimal
 
 @Controller
 @RequestMapping("/player/test")
+@PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('FUNCTIONAL_TESTING'))")
 class TestingPlayerController(
     @Autowired
     val messageBuilder: MessageBuilder,

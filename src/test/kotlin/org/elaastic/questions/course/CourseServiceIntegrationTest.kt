@@ -3,7 +3,7 @@ package org.elaastic.questions.course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
@@ -25,12 +25,12 @@ import javax.validation.ConstraintViolationException
 class CourseServiceIntegrationTest(
         @Autowired val courseService: CourseService,
         @Autowired val subjectService: SubjectService,
-        @Autowired val testingService: TestingService
+        @Autowired val integrationTestingService: IntegrationTestingService
 ){
 
     @Test
     fun `findAllByOwner - no course`() {
-        val teacher = testingService.getAnotherTestTeacher()
+        val teacher = integrationTestingService.getAnotherTestTeacher()
 
         courseService.findAllByOwner(teacher)
                 .tExpect {
@@ -41,7 +41,7 @@ class CourseServiceIntegrationTest(
 
     @Test
     fun `findAllByOwner - with courses`() {
-        val teacher = testingService.getAnotherTestTeacher()
+        val teacher = integrationTestingService.getAnotherTestTeacher()
         createTestingData(teacher)
 
         courseService.findAllByOwner(teacher)
@@ -58,7 +58,7 @@ class CourseServiceIntegrationTest(
 
     @Test
     fun `save a valid course`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val course = Course("A course", teacher)
         tWhen { courseService.save(course) }
                 .tThen {
@@ -66,14 +66,14 @@ class CourseServiceIntegrationTest(
                     MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(0L))
                     MatcherAssert.assertThat(UUID.fromString(it.globalId), CoreMatchers.notNullValue())
                     MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("A course"))
-                    MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(testingService.getTestTeacher()))
+                    MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(integrationTestingService.getTestTeacher()))
                 }
     }
 
     @Test
     fun `a course must have a not blank title`() {
         val exception = org.junit.jupiter.api.assertThrows<ConstraintViolationException> {
-            courseService.save(Course("", testingService.getTestTeacher()))
+            courseService.save(Course("", integrationTestingService.getTestTeacher()))
         }
 
         MatcherAssert.assertThat(exception.constraintViolations.size, CoreMatchers.equalTo(1))
@@ -86,15 +86,15 @@ class CourseServiceIntegrationTest(
     @Test
     fun `add a subject without a course to a course`() {
         tGiven("A subject without a course and a course") {
-            val subject = subjectService.save(Subject("a subject", testingService.getTestTeacher()))
-            val course = courseService.save(Course("a course", testingService.getTestTeacher()))
+            val subject = subjectService.save(Subject("a subject", integrationTestingService.getTestTeacher()))
+            val course = courseService.save(Course("a course", integrationTestingService.getTestTeacher()))
             Pair<Subject,Course>(subject, course)
         }.tThen {
             MatcherAssert.assertThat(it.first.course,CoreMatchers.nullValue())
             MatcherAssert.assertThat(it.second.subjects.size, CoreMatchers.equalTo(0))
             it
         }.tWhen("Adding the subject to the course") {
-            courseService.addSubjectToCourse(testingService.getTestTeacher(),it.first, it.second)
+            courseService.addSubjectToCourse(integrationTestingService.getTestTeacher(),it.first, it.second)
             it
         }.tThen {
             MatcherAssert.assertThat(it.first.course,CoreMatchers.equalTo(it.second))
@@ -104,9 +104,9 @@ class CourseServiceIntegrationTest(
 
     @Test
     fun `add a subject with a course to a new course`() {
-        val course1 = courseService.save(Course("Course 1", testingService.getTestTeacher()))
-        val subject = subjectService.save(Subject("a subject", testingService.getTestTeacher(), course = course1))
-        val course2 = courseService.save(Course("a course", testingService.getTestTeacher()))
+        val course1 = courseService.save(Course("Course 1", integrationTestingService.getTestTeacher()))
+        val subject = subjectService.save(Subject("a subject", integrationTestingService.getTestTeacher(), course = course1))
+        val course2 = courseService.save(Course("a course", integrationTestingService.getTestTeacher()))
         tGiven("A subject with a course and another course") {
             subject ; course1 ; course2
         }.tThen {
@@ -114,7 +114,7 @@ class CourseServiceIntegrationTest(
             MatcherAssert.assertThat(course1.subjects.size, CoreMatchers.equalTo(1))
             MatcherAssert.assertThat(course2.subjects.size, CoreMatchers.equalTo(0))
         }.tWhen("Adding the subject to the course 2") {
-            courseService.addSubjectToCourse(testingService.getTestTeacher(),subject, course2)
+            courseService.addSubjectToCourse(integrationTestingService.getTestTeacher(),subject, course2)
         }.tThen {
             MatcherAssert.assertThat(subject.course,CoreMatchers.equalTo(course2))
             MatcherAssert.assertThat(course2.subjects.size, CoreMatchers.equalTo(1))

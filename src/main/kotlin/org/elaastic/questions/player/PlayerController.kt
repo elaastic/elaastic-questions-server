@@ -69,15 +69,18 @@ class PlayerController(
     private val autoReloadSessionHandler = AutoReloadSessionHandler
 
     @GetMapping(value = ["", "/", "/index"])
-    fun index(authentication: Authentication,
-              model: Model): String {
+    fun index(
+        authentication: Authentication,
+        model: Model
+    ): String {
         val user: User = authentication.principal as User
 
         // TODO N+1 SELECT (Assignment => Course)
-        val assignments : List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
-        val mapCourseAssignments : Map<Course, MutableList<Assignment>> =
-                assignmentService.getCoursesAssignmentsMap(assignments)
-        val assignmentsWithoutCourse : List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
+        val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
+        val mapCourseAssignments: Map<Course, MutableList<Assignment>> =
+            assignmentService.getCoursesAssignmentsMap(assignments)
+        val assignmentsWithoutCourse: List<Assignment> =
+            assignments.filter { assignment -> assignment.subject?.course == null }
         model.addAttribute("user", user)
         model.addAttribute("mapCourseAssignments", mapCourseAssignments)
         model.addAttribute("assignmentsWithoutCourse", assignmentsWithoutCourse)
@@ -151,7 +154,7 @@ class PlayerController(
         authentication == null ||
                 throw IllegalStateException("You cannot start an anonymous session while being authenticated")
 
-        if(nickname == "") {
+        if (nickname == "") {
             redirectAttributes.addAttribute("globalId", globalId)
             with(messageBuilder) {
                 error(redirectAttributes, message("nickname.mandatory"))
@@ -436,42 +439,11 @@ class PlayerController(
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
-        var assignment: Assignment?
 
-        sequenceService.get(id, true).let { sequence ->
-            assignment = sequence.assignment!!
-            val choiceListSpecification = responseSubmissionData.choiceList?.let {
-                LearnerChoice(it)
-            }
+        val sequence = sequenceService.get(id, true)
+        sequenceService.submitResponse(user, sequence, responseSubmissionData)
 
-            val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
-
-            responseService.save(
-                userActiveInteraction
-                    ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
-                Response(
-                    learner = user,
-                    interaction = sequence.getResponseSubmissionInteraction(),
-                    attempt = responseSubmissionData.attempt,
-                    confidenceDegree = responseSubmissionData.confidenceDegree,
-                    explanation = responseSubmissionData.explanation,  // TODO Sanitize
-                    learnerChoice = choiceListSpecification,
-                    score = choiceListSpecification?.let {
-                        Response.computeScore(
-                            it,
-                            sequence.statement.choiceSpecification
-                                ?: error("The choice specification is undefined")
-                        )
-                    },
-                    statement = sequence.statement
-                )
-            )
-            if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-                sequenceService.nextInteractionForLearner(sequence, user)
-            }
-        }
-
-        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
+        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }
 
     data class ResponseSubmissionData(

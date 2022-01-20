@@ -22,8 +22,7 @@ package org.elaastic.questions.lti
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
-import org.elaastic.questions.lti.controller.LtiLaunchData
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
@@ -43,7 +42,7 @@ internal class LmsUserAccountCreationServiceIntegrationTest(
         @Autowired val lmsUserAccountCreationService: LmsUserAccountCreationService,
         @Autowired val userService: UserService,
         @Autowired val roleService: RoleService,
-        @Autowired val testingService: TestingService
+        @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     internal var logger = Logger.getLogger(LmsUserAccountCreationServiceIntegrationTest::class.java.name)
@@ -193,7 +192,7 @@ internal class LmsUserAccountCreationServiceIntegrationTest(
    @Test
    fun testCreateUserFromLtiData() {
        tGiven {
-            testingService.getLtiLaunchDataComingFromBoBDeniroTeacher().toLtiUser()
+            integrationTestingService.getLtiLaunchDataComingFromBoBDeniroTeacher().toLtiUser()
        }.tWhen {
            lmsUserAccountCreationService.createUserFromLtiData(it)
        }.tThen {

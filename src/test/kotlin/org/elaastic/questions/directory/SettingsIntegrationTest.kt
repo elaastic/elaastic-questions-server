@@ -18,9 +18,7 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.test.TestingService
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.questions.test.IntegrationTestingService
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -39,8 +37,8 @@ import javax.validation.ConstraintViolationException
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class SettingsIntegrationTest(
-        @Autowired val testingService: TestingService,
-        @Autowired val settingsRepository: SettingsRepository
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val settingsRepository: SettingsRepository
 ) {
 
     val logger = Logger.getLogger(SettingsIntegrationTest::class.java.name)
@@ -57,7 +55,7 @@ internal class SettingsIntegrationTest(
         // given a valid object
         val validObj = Settings(
                 language = "fr",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // expect validating the object succeeds
@@ -69,7 +67,7 @@ internal class SettingsIntegrationTest(
         // given a non valid object
         val noValidObj = Settings(
                 language = "",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // expect validating the object
@@ -82,7 +80,7 @@ internal class SettingsIntegrationTest(
         // given a valid object
         val validObj = Settings(
                 language = "fr",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // when saving the obj
@@ -99,7 +97,7 @@ internal class SettingsIntegrationTest(
         // given a non valid obj
         val nonValidObj = Settings(
                 language = "",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // expect an exception is thrown when saving

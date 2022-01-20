@@ -19,12 +19,14 @@
 package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
@@ -32,6 +34,7 @@ import org.elaastic.questions.assignment.sequence.interaction.specification.Read
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
@@ -188,6 +191,40 @@ class SequenceService(
             it.state = State.show
             sequenceRepository.save(it)
             return it
+        }
+    }
+
+    fun submitResponse(user: User,
+                       sequence: Sequence,
+                       responseSubmissionData: PlayerController.ResponseSubmissionData) {
+        val choiceListSpecification = responseSubmissionData.choiceList?.let {
+            LearnerChoice(it)
+        }
+
+        val userActiveInteraction = getActiveInteractionForLearner(sequence, user)
+
+        responseService.save(
+            userActiveInteraction
+                ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
+            Response(
+                learner = user,
+                interaction = sequence.getResponseSubmissionInteraction(),
+                attempt = responseSubmissionData.attempt,
+                confidenceDegree = responseSubmissionData.confidenceDegree,
+                explanation = responseSubmissionData.explanation,  // TODO Sanitize
+                learnerChoice = choiceListSpecification,
+                score = choiceListSpecification?.let {
+                    Response.computeScore(
+                        it,
+                        sequence.statement.choiceSpecification
+                            ?: error("The choice specification is undefined")
+                    )
+                },
+                statement = sequence.statement
+            )
+        )
+        if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
+            nextInteractionForLearner(sequence, user)
         }
     }
 

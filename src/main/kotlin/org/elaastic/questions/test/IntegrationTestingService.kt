@@ -38,17 +38,17 @@ import org.springframework.stereotype.Service
 import java.lang.IllegalStateException
 
 @Service
-class TestingService(
-        @Autowired val userRepository: UserRepository,
-        @Autowired val statementRepository: StatementRepository,
-        @Autowired val interactionRepository: InteractionRepository,
-        @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val responseRepository: ResponseRepository,
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val ltiConsumerRepository: LtiConsumerRepository,
-        @Autowired val roleService: RoleService,
-        @Autowired val subjectRepository: SubjectRepository
+class IntegrationTestingService(
+    @Autowired val userRepository: UserRepository,
+    @Autowired val statementRepository: StatementRepository,
+    @Autowired val interactionRepository: InteractionRepository,
+    @Autowired val sequenceRepository: SequenceRepository,
+    @Autowired val assignmentRepository: AssignmentRepository,
+    @Autowired val responseRepository: ResponseRepository,
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val ltiConsumerRepository: LtiConsumerRepository,
+    @Autowired val roleService: RoleService,
+    @Autowired val subjectRepository: SubjectRepository,
 ) {
 
     fun getAnyUser(): User {
@@ -59,7 +59,7 @@ class TestingService(
         return userRepository.getByUsername("fsil")
     }
 
-    fun getAnotherTestTeacher(): User  {
+    fun getAnotherTestTeacher(): User {
         return userRepository.getByUsername("aein")
     }
 
@@ -80,20 +80,20 @@ class TestingService(
         return interactionRepository.findAll().iterator().next()
     }
 
-    fun getAnySequence() : Sequence {
+    fun getAnySequence(): Sequence {
         return sequenceRepository.findAll().iterator().next()
     }
 
-    fun getAnyAssignment() : Assignment {
+    fun getAnyAssignment(): Assignment {
         return assignmentRepository.findAll().iterator().next()
-                ?: throw IllegalStateException("There is no assignment is testing data")
+            ?: throw IllegalStateException("There is no assignment is testing data")
     }
 
-    fun getAnyResponse() : Response {
+    fun getAnyResponse(): Response {
         return responseRepository.findAll().iterator().next()
     }
 
-    fun getTestAssignment() : Assignment {
+    fun getTestAssignment(): Assignment {
         return assignmentService.get(382)
     }
 
@@ -103,16 +103,16 @@ class TestingService(
 
     fun getLtiLaunchDataComingFromBoBDeniroTeacher(): LtiLaunchData {
         return LtiLaunchData(
-                oauth_consumer_key = getAnyLtiConsumer().key,
-                user_id = "lti_user_id",
-                roles = "Instructor",
-                lis_person_name_given = "Bob",
-                lis_person_name_family = "Deniro",
-                lis_person_contact_email_primary = "bob@elaastic.org",
-                context_id = "course_id",
-                context_title = "A spendid course",
-                resource_link_id = "activity_if",
-                resource_link_title = "A great activity"
+            oauth_consumer_key = getAnyLtiConsumer().key,
+            user_id = "lti_user_id",
+            roles = "Instructor",
+            lis_person_name_given = "Bob",
+            lis_person_name_family = "Deniro",
+            lis_person_contact_email_primary = "bob@elaastic.org",
+            context_id = "course_id",
+            context_title = "A spendid course",
+            resource_link_id = "activity_if",
+            resource_link_title = "A great activity"
         ).let {
             it.roleService = roleService
             it
@@ -121,17 +121,17 @@ class TestingService(
 
     fun getLtiLaunchDataWithBadGlobalId(): LtiLaunchData {
         return LtiLaunchData(
-                oauth_consumer_key = getAnyLtiConsumer().key,
-                user_id = "lti_user_id",
-                roles = "Instructor",
-                lis_person_name_given = "Bob",
-                lis_person_name_family = "Deniro",
-                lis_person_contact_email_primary = "bob@elaastic.org",
-                context_id = "course_id",
-                context_title = "A spendid course",
-                resource_link_id = "activity_id_2",
-                resource_link_title = "A great activity",
-                custom_assignmentid = "Bad_one"
+            oauth_consumer_key = getAnyLtiConsumer().key,
+            user_id = "lti_user_id",
+            roles = "Instructor",
+            lis_person_name_given = "Bob",
+            lis_person_name_family = "Deniro",
+            lis_person_contact_email_primary = "bob@elaastic.org",
+            context_id = "course_id",
+            context_title = "A spendid course",
+            resource_link_id = "activity_id_2",
+            resource_link_title = "A great activity",
+            custom_assignmentid = "Bad_one"
         ).let {
             it.roleService = roleService
             it
@@ -141,6 +141,5 @@ class TestingService(
     fun getAnyTestSubject(): Subject {
         return subjectRepository.findAll().iterator().next()!!
     }
-
 }
 

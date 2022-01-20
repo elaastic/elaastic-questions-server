@@ -21,7 +21,7 @@ package org.elaastic.questions.assignment.sequence.interaction
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.junit.jupiter.api.Test
@@ -36,15 +36,15 @@ import org.hamcrest.CoreMatchers.*
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class InteractionRepositoryIntegrationTest(
-        @Autowired val interactionRepository: InteractionRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val interactionRepository: InteractionRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     @Test
     fun `save a valid interaction - without specification`() {
-        val owner = testingService.getAnyUser()
-        val sequence = testingService.getAnySequence()
+        val owner = integrationTestingService.getAnyUser()
+        val sequence = integrationTestingService.getAnySequence()
         Interaction(
                 interactionType = InteractionType.Read,
                 rank = 1,
@@ -72,8 +72,8 @@ internal class InteractionRepositoryIntegrationTest(
 
     @Test
     fun `save a valid interaction - with evaluation specification`() {
-        val owner = testingService.getAnyUser()
-        val sequence = testingService.getAnySequence()
+        val owner = integrationTestingService.getAnyUser()
+        val sequence = integrationTestingService.getAnySequence()
         val specification = EvaluationSpecification(
                 responseToEvaluateCount = 3
         )
@@ -96,8 +96,8 @@ internal class InteractionRepositoryIntegrationTest(
 
     @Test
     fun `save a valid interaction - with response submission specification`() {
-        val owner = testingService.getAnyUser()
-        val sequence = testingService.getAnySequence()
+        val owner = integrationTestingService.getAnyUser()
+        val sequence = integrationTestingService.getAnySequence()
         val specification = ResponseSubmissionSpecification(
                 studentsProvideConfidenceDegree = true,
                 studentsProvideExplanation = false
@@ -132,8 +132,8 @@ internal class InteractionRepositoryIntegrationTest(
                                 3L to mutableListOf(4L, 128L)
                         )
                 )
-        val owner = testingService.getAnyUser()
-        val sequence = testingService.getAnySequence()
+        val owner = integrationTestingService.getAnyUser()
+        val sequence = integrationTestingService.getAnySequence()
         Interaction(
                 interactionType = InteractionType.Evaluation,
                 rank = 1,

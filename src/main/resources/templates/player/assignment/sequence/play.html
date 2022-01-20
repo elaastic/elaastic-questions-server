@@ -117,7 +117,13 @@
     <div th:if="${playerModel.showResults}" th:remove="tag">
       <div th:replace="|${components}/_results.html| :: results(${playerModel.resultsModel})"></div>
     </div>
+
+    <div  togglz:active="FUNCTIONAL_TESTING" th:remove="tag">
+      <div th:replace="|${components}/functional-testing/functional-test.html| :: functionalTesting(${playerModel.assignment.id},${playerModel.sequence.id})"></div>
+    </div>
+
   </div>
+
   <th:block th:if="${playerModel.userRole.name() == 'Learner'}">
     <th:block th:replace="|${components}/_auto-reload.html| :: auto-reload(${playerModel.sequence.id})"></th:block>
   </th:block>

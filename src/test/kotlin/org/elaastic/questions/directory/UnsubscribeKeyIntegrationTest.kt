@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -37,8 +37,8 @@ import javax.validation.ConstraintViolationException
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class UnsubscribeKeyIntegrationTest(
-        @Autowired val testingService: TestingService,
-        @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository
 ) {
 
     val logger = Logger.getLogger(UnsubscribeKeyIntegrationTest::class.java.name)
@@ -55,7 +55,7 @@ internal class UnsubscribeKeyIntegrationTest(
         // given a valid object
         val validObj = UnsubscribeKey(
                 unsubscribeKey = "1234",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // expect validating the object succeeds
@@ -67,7 +67,7 @@ internal class UnsubscribeKeyIntegrationTest(
         // given a non valid object
         val noValidObj = UnsubscribeKey(
                 unsubscribeKey = "",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // expect validating the object
@@ -80,7 +80,7 @@ internal class UnsubscribeKeyIntegrationTest(
         // given a valid object
         val validObj = UnsubscribeKey(
                 unsubscribeKey = "fr",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // when saving the obj
@@ -97,7 +97,7 @@ internal class UnsubscribeKeyIntegrationTest(
         // given a non valid obj
         val nonValidObj = UnsubscribeKey(
                 unsubscribeKey = "",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // expect an exception is thrown when saving

@@ -25,7 +25,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
 import org.elaastic.questions.subject.statement.StatementService
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -52,7 +52,7 @@ import kotlin.collections.ArrayList
 internal class SubjectServiceIntegrationTest(
     @Autowired val subjectService: SubjectService,
     @Autowired val courseService: CourseService,
-    @Autowired val testingService: TestingService,
+    @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val entityManager: EntityManager,
     @Autowired val statementRepository: StatementRepository,
     @Autowired val statementService: StatementService,
@@ -64,7 +64,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `findAllByOwner - no subject`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
 
         subjectService.findAllByOwner(teacher)
             .tExpect {
@@ -75,7 +75,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `findAllByOwner - with subjects`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         createTestingData(teacher)
 
         subjectService.findAllByOwner(teacher)
@@ -92,7 +92,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `get an existing subject without fetching statements and assignments`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val subjectId = subjectService.save(
             Subject("Subject", teacher)
         ).id!!
@@ -115,7 +115,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `get an existing subject fetching statements and assignments`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val subjectId = subjectService.save(
             Subject("Subject", teacher)
         ).id!!
@@ -138,7 +138,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `get a subject for a user - OK`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val subjectId = subjectService.save(
             Subject("Subject", teacher)
         ).id!!
@@ -153,8 +153,8 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `try to get a subject for a user that is a teacher with a shared access but not the owner`() {
-        val teacher = testingService.getTestTeacher()
-        val teacher2 = testingService.getAnotherTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
+        val teacher2 = integrationTestingService.getAnotherTestTeacher()
         val subjectId = subjectService.save(
             Subject("Subject", teacher)
         ).id!!
@@ -177,7 +177,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `try to get a subject for a user that is a teacher without shared access`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val subjectId = subjectService.save(
             Subject("Subject", teacher)
         ).id!!
@@ -185,13 +185,13 @@ internal class SubjectServiceIntegrationTest(
         entityManager.clear()
 
         assertThrows<AccessDeniedException> {
-            subjectService.get(testingService.getAnotherTestTeacher(), subjectId)
+            subjectService.get(integrationTestingService.getAnotherTestTeacher(), subjectId)
         }
     }
 
     @Test
     fun `try to get a subject for a user that is a learner`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val subjectId = subjectService.save(
             Subject("Subject", teacher)
         ).id!!
@@ -199,7 +199,7 @@ internal class SubjectServiceIntegrationTest(
         entityManager.clear()
 
         assertThrows<AccessDeniedException> {
-            subjectService.get(testingService.getTestStudent(), subjectId)
+            subjectService.get(integrationTestingService.getTestStudent(), subjectId)
         }
     }
 
@@ -212,7 +212,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `save a valid subject`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val subject = subjectService.save(Subject("Subject", teacher))
         tWhen { subjectService.save(subject) }
             .tThen {
@@ -222,14 +222,14 @@ internal class SubjectServiceIntegrationTest(
                 MatcherAssert.assertThat(it.statements, CoreMatchers.equalTo(ArrayList()))
                 MatcherAssert.assertThat(it.assignments, CoreMatchers.equalTo(mutableSetOf()))
                 MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("Subject"))
-                MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(testingService.getTestTeacher()))
+                MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(integrationTestingService.getTestTeacher()))
             }
     }
 
     @Test
     fun `a subject must have a not blank title`() {
         val exception = assertThrows<ConstraintViolationException> {
-            subjectService.save(Subject("", testingService.getTestTeacher()))
+            subjectService.save(Subject("", integrationTestingService.getTestTeacher()))
         }
 
         MatcherAssert.assertThat(exception.constraintViolations.size, CoreMatchers.equalTo(1))
@@ -241,7 +241,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `delete an existing subject`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val initialNbSubject = subjectService.count()
         val subject = subjectService.save(
             Subject("Subject", teacher)
@@ -260,19 +260,19 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `try to delete a subject of another user`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val subject = subjectService.save(
             Subject(title = "Foo", owner = teacher)
         )
 
         assertThrows<IllegalArgumentException> {
-            subjectService.delete(testingService.getAnotherTestTeacher(), subject)
+            subjectService.delete(integrationTestingService.getAnotherTestTeacher(), subject)
         }
     }
 
     @Test
     fun `count statements of empty subject`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         val subject = subjectService.save(
             Subject(title = "Foo", owner = teacher)
         )
@@ -295,8 +295,8 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `add a statement to a subject - valid`() {
-        val teacher = testingService.getTestTeacher()
-        val subject = testingService.getAnyTestSubject()
+        val teacher = integrationTestingService.getTestTeacher()
+        val subject = integrationTestingService.getAnyTestSubject()
         val initialCount = subjectService.countAllStatement(subject)
 
         tWhen {
@@ -317,7 +317,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `remove unused statement from a subject - no duplicate`() {
-        val subject = testingService.getAnyTestSubject()
+        val subject = integrationTestingService.getAnyTestSubject()
         val initialCount = subjectService.countAllStatement(subject)
 
         val statement1 = subjectService.addStatement(
@@ -354,7 +354,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `remove used statement from a subject - keep the statement in database`() {
-        val subject = testingService.getAnyTestSubject()
+        val subject = integrationTestingService.getAnyTestSubject()
         val statement1 = statementService.get(618) // A statement linked to a sequence with results related
         val assignment = subjectService.addAssignment(
             subject,
@@ -388,7 +388,7 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `findByGlobalId - existing value`() {
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         subjectService.save(
             Subject(
                 title = "An assignment",
@@ -405,7 +405,7 @@ internal class SubjectServiceIntegrationTest(
     @Test
     fun `duplicate a subject`() {
         // given a teacher
-        val teacher = testingService.getTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
         // a course
         val course = courseService.save(Course("A course", teacher))
         // and a subject associated with the course
@@ -468,8 +468,8 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `import a subject - valid`() {
-        val teacher = testingService.getTestTeacher()
-        val otherTeacher = testingService.getAnotherTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
+        val otherTeacher = integrationTestingService.getAnotherTestTeacher()
         val subject = subjectService.save(
             Subject(
                 title = "A subject",
@@ -530,8 +530,8 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `import a subject - not shared with you`() {
-        val teacher = testingService.getTestTeacher()
-        val otherTeacher = testingService.getAnotherTestTeacher()
+        val teacher = integrationTestingService.getTestTeacher()
+        val otherTeacher = integrationTestingService.getAnotherTestTeacher()
         val subject = subjectService.save(
             Subject(
                 title = "An assignment",
@@ -558,14 +558,14 @@ internal class SubjectServiceIntegrationTest(
 
     @Test
     fun `import a statement`() {
-        val subject = testingService.getAnyTestSubject()
+        val subject = integrationTestingService.getAnyTestSubject()
 
         MatcherAssert.assertThat(
             "The testing data are corrupted",
             subject.statements.size,
             CoreMatchers.equalTo(2)
         )
-        val newSubject = Subject("Yolo", testingService.getAnotherTestTeacher())
+        val newSubject = Subject("Yolo", integrationTestingService.getAnotherTestTeacher())
         subjectService.save(newSubject)
 
         val testingStatement = subject.statements.first()

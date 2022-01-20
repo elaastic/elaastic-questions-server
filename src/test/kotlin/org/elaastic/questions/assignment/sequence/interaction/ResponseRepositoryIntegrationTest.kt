@@ -22,7 +22,7 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.junit.jupiter.api.Test
@@ -38,15 +38,15 @@ import java.math.BigDecimal
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class ResponseRepositoryIntegrationTest(
-        @Autowired val responseRepository: ResponseRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val responseRepository: ResponseRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     @Test
     fun `save a valid interaction response - with minimal data`() {
-        val learner = testingService.getAnyUser()
-        val interaction = testingService.getAnyInteraction()
+        val learner = integrationTestingService.getAnyUser()
+        val interaction = integrationTestingService.getAnyInteraction()
         Response(
                 learner = learner,
                 interaction = interaction,
@@ -69,8 +69,8 @@ class ResponseRepositoryIntegrationTest(
 
     @Test
     fun `save a valid interaction response - with all data`() {
-        val learner = testingService.getAnyUser()
-        val interaction = testingService.getAnyInteraction()
+        val learner = integrationTestingService.getAnyUser()
+        val interaction = integrationTestingService.getAnyInteraction()
         val choiceListSpecification = LearnerChoice(listOf<Int>(1, 3))
         Response(
                 learner = learner,

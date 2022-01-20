@@ -25,7 +25,7 @@ import org.elaastic.questions.subject.statement.StatementRepository
 import org.elaastic.questions.assignment.sequence.LearnerSequenceRepository
 import org.elaastic.questions.attachment.datastore.DataIdentifier
 import org.elaastic.questions.attachment.datastore.FileDataStore
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -47,14 +47,14 @@ import javax.validation.ConstraintViolationException
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class AttachmentIntegrationTest(
-        @Autowired val attachmentRepository: AttachmentRepository,
-        @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val statementRepository: StatementRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val em: EntityManager,
-        @Autowired val attachmentService: AttachmentService,
-        @Autowired val dataStore: FileDataStore
+    @Autowired val attachmentRepository: AttachmentRepository,
+    @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val statementRepository: StatementRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val em: EntityManager,
+    @Autowired val attachmentService: AttachmentService,
+    @Autowired val dataStore: FileDataStore
 ) {
 
     @Test
@@ -117,7 +117,7 @@ internal class AttachmentIntegrationTest(
         val statement =
                 statementRepository.saveAndFlush(
                         Statement(
-                                owner = testingService.getAnyUser(),
+                                owner = integrationTestingService.getAnyUser(),
                                 title = "a title",
                                 content = "a content",
                                 questionType = QuestionType.OpenEnded
@@ -155,7 +155,7 @@ internal class AttachmentIntegrationTest(
     @Test
     fun testSaveStatementAttachment() {
         // given "a statement and an attachment") {
-        val statement = testingService.getAnyStatement()
+        val statement = integrationTestingService.getAnyStatement()
         val content = "Content".toByteArray()
         Attachment(
                 name = "MyAttach",
@@ -181,7 +181,7 @@ internal class AttachmentIntegrationTest(
     @Test
     fun testDetachAttachment() {
         // given "a statement and an attachment") {
-        val statement = testingService.getAnyStatement()
+        val statement = integrationTestingService.getAnyStatement()
         val content = "Content".toByteArray()
         val attachment = Attachment(
                 name = "MyAttach",
@@ -211,7 +211,7 @@ internal class AttachmentIntegrationTest(
     @Test
     fun testRemoveSequenceWithAttachment() {
         // given an assignment and a sequence with statement with attachment
-        val assignment = testingService.getAnyAssignment()
+        val assignment = integrationTestingService.getAnyAssignment()
         val sequence = assignment.sequences[0]
         var statement = sequence.statement
         val content = "Content".toByteArray()
@@ -244,7 +244,7 @@ internal class AttachmentIntegrationTest(
     @Test
     fun testIsdisplayableImage() {
         // given "a statement and an attachment") {
-        val statement = testingService.getAnyStatement()
+        val statement = integrationTestingService.getAnyStatement()
         val file = ResourceUtils.getFile("classpath:exemple.png")
         Attachment(
                 name = "MyAttach",
@@ -281,8 +281,8 @@ internal class AttachmentIntegrationTest(
     @Test
     fun `test the delete of an attachment and file system`() {
         //given: "two attachments to the same image"
-        val statement = testingService.getAnyStatement()
-        val statement2 = testingService.getLastStatement()
+        val statement = integrationTestingService.getAnyStatement()
+        val statement2 = integrationTestingService.getLastStatement()
         val content = "Content".toByteArray()
         val attachment1 = Attachment(
                 name = "MyAttach",
@@ -324,8 +324,8 @@ internal class AttachmentIntegrationTest(
     fun `test the delete of an attachment without the delete of the file system`() {
         //given: "two attachments to the same image"
 
-        val statement = testingService.getAnyStatement()
-        val statement2 = testingService.getLastStatement()
+        val statement = integrationTestingService.getAnyStatement()
+        val statement2 = integrationTestingService.getLastStatement()
         val attachment1 = Attachment(
                 name = "MyAttach",
                 originalFileName = "originalName",
@@ -400,7 +400,7 @@ internal class AttachmentIntegrationTest(
     @Test
     fun testDuplicateAttachment() {
         // given "a statement and an attachment") {
-        val statement = testingService.getAnyStatement()
+        val statement = integrationTestingService.getAnyStatement()
         val content = "Content".toByteArray()
         val attachment = Attachment(
                 name = "MyAttach",
