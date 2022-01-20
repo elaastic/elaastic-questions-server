@@ -18,22 +18,29 @@
 
 package org.elaastic.questions.player.components.explanationViewer
 
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.directory.User
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 class ExplanationData(
-    val content: String? = null,
-    val author: String? = null,
-    val nbEvaluations: Int = 0,
-    meanGrade: BigDecimal? = null
+        val content: String? = null,
+        val author: String? = null,
+        val nbEvaluations: Int = 0,
+        meanGrade: BigDecimal? = null,
+        val confidenceDegree: ConfidenceDegree? = null,
+        val score: BigDecimal? = null,
+        val correct: Boolean? = (score == BigDecimal(100))
+
 ) {
     constructor(response: Response) : this(
             content = response.explanation,
             author = response.learner.firstName + " " + response.learner.lastName + " (@" + response.learner.username + ")",
             nbEvaluations = response.evaluationCount,
-            meanGrade = response.meanGrade
+            meanGrade = response.meanGrade,
+            confidenceDegree = response.confidenceDegree,
+            correct = response.score == BigDecimal(100),
+            score = response.score
     )
 
     val meanGrade = meanGrade

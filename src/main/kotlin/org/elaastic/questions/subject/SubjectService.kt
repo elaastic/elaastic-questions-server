@@ -23,6 +23,7 @@ import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.action.ActionRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -146,12 +147,16 @@ class SubjectService(
         require(user == subject.owner) {
             "Only the owner can delete an assignment"
         }
-        for (statement: Statement in subject.statements) {
+        for(assignment: Assignment in subject.assignments){
+            removeAssignment(subject.owner, assignment)
+        }
+        entityManager.flush()
+        val statementsToDelete = statementService.findAllBySubject(subject)
+        for(statement: Statement in statementsToDelete){
             statementService.delete(statement)
         }
-        for (assignment: Assignment in subject.assignments) {
-            assignmentService.delete(subject.owner, assignment)
-        }
+        entityManager.flush()
+        entityManager.clear()
         subjectRepository.delete(subject) // all other linked entities are deletes by DB cascade
     }
 
@@ -174,7 +179,7 @@ class SubjectService(
     }
 
     private fun deleteStatementIfNotUsed(statement: Statement) {
-        val statementAlreadyUsed = statementService.responsesExistForStatement(statement)
+        val statementAlreadyUsed = statementService.responsesExistForStatement(statement) || statementService.actionsExistForStatement(statement)
         if (!statementAlreadyUsed) {
             sequenceService.findAllSequencesByStatement(statement).forEach {
                 assignmentService.removeSequence(statement.owner, it)
@@ -292,7 +297,7 @@ class SubjectService(
         touch(subject)
         subject.assignments.remove(assignment)
         entityManager.flush()
-        assignmentRepository.delete(assignment) // all other linked entities are deletes by DB cascade
+        assignmentService.delete(user, assignment) // all other linked entities are deletes by DB cascade
         entityManager.flush()
         entityManager.clear()
         updateAllAssignmentRank(subject)

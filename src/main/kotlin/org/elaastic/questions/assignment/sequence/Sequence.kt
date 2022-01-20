@@ -68,6 +68,7 @@ class Sequence(
         var state: State = State.beforeStart,
 
         var resultsArePublished: Boolean = false
+//        var phase2Skipped: Boolean = false
 
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Sequence> {
@@ -187,7 +188,25 @@ class Sequence(
     fun whichAttemptEvaluate() =
             if (executionIsFaceToFace()) 1 else 2
 
+    fun recommendable() : Boolean =
 
+            /* is face to face */
+            executionContext == ExecutionContext.FaceToFace
+
+                    /* exclusive choice question */
+                    && statement.isExclusiveChoice()
+
+                    && getResponseSubmissionSpecification().studentsProvideExplanation
+
+                    && state == State.show
+
+    fun recommendableAfterPhase1(): Boolean = recommendable() && activeInteraction?.state == State.afterStop && activeInteraction?.rank == 1
+
+    fun recommendableAfterPhase2(): Boolean = recommendable() && ((activeInteraction?.state == State.afterStop && activeInteraction?.rank == 2)
+
+            || (activeInteraction?.state == State.show && activeInteraction?.rank == 3)
+
+            || (activeInteraction?.state == State.beforeStart && activeInteraction?.rank == 3))
 }
 
 enum class State {

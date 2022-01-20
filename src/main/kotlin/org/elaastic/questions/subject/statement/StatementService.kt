@@ -21,6 +21,8 @@ package org.elaastic.questions.subject.statement
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.sequence.action.ActionRepository
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
@@ -37,6 +39,8 @@ import javax.transaction.Transactional
 class StatementService(
         @Autowired val attachmentService: AttachmentService,
         @Autowired val statementRepository: StatementRepository,
+        @Autowired val actionRepository: ActionRepository,
+        @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val responseRepository: ResponseRepository,
         @Autowired val fakeExplanationRepository: FakeExplanationRepository
 ) {
@@ -103,6 +107,12 @@ class StatementService(
         )
     }
 
+    fun findAllBySubject(subject: Subject): List<Statement> {
+        return statementRepository.findBySubject(
+                subject
+        )
+    }
+
     fun duplicate(statement: Statement): Statement {
         var duplicatedStatement =
                 Statement(
@@ -144,5 +154,10 @@ class StatementService(
 
     fun responsesExistForStatement(statement: Statement) =
             responseRepository.countByStatement(statement) > 0
+
+    fun actionsExistForStatement(statement: Statement):Boolean {
+        val sequences = sequenceRepository.findAllByStatement(statement)
+        return actionRepository.countBySequenceIn(sequences) > 0
+    }
 
 }

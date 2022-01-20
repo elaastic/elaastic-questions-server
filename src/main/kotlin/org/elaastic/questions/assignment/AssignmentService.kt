@@ -18,12 +18,10 @@
 
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.action.ActionRepository
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.course.Course
@@ -42,7 +40,6 @@ import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
-import kotlin.collections.ArrayList
 
 
 @Service
@@ -50,6 +47,7 @@ import kotlin.collections.ArrayList
 class AssignmentService(
         @Autowired val assignmentRepository: AssignmentRepository,
         @Autowired val sequenceRepository: SequenceRepository,
+        @Autowired val actionRepository: ActionRepository,
         @Autowired val learnerAssignmentRepository: LearnerAssignmentRepository,
         @Autowired val statementService: StatementService,
         @Autowired val attachmentService: AttachmentService,
@@ -84,6 +82,7 @@ class AssignmentService(
         require(user == assignment.owner) {
             "Only the owner can delete an assignment"
         }
+        actionRepository.deleteBySequenceIn(assignment.sequences)
         assignmentRepository.delete(assignment) // all other linked entities are deletes by DB cascade
     }
 

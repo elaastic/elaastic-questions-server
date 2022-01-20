@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.player
 
-import org.elaastic.questions.directory.User
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.player.components.explanationViewer.ChoiceExplanationViewerModel
 import org.elaastic.questions.player.components.explanationViewer.ExplanationData
 import org.elaastic.questions.player.components.explanationViewer.OpenExplanationViewerModel
@@ -124,12 +124,14 @@ class ExplanationDataBuilder {
     var author: String? = null
     var nbEvaluations: Int = 0
     var meanGrade: BigDecimal? = null
+    var confidenceDegree: ConfidenceDegree? = null
 
     fun build() = ExplanationData(
             content = content,
             author = author,
             nbEvaluations = nbEvaluations,
-            meanGrade = meanGrade
+            meanGrade = meanGrade,
+            confidenceDegree = confidenceDegree
     )
 }
 

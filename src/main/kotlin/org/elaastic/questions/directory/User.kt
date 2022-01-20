@@ -20,6 +20,8 @@ package org.elaastic.questions.directory
 
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
+import org.elaastic.questions.onboarding.OnboardingChapter
+import org.elaastic.questions.onboarding.OnboardingChapterConverter
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

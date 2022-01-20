@@ -30,6 +30,7 @@ import java.util.logging.Logger
 import javax.annotation.PostConstruct
 import javax.persistence.EntityManager
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate
 
 
 @Service
@@ -283,6 +284,19 @@ class UserService(
     }
 
     /**
+     * Initialize first activity of user user
+     * @param user the user whose first activity is to initialize
+     * @return the updated user
+     */
+    fun updateUserActiveSince(user: User):User {
+        if(user.activeSince == null) {
+            user.activeSince = LocalDate.now()
+            userRepository.saveAndFlush(user)
+        }
+        return user
+    }
+
+    /**
      * Generate password reset key for a  user
      * @param user the processed user
      * @param lifetime lifetime of a password key in hour, default set to 1
@@ -368,8 +382,8 @@ class UserService(
      */
     fun userHasGivenConsentToActiveTerms(username:String): Boolean {
         return userConsentRepository.existsByUsernameAndTerms(
-                        username,
-                        termsService.getActive()
+                username,
+                termsService.getActive()
         )
     }
 
@@ -416,23 +430,11 @@ class UserService(
 
     @Transactional
     fun updateOnboardingChapter(chapterToUpdate: OnboardingChapter, user: User?) {
-        when(chapterToUpdate){
-            OnboardingChapter.COURSE_PAGE -> user?.onboardingState?.course_page = true
-            OnboardingChapter.COURSE_CREATION_PAGE -> user?.onboardingState?.course_creation_page = true
-            OnboardingChapter.SUBJECT_PAGE -> user?.onboardingState?.subject_page = true
-            OnboardingChapter.SUBJECT_CREATION_PAGE -> user?.onboardingState?.subject_creation_page = true
-            OnboardingChapter.QUESTION_CREATION_PAGE -> user?.onboardingState?.question_creation_page = true
-            OnboardingChapter.SUBJECT_EDITION_PAGE -> user?.onboardingState?.subject_edition_page = true
-            OnboardingChapter.ASSIGNMENT_CREATION_PAGE -> user?.onboardingState?.assignment_creation_page = true
-            OnboardingChapter.PLAYER_PAGE -> user?.onboardingState?.player_page = true
-            OnboardingChapter.SHARED_SUBJECTS_PAGE -> user?.onboardingState?.shared_subjects_page = true
-            OnboardingChapter.ONE_SHARED_SUBJECT_PAGE -> user?.onboardingState?.one_shared_subject_page = true
+        val onboardingState = user?.onboardingState
+        if(onboardingState != null) {
+            onboardingState.chaptersSeen.add(chapterToUpdate)
+            onboardingStateRepository.save(onboardingState)
         }
-        entityManager.createNativeQuery(
-                "UPDATE onboarding_state\n" +
-                        "SET " + chapterToUpdate + " = b'1'\n" +
-                        "WHERE user_id = " + user?.id
-        ).executeUpdate()
 
     }
 

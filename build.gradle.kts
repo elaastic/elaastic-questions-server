@@ -64,6 +64,7 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-library")
     testImplementation("org.exparity:hamcrest-date:1.1.0")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+    testImplementation("org.mockito:mockito-inline:2.13.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
 }

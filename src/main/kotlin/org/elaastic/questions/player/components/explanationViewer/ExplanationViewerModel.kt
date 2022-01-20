@@ -21,6 +21,7 @@ package org.elaastic.questions.player.components.explanationViewer
 interface ExplanationViewerModel {
     val hasChoice: Boolean
     val explanationsExcerpt: List<ExplanationData>
+    val explanations: List<ExplanationData>
     val hasMoreThanExcerpt: Boolean
     val nbExplanations: Int
     val studentsIdentitiesAreDisplayable: Boolean

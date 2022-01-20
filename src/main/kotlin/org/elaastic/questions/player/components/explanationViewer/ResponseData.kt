@@ -18,9 +18,9 @@
 
 package org.elaastic.questions.player.components.explanationViewer
 
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import java.math.BigDecimal
-import kotlin.math.roundToInt
 
 class ResponseData(
         val choices: List<Int> = listOf(),

@@ -32,17 +32,18 @@ object ExplanationViewerModelFactory {
 
     fun buildChoice(teacher: Boolean,
                     responseList: List<Response>,
-                    choiceSpecification: ChoiceSpecification): ExplanationViewerModel =
+                    choiceSpecification: ChoiceSpecification,
+                    recommendedExplanationsComparator: Comparator<ExplanationData>? = null): ExplanationViewerModel =
             ChoiceExplanationViewerModel(
                     // TODO I should simplify (merge ChoiceExplanationViewerModel & ChoiceExplanationStore)
                     explanationsByResponse = ChoiceExplanationStore(
                             choiceSpecification,
-                            true,
                             responseList
                     ),
                     alreadySorted = true,
                     studentsIdentitiesAreDisplayable = teacher,
-                    showOnlyCorrectResponse = !teacher
+                    showOnlyCorrectResponse = !teacher,
+                    recommendedExplanationsComparator = recommendedExplanationsComparator
             )
 
 }

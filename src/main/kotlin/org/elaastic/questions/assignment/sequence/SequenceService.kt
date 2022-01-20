@@ -315,4 +315,7 @@ class SequenceService(
         sequenceRepository.save(sequence)
     }
 
+    fun existsById(id: Long): Boolean =
+        sequenceRepository.existsById(id)
+
 }

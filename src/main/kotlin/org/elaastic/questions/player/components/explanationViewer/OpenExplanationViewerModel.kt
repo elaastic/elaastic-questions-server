@@ -21,7 +21,7 @@ package org.elaastic.questions.player.components.explanationViewer
 class OpenExplanationViewerModel(explanations: List<ExplanationData>,
                                  alreadySorted: Boolean = false,
                                  override val studentsIdentitiesAreDisplayable: Boolean = false) : ExplanationViewerModel {
-    val explanations =
+    override val explanations =
             if (alreadySorted) explanations
             else explanations.sortedWith(
                     compareByDescending<ExplanationData> { it.meanGrade }.thenByDescending { it.nbEvaluations }
@@ -31,4 +31,5 @@ class OpenExplanationViewerModel(explanations: List<ExplanationData>,
     override val explanationsExcerpt = this.explanations.take(3)
     val nbExplanationsForCorrectResponse = nbExplanations
     override val hasMoreThanExcerpt = nbExplanations > 3
+    val hasRecommendedExplanations = false
 }

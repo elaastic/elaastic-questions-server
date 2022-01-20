@@ -30,4 +30,6 @@ interface StatementRepository : JpaRepository<Statement, Long> {
 
     fun countAllBySubject(subject: Subject) : Int
 
+    fun findBySubject(subject: Subject): List<Statement>
+
 }

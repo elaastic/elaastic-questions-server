@@ -18,3 +18,9 @@
 
 ALTER TABLE `user`
     add column `active_since` datetime DEFAULT NULL;
+
+UPDATE  user
+SET active_since = (SELECT date_created
+     FROM sequence
+     WHERE owner_id = user.id
+     ORDER BY date_created ASC LIMIT 1);

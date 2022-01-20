@@ -18,6 +18,8 @@
 
 package org.elaastic.questions.directory
 
+import org.elaastic.questions.onboarding.OnboardingChapter
+import org.elaastic.questions.onboarding.OnboardingChapterConverter
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.elaastic.questions.terms.Terms
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -34,16 +36,8 @@ final class OnboardingState(
         @field:OneToOne
         var user: User,
 
-        var course_page: Boolean = false,
-        var course_creation_page: Boolean = false,
-        var subject_page: Boolean = false,
-        var subject_creation_page: Boolean = false,
-        var subject_edition_page: Boolean = false,
-        var question_creation_page: Boolean = false,
-        var assignment_creation_page: Boolean = false,
-        var player_page: Boolean = false,
-        var shared_subjects_page: Boolean = false,
-        var one_shared_subject_page: Boolean = false
+        @field:Convert(converter = OnboardingChapterConverter::class)
+        var chaptersSeen: MutableSet<OnboardingChapter> = mutableSetOf()
 
 ): AbstractJpaPersistable<Long>()  {
 

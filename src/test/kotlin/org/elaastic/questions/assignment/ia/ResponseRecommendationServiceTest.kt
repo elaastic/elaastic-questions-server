@@ -105,4 +105,50 @@ internal class ResponseRecommendationServiceTest {
 
         }
     }
+
+    @Test
+    fun `test of computeRecommendations with incorrect answers only`() {
+        val service = ResponseRecommendationService(
+                mock<EntityManager>(),
+                mock<ResponseRepository>()
+        )
+
+        service.computeRecommendations(
+                listOf(
+                        mock<Response> {
+                            on { score }.doReturn(BigDecimal(50))
+                            on { id }.doReturn(1)
+                            on { explanation }.doReturn("Hello World, and Universe")
+                        },
+                        mock<Response> {
+                            on { score }.doReturn(BigDecimal(50))
+                            on { id }.doReturn(2)
+                            on { explanation }.doReturn("Hello World, and Universe")
+                        },
+                        mock<Response> {
+                            on { score }.doReturn(BigDecimal(50))
+                            on { id }.doReturn(3)
+                            on { explanation }.doReturn("Hello World, and Universe")
+                        },
+                        mock<Response> {
+                            on { score }.doReturn(BigDecimal(50))
+                            on { id }.doReturn(4)
+                            on { explanation }.doReturn("Hello World, and Universe")
+                        },
+                        mock<Response> {
+                            on { score }.doReturn(BigDecimal(50))
+                            on { id }.doReturn(5)
+                            on { explanation }.doReturn("Hello World, and Universe")
+                        },
+                        mock<Response> {
+                            on { score }.doReturn(BigDecimal(50))
+                            on { id }.doReturn(6)
+                            on { explanation }.doReturn("Hello World, and Universe")
+                        }
+                ),
+                3
+        ).let {
+            print(it)
+        }
+    }
 }
