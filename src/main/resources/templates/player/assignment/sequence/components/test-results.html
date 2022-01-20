@@ -35,7 +35,7 @@
 <section>
   <h2>Results</h2>
 
-  <th:block th:each="situation : ${resultsSituations}">
+  <th:block th:each="situation, i : ${resultsSituations}">
     <h3 th:text="${situation.description}"></h3>
 
     <div
