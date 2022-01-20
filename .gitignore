@@ -123,4 +123,4 @@ emailconfig.properties
 /src/main/resources/mail.properties
 /elaastic
 /src/test/resources/lti-consumers-export-file.csv
-
+/paper.pdf
