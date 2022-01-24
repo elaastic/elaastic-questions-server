@@ -4,21 +4,22 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceItem
+import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.test.interpreter.command.Command
-import org.elaastic.questions.test.interpreter.command.SubmitExclusiveChoiceResponse
-import org.elaastic.questions.test.interpreter.command.SubmitMultipleChoiceResponse
-import org.elaastic.questions.test.interpreter.command.SubmitOpenResponse
+import org.elaastic.questions.test.interpreter.command.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -32,6 +33,8 @@ class FunctionalTestingService(
     @Autowired val sequenceService: SequenceService,
     @Autowired val assignmentService: AssignmentService,
     @Autowired val userRepository: UserRepository,
+    @Autowired val responseService: ResponseService,
+    @Autowired val peerGradingService: PeerGradingService,
 ) {
 
     fun generateSubject(user: User): Subject {
@@ -103,18 +106,46 @@ class FunctionalTestingService(
         return subject
     }
 
-    fun submitOpenResponse(
+    fun submitResponse(
+        phase: Phase,
         user: User,
-        sequenceId: Long,
+        sequence: Sequence,
+        correct: Boolean,
         confidenceDegree: ConfidenceDegree,
         explanation: String? = null
     ) {
-        val sequence = sequenceService.get(sequenceId, true)
         registerUserIfNeeded(user, sequence)
 
+        // Check preconditions depending on phase
         val interaction = sequenceService.getActiveInteractionForLearner(sequence, user)
-        if (interaction == null || !interaction.isResponseSubmission()) {
-            error("The active interaction for this sequence and this learner is not a response submission")
+        require(interaction != null) { "The interaction must not be null after registration" }
+
+        when (phase) {
+            Phase.PHASE_1 -> {
+                require(interaction.isResponseSubmission()) {
+                    "The active interaction for this sequence and this learner is not a response submission"
+                }
+                require(
+                    !responseService.hasResponseForUser(
+                        user,
+                        sequence,
+                        1
+                    )
+                ) { "This user has already submitted its 1st attempt " }
+            }
+            Phase.PHASE_2 -> {
+                require(interaction.isEvaluation()) {
+                    "The active interaction for this sequence and this learner is not evaluation"
+                }
+                require(sequence.isSecondAttemptAllowed()) { "This sequence does not allow a 2nd attempt" }
+                require(
+                    !responseService.hasResponseForUser(
+                        user,
+                        sequence,
+                        2
+                    )
+                ) { "This user has already submitted its 2nd attempt " }
+            }
         }
 
         sequenceService.submitResponse(
@@ -122,75 +153,73 @@ class FunctionalTestingService(
             sequence,
             PlayerController.ResponseSubmissionData(
                 interactionId = interaction.id!!,
-                attempt = 1,
-                choiceList = null,
+                attempt = phase.index,
+                choiceList = generateChoiceResponse(sequence.statement.choiceSpecification, correct),
                 confidenceDegree = confidenceDegree,
                 explanation = explanation ?: "Random explanation on ${LocalDate.now()} by ${user.username}",
             )
         )
+
+
     }
 
-    fun submitExclusiveChoiceResponse(
+
+    fun evaluate(
         user: User,
         sequenceId: Long,
-        correct: Boolean,
-        confidenceDegree: ConfidenceDegree,
-        explanation: String? = null
+        evaluationStrategy: EvaluationStrategy,
     ) {
         val sequence = sequenceService.get(sequenceId, true)
-        registerUserIfNeeded(user, sequence)
 
-        val interaction = sequenceService.getActiveInteractionForLearner(sequence, user)
-        if (interaction == null || !interaction.isResponseSubmission()) {
-            error("The active interaction for this sequence and this learner is not a response submission")
+        // Evaluate other responses
+        responseService.findAllRecommandedResponsesForUser(
+            sequence = sequence,
+            attempt = sequence.whichAttemptEvaluate(),
+            user = user
+        ).forEach { response: Response ->
+            peerGradingService.createOrUpdate(user, response, evaluationStrategy.evaluate(response))
+        }
+    }
+
+    private fun generateChoiceResponse(
+        choiceSpecification: ChoiceSpecification?,
+        correct: Boolean
+    ): List<Int>? =
+        when (choiceSpecification) {
+            null -> null
+            is ExclusiveChoiceSpecification -> generateExclusiveChoiceResponse(choiceSpecification, correct)
+            is MultipleChoiceSpecification -> generateMultipleChoiceResponse(choiceSpecification, correct)
+            else -> error("Hmm... That shouldn't happened")
         }
 
-        if (!sequence.statement.isExclusiveChoice()) {
-            error("This statement is not an exclusive choice... cannot submit exclusive answer")
-        }
-        val choiceSpecification = sequence.statement.choiceSpecification as ExclusiveChoiceSpecification
-        val userChoice = if (correct) {
-            choiceSpecification.expectedChoice.index
-        } else {
-            (0 until choiceSpecification.nbCandidateItem - 1)
-                .filter {
-                    it != choiceSpecification.expectedChoice.index
-                }[Random.nextInt(choiceSpecification.nbCandidateItem - 1)]
-        }
 
-        sequenceService.submitResponse(
-            user,
-            sequence,
-            PlayerController.ResponseSubmissionData(
-                interactionId = interaction.id!!,
-                attempt = 1,
-                choiceList = listOf(userChoice),
-                confidenceDegree = confidenceDegree,
-                explanation = explanation ?: "Random explanation on ${LocalDate.now()} by ${user.username}",
-            )
+    /**
+     * Generate a user choice depending on the question specification & the response must be correct or not
+     */
+    private fun generateExclusiveChoiceResponse(
+        choiceSpecification: ExclusiveChoiceSpecification,
+        correct: Boolean,
+    ): List<Int> {
+        return listOf(
+            if (correct) {
+                choiceSpecification.expectedChoice.index
+            } else {
+                (1 until choiceSpecification.nbCandidateItem)
+                    .filter {
+                        it != choiceSpecification.expectedChoice.index
+                    }[Random.nextInt(choiceSpecification.nbCandidateItem - 2)]
+            }
         )
     }
 
-    fun submitMultipleChoiceResponse(
-        user: User,
-        sequenceId: Long,
+    /**
+     * Generate a user choice depending on the question specification & the response must be correct or not
+     */
+    private fun generateMultipleChoiceResponse(
+        choiceSpecification: MultipleChoiceSpecification,
         correct: Boolean,
-        confidenceDegree: ConfidenceDegree,
-        explanation: String? = null
-    ) {
-        val sequence = sequenceService.get(sequenceId, true)
-        registerUserIfNeeded(user, sequence)
-
-        val interaction = sequenceService.getActiveInteractionForLearner(sequence, user)
-        if (interaction == null || !interaction.isResponseSubmission()) {
-            error("The active interaction for this sequence and this learner is not a response submission")
-        }
-
-        if (!sequence.statement.isMultipleChoice()) {
-            error("This statement is not an exclusive choice... cannot submit exclusive answer")
-        }
-        val choiceSpecification = sequence.statement.choiceSpecification as MultipleChoiceSpecification
-        val userChoice = if (correct) {
+    ): List<Int> =
+        if (correct) {
             choiceSpecification.expectedChoiceList.map { it.index }
         } else {
             var candidates: List<Int>
@@ -203,43 +232,22 @@ class FunctionalTestingService(
             candidates
         }
 
-        sequenceService.submitResponse(
-            user,
-            sequence,
-            PlayerController.ResponseSubmissionData(
-                interactionId = interaction.id!!,
-                attempt = 1,
-                choiceList = userChoice,
-                confidenceDegree = confidenceDegree,
-                explanation = explanation ?: "Random explanation on ${LocalDate.now()} by ${user.username}",
-            )
-        )
-    }
-
     fun executeScript(sequenceId: Long, script: List<Command>) {
         script.forEach { command ->
             when (command) {
-                is SubmitOpenResponse -> submitOpenResponse(
-                    userRepository.getByUsername(command.username),
-                    sequenceId,
-                    confidenceDegree = command.confidenceDegree,
-                    explanation = command.explanation
-                )
-
-                is SubmitExclusiveChoiceResponse -> submitExclusiveChoiceResponse(
-                    userRepository.getByUsername(command.username),
-                    sequenceId,
+                is SubmitResponse -> submitResponse(
+                    phase = command.phase,
+                    user = userRepository.getByUsername(command.username),
+                    sequence = sequenceService.get(sequenceId, true),
                     correct = command.correct,
                     confidenceDegree = command.confidenceDegree,
                     explanation = command.explanation
                 )
 
-                is SubmitMultipleChoiceResponse -> submitMultipleChoiceResponse(
+                is Evaluate -> evaluate(
                     userRepository.getByUsername(command.username),
                     sequenceId,
-                    correct = command.correct,
-                    confidenceDegree = command.confidenceDegree,
-                    explanation = command.explanation
+                    evaluationStrategy = command.strategy,
                 )
 
                 else -> error("Unsupported command")

@@ -477,6 +477,7 @@ class PlayerController(
                     LearnerChoice(it)
                 }
 
+                // TODO I guess this code should be factorized
                 Response(
                     learner = user,
                     interaction = sequence.getResponseSubmissionInteraction(),
