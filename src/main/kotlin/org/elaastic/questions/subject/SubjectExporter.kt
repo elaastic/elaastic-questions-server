@@ -24,7 +24,7 @@ class SubjectExporter(
     val mapper: ObjectMapper = springMvcJacksonConverter.objectMapper
 
     companion object {
-        const val RESOURCE_FOLDER = "resource"
+        const val RESOURCE_FOLDER = "resources"
     }
 
 
