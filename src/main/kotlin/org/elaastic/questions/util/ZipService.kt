@@ -9,6 +9,9 @@ import java.util.zip.ZipOutputStream
 @Service
 class ZipService {
 
+    /**
+     * Compress a list of file into a ZIP archive
+     */
     fun zip(out: OutputStream, entriesData: List<ZipEntryData>) {
         ZipOutputStream(BufferedOutputStream(out)).use { zip ->
             entriesData.forEach { entryData ->
@@ -33,6 +36,9 @@ class ZipService {
         val file: File,
     )
 
+    /**
+     * Extract files from a ZIP archive into the temp dir
+     */
     fun unzip(zipFile: ZipFile): List<ExtractFileData> =
         zipFile.use { zip ->
             zip.entries().asSequence().map { entry ->
