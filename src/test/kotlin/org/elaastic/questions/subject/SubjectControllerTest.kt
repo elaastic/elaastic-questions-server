@@ -75,6 +75,9 @@ internal class SubjectControllerTest(
     @MockBean
     lateinit var courseService: CourseService
 
+    @MockBean
+    lateinit var subjectExporter: SubjectExporter
+
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
     @Test
@@ -97,8 +100,8 @@ internal class SubjectControllerTest(
     @Test
     fun `test index - with  results`() {
         val subjectPages =
-                PageImpl<Subject>(
-                        listOf(mock<Subject>(), mock<Subject>()),
+                PageImpl(
+                        listOf(mock(), mock<Subject>()),
                         PageRequest.of(0, 2), 4)
 
         whenever(subjectService.findAllByOwner(user)).thenReturn(
@@ -127,7 +130,7 @@ internal class SubjectControllerTest(
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .flashAttr("subjectData", subjectData)
         )
-                .andExpect(status().isFound())
+                .andExpect(status().isFound)
                 .andExpect(
                         redirectedUrlTemplate(
                                 "/subject/{subjectId}?activeTab=questions",
@@ -144,6 +147,6 @@ internal class SubjectControllerTest(
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("title", "")
         )
-                .andExpect(status().isBadRequest()) // no redirect, the page is re-rendered with error messages
+                .andExpect(status().isBadRequest) // no redirect, the page is re-rendered with error messages
     }
 }
