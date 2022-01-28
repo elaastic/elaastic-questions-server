@@ -45,7 +45,6 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import java.io.InputStreamReader
 import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.servlet.http.HttpServletResponse
@@ -138,9 +137,9 @@ class SubjectController(
                 .take(24)
 
 
-            response.contentType = "application/octet-stream";
-            response.setHeader("Content-Disposition", "attachment;filename=${filename}.elaastic.zip");
-            response.status = HttpServletResponse.SC_OK;
+            response.contentType = "application/octet-stream"
+            response.setHeader("Content-Disposition", "attachment;filename=${filename}.elaastic.zip")
+            response.status = HttpServletResponse.SC_OK
             subjectExporter.exportToZip(
                 subject,
                 "${filename}.elaastic.json",
@@ -197,10 +196,10 @@ class SubjectController(
         val user: User = authentication.principal as User
         model.addAttribute("user", user)
 
-        var subject: Subject = subjectService.get(user, id, fetchStatementsAndAssignments = true)
+        val subject: Subject = subjectService.get(user, id, fetchStatementsAndAssignments = true)
         model.addAttribute("subject", subject)
 
-        var statements: MutableList<Statement> = ArrayList()
+        val statements: MutableList<Statement> = ArrayList()
         for (statement: Statement in subject.statements) {
             if (!statements.contains(statement)) statements.add(statement)
         }
@@ -216,7 +215,7 @@ class SubjectController(
             model.addAttribute("subjects", it.content)
             var firstSubject = Subject("NoSubject", user)
             if (it.content.size != 0)
-                firstSubject = it.content.get(0)
+                firstSubject = it.content[0]
             model.addAttribute("firstSubject", firstSubject)
         }
 
@@ -255,7 +254,7 @@ class SubjectController(
         } else {
             val subject = subjectData.toEntity()
             subjectService.save(subject)
-            redirectAttributes.addAttribute("activeTab", "questions");
+            redirectAttributes.addAttribute("activeTab", "questions")
             "redirect:/subject/${subject.id}"
         }
     }
@@ -350,11 +349,11 @@ class SubjectController(
             "redirect:/subject/${subject.id}/addAssignment"
         } else {
             val assignment = assignmentData.toEntity()
-            if (assignment.audience.isNullOrBlank())
+            if (assignment.audience.isBlank())
                 assignment.audience = "na"
             assignmentService.save(assignment)
             subjectService.addAssignment(subject, assignment)
-            redirectAttributes.addAttribute("activeTab", "assignments");
+            redirectAttributes.addAttribute("activeTab", "assignments")
             "redirect:/subject/${subject.id}"
         }
 
@@ -402,7 +401,7 @@ class SubjectController(
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
             model.addAttribute("subject", subjectData)
-            redirectAttributes.addAttribute("activeTab", "questions");
+            redirectAttributes.addAttribute("activeTab", "questions")
             "redirect:/subject/$id"
         } else {
             subjectService.get(user, id).let {
@@ -420,7 +419,7 @@ class SubjectController(
                     )
                 }
                 model.addAttribute("subject", it)
-                redirectAttributes.addAttribute("activeTab", "questions");
+                redirectAttributes.addAttribute("activeTab", "questions")
                 "redirect:/subject/$id"
             }
         }
@@ -474,7 +473,7 @@ class SubjectController(
             }
 
             subjectService.sharedToTeacher(user, it)
-            redirectAttributes.addAttribute("activeTab", "questions");
+            redirectAttributes.addAttribute("activeTab", "questions")
             return "redirect:/subject/${it.id}/show"
         }
     }
@@ -505,9 +504,9 @@ class SubjectController(
                 )
             )
         }
-        val sharedInfos: MutableList<SharedSubject>? = ArrayList()
+        val sharedInfos: MutableList<SharedSubject> = ArrayList()
         for (subject: Subject in sharedSubjectPage!!.content) {
-            sharedInfos!!.add(sharedSubjectService.getSharedSubject(user, subject)!!)
+            sharedInfos.add(sharedSubjectService.getSharedSubject(user, subject)!!)
         }
         model.addAttribute("sharedInfos", sharedInfos)
 
@@ -532,7 +531,7 @@ class SubjectController(
                 )
             )
         }
-        redirectAttributes.addAttribute("activeTab", "questions");
+        redirectAttributes.addAttribute("activeTab", "questions")
         return "redirect:/subject/${importedSubject.id}/show"
     }
 
@@ -554,7 +553,7 @@ class SubjectController(
                 )
             )
         }
-        redirectAttributes.addAttribute("activeTab", "questions");
+        redirectAttributes.addAttribute("activeTab", "questions")
         return "redirect:/subject/${duplicatedSubject.id}/show"
     }
 
