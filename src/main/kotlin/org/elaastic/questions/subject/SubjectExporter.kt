@@ -23,6 +23,11 @@ class SubjectExporter(
 
     val mapper: ObjectMapper = springMvcJacksonConverter.objectMapper
 
+    companion object {
+        const val RESOURCE_FOLDER = "resource"
+    }
+
+
     /**
      * Export the subject (including statements, attachments & fake answers) to a POJO
      */
@@ -58,7 +63,7 @@ class SubjectExporter(
             ) +
                     exportSubjectData.getAttachmentList().map { exportAttachment ->
                         ZipService.ZipEntryData(
-                            "resources/${exportAttachment.path}",
+                            "${RESOURCE_FOLDER}/${exportAttachment.path}",
                             attachmentService.getInputStreamForPath(exportAttachment.path)
                         )
                     }
@@ -100,7 +105,7 @@ class SubjectExporter(
         )
         // Inject assignments
         exportSubjectData.getAttachmentList().forEach { exportAttachment ->
-            exportAttachment.attachmentFile = extractedFiles.find { it.name == "resources/"+exportAttachment.path }?.file
+            exportAttachment.attachmentFile = extractedFiles.find { it.name == "${RESOURCE_FOLDER}/"+exportAttachment.path }?.file
         }
 
         // Import the subject
@@ -109,7 +114,9 @@ class SubjectExporter(
             exportSubjectData
         )
 
+        // clean up all tmp files
         zip.delete()
+        extractedFiles.forEach { it.file.delete() }
 
         return subject
     }
