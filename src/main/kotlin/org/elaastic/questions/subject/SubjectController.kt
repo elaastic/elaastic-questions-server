@@ -163,42 +163,6 @@ class SubjectController(
         return "subject/upload-form-zip"
     }
 
-    @PostMapping("/do-upload")
-    fun doUpload(
-        authentication: Authentication,
-        model: Model,
-        locale: Locale,
-        @RequestParam("jsonFile") jsonFile: MultipartFile,
-    ): String {
-        val user: User = authentication.principal as User
-
-        if(jsonFile.isEmpty) {
-            model.addAttribute("user", user)
-            model.addAttribute(
-                "messageContent",
-                messageSource.getMessage("subject.file.mandatory", emptyArray(), locale)
-            )
-            model.addAttribute("messageType", "error")
-            return "/subject/upload-form"
-        }
-
-        // Parse the JSON File
-        val subject: Subject = try {
-            subjectExporter.importFromJson(user, InputStreamReader(jsonFile.inputStream))
-        }
-        catch (e: Exception) {
-            model.addAttribute("user", user)
-            model.addAttribute(
-                "messageContent",
-                e.message
-            )
-            model.addAttribute("messageType", "error")
-            return "/subject/upload-form"
-        }
-
-        return "redirect:/subject/${subject.id}"
-    }
-
     @PostMapping("/do-upload-zip")
     fun doUploadZip(
         authentication: Authentication,
@@ -215,32 +179,12 @@ class SubjectController(
                 messageSource.getMessage("subject.file.mandatory", emptyArray(), locale)
             )
             model.addAttribute("messageType", "error")
-            return "/subject/upload-form"
+            return "/subject/upload-form-zip"
         }
 
-        subjectExporter.importFromZip(user, zipFile.inputStream)
+        val subject = subjectExporter.importFromZip(user, zipFile.inputStream)
 
-//        // Parse the JSON File
-//        val subjectExportData: ExportSubjectData = try {
-//            subjectExporter.parseFromJson(InputStreamReader(zipFile.inputStream))
-//        }
-//        catch (e: Exception) {
-//            model.addAttribute("user", user)
-//            model.addAttribute(
-//                "messageContent",
-//                e.message
-//            )
-//            model.addAttribute("messageType", "error")
-//            return "/subject/upload-form"
-//        }
-//
-//        val subject = subjectService.createFromExportData(
-//            user,
-//            subjectExportData
-//        )
-//
-//        return "redirect:/subject/${subject.id}"
-        return "redirect:/subject/"
+        return "redirect:/subject/${subject.id}"
     }
 
     @GetMapping(value = ["/{id}", "{id}/show"])

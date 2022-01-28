@@ -61,7 +61,7 @@ class SubjectExporter(
             parseFromJson(jsonReader)
         )
 
-    fun importFromZip(user: User, inputStream: InputStream) {
+    fun importFromZip(user: User, inputStream: InputStream): Subject {
         val zip = File.createTempFile(UUID.randomUUID().toString(), null)
 
         inputStream.use { input ->
@@ -80,12 +80,14 @@ class SubjectExporter(
             exportAttachment.attachmentFile = extractedFiles.find { it.name == "resources/"+exportAttachment.path }?.file
         }
 
-        subjectService.createFromExportData(
+        val subject = subjectService.createFromExportData(
             user,
             exportSubjectData
         )
 
         zip.delete()
+
+        return subject
     }
 
 
