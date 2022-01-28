@@ -23,14 +23,27 @@ class SubjectExporter(
 
     val mapper: ObjectMapper = springMvcJacksonConverter.objectMapper
 
+    /**
+     * Export the subject (including statements, attachments & fake answers) to a POJO
+     */
     fun exportToPojo(subject: Subject) =
         ExportSubjectData(subject)
 
-    fun exportToJson(subject: Subject) = exportToJson(exportToPojo(subject))
+    /**
+     * Export the subject to JSON (which does not include attachments)
+     */
+    fun exportToJson(subject: Subject): String = exportToJson(exportToPojo(subject))
 
+    /**
+     * Export the subject to JSON (which does not include attachments)
+     */
     fun exportToJson(exportSubjectData: ExportSubjectData): String =
         mapper.writeValueAsString(exportSubjectData)
 
+    /**
+     * Export the subject to a ZIP archive include a JSON file for the subject data and 1 file for each
+     * attachments
+     */
     fun exportToZip(subject: Subject, filename: String, outputStream: OutputStream) {
         val exportSubjectData = exportToPojo(subject)
 
@@ -52,15 +65,24 @@ class SubjectExporter(
         )
     }
 
+    /**
+     * Extract Subject data from JSON
+     */
     fun parseFromJson(jsonReader: Reader): ExportSubjectData =
         mapper.readValue(jsonReader, ExportSubjectData::class.java)
 
+    /**
+     * Import a subject from JSON
+     */
     fun importFromJson(user: User, jsonReader: Reader): Subject =
         subjectService.createFromExportData(
             user,
             parseFromJson(jsonReader)
         )
 
+    /**
+     * Import a subject and its attachments from a ZIP archive
+     */
     fun importFromZip(user: User, inputStream: InputStream): Subject {
         val zip = File.createTempFile(UUID.randomUUID().toString(), null)
 
@@ -72,14 +94,16 @@ class SubjectExporter(
 
         val extractedFiles = zipService.unzip(ZipFile(zip))
 
-        // Attachments
+        // Extract the subject data
         val exportSubjectData = parseFromJson(
             InputStreamReader(extractedFiles.first().file.inputStream())
         )
+        // Inject assignments
         exportSubjectData.getAttachmentList().forEach { exportAttachment ->
             exportAttachment.attachmentFile = extractedFiles.find { it.name == "resources/"+exportAttachment.path }?.file
         }
 
+        // Import the subject
         val subject = subjectService.createFromExportData(
             user,
             exportSubjectData
