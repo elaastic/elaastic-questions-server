@@ -19,7 +19,7 @@
 package org.elaastic.questions.action.action
 
 import org.elaastic.questions.assignment.sequence.action.*
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test
@@ -32,13 +32,13 @@ import javax.transaction.Transactional
 @Transactional
 internal class ActionRepositoryIntegrationTest(
         @Autowired val actionRepository: ActionRepository,
-        @Autowired val testingService: TestingService
+        @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     @Test
     fun `save a valid action`() {
 
-        val sequence = testingService.getAnySequence()
+        val sequence = integrationTestingService.getAnySequence()
 
         // Given : a action
         Action(
