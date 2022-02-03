@@ -1190,7 +1190,7 @@ class TestingPlayerController(
                                 sequenceId = 1
                         ),
                         RecommendationSituation(
-                                description = "2. End sequence because p1 > 80%",
+                                description = "2. End sequence because p1 > 70%",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 2,
@@ -1213,7 +1213,7 @@ class TestingPlayerController(
                                 sequenceId = 2
                         ),
                         RecommendationSituation(
-                                description = "3. Skip phase 2 because p1 < 20% and pconf < 0",
+                                description = "3. Skip phase 2 because p1 < 30% and pconf < 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 3,
@@ -1250,7 +1250,7 @@ class TestingPlayerController(
                                 sequenceId = 3
                         ),
                         RecommendationSituation(
-                                description = "4. Provide hint because p1 < 20% and pconf > 0",
+                                description = "4. Provide hint because p1 < 30% and pconf > 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 4,
@@ -1287,7 +1287,7 @@ class TestingPlayerController(
                                 sequenceId = 4
                         ),
                         RecommendationSituation(
-                                description = "5. Provide hint because p1 < 20% and pconf = 0",
+                                description = "5. Provide hint because p1 < 30% and pconf = 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 5,
@@ -1324,7 +1324,7 @@ class TestingPlayerController(
                                 sequenceId = 5
                         ),
                         RecommendationSituation(
-                                description = "6. Provide hint because p1 < 20% and pconf is null",
+                                description = "6. Provide hint because p1 < 30% and pconf is null",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 6,
@@ -1370,7 +1370,7 @@ class TestingPlayerController(
                                 sequenceId = 7
                         ),
                         RecommendationSituation(
-                                description = "8. Phase 2 was skipped: discussion must be brief and focus on incorrect answers because p1 > 80% and pConf < 0",
+                                description = "8. Phase 2 was skipped: discussion must be brief and focus on incorrect answers because p1 > 70% and pConf < 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 8,
@@ -1407,7 +1407,7 @@ class TestingPlayerController(
                                 sequenceId = 8
                         ),
                         RecommendationSituation(
-                                description = "9. Phase 2 was skipped: discussion must focus on incorrect answers because p1 > 80% and pConf > 0",
+                                description = "9. Phase 2 was skipped: discussion must focus on incorrect answers because p1 > 70% and pConf > 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 9,
@@ -1444,7 +1444,7 @@ class TestingPlayerController(
                                 sequenceId = 9
                         ),
                         RecommendationSituation(
-                                description = "10. Phase 2 was skipped: discussion must be detailed and focus on incorrect answers because p1 > 80% and pConf = 0",
+                                description = "10. Phase 2 was skipped: discussion must be detailed and focus on incorrect answers because p1 > 70% and pConf = 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 10,
@@ -1481,7 +1481,7 @@ class TestingPlayerController(
                                 sequenceId = 10
                         ),
                         RecommendationSituation(
-                                description = "11. Phase 2 was skipped: discussion must focus on correct answers because p1 > 80% and pConf is null",
+                                description = "11. Phase 2 was skipped: discussion must focus on correct answers because p1 > 70% and pConf is null",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 11,
@@ -1504,7 +1504,7 @@ class TestingPlayerController(
                                 sequenceId = 11
                         ),
                         RecommendationSituation(
-                                description = "12. Phase 2 was skipped: discussion must be detailed and focus on correct answers because p1 < 20% and pConf < 0",
+                                description = "12. Phase 2 was skipped: discussion must be detailed and focus on correct answers because p1 < 30% and pConf < 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 12,
@@ -1541,7 +1541,7 @@ class TestingPlayerController(
                                 sequenceId = 12
                         ),
                         RecommendationSituation(
-                                description = "13. Phase 2 was skipped: discussion must be detailed and focus on incorrect answers because p1 < 20% and pConf > 0",
+                                description = "13. Phase 2 was skipped: discussion must be detailed and focus on incorrect answers because p1 < 30% and pConf > 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 13,
@@ -1578,7 +1578,7 @@ class TestingPlayerController(
                                 sequenceId = 13
                         ),
                         RecommendationSituation(
-                                description = "14. Phase 2 was skipped: discussion must be detailed and focus on incorrect answers because p1 < 20% and pConf = 0",
+                                description = "14. Phase 2 was skipped: discussion must be detailed and focus on incorrect answers because p1 < 30% and pConf = 0",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 14,
@@ -1615,7 +1615,7 @@ class TestingPlayerController(
                                 sequenceId = 14
                         ),
                         RecommendationSituation(
-                                description = "15. Phase 2 was skipped: discussion must be detailed and focus on incorrect answers because p1 < 20% and pConf is null",
+                                description = "15. Phase 2 was skipped: discussion must be detailed and focus on incorrect answers because p1 < 30% and pConf is null",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
                                         sequenceId = 15,

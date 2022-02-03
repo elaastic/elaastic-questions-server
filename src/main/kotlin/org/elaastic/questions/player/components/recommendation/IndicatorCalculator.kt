@@ -25,8 +25,8 @@ import kotlin.math.ln
 
 object IndicatorCalculator {
 
-    const val HIGH_THRESHOLD = 0.8f
-    const val LOW_THRESHOLD = 0.2f
+    const val HIGH_THRESHOLD = 0.7f
+    const val LOW_THRESHOLD = 0.3f
 
     fun computeP(responseList: List<Response>?): Float? {
         val notNullAnswers = responseList?.filter { response -> response.score != null}
