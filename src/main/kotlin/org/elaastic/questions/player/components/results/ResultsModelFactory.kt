@@ -58,7 +58,7 @@ object ResultsModelFactory {
                         confidenceDistributionChartModel = buildConfidenceDistributionChartModel(sequence, responseSet),
                         evaluationDistributionChartModel = if (peerGradings != null && peerGradings.isNotEmpty()) buildEvaluationDistributionChartModel(sequence, peerGradings) else null,
                         recommendationModel = recommendationModel,
-                        explanationViewerModel = createChoiceExplanationViewerModel(sequence, responseSet, recommendationModel?.recommendedExplanationsComparator),
+                        explanationViewerModel = createChoiceExplanationViewerModel(teacher, sequence, responseSet, recommendationModel?.recommendedExplanationsComparator),
                         userCanRefreshResults = userCanRefreshResults,
                         userCanDisplayStudentsIdentity = teacher
                 )
@@ -120,10 +120,10 @@ object ResultsModelFactory {
                 )
             }
 
-    private fun createChoiceExplanationViewerModel(sequence: Sequence, responseSet: ResponseSet, recommendedExplanations: Comparator<ExplanationData>? = null) =
+    private fun createChoiceExplanationViewerModel(teacher: Boolean, sequence: Sequence, responseSet: ResponseSet, recommendedExplanations: Comparator<ExplanationData>? = null) =
             if (sequence.getResponseSubmissionSpecification().studentsProvideExplanation)
                 ExplanationViewerModelFactory.buildChoice(
-                        teacher = true,
+                        teacher = teacher,
                         choiceSpecification = sequence.statement.choiceSpecification!!,
                         responseList = responseSet[sequence.whichAttemptEvaluate()],
                         recommendedExplanationsComparator = recommendedExplanations
