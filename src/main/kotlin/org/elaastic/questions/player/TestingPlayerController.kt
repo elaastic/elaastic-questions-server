@@ -861,7 +861,8 @@ class TestingPlayerController(
                                                                         "Joe Walson (@Jwal)",
                                                                         4,
                                                                         BigDecimal("3.5"),
-                                                                        score = BigDecimal("0")
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 2",
@@ -869,7 +870,8 @@ class TestingPlayerController(
                                                                         2,
                                                                         BigDecimal("1.5"),
                                                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
-                                                                        score = BigDecimal("0")
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
                                                                 )
                                                         ),
                                                         ResponseData(
@@ -884,7 +886,8 @@ class TestingPlayerController(
                                                                         1,
                                                                         BigDecimal("5"),
                                                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
-                                                                        score = BigDecimal("100")
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 4",
@@ -892,7 +895,8 @@ class TestingPlayerController(
                                                                         3,
                                                                         BigDecimal("1"),
                                                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
-                                                                        score = BigDecimal("100")
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
                                                                 )
                                                         )
                                                 ),
@@ -953,7 +957,8 @@ class TestingPlayerController(
                                                                         4,
                                                                         BigDecimal("3.5"),
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
-                                                                        score = BigDecimal("0")
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 2",
@@ -961,7 +966,8 @@ class TestingPlayerController(
                                                                         2,
                                                                         BigDecimal("1.5"),
                                                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
-                                                                        score = BigDecimal("0")
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
                                                                 )
                                                         ),
                                                         ResponseData(
@@ -976,7 +982,8 @@ class TestingPlayerController(
                                                                         1,
                                                                         BigDecimal("5"),
                                                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
-                                                                        score = BigDecimal("100")
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 4",
@@ -984,7 +991,8 @@ class TestingPlayerController(
                                                                         3,
                                                                         BigDecimal("1"),
                                                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
-                                                                        score = BigDecimal("100")
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
                                                                 )
                                                         )
                                                 ),
@@ -1032,13 +1040,15 @@ class TestingPlayerController(
                                                                         "explication 1",
                                                                         "Joe Walson (@Jwal)",
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
-                                                                        score = BigDecimal("0")
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 2",
                                                                         "Jack DiCaprio (@Jdic)",
                                                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
-                                                                        score = BigDecimal("0")
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
                                                                 )
                                                         ),
                                                         ResponseData(
@@ -1051,13 +1061,15 @@ class TestingPlayerController(
                                                                         "explication 3",
                                                                         "Wiliam Shakespeare (@Wsha)",
                                                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
-                                                                        score = BigDecimal("100")
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 4",
                                                                         "Averell Collignon (@Acol)",
                                                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
-                                                                        score = BigDecimal("100")
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
                                                                 )
                                                         )
                                                 ),
@@ -1105,13 +1117,15 @@ class TestingPlayerController(
                                                                         "explication 1",
                                                                         "Joe Walson (@Jwal)",
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
-                                                                        score = BigDecimal("0")
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 2",
                                                                         "Jack DiCaprio (@Jdic)",
                                                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
-                                                                        score = BigDecimal("0")
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
                                                                 )
                                                         ),
                                                         ResponseData(
@@ -1124,13 +1138,15 @@ class TestingPlayerController(
                                                                         "explication 3",
                                                                         "Wiliam Shakespeare (@Wsha)",
                                                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
-                                                                        score = BigDecimal("100")
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 4",
                                                                         "Averell Collignon (@Acol)",
                                                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
-                                                                        score = BigDecimal("100")
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
                                                                 )
                                                         )
                                                 ),
@@ -2096,7 +2112,7 @@ class TestingPlayerController(
                         responsesToGrade = listOf(
                                 org.elaastic.questions.player.components.evaluationPhase.ResponseData(
                                         id = 1,
-                                        choiceList = listOf(1),
+                                        choiceList = LearnerChoice(listOf(1)),
                                         explanation = "1st explanation"
                                 ),
                                 org.elaastic.questions.player.components.evaluationPhase.ResponseData(

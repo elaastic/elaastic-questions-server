@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.player.components.explanationViewer
 
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import java.math.BigDecimal
@@ -30,7 +31,8 @@ class ExplanationData(
         meanGrade: BigDecimal? = null,
         val confidenceDegree: ConfidenceDegree? = null,
         val score: BigDecimal? = null,
-        val correct: Boolean? = (score == BigDecimal(100))
+        val correct: Boolean? = (score == BigDecimal(100)),
+        val choiceList: LearnerChoice? = null
 
 ) {
     constructor(response: Response) : this(
@@ -40,7 +42,8 @@ class ExplanationData(
             meanGrade = response.meanGrade,
             confidenceDegree = response.confidenceDegree,
             correct = response.score == BigDecimal(100),
-            score = response.score
+            score = response.score,
+            choiceList = response.learnerChoice
     )
 
     val meanGrade = meanGrade

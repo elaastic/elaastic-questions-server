@@ -23,7 +23,7 @@
     <!--  The 3 best explanations -->
     <div th:each="explanation : ${explanationViewerModel.explanationsExcerpt}"
          th:remove="tag">
-        <div th:replace="|${components}/_anExplanation|::anExplanation(${explanation}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
+        <div th:replace="|${components}/_anExplanation|::anExplanation(${explanation}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.hasRecommendedExplanations})"></div>
     </div>
 
     <!--  Message if there is no explanations -->

@@ -61,7 +61,7 @@
             </div>
             <div th:if="${!explanationViewerModel.hasChoice}">
                 <div
-                        th:replace="|${components}/_explanationList|::explanationList(${explanationViewerModel.explanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
+                        th:replace="|${components}/_explanationList|::explanationList(${explanationViewerModel.explanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${false})"></div>
             </div>
         </div>
 

@@ -45,7 +45,7 @@ class ChoiceExplanationViewerModel(
     val hasExplanationsForIncorrectResponse = this.explanationsByResponse.any { !it.key.correct && !it.value.isEmpty() }
     val nbExplanationsForCorrectResponse = explanationsForCorrectResponses.count()
     val hasRecommendedExplanations = (recommendedExplanationsComparator != null)
-    val correctAreRecommended = (recommendedExplanationsComparator in listOf(CorrectAndMeanGradeComparator(), CorrectAndConfidenceDegreeComparator()))
+    val correctAreRecommended = recommendedExplanationsComparator is CorrectAndMeanGradeComparator || recommendedExplanationsComparator is CorrectAndConfidenceDegreeComparator
     val explanationsByCorrectness = if(correctAreRecommended) explanationsForCorrectResponses else explanationsForIncorrectResponses
     val recommendedExplanations =
             if (recommendedExplanationsComparator != null)

@@ -24,8 +24,7 @@
          th:onclick="[[${correct}]] ? fetch('/action/[[${sequenceId}]]/saveAction/teacher/click/rationales_correct_answers') : fetch('/action/[[${sequenceId}]]/saveAction/teacher/click/rationales_incorrect_answers_[[${response.choices[0]}]]')"
          th:classappend="${activate ? 'active' : ''}">
         <i class="dropdown icon"></i>
-        <span
-                th:text="|#{player.sequence.users.responses}: ${response.choices}|">Responses: [2]</span><strong>-</strong>
+        <span th:text="|#{player.sequence.users.responses}: ${response.choices}|">Responses: [2]</span><strong>-</strong>
         <span th:text="#{player.sequence.user.score(${response.score})}">Score: 100%</span><strong>-</strong>
         <span th:text="|#{player.sequence.responseCount}: ${#lists.size(explanations)}|">Response Count: 37</span>
     </div>
@@ -33,7 +32,7 @@
 
     <div class="content" th:classappend="${activate ? 'active' : ''}">
         <p class="panel-body">
-        <div th:replace="|${components}/_explanationList|::explanationList(${explanations}, ${studentsIdentitiesAreDisplayable})"></div>
+        <div th:replace="|${components}/_explanationList|::explanationList(${explanations}, ${studentsIdentitiesAreDisplayable}, ${false})"></div>
         </p>
     </div>
 </div>
