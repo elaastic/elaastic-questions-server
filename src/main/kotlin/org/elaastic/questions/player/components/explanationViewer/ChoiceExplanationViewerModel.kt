@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.player.components.explanationViewer
 
+import org.elaastic.questions.player.components.recommendation.CorrectAndConfidenceDegreeComparator
 import org.elaastic.questions.player.components.recommendation.CorrectAndMeanGradeComparator
 
 class ChoiceExplanationViewerModel(
@@ -36,19 +37,21 @@ class ChoiceExplanationViewerModel(
                 )
             }
     val allResponses: List<ExplanationData> = explanationsByResponse.values.flatten()
-    val explanations = this.explanationsByResponse.values.toList().flatten()
     val correctResponse = this.explanationsByResponse.keys.find { it.correct }
             ?: throw IllegalStateException("There is no correct answer")
-    val explanationsForCorrectResponse = this.explanationsByResponse.filter { it.key.correct }.values.flatten()
     val explanationsByIncorrectResponses = this.explanationsByResponse.filter { !it.key.correct }
+    val explanationsForCorrectResponses = this.explanationsByResponse.filter { it.key.correct }.values.flatten()
+    val explanationsForIncorrectResponses = explanationsByIncorrectResponses.values.flatten()
     val hasExplanationsForIncorrectResponse = this.explanationsByResponse.any { !it.key.correct && !it.value.isEmpty() }
-    val nbExplanationsForCorrectResponse = explanationsForCorrectResponse.count()
+    val nbExplanationsForCorrectResponse = explanationsForCorrectResponses.count()
     val hasRecommendedExplanations = (recommendedExplanationsComparator != null)
+    val correctAreRecommended = (recommendedExplanationsComparator in listOf(CorrectAndMeanGradeComparator(), CorrectAndConfidenceDegreeComparator()))
+    val explanationsByCorrectness = if(correctAreRecommended) explanationsForCorrectResponses else explanationsForIncorrectResponses
     val recommendedExplanations =
             if (recommendedExplanationsComparator != null)
-                allResponses.sortedWith(recommendedExplanationsComparator).reversed()
+                explanationsByCorrectness.sortedWith(recommendedExplanationsComparator).reversed()
             else
-                explanationsForCorrectResponse
+                explanationsForCorrectResponses
     override val explanationsExcerpt = recommendedExplanations.take(3)
     override val nbExplanations = this.explanationsByResponse.values.flatten().count()
     override val hasMoreThanExcerpt = nbExplanationsForCorrectResponse > 3 || hasExplanationsForIncorrectResponse

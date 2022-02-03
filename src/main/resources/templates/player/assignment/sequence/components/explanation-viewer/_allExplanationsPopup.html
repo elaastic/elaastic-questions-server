@@ -47,7 +47,7 @@
                         <div th:replace="|${components}/_recommendedResponseTab|::recommendedResponseTab(${explanationViewerModel.recommendedExplanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
                     </th:block>
                     <div
-                            th:replace="|${components}/_responseTab|::responseTab(${!explanationViewerModel.hasRecommendedExplanations}, ${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponse}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
+                            th:replace="|${components}/_responseTab|::responseTab(${!explanationViewerModel.hasRecommendedExplanations}, ${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponses}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
 
 
                     <th:block th:unless="${explanationViewerModel.showOnlyCorrectResponse}">

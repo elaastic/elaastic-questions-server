@@ -24,6 +24,8 @@
          th:onclick="fetch('/action/[[${sequenceId}]]/saveAction/teacher/click/recommended_rationales_order')">
         <i class="dropdown icon"></i>
         <span th:text="#{player.sequence.recommendedExplanations}">Recommended explanations</span><strong>-</strong>
+        <span th:text="#{player.sequence.recommendedExplanations.correct}" th:if="${explanations[0].correct}">Correct answers</span><strong>-</strong>
+        <span th:text="#{player.sequence.recommendedExplanations.incorrect}" th:if="${!explanations[0].correct}">Incorrect answers</span><strong>-</strong>
         <span th:text="|#{player.sequence.responseCount}: ${#lists.size(explanations)}|">Response Count: 37</span>
     </div>
 

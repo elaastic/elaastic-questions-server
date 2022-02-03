@@ -20,7 +20,6 @@
      style="font-size: 1rem"
      th:with="components=${'player/assignment/sequence/components/explanation-viewer'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-
     <!--  The 3 best explanations -->
     <div th:each="explanation : ${explanationViewerModel.explanationsExcerpt}"
          th:remove="tag">

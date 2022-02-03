@@ -1133,7 +1133,8 @@ class TestingPlayerController(
                                                                         score = BigDecimal("100")
                                                                 )
                                                         )
-                                                )
+                                                ),
+                                                recommendedExplanationsComparator = IncorrectAndConfidenceDegreeComparator()
                                         )
                                 )
                         )
