@@ -134,6 +134,7 @@ class UserService(
             enabled = if (checkEmailAccount) false else enable
             password = passwordEncoder.encode(plainTextPassword)
             userRepository.save(this).let {
+                this.onboardingState = onboardingStateRepository.save(OnboardingState(user))
                 initializeSettingsForUser(it, language)
                 initializeUnsubscribeKeyForUser(it)
                 if (checkEmailAccount) {
@@ -142,8 +143,6 @@ class UserService(
                 if (addUserConsent) {
                     addUserConsentToActiveTerms(user.username)
                 }
-                val onboardingState = OnboardingState(user)
-                onboardingStateRepository.save(onboardingState)
                 return it
             }
         }

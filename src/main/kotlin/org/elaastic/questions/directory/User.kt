@@ -123,7 +123,7 @@ class User(
     var settings: Settings? = null
 
     @OneToOne(mappedBy = "user")
-    var onboardingState: OnboardingState? = null
+    var onboardingState: OnboardingState? = null//OnboardingState(this, mutableSetOf())
 
     @OneToOne(mappedBy = "user")
     var unsubscribeKey: UnsubscribeKey? = null
