@@ -36,7 +36,7 @@ class ChoiceExplanationViewerModel(
                 )
             }
     val allResponses: List<ExplanationData> = explanationsByResponse.values.flatten()
-    override val explanations = this.explanationsByResponse.values.toList().flatten()
+    val explanations = this.explanationsByResponse.values.toList().flatten()
     val correctResponse = this.explanationsByResponse.keys.find { it.correct }
             ?: throw IllegalStateException("There is no correct answer")
     val explanationsForCorrectResponse = this.explanationsByResponse.filter { it.key.correct }.values.flatten()

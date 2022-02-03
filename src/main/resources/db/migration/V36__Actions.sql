@@ -25,5 +25,5 @@ CREATE TABLE `action` (
   `object` varchar(32),
   PRIMARY KEY (`id`),
   KEY `idx_action_sequence_id` (`sequence_id`),
-  CONSTRAINT `fk_action_sequence` FOREIGN KEY (`sequence_id`) REFERENCES `sequence` (`id`)
+  CONSTRAINT `fk_action_sequence` FOREIGN KEY (`sequence_id`) REFERENCES `sequence` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

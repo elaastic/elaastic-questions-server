@@ -23,7 +23,6 @@ import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.action.ActionRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -147,16 +146,12 @@ class SubjectService(
         require(user == subject.owner) {
             "Only the owner can delete an assignment"
         }
-        for(assignment: Assignment in subject.assignments){
-            removeAssignment(subject.owner, assignment)
-        }
-        entityManager.flush()
-        val statementsToDelete = statementService.findAllBySubject(subject)
-        for(statement: Statement in statementsToDelete){
+        for (statement: Statement in subject.statements) {
             statementService.delete(statement)
         }
-        entityManager.flush()
-        entityManager.clear()
+        for (assignment: Assignment in subject.assignments) {
+            assignmentService.delete(subject.owner, assignment)
+        }
         subjectRepository.delete(subject) // all other linked entities are deletes by DB cascade
     }
 
@@ -297,7 +292,7 @@ class SubjectService(
         touch(subject)
         subject.assignments.remove(assignment)
         entityManager.flush()
-        assignmentService.delete(user, assignment) // all other linked entities are deletes by DB cascade
+        assignmentRepository.delete(assignment) // all other linked entities are deletes by DB cascade
         entityManager.flush()
         entityManager.clear()
         updateAllAssignmentRank(subject)
