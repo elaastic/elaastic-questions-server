@@ -127,13 +127,15 @@
         </div>
 
         <div th:if="${recommendationModel.popupDetailedExplanation != null}" style="margin: 0em;padding: 0.75em 1em;font-weight: bold;border-top: 1px solid rgba(34, 36, 38, 0.15);">
+            <a th:text="#{|${recommendationModel.popupDetailedExplanation.propertyString}|}"
+               style="color: black">
+            </a>
             <a href="https://hal.archives-ouvertes.fr/hal-03396211/document"
-               target="_blank"
-               th:text="#{|${recommendationModel.popupDetailedExplanation.propertyString}|}"
-               style="color: black;text-decoration: underline;">
+                   target="_blank"
+                   th:text="#{player.sequence.recommendation.explanation.full_study}"
+                   style="color: black;text-decoration: underline;font-weight: normal">
             </a>
         </div>
-
         <div class="actions">
             <div class="ui cancel button"
                  th:onclick="|fetch('/action/${sequenceId}/saveAction/teacher/close/explanation_popup')|"
