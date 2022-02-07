@@ -44,7 +44,7 @@
             <div th:if="${explanationViewerModel.hasChoice}">
                 <div class="ui styled fluid accordion" th:id="|accordion-explanation-viewer-${sequenceId}|">
                     <th:block th:if="${explanationViewerModel.hasRecommendedExplanations}">
-                        <div th:replace="|${components}/_recommendedResponseTab|::recommendedResponseTab(${explanationViewerModel.recommendedExplanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
+                        <div th:replace="|${components}/_recommendedResponseTab|::recommendedResponseTab(${explanationViewerModel.recommendedExplanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.correctAreRecommended})"></div>
                     </th:block>
                     <div
                             th:replace="|${components}/_responseTab|::responseTab(${!explanationViewerModel.hasRecommendedExplanations}, ${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponses}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
