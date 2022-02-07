@@ -597,28 +597,35 @@ class TestingPlayerController(
                                 )
                         ),
                         MyResultsSituation(
-                                description = "Question ouverte - 2 explications",
+                                description = "Question ouverte - 2 explanations",
                                 learnerResultsModel = LearnerOpenResults(
                                         explanationFirstTry = ExplanationData(content = "1st guess"),
                                         explanationSecondTry = ExplanationData(content = "2nd guess")
                                 )
                         ),
                         MyResultsSituation(
-                                description = "Question ouverte - 1 seule explication",
+                                description = "Question ouverte - 1 explanation only",
                                 learnerResultsModel = LearnerOpenResults(
                                         explanationFirstTry = ExplanationData(content = "Only one"),
                                         explanationSecondTry = null
                                 )
                         ),
                         MyResultsSituation(
-                                description = "Question ouverte - 2 explications identiques",
+                                description = "Question ouverte - 2 identical explanations",
                                 learnerResultsModel = LearnerOpenResults(
                                         explanationFirstTry = ExplanationData(content = "same explanation"),
                                         explanationSecondTry = ExplanationData(content = "same explanation")
                                 )
                         ),
                         MyResultsSituation(
-                                description = "Question ouverte - seulement la 2ème",
+                                description = "Question ouverte - 2 identical explanations, second graded",
+                                learnerResultsModel = LearnerOpenResults(
+                                        explanationFirstTry = ExplanationData(content = "same explanation"),
+                                        explanationSecondTry = ExplanationData(content = "same explanation", nbEvaluations = 2, meanGrade = BigDecimal(3.5))
+                                )
+                        ),
+                        MyResultsSituation(
+                                description = "Question ouverte - only the second explanation",
                                 learnerResultsModel = LearnerOpenResults(
                                         explanationFirstTry = null,
                                         explanationSecondTry = ExplanationData(content = "Just the 2nd")

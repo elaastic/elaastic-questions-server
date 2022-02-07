@@ -37,9 +37,15 @@
                         ${studentResultsModel.scoreFirstTry})">
           </div>
         </div>
-        <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content)}">
+        <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content) and studentResultsModel.areBothExplanationsEqual()}">
           <div
             th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
+                        :: anExplanation(${studentResultsModel.explanationSecondTry},${false},${false})">
+          </div>
+        </th:block>
+        <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content) and !studentResultsModel.areBothExplanationsEqual()}">
+          <div
+                  th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
                         :: anExplanation(${studentResultsModel.explanationFirstTry},${false},${false})">
           </div>
         </th:block>
