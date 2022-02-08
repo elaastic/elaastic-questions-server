@@ -20,26 +20,24 @@
      style="font-size: 1rem"
      th:with="components=${'player/assignment/sequence/components/explanation-viewer'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <!--  The 3 best explanations -->
+    <div th:each="explanation : ${explanationViewerModel.explanationsExcerpt}"
+         th:remove="tag">
+        <div th:replace="|${components}/_anExplanation|::anExplanation(${explanation}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.hasRecommendedExplanations})"></div>
+    </div>
 
-  <!--  The first 3 best explanations -->
-  <div th:each="explanation : ${explanationViewerModel.explanationsExcerpt}"
-       th:remove="tag">
+    <!--  Message if there is no explanations -->
+    <div th:if="${explanationViewerModel.nbExplanations == 0}"
+         class="ui warning message"
+         th:text="#{player.sequence.explanation.noExplanation}">
+        There is no explanation.
+    </div>
+
+    <!--  Popup to visualize all explanations -->
     <div
-      th:replace="|${components}/_anExplanation|::anExplanation(${explanation}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
-  </div>
-
-  <!--  Message if there is no explanations -->
-  <div th:if="${explanationViewerModel.nbExplanations == 0}"
-       class="ui warning message"
-       th:text="#{player.sequence.explanation.noExplanation}">
-    There is no explanation.
-  </div>
-
-  <!--  Popup to visualize all explanations -->
-  <div
-    th:if="${explanationViewerModel.hasMoreThanExcerpt}">
-    <div
-      th:replace="|${components}/_allExplanationsPopup|::allExplanationsPopup(${sequenceId}, ${explanationViewerModel})"></div>
-  </div>
+            th:if="${explanationViewerModel.hasMoreThanExcerpt}">
+        <div
+                th:replace="|${components}/_allExplanationsPopup|::allExplanationsPopup(${sequenceId}, ${explanationViewerModel})"></div>
+    </div>
 
 </div>

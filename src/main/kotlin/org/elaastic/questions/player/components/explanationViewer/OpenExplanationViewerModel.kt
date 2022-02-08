@@ -31,4 +31,5 @@ class OpenExplanationViewerModel(explanations: List<ExplanationData>,
     override val explanationsExcerpt = this.explanations.take(3)
     val nbExplanationsForCorrectResponse = nbExplanations
     override val hasMoreThanExcerpt = nbExplanations > 3
+    val hasRecommendedExplanations = false
 }

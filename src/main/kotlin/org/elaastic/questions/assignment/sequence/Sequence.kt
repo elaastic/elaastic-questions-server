@@ -30,6 +30,7 @@ import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import org.elaastic.questions.assignment.sequence.action.Action
 import java.lang.IllegalStateException
 import java.util.*
 import javax.persistence.*
@@ -187,7 +188,25 @@ class Sequence(
     fun whichAttemptEvaluate() =
             if (executionIsFaceToFace()) 1 else 2
 
+    fun recommendable() : Boolean =
 
+            /* is face to face */
+            executionContext == ExecutionContext.FaceToFace
+
+                    /* exclusive choice question */
+                    && statement.isExclusiveChoice()
+
+                    && getResponseSubmissionSpecification().studentsProvideExplanation
+
+                    && state == State.show
+
+    fun recommendableAfterPhase1(): Boolean = recommendable() && activeInteraction?.state == State.afterStop && activeInteraction?.rank == 1
+
+    fun recommendableAfterPhase2(): Boolean = recommendable() && ((activeInteraction?.state == State.afterStop && activeInteraction?.rank == 2)
+
+            || (activeInteraction?.state == State.show && activeInteraction?.rank == 3)
+
+            || (activeInteraction?.state == State.beforeStart && activeInteraction?.rank == 3))
 }
 
 enum class State {

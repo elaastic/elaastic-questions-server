@@ -21,54 +21,62 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <button type="button"
-          class="ui button"
-          th:onclick="|$('#all_explanations_for_${sequenceId}').modal('show');|"
-          th:text="#{player.sequence.explanation.all.button}">
-    See all explanations
-  </button>
+    <button type="button"
+            class="ui button"
+            th:onclick="|$('#all_explanations_for_${sequenceId}').modal('show');
+          fetch('/action/${sequenceId}/saveAction/teacher/open/rationales_popup');
+          ${explanationViewerModel.hasRecommendedExplanations} ? fetch('/action/${sequenceId}/saveAction/teacher/click/recommended_rationales_order') : fetch('/action/${sequenceId}/saveAction/teacher/click/rationales_correct_answers')|"
+            th:text="#{player.sequence.explanation.all.button}">
+        See all explanations
+    </button>
 
-  <div th:id="|all_explanations_for_${sequenceId}|"
-       class="ui modal"
-       tabindex="-1" role="dialog"
-       aria-hidden="true">
+    <div th:id="|all_explanations_for_${sequenceId}|"
+         class="ui modal"
+         tabindex="-1" role="dialog"
+         aria-hidden="true">
 
-    <div class="header" th:text="#{player.sequence.explanation.all}">
-      All explanations...
-    </div>
-
-    <div class="scrolling content">
-
-      <div th:if="${explanationViewerModel.hasChoice}">
-        <div class="ui styled fluid accordion" th:id="|accordion-explanation-viewer-${sequenceId}|">
-          <div
-            th:replace="|${components}/_responseTab|::responseTab(${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponse}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
-
-          <th:block th:unless="${explanationViewerModel.showOnlyCorrectResponse}">
-            <div th:each="explanationsByResponse, i : ${explanationViewerModel.explanationsByIncorrectResponses}"
-                 th:remove="tag">
-              <div
-                th:replace="|${components}/_responseTab|::responseTab(${false}, ${explanationsByResponse.key}, ${explanationsByResponse.value}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
-            </div>
-          </th:block>
+        <div class="header" th:text="#{player.sequence.explanation.all}">
+            All explanations...
         </div>
-      </div>
-      <div th:if="${!explanationViewerModel.hasChoice}">
-        <div
-          th:replace="|${components}/_explanationList|::explanationList(${explanationViewerModel.explanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
-      </div>
+
+        <div class="scrolling content">
+
+            <div th:if="${explanationViewerModel.hasChoice}">
+                <div class="ui styled fluid accordion" th:id="|accordion-explanation-viewer-${sequenceId}|">
+                    <th:block th:if="${explanationViewerModel.hasRecommendedExplanations}">
+                        <div th:replace="|${components}/_recommendedResponseTab|::recommendedResponseTab(${explanationViewerModel.recommendedExplanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.correctAreRecommended})"></div>
+                    </th:block>
+                    <div
+                            th:replace="|${components}/_responseTab|::responseTab(${!explanationViewerModel.hasRecommendedExplanations}, ${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponses}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
+
+
+                    <th:block th:unless="${explanationViewerModel.showOnlyCorrectResponse}">
+                        <div th:each="explanationsByResponse, i : ${explanationViewerModel.explanationsByIncorrectResponses}"
+                             th:remove="tag">
+                            <div
+                                    th:replace="|${components}/_responseTab|::responseTab(${false}, ${false}, ${explanationsByResponse.key}, ${explanationsByResponse.value}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+            <div th:if="${!explanationViewerModel.hasChoice}">
+                <div
+                        th:replace="|${components}/_explanationList|::explanationList(${explanationViewerModel.explanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${false})"></div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="ui cancel button"
+                 th:onclick="|fetch('/action/${sequenceId}/saveAction/teacher/close/rationales_popup')|"
+                 th:text="#{player.sequence.explanation.close.button}">Close</div>
+        </div>
     </div>
 
-    <div class="actions">
-      <div class="ui cancel button" th:text="#{player.sequence.explanation.close.button}">Close</div>
-    </div>
-  </div>
-
-  <script th:inline="javascript">
-    $(document).ready(function () {
-      let accordionId = /*[[|#accordion-explanation-viewer-${sequenceId}|]]*/ ''
-      $(accordionId).accordion()
-    })
-  </script>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            let accordionId = /*[[|#accordion-explanation-viewer-${sequenceId}|]]*/ ''
+            $(accordionId).accordion()
+        })
+    </script>
 
 </div>

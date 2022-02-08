@@ -18,17 +18,24 @@
 
 package org.elaastic.questions.player.components.results
 
+import ConfidenceDistributionChartModel
+import EvaluationDistributionChartModel
 import org.elaastic.questions.player.components.explanationViewer.ExplanationViewerModel
+import org.elaastic.questions.player.components.recommendation.RecommendationModel
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
 
 data class ChoiceResultsModel(
-    override val sequenceIsStopped: Boolean,
-    override val sequenceId: Long,
-    val responseDistributionChartModel: ResponseDistributionChartModel? = null,
-    override val explanationViewerModel: ExplanationViewerModel? = null,
-    override val userCanRefreshResults: Boolean = true,
-    override val userCanDisplayStudentsIdentity: Boolean = false,
+        override val sequenceIsStopped: Boolean,
+        override val sequenceId: Long,
+        val responseDistributionChartModel: ResponseDistributionChartModel? = null,
+        val confidenceDistributionChartModel: ConfidenceDistributionChartModel? = null,
+        val evaluationDistributionChartModel: EvaluationDistributionChartModel? = null,
+        override val userCanRefreshResults: Boolean = true,
+        override val userCanDisplayStudentsIdentity: Boolean = false,
+        override val explanationViewerModel: ExplanationViewerModel? = null,
+        override val recommendationModel: RecommendationModel? = null
 ) : ResultsModel {
     override val hasExplanations = explanationViewerModel?.nbExplanations ?: 0 > 0
+    val hasAnyResult = !responseDistributionChartModel?.results.isNullOrEmpty()
     override fun getHasChoices() = true
 }

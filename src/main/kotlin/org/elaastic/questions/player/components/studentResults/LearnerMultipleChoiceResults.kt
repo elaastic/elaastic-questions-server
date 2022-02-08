@@ -20,8 +20,9 @@ class LearnerMultipleChoiceResults(
     override fun hasAnsweredPhase1() = choiceFirstTry != null
     override fun hasAnsweredPhase2() = choiceSecondTry != null
 
-    override fun areBothResponsesEqual(): Boolean =
-        choiceFirstTry == choiceSecondTry
+    override fun areBothResponsesEqual(): Boolean = choiceFirstTry == choiceSecondTry
+
+    override fun areBothExplanationsEqual(): Boolean = (explanationFirstTry?.content == explanationSecondTry?.content)
 
     fun isCorrectAnswer(itemId: Int) : Boolean =
             expectedChoice.expectedChoiceList.any { choiceItem ->  choiceItem.index == itemId }

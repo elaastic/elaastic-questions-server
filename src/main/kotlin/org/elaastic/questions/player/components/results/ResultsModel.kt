@@ -19,6 +19,7 @@
 package org.elaastic.questions.player.components.results
 
 import org.elaastic.questions.player.components.explanationViewer.ExplanationViewerModel
+import org.elaastic.questions.player.components.recommendation.RecommendationModel
 
 interface ResultsModel {
     val sequenceIsStopped: Boolean
@@ -28,4 +29,5 @@ interface ResultsModel {
     val explanationViewerModel: ExplanationViewerModel?
     val userCanRefreshResults : Boolean
     val userCanDisplayStudentsIdentity: Boolean
+    val recommendationModel: RecommendationModel?
 }

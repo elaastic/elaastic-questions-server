@@ -4,6 +4,8 @@ import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -15,6 +17,7 @@ import javax.transaction.Transactional
 @Transactional
 class PeerGradingService(
         @Autowired val peerGradingRepository: PeerGradingRepository,
+        @Autowired val responseRepository: ResponseRepository,
         @Autowired val learnerAssignmentService: LearnerAssignmentService,
         @Autowired val entityManager: EntityManager
 ) {
@@ -63,4 +66,7 @@ class PeerGradingService(
             """.trimIndent())
                     .setParameter("interaction", interaction)
                     .singleResult as Long).toInt()
+
+    fun findAll(sequence: Sequence): List<PeerGrading> =
+            peerGradingRepository.findAllByResponseIn(responseRepository.findAllByInteractionAndAttempt(sequence.getResponseSubmissionInteraction(), 1))
 }

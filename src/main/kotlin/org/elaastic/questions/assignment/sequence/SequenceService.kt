@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
@@ -56,6 +57,7 @@ class SequenceService(
         @Autowired val responseService: ResponseService,
         @Autowired val peerGradingService: PeerGradingService
 ) {
+
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
             get(id, fetchInteractions).let {
                 if (it.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
@@ -314,5 +316,8 @@ class SequenceService(
     fun save(sequence: Sequence) {
         sequenceRepository.save(sequence)
     }
+
+    fun existsById(id: Long): Boolean =
+        sequenceRepository.existsById(id)
 
 }

@@ -14,4 +14,7 @@ class LearnerOpenResults(
     override fun hasAnsweredPhase2() = explanationSecondTry != null
 
     override fun areBothResponsesEqual() : Boolean = explanationFirstTry?.content == explanationSecondTry?.content
+
+    override fun areBothExplanationsEqual(): Boolean = areBothResponsesEqual()
+
 }

@@ -1,0 +1,38 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="recommendedResponseTab(explanations, studentsIdentitiesAreDisplayable, correctAreRecommended)"
+     th:remove="tag"
+     th:with="components=${'/player/assignment/sequence/components/explanation-viewer'}"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <div class="title active"
+         th:onclick="fetch('/action/[[${sequenceId}]]/saveAction/teacher/click/recommended_rationales_order')">
+        <i class="dropdown icon"></i>
+        <span th:text="#{player.sequence.recommendedExplanations}">Recommended explanations </span>
+        <span th:text="#{player.sequence.recommendedExplanations.correct}" th:if="${correctAreRecommended}">(related to a correct answer)</span>
+        <span th:text="#{player.sequence.recommendedExplanations.incorrect}" th:if="${!correctAreRecommended}">(related to an incorrect answer)</span><strong>-</strong>
+        <span th:text="|#{player.sequence.responseCount}: ${#lists.size(explanations)}|">Response Count: 37</span>
+    </div>
+
+
+    <div class="content active">
+        <p class="panel-body">
+        <div th:replace="|${components}/_explanationList|::explanationList(${explanations}, ${studentsIdentitiesAreDisplayable}, ${true})"></div>
+        </p>
+    </div>
+</div>

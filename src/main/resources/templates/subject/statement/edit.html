@@ -51,9 +51,13 @@
       <i class="corner pencil alternate icon"></i>
     </i>
 
-    <div class="content" style="vertical-align: middle;" th:text="#{question.update}">
+    <div th:if="${subject.owner == user}" class="content" style="vertical-align: middle;" th:text="#{question.update}">
       Update a question
     </div>
+    <div th:unless="${subject.owner == user}" class="content" style="vertical-align: middle;" th:text="#{question.shared.title}">
+      Update a question
+    </div>
+
   </h2>
 
   <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">

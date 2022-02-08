@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
+import org.elaastic.questions.player.components.recommendation.RecommendationModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ResultsModel
@@ -53,7 +54,7 @@ class TeacherPlayerModel(
         assignmentOverviewModel: AssignmentOverviewModel,
         stepsModel: StepsModel,
         val sequenceStatistics: SequenceStatistics,
-        val commandModel: CommandModel           ,
+        val commandModel: CommandModel,
         sequenceInfoModel: SequenceInfoModel,
         statementPanelModel: StatementPanelModel,
         statement: StatementInfo,

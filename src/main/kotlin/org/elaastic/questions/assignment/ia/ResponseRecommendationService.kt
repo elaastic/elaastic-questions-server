@@ -44,7 +44,6 @@ class ResponseRecommendationService(
                 ).let { recommendationResponsePool ->
                     val correctResponseList = allResponse.filter { it.correct }.shuffled()
                     val incorrectResponseList = allResponse.filter { !it.correct }.shuffled()
-
                     repeat(nbEvaluation) { i ->
                         computeRecommandations(
                                 forResponseList = correctResponseList,

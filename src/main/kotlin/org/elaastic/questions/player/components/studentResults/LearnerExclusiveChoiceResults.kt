@@ -23,6 +23,9 @@ class LearnerExclusiveChoiceResults(
     override fun areBothResponsesEqual(): Boolean =
         choiceFirstTry == choiceSecondTry
 
+    override fun areBothExplanationsEqual(): Boolean =
+            (explanationFirstTry?.content == explanationSecondTry?.content)
+
     fun isCorrectAnswer(itemId : Int) : Boolean =
             itemId == expectedChoice.expectedChoice.index
 

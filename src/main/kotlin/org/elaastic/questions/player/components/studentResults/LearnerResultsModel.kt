@@ -12,6 +12,8 @@ interface LearnerResultsModel {
 
     fun areBothResponsesEqual(): Boolean?
 
+    fun areBothExplanationsEqual(): Boolean?
+
     fun hasAnsweredPhase1(): Boolean
 
     fun hasAnsweredPhase2(): Boolean

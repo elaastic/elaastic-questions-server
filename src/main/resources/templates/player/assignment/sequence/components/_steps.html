@@ -67,7 +67,10 @@
       <i class="phase-icon comments outline icon"></i>
 
       <div class="content">
-        <div class="title" th:text="#{sequence.phase.2}">
+        <div class="title" th:if="${stepsModel.evaluationState.name() == 'DISABLED' && stepsModel.readState.name() == 'ACTIVE'}" th:text="#{sequence.phase.2.skipped}">
+          Phase 2 (skipped)
+        </div>
+        <div class="title" th:unless="${stepsModel.evaluationState.name() == 'DISABLED' && stepsModel.readState.name() == 'ACTIVE'}" th:text="#{sequence.phase.2}">
           Phase 2
         </div>
 

@@ -41,13 +41,13 @@
   <h2 class="ui header">
     <i class="book icon"></i>
 
-    <div class="content">
-      <span th:text="#{subject.my.list.label}">My assignments</span>
-      <div class="sub header" th:text="#{subject.my.list.description}">
-        This page lists all of your assignments
-      </div>
-    </div>
-  </h2>
+        <div class="content ob-subject-creation-2">
+            <span th:text="#{subject.my.list.label}">My assignments</span>
+            <div class="sub header" th:text="#{subject.my.list.description}">
+                This page lists all of your subjects
+            </div>
+        </div>
+    </h2>
 
   <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
     Message subject delete confirmation
@@ -111,14 +111,14 @@
     You have no subject.
   </div>
 
-  <div class="ui two column stackable grid">
-    <div class="column">
-      <div class="ui basic segment">
-        <a th:href="@{/subject/create}"
-           href="create"
-           class="ui primary button">
-          <i class="add icon"></i>
-          <span th:text="#{subject.create.label}">
+    <div class="ui two column stackable grid">
+        <div class="column">
+            <div class="ui basic segment">
+                <a th:href="@{/subject/create}"
+                   href="create"
+                   class="ui primary button ob-subject-creation-3">
+                    <i class="add icon"></i>
+                    <span th:text="#{subject.create.label}">
                         Create a subject
                     </span>
         </a>
