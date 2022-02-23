@@ -69,13 +69,13 @@ open class ExportSubjectData(
         val name: String,
         val originalFileName: String,
         val path: String,
-        val mimeType: MimeType,
+        val mimeType: MimeType?,
     ) {
         constructor(attachment: Attachment): this(
             attachment.name,
             attachment.originalFileName ?: error("originalFileName must be non-empty"),
             attachment.path ?: error("path must be non-empty"),
-            attachment.mimeType ?: error("mimeType must be non-empty"),
+            attachment.mimeType,
         )
 
         var attachmentFile: File? = null

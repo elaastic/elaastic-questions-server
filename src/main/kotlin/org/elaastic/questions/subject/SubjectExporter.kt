@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.stereotype.Service
 import java.io.*
+import java.nio.file.Files
 import java.util.*
 import java.util.zip.ZipFile
 
@@ -89,7 +90,7 @@ class SubjectExporter(
      * Import a subject and its attachments from a ZIP archive
      */
     fun importFromZip(user: User, inputStream: InputStream): Subject {
-        val zip = File.createTempFile(UUID.randomUUID().toString(), null)
+        val zip = File.createTempFile("elaastic-"+UUID.randomUUID().toString(), null)
 
         inputStream.use { input ->
             zip.outputStream().use { output ->
@@ -101,7 +102,7 @@ class SubjectExporter(
 
         // Extract the subject data
         val exportSubjectData = parseFromJson(
-            InputStreamReader(extractedFiles.first().file.inputStream())
+            InputStreamReader(extractedFiles.first().file.inputStream(), Charsets.UTF_8)
         )
         // Inject assignments
         exportSubjectData.getAttachmentList().forEach { exportAttachment ->
@@ -115,8 +116,8 @@ class SubjectExporter(
         )
 
         // clean up all tmp files
-        zip.delete()
-        extractedFiles.forEach { it.file.delete() }
+        (zip.toPath() + extractedFiles.map { it.file.toPath() })
+            .forEach { Files.deleteIfExists(it) }
 
         return subject
     }
