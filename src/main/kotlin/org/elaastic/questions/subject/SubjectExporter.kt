@@ -3,6 +3,7 @@ package org.elaastic.questions.subject
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.util.ZipService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -20,6 +21,7 @@ class SubjectExporter(
     @Autowired val zipService: ZipService,
     @Autowired val attachmentService: AttachmentService,
     @Autowired val subjectService: SubjectService,
+    @Autowired val statementService: StatementService,
 ) {
 
     val mapper: ObjectMapper = springMvcJacksonConverter.objectMapper
@@ -30,10 +32,10 @@ class SubjectExporter(
 
 
     /**
-     * Export the subject (including statements, attachments & fake answers) to a POJO
+     * Export the subject (including statements, attachments & fake explanations) to a POJO
      */
     fun exportToPojo(subject: Subject) =
-        ExportSubjectData(subject)
+        ExportSubjectData(subject, statementService)
 
     /**
      * Export the subject to JSON (which does not include attachments)

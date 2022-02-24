@@ -21,6 +21,7 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.attachment.Attachment
@@ -119,6 +120,17 @@ class SubjectService(
                     expectedExplanation = statementExport.expectedExplanation,
                 )
             )
+
+            statementExport.fakeExplanationList.forEach {
+                statementService.addFakeExplanation(
+                    statement,
+                    FakeExplanationData(
+                        it.correspondingItem,
+                        it.content
+                    )
+                )
+            }
+
             statementExport.attachment?.let { attachmentExport ->
                 attachmentExport.attachmentFile?.let { file ->
                     attachmentService.saveStatementAttachment(

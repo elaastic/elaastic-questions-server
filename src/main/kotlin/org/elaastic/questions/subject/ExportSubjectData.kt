@@ -2,8 +2,10 @@ package org.elaastic.questions.subject
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.attachment.MimeType
+import org.elaastic.questions.subject.statement.StatementService
 import java.io.File
 import java.time.LocalDate
 import java.util.*
@@ -18,7 +20,7 @@ open class ExportSubjectData(
 ) {
     val export = ExportMetadata()
 
-    constructor(subject: Subject) : this(
+    constructor(subject: Subject, statementService: StatementService) : this(
         title = subject.title,
         owner = ExportUser(
             subject.owner.username,
@@ -37,6 +39,7 @@ open class ExportSubjectData(
                 statement.questionType,
                 statement.choiceSpecification,
                 statement.expectedExplanation,
+                statementService.findAllFakeExplanationsForStatement(statement).map { ExportFakeExplanation(it) },
                 attachment = if(attachment != null) ExportAttachment(attachment) else null,
             )
         }
@@ -50,6 +53,7 @@ open class ExportSubjectData(
         val questionType: QuestionType,
         val choiceSpecification: ChoiceSpecification?,
         val expectedExplanation: String?,
+        val fakeExplanationList: List<ExportFakeExplanation>,
         val attachment: ExportAttachment?,
     )
 
@@ -79,5 +83,15 @@ open class ExportSubjectData(
         )
 
         var attachmentFile: File? = null
+    }
+
+    open class ExportFakeExplanation(
+        val correspondingItem: Int?,
+        val content: String
+    ) {
+        constructor(fakeExplanation: FakeExplanation): this(
+            fakeExplanation.correspondingItem,
+            fakeExplanation.content,
+        )
     }
 }
