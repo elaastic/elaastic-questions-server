@@ -71,6 +71,7 @@
     </a>
 
     <a class="item"
+       togglz:active="IMPORT_EXPORT"
        th:href="@{/subject/{id}/download-zip(id=${subject.id})}"
        th:attr="data-tooltip=#{subject.action.download.label}"
        data-tooltip="Download"

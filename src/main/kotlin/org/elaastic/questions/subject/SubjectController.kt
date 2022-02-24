@@ -38,6 +38,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -98,6 +99,7 @@ class SubjectController(
     }
 
     @GetMapping("/{id}/download-json")
+    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('IMPORT_EXPORT'))")
     fun downloadAsJson(
         authentication: Authentication,
         @PathVariable id: Long,
@@ -123,6 +125,7 @@ class SubjectController(
     }
 
     @GetMapping("/{id}/download-zip")
+    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('IMPORT_EXPORT'))")
     fun downloadAsZip(
         authentication: Authentication,
         @PathVariable id: Long,
@@ -152,6 +155,7 @@ class SubjectController(
      * Show upload form to import a Subject from a JSON file
      */
     @GetMapping("/upload-form")
+    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('IMPORT_EXPORT'))")
     fun showUploadForm(
         authentication: Authentication,
         model: Model,
@@ -163,6 +167,7 @@ class SubjectController(
     }
 
     @PostMapping("/do-upload-zip")
+    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('IMPORT_EXPORT'))")
     fun doUploadZip(
         authentication: Authentication,
         model: Model,
