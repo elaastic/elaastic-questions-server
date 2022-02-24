@@ -69,6 +69,16 @@
        data-inverted="">
       <i class="yellow big trash icon"></i>
     </a>
+
+    <a class="item"
+       togglz:active="IMPORT_EXPORT"
+       th:href="@{/subject/{id}/download-zip(id=${subject.id})}"
+       th:attr="data-tooltip=#{subject.action.download.label}"
+       data-tooltip="Download"
+       data-position="right center"
+       data-inverted="">
+      <i class="yellow big download icon"></i>
+    </a>
   </th:block>
 
   <th:block th:if="${subject.owner != user}">

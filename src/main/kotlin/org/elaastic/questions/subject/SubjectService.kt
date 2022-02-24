@@ -21,8 +21,11 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.attachment.Attachment
+import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -53,9 +56,10 @@ class SubjectService(
     @Autowired val entityManager: EntityManager,
     @Autowired val sequenceService: SequenceService,
     @Autowired val responseService: ResponseService,
-    @Autowired val sharedSubjectRepository: SharedSubjectRepository
+    @Autowired val sharedSubjectRepository: SharedSubjectRepository,
+    @Autowired val attachmentService: AttachmentService,
 
-) {
+    ) {
 
     val LOG: Logger = Logger.getLogger(SubjectService::class.toString())
 
@@ -92,6 +96,61 @@ class SubjectService(
         }
     }
 
+    fun createFromExportData(
+        user: User,
+        subjectData: ExportSubjectData,
+    ): Subject {
+        val subject = save(
+            Subject(
+                title = subjectData.title,
+                owner = user
+            )
+        )
+
+        subjectData.statements.forEachIndexed { index, statementExport ->
+            val statement = addStatement(
+                subject,
+                Statement(
+                    title = statementExport.title,
+                    owner = user,
+                    content = statementExport.content,
+                    choiceSpecification = statementExport.choiceSpecification,
+                    rank = index,
+                    questionType = statementExport.questionType,
+                    expectedExplanation = statementExport.expectedExplanation,
+                )
+            )
+
+            statementExport.fakeExplanationList.forEach {
+                statementService.addFakeExplanation(
+                    statement,
+                    FakeExplanationData(
+                        it.correspondingItem,
+                        it.content
+                    )
+                )
+            }
+
+            statementExport.attachment?.let { attachmentExport ->
+                attachmentExport.attachmentFile?.let { file ->
+                    attachmentService.saveStatementAttachment(
+                        statement,
+                        Attachment(
+                            name = attachmentExport.name,
+                            size = file.length(),
+                            originalFileName = attachmentExport.originalFileName,
+                            mimeType = attachmentExport.mimeType,
+                        ),
+                        file.inputStream()
+                    )
+                }
+            }
+        }
+
+        return subject
+    }
+
+
     fun findAllByOwner(
         owner: User,
         pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
@@ -119,7 +178,7 @@ class SubjectService(
         statement.rank = (subject.statements.map { it.rank }.maxOrNull() ?: 0) + 1
         statementService.save(statement)
         subject.statements.add(statement)
-        addCorrespondingSequenceInAssignments(statement, subject);
+        addCorrespondingSequenceInAssignments(statement, subject)
         touch(subject)
         return statement
     }
@@ -138,7 +197,7 @@ class SubjectService(
         return subjectRepository.count()
     }
 
-    fun countWithoutCourse(owner: User) : Long {
+    fun countWithoutCourse(owner: User): Long {
         return subjectRepository.countByCourseIsNullAndOwner(owner)
     }
 
@@ -419,7 +478,7 @@ class SubjectService(
         }
     }
 
-    fun findFirstSubjectByOwner(owner: User) : Subject? {
+    fun findFirstSubjectByOwner(owner: User): Subject? {
         return subjectRepository.findFirstByOwner(owner)
     }
 }

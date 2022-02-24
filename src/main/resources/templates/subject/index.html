@@ -35,6 +35,17 @@
      data-inverted="">
     <i class="yellow plus square outline icon"></i>
   </a>
+
+  <a th:href="@{/subject/upload-form}"
+     togglz:active="IMPORT_EXPORT"
+     href="showUploadForm"
+     class="item"
+     th:attr="data-tooltip=#{subject.upload.label}"
+     data-tooltip="Upload a subject"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow upload icon"></i>
+  </a>
 </aside>
 
 <section>

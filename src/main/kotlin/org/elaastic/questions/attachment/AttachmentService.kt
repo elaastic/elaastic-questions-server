@@ -136,10 +136,11 @@ class AttachmentService(
      * @param attachment the attachement
      * @return the input stream
      */
-    fun getInputStreamForAttachment(attachment: Attachment): InputStream {
-        val dataRecord = dataStore.getRecord(DataIdentifier(attachment.path!!))
-        return dataRecord!!.stream
-    }
+    fun getInputStreamForAttachment(attachment: Attachment): InputStream =
+        getInputStreamForPath(attachment.path!!)
+
+    fun getInputStreamForPath(path: String): InputStream =
+        dataStore.getRecord(DataIdentifier(path))!!.stream
 
     /**
      * Check if there are attachment to delete and delete them in this case.

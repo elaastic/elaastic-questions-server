@@ -34,7 +34,12 @@ enum class ElaasticFeatures {
      * It also activate data generation for functional tests (including generating a test subject & scripting
      * learners interactions)
      */
-    FUNCTIONAL_TESTING;
+    FUNCTIONAL_TESTING,
+
+    /**
+     * Import and Export Subjects as a ZIP archive
+     */
+    IMPORT_EXPORT;
 
     fun isActive(): Boolean {
         return FeatureContext.getFeatureManager().isActive { name }
