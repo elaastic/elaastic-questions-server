@@ -472,7 +472,7 @@ internal class IndicatorCalculatorTest {
         )
 
         val result = IndicatorCalculator.computePPeer(mockPeerGradings)
-        assertThat(result!!, lessThan( 0f))
+        assertThat(result, lessThan( 0f))
     }
 
     @Test
@@ -603,6 +603,33 @@ internal class IndicatorCalculatorTest {
 
         val result = IndicatorCalculator.computePPeer(null)
         assertThat(result, `is`(nullValue()))
+    }
+
+    @Test
+    fun `Test computePPeer with null score`() {
+
+        val incorrectResponse1 = mock <Response> {
+            on { score }.doReturn(null)
+        }
+        val incorrectResponse2 = mock <Response> {
+            on { score }.doReturn(BigDecimal(0))
+        }
+        val correctResponse3 = mock <Response> {
+            on { score }.doReturn(BigDecimal(100))
+        }
+
+        val mockPeerGradings = listOf(
+                createMockPeerGrading(3, incorrectResponse1),
+                createMockPeerGrading(2, incorrectResponse1),
+                createMockPeerGrading(1, incorrectResponse2),
+                createMockPeerGrading(4, incorrectResponse1),
+                createMockPeerGrading(1, correctResponse3),
+                createMockPeerGrading(4, correctResponse3),
+                createMockPeerGrading(3, incorrectResponse2)
+        )
+        val result = IndicatorCalculator.computePPeer(mockPeerGradings)
+        print(result)
+        assertThat(result, lessThan( 0f))
     }
 
     @Test
