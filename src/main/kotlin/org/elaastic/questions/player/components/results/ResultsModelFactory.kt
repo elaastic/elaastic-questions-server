@@ -34,8 +34,6 @@ import org.elaastic.questions.player.components.responseDistributionChart.Choice
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
 import org.togglz.core.manager.FeatureManager
 import org.togglz.core.Feature
-import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
-import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 
 object ResultsModelFactory {
 

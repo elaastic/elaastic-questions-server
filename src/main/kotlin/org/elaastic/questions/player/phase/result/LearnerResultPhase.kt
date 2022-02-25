@@ -38,6 +38,8 @@ class LearnerResultPhase(
             sequence = this.learnerSequence.sequence,
             responseSet = learnerPhaseExecution!!.responseSet,
             userCanRefreshResults = learnerPhaseExecution!!.userCanRefreshResults,
+            featureManager = learnerPhaseExecution!!.featureManager,
+            messageBuilder = learnerPhaseExecution!!.messageBuilder,
         )
     )
 
