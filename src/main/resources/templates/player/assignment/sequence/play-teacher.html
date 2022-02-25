@@ -98,7 +98,7 @@
       th:replace="|${components}/statement/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
 
     <div th:if="${playerModel.showResults}" th:remove="tag">
-      <div th:replace="player/assignment/sequence/phase/result/_result-phase.html :: resultPhase(${playerModel.resultsModel})"></div>
+      <div th:replace="|${components}/results/_results.html| :: results(${playerModel.resultsModel})"></div>
     </div>
 
     <div togglz:active="FUNCTIONAL_TESTING" th:remove="tag">
