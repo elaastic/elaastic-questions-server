@@ -23,6 +23,9 @@
 <!--/*@thymesVar id="playerModel" type="org.elaastic.questions.player.PlayerModel"*/-->
 <head>
   <title th:text="|elaastic: ${playerModel.assignment.title}|"></title>
+  <script type="text/javascript" th:src="@{/js/vega.js}"></script>
+  <script type="text/javascript" th:src="@{/js/vega-lite.js}"></script>
+  <script type="text/javascript" th:src="@{/js/vega-embed.js}"></script>
   <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
   <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
@@ -33,16 +36,20 @@
 <body>
 
 <div id="pageSpecificMenu">
-  <script>
-    var elaastic = elaastic || {}
-  </script>
-
   <a class="item"
      th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='questions')}"
      th:attr="data-tooltip=#{subject.action.show.label}"
      data-position="right center"
      data-inverted="">
     <i class="yellow edit icon"></i>
+  </a>
+
+  <a class="item"
+     th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='assignments')}"
+     th:attr="data-tooltip=#{subject.assignment.change.action}"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow file alternate outline icon"></i>
   </a>
 
   <div class="item"
@@ -80,22 +87,25 @@
 <section th:with="components=${'player/assignment/sequence/components'}">
   <div th:if="${playerModel.sequence}"
        th:id="|sequence_${playerModel.sequence.id}|">
-
     <div
       th:replace="|${components}/steps/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
-
-
     <div th:replace="|${components}/command/_command.html| :: command(${playerModel.commandModel})"></div>
     <div
       th:replace="|${components}/sequence-info/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
+    <div th:if="${playerModel.showResults and playerModel.resultsModel.recommendationModel != null}"
+         th:insert="|${components}/_recommendation.html| :: recommendation(${playerModel.resultsModel},${playerModel.sequence.id})"></div>
     <div
       th:replace="|${components}/statement/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
 
     <div th:if="${playerModel.showResults}" th:remove="tag">
-      <div th:replace="|${components}/results/_results.html| :: results(${playerModel.resultsModel})"></div>
+      <div th:replace="player/assignment/sequence/phase/result/_result-phase.html :: resultPhase(${playerModel.resultsModel})"></div>
+    </div>
+
+    <div togglz:active="FUNCTIONAL_TESTING" th:remove="tag">
+      <div
+        th:replace="|${components}/functional-testing/functional-test.html| :: functionalTesting(${playerModel.assignment.id},${playerModel.sequence.id})"></div>
     </div>
   </div>
-
 </section>
 </body>
 </html>
