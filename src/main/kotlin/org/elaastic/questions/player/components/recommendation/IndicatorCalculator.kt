@@ -32,7 +32,7 @@ object IndicatorCalculator {
         val notNullAnswers = responseList?.filter { response -> response.score != null}
         var res: Float? = null
         if(notNullAnswers != null && !notNullAnswers.isEmpty()){
-            val nbCorrectAnswers = notNullAnswers.filter { response -> response.score?.toInt() == 100 }.size
+            val nbCorrectAnswers = notNullAnswers.filter { response -> response.score!!.toInt() == 100 }.size
             res = nbCorrectAnswers.toFloat()/notNullAnswers.size.toFloat()
         }
         return res
@@ -56,8 +56,8 @@ object IndicatorCalculator {
         /* Since no library for polychoric correlation was found, ppeer is not returned but only its sign, which is enough for now... */
         val correctAnswers = peerGradings?.filter { pg -> pg.response.score?.toInt() == 100 && pg.grade != null}
         val incorrectAnswers = peerGradings?.filter { pg -> pg.response.score?.toInt() != 100 && pg.grade != null}
-        val correctAnswersMeanGrade = correctAnswers?.map { pg -> pg.grade?.toInt() }?.average()
-        val incorrectAnswersMeanGrade = incorrectAnswers?.map { pg -> pg.grade?.toInt() }?.average()
+        val correctAnswersMeanGrade = correctAnswers?.map { pg -> pg.grade!!.toInt() }?.average()
+        val incorrectAnswersMeanGrade = incorrectAnswers?.map { pg -> pg.grade!!.toInt() }?.average()
         return if (correctAnswersMeanGrade == null || incorrectAnswersMeanGrade == null || correctAnswersMeanGrade.isNaN() || incorrectAnswersMeanGrade.isNaN()) {
             null
         } else {
