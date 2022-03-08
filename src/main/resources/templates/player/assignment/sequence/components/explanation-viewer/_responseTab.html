@@ -21,7 +21,7 @@
      th:with="components=${'player/assignment/sequence/components/explanation-viewer'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div class="title"
-         th:onclick="[[${correct}]] ? fetch('/action/[[${sequenceId}]]/saveAction/teacher/click/rationales_correct_answers') : fetch('/action/[[${sequenceId}]]/saveAction/teacher/click/rationales_incorrect_answers_[[${response.choices}]]')"
+         th:onclick="[[${correct}]] ? fetch('/action/[[${sequenceId}]]/saveAction/teacher/click/rationales_correct_answers') : fetch('/action/[[${sequenceId}]]/saveAction/teacher/click/rationales_incorrect_answers_[[${response.choices[0]}]]')"
          th:classappend="${activate ? 'active' : ''}">
         <i class="dropdown icon"></i>
         <span th:text="|#{player.sequence.users.responses}: ${response.choices}|">Responses: [2]</span><strong>-</strong>
