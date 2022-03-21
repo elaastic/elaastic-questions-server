@@ -165,7 +165,7 @@
 
         <div class="ui cancel button"
              th:text="#{common.cancel}"
-             th:onclick="|fetch('/action/${sequenceId}/saveAction/teacher/close/configure_popup')|">Cancel
+             th:onclick="|elaastic.saveAction(${sequenceId}, 'teacher', 'close', 'configure_popup')|">Cancel
         </div>
     </div>
 

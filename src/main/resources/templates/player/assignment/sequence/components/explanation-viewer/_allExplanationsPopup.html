@@ -24,8 +24,8 @@
     <button type="button"
             class="ui button"
             th:onclick="|$('#all_explanations_for_${sequenceId}').modal('show');
-          fetch('/action/${sequenceId}/saveAction/teacher/open/rationales_popup');
-          ${explanationViewerModel.hasRecommendedExplanations} ? fetch('/action/${sequenceId}/saveAction/teacher/click/recommended_rationales_order') : fetch('/action/${sequenceId}/saveAction/teacher/click/rationales_correct_answers')|"
+          elaastic.saveAction(${sequenceId}, 'teacher', 'open', 'rationales_popup');
+          ${explanationViewerModel.hasRecommendedExplanations} ? elaastic.saveAction(${sequenceId}, 'teacher', 'click', 'recommended_rationales_order') : elaastic.saveAction(${sequenceId}, 'teacher', 'click', 'rationales_correct_answers')|"
             th:text="#{player.sequence.explanation.all.button}">
         See all explanations
     </button>
@@ -67,7 +67,7 @@
 
         <div class="actions">
             <div class="ui cancel button"
-                 th:onclick="|fetch('/action/${sequenceId}/saveAction/teacher/close/rationales_popup')|"
+                 th:onclick="|elaastic.saveAction(${sequenceId}, 'teacher', 'close', 'rationales_popup')|"
                  th:text="#{player.sequence.explanation.close.button}">Close</div>
         </div>
     </div>
