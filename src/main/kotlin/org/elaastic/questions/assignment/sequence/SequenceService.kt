@@ -21,6 +21,7 @@ package org.elaastic.questions.assignment.sequence
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.questions.assignment.sequence.action.ActionService
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
@@ -49,6 +50,7 @@ import javax.transaction.Transactional
 class SequenceService(
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val fakeExplanationRepository: FakeExplanationRepository,
+        @Autowired val actionService: ActionService,
         @Autowired val interactionService: InteractionService,
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val resultsService: ResultsService,
@@ -105,6 +107,8 @@ class SequenceService(
         }
 
         initializeInteractionsForSequence(sequence, studentsProvideExplanation, nbResponseToEvaluate, executionContext)
+
+        actionService.saveActionsAfterClosingConfigurePopup(sequence)
 
         if (executionContext == ExecutionContext.FaceToFace)
             sequence.selectActiveInteraction(InteractionType.ResponseSubmission)
@@ -177,6 +181,7 @@ class SequenceService(
         sequence.let {
             it.state = State.afterStop
             sequenceRepository.save(it)
+            actionService.stopSequence(sequence)
             return it
         }
     }
@@ -192,6 +197,7 @@ class SequenceService(
         sequence.let {
             it.state = State.show
             sequenceRepository.save(it)
+            actionService.reopenSequence(sequence)
             return it
         }
     }
@@ -233,6 +239,7 @@ class SequenceService(
     fun refreshResults(user: User, sequence: Sequence): Sequence {
         sequence.let {
             resultsService.updateResults(user, it)
+            actionService.refreshResults(it)
             return it
         }
     }
@@ -259,7 +266,7 @@ class SequenceService(
                 interactionRepository.save(interaction)
             }
             sequence.activeInteraction = sequence.getReadInteraction()
-
+            actionService.publishResults(it)
             sequenceRepository.save(it)
             return it
         }
@@ -276,6 +283,7 @@ class SequenceService(
         sequence.let {
             it.resultsArePublished = false
             sequence.getReadInteraction().state = State.beforeStart
+            actionService.unpublishResults(it)
             sequenceRepository.save(it)
             return it
         }

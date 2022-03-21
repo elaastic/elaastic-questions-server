@@ -46,4 +46,45 @@ class ActionService(
         actionRepository.save(action)
     }
 
+    fun saveActionsAfterClosingConfigurePopup(sequence : Sequence){
+        create(sequence, Subject.TEACHER, ActionType.CLOSE, ObjectOfAction.CONFIGURE_POPUP)
+        create(sequence, Subject.TEACHER, ActionType.START, ObjectOfAction.SEQUENCE)
+        create(sequence, Subject.TEACHER, ActionType.START, ObjectOfAction.PHASE_1)
+    }
+
+    fun stopSequence(sequence : Sequence){
+        create(sequence, Subject.TEACHER, ActionType.STOP, ObjectOfAction.SEQUENCE)
+    }
+
+    fun reopenSequence(sequence : Sequence){
+        create(sequence, Subject.TEACHER, ActionType.RESTART, ObjectOfAction.SEQUENCE)
+    }
+
+    fun startPhase(sequence : Sequence, phaseNumber: Int){
+        create(sequence, Subject.TEACHER, ActionType.START, ObjectOfAction.from("phase_$phaseNumber"))
+    }
+
+    fun stopPhase(sequence : Sequence, phaseNumber: Int){
+        create(sequence, Subject.TEACHER, ActionType.STOP, ObjectOfAction.from("phase_$phaseNumber"))
+    }
+
+    fun skipPhase(sequence : Sequence, phaseNumber: Int){
+        create(sequence, Subject.TEACHER, ActionType.SKIP, ObjectOfAction.from("phase_$phaseNumber"))
+    }
+
+    fun restartPhase(sequence : Sequence, phaseNumber: Int){
+        create(sequence, Subject.TEACHER, ActionType.RESTART, ObjectOfAction.from("phase_$phaseNumber"))
+    }
+
+    fun publishResults(sequence: Sequence) {
+        create(sequence, Subject.TEACHER, ActionType.PUBLISH, ObjectOfAction.RESULT)
+    }
+
+    fun unpublishResults(sequence: Sequence) {
+        create(sequence, Subject.TEACHER, ActionType.UNPUBLISH, ObjectOfAction.RESULT)
+    }
+
+    fun refreshResults(sequence: Sequence) {
+        create(sequence, Subject.TEACHER, ActionType.UPDATE, ObjectOfAction.RESULT)
+    }
 }

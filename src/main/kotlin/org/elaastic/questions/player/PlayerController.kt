@@ -305,6 +305,18 @@ class PlayerController(
         return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
+    @GetMapping("/interaction/{id}/restart")
+    fun restartInteraction(
+            authentication: Authentication,
+            model: Model,
+            @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val interaction = interactionService.restart(user, id)
+        autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
+        return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
+    }
+
     @GetMapping("/interaction/{id}/start")
     fun startInteraction(
             authentication: Authentication,
@@ -328,6 +340,22 @@ class PlayerController(
         interactionService.findById(id).let {
             sequenceService.loadInteractions(it.sequence)
             val interaction = interactionService.startNext(user, it)
+            autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
+            return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
+        }
+    }
+
+    @GetMapping("/interaction/{id}/skipNext")
+    fun skipNextInteraction(
+            authentication: Authentication,
+            model: Model,
+            @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        interactionService.findById(id).let {
+            sequenceService.loadInteractions(it.sequence)
+            val interaction = interactionService.skipNext(user, it)
             autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
             return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
         }

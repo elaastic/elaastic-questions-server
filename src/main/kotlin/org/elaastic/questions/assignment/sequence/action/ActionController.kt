@@ -51,12 +51,4 @@ class ActionController(
         }
     }
 
-    @GetMapping("/null/saveAction/{subject}/{action}/{obj}")
-    fun dontSaveActionWhenSequenceNull(
-            authentication: Authentication,
-            @PathVariable subject: String,
-            @PathVariable action: String,
-            @PathVariable obj: String
-    ) {}
-
 }

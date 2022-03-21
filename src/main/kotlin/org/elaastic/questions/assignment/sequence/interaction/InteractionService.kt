@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.ia.ResponseRecommendationService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.assignment.sequence.action.ActionService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
@@ -37,6 +38,7 @@ import javax.transaction.Transactional
 class InteractionService(
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val sequenceRepository: SequenceRepository,
+        @Autowired val actionService: ActionService,
         @Autowired val resultsService: ResultsService,
         @Autowired val responseRepository: ResponseRepository,
         @Autowired val responseRecommendationService: ResponseRecommendationService
@@ -100,12 +102,16 @@ class InteractionService(
                 resultsService.updateResults(user, interaction.sequence)
         }
 
+        actionService.stopPhase(interaction.sequence, interaction.rank)
         interactionRepository.save(interaction)
         return interaction
     }
 
     fun start(user: User, interactionId: Long): Interaction =
             start(user, interactionRepository.getOne(interactionId))
+
+    fun restart(user: User, interactionId: Long): Interaction =
+            restart(user, interactionRepository.getOne(interactionId))
 
     fun start(user: User, interaction: Interaction): Interaction {
         require(user == interaction.owner) {
@@ -118,11 +124,34 @@ class InteractionService(
             it.state = State.show
             it.activeInteraction = interaction
             sequenceRepository.save(it)
+            actionService.startPhase(it, interaction.rank)
         }
 
         return interaction
     }
+
+    fun restart(user: User, interaction: Interaction): Interaction {
+        require(user == interaction.owner) {
+            "Only its owner can start an interaction"
+        }
+
+        interaction.state = State.show
+        interactionRepository.save(interaction)
+        interaction.sequence.let {
+            it.state = State.show
+            it.activeInteraction = interaction
+            sequenceRepository.save(it)
+            actionService.restartPhase(it, interaction.rank)
+        }
+
+        return interaction
+    }
+
     fun startNext(user: User, interaction: Interaction): Interaction =
         start(user, interaction.sequence.getInteractionAt(interaction.rank+1))
 
+    fun skipNext(user: User, interaction: Interaction): Interaction {
+        actionService.skipPhase(interaction.sequence, interaction.rank + 1)
+        return start(user, interaction.sequence.getInteractionAt(interaction.rank+2))
+    }
 }
