@@ -1,7 +1,7 @@
 var elaastic = elaastic || {}
 
-elaastic.saveAction = function(sequenceId, subject, action, object){
+elaastic.saveAction = function(elaasticQuestionsUrl, sequenceId, subject, action, object){
     if(sequenceId != null){
-        fetch('/action/' + sequenceId + '/saveAction/' + subject + '/' + action + '/' + object)
+        fetch(elaasticQuestionsUrl + 'action/' + sequenceId + '/saveAction/' + subject + '/' + action + '/' + object)
     }
 }

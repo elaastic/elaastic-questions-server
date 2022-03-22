@@ -25,7 +25,7 @@
        th:if="${model.actionStartSequence.name() == 'ENABLED'}"
        style="width: 100%; text-align: center; display: block; outline: none;"
        href="#"
-       th:onclick="|$('#sequenceSpec_${model.sequenceId}').modal('show');elaastic.saveAction(${sequenceId}, 'teacher', 'open', 'configure_popup')|">
+       th:onclick="|$('#sequenceSpec_${model.sequenceId}').modal('show');saveAction(${sequenceId}, 'teacher', 'open', 'configure_popup')|">
         <i class="green play icon"></i>
         &nbsp;<span th:text="#{player.sequence.start}">Start sequence</span>
     </a>
