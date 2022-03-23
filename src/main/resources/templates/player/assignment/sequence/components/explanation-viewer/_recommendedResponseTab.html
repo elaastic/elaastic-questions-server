@@ -21,7 +21,7 @@
      th:with="components=${'/player/assignment/sequence/components/explanation-viewer'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div class="title active"
-         th:onclick="saveAction(${sequenceId}, 'teacher', 'click', 'recommended_rationales_order')">
+         th:onclick="saveAction(${sequenceId}, 'click', 'recommended_rationales_order')">
         <i class="dropdown icon"></i>
         <span th:text="#{player.sequence.recommendedExplanations}">Recommended explanations </span>
         <span th:text="#{player.sequence.recommendedExplanations.correct}" th:if="${correctAreRecommended}">(related to a correct answer)</span>

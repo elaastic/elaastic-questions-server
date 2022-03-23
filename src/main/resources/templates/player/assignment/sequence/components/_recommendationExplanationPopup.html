@@ -45,7 +45,7 @@
                     {
                         percentageOfVoters: [[#{player.sequence.result.percentageOfVoters}]],
                         choice: [[#{player.sequence.interaction.choice.label}]]
-                    })}, 1); saveAction([[${sequenceId}]], 'teacher', 'click', 'explanation_popup_p1')">
+                    })}, 1); saveAction([[${sequenceId}]], 'click', 'explanation_popup_p1')">
                 <i class="dropdown icon"></i>
                 <span th:text="#{|${recommendationModel.explanationP1.propertyString}|}" th:remove="tag"></span>
             </div>
@@ -63,7 +63,7 @@
                     {
                         percentageOfVoters: [[#{player.sequence.result.percentageOfVoters}]],
                         choice: [[#{player.sequence.interaction.choice.label}]]
-                    })}, 1); saveAction([[${sequenceId}]], 'teacher', 'click', 'explanation_popup_d')"
+                    })}, 1); saveAction([[${sequenceId}]], 'click', 'explanation_popup_d')"
                  th:if="${recommendationModel.explanationD != null}">
                 <i class="dropdown icon"></i>
                 <span th:text="#{|${recommendationModel.explanationD.propertyString}|}" th:remove="tag"></span>
@@ -90,7 +90,7 @@
                         cf2: [[#{player.sequence.interaction.confidenceDegree.NOT_REALLY_CONFIDENT}]],
                         cf3: [[#{player.sequence.interaction.confidenceDegree.CONFIDENT}]],
                         cf4: [[#{player.sequence.interaction.confidenceDegree.TOTALLY_CONFIDENT}]]
-                    })}, 1); saveAction([[${sequenceId}]], 'teacher', 'click', 'explanation_popup_pconf')">
+                    })}, 1); saveAction([[${sequenceId}]], 'click', 'explanation_popup_pconf')">
                 <i class="dropdown icon"></i>
                 <span th:text="#{|${recommendationModel.explanationPConf.propertyString}|}" th:remove="tag"></span>
             </div>
@@ -116,7 +116,7 @@
             e3: [[#{player.sequence.interaction.grade.3}]],
             e4: [[#{player.sequence.interaction.grade.4}]],
             e5: [[#{player.sequence.interaction.grade.5}]]
-            })}, 1); saveAction([[${sequenceId}]], 'teacher', 'click', 'explanation_popup_ppeer')">
+            })}, 1); saveAction([[${sequenceId}]], 'click', 'explanation_popup_ppeer')">
                 <i class="dropdown icon"></i>
                 <span th:text="#{|${recommendationModel.explanationPPeer.propertyString}|}" th:remove="tag"></span>
             </div>
@@ -138,7 +138,7 @@
         </div>
         <div class="actions">
             <div class="ui cancel button"
-                 th:onclick="|saveAction(${sequenceId}, 'teacher', 'close', 'explanation_popup')|"
+                 th:onclick="|saveAction(${sequenceId}, 'close', 'explanation_popup')|"
                  th:text="#{player.sequence.explanation.close.button}">Close</div>
         </div>
 

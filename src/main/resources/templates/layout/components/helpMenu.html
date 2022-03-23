@@ -64,12 +64,6 @@ rsion.
                     );
                     elaastic.startContextualOb(false, [[${user.onboardingState.chaptersSeen}]]);
                 }
-
-                saveAction = function(sequenceId, subject, action, object){
-                    if(sequenceId != null){
-                        fetch([[${@environment.getProperty('elaastic.questions.url')}]] + 'action/' + sequenceId + '/saveAction/' + subject + '/' + action + '/' + object)
-                    }
-                }
             })
 
         var elaastic = elaastic || {}

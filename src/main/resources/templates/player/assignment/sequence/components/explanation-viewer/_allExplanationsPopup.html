@@ -24,8 +24,8 @@
     <button type="button"
             class="ui button"
             th:onclick="|$('#all_explanations_for_${sequenceId}').modal('show');
-          saveAction(${sequenceId}, 'teacher', 'open', 'rationales_popup');
-          ${explanationViewerModel.hasRecommendedExplanations} ? saveAction(${sequenceId}, 'teacher', 'click', 'recommended_rationales_order') : saveAction(${sequenceId}, 'teacher', 'click', 'rationales_correct_answers')|"
+          saveAction(${sequenceId}, 'open', 'rationales_popup');
+          ${explanationViewerModel.hasRecommendedExplanations} ? saveAction(${sequenceId}, 'click', 'recommended_rationales_order') : saveAction(${sequenceId}, 'click', 'rationales_correct_answers')|"
             th:text="#{player.sequence.explanation.all.button}">
         See all explanations
     </button>
@@ -67,7 +67,7 @@
 
         <div class="actions">
             <div class="ui cancel button"
-                 th:onclick="|saveAction(${sequenceId}, 'teacher', 'close', 'rationales_popup')|"
+                 th:onclick="|saveAction(${sequenceId}, 'close', 'rationales_popup')|"
                  th:text="#{player.sequence.explanation.close.button}">Close</div>
         </div>
     </div>

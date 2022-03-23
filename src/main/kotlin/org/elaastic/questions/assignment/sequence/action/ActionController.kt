@@ -35,18 +35,19 @@ class ActionController(
         @Autowired val messageBuilder: MessageBuilder,
         @Autowired val actionService: ActionService
 ) {
-    @GetMapping("/{id}/saveAction/{subject}/{action}/{obj}")
+
+    @GetMapping("/{id}/saveAction//{action}/{obj}")
     fun saveAction(
             authentication: Authentication,
             @PathVariable id: Long,
-            @PathVariable subject: String,
             @PathVariable action: String,
             @PathVariable obj: String
     ) {
         val user: User = authentication.principal as User
+        val subject = if(user.isTeacher()) Subject.TEACHER else Subject.STUDENT
         if(sequenceService.existsById(id)){
             sequenceService.get(user, id, false).let {
-                actionService.create(it, Subject.from(subject), ActionType.from(action), ObjectOfAction.from(obj))
+                actionService.create(it, subject, ActionType.from(action), ObjectOfAction.from(obj))
             }
         }
     }
