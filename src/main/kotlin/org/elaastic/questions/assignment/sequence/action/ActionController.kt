@@ -46,7 +46,7 @@ class ActionController(
         val user: User = authentication.principal as User
         val subject = if(user.isTeacher()) Subject.TEACHER else Subject.STUDENT
         if(sequenceService.existsById(id)){
-            sequenceService.get(user, id, false).let {
+            sequenceService.getForActionSave(user, id, false).let {
                 actionService.create(it, subject, ActionType.from(action), ObjectOfAction.from(obj))
             }
         }

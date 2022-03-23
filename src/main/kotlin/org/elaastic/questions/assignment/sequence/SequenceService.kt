@@ -66,6 +66,11 @@ class SequenceService(
                 it
             }
 
+    fun getForActionSave(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
+            get(id, fetchInteractions).let {
+                it
+            }
+
 
     fun get(id: Long, fetchInteractions: Boolean = false): Sequence {
         return sequenceRepository.findOneById(id)?.let { sequence ->
