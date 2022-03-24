@@ -36,10 +36,11 @@ class ActionController(
         @Autowired val actionService: ActionService
 ) {
 
-    @GetMapping("/{id}/saveAction/{action}/{obj}")
+    @GetMapping("/{id}/saveAction/{subject}/{action}/{obj}")
     fun saveAction(
             authentication: Authentication,
             @PathVariable id: Long,
+            @PathVariable subject: String,
             @PathVariable action: String,
             @PathVariable obj: String
     ) {
@@ -48,6 +49,7 @@ class ActionController(
                     sequenceService.getForActionSave(user, id, false).let {
                         actionService.create(sequence = it,
                                 user = user,
+                                subject = Subject.from(subject),
                                 actionType = ActionType.from(action),
                                 obj = ObjectOfAction.from(obj))
             }

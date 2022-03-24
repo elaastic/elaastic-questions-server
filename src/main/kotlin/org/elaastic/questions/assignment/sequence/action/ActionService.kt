@@ -37,7 +37,7 @@ class ActionService(
                obj: ObjectOfAction): Action =
             Action(sequence = sequence,
                     user = user ?: sequence.owner,
-                    subject = subject ?: if(sequence.owner != user) Subject.STUDENT else Subject.TEACHER,
+                    subject = subject ?: if(sequence.owner != user) Subject.LEARNER else Subject.TEACHER,
                     actionType = actionType,
                     obj = obj
             ).let(actionRepository::save)

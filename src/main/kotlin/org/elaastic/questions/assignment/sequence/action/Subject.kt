@@ -19,8 +19,8 @@
 package org.elaastic.questions.assignment.sequence.action
 
 enum class Subject(val propertyString: String) {
-    TEACHER("teacher"),
-    STUDENT("student");
+    TEACHER("Teacher"),
+    LEARNER("Learner");
 
     companion object {
         fun from(findValue: String): Subject = values().first { it.propertyString == findValue }
