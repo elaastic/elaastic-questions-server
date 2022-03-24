@@ -36,7 +36,7 @@ class ActionController(
         @Autowired val actionService: ActionService
 ) {
 
-    @GetMapping("/{id}/saveAction//{action}/{obj}")
+    @GetMapping("/{id}/saveAction/{action}/{obj}")
     fun saveAction(
             authentication: Authentication,
             @PathVariable id: Long,
@@ -44,10 +44,12 @@ class ActionController(
             @PathVariable obj: String
     ) {
         val user: User = authentication.principal as User
-        val subject = if(user.isTeacher()) Subject.TEACHER else Subject.STUDENT
         if(sequenceService.existsById(id)){
-            sequenceService.getForActionSave(user, id, false).let {
-                actionService.create(it, subject, ActionType.from(action), ObjectOfAction.from(obj))
+                    sequenceService.getForActionSave(user, id, false).let {
+                        actionService.create(sequence = it,
+                                user = user,
+                                actionType = ActionType.from(action),
+                                obj = ObjectOfAction.from(obj))
             }
         }
     }

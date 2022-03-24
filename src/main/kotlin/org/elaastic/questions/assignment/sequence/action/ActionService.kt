@@ -19,6 +19,7 @@
 package org.elaastic.questions.assignment.sequence.action
 
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -30,11 +31,13 @@ class ActionService(
 ) {
 
     fun create(sequence: Sequence,
-               subject: Subject,
+               subject: Subject? = null,
+               user: User? = null,
                actionType: ActionType,
                obj: ObjectOfAction): Action =
             Action(sequence = sequence,
-                    subject = subject,
+                    user = user ?: sequence.owner,
+                    subject = subject ?: if(sequence.owner != user) Subject.STUDENT else Subject.TEACHER,
                     actionType = actionType,
                     obj = obj
             ).let(actionRepository::save)
@@ -47,44 +50,44 @@ class ActionService(
     }
 
     fun saveActionsAfterClosingConfigurePopup(sequence : Sequence){
-        create(sequence, Subject.TEACHER, ActionType.CLOSE, ObjectOfAction.CONFIGURE_POPUP)
-        create(sequence, Subject.TEACHER, ActionType.START, ObjectOfAction.SEQUENCE)
-        create(sequence, Subject.TEACHER, ActionType.START, ObjectOfAction.PHASE_1)
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.CLOSE, ObjectOfAction.CONFIGURE_POPUP)
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.START, ObjectOfAction.SEQUENCE)
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.START, ObjectOfAction.PHASE_1)
     }
 
     fun stopSequence(sequence : Sequence){
-        create(sequence, Subject.TEACHER, ActionType.STOP, ObjectOfAction.SEQUENCE)
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.STOP, ObjectOfAction.SEQUENCE)
     }
 
     fun reopenSequence(sequence : Sequence){
-        create(sequence, Subject.TEACHER, ActionType.RESTART, ObjectOfAction.SEQUENCE)
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.RESTART, ObjectOfAction.SEQUENCE)
     }
 
     fun startPhase(sequence : Sequence, phaseNumber: Int){
-        create(sequence, Subject.TEACHER, ActionType.START, ObjectOfAction.from("phase_$phaseNumber"))
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.START, ObjectOfAction.from("phase_$phaseNumber"))
     }
 
     fun stopPhase(sequence : Sequence, phaseNumber: Int){
-        create(sequence, Subject.TEACHER, ActionType.STOP, ObjectOfAction.from("phase_$phaseNumber"))
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.STOP, ObjectOfAction.from("phase_$phaseNumber"))
     }
 
     fun skipPhase(sequence : Sequence, phaseNumber: Int){
-        create(sequence, Subject.TEACHER, ActionType.SKIP, ObjectOfAction.from("phase_$phaseNumber"))
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.SKIP, ObjectOfAction.from("phase_$phaseNumber"))
     }
 
     fun restartPhase(sequence : Sequence, phaseNumber: Int){
-        create(sequence, Subject.TEACHER, ActionType.RESTART, ObjectOfAction.from("phase_$phaseNumber"))
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.RESTART, ObjectOfAction.from("phase_$phaseNumber"))
     }
 
     fun publishResults(sequence: Sequence) {
-        create(sequence, Subject.TEACHER, ActionType.PUBLISH, ObjectOfAction.RESULT)
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.PUBLISH, ObjectOfAction.RESULT)
     }
 
     fun unpublishResults(sequence: Sequence) {
-        create(sequence, Subject.TEACHER, ActionType.UNPUBLISH, ObjectOfAction.RESULT)
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.UNPUBLISH, ObjectOfAction.RESULT)
     }
 
     fun refreshResults(sequence: Sequence) {
-        create(sequence, Subject.TEACHER, ActionType.UPDATE, ObjectOfAction.RESULT)
+        create(sequence, Subject.TEACHER, sequence.owner, ActionType.UPDATE, ObjectOfAction.RESULT)
     }
 }

@@ -19,6 +19,7 @@
 package org.elaastic.questions.assignment.sequence.action
 
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -32,6 +33,9 @@ class Action(
 
         @field:ManyToOne
         var sequence: Sequence,
+
+        @field:ManyToOne(fetch = FetchType.LAZY)
+        var user: User,
 
         @field:Enumerated(EnumType.STRING)
         var subject: Subject,
