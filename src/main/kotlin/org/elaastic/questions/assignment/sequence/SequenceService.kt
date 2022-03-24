@@ -266,7 +266,7 @@ class SequenceService(
             it.interactions.forEach { type, interaction ->
                 interaction.state = when (type) {
                     InteractionType.Read -> State.show
-                    else -> State.afterStop
+                    else -> if(interaction.state != State.beforeStart) State.afterStop else State.beforeStart
                 }
                 interactionRepository.save(interaction)
             }

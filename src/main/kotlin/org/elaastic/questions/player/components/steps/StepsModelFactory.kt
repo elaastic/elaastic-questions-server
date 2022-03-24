@@ -32,7 +32,8 @@ object StepsModelFactory {
             sequence.interactions[InteractionType.Evaluation]?.stateForRegisteredUsers().let(::interactionStateToPhaseState),
             readState =
             sequence.interactions[InteractionType.Read]?.stateForRegisteredUsers().let(::interactionStateToPhaseState),
-            showStatistics = true
+            showStatistics = true,
+            phase3Started = sequence.resultsCanBePublished() || sequence.resultsArePublished
     )
 
     fun buildForLearner(sequence: Sequence, learnerActiveInteraction: Interaction?) = StepsModel(
@@ -41,7 +42,8 @@ object StepsModelFactory {
             evaluationState =
             sequence.interactions[InteractionType.Evaluation]?.stateForLearner(learnerActiveInteraction!!).let(::interactionStateToPhaseState),
             readState =
-            sequence.interactions[InteractionType.Read]?.stateForLearner(learnerActiveInteraction!!).let(::interactionStateToPhaseState)
+            sequence.interactions[InteractionType.Read]?.stateForLearner(learnerActiveInteraction!!).let(::interactionStateToPhaseState),
+            phase3Started = sequence.resultsCanBePublished() || sequence.resultsArePublished
 
     )
 

@@ -103,7 +103,7 @@ class Interaction(
 
         sequence.isStopped() ->
             if (rank <= sequence.activeInteraction?.rank ?: 0)
-                State.afterStop
+                state
             else State.beforeStart
 
         sequence.executionIsFaceToFace() -> state

@@ -23,7 +23,8 @@ data class StepsModel(
         val evaluationState: PhaseState,
         val readState: PhaseState,
         val showStatistics: Boolean = false,
-        val studentsProvideExplanation: Boolean = true
+        val studentsProvideExplanation: Boolean = true,
+        val phase3Started: Boolean = false
 ) {
     enum class PhaseState { DISABLED, ACTIVE, COMPLETED }
 }
