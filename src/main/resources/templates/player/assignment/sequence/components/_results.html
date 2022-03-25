@@ -66,7 +66,7 @@
                         cf4: [[#{player.sequence.interaction.confidenceDegree.TOTALLY_CONFIDENT}]]
                     })}, 1)">Confidence
                             degree</a>
-                        <a th:if="${resultsModel.evaluationDistributionChartModel != null}" class="item"
+                        <a class="item"
                            th:data-tab="|peer-evaluation-${resultsModel.evaluationDistributionChartModel.interactionId}|"
                            th:text="#{player.sequence.interaction.peerEvaluation.tabLabel}"
                            th:onclick="saveAction([[${sequenceId}]], 'click', 'ppeer_graph');setTimeout(function(){elaastic.renderEvaluationGraph(

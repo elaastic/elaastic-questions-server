@@ -251,6 +251,7 @@ class PlayerController(
                                         user = user
                                 )
                             },
+                            findAllPeerGrading = { peerGradingService.findAll(sequence) },
                             userHasPerformedEvaluation = {
                                 peerGradingService.userHasPerformedEvaluation(user, sequence)
                             },

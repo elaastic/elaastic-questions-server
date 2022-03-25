@@ -29,7 +29,6 @@
         <span th:text="|#{player.sequence.responseCount}: ${#lists.size(explanations)}|">Response Count: 37</span>
     </div>
 
-
     <div class="content" th:classappend="${activate ? 'active' : ''}">
         <p class="panel-body">
         <div th:replace="|${components}/_explanationList|::explanationList(${explanations}, ${studentsIdentitiesAreDisplayable}, ${false})"></div>

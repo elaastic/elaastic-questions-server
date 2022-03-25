@@ -25,13 +25,15 @@ import java.math.BigDecimal
 object GradingDistributionFactory {
 
     fun build(choiceSpecification: ChoiceSpecification,
-              peerGradings: List<PeerGrading>): GradingDistribution{
+              peerGradings: List<PeerGrading>?): GradingDistribution{
         val gradingDistributionList = mutableListOf<GradingDistributionOnResponse>()
-        for(choiceIndex in 1..choiceSpecification.nbCandidateItem){
-            gradingDistributionList.add(GradingDistributionOnResponse(
-                    peerGradings.filter{pg -> pg.grade?.compareTo(BigDecimal(-1)) != 0 },
-                    choiceIndex
-            ))
+        if(peerGradings != null){
+            for(choiceIndex in 1..choiceSpecification.nbCandidateItem){
+                gradingDistributionList.add(GradingDistributionOnResponse(
+                        peerGradings.filter{pg -> pg.grade?.compareTo(BigDecimal(-1)) != 0 },
+                        choiceIndex
+                ))
+            }
         }
         return GradingDistribution(gradingDistributionList)
     }
