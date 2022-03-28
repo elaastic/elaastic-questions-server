@@ -126,11 +126,23 @@ class SequenceService(
         }
         if (studentsProvideExplanation) {
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                sequence = sequence,
-                teacher = sequence.owner
+                    sequence = sequence,
+                    teacher = sequence.owner
             )
             responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(sequence)
         }
+        return sequence
+    }
+
+    fun skipPhase2(user: User, sequence: Sequence): Sequence {
+        require(user == sequence.owner) {
+            "Only its owner can skip an interaction"
+        }
+
+        sequence.phase2Skipped = true
+        sequenceRepository.save(sequence)
+        eventLogService.skipPhase(sequence, 2)
+
         return sequence
     }
 
@@ -216,24 +228,24 @@ class SequenceService(
         val userActiveInteraction = getActiveInteractionForLearner(sequence, user)
 
         responseService.save(
-            userActiveInteraction
-                ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
-            Response(
-                learner = user,
-                interaction = sequence.getResponseSubmissionInteraction(),
-                attempt = responseSubmissionData.attempt,
-                confidenceDegree = responseSubmissionData.confidenceDegree,
-                explanation = responseSubmissionData.explanation,  // TODO Sanitize
-                learnerChoice = choiceListSpecification,
-                score = choiceListSpecification?.let {
-                    Response.computeScore(
-                        it,
-                        sequence.statement.choiceSpecification
-                            ?: error("The choice specification is undefined")
-                    )
-                },
-                statement = sequence.statement
-            )
+                userActiveInteraction
+                        ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
+                Response(
+                        learner = user,
+                        interaction = sequence.getResponseSubmissionInteraction(),
+                        attempt = responseSubmissionData.attempt,
+                        confidenceDegree = responseSubmissionData.confidenceDegree,
+                        explanation = responseSubmissionData.explanation,  // TODO Sanitize
+                        learnerChoice = choiceListSpecification,
+                        score = choiceListSpecification?.let {
+                            Response.computeScore(
+                                    it,
+                                    sequence.statement.choiceSpecification
+                                            ?: error("The choice specification is undefined")
+                            )
+                        },
+                        statement = sequence.statement
+                )
         )
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
             nextInteractionForLearner(sequence, user)
@@ -304,7 +316,7 @@ class SequenceService(
                 learnerSequence.activeInteraction = sequence.interactions[InteractionType.Read]
             } else {
                 learnerSequence.activeInteraction = sequence.getInteractionAt(
-                    (learnerSequence.activeInteraction ?: error("No active interaction, cannot select the next one") ).rank + 1
+                        (learnerSequence.activeInteraction ?: error("No active interaction, cannot select the next one") ).rank + 1
                 )
             }
             learnerSequenceRepository.save(learnerSequence)
@@ -330,6 +342,6 @@ class SequenceService(
     }
 
     fun existsById(id: Long): Boolean =
-        sequenceRepository.existsById(id)
+            sequenceRepository.existsById(id)
 
 }

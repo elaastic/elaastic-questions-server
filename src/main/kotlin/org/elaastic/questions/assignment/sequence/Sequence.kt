@@ -58,6 +58,8 @@ class Sequence(
 
         var rank: Int = 0,
 
+        var phase2Skipped: Boolean = false,
+
         @field:Enumerated(EnumType.STRING)
         var executionContext: ExecutionContext = ExecutionContext.FaceToFace,
 

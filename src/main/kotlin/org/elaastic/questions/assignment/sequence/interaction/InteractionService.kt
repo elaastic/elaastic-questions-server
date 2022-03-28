@@ -21,6 +21,7 @@ package org.elaastic.questions.assignment.sequence.interaction
 import org.elaastic.questions.assignment.ia.ResponseRecommendationService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.action.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
@@ -38,6 +39,7 @@ import javax.transaction.Transactional
 class InteractionService(
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val sequenceRepository: SequenceRepository,
+        @Autowired val sequenceService: SequenceService,
         @Autowired val eventLogService: EventLogService,
         @Autowired val resultsService: ResultsService,
         @Autowired val responseRepository: ResponseRepository,
@@ -151,7 +153,7 @@ class InteractionService(
         start(user, interaction.sequence.getInteractionAt(interaction.rank+1))
 
     fun skipNext(user: User, interaction: Interaction): Interaction {
-        eventLogService.skipPhase(interaction.sequence, interaction.rank + 1)
+        sequenceService.skipPhase2(user, interaction.sequence)
         return start(user, interaction.sequence.getInteractionAt(interaction.rank+2))
     }
 }
