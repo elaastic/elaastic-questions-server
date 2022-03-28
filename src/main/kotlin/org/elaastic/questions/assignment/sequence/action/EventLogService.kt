@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.persistence.Table
 import javax.transaction.Transactional
 
 @Service

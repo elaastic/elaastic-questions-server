@@ -134,18 +134,6 @@ class SequenceService(
         return sequence
     }
 
-    fun skipPhase2(user: User, sequence: Sequence): Sequence {
-        require(user == sequence.owner) {
-            "Only its owner can skip an interaction"
-        }
-
-        sequence.phase2Skipped = true
-        sequenceRepository.save(sequence)
-        eventLogService.skipPhase(sequence, 2)
-
-        return sequence
-    }
-
     internal fun initializeInteractionsForSequence(
             sequence: Sequence,
             studentsProvideExplanation: Boolean,

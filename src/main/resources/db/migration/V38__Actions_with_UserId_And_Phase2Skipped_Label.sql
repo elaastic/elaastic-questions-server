@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-RENAME TABLE action to eventLog;
+RENAME TABLE action to event_log;
 
 ALTER TABLE eventLog
     ADD COLUMN user_id BIGINT(20) AFTER sequence_id;
@@ -24,7 +24,7 @@ ALTER TABLE eventLog
 UPDATE eventLog
 SET user_id = (SELECT owner_id
                     FROM sequence
-                    WHERE action.sequence_id = sequence.id)
+                    WHERE eventLog.sequence_id = sequence.id)
 WHERE user_id is NULL;
 
 ALTER TABLE sequence

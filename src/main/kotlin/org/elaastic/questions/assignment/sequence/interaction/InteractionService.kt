@@ -39,7 +39,6 @@ import javax.transaction.Transactional
 class InteractionService(
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val sequenceService: SequenceService,
         @Autowired val eventLogService: EventLogService,
         @Autowired val resultsService: ResultsService,
         @Autowired val responseRepository: ResponseRepository,
@@ -153,7 +152,10 @@ class InteractionService(
         start(user, interaction.sequence.getInteractionAt(interaction.rank+1))
 
     fun skipNext(user: User, interaction: Interaction): Interaction {
-        sequenceService.skipPhase2(user, interaction.sequence)
+        val sequence = interaction.sequence
+        sequence.phase2Skipped = true
+        sequenceRepository.save(sequence)
+        eventLogService.skipPhase(sequence, 2)
         return start(user, interaction.sequence.getInteractionAt(interaction.rank+2))
     }
 }
