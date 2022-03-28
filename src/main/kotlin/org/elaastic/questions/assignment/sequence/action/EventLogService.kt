@@ -32,13 +32,13 @@ class EventLogService(
 ) {
 
     fun create(sequence: Sequence,
-               subject: Subject? = null,
-               user: User? = null,
+               subject: Subject,
+               user: User,
                actionType: ActionType,
                obj: ObjectOfAction): EventLog =
             EventLog(sequence = sequence,
-                    user = user ?: sequence.owner,
-                    subject = subject ?: if(sequence.owner != user) Subject.LEARNER else Subject.TEACHER,
+                    user = user,
+                    subject = subject,
                     actionType = actionType,
                     obj = obj
             ).let(eventLogRepository::save)
