@@ -18,13 +18,13 @@
 
 RENAME TABLE action to event_log;
 
-ALTER TABLE eventLog
+ALTER TABLE event_log
     ADD COLUMN user_id BIGINT(20) AFTER sequence_id;
 
-UPDATE eventLog
+UPDATE event_log
 SET user_id = (SELECT owner_id
                     FROM sequence
-                    WHERE eventLog.sequence_id = sequence.id)
+                    WHERE event_log.sequence_id = sequence.id)
 WHERE user_id is NULL;
 
 ALTER TABLE sequence

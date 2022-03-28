@@ -58,6 +58,7 @@ class Sequence(
 
         var rank: Int = 0,
 
+        @Column(name= "phase_2_skipped")
         var phase2Skipped: Boolean = false,
 
         @field:Enumerated(EnumType.STRING)
