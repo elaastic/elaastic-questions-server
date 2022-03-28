@@ -26,27 +26,27 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class ActionService(
-        @Autowired val actionRepository: ActionRepository
+class EventLogService(
+        @Autowired val eventLogRepository: EventLogRepository
 ) {
 
     fun create(sequence: Sequence,
                subject: Subject? = null,
                user: User? = null,
                actionType: ActionType,
-               obj: ObjectOfAction): Action =
-            Action(sequence = sequence,
+               obj: ObjectOfAction): EventLog =
+            EventLog(sequence = sequence,
                     user = user ?: sequence.owner,
                     subject = subject ?: if(sequence.owner != user) Subject.LEARNER else Subject.TEACHER,
                     actionType = actionType,
                     obj = obj
-            ).let(actionRepository::save)
+            ).let(eventLogRepository::save)
 
-    fun findById(id: Long): Action =
-            actionRepository.findById(id).get()
+    fun findById(id: Long): EventLog =
+            eventLogRepository.findById(id).get()
 
-    fun save(action: Action){
-        actionRepository.save(action)
+    fun save(eventLog: EventLog){
+        eventLogRepository.save(eventLog)
     }
 
     fun saveActionsAfterClosingConfigurePopup(sequence : Sequence){

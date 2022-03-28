@@ -32,7 +32,6 @@ import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.assignment.sequence.action.ActionService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User

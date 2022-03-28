@@ -19,12 +19,39 @@
 package org.elaastic.questions.assignment.sequence.action
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.springframework.data.jpa.repository.JpaRepository
+import org.elaastic.questions.directory.User
+import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.util.*
+import javax.persistence.*
 
 
-interface ActionRepository : JpaRepository<Action, Long> {
+@Entity
+@EntityListeners(AuditingEntityListener::class)
+class EventLog(
 
-    fun deleteBySequenceIn(sequence: List<Sequence>): List<Action>
-    fun findBySequenceIn(sequence: List<Sequence>): List<Action>
-    fun countBySequenceIn(sequences: List<Sequence>): Int
+        @field:ManyToOne
+        var sequence: Sequence,
+
+        @field:ManyToOne(fetch = FetchType.LAZY)
+        var user: User,
+
+        @field:Enumerated(EnumType.STRING)
+        var subject: Subject,
+
+        @field:Enumerated(EnumType.STRING)
+        var actionType: ActionType,
+
+        @field:Enumerated(EnumType.STRING)
+        @Column(name = "object")
+        var obj: ObjectOfAction
+
+) : AbstractJpaPersistable<Long>() {
+
+    @Column(name = "date")
+    @CreatedDate
+    lateinit var date: Date
+
 }
+

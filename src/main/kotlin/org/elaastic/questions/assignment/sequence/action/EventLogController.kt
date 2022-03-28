@@ -29,11 +29,11 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/action")
-class ActionController(
+class EventLogController(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val sequenceService: SequenceService,
         @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val actionService: ActionService
+        @Autowired val eventLogService: EventLogService
 ) {
 
     @GetMapping("/{id}/saveAction/{subject}/{action}/{obj}")
@@ -47,7 +47,7 @@ class ActionController(
         val user: User = authentication.principal as User
         if(sequenceService.existsById(id)){
                     sequenceService.getForActionSave(user, id, false).let {
-                        actionService.create(sequence = it,
+                        eventLogService.create(sequence = it,
                                 user = user,
                                 subject = Subject.from(subject),
                                 actionType = ActionType.from(action),

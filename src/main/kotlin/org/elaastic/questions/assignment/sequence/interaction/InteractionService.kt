@@ -22,7 +22,7 @@ import org.elaastic.questions.assignment.ia.ResponseRecommendationService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.action.ActionService
+import org.elaastic.questions.assignment.sequence.action.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
@@ -38,7 +38,7 @@ import javax.transaction.Transactional
 class InteractionService(
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val actionService: ActionService,
+        @Autowired val eventLogService: EventLogService,
         @Autowired val resultsService: ResultsService,
         @Autowired val responseRepository: ResponseRepository,
         @Autowired val responseRecommendationService: ResponseRecommendationService
@@ -102,7 +102,7 @@ class InteractionService(
                 resultsService.updateResults(user, interaction.sequence)
         }
 
-        actionService.stopPhase(interaction.sequence, interaction.rank)
+        eventLogService.stopPhase(interaction.sequence, interaction.rank)
         interactionRepository.save(interaction)
         return interaction
     }
@@ -124,7 +124,7 @@ class InteractionService(
             it.state = State.show
             it.activeInteraction = interaction
             sequenceRepository.save(it)
-            actionService.startPhase(it, interaction.rank)
+            eventLogService.startPhase(it, interaction.rank)
         }
 
         return interaction
@@ -141,7 +141,7 @@ class InteractionService(
             it.state = State.show
             it.activeInteraction = interaction
             sequenceRepository.save(it)
-            actionService.restartPhase(it, interaction.rank)
+            eventLogService.restartPhase(it, interaction.rank)
         }
 
         return interaction
@@ -151,7 +151,7 @@ class InteractionService(
         start(user, interaction.sequence.getInteractionAt(interaction.rank+1))
 
     fun skipNext(user: User, interaction: Interaction): Interaction {
-        actionService.skipPhase(interaction.sequence, interaction.rank + 1)
+        eventLogService.skipPhase(interaction.sequence, interaction.rank + 1)
         return start(user, interaction.sequence.getInteractionAt(interaction.rank+2))
     }
 }

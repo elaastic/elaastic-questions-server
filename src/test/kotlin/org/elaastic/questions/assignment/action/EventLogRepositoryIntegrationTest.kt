@@ -30,8 +30,8 @@ import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-internal class ActionRepositoryIntegrationTest(
-        @Autowired val actionRepository: ActionRepository,
+internal class EventLogRepositoryIntegrationTest(
+        @Autowired val eventLogRepository: EventLogRepository,
         @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
@@ -41,14 +41,14 @@ internal class ActionRepositoryIntegrationTest(
         val sequence = integrationTestingService.getAnySequence()
 
         // Given : a action
-        Action(
+        EventLog(
                 sequence,
                 Subject.TEACHER,
                 ActionType.OPEN,
                 ObjectOfAction.EXPLANATION_POPUP
         ).let {
             // When saving it
-            actionRepository.saveAndFlush(it).let {
+            eventLogRepository.saveAndFlush(it).let {
                 // Then
                 assertThat(it.id, not(nullValue()))
                 assertThat(it.date, not(nullValue()))
