@@ -24,12 +24,12 @@ import java.math.BigDecimal
 data class GradingDistribution(
         val evaluationPerChoice: List<GradingDistributionOnResponse>
 ) {
-    fun toLegacyFormat(): Map<ItemIndex, Map<BigDecimal, Int>> {
-        val data = mutableMapOf<ItemIndex, Map<BigDecimal, Int>>()
+    fun toLegacyFormat(): Map<ItemIndex, Map<BigDecimal, NumberOfOccurence>> {
+        val data = mutableMapOf<ItemIndex, Map<BigDecimal, NumberOfOccurence>>()
 
         for (i in 0..evaluationPerChoice.size - 1) {
             val currentChoice = evaluationPerChoice[i]
-            val dataResponse = mutableMapOf<BigDecimal, Int>()
+            val dataResponse = mutableMapOf<BigDecimal, NumberOfOccurence>()
             for (currentEvaluation in 0..4) {
                 dataResponse[currentEvaluation.toBigDecimal()] = currentChoice.nbResponsesByEvaluation[currentEvaluation]
             }

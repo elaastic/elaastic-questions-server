@@ -46,7 +46,7 @@ class EventLogController(
     ) {
         val user: User = authentication.principal as User
         if(sequenceService.existsById(id)){
-                    sequenceService.getForActionSave(user, id, false).let {
+                    sequenceService.get(id, false).let {
                         eventLogService.create(sequence = it,
                                 user = user,
                                 subject = Subject.from(subject),

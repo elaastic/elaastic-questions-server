@@ -20,15 +20,17 @@ package org.elaastic.questions.assignment.sequence.interaction.results
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 
+typealias NumberOfOccurence = Int
+
 data class ConfidenceDistribution(
         val confidencePerChoice: List<ConfidenceDistributionOnResponse>
 ) {
-    fun toJSON(): Map<ItemIndex, Map<ConfidenceDegree, Int>> {
-        val data = mutableMapOf<ItemIndex, Map<ConfidenceDegree, Int>>()
+    fun toJSON(): Map<ItemIndex, Map<ConfidenceDegree, NumberOfOccurence>> {
+        val data = mutableMapOf<ItemIndex, Map<ConfidenceDegree, NumberOfOccurence>>()
 
         for (i in 0..confidencePerChoice.size - 1) {
             val currentChoice = confidencePerChoice[i]
-            val dataResponse = mutableMapOf<ConfidenceDegree, Int>()
+            val dataResponse = mutableMapOf<ConfidenceDegree, NumberOfOccurence>()
             for (currentConfidence in ConfidenceDegree.values()) {
 //                dataResponse[currentConfidence] = percentOf(currentChoice.nbResponseByConfidence[currentConfidence.ordinal], currentChoice.nbResponse)
                 dataResponse[currentConfidence] = currentChoice.nbResponseByConfidence[currentConfidence.ordinal]
