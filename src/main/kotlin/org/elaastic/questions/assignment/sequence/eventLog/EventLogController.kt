@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.action
+package org.elaastic.questions.assignment.sequence.eventLog
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
@@ -36,21 +36,19 @@ class EventLogController(
         @Autowired val eventLogService: EventLogService
 ) {
 
-    @GetMapping("/{id}/saveAction/{subject}/{action}/{obj}")
+    @GetMapping("/{sequenceId}/saveAction/{action}/{obj}")
     fun saveAction(
             authentication: Authentication,
-            @PathVariable id: Long,
-            @PathVariable subject: String,
+            @PathVariable sequenceId: Long,
             @PathVariable action: String,
             @PathVariable obj: String
     ) {
         val user: User = authentication.principal as User
-        if(sequenceService.existsById(id)){
-                    sequenceService.get(id, false).let {
+        if(sequenceService.existsById(sequenceId)){
+                    sequenceService.get(sequenceId, false).let {
                         eventLogService.create(sequence = it,
                                 user = user,
-                                subject = Subject.from(subject),
-                                actionType = ActionType.from(action),
+                                action = Action.from(action),
                                 obj = ObjectOfAction.from(obj))
             }
         }

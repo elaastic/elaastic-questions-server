@@ -18,7 +18,8 @@
 
 package org.elaastic.questions.action.action
 
-import org.elaastic.questions.assignment.sequence.action.*
+import org.elaastic.questions.assignment.sequence.eventLog.*
+import org.elaastic.questions.directory.Role
 import org.elaastic.questions.test.IntegrationTestingService
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
@@ -39,12 +40,14 @@ internal class EventLogRepositoryIntegrationTest(
     fun `save a valid action`() {
 
         val sequence = integrationTestingService.getAnySequence()
+        val user = integrationTestingService.getAnyUser()
 
-        // Given : a action
+        // Given : an eventLog
         EventLog(
                 sequence,
-                Subject.TEACHER,
-                ActionType.OPEN,
+                user,
+                Role.RoleId.STUDENT,
+                Action.OPEN,
                 ObjectOfAction.EXPLANATION_POPUP
         ).let {
             // When saving it

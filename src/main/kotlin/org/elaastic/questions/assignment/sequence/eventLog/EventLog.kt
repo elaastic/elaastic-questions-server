@@ -16,9 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.action
+package org.elaastic.questions.assignment.sequence.eventLog
 
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.directory.Role
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -38,10 +39,10 @@ class EventLog(
         var user: User,
 
         @field:Enumerated(EnumType.STRING)
-        var subject: Subject,
+        var subject: Role.RoleId,
 
         @field:Enumerated(EnumType.STRING)
-        var actionType: ActionType,
+        var action: Action,
 
         @field:Enumerated(EnumType.STRING)
         @Column(name = "object")

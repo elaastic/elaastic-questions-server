@@ -22,7 +22,7 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.assignment.sequence.action.EventLogRepository
+import org.elaastic.questions.assignment.sequence.eventLog.EventLogRepository
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
