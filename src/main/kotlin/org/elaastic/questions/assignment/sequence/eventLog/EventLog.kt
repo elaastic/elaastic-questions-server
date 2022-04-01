@@ -39,8 +39,9 @@ class EventLog(
         var user: User,
 
         @field:Enumerated(EnumType.STRING)
-        var subject: Role.RoleId,
+        var role: Role.RoleId,
 
+        @Column(name = "action_type")
         @field:Enumerated(EnumType.STRING)
         var action: Action,
 

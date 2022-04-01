@@ -21,6 +21,9 @@ RENAME TABLE action to event_log;
 ALTER TABLE event_log
     ADD COLUMN user_id BIGINT(20) AFTER sequence_id;
 
+ALTER TABLE event_log CHANGE subject role varchar(32) not null;
+ALTER TABLE event_log CHANGE action_type action varchar(32) not null;
+
 UPDATE event_log
 SET user_id = (SELECT owner_id
                     FROM sequence

@@ -37,7 +37,7 @@ class EventLogService(
                obj: ObjectOfAction): EventLog =
             EventLog(sequence = sequence,
                     user = user,
-                    subject = if(user != sequence.owner) Role.RoleId.STUDENT else Role.RoleId.TEACHER,
+                    role = if(user != sequence.owner) Role.RoleId.STUDENT else Role.RoleId.TEACHER,
                     action = action,
                     obj = obj
             ).let(eventLogRepository::save)
