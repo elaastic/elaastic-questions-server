@@ -41,7 +41,6 @@ class EventLog(
         @field:Enumerated(EnumType.STRING)
         var role: Role.RoleId,
 
-        @Column(name = "action_type")
         @field:Enumerated(EnumType.STRING)
         var action: Action,
 
