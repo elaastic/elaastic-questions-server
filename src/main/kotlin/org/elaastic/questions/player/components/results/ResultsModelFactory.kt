@@ -56,7 +56,7 @@ object ResultsModelFactory {
                         sequenceId = sequence.id ?: error("This sequence has no ID"),
                         responseDistributionChartModel = buildResponseDistributionChartModel(sequence, responseSet),
                         confidenceDistributionChartModel = buildConfidenceDistributionChartModel(sequence, responseSet),
-                        evaluationDistributionChartModel = if (peerGradings != null && peerGradings.isNotEmpty()) buildEvaluationDistributionChartModel(sequence, peerGradings) else null,
+                        evaluationDistributionChartModel = buildEvaluationDistributionChartModel(sequence, peerGradings),
                         recommendationModel = recommendationModel,
                         explanationViewerModel = createChoiceExplanationViewerModel(teacher, sequence, responseSet, recommendationModel?.recommendedExplanationsComparator),
                         userCanRefreshResults = userCanRefreshResults,
@@ -105,7 +105,7 @@ object ResultsModelFactory {
             }
 
     private fun buildEvaluationDistributionChartModel(sequence: Sequence,
-                                                      peerGradings: List<PeerGrading>): EvaluationDistributionChartModel =
+                                                      peerGradings: List<PeerGrading>?): EvaluationDistributionChartModel =
             sequence.getResponseSubmissionInteraction().let { responseSubmissionInteraction ->
                 val choiceSpecification = sequence.statement.choiceSpecification
                         ?: error("This is an open question ; cannot compute confidence distribution")

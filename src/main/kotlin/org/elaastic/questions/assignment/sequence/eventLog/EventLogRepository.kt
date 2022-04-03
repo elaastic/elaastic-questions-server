@@ -16,34 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.action
+package org.elaastic.questions.assignment.sequence.eventLog
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.data.jpa.repository.JpaRepository
 
-@Service
-@Transactional
-class ActionService(
-        @Autowired val actionRepository: ActionRepository
-) {
 
-    fun create(sequence: Sequence,
-               subject: Subject,
-               actionType: ActionType,
-               obj: ObjectOfAction): Action =
-            Action(sequence = sequence,
-                    subject = subject,
-                    actionType = actionType,
-                    obj = obj
-            ).let(actionRepository::save)
+interface EventLogRepository : JpaRepository<EventLog, Long> {
 
-    fun findById(id: Long): Action =
-            actionRepository.findById(id).get()
-
-    fun save(action: Action){
-        actionRepository.save(action)
-    }
-
+    fun deleteBySequenceIn(sequence: List<Sequence>): List<EventLog>
+    fun findBySequenceIn(sequence: List<Sequence>): List<EventLog>
+    fun countBySequenceIn(sequences: List<Sequence>): Int
 }

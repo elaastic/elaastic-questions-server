@@ -30,7 +30,6 @@ import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import org.elaastic.questions.assignment.sequence.action.Action
 import java.lang.IllegalStateException
 import java.util.*
 import javax.persistence.*
@@ -58,6 +57,9 @@ class Sequence(
         var assignment: Assignment? = null,
 
         var rank: Int = 0,
+
+        @Column(name= "phase_2_skipped")
+        var phase2Skipped: Boolean = false,
 
         @field:Enumerated(EnumType.STRING)
         var executionContext: ExecutionContext = ExecutionContext.FaceToFace,

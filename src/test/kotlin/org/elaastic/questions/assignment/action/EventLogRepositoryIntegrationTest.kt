@@ -18,7 +18,8 @@
 
 package org.elaastic.questions.action.action
 
-import org.elaastic.questions.assignment.sequence.action.*
+import org.elaastic.questions.assignment.sequence.eventLog.*
+import org.elaastic.questions.directory.Role
 import org.elaastic.questions.test.IntegrationTestingService
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
@@ -30,8 +31,8 @@ import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-internal class ActionRepositoryIntegrationTest(
-        @Autowired val actionRepository: ActionRepository,
+internal class EventLogRepositoryIntegrationTest(
+        @Autowired val eventLogRepository: EventLogRepository,
         @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
@@ -39,16 +40,18 @@ internal class ActionRepositoryIntegrationTest(
     fun `save a valid action`() {
 
         val sequence = integrationTestingService.getAnySequence()
+        val user = integrationTestingService.getAnyUser()
 
-        // Given : a action
-        Action(
+        // Given : an eventLog
+        EventLog(
                 sequence,
-                Subject.TEACHER,
-                ActionType.OPEN,
+                user,
+                Role.RoleId.STUDENT,
+                Action.OPEN,
                 ObjectOfAction.EXPLANATION_POPUP
         ).let {
             // When saving it
-            actionRepository.saveAndFlush(it).let {
+            eventLogRepository.saveAndFlush(it).let {
                 // Then
                 assertThat(it.id, not(nullValue()))
                 assertThat(it.date, not(nullValue()))

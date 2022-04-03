@@ -16,13 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.action
+package org.elaastic.questions.assignment.sequence.eventLog
 
-enum class Subject(val propertyString: String) {
-    TEACHER("teacher"),
-    STUDENT("student");
+enum class Action(val propertyString: String) {
+    OPEN("open"),
+    CLOSE("close"),
+    START("start"),
+    STOP("stop"),
+    SKIP("skip"),
+    PUBLISH("publish"),
+    UNPUBLISH("unpublish"),
+    UPDATE("update"),
+    LOAD("load"),
+    CLICK("click"),
+    RESTART("restart");
 
     companion object {
-        fun from(findValue: String): Subject = values().first { it.propertyString == findValue }
+        fun from(findValue: String): Action = values().first { it.propertyString == findValue }
     }
 }

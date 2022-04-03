@@ -160,13 +160,12 @@
     <div class="actions">
         <div class="ui approve primary button ob-start-sequence-8"
              th:text="#{player.sequence.start}"
-             th:onclick="|fetch('/action/${sequenceId}/saveAction/teacher/close/configure_popup');fetch('/action/${sequenceId}/saveAction/teacher/start/sequence');fetch('/action/${sequenceId}/saveAction/teacher/close/configure_popup');fetch('/action/${sequenceId}/saveAction/teacher/start/sequence');fetch('/action/${sequenceId}/saveAction/teacher/start/phase_1')|">
             >Start sequence
         </div>
 
         <div class="ui cancel button"
              th:text="#{common.cancel}"
-             th:onclick="|fetch('/action/${sequenceId}/saveAction/teacher/close/configure_popup')|">Cancel
+             th:onclick="|saveAction(${sequenceId}, 'close', 'configure_popup')|">Cancel
         </div>
     </div>
 

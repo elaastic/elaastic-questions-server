@@ -114,7 +114,8 @@ object PlayerModelFactory {
             userHasPerformedEvaluation: () -> Boolean,
             getFirstAttemptResponse: () -> Response?,
             getSecondAttemptResponse: () -> Response?,
-            userCanRefreshResults: () -> Boolean
+            userCanRefreshResults: () -> Boolean,
+            findAllPeerGrading: () -> List<PeerGrading>
     ): LearnerPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResponsePhase = sequence.state == State.show &&
@@ -191,7 +192,8 @@ object PlayerModelFactory {
                             featureManager,
                             findAllResponses(),
                             userCanRefreshResults(),
-                            messageBuilder
+                            messageBuilder,
+                            peerGradings = findAllPeerGrading()
                     )
                 else null,
                 learnerResultsModel =

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.action
+package org.elaastic.questions.assignment.sequence.eventLog
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
@@ -29,34 +29,29 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/action")
-class ActionController(
+class EventLogController(
         @Autowired val assignmentService: AssignmentService,
         @Autowired val sequenceService: SequenceService,
         @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val actionService: ActionService
+        @Autowired val eventLogService: EventLogService
 ) {
-    @GetMapping("/{id}/saveAction/{subject}/{action}/{obj}")
+
+    @GetMapping("/{sequenceId}/saveAction/{action}/{obj}")
     fun saveAction(
             authentication: Authentication,
-            @PathVariable id: Long,
-            @PathVariable subject: String,
+            @PathVariable sequenceId: Long,
             @PathVariable action: String,
             @PathVariable obj: String
     ) {
         val user: User = authentication.principal as User
-        if(sequenceService.existsById(id)){
-            sequenceService.get(user, id, false).let {
-                actionService.create(it, Subject.from(subject), ActionType.from(action), ObjectOfAction.from(obj))
+        if(sequenceService.existsById(sequenceId)){
+                    sequenceService.get(sequenceId, false).let {
+                        eventLogService.create(sequence = it,
+                                user = user,
+                                action = Action.from(action),
+                                obj = ObjectOfAction.from(obj))
             }
         }
     }
-
-    @GetMapping("/null/saveAction/{subject}/{action}/{obj}")
-    fun dontSaveActionWhenSequenceNull(
-            authentication: Authentication,
-            @PathVariable subject: String,
-            @PathVariable action: String,
-            @PathVariable obj: String
-    ) {}
 
 }
