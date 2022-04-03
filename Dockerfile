@@ -1,6 +1,6 @@
 FROM openjdk:11
 VOLUME /tmp
-ARG JAR_FILE=build/libs/elaastic-questions-server-5.0.1.jar
+ARG JAR_FILE=build/libs/elaastic-questions-server-5.0.2.jar
 ARG CONF_FILE=docker-resources/elaastic-questions/elaastic-questions.properties
 ADD ${JAR_FILE} elaastic-questions.jar
 ADD ${CONF_FILE} elaastic-questions.properties
