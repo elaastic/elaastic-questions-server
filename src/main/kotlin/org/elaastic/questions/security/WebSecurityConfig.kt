@@ -19,33 +19,44 @@
 package org.elaastic.questions.security
 
 
+import org.elaastic.questions.directory.Role
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.cas.authentication.CasAuthenticationProvider
+import org.springframework.security.cas.web.CasAuthenticationEntryPoint
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.elaastic.questions.directory.Role
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.AuthenticationEntryPoint
+import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
+import org.springframework.security.web.util.matcher.AnyRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
+
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig(
-    @Autowired val userDetailsService: UserDetailsService
+    @Autowired val userDetailsService: UserDetailsService,
+    @Autowired val casAuthenticationProvider: CasAuthenticationProvider,
+    @Autowired val casAuthenticationEntryPoint: CasAuthenticationEntryPoint,
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(auth: AuthenticationManagerBuilder) {
+        auth.authenticationProvider(casAuthenticationProvider)
         auth.authenticationProvider(authenticationProvider())
     }
 
@@ -56,6 +67,7 @@ class WebSecurityConfig(
 
     override fun configure(http: HttpSecurity) {
         http {
+
             logout {
                 logoutRequestMatcher = AntPathRequestMatcher("/logout")
                 logoutSuccessUrl = "/"
@@ -75,6 +87,11 @@ class WebSecurityConfig(
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
                 authorize("/login", permitAll)
+
+                // Allow access to this URL on which the CAS filter is applied
+                // The CAS filter will validate the provided ticket (URL argument) against the configured CAS server
+                authorize("/login/cas", permitAll)
+
                 authorize("/player/start-anonymous-session", permitAll)
                 authorize("/userAccount/beginPasswordReset", permitAll)
                 authorize("/userAccount/resetPassword", permitAll)
@@ -93,6 +110,22 @@ class WebSecurityConfig(
                 loginPage = "/login"
                 defaultSuccessUrl("/home", false)
             }
+
+            // ExceptionHandling define the behavior when a Security Exception occurred (typically when the user is not
+            // authenticated on a secured URL)
+            exceptionHandling {
+                authenticationEntryPoint = DelegatingAuthenticationEntryPoint(
+                        linkedMapOf(
+                            // URL "/login/ent" is secured by the CAS (it will redirect on the configured login cas URL
+                            // if the user is not already authenticated)
+                            AntPathRequestMatcher("/login/ent") to casAuthenticationEntryPoint,
+                            // Any other secured URL is handled by the native elaastic authentication (the formLogin)
+                            AnyRequestMatcher.INSTANCE to LoginUrlAuthenticationEntryPoint("/login")
+                        )
+
+                )
+            }
+
         }
     }
 
@@ -115,5 +148,4 @@ class WebSecurityConfig(
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
     }
-
 }
