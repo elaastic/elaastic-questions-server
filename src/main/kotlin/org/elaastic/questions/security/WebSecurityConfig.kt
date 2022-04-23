@@ -36,14 +36,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
-import org.springframework.security.web.util.matcher.RequestMatcher
 
 
 @Configuration
@@ -53,6 +50,7 @@ class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val casAuthenticationProvider: CasAuthenticationProvider,
     @Autowired val casAuthenticationEntryPoint: CasAuthenticationEntryPoint,
+    @Autowired val encoder: PasswordEncoder,
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(auth: AuthenticationManagerBuilder) {
@@ -133,14 +131,9 @@ class WebSecurityConfig(
     fun authenticationProvider(): DaoAuthenticationProvider {
         DaoAuthenticationProvider().let {
             it.setUserDetailsService(userDetailsService)
-            it.setPasswordEncoder(encoder())
+            it.setPasswordEncoder(encoder)
             return it
         }
-    }
-
-    @Bean
-    fun encoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
     }
 
     @Bean

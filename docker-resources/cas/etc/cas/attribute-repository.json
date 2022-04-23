@@ -1,0 +1,51 @@
+{
+  "casuser": {
+    "firstName": [
+      "Json1"
+    ],
+    "lastName": [
+      "One"
+    ]
+  },
+  "fsil": {
+    "prenom": [
+      "Franck"
+    ],
+    "nom": [
+      "Silvestre"
+    ],
+    "mail": [
+      "franck@elaastic.com"
+    ],
+    "dateNaissance": [
+      "01/01/1970"
+    ],
+    "profil": [
+      "Professeur"
+    ],
+    "rneCourant": [
+      "123X"
+    ],
+    "ENTAuxEnsClasses": [
+      "6eA"
+    ]
+  },
+  "kcas": {
+    "nom": [
+      "CAS"
+    ],
+    "prenom": [
+      "Kevin"
+    ],
+    "mail": [
+      "kevin@elaastic.com"
+    ],
+    "dateNaissance": [ "01/01/2001" ],
+    "profil": [ "Eleve" ],
+    "rneCourant": [
+      "123X"
+    ],
+    "ENTEleveClasses": ["6eA"],
+    "ENTEleveNivFormation": ["DEUG "]
+  }
+}

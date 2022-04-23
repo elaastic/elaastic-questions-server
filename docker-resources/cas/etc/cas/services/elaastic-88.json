@@ -4,5 +4,8 @@
   "name" : "elaastic",
   "id" : 88,
   "logoutType" : "BACK_CHANNEL",
-  "logoutUrl" : "http://localhost:8080/exit/cas"
+  "logoutUrl" : "http://localhost:8080/exit/cas",
+  "attributeReleasePolicy" : {
+    "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  }
 }
