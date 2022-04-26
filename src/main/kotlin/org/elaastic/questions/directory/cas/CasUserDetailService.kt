@@ -27,7 +27,7 @@ class CasUserDetailService(
             when(value) {
                 is String -> value
                 null -> throw IllegalArgumentException("The attribute '$attributeName' is mandatory")
-                else -> throw IllegalArgumentException("The attribute '$attributeName' is expected of type 'String' ; provided ${value!!::class.java}")
+                else -> throw IllegalArgumentException("The attribute '$attributeName' is expected of type 'String' ; provided ${value::class.java}")
             }
         }
 
@@ -53,16 +53,6 @@ class CasUserDetailService(
         val lastName = parseStringAttribute(principal, "nom")
         val email = parseStringAttribute(principal, "mail")
         val roleId = parseRoleId(principal)
-        val birthDate = parseOptionalStringAttribute(principal, "dateNaissance")
-        val rne = parseOptionalStringAttribute(principal, "rneCourant")
-
-        if(roleId == Role.RoleId.TEACHER) {
-            // TODO ENTAuxEnsClasses
-        }
-
-        if(roleId == Role.RoleId.STUDENT) {
-            // TODO ENTEleveClasses + ENTEleveNivFormation
-        }
 
         val user = User(
             firstName = firstName,
@@ -81,7 +71,7 @@ class CasUserDetailService(
         }
 
         CasUser(
-            casKey = casKey, // TODO Find out how to retrieve the proper casKey
+            casKey = casKey,
             casUserId = principal.name,
             user = user,
             ).let { casUserRepository.save(it) }

@@ -21,7 +21,6 @@ package org.elaastic.questions.security
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 
-
 @Controller
 class LoginController {
 
@@ -29,12 +28,5 @@ class LoginController {
     fun displayLoginForm(): String {
         return "login"
     }
-
-    // TODO *** Find out how to automize that
-    @GetMapping("/login/ent/1", "/login/ent/2") // This URL is secured by the configured CAS server
-    fun logFromEnt(): String {
-        return "redirect:/home"
-    }
-
 
 }

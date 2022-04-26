@@ -1,6 +1,6 @@
 {
   "@class" : "org.apereo.cas.services.RegexRegisteredService",
-  "serviceId" : "http://localhost:8080/login/cas/2",
+  "serviceId" : "http://localhost:8080/login/cas/ENT_2",
   "name" : "elaastic",
   "id" : 89,
   "logoutType" : "BACK_CHANNEL",
