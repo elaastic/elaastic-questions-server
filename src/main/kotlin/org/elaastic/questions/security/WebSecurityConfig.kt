@@ -21,6 +21,7 @@ package org.elaastic.questions.security
 
 import org.elaastic.questions.directory.Role
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -48,13 +49,16 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
-    @Autowired val casAuthenticationProvider: CasAuthenticationProvider,
-    @Autowired val casAuthenticationEntryPoint: CasAuthenticationEntryPoint,
+    @Autowired @Qualifier("casAuthenticationProvider1") val casAuthenticationProvider1: CasAuthenticationProvider,
+    @Autowired @Qualifier("casAuthenticationEntryPoint1") val casAuthenticationEntryPoint1: CasAuthenticationEntryPoint,
+    @Autowired @Qualifier("casAuthenticationProvider2") val casAuthenticationProvider2: CasAuthenticationProvider,
+    @Autowired @Qualifier("casAuthenticationEntryPoint2") val casAuthenticationEntryPoint2: CasAuthenticationEntryPoint,
     @Autowired val encoder: PasswordEncoder,
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(casAuthenticationProvider)
+        auth.authenticationProvider(casAuthenticationProvider1)
+        auth.authenticationProvider(casAuthenticationProvider2)
         auth.authenticationProvider(authenticationProvider())
     }
 
@@ -88,7 +92,8 @@ class WebSecurityConfig(
 
                 // Allow access to this URL on which the CAS filter is applied
                 // The CAS filter will validate the provided ticket (URL argument) against the configured CAS server
-                authorize("/login/cas", permitAll)
+                authorize("/login/cas/1", permitAll) // TODO *** try to handle that from CAS config
+                authorize("/login/cas/2", permitAll)
 
                 authorize("/player/start-anonymous-session", permitAll)
                 authorize("/userAccount/beginPasswordReset", permitAll)
@@ -116,7 +121,8 @@ class WebSecurityConfig(
                         linkedMapOf(
                             // URL "/login/ent" is secured by the CAS (it will redirect on the configured login cas URL
                             // if the user is not already authenticated)
-                            AntPathRequestMatcher("/login/ent") to casAuthenticationEntryPoint,
+                            AntPathRequestMatcher("/login/ent/1") to casAuthenticationEntryPoint1,
+                            AntPathRequestMatcher("/login/ent/2") to casAuthenticationEntryPoint2,
                             // Any other secured URL is handled by the native elaastic authentication (the formLogin)
                             AnyRequestMatcher.INSTANCE to LoginUrlAuthenticationEntryPoint("/login")
                         )

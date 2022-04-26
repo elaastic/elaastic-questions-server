@@ -30,7 +30,8 @@ class LoginController {
         return "login"
     }
 
-    @GetMapping("/login/ent") // This URL is secured by the configured CAS server
+    // TODO *** Find out how to automize that
+    @GetMapping("/login/ent/1", "/login/ent/2") // This URL is secured by the configured CAS server
     fun logFromEnt(): String {
         return "redirect:/home"
     }

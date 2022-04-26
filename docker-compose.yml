@@ -28,4 +28,8 @@ services:
     build: docker-resources/cas
     ports:
       - "8443:8443"
-
+  cas-2:
+    container_name: elaastic-cas-2
+    build: docker-resources/cas
+    ports:
+      - "8444:8443"
