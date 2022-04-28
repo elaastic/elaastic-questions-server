@@ -19,7 +19,7 @@ class CasUserDetailService(
 )  {
 
     fun loadUserByUsername(casKey: String, username: String): UserDetails? {
-        return casUserRepository.findByCasKeyAndCasUserId(casKey, username)?.user
+        return casUserRepository.findByCasKeyAndCasUserId(casKey, username)?.user?.also { it.casKey = casKey }
     }
 
     private fun parseStringAttribute(principal: AttributePrincipal, attributeName: String): String =

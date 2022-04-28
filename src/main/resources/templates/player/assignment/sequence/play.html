@@ -68,7 +68,7 @@
              data-inverted="">
             <i class="yellow feed icon"></i>
         </div>
-        <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${playerModel.assignment})"></div>
+        <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${playerModel.assignment}, ${playerModel.serverBaseUrl})"></div>
 
         <div class="item"
              onclick="elaastic.showLtiParameterModal()"

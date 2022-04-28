@@ -20,8 +20,6 @@ package org.elaastic.questions.directory
 
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
-import org.elaastic.questions.onboarding.OnboardingChapter
-import org.elaastic.questions.onboarding.OnboardingChapterConverter
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -42,25 +40,29 @@ class User(
     @field:NotBlank var lastName: String,
 
     @field:NotBlank
-        @field:Column(unique = true, length = 32)
-        @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,31}$")
-        private var username: String,
+    @field:Column(unique = true, length = 32)
+    @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,31}$")
+    private var username: String,
 
     @Transient
-        var plainTextPassword: String?,
+    var plainTextPassword: String?,
 
     @field:Column(unique = true)
-        @field:Email
-        var email: String? = null,
+    @field:Email
+    var email: String? = null,
 
-    private var isAnonymous: Boolean = false
+    private var isAnonymous: Boolean = false,
+
+    @Transient
+    var casKey: String? = null
 
 ) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrIsAnonymous {
 
     @Version
     var version: Long? = null
 
-    @NotNull @Size(min = 1)
+    @NotNull
+    @Size(min = 1)
     private var password: String? = null
 
 
@@ -78,7 +80,7 @@ class User(
     var activeSince: LocalDate? = null
 
     fun getFullname(): String {
-        return if(isAnonymous) firstName else "${firstName} ${lastName}"
+        return if (isAnonymous) firstName else "${firstName} ${lastName}"
     }
 
     override fun hasEmail(): Boolean {
@@ -93,13 +95,14 @@ class User(
         return isAnonymous
     }
 
-    @ManyToMany(cascade = [CascadeType.ALL],
-            targetEntity = Role::class
+    @ManyToMany(
+        cascade = [CascadeType.ALL],
+        targetEntity = Role::class
     )
     @JoinTable(
-            name = "user_role",
-            joinColumns = [JoinColumn(name = "user_id")],
-            inverseJoinColumns = [JoinColumn(name = "role_id")]
+        name = "user_role",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
     var roles: MutableSet<Role> = HashSet()
 

@@ -18,7 +18,6 @@
 
 package org.elaastic.questions.controller
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -27,11 +26,6 @@ import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletRequest
 import org.springframework.web.multipart.MaxUploadSizeExceededException
-
-
-
-
-
 
 @ControllerAdvice
 class ControllerAdvice {
