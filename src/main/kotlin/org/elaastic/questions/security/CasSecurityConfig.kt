@@ -180,24 +180,27 @@ class CasSecurityConfig {
         }
 
         private fun readCasConfiguration(environment: ConfigurableEnvironment): List<CasInfo> =
-            readProperty("cas.keyList", environment).split(',').map { casKey ->
+            readOptionalProperty("cas.keyList", environment)?.split(',')?.map { casKey ->
                 CasInfo(
                     casKey,
                     label = readCasProperty("label", casKey, environment),
                     logoSrc = readCasProperty("logo", casKey, environment),
                 )
-            }
+            } ?: listOf()
 
         /*
          * Iterates over all configuration sources, looking for the property value.
          * As Spring orders the property sources by relevance, the value of the first
          * encountered property with the correct name is read and returned.
          */
-        private fun readProperty(propertyName: String, environment: ConfigurableEnvironment): String =
+        private fun readOptionalProperty(propertyName: String, environment: ConfigurableEnvironment): String? =
             environment.propertySources.filterIsInstance<EnumerablePropertySource<Any>>()
                 .find { source: EnumerablePropertySource<Any> ->
                     source.propertyNames.find { it.equals(propertyName) } != null
                 }?.getProperty(propertyName) as String?
+
+        private fun readProperty(propertyName: String, environment: ConfigurableEnvironment): String =
+            readOptionalProperty(propertyName, environment)
                 ?: throw IllegalStateException("Unable to determine value of property $propertyName")
 
         private fun readCasProperty(casPropertyName: String, casKey: String, environment: ConfigurableEnvironment) =
