@@ -49,18 +49,20 @@ class CasSecurityConfig {
     }
 
     @Bean
-    fun casSecurityConfigurer(context: ApplicationContext,
-                              environment: ConfigurableEnvironment): BeanDefinitionRegistryPostProcessor {
+    fun casSecurityConfigurer(
+        context: ApplicationContext,
+        environment: ConfigurableEnvironment
+    ): BeanDefinitionRegistryPostProcessor {
         return CasSecurityConfigurer(context, environment)
     }
 
     class CasSecurityConfigurer(
         val context: ApplicationContext,
         val environment: ConfigurableEnvironment
-        ) : BeanDefinitionRegistryPostProcessor {
+    ) : BeanDefinitionRegistryPostProcessor {
 
-        private val elaasticServerUrl= readProperty("elaastic.questions.url", environment)
-        private val casKeyList: List<String> = readProperty("cas.keyList", environment).split(',')
+        private val elaasticServerUrl = readProperty("elaastic.questions.url", environment)
+        val casInfoList = readCasConfiguration(environment)
 
         /**
          * Each configured CAS server will require a CasAuthenticationProvider
@@ -68,9 +70,9 @@ class CasSecurityConfig {
          * @return the list of CasAuthenticationProviders created
          */
         fun getCasAuthenticationProviderBeanList(): List<CasAuthenticationProvider> =
-            casKeyList.map {casKey ->
+            casInfoList.map { casInfo ->
                 context.getBean(
-                    "$CAS_AUTHENTICATION_PROVIDER_BEAN_PREFIX$casKey",
+                    "$CAS_AUTHENTICATION_PROVIDER_BEAN_PREFIX${casInfo.casKey}",
                     CasAuthenticationProvider::class.java
                 )
             }
@@ -87,10 +89,10 @@ class CasSecurityConfig {
          *
          */
         fun getCasAuthenticationEntryPoints(): Array<Pair<AntPathRequestMatcher, CasAuthenticationEntryPoint>> =
-            casKeyList.map {casKey ->
-                AntPathRequestMatcher("/cas/$casKey/**") to
+            casInfoList.map { casInfo ->
+                AntPathRequestMatcher("/cas/${casInfo.casKey}/**") to
                         context.getBean(
-                            "$CAS_AUTHENTICATION_ENTRY_POINT$casKey",
+                            "$CAS_AUTHENTICATION_ENTRY_POINT${casInfo.casKey}",
                             CasAuthenticationEntryPoint::class.java
                         )
             }.toTypedArray()
@@ -107,7 +109,7 @@ class CasSecurityConfig {
         override fun postProcessBeanDefinitionRegistry(registry: BeanDefinitionRegistry) {
 
             // Iterate on the list of configured CAS in application.properties
-            casKeyList.forEach { registerCasBeans(registry, it) }
+            casInfoList.forEach { registerCasBeans(registry, it.casKey) }
         }
 
         /**
@@ -176,6 +178,15 @@ class CasSecurityConfig {
                     registry.registerBeanDefinition("$CAS_AUTHENTICATION_ENTRY_POINT${casKey}", builder.beanDefinition)
                 }
         }
+
+        private fun readCasConfiguration(environment: ConfigurableEnvironment): List<CasInfo> =
+            readProperty("cas.keyList", environment).split(',').map { casKey ->
+                CasInfo(
+                    casKey,
+                    label = readCasProperty("label", casKey, environment),
+                    logoSrc = readCasProperty("logo", casKey, environment),
+                )
+            }
 
         /*
          * Iterates over all configuration sources, looking for the property value.

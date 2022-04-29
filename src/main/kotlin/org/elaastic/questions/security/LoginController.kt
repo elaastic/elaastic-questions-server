@@ -18,15 +18,24 @@
 
 package org.elaastic.questions.security
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
-class LoginController {
+class LoginController(
+    @Autowired val casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer
+) {
 
     @GetMapping("/login")
-    fun displayLoginForm(): String {
+    fun displayLoginForm(model: Model): String {
+
+        model.addAttribute(
+            "casInfoList",
+            casSecurityConfigurer.casInfoList
+        )
+
         return "login"
     }
-
 }
