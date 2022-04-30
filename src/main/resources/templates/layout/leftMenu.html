@@ -94,6 +94,7 @@
          th:href="@{/subject/}"
          href="/subject/"
          class="item ob-subject-creation-1"
+         th:attr="data-tooltip=#{subject.my.list.label}"
      data-tooltip="My subjects"
      data-position="right center"
      th:styleappend="|background-color: ${#strings.equals(currentSection, 'my-subjects') ? 'white' : ''}|"
