@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="modalShareAccess(subject, serverBaseUrl)"
+<div th:fragment="modalShareAccess(subject)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -53,7 +53,7 @@
   </div>
 
   <script type="text/javascript" th:inline="javascript"
-          th:with="shareUrl=${serverBaseUrl}+@{/subject/shared(globalId=${subject.globalId})}">
+          th:with="shareUrl=${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/subject/shared(globalId=${subject.globalId})}">
     /*<![CDATA[*/
 
     elaastic.showShareAccessModal = function () {

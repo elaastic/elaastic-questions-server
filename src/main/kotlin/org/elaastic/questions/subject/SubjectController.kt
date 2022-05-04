@@ -21,7 +21,6 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
@@ -49,7 +48,6 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.util.*
 import javax.persistence.EntityNotFoundException
-import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
@@ -196,7 +194,6 @@ class SubjectController(
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(
         authentication: Authentication, model: Model, @PathVariable id: Long,
-        httpServletRequest: HttpServletRequest,
         @RequestParam("activeTab", defaultValue = "questions") activeTab: String,
         @RequestParam("page") page: Int?,
         @RequestParam("size") size: Int?
@@ -216,7 +213,6 @@ class SubjectController(
         model.addAttribute("alreadyImported", subjectService.isUsedAsParentSubject(user, subject))
         model.addAttribute("subjectData", SubjectData(owner = user))
         model.addAttribute("activeTab", activeTab)
-        model.addAttribute("serverBaseUrl", ControllerUtil.getServerBaseUrl(httpServletRequest, user))
         subjectService.findAllByOwner(
             user,
             PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
