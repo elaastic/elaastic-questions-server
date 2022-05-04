@@ -52,7 +52,7 @@ class CasSecurityConfig {
     fun casSecurityConfigurer(
         context: ApplicationContext,
         environment: ConfigurableEnvironment
-    ): BeanDefinitionRegistryPostProcessor {
+    ): CasSecurityConfigurer {
         return CasSecurityConfigurer(context, environment)
     }
 

@@ -24,7 +24,7 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 import org.springframework.security.core.userdetails.UserDetailsService
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 
 @TestConfiguration
@@ -49,6 +49,8 @@ class TestSecurityConfig {
         )
 
         return UserDetailsService { username: String? -> users[username] }
-
     }
+
+    @Bean("passwordEncoder")
+    fun passwordEncoder() = BCryptPasswordEncoder()
 }

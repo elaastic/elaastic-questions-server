@@ -44,12 +44,13 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
-    @Autowired val casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer,
     @Autowired val encoder: PasswordEncoder,
 ) : WebSecurityConfigurerAdapter() {
 
+    @Autowired var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
+
     override fun configure(auth: AuthenticationManagerBuilder) {
-        casSecurityConfigurer.getCasAuthenticationProviderBeanList().forEach {
+        casSecurityConfigurer?.getCasAuthenticationProviderBeanList()?.forEach {
             auth.authenticationProvider(it)
         }
 
@@ -117,7 +118,7 @@ class WebSecurityConfig(
                         // If a request without authentication get a URL of the form /cas/<casKey>/** the corresponding
                         // CasAuthenticationEntryPoint will be triggered (resulting in a redirect on the corresponding
                         // CAS server)
-                        *casSecurityConfigurer.getCasAuthenticationEntryPoints(),
+                        *casSecurityConfigurer?.getCasAuthenticationEntryPoints() ?: arrayOf(),
                         
                         // Any other secured URL is handled by the native elaastic authentication (the formLogin)
                         AnyRequestMatcher.INSTANCE to LoginUrlAuthenticationEntryPoint("/login")
