@@ -66,6 +66,9 @@ class CasSecurityConfig {
         val casInfoList = readCasConfiguration(environment)
         val casKeyToServerUrl = casInfoList.map { it.casKey }.associateWith { readCasProperty("server.url", it, environment) }
 
+        fun getCasLoginUrl(casKey: String): String =
+            context.getBean("$SERVICE_PROPERTIES_BEAN_PREFIX${casKey}", ServiceProperties::class.java).service
+
         /**
          * Each configured CAS server will require a CasAuthenticationProvider
          * This method returns the list of created CasAuthenticationProviders so that they can be used within WebSecurityConfig
@@ -187,6 +190,7 @@ class CasSecurityConfig {
                     casKey,
                     label = readCasProperty("label", casKey, environment),
                     logoSrc = readCasProperty("logo", casKey, environment),
+                    serverUrl = readCasProperty("server.url", casKey, environment),
                 )
             } ?: listOf()
 

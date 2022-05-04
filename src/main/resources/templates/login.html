@@ -103,7 +103,7 @@
 
             <div class="ui list">
               <div class="item" th:each="casInfo : ${casInfoList}">
-                <a th:href="@{/cas/{casKey}/home(casKey = ${casInfo.casKey})}"
+                <a th:href="@{${casInfo.serverUrl}(service=${serviceUrlMap[casInfo.casKey]})}"
                    th:title="${casInfo.label}"
                    class="ui fluid secondary button">
                   <img class="ui image" src="/images/cas/ecollege.haute-garonne.long.png"
