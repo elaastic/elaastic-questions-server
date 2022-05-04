@@ -23,7 +23,6 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.OnboardingState
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig
-import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,13 +32,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
-import org.springframework.http.MediaType
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 

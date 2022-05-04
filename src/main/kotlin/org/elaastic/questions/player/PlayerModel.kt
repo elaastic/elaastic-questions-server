@@ -49,7 +49,7 @@ open class PlayerModel(
 
 class TeacherPlayerModel(
     assignment: Assignment,
-    val serverBaseUrl: String = "Hello World",
+    val serverBaseUrl: String,
     sequence: Sequence,
     assignmentOverviewModel: AssignmentOverviewModel,
     stepsModel: StepsModel,
