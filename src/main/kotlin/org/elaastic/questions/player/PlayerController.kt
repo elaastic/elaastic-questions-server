@@ -216,7 +216,7 @@ class PlayerController(
                         PlayerModelFactory.buildForTeacher(
                                 user = user,
                                 sequence = sequence,
-                                serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest, user),
+                                serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
                                 featureManager = featureManager,
                                 nbRegisteredUsers = nbRegisteredUsers,
                                 sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
