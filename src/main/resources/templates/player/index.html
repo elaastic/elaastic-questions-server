@@ -69,7 +69,7 @@
         <td>
           <a class="ui compact icon primary button"
             th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
-            th:attr="data-tooltip=#{player.assignment.play}"
+            th:attr="data-tooltip=#{player.assignment.learner.play}"
             data-position="right center"
             data-inverted="">
             <i class="play icon"></i>
@@ -106,7 +106,7 @@
       <td>
         <a class="ui compact icon primary button"
           th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
-          th:attr="data-tooltip=#{player.assignment.play}"
+          th:attr="data-tooltip=#{player.assignment.learner.play}"
           data-position="right center"
           data-inverted="">
           <i class="play icon"></i>
