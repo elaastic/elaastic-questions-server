@@ -20,6 +20,7 @@ package org.elaastic.questions.security
 
 import org.elaastic.questions.directory.Role
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -45,6 +46,7 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val encoder: PasswordEncoder,
+    @Value("\${elaastic.questions.url}") val elaasticUrl: String,
 ) : WebSecurityConfigurerAdapter() {
 
     @Autowired var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
@@ -67,7 +69,11 @@ class WebSecurityConfig(
 
             logout {
                 logoutRequestMatcher = AntPathRequestMatcher("/logout")
-                logoutSuccessUrl = "/"
+                logoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
+                    "/",
+                    casSecurityConfigurer?.casKeyToServerUrl ?: mapOf(),
+                    "/logout?service=${elaasticUrl}"
+                )
                 clearAuthentication = true
                 deleteCookies("JSESSIONID")
                 invalidateHttpSession = true

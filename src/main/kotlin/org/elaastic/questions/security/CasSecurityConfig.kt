@@ -16,6 +16,7 @@ import org.springframework.security.cas.web.CasAuthenticationEntryPoint
 import org.springframework.security.cas.web.CasAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
+
 private const val SERVICE_URL_PREFIX = "login/cas"
 
 private const val SERVICE_PROPERTIES_BEAN_PREFIX = "serviceProperties_"
@@ -63,6 +64,7 @@ class CasSecurityConfig {
 
         private val elaasticServerUrl = readProperty("elaastic.questions.url", environment)
         val casInfoList = readCasConfiguration(environment)
+        val casKeyToServerUrl = casInfoList.map { it.casKey }.associateWith { readCasProperty("server.url", it, environment) }
 
         /**
          * Each configured CAS server will require a CasAuthenticationProvider
