@@ -32,6 +32,7 @@ import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
+import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
@@ -49,6 +50,7 @@ import org.togglz.core.manager.FeatureManager
 import java.lang.IllegalArgumentException
 import java.util.HashMap
 import javax.persistence.EntityNotFoundException
+import javax.servlet.http.HttpServletRequest
 import javax.transaction.Transactional
 import kotlin.IllegalStateException
 
@@ -187,6 +189,7 @@ class PlayerController(
     )
     fun playAssignment(
             authentication: Authentication,
+            httpServletRequest: HttpServletRequest,
             model: Model,
             @PathVariable assignmentId: Long,
             @PathVariable sequenceId: Long?
@@ -213,9 +216,10 @@ class PlayerController(
                         PlayerModelFactory.buildForTeacher(
                                 user = user,
                                 sequence = sequence,
+                                serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
                                 featureManager = featureManager,
                                 nbRegisteredUsers = nbRegisteredUsers,
-                                sequenceToUserActiveInteraction = assignment.sequences.associate { it to it.activeInteraction },
+                                sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                                 messageBuilder = messageBuilder,
                                 findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
                                 findAllPeerGrading = { peerGradingService.findAll(sequence) },
@@ -227,8 +231,8 @@ class PlayerController(
                             sequence = sequence,
                             nbRegisteredUsers = nbRegisteredUsers,
                             featureManager = featureManager,
-                            sequenceToUserActiveInteraction = assignment.sequences.associate {
-                                it to if (it.executionIsFaceToFace())
+                            sequenceToUserActiveInteraction = assignment.sequences.associateWith {
+                                if (it.executionIsFaceToFace())
                                     it.activeInteraction
                                 else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
                             },

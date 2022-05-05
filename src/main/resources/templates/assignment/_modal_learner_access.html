@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="modalLearnerAccess(assignment)"
+<div th:fragment="modalLearnerAccess(assignment, serverBaseUrl)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -55,9 +55,9 @@
   </div>
 
   <script type="text/javascript" th:inline="javascript"
-          th:with="registerUrl=${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/player/register(globalId=${assignment.globalId})}">
+          th:with="registerUrl=${serverBaseUrl}+@{/player/register(globalId=${assignment.globalId})}">
     /*<![CDATA[*/
-
+                                                    
     elaastic.showLearnerAccessModal = function () {
       window.learnerAccessModalApp.showLearnerAccessModal(
         /*[[${registerUrl}]]*/ 'registerUrl',

@@ -18,17 +18,29 @@
 
 package org.elaastic.questions.security
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-
+import javax.servlet.http.HttpServletRequest
 
 @Controller
-class LoginController {
+class LoginController(
+    @Autowired val casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer
+) {
 
     @GetMapping("/login")
-    fun displayLoginForm(): String {
+    fun displayLoginForm(model: Model, request: HttpServletRequest): String {
+
+        model.addAttribute(
+            "casInfoList",
+            casSecurityConfigurer.casInfoList
+        )
+        model.addAttribute(
+            "serviceUrlMap",
+            casSecurityConfigurer.casInfoList.map { it.casKey }.associateWith { casSecurityConfigurer.getCasLoginUrl(it) }
+        )
+
         return "login"
     }
-
-
 }

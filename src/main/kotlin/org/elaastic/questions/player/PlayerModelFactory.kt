@@ -45,6 +45,7 @@ object PlayerModelFactory {
 
     fun buildForTeacher(user: User,
                         sequence: Sequence,
+                        serverBaseUrl: String,
                         featureManager: FeatureManager,
                         nbRegisteredUsers: Int,
                         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
@@ -58,6 +59,7 @@ object PlayerModelFactory {
 
         TeacherPlayerModel(
                 assignment = assignment,
+                serverBaseUrl = serverBaseUrl,
                 sequence = sequence,
                 assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                         nbRegisteredUser = nbRegisteredUsers,
