@@ -66,7 +66,7 @@ class CasSecurityConfig {
         val casInfoList = readCasConfiguration(environment)
         val casKeyToServerUrl = casInfoList.map { it.casKey }.associateWith { readCasProperty("server.url", it, environment) }
 
-        fun getCasLoginUrl(casKey: String): String =
+        fun getServiceCasLoginUrl(casKey: String): String =
             context.getBean("$SERVICE_PROPERTIES_BEAN_PREFIX${casKey}", ServiceProperties::class.java).service
 
         /**
@@ -81,6 +81,12 @@ class CasSecurityConfig {
                     CasAuthenticationProvider::class.java
                 )
             }
+
+        fun getCasAuthenticationProviderBean(casKey: String): CasAuthenticationProvider =
+            context.getBean(
+                "$CAS_AUTHENTICATION_PROVIDER_BEAN_PREFIX${casKey}",
+                CasAuthenticationProvider::class.java
+            )
 
         /**
          * Each configured CAS server will require a CasAuthenticationEntryPoint that is responsible to commence
@@ -101,6 +107,12 @@ class CasSecurityConfig {
                             CasAuthenticationEntryPoint::class.java
                         )
             }.toTypedArray()
+
+        fun getCasAuthenticationEntryPointBean(casKey: String): CasAuthenticationEntryPoint =
+            context.getBean(
+                "$CAS_AUTHENTICATION_ENTRY_POINT${casKey}",
+                CasAuthenticationEntryPoint::class.java
+            )
 
         override fun postProcessBeanFactory(beanFactory: ConfigurableListableBeanFactory) {}
 

@@ -38,7 +38,7 @@ class LoginController(
         )
         model.addAttribute(
             "serviceUrlMap",
-            casSecurityConfigurer.casInfoList.map { it.casKey }.associateWith { casSecurityConfigurer.getCasLoginUrl(it) }
+            casSecurityConfigurer.casInfoList.map { it.casKey }.associateWith { casSecurityConfigurer.getServiceCasLoginUrl(it) }
         )
 
         return "login"
