@@ -433,6 +433,9 @@ class UserService(
     fun updateOnboardingChapter(chapterToUpdate: OnboardingChapter, user: User?) {
         val onboardingState = user?.onboardingState
         if(onboardingState != null) {
+            if(onboardingState.chaptersSeen == null){
+                onboardingState.chaptersSeen = mutableSetOf()
+            }
             onboardingState.chaptersSeen.add(chapterToUpdate)
             onboardingStateRepository.save(onboardingState)
         }
