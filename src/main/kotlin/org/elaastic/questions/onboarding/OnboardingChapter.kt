@@ -50,10 +50,10 @@ enum class OnboardingChapter(val propertyString: String, val i18nMessages: List<
                 "onboarding.content.assignment_creation.1",
                 "onboarding.content.assignment_creation.2",
                 "onboarding.content.assignment_creation.3",
-                "onboarding.content.assignment_creation.4",
-                "onboarding.content.assignment_creation.5",
-                "onboarding.content.assignment_creation.6",
-                "onboarding.content.assignment_creation.7")
+                "onboarding.content.assignment_creation.9",
+                "onboarding.content.assignment_creation.10",
+                "onboarding.content.assignment_creation.11",
+                "onboarding.content.assignment_creation.12")
             ),
     QUESTION_CREATION_PAGE(
             "question_creation_page",

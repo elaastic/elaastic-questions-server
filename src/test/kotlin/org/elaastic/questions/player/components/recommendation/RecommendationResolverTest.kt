@@ -105,8 +105,8 @@ internal class RecommendationResolverTest {
         on { message("player.sequence.recommendation.pPeerZero.message") }.doReturn("Rationales associated to a correct answer have a identical mean grade than those associated to an incorrect one. This means that correct answers are as popular as incorrect ones.")
         on { message("player.sequence.recommendation.pPeerNeg.message") }.doReturn("Rationales associated to a correct answer have a lower mean grade than those associated to an incorrect one. This means that correct answers are less popular than incorrect ones.")
         on { message("player.sequence.recommendation.dPos.message") }.doReturn("The second vote has more correct answers than the first one. Which means that the evaluation phase was beneficial to learners. A detailed discussion is required.")
-        on { message("player.sequence.recommendation.dZero.message") }.doReturn("The second vote has as many correct answers than the first one. Which means that the evaluation phase was not beneficial to learners. A detailed discussion is required.")
-        on { message("player.sequence.recommendation.dNeg.message") }.doReturn("The second vote has more correct answers than the first one. Which means that the evaluation phase was harmful to learners. A detailed discussion is required.")
+        on { message("player.sequence.recommendation.dZero.message") }.doReturn("The second vote has as many correct answers as the first one. Which means that the evaluation phase was not beneficial to learners. A detailed discussion is required.")
+        on { message("player.sequence.recommendation.dNeg.message") }.doReturn("The second vote has less correct answers than the first one. Which means that the evaluation phase was harmful to learners. A detailed discussion is required.")
     }
 
     private val mockCorrectResponseConf0 = mock<Response> {

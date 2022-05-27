@@ -24,7 +24,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     intro: i18n['onboarding.content.course_creation.3']
                 }
             ].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/course_page')
@@ -43,7 +43,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     intro: i18n['onboarding.content.course_creation.5']
                 }
             ].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/course_creation_page')
@@ -66,7 +66,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     intro: i18n['onboarding.content.subject_creation.3']
                 }
             ].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/subject_page')
@@ -89,7 +89,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     intro: i18n['onboarding.content.subject_creation.6']
                 }
             ].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/subject_creation_page')
@@ -147,27 +147,27 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     intro: i18n['onboarding.content.assignment_creation.2']
                 },
                 {
-                    element: document.querySelector('.ob-assignment-creation-13'),
+                    element: document.querySelector('.ob-assignment-creation-7'),
                     intro: i18n['onboarding.content.assignment_creation.3']
                 },
                 {
+                    element: document.querySelector('.ob-assignment-creation-13'),
+                    intro: i18n['onboarding.content.assignment_creation.9']
+                },
+                {
                     element: document.querySelector('.ob-assignment-creation-14'),
-                    intro: i18n['onboarding.content.assignment_creation.4']
+                    intro: i18n['onboarding.content.assignment_creation.10']
                 },
                 {
                     element: document.querySelector('.ob-assignment-creation-15'),
-                    intro: i18n['onboarding.content.assignment_creation.5']
+                    intro: i18n['onboarding.content.assignment_creation.11']
                 },
                 {
                     element: document.querySelector('.ob-assignment-creation-16'),
-                    intro: i18n['onboarding.content.assignment_creation.6']
-                },
-                {
-                    element: document.querySelector('.ob-assignment-creation-7'),
-                    intro: i18n['onboarding.content.assignment_creation.7']
+                    intro: i18n['onboarding.content.assignment_creation.12']
                 }
             ].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/subject_edition_page')
@@ -226,7 +226,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     intro: i18n['questionCreationPage14']
                 }
             ].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/question_creation_page')
@@ -258,7 +258,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
 
                 },
             ].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/assignment_creation_page')
@@ -299,7 +299,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     element: document.querySelector('.ob-play-sequence-4'),
                     intro: i18n['onboarding.content.play_sequence.4']
                 }].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/player_page')
@@ -321,7 +321,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     element: document.querySelector('.ob-shared-subjects-3'),
                     intro: i18n['onboarding.content.shared_subjects.3']
                 }].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/shared_subjects_page')
@@ -343,7 +343,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                     element: document.querySelector('.ob-one-shared-subjects-3'),
                     intro: i18n['onboarding.content.one_shared_subject.3']
                 }].filter(function (obj) {
-                return $(obj.element).length;
+                return !('element' in obj) || $(obj.element).length;
             })
         }).onexit(function () {
             fetch(elaasticQuestionsUrl + 'userAccount/updateOnboardingChapter/one_shared_subject_page')
