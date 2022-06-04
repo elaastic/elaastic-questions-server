@@ -48,7 +48,7 @@ class CasUserDetailService(
     fun registerNewCasUser(casKey: String, principal: AttributePrincipal): UserDetails {
         val firstName = parseStringAttribute(principal, "prenom")
         val lastName = parseStringAttribute(principal, "nom")
-        val email = parseStringAttribute(principal, "mail")
+        val email = parseOptionalStringAttribute(principal, "mail")
         val roleId = parseRoleId(principal)
 
         val user = User(
