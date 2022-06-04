@@ -665,4 +665,39 @@ internal class UserServiceIntegrationTest(
             assertThat(it, nullValue())
         }
     }
+
+    @Test
+    fun `an elaastic user must have an email`() {
+        assertThrows<ValidationException> {
+            userService.addUser(
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = null
+                ).addRole(roleService.roleStudent())
+            )
+        }
+    }
+
+    @Test
+    fun `a user from an external source may have no email`() {
+        tWhen {
+            // adding a user
+            userService.addUser(
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "foo@elaastic.org",
+                    source = UserSource.CAS
+                ).addRole(roleService.roleStudent())
+            )
+        }.tThen {
+            assertThat(it.id, notNullValue())
+            it
+        }
+    }
 }

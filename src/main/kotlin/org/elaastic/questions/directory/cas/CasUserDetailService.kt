@@ -1,9 +1,6 @@
 package org.elaastic.questions.directory.cas
 
-import org.elaastic.questions.directory.Role
-import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.directory.*
 import org.jasig.cas.client.authentication.AttributePrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
@@ -60,6 +57,7 @@ class CasUserDetailService(
             username = userService.generateUsername(firstName, lastName),
             plainTextPassword = userService.generatePassword(),
             email = email,
+            source = UserSource.CAS,
         ).let {
             userService.addUser(
                 it.addRole(roleService.roleForName(roleId.roleName, true)),

@@ -19,7 +19,7 @@
 package org.elaastic.questions.directory
 
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
-import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
+import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -33,7 +33,7 @@ import kotlin.jvm.Transient
 
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
-@ValidateHasEmailOrHasOwnerOrIsAnonymous
+@ValidateHasEmailOrHasOwnerOrHasExternalSource
 @PlainTextPasswordIsTooShort
 class User(
     @field:NotBlank var firstName: String,
@@ -51,12 +51,13 @@ class User(
     @field:Email
     var email: String? = null,
 
-    private var isAnonymous: Boolean = false,
+    @field:Enumerated(EnumType.STRING)
+    private var source: UserSource = UserSource.ELAASTIC,
 
     @Transient
     var casKey: String? = null
 
-) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrIsAnonymous {
+) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource {
 
     @Version
     var version: Long? = null
@@ -80,7 +81,7 @@ class User(
     var activeSince: LocalDate? = null
 
     fun getFullname(): String {
-        return if (isAnonymous) firstName else "${firstName} ${lastName}"
+        return if (isAnonymous()) firstName else "${firstName} ${lastName}"
     }
 
     override fun hasEmail(): Boolean {
@@ -91,8 +92,10 @@ class User(
         return owner != null
     }
 
-    override fun isAnonymous(): Boolean {
-        return isAnonymous
+    override fun getSource(): UserSource = source
+
+    fun isAnonymous(): Boolean {
+        return source == UserSource.ANONYMOUS
     }
 
     @ManyToMany(

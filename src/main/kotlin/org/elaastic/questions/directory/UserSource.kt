@@ -15,13 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 package org.elaastic.questions.directory
 
-interface HasEmailOrHasOwnerOrIsAnonymous {
-
-    fun hasEmail():Boolean
-    fun hasOwner():Boolean
-    fun isAnonymous(): Boolean
-
+enum class UserSource {
+    ELAASTIC,
+    ANONYMOUS,
+    LMS,
+    CAS
 }

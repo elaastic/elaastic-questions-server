@@ -56,7 +56,7 @@ class AnonymousUserService(
                 username = "${normalizeNickname(nickname)}-${System.currentTimeMillis()}",
                 plainTextPassword = ANONYMOUS_PWD,
                 email = null,
-                isAnonymous = true,
+                source = UserSource.ANONYMOUS,
             ).addRole(roleService.roleStudent())
 
         ).let {

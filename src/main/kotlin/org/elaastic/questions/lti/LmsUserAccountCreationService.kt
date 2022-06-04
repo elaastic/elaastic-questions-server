@@ -21,6 +21,7 @@ package org.elaastic.questions.lti
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.directory.UserSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.text.Normalizer
@@ -49,14 +50,13 @@ class LmsUserAccountCreationService(
      */
     fun createUserFromLtiData(ltiUser: LtiUser): User {
         User(
-                firstName = ltiUser.firstName,
-                lastName = ltiUser.lastName,
-                username = userService.generateUsername(ltiUser.firstName, ltiUser.lastName),
-                plainTextPassword = userService.generatePassword(),
-                email = ltiUser.email
-        ).let {
-            it.addRole(ltiUser.role)
-        }.let {
+            firstName = ltiUser.firstName,
+            lastName = ltiUser.lastName,
+            username = userService.generateUsername(ltiUser.firstName, ltiUser.lastName),
+            plainTextPassword = userService.generatePassword(),
+            email = ltiUser.email,
+        source = UserSource.LMS,
+    ).addRole(ltiUser.role).let {
             if (it.email == null) {
                 it.owner = userService.getDefaultAdminUser()
             }
