@@ -37,8 +37,8 @@ jobs:
 
       - name: Copying test reports
         run: |
-        mkdir test-reports
-        cp -R elaastic-questions-server/build/reports/tests/* test-reports
+          mkdir test-reports
+          cp -R elaastic-questions-server/build/reports/tests/* test-reports
 
       - name: Uploading test reports
         uses: actions/upload-artifact@v2
