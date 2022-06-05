@@ -29,8 +29,19 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Run Elaastic DB test 
+      - name: Run Elaastic DB test
         run: docker-compose up -d  elaastic-questions-db-test
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Copying test reports
+        run: |
+        mkdir test-reports
+        cp -R elaastic-questions-server/build/reports/tests/* test-reports
+
+      - name: Uploading test reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test-reports
+          path: test-reports
