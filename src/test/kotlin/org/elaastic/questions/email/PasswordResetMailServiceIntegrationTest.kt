@@ -24,7 +24,6 @@ import org.elaastic.questions.directory.*
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -50,7 +49,7 @@ internal class PasswordResetMailServiceIntegrationTest(
     lateinit var claraLuciani: User
     lateinit var bobDeniro: User
 
-    val logger = Logger.getLogger(PasswordResetMailServiceIntegrationTest::class.java.name)
+    val logger: Logger = Logger.getLogger(PasswordResetMailServiceIntegrationTest::class.java.name)
     val smtpServer = bootstrapService.mailServer!!
 
     @BeforeEach
@@ -102,7 +101,7 @@ internal class PasswordResetMailServiceIntegrationTest(
         // when:  triggering emails sending to send password keys
         passwordResetMailService.sendPasswordResetKeyEmails()
         // then: 3 messages have been received
-        if(smtpServer.waitForIncomingEmail(1000, 3)) {
+        if(smtpServer.waitForIncomingEmail(2000, 3)) {
             assertThat(smtpServer.receivedMessages.size, equalTo(3))
         }
         else {
