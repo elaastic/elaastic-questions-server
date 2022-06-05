@@ -12,8 +12,8 @@ class ResponseInfo(
 
     constructor(response: Response) : this(
             response.id!!,
-            response.score == BigDecimal(100),
-            response.explanation?.length ?: 0 > ResponseRecommendationService.MIN_SIZE_OF_EXPLANATION_TO_BE_EVALUATED
+            response.score?.compareTo(BigDecimal(100)) == 0,
+        (response.explanation?.length ?: 0) > ResponseRecommendationService.MIN_SIZE_OF_EXPLANATION_TO_BE_EVALUATED
     )
 
     override fun compareTo(other: ResponseInfo): Int =

@@ -42,7 +42,7 @@ class PasswordResetKeyController(
 
     @GetMapping("/userAccount/beginPasswordReset")
     fun doBeginPasswordReset(): String {
-        return "/userAccount/beginPasswordReset"
+        return "userAccount/beginPasswordReset"
     }
 
 
@@ -69,7 +69,7 @@ class PasswordResetKeyController(
 
     @GetMapping("/userAccount/resetPassword")
     fun doResetPassword(): String {
-        return "/userAccount/resetPassword"
+        return "userAccount/resetPassword"
     }
 
     @PostMapping("/userAccount/processResetPassword")

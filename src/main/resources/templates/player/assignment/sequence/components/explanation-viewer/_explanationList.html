@@ -16,8 +16,8 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="explanationList(explanations)"
-     th:with="components=${'/player/assignment/sequence/components/explanation-viewer'}"
+<div th:fragment="explanationList(explanations, studentsIdentitiesAreDisplayable, displayChoices)"
+     th:with="components=${'player/assignment/sequence/components/explanation-viewer'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
   <div th:if="${#lists.isEmpty(explanations)}"
        class="ui warning message"
@@ -28,6 +28,6 @@
        th:each="explanation, i : ${explanations}"
        th:remove="tag">
     <div
-      th:replace="|${components}/_anExplanation|::anExplanation(${explanation})"></div>
+      th:replace="|${components}/_anExplanation|::anExplanation(${explanation},${studentsIdentitiesAreDisplayable}, ${displayChoices})"></div>
   </div>
 </div>

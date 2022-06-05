@@ -25,71 +25,86 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 
 object AssignmentOverviewModelFactory {
 
-    fun build(teacher: Boolean,
-              nbRegisteredUser: Int,
-              assignmentTitle: String,
-              assignmentId: Long,
-              sequences: List<Sequence>,
-              sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
-              selectedSequenceId: Long? = null
+    fun build(
+        teacher: Boolean,
+        nbRegisteredUser: Int,
+        assignmentTitle: String,
+        courseTitle: String?,
+        courseId: Long?,
+        subjectTitle: String?,
+        subjectId: Long?,
+        audience: String?,
+        assignmentId: Long,
+        sequences: List<Sequence>,
+        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
+        selectedSequenceId: Long? = null
     ): AssignmentOverviewModel = AssignmentOverviewModel(
-            nbRegisteredUser = nbRegisteredUser,
-            assignmentTitle = assignmentTitle,
-            assignmentId = assignmentId,
-            sequences = sequences.map {
-                AssignmentOverviewModel.SequenceInfo(
-                        id = it.id!!,
-                        title = it.statement.title,
-                        content = it.statement.content,
-                        hideStatementContent = !teacher && it.state == State.beforeStart,
-                        icons = resolveIcons(
-                                teacher,
-                                it,
-                                sequenceToUserActiveInteraction[it])
+        teacher = teacher,
+        nbRegisteredUser = nbRegisteredUser,
+        assignmentTitle = assignmentTitle,
+        courseTitle = courseTitle,
+        courseId = courseId,
+        subjectTitle = subjectTitle,
+        subjectId = subjectId,
+        audience = audience,
+        assignmentId = assignmentId,
+        sequences = sequences.map {
+            AssignmentOverviewModel.SequenceInfo(
+                id = it.id!!,
+                title = it.statement.title,
+                content = it.statement.content,
+                hideStatementContent = !teacher && it.state == State.beforeStart,
+                icons = resolveIcons(
+                    teacher,
+                    it,
+                    sequenceToUserActiveInteraction[it]
                 )
-            },
-            selectedSequenceId = selectedSequenceId
+            )
+        },
+        selectedSequenceId = selectedSequenceId
     )
 
-    private fun resolveIcons(teacher: Boolean,
-                             sequence: Sequence,
-                             userActiveInteraction: Interaction?): List<PhaseIcon> =
-            if (sequence.executionIsFaceToFace() || !teacher) {
-                when {
-                    sequence.isStopped() ->
-                        if (sequence.resultsArePublished)
-                            listOf("grey bar chart outline")
-                        else listOf("big grey lock")
+    private fun resolveIcons(
+        teacher: Boolean,
+        sequence: Sequence,
+        userActiveInteraction: Interaction?
+    ): List<PhaseIcon> =
+        if (sequence.executionIsFaceToFace() || !teacher) {
+            when {
+                sequence.isStopped() ->
+                    if (sequence.resultsArePublished)
+                        listOf("grey bar chart outline")
+                    else listOf("big grey lock")
 
-                    else -> when (userActiveInteraction?.interactionType) {
-                        null -> listOf("big grey minus")
-                        InteractionType.ResponseSubmission -> listOf("big grey comment outline")
-                        InteractionType.Evaluation -> listOf("big grey comments outline")
-                        InteractionType.Read -> listOf("big grey bar chart outline")
-                    }
-
+                else -> when (userActiveInteraction?.interactionType) {
+                    null -> listOf("big grey minus")
+                    InteractionType.ResponseSubmission -> listOf("big grey comment outline")
+                    InteractionType.Evaluation -> listOf("big grey comments outline")
+                    InteractionType.Read -> listOf("big grey bar chart outline")
                 }
 
-            } else { // Distance & blended for teacher
-                when (sequence.state) {
-                    State.beforeStart -> listOf("big grey minus")
-                    State.afterStop ->
-                        if (sequence.resultsArePublished)
-                            listOf("big grey bar chart outline")
-                        else listOf("big grey lock")
-                    else ->
-                        if (sequence.resultsArePublished)
-                            listOf(
-                                    "large grey comment outline",
-                                    "large grey comments outline",
-                                    "large  grey bar chart outline"
-                            )
-                        else listOf(
-                                "large grey comment outline",
-                                "large grey comments outline"
-                        )
-                }
             }
+
+        } else { // Distance & blended for teacher
+            when (sequence.state) {
+                State.beforeStart -> listOf("big grey minus")
+                State.afterStop ->
+                    if (sequence.resultsArePublished)
+                        listOf("big grey bar chart outline")
+                    else listOf("big grey lock")
+                else ->
+                    if (sequence.resultsArePublished)
+                        listOf(
+                            "large grey comment outline",
+                            "large grey comments outline",
+                            "large  grey bar chart outline"
+                        )
+                    else listOf(
+                        "large grey comment outline",
+                        "large grey comments outline"
+                    )
+            }
+        }
 
 
 }

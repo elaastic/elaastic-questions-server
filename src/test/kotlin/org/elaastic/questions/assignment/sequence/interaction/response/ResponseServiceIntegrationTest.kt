@@ -30,10 +30,9 @@ import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.directory.UserService
-import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.StatementService
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -50,23 +49,23 @@ import javax.transaction.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class ResponseServiceIntegrationTest(
-        @Autowired val testingService: TestingService,
-        @Autowired val responseService: ResponseService,
-        @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val sequenceService: SequenceService,
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val statementService: StatementService,
-        @Autowired val userService: UserService,
-        @Autowired val peerGradingRepository: PeerGradingRepository,
-        @Autowired val entityManager: EntityManager,
-        @Autowired val subjectService: SubjectService
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val responseService: ResponseService,
+    @Autowired val sequenceRepository: SequenceRepository,
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val statementService: StatementService,
+    @Autowired val userService: UserService,
+    @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val entityManager: EntityManager,
+    @Autowired val subjectService: SubjectService
 ) {
 
     @Test
     fun buildResponseBasedOnTeacherNullExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            val subject = testingService.getAnyTestSubject()
-            val assignment =  testingService.getAnyAssignment()
+            val subject = integrationTestingService.getAnyTestSubject()
+            val assignment =  integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement( subject,
@@ -105,8 +104,8 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun buildResponseBasedOnTeacherEmptyExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            val subject = testingService.getAnyTestSubject()
-            val assignment =  testingService.getAnyAssignment()
+            val subject = integrationTestingService.getAnyTestSubject()
+            val assignment =  integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement(
@@ -148,8 +147,8 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            val subject = testingService.getAnyTestSubject()
-            val assignment =  testingService.getAnyAssignment()
+            val subject = integrationTestingService.getAnyTestSubject()
+            val assignment =  integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement(
@@ -185,7 +184,7 @@ internal class ResponseServiceIntegrationTest(
             )
         }.tThen { response ->
             assertThat(response!!.id, notNullValue())
-            assertThat(response.learner, equalTo(testingService.getAnyAssignment().owner))
+            assertThat(response.learner, equalTo(integrationTestingService.getAnyAssignment().owner))
             assertThat(response.score, nullValue())
             assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
@@ -197,8 +196,8 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceExclusiveChoiceBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            val subject = testingService.getAnyTestSubject()
-            val assignment =  testingService.getAnyAssignment()
+            val subject = integrationTestingService.getAnyTestSubject()
+            val assignment =  integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement(
@@ -238,7 +237,7 @@ internal class ResponseServiceIntegrationTest(
             )
         }.tThen { response ->
             assertThat(response!!.id, notNullValue())
-            assertThat(response.learner, equalTo(testingService.getAnyAssignment().owner))
+            assertThat(response.learner, equalTo(integrationTestingService.getAnyAssignment().owner))
             assertThat(response.score, equalTo(BigDecimal(100)))
             assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
@@ -251,8 +250,8 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceMultipleChoiceFaceToFace() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            val subject = testingService.getAnyTestSubject()
-            val assignment =  testingService.getAnyAssignment()
+            val subject = integrationTestingService.getAnyTestSubject()
+            val assignment =  integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement(
@@ -295,7 +294,7 @@ internal class ResponseServiceIntegrationTest(
             )
         }.tThen { response ->
             assertThat(response!!.id, notNullValue())
-            assertThat(response.learner, equalTo(testingService.getAnyAssignment().owner))
+            assertThat(response.learner, equalTo(integrationTestingService.getAnyAssignment().owner))
             assertThat(response.score, equalTo(BigDecimal(100)))
             assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
             assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
@@ -319,8 +318,8 @@ internal class ResponseServiceIntegrationTest(
                 )
         )
 
-        val subject = testingService.getAnyTestSubject()
-        val assignment =  testingService.getAnyAssignment()
+        val subject = integrationTestingService.getAnyTestSubject()
+        val assignment =  integrationTestingService.getAnyAssignment()
         subject.owner = assignment.owner
 
         val stmt1 = subjectService.addStatement(
@@ -386,8 +385,8 @@ internal class ResponseServiceIntegrationTest(
                 )
         )
 
-        val subject = testingService.getAnyTestSubject()
-        val assignment =  testingService.getAnyAssignment()
+        val subject = integrationTestingService.getAnyTestSubject()
+        val assignment =  integrationTestingService.getAnyAssignment()
         subject.owner = assignment.owner
 
         val stmt1 = subjectService.addStatement(
@@ -457,8 +456,8 @@ internal class ResponseServiceIntegrationTest(
                 )
         )
 
-        val subject = testingService.getAnyTestSubject()
-        val assignment =  testingService.getAnyAssignment()
+        val subject = integrationTestingService.getAnyTestSubject()
+        val assignment =  integrationTestingService.getAnyAssignment()
         subject.owner = assignment.owner
 
         val stmt1 = subjectService.addStatement(
@@ -516,7 +515,7 @@ internal class ResponseServiceIntegrationTest(
     fun testUpgradeMeanGradeAndEvaluationCount() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
             statementService.save(Statement(
-                    owner = testingService.getAnyAssignment().owner,
+                    owner = integrationTestingService.getAnyAssignment().owner,
                     title = "q1",
                     content = "question 1",
                     expectedExplanation = "it is expected",
@@ -531,7 +530,7 @@ internal class ResponseServiceIntegrationTest(
                 )
             ).let {
                 assignmentService.addSequence(
-                        assignment = testingService.getAnyAssignment(),
+                        assignment = integrationTestingService.getAnyAssignment(),
                         statement = it
                 )
             }.let {
@@ -586,7 +585,7 @@ internal class ResponseServiceIntegrationTest(
 
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
             val statement = statementService.save(Statement(
-                    owner = testingService.getAnyAssignment().owner,
+                    owner = integrationTestingService.getAnyAssignment().owner,
                     title = "q1",
                     content = "question 1",
                     expectedExplanation = "it is expected",
@@ -601,7 +600,7 @@ internal class ResponseServiceIntegrationTest(
                 )
             )
             assignmentService.addSequence(
-                    assignment = testingService.getAnyAssignment(),
+                    assignment = integrationTestingService.getAnyAssignment(),
                     statement = statement
             ).let {
                 sequenceService.initializeInteractionsForSequence(

@@ -18,13 +18,10 @@
 
 package org.elaastic.questions.directory.controller.command
 
-import org.elaastic.questions.directory.HasEmailOrHasOwnerOrIsAnonymous
-import org.elaastic.questions.directory.HasPasswords
-import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.directory.User
+import org.elaastic.questions.directory.*
 import org.elaastic.questions.directory.validation.PasswordsMustBeIdentical
 import org.elaastic.questions.directory.validation.UserHasGivenConsent
-import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrIsAnonymous
+import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.validation.BindingResult
 import javax.validation.constraints.Email
@@ -32,28 +29,30 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
-@ValidateHasEmailOrHasOwnerOrIsAnonymous
+@ValidateHasEmailOrHasOwnerOrHasExternalSource
 @PasswordsMustBeIdentical
 @UserHasGivenConsent
 data class UserData(
-        val id: Long?,
-        @field:NotBlank val firstName: String,
-        @field:NotBlank val lastName: String,
-        val role: String,
+    val id: Long?,
+    @field:NotBlank val firstName: String,
+    @field:NotBlank val lastName: String,
+    val role: String,
 
-        @field:NotBlank
+    @field:NotBlank
         @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
         val username: String,
 
-        @field:Email val email: String?,
-        @field:NotNull val hasOwner: Boolean = false,
-        override val password1: String? = null,
-        override val password2: String? = null,
-        val language:String = "fr",
+    @field:Email val email: String?,
+    @field:NotNull val hasOwner: Boolean = false,
+    override val password1: String? = null,
+    override val password2: String? = null,
+    val language:String = "fr",
+    private val source: UserSource = UserSource.ELAASTIC,
 
-        @field:NotNull
+    @field:NotNull
         var userHasGivenConsent: Boolean = false
-) : HasEmailOrHasOwnerOrIsAnonymous, HasPasswords {
+
+) : HasEmailOrHasOwnerOrHasExternalSource, HasPasswords {
 
     constructor(user: User, userHasGivenConsent: Boolean) : this(
             user.id,
@@ -65,10 +64,6 @@ data class UserData(
             user.hasOwner(),
             userHasGivenConsent = userHasGivenConsent
     )
-
-    override fun isAnonymous(): Boolean {
-        return false
-    }
 
     fun populateUser(user: User, roleService: RoleService): User {
         user.firstName = firstName
@@ -107,4 +102,6 @@ data class UserData(
     override fun hasOwner(): Boolean {
         return hasOwner
     }
+
+    override fun getSource(): UserSource =  source
 }

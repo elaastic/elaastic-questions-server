@@ -24,6 +24,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.directory.controller.command.PasswordData
 import org.elaastic.questions.directory.controller.command.UserData
+import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -58,7 +59,7 @@ class UserAccountController(
     @GetMapping("/register")
     fun showSubscribeForm(model: Model): String {
         model.addAttribute("checkEmail", checkEmail)
-        return "/userAccount/showSubscribeForm"
+        return "userAccount/showSubscribeForm"
     }
 
     @GetMapping("/userAccount/edit")
@@ -69,7 +70,7 @@ class UserAccountController(
         val userToUpdate = userService.get(user.id!!)!!
         model.addAttribute("userData", UserData(userToUpdate, userHasGivenConsent = true))
         model.addAttribute("user", userToUpdate)
-        return "/userAccount/edit"
+        return "userAccount/edit"
     }
 
 
@@ -112,17 +113,17 @@ class UserAccountController(
         if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         model.addAttribute("passwordData", PasswordData(user))
         model.addAttribute("user", user)
-        return "/userAccount/editPassword"
+        return "userAccount/editPassword"
     }
 
     @PostMapping("/userAccount/updatePassword")
-    fun updatePassword(authentication: Authentication,
-               @Valid @ModelAttribute passwordData: PasswordData,
-               result: BindingResult,
-               model: Model,
-               response: HttpServletResponse,
-               redirectAttributes: RedirectAttributes,
-               locale: Locale): String {
+    fun  updatePassword(authentication: Authentication,
+                       @Valid @ModelAttribute passwordData: PasswordData,
+                       result: BindingResult,
+                       model: Model,
+                       response: HttpServletResponse,
+                       redirectAttributes: RedirectAttributes,
+                       locale: Locale): String {
         val authUser: User = authentication.principal as User
         if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         if (!result.hasErrors()) {
@@ -145,6 +146,20 @@ class UserAccountController(
             }
             "redirect:/userAccount/edit"
         }
+    }
+
+    @ResponseBody
+    @GetMapping("/userAccount/updateOnboardingChapter/{chapterToUpdate}")
+    fun updateOnboardingChapter(authentication: Authentication, @PathVariable chapterToUpdate: String){
+        val user: User = authentication.principal as User
+        userService.updateOnboardingChapter(OnboardingChapter.from(chapterToUpdate), user)
+    }
+
+    @ResponseBody
+    @GetMapping("/userAccount/getOnboardingChapter")
+    fun getOnboardingChapter(authentication: Authentication): String? {
+        val user: User = authentication.principal as User
+        return userService.getOnboardingState(user.id).toString()
     }
 
     @GetMapping("/userAccount/activate")
@@ -177,7 +192,7 @@ class UserAccountController(
             model.addAttribute("messageContent", it)
             model.addAttribute("messageType", "error")
         }
-        return "/userAccount/unsubscribe"
+        return "userAccount/unsubscribe"
     }
 
     @GetMapping("/userAccount/processUnsubscription")
@@ -195,7 +210,7 @@ class UserAccountController(
     @GetMapping("/terms")
     fun terms(model: Model, locale: Locale):String {
         model.addAttribute("termsContent",termsService.getTermsContentByLanguage(locale.language))
-        return "/terms/terms"
+        return "terms/terms"
     }
 
 }

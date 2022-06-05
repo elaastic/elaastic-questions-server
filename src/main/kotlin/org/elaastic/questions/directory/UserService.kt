@@ -19,6 +19,7 @@
 package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
+import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
@@ -27,7 +28,11 @@ import org.springframework.stereotype.Service
 import java.util.*
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
-import javax.transaction.Transactional
+import javax.persistence.EntityManager
+import org.springframework.transaction.annotation.Transactional
+import java.text.Normalizer
+import java.time.LocalDate
+import java.util.regex.Pattern
 
 
 @Service
@@ -39,7 +44,9 @@ class UserService(
         @Autowired val activationKeyRepository: ActivationKeyRepository,
         @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
         @Autowired val termsService: TermsService,
-        @Autowired val userConsentRepository: UserConsentRepository
+        @Autowired val userConsentRepository: UserConsentRepository,
+        @Autowired val onboardingStateRepository: OnboardingStateRepository,
+        @Autowired val entityManager: EntityManager
 ) {
 
     val FAKE_USER_PREFIX = "John_Doe___"
@@ -129,6 +136,7 @@ class UserService(
             enabled = if (checkEmailAccount) false else enable
             password = passwordEncoder.encode(plainTextPassword)
             userRepository.save(this).let {
+                this.onboardingState = onboardingStateRepository.save(OnboardingState(user))
                 initializeSettingsForUser(it, language)
                 initializeUnsubscribeKeyForUser(it)
                 if (checkEmailAccount) {
@@ -277,6 +285,19 @@ class UserService(
     }
 
     /**
+     * Initialize first activity of user user
+     * @param user the user whose first activity is to initialize
+     * @return the updated user
+     */
+    fun updateUserActiveSince(user: User):User {
+        if(user.activeSince == null) {
+            user.activeSince = LocalDate.now()
+            userRepository.saveAndFlush(user)
+        }
+        return user
+    }
+
+    /**
      * Generate password reset key for a  user
      * @param user the processed user
      * @param lifetime lifetime of a password key in hour, default set to 1
@@ -342,6 +363,7 @@ class UserService(
             unsubscribeKeyRepository.findByUser(user).let { unsubscribeKey ->
                 unsubscribeKeyRepository.delete(unsubscribeKey)
             }
+            onboardingStateRepository.deleteAllByUser(user)
             userRepository.delete(user)
         }
     }
@@ -361,8 +383,8 @@ class UserService(
      */
     fun userHasGivenConsentToActiveTerms(username:String): Boolean {
         return userConsentRepository.existsByUsernameAndTerms(
-                        username,
-                        termsService.getActive()
+                username,
+                termsService.getActive()
         )
     }
 
@@ -406,5 +428,83 @@ class UserService(
             }
         }
     }
+
+    @Transactional
+    fun updateOnboardingChapter(chapterToUpdate: OnboardingChapter, user: User?) {
+        val onboardingState = user?.onboardingState
+        if(onboardingState != null) {
+            if(onboardingState.chaptersSeen == null){
+                onboardingState.chaptersSeen = mutableSetOf()
+            }
+            onboardingState.chaptersSeen.add(chapterToUpdate)
+            onboardingStateRepository.save(onboardingState)
+        }
+
+    }
+
+    fun getOnboardingState(userId: Long?): OnboardingState {
+        return onboardingStateRepository.findFirstByUserId(userId)
+    }
+
+
+    /**
+     * Generate username from firstname and lastname
+     * @param sql the sql connection to check existing username
+     * @param firstName the firstname
+     * @param lastName the lastname
+     * @return the username
+     */
+    fun generateUsername(firstName: String, lastName: String): String {
+        val indexLastname = MAX_INDEX_LASTNAME.coerceAtMost(lastName.length)
+        val indexFirstName = MAX_INDEX_FIRSTNAME.coerceAtMost(firstName.length)
+        var username = replaceAccent(firstName.replace("\\s".toRegex(), "").toLowerCase().substring(0, indexFirstName)) +
+                replaceAccent(lastName.replace("\\s".toRegex(), "").toLowerCase().substring(0, indexLastname))
+        val existingUsername = findMostRecentUsernameStartingWithUsername(username)
+        if (existingUsername != null) {
+            "[0-9]+".toRegex().let {
+                it.findAll(existingUsername)
+            }.let {
+                username += if (it.count() == 0) {
+                    2
+                } else {
+                    java.lang.Integer.parseInt(it.iterator().next().value) + 1
+                }
+            }
+        }
+        return username
+    }
+
+    private val MAX_INDEX_LASTNAME = 4
+    private val MAX_INDEX_FIRSTNAME = 3
+
+    /**
+     * Replace accents in a string
+     * @param str the string to modify
+     * @return
+     */
+    fun replaceAccent(str: String): String {
+        val nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD)
+        val pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+")
+        return pattern.matcher(nfdNormalizedString).replaceAll("");
+    }
+
+    /**
+     * Get the most recent user who begin with username param
+     * @param sql the sql object
+     * @param username the username
+     * @return a username if found else null
+     */
+    fun findMostRecentUsernameStartingWithUsername(username: String): String? {
+        val userNameLike = "^$username[0-9]*$"
+        val queryString = "SELECT username FROM user WHERE username RLIKE '$userNameLike' ORDER BY username DESC"
+        logger.finest("Generated query string: $queryString")
+        val query = entityManager.createNativeQuery(queryString)
+        val result = query.resultList
+        return when (result.isEmpty()) {
+            true -> null
+            false -> result.first().toString()
+        }
+    }
+
 }
 

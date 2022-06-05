@@ -22,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Service
+import java.text.Normalizer
 import javax.transaction.Transactional
 
 @Service
@@ -52,10 +53,10 @@ class AnonymousUserService(
             User( 
                 firstName = nickname,
                 lastName = ANONYMOUS_NAME,
-                username = "${nickname}-${System.currentTimeMillis()}",
+                username = "${normalizeNickname(nickname)}-${System.currentTimeMillis()}",
                 plainTextPassword = ANONYMOUS_PWD,
                 email = null,
-                isAnonymous = true,
+                source = UserSource.ANONYMOUS,
             ).addRole(roleService.roleStudent())
 
         ).let {
@@ -63,5 +64,11 @@ class AnonymousUserService(
             return it
         }
     }
+
+    private fun normalizeNickname(nickname: String) =
+        Normalizer.normalize(
+            nickname.substring(0, 15.coerceAtMost(nickname.length - 1)),
+            Normalizer.Form.NFD
+        ).replace("[^a-zA-Z0-9]".toRegex(), "")
 
 }

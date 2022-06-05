@@ -10,9 +10,14 @@ interface CourseRepository : JpaRepository<Course?, Long> {
 
     fun findAllByOwner(owner: User, pageable: Pageable): Page<Course>
 
+    @EntityGraph(value = "Course_subjects", type = EntityGraph.EntityGraphType.LOAD)
+    fun findAllWithSubjectsByOwner(owner: User, pageable: Pageable): Page<Course>
+
     fun findOneById(id: Long): Course
 
     @EntityGraph(value = "Course_subjects", type = EntityGraph.EntityGraphType.LOAD)
     fun findOneWithSubjectsById(id: Long): Course?
+
+    fun findFirstByOwner(owner: User): Course?
 
 }

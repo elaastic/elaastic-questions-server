@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section}, currentSection=${subject.owner == user ? 'my-subjects' : 'shared-subjects'})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="|elaastic: ${subject.title} |">elaastic: Subject edit</title>
@@ -26,12 +26,12 @@
 
 <body>
 <aside id="pageSpecificMenu">
-  <script>
+  <script th:inline="javascript">
     var elaastic = elaastic || {}
   </script>
   <th:block th:if="${subject.owner == user}">
 
-    <a class="item"
+    <a class="item ob-subject-creation-8"
        onclick="$('#subject-editProperties-modal').modal('show');"
        th:attr="data-tooltip=#{subject.action.propertiesEdition.label}"
        data-tooltip="Edit"
@@ -42,7 +42,7 @@
 
     <div class="divider"></div>
 
-    <a class="item"
+    <a class="item ob-subject-creation-9"
        onclick="$('#confirm-duplicate-subject-modal').modal('show');"
        th:attr="data-tooltip=#{subject.duplicate}"
        data-tooltip="Duplicate the subject"
@@ -51,7 +51,7 @@
       <i class="yellow dimgrey copy icon"></i>
     </a>
 
-    <a class="item"
+    <a class="item ob-subject-creation-10"
        onclick="elaastic.showShareAccessModal()"
        th:attr="data-tooltip=#{subject.share.linktitle}"
        data-tooltip="Link to share with teachers"
@@ -59,15 +59,25 @@
        data-inverted="">
       <i class="big yellow external url icon"></i>
     </a>
-    <div th:replace="subject/_modal_share_subject.html :: modalShareAccess(${subject})"></div>
+    <div th:replace="subject/_modal_share_subject.html :: modalShareAccess(${subject}, ${serverBaseUrl})"></div>
 
-    <a class="item"
+    <a class="item ob-subject-creation-11"
        onclick="$('#confirm-delete-subject-modal').modal('show');"
        th:attr="data-tooltip=#{subject.action.delete.label}"
        data-tooltip="Delete"
        data-position="right center"
        data-inverted="">
       <i class="yellow big trash icon"></i>
+    </a>
+
+    <a class="item"
+       togglz:active="IMPORT_EXPORT"
+       th:href="@{/subject/{id}/download-zip(id=${subject.id})}"
+       th:attr="data-tooltip=#{subject.action.download.label}"
+       data-tooltip="Download"
+       data-position="right center"
+       data-inverted="">
+      <i class="yellow big download icon"></i>
     </a>
   </th:block>
 
@@ -88,30 +98,46 @@
   <div id="subjectPage">
 
     <th:block th:if="${subject.owner == user}">
-    <h2 class="ui header">
-      <i class="book icon"></i>
+      <h2 class="ui header">
+        <i class="book icon"></i>
 
-      <div class="content">
-        <div>
-          <span th:if="${subject.course != null}" th:text="${subject.course.title} + ' > ' + ${subject.title}" >Course title  > subject title</span>
-          <span th:unless="${subject.course != null}" th:text="${subject.title} + ' (Aucun cours associé)'" >Subject title (Not assigned)</span>
-        </div>
+        <div class="content">
+          <div>
+            <span th:text="${subject.title}">Subject title</span>
+          </div>
 
-        <div th:if="${subject.parentSubject != null}">
-          <span style="font-size: small" th:text="#{subject.createdFrom}">Created from </span>
-          <span style="font-size: small">
+          <div th:if="${subject.parentSubject != null}">
+            <span style="font-size: small" th:text="#{subject.createdFrom}">Created from </span>
+            <span style="font-size: small">
             "<span th:text="${subject.parentSubject.title}">Subject title</span>"
           </span>
+          </div>
+        </div>
+
+        <div class="sub header" th:text="#{subject.page.show.notice}">
+          This page allows you to add, remove, edit, and reorder questions of a subject. It also allows you to make
+          assignment with questions of the subject.
+        </div>
+      </h2>
+
+      <div class="ui basic segment">
+        <div class="ui breadcrumb" th:if="${subject.course != null}">
+          <a class="section" th:text="#{course.my.list.label}" th:href="@{/course/}">My courses</a>
+          <div class="divider"> /</div>
+          <a class="section" th:text="${subject.course.title}" th:href="@{/course/{id}(id=${subject.course.id})}">Course
+            title</a>
+          <div class="divider"> /</div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
+        </div>
+
+        <div class="ui breadcrumb" th:unless="${subject.course != null}">
+          <a class="section" th:text="#{subject.my.list.label}" th:href="@{/subject/}">My subjects</a>
+          <div class="divider"> /</div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
         </div>
       </div>
-
-      <div class="sub header"  th:text="#{subject.page.show.notice}">
-        This page allows you to add, remove, edit, and reorder questions of a subject. It also allows you to make
-        assignment with questions of the subject.
-      </div>
-
-    </h2>
     </th:block>
+
 
     <th:block th:if="${subject.owner != user}">
       <h2 class="ui header">
@@ -129,13 +155,22 @@
         </div>
 
         <div class="sub header" data-i18n="[html]content.body" th:text="#{subject.shared.notice}">
-          This page allows you to read statements of a subject that has been shared with you, and import the subject if you want to use it
-          You cannot modify nor delete any of the statements of this subject. You also don't have access to the assignments of the owner.
+          This page allows you to read statements of a subject that has been shared with you, and import the subject if
+          you want to use it
+          You cannot modify nor delete any of the statements of this subject. You also don't have access to the
+          assignments of the owner.
         </div>
 
       </h2>
 
+      <div class="ui basic segment">
 
+        <div class="ui breadcrumb">
+          <a class="section" th:text="#{subject.shared.my.list.label}" th:href="@{/subject/shared_index/}">My subjects</a>
+          <div class="divider"> /</div>
+          <div class="active section" th:text="${subject.title}">Subject title</div>
+        </div>
+      </div>
     </th:block>
 
     <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
@@ -143,40 +178,45 @@
     </div>
 
     <div class="ui attached tabular menu top">
-      <a class="item" th:classappend="${activeTab=='questions'} ? active" data-tab="questions"
-           th:text="#{subject.page.show.questions-tab-title}">questions</a>
-      <a class="item" th:classappend="${activeTab=='assignments'} ? active" data-tab="assignments"
-           th:text="#{subject.page.show.assignments-tab-title}"
-           th:class="${subject.owner==user} ? item : noAccess ">assignments</a>
+      <a class="item ob-subject-creation-7"
+         th:classappend="${activeTab=='questions'} ? active" data-tab="questions"
+         th:text="#{subject.page.show.questions-tab-title}">questions</a>
+      <a class="item"
+         th:classappend="${activeTab=='assignments'} ? active" data-tab="assignments"
+         th:text="#{subject.page.show.assignments-tab-title}"
+         th:class="${subject.owner==user} ? 'item ob-assignment-creation-1 ob-one-shared-subjects-2' : 'noAccess ob-assignment-creation-1 ob-one-shared-subjects-2'">assignments</a>
     </div>
+
     <style>
-      .noAccess{
-        background-color: #e0e1e2 !important;
-        color: rgba(0,0,0,.6) !important;
-        border-radius: .28571429rem .28571429rem 0 0 !important;
-        border-bottom: none;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
-        border-top: 2px solid transparent;
-        padding: .92857143em 1.42857143em;
-      }
+        .noAccess {
+            background-color: #e0e1e2 !important;
+            color: rgba(0, 0, 0, .6) !important;
+            border-radius: .28571429rem .28571429rem 0 0 !important;
+            border-bottom: none;
+            border-left: 1px solid transparent;
+            border-right: 1px solid transparent;
+            border-top: 2px solid transparent;
+            padding: .92857143em 1.42857143em;
+        }
     </style>
 
     <!-- Question Tab -->
-    <div th:classappend="${activeTab=='questions'} ? active" class="ui bottom attached tab segment" style="border-top: none !important;" data-tab="questions">
-        <div th:replace="|/subject/question-tab.html| :: subjectItem(${subject},${statements})"></div>
+    <div th:classappend="${activeTab=='questions'} ? active" class="ui bottom attached tab segment"
+         style="border-top: none !important;" data-tab="questions">
+      <div th:replace="|subject/question-tab.html| :: subjectItem(${subject},${statements})"></div>
     </div>
 
     <!-- Assignments Tab -->
-    <div th:classappend="${activeTab=='assignments'} ? active" class="ui bottom attached tab segment" style="border-top: none !important;" data-tab="assignments">
-        <div th:replace="|/subject/assignment-tab.html| :: subjectItem(${subject})"></div>
+    <div th:classappend="${activeTab=='assignments'} ? active" class="ui bottom attached tab segment"
+         style="border-top: none !important;" data-tab="assignments">
+      <div th:replace="|subject/assignment-tab.html| :: subjectItem(${subject})"></div>
     </div>
 
     <div th:replace="subject/_modal_edit_properties :: modalEditProperties(${subject})"></div>
 
   </div>
   <script th:inline="javascript">
-    $('.ui.menu .item').tab();
+    $('.ui.menu .item').tab()
   </script>
 
   <!--  Delete confirm modal-->

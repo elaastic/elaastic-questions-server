@@ -24,7 +24,10 @@ class OpenExplanationStore(
 ) : ExplanationStore, ArrayList<ExplanationData>(responseList) {
 
     constructor(alreadySorted: Boolean, responseList: List<Response>) :
-            this(responseList.map { ExplanationData(it) })
-    // TODO Handle alreadySorted
+            this(responseList.map { ExplanationData(it) }) {
+                if(!alreadySorted) {
+                    TODO("Sorting is not handled yet here...")
+                }
+            }
 
 }

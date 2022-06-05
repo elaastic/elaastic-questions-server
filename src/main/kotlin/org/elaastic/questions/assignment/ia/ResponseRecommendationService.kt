@@ -44,7 +44,6 @@ class ResponseRecommendationService(
                 ).let { recommendationResponsePool ->
                     val correctResponseList = allResponse.filter { it.correct }.shuffled()
                     val incorrectResponseList = allResponse.filter { !it.correct }.shuffled()
-
                     repeat(nbEvaluation) { i ->
                         computeRecommandations(
                                 forResponseList = correctResponseList,
@@ -121,7 +120,7 @@ class ResponseRecommendationService(
             }
         }
                 .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> -r1.nbSelection.compareTo(r2.nbSelection) })
-                .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> r1.id.compareTo(r2.id) })
+                .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> -r1.id.compareTo(r2.id) })
 
         val CORRECT_RESPONSE_FIRST: Comparator<ResponseInfo> = kotlin.Comparator<ResponseInfo> { r1, r2 ->
             when (Pair(r1.correct, r2.correct)) {
@@ -131,6 +130,6 @@ class ResponseRecommendationService(
             }
         }
                 .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> -r1.nbSelection.compareTo(r2.nbSelection) })
-                .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> r1.id.compareTo(r2.id) })
+                .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> -r1.id.compareTo(r2.id) })
     }
 }

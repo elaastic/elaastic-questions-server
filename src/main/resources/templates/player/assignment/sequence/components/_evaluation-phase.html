@@ -23,6 +23,13 @@
       Comparing viewpoints
     </div>
 
+    <style>
+
+        .ui.pagination.menu .active.item {
+            background-color: #dff0ff;
+            color: #0e6eb8;
+        }
+    </style>
 
     <form th:unless="${model.userHasCompletedPhase2 || model.userActiveInteractionState.name() == 'afterStop'}"
           th:action="@{/player/sequence/{sequenceId}/submit-evaluation-and-second-attempt(sequenceId=${model.sequenceId})}"
@@ -95,11 +102,49 @@
 
 
   <style>
-    .fieldgrade .active.item {
-      background-color: #dff0ff !important;
-      color: #0e6eb8 !important;
-    }
+      .fieldgrade .active.item {
+          background-color: #dff0ff !important;
+          color: #0e6eb8 !important;
+      }
   </style>
+
+  <script type="text/x-template" id="evaluation-input-template">
+    <div class="field grade">
+      <input type="hidden" :id="'grades['+currentResponseId+']'" :name="'grades['+currentResponseId+']'"
+             v-model="grade"/>
+      <label>{{ i18n.yourEvaluation }}</label>
+      <div class="ui stackable pagination menu">
+        <a class="item" v-bind:class="{ active: grade === -1 }" v-on:click="grade = -1">{{ i18n.noGrade }}
+        </a>
+        <div class="disabled item"></div>
+        <a class="item"
+           v-bind:class="{ active: grade === 1 }"
+           v-on:click="grade=1"
+           data-inverted="" :data-tooltip="i18n.grade1"
+           data-position="top center">1</a>
+        <a class="item"
+           v-bind:class="{ active: grade === 2 }"
+           v-on:click="grade=2"
+           data-inverted="" :data-tooltip="i18n.grade2"
+           data-position="top center">2</a>
+        <a class="item"
+           v-bind:class="{ active: grade === 3 }"
+           v-on:click="grade=3"
+           data-inverted="" :data-tooltip="i18n.grade3"
+           data-position="top center">3</a>
+        <a class="item"
+           v-bind:class="{ active: grade === 4 }"
+           v-on:click="grade=4"
+           data-inverted="" :data-tooltip="i18n.grade4"
+           data-position="top center">4</a>
+        <a class="item"
+           v-bind:class="{ active: grade === 5 }"
+           v-on:click="grade=5"
+           data-inverted="" :data-tooltip="i18n.grade5"
+           data-position="top center">5</a>
+      </div>
+    </div>
+  </script>
 
   <script th:inline="javascript">
 
@@ -108,40 +153,25 @@
       components: {
         'evaluation-input': {
           props: ['currentResponseId', 'value'],
-          template: `
-    <div class="field grade">
-      <input type="hidden" :id="\'grades[\'+currentResponseId+\']\'" :name="\'grades[\'+currentResponseId+\']\'" v-model="grade" />` +
-            '<label>' + [[#{player.sequence.interaction.your.evaluation}]] + '</label>' +
-            `<div class="ui stackable pagination menu" >
-        <a class="item" v-bind:class="{ active: grade === -1 }" v-on:click="grade = -1">` +
-            [[#{player.sequence.interaction.grade.-1}]] +
-            `</a>
-        <div class="disabled item"></div>` +
-            /*[# th:each="grade : ${#numbers.sequence(1, 5)}"]*/
-            '<a class="item"' +
-            'v-bind:class="{ active: grade === [[${grade}]] }"' +
-            'v-on:click="grade=[[${grade}]]"' +
-            'data-inverted=""' +
-            'data-tooltip="' + [[#{|player.sequence.interaction.grade.${grade}|}]]+ '"' +
-            'data-position="top center">' +
-            '[[${grade}]]' +
-            '</a>' +
-            [/]
-              `
-      </div>
-    </div>`,
-              data
-    :
+          template: '#evaluation-input-template',
+          data: function () {
+              return {
+                grade: this.value,
+                i18n: {
+                  yourEvaluation: [[#{player.sequence.interaction.your.evaluation}]],
+                  noGrade: [[#{player.sequence.interaction.grade.-1}]],
+                  grade1: [[#{player.sequence.interaction.grade.1}]],
+                  grade2: [[#{player.sequence.interaction.grade.2}]],
+                  grade3: [[#{player.sequence.interaction.grade.3}]],
+                  grade4: [[#{player.sequence.interaction.grade.4}]],
+                  grade5: [[#{player.sequence.interaction.grade.5}]],
 
-    function () {
-      return {
-        grade: this.value
+                }
+              }
+            }
+        }
       }
-    }
-    }
-    }
     })
-
   </script>
 
 </div>

@@ -18,8 +18,10 @@
 
 package org.elaastic.questions.assignment.choice
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import org.elaastic.questions.assignment.choice.legacy.ChoiceSpecification
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
 interface ChoiceSpecification {
 
     fun getChoiceType() : ChoiceType

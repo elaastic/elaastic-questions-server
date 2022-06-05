@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section}, currentSection='shared-subjects')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My Subjects</title>
@@ -26,7 +26,7 @@
 
 <body>
 <section>
-    <h2 class="ui header">
+    <h2 class="ui header ob-shared-subjects-1">
         <i class="book icon"></i>
 
         <div class="content">
@@ -42,7 +42,7 @@
     </div>
 
     <table th:if="${not #lists.isEmpty(sharedSubjectPage.content)}"
-           class="ui single selectable line unstackable table">
+           class="ui single selectable line unstackable table ob-shared-subjects-2">
         <thead>
         <tr>
             <th th:text="#{common.title}">
@@ -62,7 +62,7 @@
         </thead>
         <tbody>
         <tr th:each="subject, i : ${sharedSubjectPage.content}">
-            <td>
+            <td class="ob-shared-subjects-3">
                 <a th:href="@{/subject/{id}(id=${subject.id},activeTab='questions')}"
                    href="subject/123"
                    th:attr="data-tooltip=#{subject.shared.title}"

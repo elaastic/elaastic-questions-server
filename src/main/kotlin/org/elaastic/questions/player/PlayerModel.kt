@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
+import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
@@ -42,21 +43,23 @@ open class PlayerModel(
         val showResponsePhase: Boolean,
         val showEvaluationPhase: Boolean,
         val showResults: Boolean,
-        val resultsModel: ResultsModel?
+        val resultsModel: ResultsModel?,
+        val learnerResultsModel: LearnerResultsModel?
 )
 
 class TeacherPlayerModel(
-        assignment: Assignment,
-        sequence: Sequence,
-        assignmentOverviewModel: AssignmentOverviewModel,
-        stepsModel: StepsModel,
-        val sequenceStatistics: SequenceStatistics,
-        val commandModel: CommandModel           ,
-        sequenceInfoModel: SequenceInfoModel,
-        statementPanelModel: StatementPanelModel,
-        statement: StatementInfo,
-        showResults: Boolean,
-        resultsModel: ResultsModel?
+    assignment: Assignment,
+    val serverBaseUrl: String,
+    sequence: Sequence,
+    assignmentOverviewModel: AssignmentOverviewModel,
+    stepsModel: StepsModel,
+    val sequenceStatistics: SequenceStatistics,
+    val commandModel: CommandModel,
+    sequenceInfoModel: SequenceInfoModel,
+    statementPanelModel: StatementPanelModel,
+    statement: StatementInfo,
+    showResults: Boolean,
+    resultsModel: ResultsModel?
 ) : PlayerModel(
         assignment = assignment,
         sequence = sequence,
@@ -69,23 +72,25 @@ class TeacherPlayerModel(
         showResponsePhase = false,
         showEvaluationPhase = false,
         showResults = showResults,
-        resultsModel = resultsModel
+        resultsModel = resultsModel,
+        learnerResultsModel = null
 )
 
 class LearnerPlayerModel(
-        assignment: Assignment,
-        sequence: Sequence,
-        assignmentOverviewModel: AssignmentOverviewModel,
-        stepsModel: StepsModel,
-        sequenceInfoModel: SequenceInfoModel,
-        statementPanelModel: StatementPanelModel,
-        statement: StatementInfo,
-        showResponsePhase: Boolean,
-        val responsePhaseModel: ResponsePhaseModel?,
-        showEvaluationPhase: Boolean,
-        val evaluationPhaseModel: EvaluationPhaseModel?,
-        showResults: Boolean,
-        resultsModel: ResultsModel?
+    assignment: Assignment,
+    sequence: Sequence,
+    assignmentOverviewModel: AssignmentOverviewModel,
+    stepsModel: StepsModel,
+    sequenceInfoModel: SequenceInfoModel,
+    statementPanelModel: StatementPanelModel,
+    statement: StatementInfo,
+    showResponsePhase: Boolean,
+    val responsePhaseModel: ResponsePhaseModel?,
+    showEvaluationPhase: Boolean,
+    val evaluationPhaseModel: EvaluationPhaseModel?,
+    showResults: Boolean,
+    resultsModel: ResultsModel?,
+    learnerResultsModel: LearnerResultsModel?
 ) : PlayerModel(
         assignment = assignment,
         sequence = sequence,
@@ -98,7 +103,8 @@ class LearnerPlayerModel(
         showResponsePhase = showResponsePhase,
         showEvaluationPhase = showEvaluationPhase,
         showResults = showResults,
-        resultsModel = resultsModel
+        resultsModel = resultsModel,
+        learnerResultsModel = learnerResultsModel
 )
 
 enum class UserRole {

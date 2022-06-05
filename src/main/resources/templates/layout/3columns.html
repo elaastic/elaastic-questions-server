@@ -34,12 +34,15 @@
     <title th:replace="${title}">Page title</title>
     <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
     <link th:href="@{/css/elaastic.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
+    <link th:href="@{/css/introjs.min.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
     <script th:src="@{/js/jquery.js}"></script>
     <script th:src="@{/semantic/dist/semantic.min.js}"></script>
     <script th:src="@{/js/vuejs/vue.min.js}"></script>
     <script th:src="@{/js/vuejs/vue-resource.min.js}"></script>
     <script th:src="@{/js/js.cookie.js}"></script>
     <script th:src="@{/js/elaastic/util.js}"></script>
+    <script th:src="@{/js/intro.min.js}"></script>
+    <script th:src="@{/js/onboarding.js}"></script>
     <meta th:replace="${extraHeader}"/>
 
     <style type="text/css">[v-cloak] {
@@ -78,17 +81,6 @@
       <div class="ui divider"></div>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
-         th:href="@{/subject}"
-         href="/subjects"
-         class="item"
-         th:attr="data-tooltip=#{subject.my.list.label}"
-         data-tooltip="My subjects"
-         data-position="right center"
-         data-inverted="">
-        <i class="book icon"></i>
-      </a>
-
-      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
          th:href="@{/course/}"
          href="/course"
          class="item"
@@ -97,6 +89,17 @@
          data-position="right center"
          data-inverted="">
         <i class="folder open icon"></i>
+      </a>
+      
+      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+         th:href="@{/subject}"
+         href="/subjects"
+         class="item"
+         th:attr="data-tooltip=#{subject.my.list.label}"
+         data-tooltip="My subjects"
+         data-position="right center"
+         data-inverted="">
+        <i class="book icon"></i>
       </a>
 
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
@@ -117,8 +120,8 @@
          th:href="@{/player}"
          href="/player"
          class="item"
-         th:attr="data-tooltip=#{player.my.assignment.list.label}"
-         data-tooltip="My works"
+         th:attr="data-tooltip=#{assignment.my.list.label}"
+         data-tooltip="My assignments"
          data-position="right center"
          data-inverted="">
         <i class="travel icon"></i>
@@ -134,7 +137,22 @@
         <i class="settings icon"></i>
       </a>
 
-      <div th:replace="layout/components/userMenu :: userMenu(user=${user})"></div>
+      <style>
+          .bottom-menu {
+              position: relative;
+          }
+
+          @media (min-height: 600px) {
+              .bottom-menu {
+                  position: absolute !important;
+                  bottom: 0 !important;
+              }
+          }
+      </style>
+      <div class="bottom-menu">
+        <div sec:authorize="hasAnyAuthority('TEACHER_ROLE')" th:replace="layout/components/helpMenu :: helpMenu()"></div>
+        <div th:replace="layout/components/userMenu :: userMenu(user=${user})"></div>
+      </div>
 
       <div class="ui divider"></div>
 

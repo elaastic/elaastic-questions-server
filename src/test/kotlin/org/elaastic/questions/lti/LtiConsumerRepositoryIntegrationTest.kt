@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.lti
 
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
@@ -40,7 +40,7 @@ import javax.validation.ConstraintViolationException
 internal class LtiConsumerRepositoryIntegrationTest(
         @Autowired val ltiConsumerRepository: LtiConsumerRepository,
         @Autowired val em: EntityManager,
-        @Autowired val testingService: TestingService
+        @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     @Test
@@ -90,15 +90,15 @@ internal class LtiConsumerRepositoryIntegrationTest(
     fun `test find by id`() {
         tGiven {
             // an lti consumer
-            testingService.getAnyLtiConsumer()
+            integrationTestingService.getAnyLtiConsumer()
         }.tWhen {
             // searching for lti consumer with a given valid key
             ltiConsumerRepository.findById(it.key)
         }.tThen {
             // the lti consumer corresponding with the key is found
             assertTrue(it.isPresent)
-            assertThat(it.get().key, equalTo(testingService.getAnyLtiConsumer().key))
-            assertThat(it.get().consumerName, equalTo(testingService.getAnyLtiConsumer().consumerName))
+            assertThat(it.get().key, equalTo(integrationTestingService.getAnyLtiConsumer().key))
+            assertThat(it.get().consumerName, equalTo(integrationTestingService.getAnyLtiConsumer().consumerName))
         }.tExpect {
             // searching a lti Consumer with bad key, an exception is thrown
             assertThrows<NoSuchElementException> {

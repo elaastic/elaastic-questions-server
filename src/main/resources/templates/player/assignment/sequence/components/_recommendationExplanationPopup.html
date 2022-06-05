@@ -1,0 +1,150 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="recommendationExplanationPopup(sequenceId, resultsModel)"
+     th:with="components=${'/player/assignment/sequence/components/explanation-viewer'}, recommendationModel = ${resultsModel.recommendationModel}"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <div th:id="|recommendation_explanation_for_${sequenceId}|"
+         class="ui modal"
+         tabindex="-1" role="dialog"
+         aria-hidden="true">
+
+        <div class="header" th:text="#{player.sequence.recommendation.explanation}">
+            Explanation of the recommendation
+        </div>
+
+        <div class="ui styled fluid accordion" th:id="|recommendation-explanation-viewer-${sequenceId}|">
+
+            <div class="title" style="color: black;" th:if="${recommendationModel.noCorrectExplanation}">
+                <span th:text="#{player.sequence.recommendation.noExplanation.message}" th:remove="tag"></span>
+            </div>
+            <div class="title" style="color: black;"
+                 th:if="${recommendationModel.explanationP1 != null}"
+                 th:onclick="setTimeout(function(){elaastic.renderGraph(
+                    '#expl-p1-[[${sequenceId}]]',
+                    [[${resultsModel.responseDistributionChartModel.choiceSpecification}]],
+                    [[${resultsModel.responseDistributionChartModel.results}]],
+                    [],
+                    {
+                        percentageOfVoters: [[#{player.sequence.result.percentageOfVoters}]],
+                        choice: [[#{player.sequence.interaction.choice.label}]]
+                    })}, 1); saveAction([[${sequenceId}]], 'click', 'explanation_popup_p1')">
+                <i class="dropdown icon"></i>
+                <span th:text="#{|${recommendationModel.explanationP1.propertyString}|}" th:remove="tag"></span>
+            </div>
+            <div class="content"
+                 th:if="${recommendationModel.explanationP1 != null}">
+                <div th:id="|expl-p1-${sequenceId}|" style="display:block"></div>
+            </div>
+
+            <div class="title" style="color: black;"
+                 th:onclick="setTimeout(function(){elaastic.renderGraph(
+                    '#expl-d-[[${sequenceId}]]',
+                    [[${resultsModel.responseDistributionChartModel.choiceSpecification}]],
+                    [[${resultsModel.responseDistributionChartModel.results}]],
+                    [],
+                    {
+                        percentageOfVoters: [[#{player.sequence.result.percentageOfVoters}]],
+                        choice: [[#{player.sequence.interaction.choice.label}]]
+                    })}, 1); saveAction([[${sequenceId}]], 'click', 'explanation_popup_d')"
+                 th:if="${recommendationModel.explanationD != null}">
+                <i class="dropdown icon"></i>
+                <span th:text="#{|${recommendationModel.explanationD.propertyString}|}" th:remove="tag"></span>
+            </div>
+            <div class="content"
+                 th:if="${recommendationModel.explanationD != null}">
+                <div th:id="|expl-d-${sequenceId}|" style="display:block"></div>
+            </div>
+
+            <div class="title" style="color: black;"
+                 th:if="${recommendationModel.explanationPConf != null}"
+                 th:onclick="setTimeout(function(){elaastic.renderConfidenceGraph(
+                    '#expl-pconf-[[${sequenceId}]]',
+                    [[${resultsModel.confidenceDistributionChartModel.choiceSpecification}]],
+                    [[${resultsModel.confidenceDistributionChartModel.results}]],
+                    [],
+                    {
+                        percentageOfVoters: [[#{player.sequence.result.percentageOfVoters}]],
+                        choice: [[#{player.sequence.interaction.choice.label}]],
+                        correct: [[#{player.sequence.interaction.choice.correct}]],
+                        incorrect: [[#{player.sequence.interaction.choice.incorrect}]],
+                        legend: [[#{player.sequence.interaction.confidenceDegree}]],
+                        cf1: [[#{player.sequence.interaction.confidenceDegree.NOT_CONFIDENT_AT_ALL}]],
+                        cf2: [[#{player.sequence.interaction.confidenceDegree.NOT_REALLY_CONFIDENT}]],
+                        cf3: [[#{player.sequence.interaction.confidenceDegree.CONFIDENT}]],
+                        cf4: [[#{player.sequence.interaction.confidenceDegree.TOTALLY_CONFIDENT}]]
+                    })}, 1); saveAction([[${sequenceId}]], 'click', 'explanation_popup_pconf')">
+                <i class="dropdown icon"></i>
+                <span th:text="#{|${recommendationModel.explanationPConf.propertyString}|}" th:remove="tag"></span>
+            </div>
+            <div class="content"
+                 th:if="${recommendationModel.explanationPConf != null}">
+                <div th:id="|expl-pconf-${sequenceId}|" style="display:block"></div>
+            </div>
+
+            <div class="title" style="color: black;" th:if="${recommendationModel.explanationPPeer != null}"
+                 th:onclick="setTimeout(function(){elaastic.renderEvaluationGraph(
+            '#expl-ppeer-[[${sequenceId}]]',
+            [[${resultsModel.evaluationDistributionChartModel.choiceSpecification}]],
+            [[${resultsModel.evaluationDistributionChartModel.results}]],
+            [],
+            {
+            percentageOfVoters: [[#{player.sequence.result.percentageOfVoters}]],
+            choice: [[#{player.sequence.interaction.choice.label}]],
+            legend: [[#{player.sequence.interaction.grade.level}]],
+            correct: [[#{player.sequence.interaction.choice.correct}]],
+            incorrect: [[#{player.sequence.interaction.choice.incorrect}]],
+            e1: [[#{player.sequence.interaction.grade.1}]],
+            e2: [[#{player.sequence.interaction.grade.2}]],
+            e3: [[#{player.sequence.interaction.grade.3}]],
+            e4: [[#{player.sequence.interaction.grade.4}]],
+            e5: [[#{player.sequence.interaction.grade.5}]]
+            })}, 1); saveAction([[${sequenceId}]], 'click', 'explanation_popup_ppeer')">
+                <i class="dropdown icon"></i>
+                <span th:text="#{|${recommendationModel.explanationPPeer.propertyString}|}" th:remove="tag"></span>
+            </div>
+            <div class="content"
+                 th:if="${recommendationModel.explanationPPeer != null}">
+                <div th:id="|expl-ppeer-${sequenceId}|" style="display:block"></div>
+            </div>
+        </div>
+
+        <div th:if="${recommendationModel.popupDetailedExplanation != null}" style="margin: 0em;padding: 0.75em 1em;font-weight: bold;border-top: 1px solid rgba(34, 36, 38, 0.15);">
+            <a th:text="#{|${recommendationModel.popupDetailedExplanation.propertyString}|}"
+               style="color: black">
+            </a>
+            <a href="https://hal.archives-ouvertes.fr/hal-03396211/document"
+                   target="_blank"
+                   th:text="#{player.sequence.recommendation.explanation.full_study}"
+                   style="color: black;text-decoration: underline;font-weight: normal">
+            </a>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button"
+                 th:text="#{player.sequence.explanation.close.button}">Close</div>
+        </div>
+
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                let accordionId = /*[[|#recommendation-explanation-viewer-${sequenceId}|]]*/ ''
+                $(accordionId).accordion()
+            })
+        </script>
+    </div>

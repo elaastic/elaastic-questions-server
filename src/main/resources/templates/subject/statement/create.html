@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::#edit-statement}, pageSpecificMenu=~{::#pageSpecificMenu}, extraHeader=~{::head/script})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::#edit-statement}, pageSpecificMenu=~{::#pageSpecificMenu}, extraHeader=~{::head/script}, currentSection='my-subjects')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
@@ -33,7 +33,7 @@
 <body>
 
 <aside id="pageSpecificMenu">
-  <a href="#" class="item"
+  <a href="#" class="item ob-question-creation-5"
      onclick="$('#fileToAttached').click();"
      th:attr="data-tooltip=#{question.attachment.select}"
      data-position="right center"
@@ -43,7 +43,6 @@
 </aside>
 
 <div id="edit-statement">
-
   <form name="statementForm"
         class="ui form"
         th:classappend="${#fields.hasErrors('*')}? 'error'"
@@ -76,15 +75,15 @@
 
     <div class="ui bottom attached segment">
 
-      <div th:replace="/subject/statement/_statement_form :: statementForm(${statementData}, ${null})"></div>
-      <div th:replace="/subject/statement/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
-      <div th:replace="/subject/statement/_statement_explanations_form :: statementExplanationForm(${statementData}, ${null})"></div>
+      <div th:replace="subject/statement/_statement_form :: statementForm(${statementData}, ${null})"></div>
+      <div th:replace="subject/statement/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
+      <div th:replace="subject/statement/_statement_explanations_form :: statementExplanationForm(${statementData}, ${null})"></div>
     </div>
 
     <div class="ui hidden divider"></div>
 
     <button type="submit"
-            class="ui primary button"
+            class="ui primary button ob-question-creation-14"
             name="returnOnSubject"
             value="true"
             th:text="#{question.createAndReturnToSubject}">

@@ -17,6 +17,7 @@ rsion.
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+
 <div th:fragment="userMenu(user)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -59,19 +60,6 @@ rsion.
       </a>
     </div>
   </div>
-
-  <style>
-    .user-menu {
-      position: relative;
-    }
-
-    @media (min-height: 600px) {
-      .user-menu {
-        position: absolute !important;
-        bottom: 0 !important;
-      }
-    }
-  </style>
 
   <script>
     $(document)

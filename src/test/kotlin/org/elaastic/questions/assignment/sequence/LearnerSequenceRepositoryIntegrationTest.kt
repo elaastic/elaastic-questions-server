@@ -18,11 +18,10 @@
 
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
@@ -35,16 +34,16 @@ import javax.persistence.EntityManager
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LearnerSequenceRepositoryIntegrationTest(
-        @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     @Test
     fun `save a valid learner sequence`() {
-        val learner = testingService.getAnyUser()
-        val sequence = testingService.getAnySequence()
-        val interaction = testingService.getAnyInteraction()
+        val learner = integrationTestingService.getAnyUser()
+        val sequence = integrationTestingService.getAnySequence()
+        val interaction = integrationTestingService.getAnyInteraction()
         LearnerSequence(
                 learner = learner,
                 sequence = sequence,

@@ -24,6 +24,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Test command components</title>
+  <script th:inline="javascript">
+    saveAction = function(sequenceId, action, object){
+      if(sequenceId != null){
+        fetch([[${@environment.getProperty('elaastic.questions.url')}]] + 'action/' + sequenceId + '/saveAction/' + action + '/' + object)
+      }
+    }
+  </script>
 </head>
 <body>
 <section>

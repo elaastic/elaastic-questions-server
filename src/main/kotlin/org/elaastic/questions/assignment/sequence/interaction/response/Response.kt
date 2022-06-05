@@ -95,10 +95,21 @@ class Response(
 
                     is MultipleChoiceSpecification ->
                         run {
-                            val scorePerItem = BigDecimal(100) / BigDecimal(choiceSpecification.expectedChoiceList.size)
-                            learnerChoice.filter { it in choiceSpecification.expectedChoiceList.map { it.index } }.count().let {nbGoodChoice ->
-                                BigDecimal(nbGoodChoice)
-                            } * scorePerItem
+                            val zero = BigDecimal(0)
+                            if (learnerChoice.size == choiceSpecification.nbCandidateItem) return zero
+                            val scorePerExpectedItem = BigDecimal(100) / BigDecimal(choiceSpecification.expectedChoiceList.size)
+                            val scorePerUnexpectedItem = BigDecimal(100) / BigDecimal(choiceSpecification.nbCandidateItem - choiceSpecification.expectedChoiceList.size)
+                            val expectedIndexList = choiceSpecification.expectedChoiceList.map { it.index }
+                            var score = zero
+                            learnerChoice.forEach {
+                                if (it in expectedIndexList) {
+                                    score += scorePerExpectedItem
+                                } else {
+                                    score -= scorePerUnexpectedItem
+                                }
+                            }
+                            if (score < zero) score = zero
+                            score
                         }
 
                     else -> error("Unsupported type of choice")

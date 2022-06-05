@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::#edit-statement} ,  pageSpecificMenu=~{::#pageSpecificMenu},extraHeader=~{::head/script})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::#edit-statement} ,  pageSpecificMenu=~{::#pageSpecificMenu},extraHeader=~{::head/script}, currentSection='my-subjects')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
@@ -51,9 +51,13 @@
       <i class="corner pencil alternate icon"></i>
     </i>
 
-    <div class="content" style="vertical-align: middle;" th:text="#{question.update}">
+    <div th:if="${subject.owner == user}" class="content" style="vertical-align: middle;" th:text="#{question.update}">
       Update a question
     </div>
+    <div th:unless="${subject.owner == user}" class="content" style="vertical-align: middle;" th:text="#{question.shared.title}">
+      Update a question
+    </div>
+
   </h2>
 
   <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
@@ -86,13 +90,13 @@
     <div class="ui bottom attached segment">
 
 
-      <div th:replace="/subject/statement/_statement_form :: statementForm(${statementData}, @{/subject/{subjectId}/statement/{statementId}/removeAttachment(subjectId=${subject.id}, statementId=${statementData.id})})"></div>
+      <div th:replace="subject/statement/_statement_form :: statementForm(${statementData}, @{/subject/{subjectId}/statement/{statementId}/removeAttachment(subjectId=${subject.id}, statementId=${statementData.id})})"></div>
 
-      <div th:replace="/subject/statement/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
+      <div th:replace="subject/statement/_statement_question_type_form :: statementQuestionTypeForm(${statementData})"></div>
 
       <div class="ui hidden divider"></div>
 
-      <div th:replace="/subject/statement/_statement_explanations_form :: statementExplanationForm(${statementData}, @{/api/assignment/{assignmentId}/sequence/{statementId}/findAllFakeExplanation(subjectId=${subject.id}, statementId=${statementData.id})})"></div>
+      <div th:replace="subject/statement/_statement_explanations_form :: statementExplanationForm(${statementData}, @{/api/assignment/{assignmentId}/sequence/{statementId}/findAllFakeExplanation(subjectId=${subject.id}, statementId=${statementData.id})})"></div>
 
     </div>
 

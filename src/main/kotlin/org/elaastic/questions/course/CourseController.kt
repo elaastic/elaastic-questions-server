@@ -22,6 +22,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.SubjectController
+import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -43,6 +44,7 @@ import javax.validation.constraints.NotNull
 @Transactional
 class CourseController(
     @Autowired val courseService: CourseService,
+    @Autowired val subjectService: SubjectService,
     @Autowired val messageBuilder: MessageBuilder
 ) {
 
@@ -56,13 +58,14 @@ class CourseController(
 
         val user: User = authentication.principal as User
 
-        courseService.findAllByOwner(
+        courseService.findAllWithSubjectsByOwner(
             user,
-            PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+            PageRequest.of((page ?: 1) - 1, size ?: 8, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         )
             .let {
                 model.addAttribute("user", user)
                 model.addAttribute("coursePage", it)
+                model.addAttribute("nbSubjectsWithoutCourse", subjectService.countWithoutCourse(user))
                 model.addAttribute(
                     "pagination",
                     PaginationUtil.buildInfo(
@@ -72,7 +75,7 @@ class CourseController(
                     )
                 )
             }
-        return "/course/index"
+        return "course/index"
     }
 
 
@@ -85,24 +88,45 @@ class CourseController(
         }
         model.addAttribute("user", user)
 
-        return "/course/create"
+        return "course/create"
     }
 
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(
         authentication: Authentication, model: Model,
-        @PathVariable id: Long
+        @PathVariable id: Long,
+        @RequestParam("page") page: Int?,
+        @RequestParam("size") size: Int?
     ): String {
 
         val user: User = authentication.principal as User
         model.addAttribute("user", user)
 
-        val course: Course = courseService.get(id, fetchSubjects = true)
-        model.addAttribute("course", course)
+        if(id != -1L) {
+            val course = courseService.get(id, fetchSubjects = true)
+            model.addAttribute("course", course)
+            model.addAttribute("subjects", course.subjects.toList())
+            return "course/show"
+        }
+        else {
+            subjectService.findAllWithoutCourseByOwner(
+                user,
+                PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+            ).let {
+                model.addAttribute("subjectsPage", it)
+                model.addAttribute(
+                    "pagination",
+                    PaginationUtil.buildInfo(
+                        it.totalPages,
+                        page,
+                        size
+                    )
+                )
+            }
 
-        model.addAttribute("subjects", course.subjects.toList())
 
-        return "/course/show"
+            return "course/show-without-course"
+        }
     }
 
     @PostMapping("{id}/update")
@@ -167,6 +191,22 @@ class CourseController(
         }
     }
 
+    @GetMapping("firstCourse")
+    fun firstCourse(
+            authentication: Authentication,
+            model: Model,
+            @RequestParam("page") page: Int?,
+            @RequestParam("size") size: Int?
+    ): String {
+        val user: User = authentication.principal as User
+        var firstCourse = courseService.findFirstCourseByOwner(user)
+        if(firstCourse == null)
+            firstCourse = createExampleCourse(user)
+        return "redirect:/course/${firstCourse.id}"
+    }
+
+    private fun createExampleCourse(user: User): Course = courseService.save(CourseData(title = "Example Course", owner = user).toEntity())
+
     @GetMapping("{id}/delete")
     fun delete(
         authentication: Authentication,
@@ -207,7 +247,7 @@ class CourseController(
         model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
         model.addAttribute("subjectData", SubjectController.SubjectData(owner = user, course = course))
 
-        return "/subject/create"
+        return "subject/create"
     }
 
     data class CourseData(

@@ -52,6 +52,13 @@ class BootstrapService(
                         email = "fsil@elaastic.org"
                 ).addRole(roleService.roleTeacher()),
                 User(
+                        firstName = "Rialy",
+                        lastName = "Andria",
+                        username = "rand",
+                        plainTextPassword = "1234",
+                        email = "rand@elaastic.org"
+                ).addRole(roleService.roleTeacher()),
+                User(
                         firstName = "Albert",
                         lastName = "Ein",
                         username = "aein",

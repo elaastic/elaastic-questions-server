@@ -22,24 +22,28 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 
 object ExplanationViewerModelFactory {
 
-    fun buildOpen(responseList: List<Response>) =
+    fun buildOpen(teacher: Boolean,
+                  responseList: List<Response>) =
             OpenExplanationViewerModel(
                     responseList.map { ExplanationData(it) },
-                    true
+                    true,
+                    studentsIdentitiesAreDisplayable = teacher
             )
 
     fun buildChoice(teacher: Boolean,
                     responseList: List<Response>,
-                    choiceSpecification: ChoiceSpecification): ExplanationViewerModel =
+                    choiceSpecification: ChoiceSpecification,
+                    recommendedExplanationsComparator: Comparator<ExplanationData>? = null): ExplanationViewerModel =
             ChoiceExplanationViewerModel(
                     // TODO I should simplify (merge ChoiceExplanationViewerModel & ChoiceExplanationStore)
                     explanationsByResponse = ChoiceExplanationStore(
                             choiceSpecification,
-                            true,
                             responseList
                     ),
                     alreadySorted = true,
-                    showOnlyCorrectResponse = !teacher
+                    studentsIdentitiesAreDisplayable = teacher,
+                    showOnlyCorrectResponse = !teacher,
+                    recommendedExplanationsComparator = recommendedExplanationsComparator
             )
 
 }

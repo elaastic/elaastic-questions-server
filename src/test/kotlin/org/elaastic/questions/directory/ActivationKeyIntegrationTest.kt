@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,15 +33,14 @@ import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class ActivationKeyIntegrationTest(
-        @Autowired val testingService: TestingService,
-        @Autowired val activationKeyRepository: ActivationKeyRepository
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val activationKeyRepository: ActivationKeyRepository
 ) {
 
     val logger = Logger.getLogger(ActivationKeyIntegrationTest::class.java.name)
@@ -58,7 +57,7 @@ internal class ActivationKeyIntegrationTest(
         // given a valid activation key
         val actKey = ActivationKey(
                 activationKey = "1234",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
         actKey.dateCreated = Date()
 
@@ -71,7 +70,7 @@ internal class ActivationKeyIntegrationTest(
         // given an activation key with a blank key
         val actKey = ActivationKey(
                 activationKey = "",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
         actKey.dateCreated = Date()
 
@@ -85,7 +84,7 @@ internal class ActivationKeyIntegrationTest(
         // given a valid activation key
         val actKey = ActivationKey(
                 activationKey = "1234",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // when saving the act key
@@ -103,7 +102,7 @@ internal class ActivationKeyIntegrationTest(
         // given a non valid activation key
         val actKey = ActivationKey(
                 activationKey = "",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // expect an exception is thrown when saving

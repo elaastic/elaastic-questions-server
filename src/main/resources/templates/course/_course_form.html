@@ -19,9 +19,7 @@
 <div th:fragment="courseForm(course)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-
     <div class="ui error message"></div>
-
     <div class="required field" th:classappend="${#fields.hasErrors('title')}? 'error'">
         <label th:text="#{course.title.label}">
             Title
@@ -29,6 +27,7 @@
         <input type="text"
                name="title"
                th:field="*{title}"
+               class = "ob-course-creation-4"
                autofocus="autofocus"/>
 
         <input type="hidden"

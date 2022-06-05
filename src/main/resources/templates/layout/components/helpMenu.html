@@ -1,0 +1,74 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later ve
+rsion.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+
+<div th:fragment="helpMenu()"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <div id="help-menu-dropdown"
+         class="ui dropdown item help-menu"
+         th:attr="data-tooltip=#{common.Help}"
+         data-tooltip="Help"
+         data-position="right center"
+         data-inverted="">
+        <i class="question circle icon"></i>
+
+        <div class="ui vertical menu">
+            <div class="header" style="text-align: center; text-overflow: ellipsis; overflow: hidden;">
+                <span th:text="#{common.Help}">Help</span>
+            </div>
+
+            <a href="#" class="item" th:onclick="if([[${user.isTeacher}]]){elaastic.startContextualOb(true, [[${user.onboardingState.chaptersSeen}]])}">
+                <i class="clock outline icon"></i>
+                <span th:text="#{common.quick-start}">Quick start</span>
+            </a>
+
+            <a th:href="#{common.online-help.url}"
+               target="_blank"
+               class="item">
+                <i class="question circle outline icon"></i>
+                <span th:text="#{common.online-help}">Online help</span>
+            </a>
+
+
+        </div>
+    </div>
+
+
+    <script th:inline="javascript">
+        $(document)
+            .ready(function () {
+
+                // Initialize dropdown
+                $('#help-menu-dropdown').dropdown();
+                if([[${user.isTeacher}]]){
+                    elaastic.manageOnboarding(
+                        [[${@environment.getProperty('elaastic.questions.url')}]] /*''*/
+                    );
+                    if([[${user.onboardingState.chaptersSeen}]] != null){
+                        elaastic.startContextualOb(false, [[${user.onboardingState.chaptersSeen}]]);
+                    }
+                }
+            })
+
+        var elaastic = elaastic || {}
+
+    </script>
+</div>

@@ -20,7 +20,6 @@ package org.elaastic.questions.subject.statement
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.*
-import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -147,7 +146,18 @@ class Statement(
                     )
             )
         }
+        fun createExampleStatement(user: User): Statement {
+            return Statement(
+                    owner = user,
+                    questionType = QuestionType.ExclusiveChoice,
+                    choiceSpecification = ExclusiveChoiceSpecification(
+                            nbCandidateItem = 2,
+                            expectedChoice = ChoiceItem(1, 1f)
+                    ),
+                    content = "Blabla...",
+                    title = "Title"
+            )
+        }
     }
 }
-
 

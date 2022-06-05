@@ -28,30 +28,39 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class LearnerSequenceService(
-        @Autowired val learnerSequenceRepository: LearnerSequenceRepository
+    @Autowired val learnerSequenceRepository: LearnerSequenceRepository
 ) {
 
-    fun getActiveInteractionForLearner(learner: User,
-                                       sequence: Sequence): Interaction? =
-            when {
-                sequence.executionIsFaceToFace() -> sequence.activeInteraction
-                else -> findOrCreateLearnerSequence(learner, sequence).activeInteraction
-            }
+    fun getActiveInteractionForLearner(
+        learner: User,
+        sequence: Sequence
+    ): Interaction? =
+        when {
+            sequence.executionIsFaceToFace() -> sequence.activeInteraction
+            else -> findOrCreateLearnerSequence(learner, sequence).activeInteraction
+        }
 
-    fun findOrCreateLearnerSequence(learner: User,
-                                    sequence: Sequence) : LearnerSequence =
-            learnerSequenceRepository.findByLearnerAndSequence(
-                    learner,
-                    sequence
-            ).let {
-                it ?: LearnerSequence(learner, sequence)
-                        .let { learnerSequenceRepository.save(it) }
-            }.let {
+    fun findOrCreateLearnerSequence(
+        learner: User,
+        sequence: Sequence
+    ): LearnerSequence =
+        learnerSequenceRepository.findByLearnerAndSequence(
+            learner,
+            sequence
+        ).let {
+            it ?: LearnerSequence(learner, sequence)
+                .let { learnerSequenceRepository.save(it) }
+        }.let {
+            if (sequence.executionIsBlended() && sequence.resultsArePublished &&
+                it.activeInteraction != sequence.interactions[InteractionType.Read]) {
+                it.activeInteraction = sequence.interactions[InteractionType.Read]
+                learnerSequenceRepository.save(it)
+            } else {
                 if (it.activeInteraction == null && sequence.activeInteraction != null) {
                     it.activeInteraction = sequence.interactions[InteractionType.ResponseSubmission]
                     learnerSequenceRepository.save(it)
-                    it
                 }
-                else it
             }
+            it
+        }
 }

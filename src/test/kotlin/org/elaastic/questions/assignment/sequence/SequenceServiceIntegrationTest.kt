@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -34,12 +34,12 @@ import javax.persistence.EntityNotFoundException
 @Transactional
 internal class SequenceServiceIntegrationTest(
         @Autowired val sequenceService: SequenceService,
-        @Autowired val testingService: TestingService
+        @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     @Test
     fun `get a sequence - valid`() {
-        val assignment = testingService.getTestAssignment()
+        val assignment = integrationTestingService.getTestAssignment()
         val user = assignment.owner
 
         assertThat(
@@ -57,8 +57,8 @@ internal class SequenceServiceIntegrationTest(
 
     @Test
     fun `get a sequence - error unauthorized`() {
-        val assignment = testingService.getTestAssignment()
-        val user = testingService.getTestTeacher()
+        val assignment = integrationTestingService.getTestAssignment()
+        val user = integrationTestingService.getTestTeacher()
 
         assertThat(
                 "The testing data are corrupted",
@@ -74,7 +74,7 @@ internal class SequenceServiceIntegrationTest(
 
     @Test
     fun `get a sequence - error invalid id`() {
-        val user = testingService.getTestTeacher()
+        val user = integrationTestingService.getTestTeacher()
 
         assertThrows<EntityNotFoundException> {
             sequenceService.get(user, 12345678)

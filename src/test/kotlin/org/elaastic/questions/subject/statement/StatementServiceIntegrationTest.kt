@@ -1,10 +1,9 @@
 package org.elaastic.questions.subject.statement
 
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
@@ -24,12 +23,12 @@ internal class StatementServiceIntegrationTest(
         @Autowired val statementService: StatementService,
         @Autowired val statementRepository: StatementRepository,
         @Autowired val subjectService: SubjectService,
-        @Autowired val testingService: TestingService
+        @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     @Test
     fun `get a statement as the owner - valid`() {
-        val subject = testingService.getAnyTestSubject()
+        val subject = integrationTestingService.getAnyTestSubject()
 
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
@@ -47,8 +46,8 @@ internal class StatementServiceIntegrationTest(
 
     @Test
     fun `get a shared statement as a teacher but not the owner - valid`() {
-        val subject = testingService.getAnyTestSubject()
-        val teacher = testingService.getAnotherTestTeacher()
+        val subject = integrationTestingService.getAnyTestSubject()
+        val teacher = integrationTestingService.getAnotherTestTeacher()
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
                 subject.statements.size,
@@ -65,9 +64,9 @@ internal class StatementServiceIntegrationTest(
 
     @Test
     fun `get a statement as a learner - error unauthorized`() {
-        val learner: User = testingService.getTestStudent()
+        val learner: User = integrationTestingService.getTestStudent()
 
-        val subject = testingService.getAnyTestSubject()
+        val subject = integrationTestingService.getAnyTestSubject()
 
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
@@ -83,7 +82,7 @@ internal class StatementServiceIntegrationTest(
 
     @Test
     fun `get a statement - error invalid id`() {
-        val user = testingService.getTestTeacher()
+        val user = integrationTestingService.getTestTeacher()
 
         assertThrows<EntityNotFoundException> {
             statementService.get(user, 12345678)
@@ -92,7 +91,7 @@ internal class StatementServiceIntegrationTest(
 
     @Test
     fun `duplicate statement when update`() {
-        val subject = testingService.getAnyTestSubject()
+        val subject = integrationTestingService.getAnyTestSubject()
 
         MatcherAssert.assertThat(
                 "The testing data are corrupted",
@@ -168,7 +167,7 @@ internal class StatementServiceIntegrationTest(
 
     @Test
     fun `assign statement after update`() {
-        val subject = testingService.getAnyTestSubject()
+        val subject = integrationTestingService.getAnyTestSubject()
 
         MatcherAssert.assertThat(
                 "The testing data are corrupted",

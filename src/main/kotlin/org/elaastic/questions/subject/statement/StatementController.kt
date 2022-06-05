@@ -73,7 +73,7 @@ class StatementController(
         model.addAttribute("statementData",statement)
         model.addAttribute("rank",statementBase.rank)
 
-        return "/subject/statement/edit"
+        return "subject/statement/edit"
     }
 
     @PostMapping("{id}/update")

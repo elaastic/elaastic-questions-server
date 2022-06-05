@@ -18,32 +18,44 @@
 
 package org.elaastic.questions.security
 
-
+import org.elaastic.questions.directory.Role
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.elaastic.questions.directory.Role
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.config.annotation.web.builders.WebSecurity
+import org.springframework.security.web.util.matcher.AnyRequestMatcher
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig(
-    @Autowired val userDetailsService: UserDetailsService
+    @Autowired val userDetailsService: UserDetailsService,
+    @Autowired val encoder: PasswordEncoder,
+    @Value("\${elaastic.questions.url}") val elaasticUrl: String,
 ) : WebSecurityConfigurerAdapter() {
 
+    @Autowired var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
+
     override fun configure(auth: AuthenticationManagerBuilder) {
+        casSecurityConfigurer?.getCasAuthenticationProviderBeanList()?.forEach {
+            auth.authenticationProvider(it)
+        }
+
         auth.authenticationProvider(authenticationProvider())
     }
 
@@ -54,9 +66,14 @@ class WebSecurityConfig(
 
     override fun configure(http: HttpSecurity) {
         http {
+
             logout {
                 logoutRequestMatcher = AntPathRequestMatcher("/logout")
-                logoutSuccessUrl = "/"
+                logoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
+                    "/",
+                    casSecurityConfigurer?.casKeyToServerUrl ?: mapOf(),
+                    "/logout?service=${elaasticUrl}"
+                )
                 clearAuthentication = true
                 deleteCookies("JSESSIONID")
                 invalidateHttpSession = true
@@ -73,6 +90,12 @@ class WebSecurityConfig(
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
                 authorize("/login", permitAll)
+
+                // Allow access to this URL on which the CAS filter are applied
+                // A CAS filter will validate the provided ticket (URL argument) against the configured CAS server
+                // Each CAS filter monitor its own URL in the form of /login/cas/<casKey>
+                authorize("/login/cas/*", permitAll)
+
                 authorize("/player/start-anonymous-session", permitAll)
                 authorize("/userAccount/beginPasswordReset", permitAll)
                 authorize("/userAccount/resetPassword", permitAll)
@@ -91,6 +114,25 @@ class WebSecurityConfig(
                 loginPage = "/login"
                 defaultSuccessUrl("/home", false)
             }
+
+            // ExceptionHandling define the behavior when a Security Exception occurred (typically when the user is not
+            // authenticated on a secured URL)
+            exceptionHandling {
+                authenticationEntryPoint = DelegatingAuthenticationEntryPoint(
+                    linkedMapOf(
+                        // URL of the form /cas/<casKey>/** are secured by the CAS server identified by <casKey>
+                        // If a request without authentication get a URL of the form /cas/<casKey>/** the corresponding
+                        // CasAuthenticationEntryPoint will be triggered (resulting in a redirect on the corresponding
+                        // CAS server)
+                        *casSecurityConfigurer?.getCasAuthenticationEntryPoints() ?: arrayOf(),
+                        
+                        // Any other secured URL is handled by the native elaastic authentication (the formLogin)
+                        AnyRequestMatcher.INSTANCE to LoginUrlAuthenticationEntryPoint("/login")
+                    )
+
+                )
+            }
+
         }
     }
 
@@ -98,14 +140,9 @@ class WebSecurityConfig(
     fun authenticationProvider(): DaoAuthenticationProvider {
         DaoAuthenticationProvider().let {
             it.setUserDetailsService(userDetailsService)
-            it.setPasswordEncoder(encoder())
+            it.setPasswordEncoder(encoder)
             return it
         }
-    }
-
-    @Bean
-    fun encoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
     }
 
     @Bean
@@ -113,5 +150,4 @@ class WebSecurityConfig(
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
     }
-
 }

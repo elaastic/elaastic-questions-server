@@ -78,7 +78,7 @@ class Attachment(
             return if (dimension != null) {
                 var l = dimension.width
                 var h = dimension.height
-                val ratio = listOf(l / widthMax.toDouble() , h / heightMax.toDouble()).max()!!
+                val ratio = listOf(l / widthMax.toDouble() , h / heightMax.toDouble()).maxOrNull()!!
 
                 if (ratio > 1) {
                     l = (l / ratio).roundToInt()

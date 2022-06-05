@@ -19,7 +19,7 @@
 package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -41,9 +41,9 @@ import javax.validation.ConstraintViolationException
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class PasswordResetKeyIntegrationTest(
-        @Autowired val testingService: TestingService,
-        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
-        @Autowired val userService: UserService
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
+    @Autowired val userService: UserService
 ) {
 
     val logger = Logger.getLogger(PasswordResetKeyIntegrationTest::class.java.name)
@@ -60,7 +60,7 @@ internal class PasswordResetKeyIntegrationTest(
         // given a valid password reset key
         val passKey = PasswordResetKey(
                 passwordResetKey = "1234",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
         passKey.dateCreated = Date()
 
@@ -73,7 +73,7 @@ internal class PasswordResetKeyIntegrationTest(
         // given a pass key with a blank key
         val key = PasswordResetKey(
                 passwordResetKey = "",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
         key.dateCreated = Date()
 
@@ -87,7 +87,7 @@ internal class PasswordResetKeyIntegrationTest(
         // given a valid pass key
         val key = PasswordResetKey(
                 passwordResetKey = "1234",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // when saving the pass key
@@ -104,7 +104,7 @@ internal class PasswordResetKeyIntegrationTest(
         // given a non valid pass key
         val key = PasswordResetKey(
                 passwordResetKey = "",
-                user = testingService.getAnyUser()
+                user = integrationTestingService.getAnyUser()
         )
 
         // expect an exception is thrown when saving
@@ -118,7 +118,7 @@ internal class PasswordResetKeyIntegrationTest(
         var users: List<User>? = null
         tGiven {
             // 2 users with password reset keys freshly generated
-            users = listOf(testingService.getTestStudent(), testingService.getTestTeacher())
+            users = listOf(integrationTestingService.getTestStudent(), integrationTestingService.getTestTeacher())
             users!!.forEach {
                 userService.generatePasswordResetKeyForUser(it)
             }

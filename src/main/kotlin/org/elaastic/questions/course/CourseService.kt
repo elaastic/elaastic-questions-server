@@ -35,25 +35,25 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class CourseService (
+class CourseService(
     @Autowired val courseRepository: CourseRepository,
     @Autowired val subjectService: SubjectService,
     @Autowired val entityManager: EntityManager
-){
+) {
 
     fun get(id: Long, fetchSubjects: Boolean = false): Course {
-        return when (fetchSubjects){
+        return when (fetchSubjects) {
             true -> courseRepository.findOneWithSubjectsById(id)
             false -> courseRepository.findOneById(id)
         } ?: throw EntityNotFoundException("There is no course for id \"$id\"")
     }
 
-    fun get(user : User, id: Long) : Course{
-        courseRepository.findOneById(id).let{
+    fun get(user: User, id: Long): Course {
+        courseRepository.findOneById(id).let {
             if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this course")
             }
-            if(user != it.owner){
+            if (user != it.owner) {
                 throw AccessDeniedException("This course doesn't belong to you")
             }
             return it
@@ -75,12 +75,12 @@ class CourseService (
         courseRepository.save(course)
     }
 
-    fun removeSubject(user : User, subject: Subject){
+    fun removeSubject(user: User, subject: Subject) {
         require(user == subject.owner) {
             "Only the owner can delete a subject"
         }
 
-        if (subject.course != null){
+        if (subject.course != null) {
             val course = subject.course!!
             touch(course)
             course.subjects.remove(subject)
@@ -91,6 +91,19 @@ class CourseService (
         entityManager.clear()
     }
 
+    fun addSubjectToCourse(user: User, subject: Subject, course: Course) {
+        require(user == course.owner) {
+            "Only the owner can add a subject"
+        }
+        subject.course?.let {
+            touch(it)
+            it.subjects.remove(subject)
+        }
+        subject.course = course
+        course.subjects.add(subject)
+        subjectService.save(subject)
+    }
+
     fun save(course: Course): Course {
         return courseRepository.save(course)
     }
@@ -99,9 +112,23 @@ class CourseService (
         return courseRepository.count()
     }
 
-    fun findAllByOwner(owner: User,
-                       pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
+    fun findAllByOwner(
+        owner: User,
+        pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+    )
             : Page<Course> {
         return courseRepository.findAllByOwner(owner, pageable)
+    }
+
+    fun findAllWithSubjectsByOwner(
+        owner: User,
+        pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+    )
+            : Page<Course> {
+        return courseRepository.findAllWithSubjectsByOwner(owner, pageable)
+    }
+
+    fun findFirstCourseByOwner(owner: User) : Course? {
+        return courseRepository.findFirstByOwner(owner)
     }
 }

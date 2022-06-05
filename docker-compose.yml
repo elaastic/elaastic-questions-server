@@ -10,7 +10,7 @@ services:
       - MYSQL_PASSWORD=elaastic
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - 6603:3306
+      - "6603:3306"
     command: --character-set-server=utf8 --collation-server=utf8_general_ci
   elaastic-questions-db-test:
     image: mysql:5
@@ -21,5 +21,15 @@ services:
       - MYSQL_PASSWORD=elaastic
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - 6604:3306
+      - "6604:3306"
     command: --character-set-server=utf8 --collation-server=utf8_general_ci
+  cas:
+    container_name: elaastic-cas
+    build: docker-resources/cas
+    ports:
+      - "8443:8443"
+  cas-2:
+    container_name: elaastic-cas-2
+    build: docker-resources/cas
+    ports:
+      - "8444:8443"

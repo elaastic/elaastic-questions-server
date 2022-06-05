@@ -26,7 +26,7 @@ import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.exparity.hamcrest.date.DateMatchers
 import java.util.*
 import javax.persistence.EntityManager
@@ -40,9 +40,9 @@ import org.junit.jupiter.api.Assertions
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class StatementRepositoryIntegrationTest(
-        @Autowired val statementRepository: StatementRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val statementRepository: StatementRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     @Test
@@ -50,7 +50,7 @@ internal class StatementRepositoryIntegrationTest(
         // Given :
         val title = "title"
         val content = "content"
-        val user = testingService.getAnyUser()
+        val user = integrationTestingService.getAnyUser()
 
         val justBefore = Date()
 
@@ -98,7 +98,7 @@ internal class StatementRepositoryIntegrationTest(
     @Test
     fun `create a statement with a parent statement`() {
         // Given:
-        val user = testingService.getAnyUser()
+        val user = integrationTestingService.getAnyUser()
 
         val parentStatement = Statement(
                 user,
@@ -129,7 +129,7 @@ internal class StatementRepositoryIntegrationTest(
     @Test
     fun `test questionSpecification serialization-deserialization - adhoc data`() {
         // Given: an adhoc choice specification to be serialized into the datasource
-        val user = testingService.getAnyUser()
+        val user = integrationTestingService.getAnyUser()
         val choiceSpecification : ChoiceSpecification = MultipleChoiceSpecification(
                 nbCandidateItem = 3,
                 expectedChoiceList = listOf(

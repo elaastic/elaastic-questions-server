@@ -59,9 +59,7 @@ class ChoiceExplanationStore(choiceSpecification: ChoiceSpecification) : Explana
     }
 
     constructor(choiceSpecification: ChoiceSpecification,
-                alreadySorted: Boolean,
                 responseList: List<Response>) : this(choiceSpecification) {
-        // TODO Handle sorting
         responseList.forEach { add(it) }
     }
 

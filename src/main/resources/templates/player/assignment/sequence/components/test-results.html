@@ -24,19 +24,29 @@
 <head>
   <meta charset="UTF-8">
   <title>Test results</title>
+  <script type="text/javascript" th:src="@{/js/vega.js}"></script>
+  <script type="text/javascript" th:src="@{/js/vega-lite.js}"></script>
+  <script type="text/javascript" th:src="@{/js/vega-embed.js}"></script>
   <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+  <script th:inline="javascript">
+    saveAction = function(sequenceId, action, object){
+      if(sequenceId != null){
+        fetch([[${@environment.getProperty('elaastic.questions.url')}]] + 'action/' + sequenceId + '/saveAction/' + action + '/' + object)
+      }
+    }
+  </script>
 </head>
 <body>
 <section>
   <h2>Results</h2>
 
-  <th:block th:each="situation : ${resultsSituations}">
+  <th:block th:each="situation, i : ${resultsSituations}">
     <h3 th:text="${situation.description}"></h3>
 
     <div
-      th:replace="player/assignment/sequence/components/_results.html :: results(${situation.resultsModel})"></div>
+      th:replace="player/assignment/sequence/components/_results.html :: results(resultsModel=${situation.resultsModel},id=${i.index})"></div>
   </th:block>
 </section>
 </body>

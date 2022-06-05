@@ -19,13 +19,12 @@
 <div th:fragment="statementForm(statementData, urlRemoveAttachment)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-    <div id="appTitle"
-         v-cloak>
+    <div id="appTitle" v-cloak>
         <a class="ui ribbon label" th:text="#{statement.title.label}">
             Title
         </a>
 
-        <div class="field"
+        <div class="field ob-question-creation-3"
              th:classappend="${#fields.hasErrors('title')} ? 'error'"
              style="margin-top: 1em;"
              v-on:mouseover="mouseOverTitle"
@@ -50,7 +49,7 @@
             </div>
         </div>
 
-        <div >
+        <div class="ob-question-creation-4">
             <div class="ui hidden divider"></div>
             <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{statement.attachment.label}">Pièce
                 jointe</a>
@@ -60,7 +59,7 @@
                        id="fileToAttached">
             </div>
             <div th:if="${statementData.attachment != null}" id="attachmentView" v-show="anAttachmentIsSelected">
-                <div th:replace="/subject/statement/_statement_attachment :: statementAttachment(${statementData.attachment},650,380)"></div>
+                <div th:replace="subject/statement/_statement_attachment :: statementAttachment(${statementData.attachment},650,380)"></div>
                 <a th:if="${subject.owner==user}" style="margin-left: 2em;" class="ui tiny negative right floated button"
                    v-on:click="removeAttachment">
                     <i class="trash icon"></i> Supprimer
@@ -71,7 +70,7 @@
 
     <div class="ui hidden divider"></div>
 
-    <div id="statement-section">
+    <div id="statement-section" class="ob-question-creation-6">
         <a class="ui ribbon label" th:text="#{statement.content.label}">Énoncé</a>
 
         <div id="statement-container"
@@ -116,7 +115,6 @@
         }
 
     </style>
-
     <script th:inline="javascript">
         new Vue({
             el: '#appTitle',

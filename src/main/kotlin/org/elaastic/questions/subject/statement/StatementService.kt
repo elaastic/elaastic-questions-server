@@ -21,6 +21,8 @@ package org.elaastic.questions.subject.statement
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.sequence.eventLog.EventLogRepository
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
@@ -37,6 +39,8 @@ import javax.transaction.Transactional
 class StatementService(
         @Autowired val attachmentService: AttachmentService,
         @Autowired val statementRepository: StatementRepository,
+        @Autowired val eventLogRepository: EventLogRepository,
+        @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val responseRepository: ResponseRepository,
         @Autowired val fakeExplanationRepository: FakeExplanationRepository
 ) {
@@ -86,7 +90,9 @@ class StatementService(
         removeAllFakeExplanation(statement)
         if(fakeExplanationDataList.isNotEmpty()) {
             fakeExplanationDataList.forEach {
-                addFakeExplanation(statement, it)
+                if(it.content?.isNotEmpty() == true) {
+                    addFakeExplanation(statement, it)
+                }
             }
         }
     }
@@ -98,6 +104,12 @@ class StatementService(
     fun findAllFakeExplanationsForStatement(statement: Statement): List<FakeExplanation> {
         return fakeExplanationRepository.findAllByStatement(
                 statement
+        )
+    }
+
+    fun findAllBySubject(subject: Subject): List<Statement> {
+        return statementRepository.findBySubject(
+                subject
         )
     }
 
@@ -142,5 +154,10 @@ class StatementService(
 
     fun responsesExistForStatement(statement: Statement) =
             responseRepository.countByStatement(statement) > 0
+
+    fun eventLogsExistForStatement(statement: Statement):Boolean {
+        val sequences = sequenceRepository.findAllByStatement(statement)
+        return eventLogRepository.countBySequenceIn(sequences) > 0
+    }
 
 }

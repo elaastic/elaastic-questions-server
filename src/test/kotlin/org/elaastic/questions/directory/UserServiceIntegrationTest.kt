@@ -19,7 +19,7 @@
 package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
@@ -45,16 +45,16 @@ import javax.validation.ValidationException
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class UserServiceIntegrationTest(
-        @Autowired val userService: UserService,
-        @Autowired val roleService: RoleService,
-        @Autowired val settingsRepository: SettingsRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val entityManager: EntityManager,
-        @Autowired val activationKeyRepository: ActivationKeyRepository,
-        @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository,
-        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
-        @Autowired val passwordEncoder: PasswordEncoder,
-        @Autowired val userRepository: UserRepository
+    @Autowired val userService: UserService,
+    @Autowired val roleService: RoleService,
+    @Autowired val settingsRepository: SettingsRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val entityManager: EntityManager,
+    @Autowired val activationKeyRepository: ActivationKeyRepository,
+    @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository,
+    @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
+    @Autowired val passwordEncoder: PasswordEncoder,
+    @Autowired val userRepository: UserRepository
 ) {
 
     @Test
@@ -152,10 +152,10 @@ internal class UserServiceIntegrationTest(
     @Test
     fun `test initialization of settings for a given user `() {
         // given a user
-        testingService.getAnyUser().tWhen {
+        integrationTestingService.getAnyUser().tWhen {
             userService.initializeSettingsForUser(it, "fr")
         }.tThen {
-            assertThat(it.user, equalTo(testingService.getAnyUser()))
+            assertThat(it.user, equalTo(integrationTestingService.getAnyUser()))
             assertThat(it.language, equalTo("fr"))
             assertThat(it.id, notNullValue())
             assertThat(it.version, equalTo(0L))
@@ -166,10 +166,10 @@ internal class UserServiceIntegrationTest(
     @Test
     fun `test initialization of unsubscribe key for a given user `() {
         // given a user
-        testingService.getAnyUser().tWhen {
+        integrationTestingService.getAnyUser().tWhen {
             userService.initializeUnsubscribeKeyForUser(it)
         }.tThen {
-            assertThat(it.user, equalTo(testingService.getAnyUser()))
+            assertThat(it.user, equalTo(integrationTestingService.getAnyUser()))
             assertThat(it.unsubscribeKey, notNullValue())
             assertThat(it.id, notNullValue())
             assertThat(it.version, equalTo(0L))
@@ -179,10 +179,10 @@ internal class UserServiceIntegrationTest(
     @Test
     fun `test initialization of activation key for a given user `() {
         // given a user
-        testingService.getAnyUser().tWhen {
+        integrationTestingService.getAnyUser().tWhen {
             userService.initializeActivationKeyForUser(it)
         }.tThen {
-            assertThat(it.user, equalTo(testingService.getAnyUser()))
+            assertThat(it.user, equalTo(integrationTestingService.getAnyUser()))
             assertThat(it.activationKey, notNullValue())
             assertThat(it.id, notNullValue())
             assertThat(it.version, equalTo(0L))
@@ -224,7 +224,7 @@ internal class UserServiceIntegrationTest(
     fun `test generate new password reset key`() {
         tGiven {
             // a user without password reset key
-            testingService.getAnyUser().let {
+            integrationTestingService.getAnyUser().let {
                 assertThat(passwordResetKeyRepository.findByUser(it), nullValue())
                 it
             }
@@ -248,7 +248,7 @@ internal class UserServiceIntegrationTest(
         var oldKey: String? = null
         tGiven {
             // a user with an old password reset key
-            testingService.getAnyUser().let {
+            integrationTestingService.getAnyUser().let {
                 userService.generatePasswordResetKeyForUser(it).let { prk ->
                     oldKey = prk.passwordResetKey
                     prk.dateCreated = DateUtils.addHours(Date(), -2)
@@ -312,7 +312,7 @@ internal class UserServiceIntegrationTest(
     fun `test change password user`() {
         tGiven {
             // a user
-            testingService.getAnyUser()
+            integrationTestingService.getAnyUser()
         }.tWhen {
             // changing the password with a correct plain password
             userService.changePasswordForUser(it, "abcd").let { user ->
@@ -325,7 +325,7 @@ internal class UserServiceIntegrationTest(
 
         tGiven {
             // a user
-            testingService.getAnyUser()
+            integrationTestingService.getAnyUser()
         }.tExpect {
             // exception when changing the password with an incorrect plain password
             assertThrows<ValidationException> {
@@ -340,7 +340,7 @@ internal class UserServiceIntegrationTest(
     fun `test change password user with password check`() {
         tGiven {
             // a user with "abcd" password
-            testingService.getAnyUser(). let {
+            integrationTestingService.getAnyUser(). let {
                 userService.changePasswordForUser(it, "abcd")
             }
         }.tWhen {
@@ -443,21 +443,21 @@ internal class UserServiceIntegrationTest(
         tGiven {
             // 3 users with the last one only with a password reset key "alive"
             listOf(
-                    testingService.getAnyUser().let {
+                    integrationTestingService.getAnyUser().let {
                         userService.generatePasswordResetKeyForUser(it).let { passwordResetKey ->
                             passwordResetKey.dateCreated = DateUtils.addHours(Date(), -2)
                             passwordResetKeyRepository.saveAndFlush(passwordResetKey)
                         }
                         it
                     },
-                    testingService.getTestStudent().let {
+                    integrationTestingService.getTestStudent().let {
                         userService.generatePasswordResetKeyForUser(it).let { passwordResetKey ->
                             passwordResetKey.dateCreated = DateUtils.addHours(Date(), -2)
                             passwordResetKeyRepository.saveAndFlush(passwordResetKey)
                         }
                         it
                     },
-                    testingService.getTestTeacher().let {
+                    integrationTestingService.getTestTeacher().let {
                         userService.generatePasswordResetKeyForUser(it)
                         it
                     }
@@ -467,9 +467,9 @@ internal class UserServiceIntegrationTest(
             userService.removeOldPasswordResetKeys()
         }.tThen {
             // it remains only the last user key
-            assertThat(passwordResetKeyRepository.findByUser(testingService.getAnyUser()), nullValue())
-            assertThat(passwordResetKeyRepository.findByUser(testingService.getTestStudent()), nullValue())
-            assertThat(passwordResetKeyRepository.findByUser(testingService.getTestTeacher()), notNullValue())
+            assertThat(passwordResetKeyRepository.findByUser(integrationTestingService.getAnyUser()), nullValue())
+            assertThat(passwordResetKeyRepository.findByUser(integrationTestingService.getTestStudent()), nullValue())
+            assertThat(passwordResetKeyRepository.findByUser(integrationTestingService.getTestTeacher()), notNullValue())
         }
     }
 
@@ -477,7 +477,7 @@ internal class UserServiceIntegrationTest(
     fun `test save user with role change`() {
         tGiven {
             // a teacher
-            testingService.getTestTeacher().let {
+            integrationTestingService.getTestTeacher().let {
                 assertTrue(it.isTeacher())
                 it
             }
@@ -496,7 +496,7 @@ internal class UserServiceIntegrationTest(
     fun `test disable user`() {
         tGiven {
             // a user
-            testingService.getTestTeacher().let {
+            integrationTestingService.getTestTeacher().let {
                 assertTrue(it.enabled)
                 it
             }
@@ -514,7 +514,7 @@ internal class UserServiceIntegrationTest(
     fun testAddUserConsentToActiveTerms() {
         tGiven {
             // a user without consent to active terms
-            testingService.getAnyUser().let {
+            integrationTestingService.getAnyUser().let {
                 assertFalse(userService.userHasGivenConsentToActiveTerms(it.username))
                 it
             }.tWhen {
@@ -537,6 +537,167 @@ internal class UserServiceIntegrationTest(
             for(i in 0..8) {
                 assertThat(it!![i].username, equalTo("${userService.FAKE_USER_PREFIX}${i+1}"))
             }
+        }
+    }
+
+
+    @Test
+    fun `test replace accent`() {
+        tWhen {
+            userService.replaceAccent("aébècàdêfïg")
+        }.tExpect {
+            assertThat(it, equalTo("aebecadefig"))
+        }
+    }
+
+    @Test
+    fun `test generate username`() {
+
+        tWhen {
+            // "I want to generate a username when there is not already the same username in the database"
+            userService.generateUsername("John", "Dorel")
+        }.tThen {
+            // I obtain a username without index as suffix
+            assertThat(it, equalTo("johdore"))
+        }.tWhen {
+            // the username exists
+            User("John", "Dolores", "johdolo", "passwd", "joh@doe.com").let {
+                it.addRole(roleService.roleStudent())
+            }.let {
+                userService.addUser(it)
+            }
+            userService.generateUsername("John", "Dolorus")
+        }.tThen {
+            assertThat(it, equalTo("johdolo2"))
+        }.tWhen {
+            // the username exists with numerical suffix
+            User("John", "Dolores15", "johdolo19", "passwd", "joh@doe15.com").let {
+                it.addRole(roleService.roleStudent())
+            }.let {
+                userService.addUser(it)
+            }
+            userService.generateUsername("John", "Dolorus")
+        }.tThen {
+            assertThat(it, equalTo("johdolo20"))
+        }.tWhen {
+            // the username exists with litteral suffix
+            User("John", "Dolores16", "johdoloabcd", "passwd", "joh@doe16.com").let {
+                it.addRole(roleService.roleStudent())
+            }.let {
+                userService.addUser(it)
+            }
+            userService.generateUsername("John", "Dolorus")
+        }.tThen {
+            assertThat(it, equalTo("johdolo20"))
+        }.tWhen {
+            // the username exists with multiple sequences of digit suffix
+            User("John", "Dolores16", "johdolo25ab29", "passwd", "joh@doe17.com").let {
+                it.addRole(roleService.roleStudent())
+            }.let {
+                userService.addUser(it)
+            }
+            userService.generateUsername("John", "Dolorus")
+        }.tThen {
+            assertThat(it, equalTo("johdolo20"))
+        }.tWhen {
+            // the username exists with multiple sequences of digit suffix, the first is smaller than another username numeric suffix
+            User("John", "Dolores16", "johdolo18ab29", "passwd", "joh@doe18.com").let {
+                it.addRole(roleService.roleStudent())
+            }.let {
+                userService.addUser(it)
+            }
+            userService.generateUsername("John", "Dolorus")
+        }.tThen {
+            assertThat(it, equalTo("johdolo20"))
+        }
+    }
+
+    @Test
+    fun `test generate username with very short name`() {
+        tWhen {
+            // the username exists with very short name
+            userService.generateUsername("Jo", "Do")
+        }.tThen {
+            assertThat(it, equalTo("jodo"))
+        }.tWhen {
+            // a user with quadrigramm already used exists
+            User("John", "Dolores", "jodo9", "passwd", "joh@doe19.com").let {
+                it.addRole(roleService.roleStudent())
+            }.let {
+                userService.addUser(it)
+            }
+            userService.generateUsername("Jo", "Do")
+        }.tThen {
+            assertThat(it, equalTo("jodo10"))
+        }
+    }
+
+    @Test
+    fun `test generate username with accents`() {
+        tWhen {
+            // I generate a username with firsname and lastname with  accents
+            userService.generateUsername("Jérémie", "DÖrèl")
+        }.tThen {
+            assertThat(it, equalTo("jerdore"))
+        }
+    }
+
+    @Test
+    fun `test generate username with spaces in firstname or lastname`() {
+        tWhen {
+            // I generate a username with firsname and lastname with  accents
+            userService.generateUsername("El Medie", "Ma Patrick")
+        }.tThen {
+            assertThat(it, equalTo("elmmapa"))
+        }
+    }
+
+    @Test
+    fun `test find more recent username starting wit a given username`() {
+        tWhen {
+            userService.findMostRecentUsernameStartingWithUsername("John_Doe___")
+        }.tExpect {
+            assertThat(it, equalTo("John_Doe___9"))
+        }
+        tWhen {
+            userService.findMostRecentUsernameStartingWithUsername("NoUsername___")
+        }.tExpect {
+            assertThat(it, nullValue())
+        }
+    }
+
+    @Test
+    fun `an elaastic user must have an email`() {
+        assertThrows<ValidationException> {
+            userService.addUser(
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = null
+                ).addRole(roleService.roleStudent())
+            )
+        }
+    }
+
+    @Test
+    fun `a user from an external source may have no email`() {
+        tWhen {
+            // adding a user
+            userService.addUser(
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "foo@elaastic.org",
+                    source = UserSource.CAS
+                ).addRole(roleService.roleStudent())
+            )
+        }.tThen {
+            assertThat(it.id, notNullValue())
+            it
         }
     }
 }

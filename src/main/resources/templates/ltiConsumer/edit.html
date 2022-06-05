@@ -51,7 +51,7 @@
 
     <div th:replace="layout/components/form-messages :: formMessages('')"></div>
 
-    <div th:replace="/ltiConsumer/_ltiConsumer_form :: ltiConsumerForm(${ltiConsumer}, ${true})"></div>
+    <div th:replace="ltiConsumer/_ltiConsumer_form :: ltiConsumerForm(${ltiConsumer}, ${true})"></div>
 
     <input type="submit"
            name="update"

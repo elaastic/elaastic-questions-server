@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "org.elaastic.questions"
-version = "4.0.0"
+version = "5.1.1"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -29,6 +29,7 @@ dependencies {
     implementation("org.ehcache:ehcache:3.6.3")
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.security:spring-security-cas")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -47,6 +48,11 @@ dependencies {
     implementation("commons-io:commons-io:2.6")
     implementation("org.apache.commons:commons-csv:1.5")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.togglz:togglz-spring-boot-starter:3.0.0")
+    implementation("org.togglz:togglz-spring-security:3.0.0")
+    implementation("org.togglz:togglz-kotlin:3.0.0")
+    implementation("org.togglz:togglz-console:3.0.0")
+
 
     runtimeOnly("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -59,6 +65,7 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-library")
     testImplementation("org.exparity:hamcrest-date:1.1.0")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+    testImplementation("org.mockito:mockito-inline:2.13.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
 }

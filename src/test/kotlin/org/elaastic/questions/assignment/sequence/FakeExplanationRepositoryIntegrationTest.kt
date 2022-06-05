@@ -21,7 +21,7 @@ package org.elaastic.questions.assignment.sequence
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.test.directive.*
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
@@ -36,16 +36,16 @@ import javax.validation.ConstraintViolationException
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class FakeExplanationRepositoryIntegrationTest(
-        @Autowired val fakeExplanationRepository: FakeExplanationRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val fakeExplanationRepository: FakeExplanationRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     @Test
     fun `save a valid fake explanation - with corresponding item`() {
         // Given a fake explanation
-        val author = testingService.getAnyUser()
-        val statement = testingService.getAnyStatement()
+        val author = integrationTestingService.getAnyUser()
+        val statement = integrationTestingService.getAnyStatement()
         FakeExplanation(
                 content = "My fake explanation",
                 author = author,
@@ -72,8 +72,8 @@ internal class FakeExplanationRepositoryIntegrationTest(
         // Expect a fake explanation without corresponding item to be saved without error
         FakeExplanation(
                 content = "My fake explanation",
-                author = testingService.getAnyUser(),
-                statement = testingService.getAnyStatement()
+                author = integrationTestingService.getAnyUser(),
+                statement = integrationTestingService.getAnyStatement()
         )
                 .tWhen {
                     fakeExplanationRepository.saveAndFlush(it)
@@ -86,8 +86,8 @@ internal class FakeExplanationRepositoryIntegrationTest(
         // Expect an error to be thrown when trying to save a fake explanation with blank content
         FakeExplanation(
                 content = "",
-                author = testingService.getAnyUser(),
-                statement = testingService.getAnyStatement()
+                author = integrationTestingService.getAnyUser(),
+                statement = integrationTestingService.getAnyStatement()
         )
                 .tThen {
                     Assertions.assertThrows(ConstraintViolationException::class.java) {

@@ -76,7 +76,7 @@ class LtiConsumerController(
             )
         }
 
-        return "/ltiConsumer/index"
+        return "ltiConsumer/index"
     }
 
     @GetMapping(value = ["/{id}", "{id}/show"])
@@ -88,7 +88,7 @@ class LtiConsumerController(
             model.addAttribute("ltiConsumer", it)
         }
 
-        return "/ltiConsumer/show"
+        return "ltiConsumer/show"
     }
 
     @GetMapping("create")
@@ -100,7 +100,7 @@ class LtiConsumerController(
         }
         model.addAttribute("user", user)
 
-        return "/ltiConsumer/create"
+        return "ltiConsumer/create"
     }
 
     @GetMapping("import")
@@ -112,7 +112,7 @@ class LtiConsumerController(
         }
         model.addAttribute("user", user)
 
-        return "/ltiConsumer/import"
+        return "ltiConsumer/import"
     }
 
     @PostMapping("saveImport")
@@ -131,7 +131,7 @@ class LtiConsumerController(
             model.addAttribute("ltiConsumersImport", ltiConsumersImport)
             "/ltiConsumer/import"
         } else {
-            csvFile?.let {
+            csvFile.let {
                 val isr = InputStreamReader(it.inputStream, "UTF-8")
                 ltiConsumerService.generateLtiConsumerListFromCSVFile(isr, ltiConsumersImport.suffix).let {
                     with(response) {
@@ -197,7 +197,7 @@ class LtiConsumerController(
             model.addAttribute("ltiConsumer", it)
         }
 
-        return "/ltiConsumer/edit"
+        return "ltiConsumer/edit"
     }
 
     @PostMapping("{id}/update")

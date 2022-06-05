@@ -116,6 +116,11 @@ gradle-app.setting
 # email server config
 emailconfig.properties
 
+# Jekyll
+.jekyll-cache
+
+# Misc
 /src/main/resources/mail.properties
 /elaastic
 /src/test/resources/lti-consumers-export-file.csv
+/paper.pdf

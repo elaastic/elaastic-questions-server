@@ -20,6 +20,7 @@ package org.elaastic.questions.lti.controller
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.directory.RoleService
+import org.elaastic.questions.lti.LmsCourse
 import org.elaastic.questions.lti.LmsService
 import org.elaastic.questions.lti.LmsUser
 import org.elaastic.questions.lti.LtiConsumerService
@@ -44,39 +45,43 @@ import javax.servlet.http.HttpSession
 
 @Controller
 class LtiController(
-        @Autowired val lmsService: LmsService,
-        @Autowired val ltiConsumerService: LtiConsumerService,
-        @Autowired val oauthService: OauthService,
-        @Autowired val termsService: TermsService,
-        @Autowired val roleService: RoleService,
-        @Autowired val assignmentService: AssignmentService
+    @Autowired val lmsService: LmsService,
+    @Autowired val ltiConsumerService: LtiConsumerService,
+    @Autowired val oauthService: OauthService,
+    @Autowired val termsService: TermsService,
+    @Autowired val roleService: RoleService,
+    @Autowired val assignmentService: AssignmentService
 ) {
 
     internal var logger = Logger.getLogger(LtiController::class.java.name)
 
     @PostMapping("/launch")
-    fun launch(ltiLaunchData: LtiLaunchData,
-               request: HttpServletRequest,
-               response: HttpServletResponse,
-               model: Model,
-               redirectAttributes: RedirectAttributes,
-               locale: Locale): String {
+    fun launch(
+        ltiLaunchData: LtiLaunchData,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        model: Model,
+        redirectAttributes: RedirectAttributes,
+        locale: Locale
+    ): String {
         val session = startNewSession(request)
         return try {
             oauthService.validateOauthRequest(request)
             ltiConsumerService.touchLtiConsumer(
-                    ltiLaunchData.oauth_consumer_key,
-                    ltiLaunchData.tool_consumer_info_product_family_code,
-                    ltiLaunchData.tool_consumer_info_version,
-                    ltiLaunchData.tool_consumer_instance_guid,
-                    ltiLaunchData.lti_version
+                ltiLaunchData.oauth_consumer_key,
+                ltiLaunchData.tool_consumer_info_product_family_code,
+                ltiLaunchData.tool_consumer_info_version,
+                ltiLaunchData.tool_consumer_instance_guid,
+                ltiLaunchData.lti_version
             )
             ltiLaunchData.roleService = roleService
             val lmsUser = lmsService.findLmsUser(
-                    ltiLmsKey = ltiLaunchData.oauth_consumer_key,
-                    ltiUserId = ltiLaunchData.user_id)
+                ltiLmsKey = ltiLaunchData.oauth_consumer_key,
+                ltiUserId = ltiLaunchData.user_id
+            )
             if (lmsUser != null) {
                 authenticateLmsUser(session, lmsUser)
+                //val lmsCourse = lmsService.getLmsCourse(lmsUser,ltiLaunchData.toLtiActivity())
                 redirectToAssignment(ltiLaunchData, lmsUser, redirectAttributes)
             } else {
                 setLtiLaunchDataInSession(ltiLaunchData, session)
@@ -94,14 +99,17 @@ class LtiController(
     }
 
     @GetMapping("/launch/consent")
-    fun collectConsent(request: HttpServletRequest,
-                       @RequestParam("withConsent") withConsent: Boolean = false,
-                        redirectAttributes: RedirectAttributes): String {
+    fun collectConsent(
+        request: HttpServletRequest,
+        @RequestParam("withConsent") withConsent: Boolean = false,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val ltiLaunchData = getLtiLaunchDataFromSession(request.session)
         return try {
             if (withConsent) {
                 val lmsUser = lmsService.getLmsUser(ltiLaunchData.toLtiUser())
                 authenticateLmsUser(request.session, lmsUser)
+                //val lmsCourse = lmsService.getLmsCourse(lmsUser, ltiLaunchData.toLtiActivity())
                 redirectToAssignment(ltiLaunchData, lmsUser, redirectAttributes)
             } else {
                 logger.severe("Consent not given")
@@ -124,10 +132,14 @@ class LtiController(
         }
     }
 
-    private fun redirectToAssignment(ltiLaunchData: LtiLaunchData, lmsUser: LmsUser, redirectAttributes: RedirectAttributes): String {
+    private fun redirectToAssignment(
+        ltiLaunchData: LtiLaunchData,
+        lmsUser: LmsUser,
+        redirectAttributes: RedirectAttributes
+    ): String {
         val assignment = lmsService.getLmsAssignment(
-                lmsUser = lmsUser,
-                ltiActivity = ltiLaunchData.toLtiActivity()
+            lmsUser = lmsUser,
+            ltiActivity = ltiLaunchData.toLtiActivity()
         ).assignment
         val user = lmsUser.user
         assignmentService.registerUser(user, assignment)

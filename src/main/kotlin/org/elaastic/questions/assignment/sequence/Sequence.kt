@@ -58,6 +58,9 @@ class Sequence(
 
         var rank: Int = 0,
 
+        @Column(name= "phase_2_skipped")
+        var phase2Skipped: Boolean = false,
+
         @field:Enumerated(EnumType.STRING)
         var executionContext: ExecutionContext = ExecutionContext.FaceToFace,
 
@@ -187,7 +190,25 @@ class Sequence(
     fun whichAttemptEvaluate() =
             if (executionIsFaceToFace()) 1 else 2
 
+    fun recommendable() : Boolean =
 
+            /* is face to face */
+            executionContext == ExecutionContext.FaceToFace
+
+                    /* exclusive choice question */
+                    && statement.isExclusiveChoice()
+
+                    && getResponseSubmissionSpecification().studentsProvideExplanation
+
+                    && state == State.show
+
+    fun recommendableAfterPhase1(): Boolean = recommendable() && activeInteraction?.state == State.afterStop && activeInteraction?.rank == 1
+
+    fun recommendableAfterPhase2(): Boolean = recommendable() && ((activeInteraction?.state == State.afterStop && activeInteraction?.rank == 2)
+
+            || (activeInteraction?.state == State.show && activeInteraction?.rank == 3)
+
+            || (activeInteraction?.state == State.beforeStart && activeInteraction?.rank == 3))
 }
 
 enum class State {

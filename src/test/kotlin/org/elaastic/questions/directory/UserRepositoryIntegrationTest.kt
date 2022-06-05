@@ -19,7 +19,7 @@
 package org.elaastic.questions.directory
 
 
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -40,14 +40,14 @@ import javax.validation.ValidationException
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class UserRepositoryIntegrationTest(
-        @Autowired val userRepository: UserRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val userService: UserService
+    @Autowired val userRepository: UserRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val userService: UserService
 ) {
 
     @Test
     fun `check test data`() {
-        assertEquals(18, userRepository.findAll().count())
+        assertEquals(19, userRepository.findAll().count())
     }
 
     @Test
@@ -65,7 +65,7 @@ class UserRepositoryIntegrationTest(
                 }
         )
 
-        assertEquals(19, userRepository.count())
+        assertEquals(20, userRepository.count())
     }
 
     @Test
@@ -83,7 +83,7 @@ class UserRepositoryIntegrationTest(
                 }
         )
 
-        assertEquals(19, userRepository.count())
+        assertEquals(20, userRepository.count())
     }
 
     @Test
@@ -230,7 +230,7 @@ class UserRepositoryIntegrationTest(
         var keyValue: String? = null
         tGiven {
             // user with password reset key
-            testingService.getAnyUser().let {
+            integrationTestingService.getAnyUser().let {
                 userService.generatePasswordResetKeyForUser(it).let { key ->
                     keyValue = key.passwordResetKey
                 }
@@ -240,7 +240,7 @@ class UserRepositoryIntegrationTest(
             // triggering user search by password reset key value with a good value
             userRepository.findByPasswordResetKeyValue(keyValue!!)
         }.tThen {
-            assertThat(it, equalTo(testingService.getAnyUser()))
+            assertThat(it, equalTo(integrationTestingService.getAnyUser()))
         }
     }
 }

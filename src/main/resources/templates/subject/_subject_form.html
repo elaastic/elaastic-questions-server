@@ -29,6 +29,7 @@
         <input type="text"
                name="title"
                th:field="*{title}"
+               class = "ob-subject-creation-4"
                autofocus="autofocus"/>
 
         <input type="hidden"
@@ -36,7 +37,7 @@
                th:field="*{owner}"/>
     </div>
 
-    <div class="field" style="margin-top: 10px;">
+    <div class="field ob-subject-creation-5" style="margin-top: 10px;">
         <label th:text="#{course.create.action.label}">
             Select the associated course :
         </label>

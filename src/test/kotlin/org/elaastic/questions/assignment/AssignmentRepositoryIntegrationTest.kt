@@ -18,13 +18,12 @@
 
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import java.util.*
 import javax.transaction.Transactional
 
@@ -33,7 +32,7 @@ import javax.transaction.Transactional
 @Transactional
 internal class AssignmentRepositoryIntegrationTest(
         @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val testingService: TestingService
+        @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     @Test
@@ -41,7 +40,7 @@ internal class AssignmentRepositoryIntegrationTest(
         // Given : an assignment
         Assignment(
                 "My test assignment",
-                testingService.getAnyUser(),
+                integrationTestingService.getAnyUser(),
                 UUID.randomUUID().toString()
         ).let {
             // When saving it

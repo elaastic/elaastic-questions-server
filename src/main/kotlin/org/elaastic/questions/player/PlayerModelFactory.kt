@@ -17,18 +17,21 @@
  */
 package org.elaastic.questions.player
 
+import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModelFactory
 import org.elaastic.questions.player.components.evaluationPhase.ResponseData
+import org.elaastic.questions.player.components.studentResults.StudentResultsModelFactory
 import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModelFactory
 import org.elaastic.questions.player.components.results.ResultsModelFactory
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
@@ -36,26 +39,39 @@ import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModelFactory
+import org.togglz.core.manager.FeatureManager
 
 object PlayerModelFactory {
 
     fun buildForTeacher(user: User,
                         sequence: Sequence,
+                        serverBaseUrl: String,
+                        featureManager: FeatureManager,
                         nbRegisteredUsers: Int,
                         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
                         messageBuilder: MessageBuilder,
                         findAllResponses: () -> ResponseSet,
                         sequenceStatistics: SequenceStatistics,
-                        userCanRefreshResults: () -> Boolean): TeacherPlayerModel = run {
+                        userCanRefreshResults: () -> Boolean,
+                        findAllPeerGrading: () -> List<PeerGrading>): TeacherPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResults = sequence.state != State.beforeStart
 
         TeacherPlayerModel(
                 assignment = assignment,
+                serverBaseUrl = serverBaseUrl,
                 sequence = sequence,
                 assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                         nbRegisteredUser = nbRegisteredUsers,
                         assignmentTitle = assignment.title,
+                        courseTitle = assignment.subject?.course?.title,
+                        courseId = assignment.subject?.course?.id,
+                        subjectTitle = assignment.subject!!.title,
+                        subjectId = assignment.subject!!.id,
+                        audience = assignment.audience +
+                                if (assignment.scholarYear != null) {
+                                    " (${assignment.scholarYear})"
+                                } else "",
                         assignmentId = assignment.id!!,
                         sequences = assignment.sequences,
                         sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
@@ -76,26 +92,33 @@ object PlayerModelFactory {
                     ResultsModelFactory.build(
                             true,
                             sequence,
+                            featureManager,
                             findAllResponses(),
-                            userCanRefreshResults()
+                            userCanRefreshResults(),
+                            messageBuilder,
+                            peerGradings = findAllPeerGrading()
                     )
                 else null
         )
     }
 
 
-    fun buildForLearner(user: User,
-                        sequence: Sequence,
-                        nbRegisteredUsers: Int,
-                        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
-                        messageBuilder: MessageBuilder,
-                        getActiveInteractionForLearner: () -> Interaction?,
-                        hasResponseForUser: (attemptNum: AttemptNum) -> Boolean,
-                        findAllResponses: () -> ResponseSet,
-                        findAllRecommandedResponsesForUser: () -> List<Response>,
-                        userHasPerformedEvaluation: () -> Boolean,
-                        getFirstAttemptResponse: () -> Response?,
-                        userCanRefreshResults: () -> Boolean): LearnerPlayerModel = run {
+    fun buildForLearner(
+            sequence: Sequence,
+            nbRegisteredUsers: Int,
+            featureManager: FeatureManager,
+            sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
+            messageBuilder: MessageBuilder,
+            getActiveInteractionForLearner: () -> Interaction?,
+            hasResponseForUser: (attemptNum: AttemptNum) -> Boolean,
+            findAllResponses: () -> ResponseSet,
+            findAllRecommandedResponsesForUser: () -> List<Response>,
+            userHasPerformedEvaluation: () -> Boolean,
+            getFirstAttemptResponse: () -> Response?,
+            getSecondAttemptResponse: () -> Response?,
+            userCanRefreshResults: () -> Boolean,
+            findAllPeerGrading: () -> List<PeerGrading>
+    ): LearnerPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResponsePhase = sequence.state == State.show &&
                 getActiveInteractionForLearner()?.isResponseSubmission() == true
@@ -103,6 +126,7 @@ object PlayerModelFactory {
                 getActiveInteractionForLearner()?.isEvaluation() == true
         val showResults =
                 sequence.resultsArePublished && getActiveInteractionForLearner()?.isRead() == true
+        val statement = sequence.statement
 
         LearnerPlayerModel(
                 assignment = assignment,
@@ -110,6 +134,11 @@ object PlayerModelFactory {
                 assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                         nbRegisteredUser = nbRegisteredUsers,
                         assignmentTitle = assignment.title,
+                        courseTitle = null,
+                        courseId = null,
+                        subjectTitle = null,
+                        subjectId = null,
+                        audience = null,
                         assignmentId = assignment.id!!,
                         sequences = assignment.sequences,
                         sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
@@ -162,10 +191,32 @@ object PlayerModelFactory {
                     ResultsModelFactory.build(
                             false,
                             sequence,
+                            featureManager,
                             findAllResponses(),
-                            userCanRefreshResults()
+                            userCanRefreshResults(),
+                            messageBuilder,
+                            peerGradings = findAllPeerGrading()
                     )
-                else null
+                else null,
+                learnerResultsModel =
+                if (showResults) {
+                    when (statement.questionType) {
+                        QuestionType.OpenEnded -> StudentResultsModelFactory.buildOpenResult(
+                                getFirstAttemptResponse(),
+                                getSecondAttemptResponse()
+                        )
+                        QuestionType.ExclusiveChoice -> StudentResultsModelFactory.buildExclusiveChoiceResult(
+                                getFirstAttemptResponse(),
+                                getSecondAttemptResponse(),
+                                statement
+                        )
+                        QuestionType.MultipleChoice -> StudentResultsModelFactory.buildMultipleChoiceResult(
+                                getFirstAttemptResponse(),
+                                getSecondAttemptResponse(),
+                                statement
+                        )
+                    }
+                } else null
         )
     }
 

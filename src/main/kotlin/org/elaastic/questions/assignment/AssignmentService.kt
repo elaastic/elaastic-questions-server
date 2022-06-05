@@ -18,11 +18,8 @@
 
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
@@ -42,7 +39,6 @@ import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
-import kotlin.collections.ArrayList
 
 
 @Service
@@ -127,7 +123,6 @@ class AssignmentService(
         assignment.sequences.remove(sequence)
         sequenceRepository.delete(sequence) // all other linked entities are deletes by DB cascade
         entityManager.flush()
-        entityManager.clear()
         updateAllSequenceRank(assignment)
     }
 

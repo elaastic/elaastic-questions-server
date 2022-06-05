@@ -23,26 +23,26 @@
   <title th:text="#{springSecurity.login.page.title}">elaastic</title>
   <style th:inline="text">
 
-    body {
-      background-image: url([[@{'/images/elaastic_background.jpg'}]]);
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
+      body {
+          background-image: url([[@{ '/images/elaastic_background.jpg' }]]);
+          background-repeat: no-repeat;
+          background-size: cover;
+      }
 
-    body > .ui.grid {
-      height: 100%;
-      background-color: rgba(0, 0, 0, .45);
-      margin-top: 0;
-      margin-bottom: 0;
-    }
+      body > .ui.grid {
+          height: 100%;
+          background-color: rgba(0, 0, 0, .45);
+          margin-top: 0;
+          margin-bottom: 0;
+      }
 
-    .column {
-      max-width: 450px;
-    }
+      .column {
+          max-width: 450px;
+      }
 
-    .ui.segments > .segment {
-      border-top: none;
-    }
+      .ui.segments > .segment {
+          border-top: none;
+      }
 
   </style>
 </head>
@@ -97,6 +97,24 @@
             <button type="submit" id="submit" class="ui fluid large primary submit button">
               <span th:text="#{springSecurity.login.button}"></span>
             </button>
+
+            <th:block th:if="${not #lists.isEmpty(casInfoList)}">
+            <div class="ui horizontal divider">OU</div>
+
+            <div class="ui list">
+              <div class="item" th:each="casInfo : ${casInfoList}">
+                <a th:href="@{${casInfo.serverUrl}(service=${serviceUrlMap[casInfo.casKey]})}"
+                   th:title="${casInfo.label}"
+                   class="ui fluid secondary button">
+                  <img class="ui image" src="/images/cas/ecollege.haute-garonne.long.png"
+                       style="margin: auto"
+                       th:src="@{${casInfo.logoSrc}}"
+                       alt="CAS connector label"
+                       th:alt="${casInfo.label}">
+                </a>
+              </div>
+            </div>
+            </th:block>
           </div>
 
           <div class="ui secondary segment center aligned">

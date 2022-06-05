@@ -21,7 +21,7 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <section>
+    <section class="ob-one-shared-subjects-1">
 
         <div class="ui segment bottom attached" th:if="${statements.isEmpty()}">
             <p class="ui info message" th:text="#{subject.statement.empty}">
@@ -30,7 +30,7 @@
         </div>
 
         <div th:each="statement, i : ${statements}"
-             class="ui clearing segment attached large text"
+             class="ui clearing segment attached large text ob-question-creation-15"
              th:id="|statement_${statement.id}|"
              style="padding: 1em;">
             <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
@@ -48,12 +48,17 @@
                         <span th:id="|statement-title-${statement.id}|" th:text="${statement.title}">Title</span>
                     </a>
                 </h3>
+                <div th:if="${statement.attachment != null}">
+                    <div
+                            th:replace="subject/statement/_statement_attachment :: statementAttachment(${statement.attachment},650,380)"></div>
+                    <div class="ui hidden divider"></div>
+                </div>
                 <div th:utext="${statement.content}" th:remove="tag"></div>
             </div>
         </div>
 
         <div class="ui basic segment" th:if="${subject.owner == user}">
-            <a class="ui primary button"
+            <a class="ui primary button ob-question-creation-2"
                th:href="@{/subject/{id}/addStatement(id=${subject.id})}">
                 <i class="add icon"></i>
                 <span th:text="#{subject.statement.addStatement}">Add a statement</span>
@@ -61,7 +66,7 @@
         </div>
 
         <div class="ui basic segment" th:if="${subject.owner != user}">
-            <a class="ui primary button"
+            <a class="ui primary button ob-one-shared-subjects-3 onexit(function ()"
                onclick="$('#confirm-import-subject-modal').modal('show');">
                 <i class="upload icon"></i>
                 <span th:text="#{subject.import}">Import the subject</span>

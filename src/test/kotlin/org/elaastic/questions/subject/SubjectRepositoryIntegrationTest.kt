@@ -19,30 +19,27 @@
 package org.elaastic.questions.subject
 
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test
-import org.junit.platform.commons.util.Preconditions.notNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
-import java.util.*
 import javax.transaction.Transactional
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class SubjectRepositoryIntegrationTest (
-        @Autowired val subjectRepository: SubjectRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val statementRepository: StatementRepository
+    @Autowired val subjectRepository: SubjectRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val assignmentRepository: AssignmentRepository,
+    @Autowired val statementRepository: StatementRepository
 ) {
 
     @Test
@@ -50,7 +47,7 @@ class SubjectRepositoryIntegrationTest (
         // Given : a subject
         Subject(
                 "My test subject",
-                testingService.getAnyUser()
+                integrationTestingService.getAnyUser()
         ).let {
             // When having it
             subjectRepository.saveAndFlush(it).let {
@@ -66,7 +63,7 @@ class SubjectRepositoryIntegrationTest (
     @Test
     fun `finding a subject with statements and assignments`(){
         // Given a subject with statements and assignments
-        var randomUser = testingService.getAnyUser()
+        var randomUser = integrationTestingService.getAnyUser()
         var subject: Subject = Subject(
                 "My test subject",
                 randomUser

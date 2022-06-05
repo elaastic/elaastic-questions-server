@@ -22,7 +22,7 @@
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta name="layout" content="left_menu-elaastic">
-  <title th:text="|elaastic: #{player.my.assignment.list.label}|">elaastic: My works</title>
+  <title th:text="|elaastic: #{assignment.my.list.label}|">elaastic: My works</title>
 </head>
 
 <body>
@@ -45,15 +45,19 @@
 
 <!-- subject with courses -->
 <div th:each="pairCourseAssignments : ${mapCourseAssignments}">
-  <table class="ui selectable table unstackable fixed">
-    <thead>
+  <table class="ui selectable table unstackable fixed accordion">
+    <thead class="active title">
       <tr>
-        <th th:text="${pairCourseAssignments.key.title}">Course Name</th>
+        <th>
+          <i class="dropdown icon"></i>
+          <i class="folder icon"></i>
+          <span th:text="${pairCourseAssignments.key.title}"></span>
+        </th>
         <th th:text="#{assignment.lastupdated.label}">Last update</th>
         <th></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="active">
       <tr th:each="assignment : ${pairCourseAssignments.value}">
         <td>
           <a th:href="@{/player/assignment/{assignmentId}/play(assignmentId=${assignment.id})}"
@@ -65,7 +69,7 @@
         <td>
           <a class="ui compact icon primary button"
             th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
-            th:attr="data-tooltip=#{player.assignment.play}"
+            th:attr="data-tooltip=#{player.assignment.learner.play}"
             data-position="right center"
             data-inverted="">
             <i class="play icon"></i>
@@ -78,15 +82,19 @@
 </div>
 
 <!-- subject without course -->
-<table class="ui selectable table unstackable fixed">
-  <thead>
+<table class="ui selectable table unstackable fixed accordion" th:if="${assignmentsWithoutCourse.size() > 0}">
+  <thead class="active title">
     <tr>
-      <th th:text="#{assignments.no.course.label}">Assignments without courses</th>
+      <th>
+        <i class="dropdown icon"></i>
+        <i class="folder icon"></i>
+        <span th:text="#{assignments.no.course.label}">Assignments without courses</span>
+      </th>
       <th th:text="#{assignment.lastupdated.label}">Last update</th>
       <th></th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="active">
     <tr th:each="assignment : ${assignmentsWithoutCourse}">
       <td>
         <a th:href="@{/player/assignment/{assignmentId}/play(assignmentId=${assignment.id})}"
@@ -98,7 +106,7 @@
       <td>
         <a class="ui compact icon primary button"
           th:href="@{/player/assignment/{id}/play(id=${assignment.id})}"
-          th:attr="data-tooltip=#{player.assignment.play}"
+          th:attr="data-tooltip=#{player.assignment.learner.play}"
           data-position="right center"
           data-inverted="">
           <i class="play icon"></i>
@@ -107,6 +115,13 @@
     </tr>
   </tbody>
 </table>
+
+<script th:inline="javascript">
+  $(document).ready(function () {
+    $('.ui.accordion').accordion();
+  })
+</script>
+
 <div style="margin-top: 10px;"></div>
 
 <div class="ui hidden divider"></div>

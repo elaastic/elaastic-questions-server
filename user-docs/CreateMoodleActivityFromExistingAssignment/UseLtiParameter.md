@@ -1,0 +1,11 @@
+---
+layout: page
+title: create_moodle_activity_from_existing_assignment.use_lti_parameter
+parent: create_moodle_activity_from_existing_assignment.create_moodle_activity_from_existing_assignment
+permalink: /creer_activite_moodle_depuis_devoir_existant/utiliser_parametre_lti
+permalink_en: /create_moodle_activity_from_existing_assignment/use_lti_parameter
+nav_order: 2
+has_children: false
+---
+
+{% tf CreateMoodleActivityFromExistingAssignment/UseLtiParameter.md %}

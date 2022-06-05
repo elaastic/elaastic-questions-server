@@ -18,14 +18,13 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body}, currentSection='my-subjects')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="#{assignment.creation.label(#{assignment.label})}"></title>
 </head>
 
 <body>
-
 <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
   Message
 </div>
@@ -44,7 +43,7 @@
 
     <input type="submit"
            name="create"
-           class="ui primary button"
+           class="ui primary button ob-assignment-creation-12"
            th:value="#{default.button.create.label}"/>
 
 

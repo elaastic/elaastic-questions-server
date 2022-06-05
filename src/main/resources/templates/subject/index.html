@@ -18,106 +18,138 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section}, currentSection='my-subjects')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My Subjects</title>
+  <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My Subjects</title>
 </head>
 
 <body>
 <aside id="pageSpecificMenu">
-    <a th:href="@{/subject/create}"
-       href="create"
-       class="item"
-       th:attr="data-tooltip=#{subject.create.label}"
-       data-tooltip="Create a subject"
-       data-position="right center"
-       data-inverted="">
-        <i class="yellow plus square outline icon"></i>
-    </a>
+  <a th:href="@{/subject/create}"
+     href="create"
+     class="item"
+     th:attr="data-tooltip=#{subject.create.label}"
+     data-tooltip="Create a subject"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow plus square outline icon"></i>
+  </a>
+
+  <a th:href="@{/subject/upload-form}"
+     togglz:active="IMPORT_EXPORT"
+     href="showUploadForm"
+     class="item"
+     th:attr="data-tooltip=#{subject.upload.label}"
+     data-tooltip="Upload a subject"
+     data-position="right center"
+     data-inverted="">
+    <i class="yellow upload icon"></i>
+  </a>
 </aside>
 
 <section>
-    <h2 class="ui header">
-        <i class="book icon"></i>
+  <h2 class="ui header">
+    <i class="book icon"></i>
 
-        <div class="content">
+        <div class="content ob-subject-creation-2">
             <span th:text="#{subject.my.list.label}">My assignments</span>
             <div class="sub header" th:text="#{subject.my.list.description}">
-                This page lists all of your assignments
+                This page lists all of your subjects
             </div>
         </div>
     </h2>
 
-    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-        Message subject delete confirmation
-    </div>
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message subject delete confirmation
+  </div>
 
-    <table th:if="${not #lists.isEmpty(subjectPage.content)}"
-           class="ui selectable unstackable table">
-        <thead>
-        <tr>
-            <th th:text="#{common.title}">
-                Title
-            </th>
-            <th class="not mobile" th:text="#{common.lastUpdate}">
-                Last update
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="subject, i : ${subjectPage.content}">
-            <td>
-                <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
-                   href="subject/123"
-                   th:attr="data-tooltip=#{subject.action.show.label}"
-                   data-tooltip="Modify subject"
-                   data-inverted=""
-                   th:text="${subject.title}">
-                    Subject title
-                </a>
-                &nbsp; [
-                <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
-                   href="subject/123"
-                   th:attr="data-tooltip=#{subject.action.show.label}"
-                   data-tooltip="Modify subject"
-                   data-inverted="">
-                    <i class="edit outline icon" style="margin: 0;"></i>
-                </a>
-                ]
-            </td>
+  <table th:if="${not #lists.isEmpty(subjectPage.content)}"
+         class="ui selectable unstackable table">
+    <thead>
+    <tr>
+      <th th:text="#{common.title}">
+        Title
+      </th>
+      <th th:text="#{course.label}">
+        Course
+      </th>
+      <th class="not mobile" th:text="#{common.lastUpdate}">
+        Last update
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="subject, i : ${subjectPage.content}">
+      <td>
+        <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
+           href="subject/123"
+           th:attr="data-tooltip=#{subject.action.show.label}"
+           data-tooltip="Modify subject"
+           data-inverted=""
+           th:text="${subject.title}">
+          Subject title
+        </a>
+        &nbsp; [
+        <a th:href="@{/subject/{id}(id=${subject.id}, activeTab='questions')}"
+           href="subject/123"
+           th:attr="data-tooltip=#{subject.action.show.label}"
+           data-tooltip="Modify subject"
+           data-inverted="">
+          <i class="edit outline icon" style="margin: 0;"></i>
+        </a>
+        ]
+      </td>
 
-            <td class="not mobile" th:text="${#dates.format(subject.lastUpdated, 'dd/MM/yyyy HH:mm')}">
-                25/07/2019
-            </td>
-        </tr>
-        </tbody>
-    </table>
+      <td>
+        <a th:if="${subject.course != null}"
+           th:href="@{/course/{id}(id=${subject.course.id})}"
+           th:text="${subject.course?.title}">
+          Course title
+        </a>
+        <span th:if="${subject.course == null}">-</span>
+      </td>
 
-    <div th:if="${#lists.isEmpty(subjectPage.content)}"
-         class="ui info message" th:text="#{subject.you.have.none}">
-        You have no subject.
-    </div>
+      <td class="not mobile" th:text="${#dates.format(subject.lastUpdated, 'dd/MM/yyyy HH:mm')}">
+        25/07/2019
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div th:if="${#lists.isEmpty(subjectPage.content)}"
+       class="ui info message" th:text="#{subject.you.have.none}">
+    You have no subject.
+  </div>
 
     <div class="ui two column stackable grid">
         <div class="column">
             <div class="ui basic segment">
                 <a th:href="@{/subject/create}"
                    href="create"
-                   class="ui primary button">
+                   class="ui primary button ob-subject-creation-3">
                     <i class="add icon"></i>
                     <span th:text="#{subject.create.label}">
                         Create a subject
                     </span>
-                </a>
-            </div>
-        </div>
-        <div class="column">
-            <div th:replace="layout/components/paginate :: paginate(baseUrl='/subject/index')"></div>
-        </div>
-    </div>
+        </a>
 
-    <div class="ui hidden divider"></div>
+        <a togglz:active="FUNCTIONAL_TESTING"
+           th:href="@{/test/generate-subject}"
+           href="create"
+           class="ui inverted red button">
+          <i class="add icon"></i>
+          <span th:text="#{subject.test.generate.label}">Generate a test subject</span>
+        </a>
+      </div>
+
+    </div>
+    <div class="column">
+      <div th:replace="layout/components/paginate :: paginate(baseUrl='/subject/index')"></div>
+    </div>
+  </div>
+
+  <div class="ui hidden divider"></div>
 </section>
 
 </body>

@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, content=~{::body}, currentSection='my-subjects')"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="#{subject.creation.label(#{subject.label})}"></title>
@@ -44,7 +44,7 @@
 
     <input type="submit"
            name="create"
-           class="ui primary button"
+           class="ui primary button ob-subject-creation-6"
            th:value="#{default.button.create.label}"/>
 
     <a th:href="@{/course}" class="ui button" th:text="#{common.cancel}">

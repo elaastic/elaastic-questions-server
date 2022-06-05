@@ -37,7 +37,7 @@
         </div>
 
         <div th:each="assignment, i : ${subject.assignments}"
-             class="ui clearing segment attached large text"
+             class="ui clearing segment attached large text ob-assignment-creation-13"
              th:id="|assignment${assignment.id}|"
              style="padding: 1em;">
             <div class="ui clearing basicsegment" th:with="position=${1+i.index}">
@@ -89,13 +89,35 @@
                             <span style="font-size: smaller" th:text="${assignment.description}">content</span>
                         </div>
                     </div>
+                    <div class="ui row">
+                        <span class="ui sixteen wide column" style="font-size: smaller"
+                                  th:text="#{assignment.learnerAccess.description}">
+          Here is the URL to communicate to learners so they can sign up on the
+                        </span>
+                        <span class="ui message sixteen wide column" style="font-size: smaller"
+                              th:id="|assignment-learner-link-${assignment.id}|"
+                              th:text="${serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})}">
+                                https://link
+                        </span>
+                    </div>
+                    <div class="ui row">
+                        <span class="ui sixteen wide column" style="font-size: smaller"
+                              th:text="#{assignment.ltiparameter.description}">
+                            Here is the parameter to use in lti configuration
+                        </span>
+                        <span class="ui message sixteen wide column" style="font-size: smaller"
+                              th:id="|assignment-moodle-parameter-${assignment.id}|"
+                              th:text="'assignmentid='+${assignment.globalId}">
+                                assignmentid=qjg666gsggs
+                        </span>
+                    </div>
                 </div>
 
             </div>
         </div>
 
         <div class="ui basic segment">
-            <a class="ui primary button"
+            <a class="ui primary button ob-assignment-creation-7"
                th:href="@{/subject/{id}/addAssignment(id=${subject.id})}">
                 <i class="add icon"></i>
                 <span th:text="#{subject.assignment.addAssignment}">Add an assignment</span>

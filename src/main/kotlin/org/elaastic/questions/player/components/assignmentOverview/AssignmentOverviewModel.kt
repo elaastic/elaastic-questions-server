@@ -19,8 +19,14 @@
 package org.elaastic.questions.player.components.assignmentOverview
 
 data class AssignmentOverviewModel(
+        val teacher: Boolean,
         val nbRegisteredUser: Int,
         val assignmentTitle: String,
+        val courseTitle: String?,
+        val courseId: Long?,
+        val subjectTitle: String?,
+        val subjectId: Long?,
+        val audience: String?,
         val assignmentId: Long,
         val sequences: List<SequenceInfo>,
         val selectedSequenceId: Long? = null,

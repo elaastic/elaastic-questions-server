@@ -20,7 +20,7 @@ package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.test.TestingService
+import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.springframework.boot.test.context.SpringBootTest
@@ -36,15 +36,15 @@ import java.math.BigDecimal
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class PeerGradingRepositoryIntegrationTest(
-        @Autowired val peerGradingRepository: PeerGradingRepository,
-        @Autowired val testingService: TestingService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     @Test
     fun `save a valid peer grading`() {
-        val grader = testingService.getAnyUser()
-        val response = testingService.getAnyResponse()
+        val grader = integrationTestingService.getAnyUser()
+        val response = integrationTestingService.getAnyResponse()
         PeerGrading(
                 grade = BigDecimal(2),
                 annotation = "Annotation",
