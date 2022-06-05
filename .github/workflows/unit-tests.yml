@@ -39,7 +39,7 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         run: |
           mkdir test-reports
-          cp -R elaastic-questions-server/build/reports/tests/* test-reports
+          cp -R build/reports/tests/* test-reports
 
       - name: Uploading test reports
         if: success() || failure()    # run this step even if previous step failed
