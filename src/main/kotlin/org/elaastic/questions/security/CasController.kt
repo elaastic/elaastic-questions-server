@@ -16,7 +16,7 @@ class CasController {
      */
     @GetMapping("/cas/{casKey}/**")
     fun casRedirect(request: HttpServletRequest, @PathVariable casKey: String) =
-        "redirect:${request.requestURI.removePrefix("/cas/$casKey")}" +
+        "redirect:${request.requestURL.replace(Regex("/cas/$casKey"), "")}"  +
                 (if (request.queryString != null) "?${request.queryString}" else "")
 
 }
