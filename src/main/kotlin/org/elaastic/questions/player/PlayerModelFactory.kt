@@ -33,25 +33,28 @@ import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModelFactory
-import org.elaastic.questions.player.phase.LearnerPhase
 import org.togglz.core.manager.FeatureManager
 
 object PlayerModelFactory {
 
-    fun buildForTeacher(user: User,
-                        sequence: Sequence,
-                        featureManager: FeatureManager,
-                        nbRegisteredUsers: Int,
-                        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
-                        messageBuilder: MessageBuilder,
-                        findAllResponses: () -> ResponseSet,
-                        sequenceStatistics: SequenceStatistics,
-                        userCanRefreshResults: () -> Boolean,
-                        findAllPeerGrading: () -> List<PeerGrading>): TeacherPlayerModel = run {
+    fun buildForTeacher(
+        user: User,
+        sequence: Sequence,
+        serverBaseUrl: String,
+        featureManager: FeatureManager,
+        nbRegisteredUsers: Int,
+        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
+        messageBuilder: MessageBuilder,
+        findAllResponses: () -> ResponseSet,
+        sequenceStatistics: SequenceStatistics,
+        userCanRefreshResults: () -> Boolean,
+        findAllPeerGrading: () -> List<PeerGrading>
+    ): TeacherPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResults = sequence.state != State.beforeStart
 
         TeacherPlayerModel(
+            serverBaseUrl = serverBaseUrl,
             sequence = sequence,
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
@@ -84,13 +87,13 @@ object PlayerModelFactory {
                 ResultsModelFactory.build(
                     true,
                     sequence,
-                            featureManager,
-                            findAllResponses(),
-                            userCanRefreshResults(),
-                            messageBuilder,
-                            peerGradings = findAllPeerGrading()
-                    )
-                else null
+                    featureManager,
+                    findAllResponses(),
+                    userCanRefreshResults(),
+                    messageBuilder,
+                    peerGradings = findAllPeerGrading()
+                )
+            else null
         )
     }
 
@@ -98,7 +101,6 @@ object PlayerModelFactory {
     fun buildForLearner(
         sequence: Sequence,
         nbRegisteredUsers: Int,
-            featureManager: FeatureManager,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
         activeInteraction: Interaction?,

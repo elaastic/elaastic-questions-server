@@ -15,14 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.elaastic.questions.directory
 
-package org.elaastic.questions.assignment.sequence.action
-
-enum class Subject(val propertyString: String) {
-    TEACHER("teacher"),
-    STUDENT("student");
-
-    companion object {
-        fun from(findValue: String): Subject = values().first { it.propertyString == findValue }
-    }
+enum class UserSource {
+    ELAASTIC,
+    ANONYMOUS,
+    LMS,
+    CAS
 }

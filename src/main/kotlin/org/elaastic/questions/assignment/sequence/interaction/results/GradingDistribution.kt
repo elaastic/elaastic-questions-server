@@ -20,27 +20,22 @@ package org.elaastic.questions.assignment.sequence.interaction.results
 
 import java.math.BigDecimal
 
-typealias EvaluationPercentage = Float
 
 data class GradingDistribution(
         val evaluationPerChoice: List<GradingDistributionOnResponse>
 ) {
-    fun toLegacyFormat(): Map<ItemIndex, Map<BigDecimal, EvaluationPercentage>> {
-        val data = mutableMapOf<ItemIndex, Map<BigDecimal, EvaluationPercentage>>()
+    fun toLegacyFormat(): Map<ItemIndex, Map<BigDecimal, NumberOfOccurence>> {
+        val data = mutableMapOf<ItemIndex, Map<BigDecimal, NumberOfOccurence>>()
 
         for (i in 0..evaluationPerChoice.size - 1) {
             val currentChoice = evaluationPerChoice[i]
-            val dataResponse = mutableMapOf<BigDecimal, EvaluationPercentage>()
+            val dataResponse = mutableMapOf<BigDecimal, NumberOfOccurence>()
             for (currentEvaluation in 0..4) {
-                dataResponse[currentEvaluation.toBigDecimal()] = percentOf(currentChoice.nbResponsesByEvaluation[currentEvaluation].toBigDecimal(), currentChoice.nbGrade.toBigDecimal())
+                dataResponse[currentEvaluation.toBigDecimal()] = currentChoice.nbResponsesByEvaluation[currentEvaluation]
             }
             data[i] = dataResponse
         }
 
         return data
-    }
-
-    private fun percentOf(nbVote: BigDecimal, nbResponse: BigDecimal): Float {
-        return (BigDecimal(100) * nbVote).toFloat() / nbResponse.toFloat()
     }
 }

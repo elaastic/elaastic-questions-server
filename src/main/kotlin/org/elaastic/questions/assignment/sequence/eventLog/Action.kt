@@ -16,15 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.action
+package org.elaastic.questions.assignment.sequence.eventLog
 
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.springframework.data.jpa.repository.JpaRepository
+enum class Action(val propertyString: String) {
+    OPEN("open"),
+    CLOSE("close"),
+    START("start"),
+    STOP("stop"),
+    SKIP("skip"),
+    PUBLISH("publish"),
+    UNPUBLISH("unpublish"),
+    UPDATE("update"),
+    LOAD("load"),
+    CLICK("click"),
+    RESTART("restart");
 
-
-interface ActionRepository : JpaRepository<Action, Long> {
-
-    fun deleteBySequenceIn(sequence: List<Sequence>): List<Action>
-    fun findBySequenceIn(sequence: List<Sequence>): List<Action>
-    fun countBySequenceIn(sequences: List<Sequence>): Int
+    companion object {
+        fun from(findValue: String): Action = values().first { it.propertyString == findValue }
+    }
 }

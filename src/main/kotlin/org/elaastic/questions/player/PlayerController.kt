@@ -33,7 +33,7 @@ import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.assignment.sequence.action.ActionService
+import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
@@ -52,6 +52,7 @@ import org.togglz.core.manager.FeatureManager
 import java.lang.IllegalArgumentException
 import java.util.HashMap
 import javax.persistence.EntityNotFoundException
+import javax.servlet.http.HttpServletRequest
 import javax.transaction.Transactional
 import kotlin.IllegalStateException
 
@@ -69,9 +70,9 @@ class PlayerController(
     @Autowired val resultsService: ResultsService,
     @Autowired val anonymousUserService: AnonymousUserService,
     @Autowired val learnerPhaseService: LearnerPhaseService,
-        @Autowired val userService: UserService,
-        @Autowired val featureManager: FeatureManager
-        ) {
+    @Autowired val userService: UserService,
+    @Autowired val featureManager: FeatureManager
+) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
 
@@ -85,8 +86,9 @@ class PlayerController(
         // TODO N+1 SELECT (Assignment => Course)
         val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
         val mapCourseAssignments: Map<Course, MutableList<Assignment>> =
-                assignmentService.getCoursesAssignmentsMap(assignments)
-        val assignmentsWithoutCourse : List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
+            assignmentService.getCoursesAssignmentsMap(assignments)
+        val assignmentsWithoutCourse: List<Assignment> =
+            assignments.filter { assignment -> assignment.subject?.course == null }
         model.addAttribute("user", user)
         model.addAttribute("mapCourseAssignments", mapCourseAssignments)
         model.addAttribute("assignmentsWithoutCourse", assignmentsWithoutCourse)
@@ -97,20 +99,20 @@ class PlayerController(
     private fun findAssignment(globalId: String?): Assignment {
         if (globalId == null || globalId == "") {
             throw IllegalArgumentException(
-                    messageBuilder.message("assignment.register.empty.globalId")
+                messageBuilder.message("assignment.register.empty.globalId")
             )
         }
 
         return assignmentService.findByGlobalId(globalId) ?: throw EntityNotFoundException(
-                messageBuilder.message("assignment.globalId.does.not.exist")
+            messageBuilder.message("assignment.globalId.does.not.exist")
         )
     }
 
     @GetMapping("/register")
     fun register(
-            authentication: Authentication?,
-            model: Model,
-            @RequestParam("globalId") globalId: String?
+        authentication: Authentication?,
+        model: Model,
+        @RequestParam("globalId") globalId: String?
     ): ModelAndView {
         findAssignment(globalId).let {
 
@@ -120,8 +122,8 @@ class PlayerController(
                 ModelAndView("/player/assignment/register")
             } else {
                 ModelAndView(
-                        "redirect:/player/authenticated-register",
-                        mapOf("globalId" to globalId)
+                    "redirect:/player/authenticated-register",
+                    mapOf("globalId" to globalId)
                 )
             }
         }
@@ -133,12 +135,12 @@ class PlayerController(
      */
     @GetMapping("/authenticated-register")
     fun authenticatedOnlyRegister(
-            authentication: Authentication,
-            @RequestParam("globalId") globalId: String
+        authentication: Authentication,
+        @RequestParam("globalId") globalId: String
     ): String {
         return doRegister(
-                authentication.principal as User,
-                findAssignment(globalId)
+            authentication.principal as User,
+            findAssignment(globalId)
         )
     }
 
@@ -152,10 +154,10 @@ class PlayerController(
     @GetMapping("/start-anonymous-session")
     @Transactional
     fun startAnonymousSession(
-            authentication: Authentication?,
-            @RequestParam("nickname") nickname: String,
-            @RequestParam("globalId") globalId: String,
-            redirectAttributes: RedirectAttributes
+        authentication: Authentication?,
+        @RequestParam("nickname") nickname: String,
+        @RequestParam("globalId") globalId: String,
+        redirectAttributes: RedirectAttributes
     ): String {
         authentication == null ||
                 throw IllegalStateException("You cannot start an anonymous session while being authenticated")
@@ -170,12 +172,12 @@ class PlayerController(
         }
 
         val anonymousAuthentication =
-                anonymousUserService.authenticateAnonymousUser(nickname)
+            anonymousUserService.authenticateAnonymousUser(nickname)
         SecurityContextHolder.getContext().authentication = anonymousAuthentication
 
         return doRegister(
-                anonymousAuthentication.principal as User,
-                findAssignment(globalId)
+            anonymousAuthentication.principal as User,
+            findAssignment(globalId)
         )
     }
 
@@ -185,15 +187,16 @@ class PlayerController(
     }
 
     @GetMapping(
-            "/assignment/{assignmentId}/play/sequence/{sequenceId}",
-            "/assignment/{assignmentId}/play",
-            "/assignment/{assignmentId}/{sequenceId}"
+        "/assignment/{assignmentId}/play/sequence/{sequenceId}",
+        "/assignment/{assignmentId}/play",
+        "/assignment/{assignmentId}/{sequenceId}"
     )
     fun playAssignment(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable assignmentId: Long,
-            @PathVariable sequenceId: Long?
+        authentication: Authentication,
+        httpServletRequest: HttpServletRequest,
+        model: Model,
+        @PathVariable assignmentId: Long,
+        @PathVariable sequenceId: Long?
     ): String {
 
         val user: User = authentication.principal as User
@@ -204,16 +207,15 @@ class PlayerController(
             return "redirect:/subject/${assignment.subject!!.id}"
         }
 
-        val sequenceIdValid: Long = if (sequenceId != null) sequenceId else assignment.sequences.first().id!!
+        val sequenceIdValid: Long = sequenceId ?: assignment.sequences.first().id!!
 
         // TODO Improve data fetching (should start from the assignment)
         sequenceService.get(sequenceIdValid, true).let { sequence ->
             model.addAttribute("user", user)
             val teacher = user == sequence.owner
-            val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(sequence.assignment!!)
 
             return if (teacher)
-                playAssignmentForTeacher(user, model, sequence)
+                playAssignmentForTeacher(user, model, sequence, httpServletRequest)
             else playAssignmentForLearner(user, model, sequence)
         }
 
@@ -223,7 +225,8 @@ class PlayerController(
     private fun playAssignmentForTeacher(
         user: User,
         model: Model,
-        sequence: Sequence
+        sequence: Sequence,
+        httpServletRequest: HttpServletRequest,
     ): String {
 
         val assignment = sequence.assignment!!
@@ -234,9 +237,10 @@ class PlayerController(
             PlayerModelFactory.buildForTeacher(
                 user = user,
                 sequence = sequence,
+                serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
                 featureManager = featureManager,
                 nbRegisteredUsers = nbRegisteredUsers,
-                sequenceToUserActiveInteraction = assignment.sequences.associate { it to it.activeInteraction },
+                sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                 messageBuilder = messageBuilder,
                 findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
                 findAllPeerGrading = { peerGradingService.findAll(sequence) },
@@ -265,9 +269,8 @@ class PlayerController(
             PlayerModelFactory.buildForLearner(
                 sequence = sequence,
                 nbRegisteredUsers = nbRegisteredUsers,
-                featureManager = featureManager,
-                sequenceToUserActiveInteraction = assignment.sequences.associate {
-                    it to if (it.executionIsFaceToFace())
+                sequenceToUserActiveInteraction = assignment.sequences.associateWith {
+                    if (it.executionIsFaceToFace())
                         it.activeInteraction
                     else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
                 },
@@ -292,38 +295,50 @@ class PlayerController(
 
     @GetMapping("/sequence/{id}/start")
     fun startSequence(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long,
-            @RequestParam executionContext: ExecutionContext,
-            @RequestParam studentsProvideExplanation: Boolean?,
-            @RequestParam responseToEvaluateCount: Int?
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long,
+        @RequestParam executionContext: ExecutionContext,
+        @RequestParam studentsProvideExplanation: Boolean?,
+        @RequestParam responseToEvaluateCount: Int?
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment?
 
         sequenceService.get(user, id, true)
-                .let {
-                    sequenceService.start(
-                            user,
-                            it,
-                            executionContext,
-                            studentsProvideExplanation ?: false,
-                            responseToEvaluateCount ?: 0
-                    )
-                    userService.updateUserActiveSince(user)
-                    autoReloadSessionHandler.broadcastReload(id)
-                    assignment = it.assignment!!
-                }
+            .let {
+                sequenceService.start(
+                    user,
+                    it,
+                    executionContext,
+                    studentsProvideExplanation ?: false,
+                    responseToEvaluateCount ?: 0
+                )
+                userService.updateUserActiveSince(user)
+                autoReloadSessionHandler.broadcastReload(id)
+                assignment = it.assignment!!
+            }
 
         return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
+    @GetMapping("/interaction/{id}/restart")
+    fun restartInteraction(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val interaction = interactionService.restart(user, id)
+        autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
+        return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
+    }
+
     @GetMapping("/interaction/{id}/start")
     fun startInteraction(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
         val interaction = interactionService.start(user, id)
@@ -333,9 +348,9 @@ class PlayerController(
 
     @GetMapping("/interaction/{id}/startNext")
     fun startNextInteraction(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
 
@@ -347,11 +362,27 @@ class PlayerController(
         }
     }
 
+    @GetMapping("/interaction/{id}/skipNext")
+    fun skipNextInteraction(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        interactionService.findById(id).let {
+            sequenceService.loadInteractions(it.sequence)
+            val interaction = interactionService.skipNext(user, it)
+            autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
+            return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
+        }
+    }
+
     @GetMapping("/interaction/{id}/stop")
     fun stopInteraction(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
 
@@ -365,9 +396,9 @@ class PlayerController(
 
     @GetMapping("/sequence/{id}/stop")
     fun stopSequence(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment?
@@ -383,9 +414,9 @@ class PlayerController(
 
     @GetMapping("/sequence/{id}/reopen")
     fun reopenSequence(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment?
@@ -401,9 +432,9 @@ class PlayerController(
 
     @GetMapping("/sequence/{id}/publish-results")
     fun publishResults(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment?
@@ -419,9 +450,9 @@ class PlayerController(
 
     @GetMapping("/sequence/{id}/refresh-results")
     fun refreshResults(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment?
@@ -436,9 +467,9 @@ class PlayerController(
 
     @GetMapping("/sequence/{id}/unpublish-results")
     fun unpublishResults(
-            authentication: Authentication,
-            model: Model,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment?
@@ -454,10 +485,10 @@ class PlayerController(
 
     @PostMapping("/sequence/{id}/submit-response")
     fun submitResponse(
-            authentication: Authentication,
-            model: Model,
-            @ModelAttribute responseSubmissionData: ResponseSubmissionData,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @ModelAttribute responseSubmissionData: ResponseSubmissionData,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
 
@@ -468,19 +499,19 @@ class PlayerController(
     }
 
     data class ResponseSubmissionData(
-            val interactionId: Long,
-            val attempt: AttemptNum,
-            val choiceList: List<Int>?,
-            val confidenceDegree: ConfidenceDegree?,
-            val explanation: String?
+        val interactionId: Long,
+        val attempt: AttemptNum,
+        val choiceList: List<Int>?,
+        val confidenceDegree: ConfidenceDegree?,
+        val explanation: String?
     )
 
     @PostMapping("/sequence/{id}/submit-evaluation-and-second-attempt")
     fun submitEvaluationAndSecondAttempt(
-            authentication: Authentication,
-            model: Model,
-            @ModelAttribute evaluationData: EvaluationData,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @ModelAttribute evaluationData: EvaluationData,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment?
@@ -492,7 +523,7 @@ class PlayerController(
             }
 
             if (sequence.isSecondAttemptAllowed()
-                    && !responseService.hasResponseForUser(user, sequence, 2)
+                && !responseService.hasResponseForUser(user, sequence, 2)
             ) {
                 val choiceListSpecification = evaluationData.choiceList?.let {
                     LearnerChoice(it)
@@ -500,31 +531,31 @@ class PlayerController(
 
                 // TODO I guess this code should be factorized
                 Response(
-                        learner = user,
-                        interaction = sequence.getResponseSubmissionInteraction(),
-                        attempt = 2,
-                        confidenceDegree = evaluationData.confidenceDegree,
-                        explanation = evaluationData.explanation,
-                        learnerChoice = choiceListSpecification,
-                        score = choiceListSpecification?.let {
-                            Response.computeScore(
-                                    it,
-                                    sequence.statement.choiceSpecification
-                                            ?: error("The choice specification is undefined")
-                            )
-                        },
-                        statement = sequence.statement
+                    learner = user,
+                    interaction = sequence.getResponseSubmissionInteraction(),
+                    attempt = 2,
+                    confidenceDegree = evaluationData.confidenceDegree,
+                    explanation = evaluationData.explanation,
+                    learnerChoice = choiceListSpecification,
+                    score = choiceListSpecification?.let {
+                        Response.computeScore(
+                            it,
+                            sequence.statement.choiceSpecification
+                                ?: error("The choice specification is undefined")
+                        )
+                    },
+                    statement = sequence.statement
 
                 )
-                        .let {
-                            val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
-                                    ?: error("No active interaction, cannot submit a response") // TODO we should provide a user-friendly error page for this
+                    .let {
+                        val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
+                            ?: error("No active interaction, cannot submit a response") // TODO we should provide a user-friendly error page for this
 
-                            responseService.save(
-                                    userActiveInteraction,
-                                    it
-                            )
-                        }
+                        responseService.save(
+                            userActiveInteraction,
+                            it
+                        )
+                    }
 
 
             }

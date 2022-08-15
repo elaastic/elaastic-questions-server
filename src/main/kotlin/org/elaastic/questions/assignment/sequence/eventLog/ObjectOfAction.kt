@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.action
+package org.elaastic.questions.assignment.sequence.eventLog
 
 enum class ObjectOfAction(val propertyString: String) {
     CONFIGURE_POPUP("configure_popup"),

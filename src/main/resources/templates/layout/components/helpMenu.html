@@ -62,7 +62,9 @@ rsion.
                     elaastic.manageOnboarding(
                         [[${@environment.getProperty('elaastic.questions.url')}]] /*''*/
                     );
-                    elaastic.startContextualOb(false, [[${user.onboardingState.chaptersSeen}]]);
+                    if([[${user.onboardingState.chaptersSeen}]] != null){
+                        elaastic.startContextualOb(false, [[${user.onboardingState.chaptersSeen}]]);
+                    }
                 }
             })
 

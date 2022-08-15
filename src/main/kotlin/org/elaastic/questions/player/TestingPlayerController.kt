@@ -922,34 +922,38 @@ class TestingPlayerController(
                                         responseDistributionChartModel = ResponseDistributionChartModel(
                                                 interactionId = 9,
                                                 choiceSpecification = ChoiceSpecificationData(
-                                                        2,
+                                                        4,
                                                         listOf(2)
                                                 ),
                                                 results = ResponsesDistribution(
-                                                        ResponsesDistributionOnAttempt(4, arrayOf(1, 3), 0)
+                                                        ResponsesDistributionOnAttempt(10, arrayOf(1, 3, 4, 2), 0)
                                                 ).toLegacyFormat()
                                         ),
                                         confidenceDistributionChartModel = ConfidenceDistributionChartModel(
                                                 interactionId = 9,
                                                 choiceSpecification = ChoiceSpecificationData(
-                                                        2,
+                                                        4,
                                                         listOf(2)
                                                 ),
                                                 results = ConfidenceDistribution(
                                                         listOf(
                                                                 ConfidenceDistributionOnResponse(1, arrayOf(0, 1, 0, 0), 0),
-                                                                ConfidenceDistributionOnResponse(3, arrayOf(1, 1, 1, 0), 0)
+                                                                ConfidenceDistributionOnResponse(3, arrayOf(0, 2, 1, 0), 0),
+                                                                ConfidenceDistributionOnResponse(4, arrayOf(3, 1, 0, 0), 0),
+                                                                ConfidenceDistributionOnResponse(2, arrayOf(1, 0, 1, 0), 0)
                                                         )
                                                 ).toJSON()
                                         ),
                                         evaluationDistributionChartModel = EvaluationDistributionChartModel(
                                                 interactionId = 9,
                                                 choiceSpecification = ChoiceSpecificationData(
-                                                        2,
+                                                        4,
                                                         listOf(2)
                                                 ),
                                                 results = GradingDistribution(listOf(
-                                                        GradingDistributionOnResponse(1, arrayOf(0, 0, 1, 0, 0), 0),
+                                                        GradingDistributionOnResponse(15, arrayOf(1, 7, 1, 1, 5), 0),
+                                                        GradingDistributionOnResponse(12, arrayOf(1, 0, 2, 8, 1), 0),
+                                                        GradingDistributionOnResponse(10, arrayOf(3, 0, 1, 4, 2), 0),
                                                         GradingDistributionOnResponse(3, arrayOf(1, 0, 1, 1, 0), 0))
                                                 ).toLegacyFormat()
                                         ),

@@ -18,9 +18,9 @@
 
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
@@ -49,6 +49,7 @@ import javax.transaction.Transactional
 class SequenceService(
         @Autowired val sequenceRepository: SequenceRepository,
         @Autowired val fakeExplanationRepository: FakeExplanationRepository,
+        @Autowired val eventLogService: EventLogService,
         @Autowired val interactionService: InteractionService,
         @Autowired val interactionRepository: InteractionRepository,
         @Autowired val resultsService: ResultsService,
@@ -106,6 +107,8 @@ class SequenceService(
 
         initializeInteractionsForSequence(sequence, studentsProvideExplanation, nbResponseToEvaluate, executionContext)
 
+        eventLogService.saveActionsAfterClosingConfigurePopup(sequence)
+
         if (executionContext == ExecutionContext.FaceToFace)
             sequence.selectActiveInteraction(InteractionType.ResponseSubmission)
         else sequence.selectActiveInteraction(InteractionType.Read)
@@ -118,8 +121,8 @@ class SequenceService(
         }
         if (studentsProvideExplanation) {
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                sequence = sequence,
-                teacher = sequence.owner
+                    sequence = sequence,
+                    teacher = sequence.owner
             )
             responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(sequence)
         }
@@ -177,6 +180,7 @@ class SequenceService(
         sequence.let {
             it.state = State.afterStop
             sequenceRepository.save(it)
+            eventLogService.stopSequence(sequence)
             return it
         }
     }
@@ -192,6 +196,7 @@ class SequenceService(
         sequence.let {
             it.state = State.show
             sequenceRepository.save(it)
+            eventLogService.reopenSequence(sequence)
             return it
         }
     }
@@ -206,24 +211,24 @@ class SequenceService(
         val userActiveInteraction = getActiveInteractionForLearner(sequence, user)
 
         responseService.save(
-            userActiveInteraction
-                ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
-            Response(
-                learner = user,
-                interaction = sequence.getResponseSubmissionInteraction(),
-                attempt = responseSubmissionData.attempt,
-                confidenceDegree = responseSubmissionData.confidenceDegree,
-                explanation = responseSubmissionData.explanation,  // TODO Sanitize
-                learnerChoice = choiceListSpecification,
-                score = choiceListSpecification?.let {
-                    Response.computeScore(
-                        it,
-                        sequence.statement.choiceSpecification
-                            ?: error("The choice specification is undefined")
-                    )
-                },
-                statement = sequence.statement
-            )
+                userActiveInteraction
+                        ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
+                Response(
+                        learner = user,
+                        interaction = sequence.getResponseSubmissionInteraction(),
+                        attempt = responseSubmissionData.attempt,
+                        confidenceDegree = responseSubmissionData.confidenceDegree,
+                        explanation = responseSubmissionData.explanation,  // TODO Sanitize
+                        learnerChoice = choiceListSpecification,
+                        score = choiceListSpecification?.let {
+                            Response.computeScore(
+                                    it,
+                                    sequence.statement.choiceSpecification
+                                            ?: error("The choice specification is undefined")
+                            )
+                        },
+                        statement = sequence.statement
+                )
         )
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
             nextInteractionForLearner(sequence, user)
@@ -233,6 +238,7 @@ class SequenceService(
     fun refreshResults(user: User, sequence: Sequence): Sequence {
         sequence.let {
             resultsService.updateResults(user, it)
+            eventLogService.refreshResults(it)
             return it
         }
     }
@@ -259,7 +265,7 @@ class SequenceService(
                 interactionRepository.save(interaction)
             }
             sequence.activeInteraction = sequence.getReadInteraction()
-
+            eventLogService.publishResults(it)
             sequenceRepository.save(it)
             return it
         }
@@ -276,6 +282,7 @@ class SequenceService(
         sequence.let {
             it.resultsArePublished = false
             sequence.getReadInteraction().state = State.beforeStart
+            eventLogService.unpublishResults(it)
             sequenceRepository.save(it)
             return it
         }
@@ -292,7 +299,7 @@ class SequenceService(
                 learnerSequence.activeInteraction = sequence.interactions[InteractionType.Read]
             } else {
                 learnerSequence.activeInteraction = sequence.getInteractionAt(
-                    (learnerSequence.activeInteraction ?: error("No active interaction, cannot select the next one") ).rank + 1
+                        (learnerSequence.activeInteraction ?: error("No active interaction, cannot select the next one") ).rank + 1
                 )
             }
             learnerSequenceRepository.save(learnerSequence)
@@ -318,6 +325,6 @@ class SequenceService(
     }
 
     fun existsById(id: Long): Boolean =
-        sequenceRepository.existsById(id)
+            sequenceRepository.existsById(id)
 
 }

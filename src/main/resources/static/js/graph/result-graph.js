@@ -58,16 +58,22 @@ elaastic.renderConfidenceGraph = function (elViewSelector, choiceSpecification, 
           }
         }
     )
-    var nbCorrectItem = choiceSpecification.expectedChoiceList.length;
-    var nbIncorrectItem = choiceSpecification.itemCount - choiceSpecification.expectedChoiceList.length;
-    resultsByCorrectness["✓"].NOT_CONFIDENT_AT_ALL = resultsByCorrectness["✓"].NOT_CONFIDENT_AT_ALL/nbCorrectItem;
-    resultsByCorrectness["✓"].NOT_REALLY_CONFIDENT = resultsByCorrectness["✓"].NOT_REALLY_CONFIDENT/nbCorrectItem;
-    resultsByCorrectness["✓"].CONFIDENT = resultsByCorrectness["✓"].CONFIDENT/nbCorrectItem;
-    resultsByCorrectness["✓"].TOTALLY_CONFIDENT = resultsByCorrectness["✓"].TOTALLY_CONFIDENT/nbCorrectItem;
-    resultsByCorrectness["x"].NOT_CONFIDENT_AT_ALL = resultsByCorrectness["x"].NOT_CONFIDENT_AT_ALL/nbIncorrectItem;
-    resultsByCorrectness["x"].NOT_REALLY_CONFIDENT = resultsByCorrectness["x"].NOT_REALLY_CONFIDENT/nbIncorrectItem;
-    resultsByCorrectness["x"].CONFIDENT = resultsByCorrectness["x"].CONFIDENT/nbIncorrectItem;
-    resultsByCorrectness["x"].TOTALLY_CONFIDENT = resultsByCorrectness["x"].TOTALLY_CONFIDENT/nbIncorrectItem;
+    var nbCorrectAnswers = resultsByCorrectness["✓"].NOT_CONFIDENT_AT_ALL
+        + resultsByCorrectness["✓"].NOT_REALLY_CONFIDENT
+        + resultsByCorrectness["✓"].CONFIDENT
+        + resultsByCorrectness["✓"].TOTALLY_CONFIDENT
+    var nbIncorrectAnswers = resultsByCorrectness["x"].NOT_CONFIDENT_AT_ALL
+        + resultsByCorrectness["x"].NOT_REALLY_CONFIDENT
+        + resultsByCorrectness["x"].CONFIDENT
+        + resultsByCorrectness["x"].TOTALLY_CONFIDENT
+    resultsByCorrectness["✓"].NOT_CONFIDENT_AT_ALL = resultsByCorrectness["✓"].NOT_CONFIDENT_AT_ALL * 100/nbCorrectAnswers;
+    resultsByCorrectness["✓"].NOT_REALLY_CONFIDENT = resultsByCorrectness["✓"].NOT_REALLY_CONFIDENT * 100/nbCorrectAnswers;
+    resultsByCorrectness["✓"].CONFIDENT = resultsByCorrectness["✓"].CONFIDENT * 100/nbCorrectAnswers;
+    resultsByCorrectness["✓"].TOTALLY_CONFIDENT = resultsByCorrectness["✓"].TOTALLY_CONFIDENT * 100/nbCorrectAnswers;
+    resultsByCorrectness["x"].NOT_CONFIDENT_AT_ALL = resultsByCorrectness["x"].NOT_CONFIDENT_AT_ALL * 100/nbIncorrectAnswers;
+    resultsByCorrectness["x"].NOT_REALLY_CONFIDENT = resultsByCorrectness["x"].NOT_REALLY_CONFIDENT * 100/nbIncorrectAnswers;
+    resultsByCorrectness["x"].CONFIDENT = resultsByCorrectness["x"].CONFIDENT * 100/nbIncorrectAnswers;
+    resultsByCorrectness["x"].TOTALLY_CONFIDENT = resultsByCorrectness["x"].TOTALLY_CONFIDENT * 100/nbIncorrectAnswers;
 
     _.each(resultsByCorrectness, (currentConfidenceDistribution, currentChoice) =>
     _.each(currentConfidenceDistribution, (currentPerc, currentCF) => (
@@ -212,210 +218,6 @@ elaastic.renderConfidenceGraph = function (elViewSelector, choiceSpecification, 
         "axis": {"grid": true}
       }
     }
-
-    vegaEmbed(elViewSelector, spec, {"actions": false});
-  }
-}
-
-elaastic.renderPConfGraph = function (elViewSelector, choiceSpecification, results, userChoiceList, i18n) {
-
-  i18n = i18n || {
-    percentageOfVoters: 'percentage of voters',
-    choice: 'choice',
-    noAnswer: 'none'
-  }
-
-  if (!_.isEmpty(results)) {
-
-    var graphData = []
-    var resultsByCorrectness =
-        { "✓" : {
-            "NOT_CONFIDENT_AT_ALL": 0,
-            "NOT_REALLY_CONFIDENT": 0,
-            "CONFIDENT": 0,
-            "TOTALLY_CONFIDENT": 0
-          },
-          "x" : {
-            "NOT_CONFIDENT_AT_ALL": 0,
-            "NOT_REALLY_CONFIDENT": 0,
-            "CONFIDENT": 0,
-            "TOTALLY_CONFIDENT": 0
-          }
-        }
-    _.each(results,
-        function(currentConfidenceDistribution, currentChoice){
-          if(choiceSpecification.expectedChoiceList.includes(parseInt(currentChoice) + 1)){
-            resultsByCorrectness["✓"].NOT_CONFIDENT_AT_ALL += currentConfidenceDistribution.NOT_CONFIDENT_AT_ALL;
-            resultsByCorrectness["✓"].NOT_REALLY_CONFIDENT += currentConfidenceDistribution.NOT_REALLY_CONFIDENT;
-            resultsByCorrectness["✓"].CONFIDENT += currentConfidenceDistribution.CONFIDENT
-            resultsByCorrectness["✓"].TOTALLY_CONFIDENT += currentConfidenceDistribution.TOTALLY_CONFIDENT;
-          } else {
-            resultsByCorrectness["x"].NOT_CONFIDENT_AT_ALL += currentConfidenceDistribution.NOT_CONFIDENT_AT_ALL;
-            resultsByCorrectness["x"].NOT_REALLY_CONFIDENT += currentConfidenceDistribution.NOT_REALLY_CONFIDENT;
-            resultsByCorrectness["x"].CONFIDENT += currentConfidenceDistribution.CONFIDENT
-            resultsByCorrectness["x"].TOTALLY_CONFIDENT += currentConfidenceDistribution.TOTALLY_CONFIDENT;
-          }
-        }
-    )
-    var nbCorrectItem = choiceSpecification.expectedChoiceList.length;
-    var nbIncorrectItem = choiceSpecification.itemCount - choiceSpecification.expectedChoiceList.length;
-    resultsByCorrectness["✓"].NOT_CONFIDENT_AT_ALL = resultsByCorrectness["✓"].NOT_CONFIDENT_AT_ALL/nbCorrectItem;
-    resultsByCorrectness["✓"].NOT_REALLY_CONFIDENT = resultsByCorrectness["✓"].NOT_REALLY_CONFIDENT/nbCorrectItem;
-    resultsByCorrectness["✓"].CONFIDENT = resultsByCorrectness["✓"].CONFIDENT/nbCorrectItem;
-    resultsByCorrectness["✓"].TOTALLY_CONFIDENT = resultsByCorrectness["✓"].TOTALLY_CONFIDENT/nbCorrectItem;
-    resultsByCorrectness["x"].NOT_CONFIDENT_AT_ALL = resultsByCorrectness["x"].NOT_CONFIDENT_AT_ALL/nbIncorrectItem;
-    resultsByCorrectness["x"].NOT_REALLY_CONFIDENT = resultsByCorrectness["x"].NOT_REALLY_CONFIDENT/nbIncorrectItem;
-    resultsByCorrectness["x"].CONFIDENT = resultsByCorrectness["x"].CONFIDENT/nbIncorrectItem;
-    resultsByCorrectness["x"].TOTALLY_CONFIDENT = resultsByCorrectness["x"].TOTALLY_CONFIDENT/nbIncorrectItem;
-
-    _.each(resultsByCorrectness, (currentConfidenceDistribution, currentChoice) =>
-    _.each(currentConfidenceDistribution, (currentPerc, currentCF) => (
-        graphData.push({"choice": currentChoice, "confidenceDegree": currentCF, "percentage": currentPerc/100})
-    )
-  )
-  )
-    var preferredWidth = choiceSpecification.itemCount * 75
-    var vegaView = $(elViewSelector)
-
-    function computeMaxWidth () { return vegaView.width() - 25 }
-
-    function computeWidth () {
-      return Math.min(preferredWidth, computeMaxWidth())
-    }
-
-    graphData.forEach(function(i){switch(i.confidenceDegree){
-      case "NOT_CONFIDENT_AT_ALL":
-        i.confidenceDegree = i18n.cf1;
-        break;
-      case "NOT_REALLY_CONFIDENT":
-        i.confidenceDegree = i18n.cf2;
-        break;
-      case "CONFIDENT":
-        i.confidenceDegree = i18n.cf3;
-        break;
-      case "TOTALLY_CONFIDENT":
-        i.confidenceDegree = i18n.cf4;
-        break;
-    }
-    })
-    var spec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "data": { "values":graphData
-      },
-      "width": computeWidth(),
-      "layer" : [{
-        "params": [
-          {
-            "name": "highlight",
-            "select": {"type": "point", "on": "mouseover"}
-          }
-        ],
-        "transform": [
-          {
-            /* this won't work if one of the confidence degrees contains a double quote (ex : Tout à fait d"accord) */
-            "calculate": "if(datum.confidenceDegree === '" + i18n.cf1 + "',-2,0) + if(datum.confidenceDegree==='" + i18n.cf2 + "',-1,0) + if(datum.confidenceDegree ==='" + i18n.cf3 + "',1,0) + if(datum.confidenceDegree ==='" + i18n.cf4 + "',2,0)",
-            "as": "q_order"
-          },
-          {
-            /* this won't work if one of the confidence degrees contains a double quote (ex : Tout à fait d"accord) */
-            "calculate": "if(datum.confidenceDegree === '" + i18n.cf2 + "' || datum.confidenceDegree === '" + i18n.cf1 + "', datum.percentage,0)",
-            "as": "signed_percentage"
-          },
-          {"stack": "percentage", "as": ["v1", "v2"], "groupby": ["choice"]},
-          {
-            "joinaggregate": [
-              {
-                "field": "signed_percentage",
-                "op": "sum",
-                "as": "offset"
-              }
-            ],
-            "groupby": ["choice"]
-          },
-          {"calculate": "datum.v1 - datum.offset", "as": "ny"},
-          {"calculate": "datum.v2 - datum.offset", "as": "ny2"}
-        ],
-        "mark": {"type": "bar", "opacity": 1, "width": 43},
-        "encoding": {
-          "x": {
-            "field": "ny",
-            "type": "quantitative",
-            "title": i18n.percentageOfVoters,
-            "axis": {
-              "labelExpr": "(isNaN(toNumber(datum.label[0]))? (slice(datum.label, 1)) : datum.label) *100"
-            }
-          },
-          "tooltip": {
-            "field": "percentage",
-            "type": "nominal",
-            "format": ".1%"
-          },
-          "x2": {"field": "ny2"},
-          "y": {
-            "field": "choice",
-            "type": "nominal",
-            "title": i18n.choice,
-            "axis": {
-              "labelAngle": 0,
-              "offset": 5,
-              "ticks": false,
-              "domain": false,
-              "labelColor": {
-                "condition": {
-                  "test": {
-                    "field": "value",
-                    "equal": "✓"
-                  },
-                  "value": "#016936"
-                },
-                "value": "#b03060"
-              }
-            },
-            "scale": {
-              //"domain": Array.from({length: choiceSpecification.itemCount}, (_, i) => i + 1)
-              "domain": ["✓", "x"]
-            }
-          },
-          "color": {
-            "field": "confidenceDegree",
-            "type": "nominal",
-            "title": i18n.legend,
-            "scale": {
-              "domain": [i18n.cf4, i18n.cf3, i18n.cf2, i18n.cf1],
-              "range": ["#1770ab", "#94c6da", "#f3a583", "#c30d24"],
-              "type": "ordinal"
-            }
-          },
-          "opacity": {
-            "condition": [
-              {
-                "param": "highlight",
-                "empty": false,
-                "value": 0.7
-              }
-            ],
-            "value": 1
-          }
-        }
-      }, {
-        "mark": { "type": "rule", "color": "black", "size": 2},
-        "encoding": {
-          "x": {
-            "datum": 0
-          }
-        }
-      }]
-    }
-
-
-    // signals: orientedSpec.signals,
-    //
-    // 'scales': orientedSpec.scales,
-    //
-    // 'axes': orientedSpec.axes,
-    //
-    // 'marks': orientedSpec.marks
-    //}
 
     vegaEmbed(elViewSelector, spec, {"actions": false});
   }
@@ -1049,18 +851,26 @@ elaastic.renderEvaluationGraph = function (elViewSelector, choiceSpecification, 
           }
         }
     )
-    var nbCorrectItem = choiceSpecification.expectedChoiceList.length;
-    var nbIncorrectItem = choiceSpecification.itemCount - choiceSpecification.expectedChoiceList.length;
-    resultsByCorrectness["✓"][0] = resultsByCorrectness["✓"][0]/nbCorrectItem;
-    resultsByCorrectness["✓"][1] = resultsByCorrectness["✓"][1]/nbCorrectItem;
-    resultsByCorrectness["✓"][2] = resultsByCorrectness["✓"][2]/nbCorrectItem;
-    resultsByCorrectness["✓"][3] = resultsByCorrectness["✓"][3]/nbCorrectItem;
-    resultsByCorrectness["✓"][4] = resultsByCorrectness["✓"][4]/nbCorrectItem;
-    resultsByCorrectness["x"][0] = resultsByCorrectness["x"][0]/nbIncorrectItem;
-    resultsByCorrectness["x"][1] = resultsByCorrectness["x"][1]/nbIncorrectItem;
-    resultsByCorrectness["x"][2] = resultsByCorrectness["x"][2]/nbIncorrectItem;
-    resultsByCorrectness["x"][3] = resultsByCorrectness["x"][3]/nbIncorrectItem;
-    resultsByCorrectness["x"][4] = resultsByCorrectness["x"][4]/nbIncorrectItem;
+    var nbCorrectAnswers = resultsByCorrectness["✓"][0]
+        + resultsByCorrectness["✓"][1]
+        + resultsByCorrectness["✓"][2]
+        + resultsByCorrectness["✓"][3]
+        + resultsByCorrectness["✓"][4]
+    var nbIncorrectAnswers = resultsByCorrectness["x"][0]
+        + resultsByCorrectness["x"][1]
+        + resultsByCorrectness["x"][2]
+        + resultsByCorrectness["x"][3]
+        + resultsByCorrectness["x"][4]
+    resultsByCorrectness["✓"][0] = resultsByCorrectness["✓"][0] * 100/nbCorrectAnswers;
+    resultsByCorrectness["✓"][1] = resultsByCorrectness["✓"][1] * 100/nbCorrectAnswers;
+    resultsByCorrectness["✓"][2] = resultsByCorrectness["✓"][2] * 100/nbCorrectAnswers;
+    resultsByCorrectness["✓"][3] = resultsByCorrectness["✓"][3] * 100/nbCorrectAnswers;
+    resultsByCorrectness["✓"][4] = resultsByCorrectness["✓"][4] * 100/nbCorrectAnswers;
+    resultsByCorrectness["x"][0] = resultsByCorrectness["x"][0] * 100/nbIncorrectAnswers;
+    resultsByCorrectness["x"][1] = resultsByCorrectness["x"][1] * 100/nbIncorrectAnswers;
+    resultsByCorrectness["x"][2] = resultsByCorrectness["x"][2] * 100/nbIncorrectAnswers;
+    resultsByCorrectness["x"][3] = resultsByCorrectness["x"][3] * 100/nbIncorrectAnswers;
+    resultsByCorrectness["x"][4] = resultsByCorrectness["x"][4] * 100/nbIncorrectAnswers;
 
     _.each(resultsByCorrectness, (currentEvaluation, currentChoice) =>
     _.each(currentEvaluation, (currentPerc, currentE) => (

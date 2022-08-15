@@ -89,6 +89,28 @@
                             <span style="font-size: smaller" th:text="${assignment.description}">content</span>
                         </div>
                     </div>
+                    <div class="ui row">
+                        <span class="ui sixteen wide column" style="font-size: smaller"
+                                  th:text="#{assignment.learnerAccess.description}">
+          Here is the URL to communicate to learners so they can sign up on the
+                        </span>
+                        <span class="ui message sixteen wide column" style="font-size: smaller"
+                              th:id="|assignment-learner-link-${assignment.id}|"
+                              th:text="${serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})}">
+                                https://link
+                        </span>
+                    </div>
+                    <div class="ui row">
+                        <span class="ui sixteen wide column" style="font-size: smaller"
+                              th:text="#{assignment.ltiparameter.description}">
+                            Here is the parameter to use in lti configuration
+                        </span>
+                        <span class="ui message sixteen wide column" style="font-size: smaller"
+                              th:id="|assignment-moodle-parameter-${assignment.id}|"
+                              th:text="'assignmentid='+${assignment.globalId}">
+                                assignmentid=qjg666gsggs
+                        </span>
+                    </div>
                 </div>
 
             </div>

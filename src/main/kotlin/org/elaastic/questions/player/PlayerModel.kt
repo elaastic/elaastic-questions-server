@@ -43,6 +43,7 @@ abstract class PlayerModel(
 }
 
 class TeacherPlayerModel(
+    val serverBaseUrl: String,
     sequence: Sequence,
     assignmentOverviewModel: AssignmentOverviewModel,
     stepsModel: StepsModel,

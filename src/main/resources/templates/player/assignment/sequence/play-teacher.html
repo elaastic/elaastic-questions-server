@@ -31,6 +31,13 @@
   <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
   <script type="text/javascript" th:src="@{/js/elaastic/auto-reload.js}"></script>
+  <script th:inline="javascript">
+    saveAction = function(sequenceId, action, object){
+      if(sequenceId != null){
+        fetch([[${@environment.getProperty('elaastic.questions.url')}]] + 'action/' + sequenceId + '/saveAction/' + action + '/' + object)
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -60,7 +67,7 @@
        data-inverted="">
     <i class="yellow feed icon"></i>
   </div>
-  <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${playerModel.assignment})"></div>
+  <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${playerModel.assignment}, ${playerModel.serverBaseUrl})"></div>
 
   <div class="item"
        onclick="elaastic.showLtiParameterModal()"

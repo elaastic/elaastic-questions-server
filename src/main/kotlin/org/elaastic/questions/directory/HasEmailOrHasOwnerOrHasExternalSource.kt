@@ -16,22 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.action
+package org.elaastic.questions.directory
 
-enum class ActionType(val propertyString: String) {
-    OPEN("open"),
-    CLOSE("close"),
-    START("start"),
-    STOP("stop"),
-    SKIP("skip"),
-    PUBLISH("publish"),
-    UNPUBLISH("unpublish"),
-    UPDATE("update"),
-    LOAD("load"),
-    CLICK("click"),
-    RESTART("restart");
+interface HasEmailOrHasOwnerOrHasExternalSource {
 
-    companion object {
-        fun from(findValue: String): ActionType = values().first { it.propertyString == findValue }
-    }
+    fun hasEmail():Boolean
+    fun hasOwner():Boolean
+
+    fun getSource(): UserSource
+
 }

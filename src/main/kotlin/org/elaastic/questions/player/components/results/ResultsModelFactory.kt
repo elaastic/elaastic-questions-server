@@ -37,98 +37,117 @@ import org.togglz.core.Feature
 
 object ResultsModelFactory {
 
-    fun build(teacher: Boolean,
-              sequence: Sequence,
-              featureManager: FeatureManager,
-              responseSet: ResponseSet,
-              userCanRefreshResults: Boolean,
-              messageBuilder: MessageBuilder,
-              peerGradings: List<PeerGrading>? = null
+    fun build(
+        teacher: Boolean,
+        sequence: Sequence,
+        featureManager: FeatureManager,
+        responseSet: ResponseSet,
+        userCanRefreshResults: Boolean,
+        messageBuilder: MessageBuilder,
+        peerGradings: List<PeerGrading>? = null
     ): ResultsModel =
         if (sequence.statement.hasChoices()) {
             val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
             val recommendationModel = if (recommendationIsActive)
-                RecommendationResolver.resolve(responseSet,
+                RecommendationResolver.resolve(
+                    responseSet,
                     peerGradings,
                     sequence,
-                    messageBuilder) else null
+                    messageBuilder
+                ) else null
             ChoiceResultsModel(
                 sequenceIsStopped = sequence.isStopped(),
                 sequenceId = sequence.id ?: error("This sequence has no ID"),
                 responseDistributionChartModel = buildResponseDistributionChartModel(sequence, responseSet),
                 confidenceDistributionChartModel = buildConfidenceDistributionChartModel(sequence, responseSet),
-                evaluationDistributionChartModel = if (peerGradings != null && peerGradings.isNotEmpty()) buildEvaluationDistributionChartModel(sequence, peerGradings) else null,
+                evaluationDistributionChartModel = buildEvaluationDistributionChartModel(sequence, peerGradings),
                 recommendationModel = recommendationModel,
-                explanationViewerModel = createChoiceExplanationViewerModel(teacher, sequence, responseSet, recommendationModel?.recommendedExplanationsComparator),
+                explanationViewerModel = createChoiceExplanationViewerModel(
+                    teacher,
+                    sequence,
+                    responseSet,
+                    recommendationModel?.recommendedExplanationsComparator
+                ),
                 userCanRefreshResults = userCanRefreshResults,
                 userCanDisplayStudentsIdentity = teacher
             )
-            }
-            else OpenResultsModel(
-                    sequenceIsStopped = sequence.isStopped(),
-                    sequenceId = sequence.id ?: error("This sequence has no ID"),
-                    explanationViewerModel = ExplanationViewerModelFactory.buildOpen(teacher,
-                            responseSet[sequence.whichAttemptEvaluate()]
-                    ),
-                    userCanRefreshResults = userCanRefreshResults,
-                    userCanDisplayStudentsIdentity = teacher)
+        } else OpenResultsModel(
+            sequenceIsStopped = sequence.isStopped(),
+            sequenceId = sequence.id ?: error("This sequence has no ID"),
+            explanationViewerModel = ExplanationViewerModelFactory.buildOpen(
+                teacher,
+                responseSet[sequence.whichAttemptEvaluate()]
+            ),
+            userCanRefreshResults = userCanRefreshResults,
+            userCanDisplayStudentsIdentity = teacher
+        )
 
-    private fun buildResponseDistributionChartModel(sequence: Sequence,
-                                                    responseSet: ResponseSet): ResponseDistributionChartModel =
-            sequence.getResponseSubmissionInteraction().let { responseSubmissionInteraction ->
-                val choiceSpecification = sequence.statement.choiceSpecification
-                        ?: error("This is an open question ; cannot compute response distribution")
+    private fun buildResponseDistributionChartModel(
+        sequence: Sequence,
+        responseSet: ResponseSet
+    ): ResponseDistributionChartModel =
+        sequence.getResponseSubmissionInteraction().let { responseSubmissionInteraction ->
+            val choiceSpecification = sequence.statement.choiceSpecification
+                ?: error("This is an open question ; cannot compute response distribution")
 
-                ResponseDistributionChartModel(
-                        interactionId = responseSubmissionInteraction.id!!, // TODO (+) would be more relevant to use sequence.id
-                        choiceSpecification = ChoiceSpecificationData(choiceSpecification),
-                        results = ResponsesDistributionFactory.build(
-                                sequence.statement.choiceSpecification!!,
-                                responseSet
-                        ).toLegacyFormat()
-                )
-            }
+            ResponseDistributionChartModel(
+                interactionId = responseSubmissionInteraction.id!!, // TODO (+) would be more relevant to use sequence.id
+                choiceSpecification = ChoiceSpecificationData(choiceSpecification),
+                results = ResponsesDistributionFactory.build(
+                    sequence.statement.choiceSpecification!!,
+                    responseSet
+                ).toLegacyFormat()
+            )
+        }
 
-    private fun buildConfidenceDistributionChartModel(sequence: Sequence,
-                                                      responseSet: ResponseSet): ConfidenceDistributionChartModel =
-            sequence.getResponseSubmissionInteraction().let { responseSubmissionInteraction ->
-                val choiceSpecification = sequence.statement.choiceSpecification
-                        ?: error("This is an open question ; cannot compute confidence distribution")
+    private fun buildConfidenceDistributionChartModel(
+        sequence: Sequence,
+        responseSet: ResponseSet
+    ): ConfidenceDistributionChartModel =
+        sequence.getResponseSubmissionInteraction().let { responseSubmissionInteraction ->
+            val choiceSpecification = sequence.statement.choiceSpecification
+                ?: error("This is an open question ; cannot compute confidence distribution")
 
-                ConfidenceDistributionChartModel(
-                        interactionId = responseSubmissionInteraction.id!!, // TODO (+) would be more relevant to use sequence.id
-                        choiceSpecification = ChoiceSpecificationData(choiceSpecification),
-                        results = ConfidenceDistributionFactory.build(
-                                sequence.statement.choiceSpecification!!,
-                                responseSet
-                        ).toJSON()
-                )
-            }
+            ConfidenceDistributionChartModel(
+                interactionId = responseSubmissionInteraction.id!!, // TODO (+) would be more relevant to use sequence.id
+                choiceSpecification = ChoiceSpecificationData(choiceSpecification),
+                results = ConfidenceDistributionFactory.build(
+                    sequence.statement.choiceSpecification!!,
+                    responseSet
+                ).toJSON()
+            )
+        }
 
-    private fun buildEvaluationDistributionChartModel(sequence: Sequence,
-                                                      peerGradings: List<PeerGrading>): EvaluationDistributionChartModel =
-            sequence.getResponseSubmissionInteraction().let { responseSubmissionInteraction ->
-                val choiceSpecification = sequence.statement.choiceSpecification
-                        ?: error("This is an open question ; cannot compute confidence distribution")
+    private fun buildEvaluationDistributionChartModel(
+        sequence: Sequence,
+                                                      peerGradings: List<PeerGrading>?): EvaluationDistributionChartModel =
+        sequence.getResponseSubmissionInteraction().let { responseSubmissionInteraction ->
+            val choiceSpecification = sequence.statement.choiceSpecification
+                ?: error("This is an open question ; cannot compute confidence distribution")
 
-                EvaluationDistributionChartModel(
-                        interactionId = responseSubmissionInteraction.id!!, // TODO (+) would be more relevant to use sequence.id
-                        choiceSpecification = ChoiceSpecificationData(choiceSpecification),
-                        results = GradingDistributionFactory.build(
-                                sequence.statement.choiceSpecification!!,
-                                peerGradings
-                        ).toLegacyFormat()
-                )
-            }
+            EvaluationDistributionChartModel(
+                interactionId = responseSubmissionInteraction.id!!, // TODO (+) would be more relevant to use sequence.id
+                choiceSpecification = ChoiceSpecificationData(choiceSpecification),
+                results = GradingDistributionFactory.build(
+                    sequence.statement.choiceSpecification!!,
+                    peerGradings
+                ).toLegacyFormat()
+            )
+        }
 
-    private fun createChoiceExplanationViewerModel(teacher: Boolean, sequence: Sequence, responseSet: ResponseSet, recommendedExplanations: Comparator<ExplanationData>? = null) =
-            if (sequence.getResponseSubmissionSpecification().studentsProvideExplanation)
-                ExplanationViewerModelFactory.buildChoice(
-                        teacher = teacher,
-                        choiceSpecification = sequence.statement.choiceSpecification!!,
-                        responseList = responseSet[sequence.whichAttemptEvaluate()],
-                        recommendedExplanationsComparator = recommendedExplanations
-                )
-            else null
+    private fun createChoiceExplanationViewerModel(
+        teacher: Boolean,
+        sequence: Sequence,
+        responseSet: ResponseSet,
+        recommendedExplanations: Comparator<ExplanationData>? = null
+    ) =
+        if (sequence.getResponseSubmissionSpecification().studentsProvideExplanation)
+            ExplanationViewerModelFactory.buildChoice(
+                teacher = teacher,
+                choiceSpecification = sequence.statement.choiceSpecification!!,
+                responseList = responseSet[sequence.whichAttemptEvaluate()],
+                recommendedExplanationsComparator = recommendedExplanations
+            )
+        else null
 
 }

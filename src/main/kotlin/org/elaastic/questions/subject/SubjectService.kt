@@ -233,7 +233,7 @@ class SubjectService(
     }
 
     private fun deleteStatementIfNotUsed(statement: Statement) {
-        val statementAlreadyUsed = statementService.responsesExistForStatement(statement) || statementService.actionsExistForStatement(statement)
+        val statementAlreadyUsed = statementService.responsesExistForStatement(statement) || statementService.eventLogsExistForStatement(statement)
         if (!statementAlreadyUsed) {
             sequenceService.findAllSequencesByStatement(statement).forEach {
                 assignmentService.removeSequence(statement.owner, it)
