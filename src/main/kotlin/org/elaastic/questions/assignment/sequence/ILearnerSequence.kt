@@ -4,7 +4,7 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.phase.LearnerPhase
 
-interface ILearnerSequence : ISequence {
+interface ILearnerSequence : SequenceProgress {
 
     val learner: User
     val sequence: Sequence

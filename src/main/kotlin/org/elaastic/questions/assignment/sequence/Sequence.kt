@@ -50,7 +50,7 @@ class Sequence(
     var owner: User,
 
     @field:ManyToOne(fetch = FetchType.EAGER)
-    override var statement: Statement,
+    var statement: Statement,
 
     @field:NotNull
     @field:ManyToOne(fetch = FetchType.EAGER)
@@ -58,8 +58,8 @@ class Sequence(
 
     var rank: Int = 0,
 
-        @Column(name= "phase_2_skipped")
-        var phase2Skipped: Boolean = false,
+    @Column(name = "phase_2_skipped")
+    var phase2Skipped: Boolean = false,
 
     @field:Enumerated(EnumType.STRING)
     var executionContext: ExecutionContext = ExecutionContext.FaceToFace,
@@ -74,8 +74,7 @@ class Sequence(
 
 
 ) : AbstractJpaPersistable<Long>(),
-    Comparable<Sequence>,
-    ISequence {
+    Comparable<Sequence>, SequenceProgress {
 
     @Version
     var version: Long? = null
@@ -97,13 +96,13 @@ class Sequence(
             return field
         }
 
-    override fun getInteractionAt(rank: Int): Interaction {
+    fun getInteractionAt(rank: Int): Interaction {
         return interactions.values.find { it.rank == rank }
             ?: error("There is no interaction for rank $rank in this sequence")
     }
 
     @Transient
-    override fun getResponseSubmissionInteraction() =
+    fun getResponseSubmissionInteraction() =
         interactions[InteractionType.ResponseSubmission]
             ?: throw IllegalStateException("The response submission interaction is not initialized")
 
@@ -132,7 +131,7 @@ class Sequence(
         }
 
     @Transient
-    override fun getEvaluationInteraction() =
+    fun getEvaluationInteraction() =
         interactions[InteractionType.Evaluation]
             ?: throw IllegalStateException("The evaluation interaction is not initialized")
 
@@ -186,7 +185,7 @@ class Sequence(
     fun selectActiveInteraction(interactionType: InteractionType) {
         interactions[interactionType]?.let {
             activeInteraction = it
-        } ?: throw IllegalStateException("No interaction ${interactionType} defined for this sequence")
+        } ?: throw IllegalStateException("No interaction $interactionType defined for this sequence")
     }
 
 
@@ -197,25 +196,28 @@ class Sequence(
     fun whichAttemptEvaluate() =
         if (executionIsFaceToFace()) 1 else 2
 
-    fun recommendable() : Boolean =
+    fun recommendable(): Boolean =
 
-            /* is face to face */
-            executionContext == ExecutionContext.FaceToFace
+        /* is face to face */
+        executionContext == ExecutionContext.FaceToFace
 
-                    /* exclusive choice question */
-                    && statement.isExclusiveChoice()
+                /* exclusive choice question */
+                && statement.isExclusiveChoice()
 
-                    && getResponseSubmissionSpecification().studentsProvideExplanation
+                && getResponseSubmissionSpecification().studentsProvideExplanation
 
-                    && state == State.show
+                && state == State.show
 
-    fun recommendableAfterPhase1(): Boolean = recommendable() && activeInteraction?.state == State.afterStop && activeInteraction?.rank == 1
+    fun recommendableAfterPhase1(): Boolean =
+        recommendable() && activeInteraction?.state == State.afterStop && activeInteraction?.rank == 1
 
-    fun recommendableAfterPhase2(): Boolean = recommendable() && ((activeInteraction?.state == State.afterStop && activeInteraction?.rank == 2)
+    fun recommendableAfterPhase2(): Boolean =
+        recommendable() && ((activeInteraction?.state == State.afterStop && activeInteraction?.rank == 2)
 
-            || (activeInteraction?.state == State.show && activeInteraction?.rank == 3)
+                || (activeInteraction?.state == State.show && activeInteraction?.rank == 3)
 
-            || (activeInteraction?.state == State.beforeStart && activeInteraction?.rank == 3))
+                || (activeInteraction?.state == State.beforeStart && activeInteraction?.rank == 3))
+
 }
 
 enum class State {

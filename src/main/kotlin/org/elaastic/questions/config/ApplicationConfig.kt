@@ -18,11 +18,10 @@
 
 package org.elaastic.questions.config
 
+import org.elaastic.questions.player.phase.LearnerPhaseType
 import org.elaastic.questions.player.phase.descriptor.PhaseDescriptor
 import org.elaastic.questions.player.phase.descriptor.SequenceDescriptor
-import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneEvaluationPhaseType
-import org.elaastic.questions.player.phase.response.ResponsePhaseType
-import org.elaastic.questions.player.phase.result.ResultPhaseType
+import org.elaastic.questions.player.phase.evaluation.LearnerEvaluationPhaseConfig
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -39,9 +38,9 @@ class ApplicationConfig {
     @Bean(name = ["sequenceDescriptor"])
     fun getSequenceDescriptor() = SequenceDescriptor(
         listOf(
-            PhaseDescriptor(ResponsePhaseType),
-            PhaseDescriptor(OneByOneEvaluationPhaseType),
-            PhaseDescriptor(ResultPhaseType),
+            PhaseDescriptor(LearnerPhaseType.RESPONSE),
+            PhaseDescriptor(LearnerPhaseType.EVALUATION, LearnerEvaluationPhaseConfig.ONE_BY_ONE),
+            PhaseDescriptor(LearnerPhaseType.RESULT),
         )
     )
 }

@@ -18,6 +18,7 @@
 package org.elaastic.questions.player.phase.response
 
 import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.player.phase.PhaseViewModel
 
 data class LearnerResponsePhaseViewModel(
         val sequenceId: Long,
@@ -25,6 +26,6 @@ data class LearnerResponsePhaseViewModel(
         val learnerPhaseState: State,
         val responseSubmitted: Boolean,
         val responseFormModel: LearnerResponseFormViewModel
-) {
+) : PhaseViewModel {
         fun isInProgress() = learnerPhaseState == State.show
 }

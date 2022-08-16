@@ -4,16 +4,20 @@ import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.player.phase.descriptor.PhaseConfig
+import org.elaastic.questions.player.phase.descriptor.PhaseDescriptor
 import org.elaastic.questions.player.phase.descriptor.SequenceDescriptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 
+/**
+ * @see LearnerPhase
+ */
 @Service
 class LearnerPhaseService(
     @Autowired val learnerSequenceService: LearnerSequenceService,
-    @Autowired val learnerPhaseFactoryResolver: LearnerPhaseFactoryResolver,
+    @Autowired val learnerPhaseFactory: LearnerPhaseFactory,
     @Autowired val sequenceDescriptor: SequenceDescriptor,
     @Autowired val ctx: ApplicationContext,
     ) {
@@ -28,43 +32,39 @@ class LearnerPhaseService(
 
         sequenceDescriptor.phaseDescriptorList.forEachIndexed() { index, phaseDescriptor ->
             learnerSequence.loadPhase(
-                getPhase(
+                buildPhase(
                     learnerSequence,
-                    phaseDescriptor.type,
+                    phaseDescriptor,
                     index + 1,
                     active = activeInteractionForLearner?.rank == (index + 1),
-                    phaseDescriptor.config
                 )
             )
         }
     }
 
-    fun getPhase(
+    fun buildPhase(
         learnerSequence: ILearnerSequence,
-        phaseType: PhaseType,
+        phaseDescriptor: PhaseDescriptor,
         phaseIndex: Int,
         active: Boolean,
-        phaseConfig: PhaseConfig?
     ): LearnerPhase =
         run {
 
             val learnerPhase =
-                learnerPhaseFactoryResolver
-                    .resolve(phaseType)
-                    .build(
+                learnerPhaseFactory.build(
+                        phaseDescriptor,
                         learnerSequence,
                         phaseIndex = phaseIndex,
                         active = active,
                         state = if (learnerSequence.isNotStarted())
                             State.beforeStart
-                        else learnerSequence.getInteractionAt(phaseIndex).state,
-                        phaseConfig = phaseConfig
+                        else learnerSequence.sequence.getInteractionAt(phaseIndex).state,
                     )
 
             if (learnerSequence.hasStarted()) {
                 learnerPhase.loadPhaseExecution(
-                    ctx.getBean<LearnerPhaseExecutionService>(
-                        learnerPhase.phaseType.learnerPhaseExecutionServiceBeanName
+                    ctx.getBean<LearnerPhaseExecutionLoader>(
+                        learnerPhase.getLearnerPhaseExecutionLoaderName()
                     ).build(learnerPhase)
                 )
             }

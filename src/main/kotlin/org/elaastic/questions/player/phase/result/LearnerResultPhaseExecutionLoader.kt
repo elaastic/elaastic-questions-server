@@ -6,19 +6,19 @@ import org.elaastic.questions.assignment.sequence.interaction.results.ResultsSer
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhaseExecution
-import org.elaastic.questions.player.phase.LearnerPhaseExecutionService
+import org.elaastic.questions.player.phase.LearnerPhaseExecutionLoader
 import org.elaastic.questions.player.phase.LearnerPhase
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.togglz.core.manager.FeatureManager
 
-@Service
-class LearnerResultPhaseExecutionService(
+@Service("LearnerResultPhaseExecutionLoader")
+class LearnerResultPhaseExecutionLoader(
     @Autowired val resultsService: ResultsService,
     @Autowired val responseService: ResponseService,
     @Autowired val featureManager: FeatureManager,
     @Autowired val messageBuilder: MessageBuilder,
-) : LearnerPhaseExecutionService {
+) : LearnerPhaseExecutionLoader {
 
     override fun build(learnerPhase: LearnerPhase): LearnerPhaseExecution = run {
         val firstResponse = responseService.find(
@@ -33,7 +33,7 @@ class LearnerResultPhaseExecutionService(
         )
 
         // Get the "My results" data for the learner
-        val myResultsModel = when (learnerPhase.learnerSequence.statement.questionType) {
+        val myResultsModel = when (learnerPhase.learnerSequence.sequence.statement.questionType) {
             QuestionType.OpenEnded ->
                 LearnerResultsModelFactory.buildOpenResult(
                     firstResponse,
@@ -43,13 +43,13 @@ class LearnerResultPhaseExecutionService(
                 LearnerResultsModelFactory.buildExclusiveChoiceResult(
                     firstResponse,
                     secondResponse,
-                    learnerPhase.learnerSequence.statement
+                    learnerPhase.learnerSequence.sequence.statement
                 )
             QuestionType.MultipleChoice ->
                 LearnerResultsModelFactory.buildMultipleChoiceResult(
                     firstResponse,
                     secondResponse,
-                    learnerPhase.learnerSequence.statement
+                    learnerPhase.learnerSequence.sequence.statement
                 )
         }
 

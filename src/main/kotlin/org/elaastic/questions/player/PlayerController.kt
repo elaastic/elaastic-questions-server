@@ -31,13 +31,13 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
-import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.*
+import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.springframework.beans.factory.annotation.Autowired
@@ -67,11 +67,11 @@ class PlayerController(
     @Autowired val responseService: ResponseService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val messageBuilder: MessageBuilder,
-    @Autowired val resultsService: ResultsService,
     @Autowired val anonymousUserService: AnonymousUserService,
     @Autowired val learnerPhaseService: LearnerPhaseService,
     @Autowired val userService: UserService,
-    @Autowired val featureManager: FeatureManager
+    @Autowired val featureManager: FeatureManager,
+    @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
@@ -238,14 +238,11 @@ class PlayerController(
                 user = user,
                 sequence = sequence,
                 serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
-                featureManager = featureManager,
                 nbRegisteredUsers = nbRegisteredUsers,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                 messageBuilder = messageBuilder,
-                findAllResponses = { responseService.findAll(sequence, excludeFakes = false) },
-                findAllPeerGrading = { peerGradingService.findAll(sequence) },
                 sequenceStatistics = sequenceService.getStatistics(sequence),
-                userCanRefreshResults = { resultsService.canUpdateResults(user, sequence) }
+                teacherResultDashboardService = teacherResultDashboardService,
             )
         )
 

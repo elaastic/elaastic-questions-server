@@ -5,16 +5,24 @@ import org.elaastic.questions.player.phase.evaluation.AbstractLearnerEvaluationP
 import org.elaastic.questions.player.phase.evaluation.ResponseData
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
 
-data class AllAtOnceLearnerEvaluationPhaseViewModel(
-    val sequenceId: Long,
-    val interactionId: Long,
-    val userActiveInteractionState: State,
-    val choices: Boolean,
-    val activeInteractionRank: Int,
-    val userHasCompletedPhase2: Boolean,
+class AllAtOnceLearnerEvaluationPhaseViewModel(
+    sequenceId: Long,
+    interactionId: Long,
+    phaseState: State,
+    choices: Boolean,
+    userHasCompletedPhase2: Boolean,
     val userHasPerformedEvaluation: Boolean,
     val responsesToGrade: List<ResponseData>,
-    val secondAttemptAllowed: Boolean,
-    val secondAttemptAlreadySubmitted: Boolean,
-    val responseFormModel: LearnerResponseFormViewModel
-) : AbstractLearnerEvaluationPhaseViewModel()
+    secondAttemptAllowed: Boolean,
+    secondAttemptAlreadySubmitted: Boolean,
+    responseFormModel: LearnerResponseFormViewModel
+) : AbstractLearnerEvaluationPhaseViewModel(
+    sequenceId,
+    interactionId,
+    phaseState,
+    choices,
+    userHasCompletedPhase2,
+    secondAttemptAllowed,
+    secondAttemptAlreadySubmitted,
+    responseFormModel
+)

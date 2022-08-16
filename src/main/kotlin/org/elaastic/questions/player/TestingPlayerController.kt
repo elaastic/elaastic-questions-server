@@ -2134,7 +2134,6 @@ class TestingPlayerController(
                 sequenceId = 12,
                 interactionId = 123,
                 choices = true,
-                activeInteractionRank = 2,
                 userHasCompletedPhase2 = false,
                 nextResponseToGrade =
                 org.elaastic.questions.player.phase.evaluation.ResponseData(
@@ -2159,7 +2158,7 @@ class TestingPlayerController(
                     firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
                     nbItem = 3
                 ),
-                userActiveInteractionState = State.show,
+                phaseState = State.show,
             )
         )
 
@@ -2182,7 +2181,6 @@ class TestingPlayerController(
                 sequenceId = 12,
                 interactionId = 123,
                 choices = true,
-                activeInteractionRank = 2,
                 userHasCompletedPhase2 = false,
                 responsesToGrade = listOf(
                     org.elaastic.questions.player.phase.evaluation.ResponseData(
@@ -2213,7 +2211,7 @@ class TestingPlayerController(
                     firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
                     nbItem = 3
                 ),
-                userActiveInteractionState = State.show,
+                phaseState = State.show,
                 userHasPerformedEvaluation = false
             )
         )

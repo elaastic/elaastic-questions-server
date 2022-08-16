@@ -53,7 +53,7 @@ class TeacherPlayerModel(
     statementPanelModel: StatementPanelModel,
     statement: StatementInfo,
     val showResults: Boolean,
-    val resultsModel: ResultsModel?
+    val resultsModel: ResultsModel?,
 ) : PlayerModel(
     sequence = sequence,
     userRole = UserRole.Teacher, // TODO Check if we need it

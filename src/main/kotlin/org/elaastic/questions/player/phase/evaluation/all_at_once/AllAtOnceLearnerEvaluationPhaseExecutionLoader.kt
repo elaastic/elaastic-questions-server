@@ -4,16 +4,16 @@ import org.elaastic.questions.assignment.sequence.interaction.response.ResponseS
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.player.phase.LearnerPhaseExecution
 import org.elaastic.questions.player.phase.LearnerPhase
-import org.elaastic.questions.player.phase.evaluation.AbstractLearnerEvaluationPhaseExecutionService
+import org.elaastic.questions.player.phase.evaluation.AbstractLearnerEvaluationPhaseExecutionLoader
 import org.elaastic.questions.player.phase.evaluation.ResponseData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Service
-class AllAtOnceLearnerEvaluationPhaseExecutionService(
+@Service("AllAtOnceLearnerEvaluationPhaseExecutionLoader")
+class AllAtOnceLearnerEvaluationPhaseExecutionLoader(
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val responseService: ResponseService,
-) : AbstractLearnerEvaluationPhaseExecutionService() {
+) : AbstractLearnerEvaluationPhaseExecutionLoader() {
 
     override fun build(learnerPhase: LearnerPhase): LearnerPhaseExecution = run {
         if (learnerPhase !is AllAtOnceLearnerEvaluationPhase)

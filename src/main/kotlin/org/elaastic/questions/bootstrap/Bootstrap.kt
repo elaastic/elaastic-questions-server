@@ -18,8 +18,6 @@
 
 package org.elaastic.questions.bootstrap
 
-import org.elaastic.questions.player.phase.LearnerPhaseFactoryResolver
-import org.elaastic.questions.player.phase.descriptor.SequenceDescriptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
@@ -29,8 +27,6 @@ import javax.annotation.PostConstruct
 @Component
 class Bootstrap(
     @Autowired val bootstrapService: BootstrapService,
-    @Autowired val sequenceDescriptor: SequenceDescriptor,
-    @Autowired val learnerPhaseFactoryResolver: LearnerPhaseFactoryResolver,
 ) {
 
     val LOG: Logger = Logger.getLogger(Bootstrap::class.toString())
@@ -42,15 +38,6 @@ class Bootstrap(
         bootstrapService.migrateTowardVersion400()
         LOG.info("End of Migration to 4.0.0")
         LOG.info("End of the bootstrap")
-
-        // Load phase factories
-        sequenceDescriptor.phaseDescriptorList.forEach {
-            learnerPhaseFactoryResolver.registerFactory(
-                it.type,
-                it.type.learnerPhaseFactory
-            )
-        }
-
     }
 
 }

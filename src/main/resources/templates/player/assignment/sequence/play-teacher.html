@@ -108,6 +108,13 @@
       <div th:replace="|${components}/results/_results.html| :: results(${playerModel.resultsModel})"></div>
     </div>
 
+<!--    <th:block th:each="phase : ${playerModel.phaseList}">-->
+<!--      <th:block th:if="${phase.isVisible()}">-->
+<!--        <div-->
+<!--          th:replace="|${phase.getPlayerTemplate().fileName}| :: ${phase.getPlayerTemplate().fragmentName}(${phase.viewModel})"></div>-->
+<!--      </th:block>-->
+<!--    </th:block>-->
+
     <div togglz:active="FUNCTIONAL_TESTING" th:remove="tag">
       <div
         th:replace="|${components}/functional-testing/functional-test.html| :: functionalTesting(${playerModel.assignment.id},${playerModel.sequence.id})"></div>

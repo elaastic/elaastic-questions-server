@@ -43,8 +43,8 @@ class LearnerSequence(
     @field:ManyToOne
     override var activeInteraction: Interaction? = null
 ) : AbstractJpaPersistable<Long>(),
-    ISequence by sequence,
-    ILearnerSequence {
+    ILearnerSequence,
+    SequenceProgress by sequence {
 
     @Version
     var version: Long? = null

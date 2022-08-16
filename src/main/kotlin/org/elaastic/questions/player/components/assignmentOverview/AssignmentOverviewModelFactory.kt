@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.player.components.assignmentOverview
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
@@ -27,28 +28,26 @@ object AssignmentOverviewModelFactory {
 
     fun build(
         teacher: Boolean,
+        assignment: Assignment,
         nbRegisteredUser: Int,
-        assignmentTitle: String,
-        courseTitle: String? = null,
-        courseId: Long? = null,
-        subjectTitle: String? = null,
-        subjectId: Long? = null,
-        audience: String? = null,
-        assignmentId: Long,
-        sequences: List<Sequence>,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         selectedSequenceId: Long? = null
     ): AssignmentOverviewModel = AssignmentOverviewModel(
         teacher = teacher,
         nbRegisteredUser = nbRegisteredUser,
-        assignmentTitle = assignmentTitle,
-        courseTitle = courseTitle,
-        courseId = courseId,
-        subjectTitle = subjectTitle,
-        subjectId = subjectId,
-        audience = audience,
-        assignmentId = assignmentId,
-        sequences = sequences.map {
+        assignmentTitle = assignment.title,
+        courseTitle = if (teacher) assignment.subject?.course?.title else null,
+        courseId = if (teacher) assignment.subject?.course?.id else null,
+        subjectTitle = if (teacher) assignment.subject!!.title else null,
+        subjectId = if (teacher) assignment.subject!!.id else null,
+        audience = if (teacher) {
+            assignment.audience +
+                    if (assignment.scholarYear != null) {
+                        " (${assignment.scholarYear})"
+                    } else ""
+        } else null,
+        assignmentId = assignment.id!!,
+        sequences = assignment.sequences.map {
             AssignmentOverviewModel.SequenceInfo(
                 id = it.id!!,
                 title = it.statement.title,
@@ -92,6 +91,7 @@ object AssignmentOverviewModelFactory {
                     if (sequence.resultsArePublished)
                         listOf("big grey bar chart outline")
                     else listOf("big grey lock")
+
                 else ->
                     if (sequence.resultsArePublished)
                         listOf(

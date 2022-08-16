@@ -8,7 +8,7 @@ import java.lang.IllegalStateException
 class TransientLearnerSequence(
     override val learner: User,
     override val sequence: Sequence
-) : ILearnerSequence, ISequence by sequence {
+) : ILearnerSequence, SequenceProgress by sequence {
     @Suppress("UNUSED_PARAMETER")
     override var activeInteraction: Interaction?
         get() = sequence.activeInteraction

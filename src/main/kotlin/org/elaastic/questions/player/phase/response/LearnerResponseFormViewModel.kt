@@ -18,6 +18,8 @@
 package org.elaastic.questions.player.phase.response
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.questions.assignment.sequence.ILearnerSequence
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 
@@ -34,3 +36,27 @@ data class LearnerResponseFormViewModel(
         val responseSubmissionSpecification: ResponseSubmissionSpecification,
         val ConfidenceDegreeValues: Array<ConfidenceDegree> = ConfidenceDegree.values()
 )
+
+object LearnerResponseFormViewModelFactory {
+        fun buildFor2ndAttempt(learnerSequence: ILearnerSequence, firstAttemptResponse: Response?) = run {
+
+                // TODO we should get rid of interaction here...
+                val interactionId = learnerSequence.sequence.getEvaluationInteraction().id
+                        ?: error("Interaction must have an ID to an evaluation")
+
+                val sequence = learnerSequence.sequence
+
+                LearnerResponseFormViewModel(
+                        interactionId = interactionId,
+                        attempt = 2,
+                        responseSubmissionSpecification = sequence.getResponseSubmissionSpecification(),
+                        timeToProvideExplanation = (sequence.executionIsBlended() || sequence.executionIsDistance()), // TODO I don't understand this logic
+                        hasChoices = sequence.statement.hasChoices(),
+                        multipleChoice = sequence.statement.isMultipleChoice(),
+                        nbItem = sequence.statement.choiceSpecification?.nbCandidateItem,
+                        firstAttemptExplanation = firstAttemptResponse?.explanation,
+                        firstAttemptChoices = firstAttemptResponse?.learnerChoice?.toTypedArray() ?: arrayOf(),
+                        firstAttemptConfidenceDegree = firstAttemptResponse?.confidenceDegree
+                )
+        }
+}

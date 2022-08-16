@@ -7,11 +7,17 @@ import org.elaastic.questions.player.phase.evaluation.AbstractLearnerEvaluationP
 import org.elaastic.questions.player.phase.evaluation.ResponseData
 
 class OneByOneLearnerEvaluationPhaseExecution(
-    val userHasCompletedPhase2: Boolean,
-    val secondAttemptAlreadySubmitted: Boolean,
+    userHasCompletedPhase2: Boolean,
+    secondAttemptAlreadySubmitted: Boolean,
     val nextResponseToGrade: ResponseData?,
-    val sequence: Sequence,
-    val userActiveInteraction: Interaction?,
-    val firstAttemptResponse: Response?
-): AbstractLearnerEvaluationPhaseExecution() {
+    sequence: Sequence,
+    userActiveInteraction: Interaction?,
+    firstAttemptResponse: Response?
+): AbstractLearnerEvaluationPhaseExecution(
+    userHasCompletedPhase2,
+    secondAttemptAlreadySubmitted,
+    sequence,
+    userActiveInteraction,
+    firstAttemptResponse
+) {
 }

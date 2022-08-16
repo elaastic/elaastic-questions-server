@@ -3,9 +3,7 @@ package org.elaastic.questions.player.phase.result
 import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.player.components.results.ResultsModelFactory
-import org.elaastic.questions.player.phase.LearnerPhaseExecution
-import org.elaastic.questions.player.phase.LearnerPhase
-import org.elaastic.questions.player.phase.PhaseTemplate
+import org.elaastic.questions.player.phase.*
 
 class LearnerResultPhase(
     learnerSequence: ILearnerSequence,
@@ -18,11 +16,11 @@ class LearnerResultPhase(
     active,
     state,
     PhaseTemplate(
-        "${PhaseTemplate.TEMPLATE_PACKAGE}/result/_result-phase.html",
+        "${PhaseTemplate.TEMPLATE_PACKAGE}/result/_learner-result-phase.html",
         "resultPhase"
     )
 ) {
-    override val phaseType = ResultPhaseType
+    override val phaseType = LearnerPhaseType.RESULT
     override var learnerPhaseExecution: LearnerResultPhaseExecution? = null
 
     override fun loadPhaseExecution(learnerPhaseExecution: LearnerPhaseExecution) {
@@ -31,7 +29,7 @@ class LearnerResultPhase(
         else throw IllegalArgumentException()
     }
 
-    fun getViewModel() = LearnerResultPhaseViewModel(
+    override  fun getViewModel() = LearnerResultPhaseViewModel(
         learnerPhaseExecution!!.myResultsModel,
         ResultsModelFactory.build(
             teacher = false,

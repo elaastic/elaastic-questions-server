@@ -31,7 +31,7 @@
         }
     </style>
 
-    <form th:unless="${model.userHasCompletedPhase2 || model.userActiveInteractionState.name() == 'afterStop'}"
+    <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
           th:action="@{/player/sequence/{sequenceId}/submit-evaluation-and-second-attempt(sequenceId=${model.sequenceId})}"
           class="ui form"
           method="post">
@@ -89,10 +89,10 @@
 
     <div th:if="${model.userHasCompletedPhase2}"
          class="ui blue message"
-         th:text="#{player.sequence.phase.completedByUser(${model.activeInteractionRank})}">
+         th:text="#{player.sequence.phase.completedByUser(${2})}">
     </div>
 
-    <div th:if="${!model.userHasCompletedPhase2 && model.userActiveInteractionState.name() == 'afterStop'}"
+    <div th:if="${!model.userHasCompletedPhase2 && model.phaseState.name() == 'afterStop'}"
          class="ui blue message"
          th:text="#{player.sequence.interaction.evaluation.tooLate}">
     </div>

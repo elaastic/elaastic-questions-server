@@ -1,6 +1,9 @@
 package org.elaastic.questions.player.phase
 
-interface LearnerPhaseExecutionService {
+/**
+ * @see LearnerPhase
+ */
+interface LearnerPhaseExecutionLoader {
 
     fun build(learnerPhase: LearnerPhase): LearnerPhaseExecution
 }
