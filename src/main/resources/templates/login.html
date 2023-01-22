@@ -44,6 +44,37 @@
           border-top: none;
       }
 
+      .cas-container {
+          display: flex;
+          justify-content: space-evenly;
+          flex-wrap: wrap;
+      }
+
+      .cas-item {
+          border-radius: 3px;
+          margin: 4px;
+          flex: 1;
+          height: 5em;
+          min-width: 8em;
+          padding: 0;
+      }
+
+      .cas-button {
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          padding: 2px !important;
+          display: flex !important;
+          justify-content: space-around !important;
+      }
+
+      .cas-button img {
+          max-width: 100%;
+          max-height: 100%;
+          vertical-align: middle;
+      }
+
+
   </style>
 </head>
 
@@ -99,21 +130,21 @@
             </button>
 
             <th:block th:if="${not #lists.isEmpty(casInfoList)}">
-            <div class="ui horizontal divider">OU</div>
+              <div class="ui horizontal divider">OU</div>
 
-            <div class="ui list">
-              <div class="item" th:each="casInfo : ${casInfoList}">
-                <a th:href="@{${casInfo.serverUrl}(service=${serviceUrlMap[casInfo.casKey]})}"
-                   th:title="${casInfo.label}"
-                   class="ui fluid secondary button">
-                  <img class="ui image" src="/images/cas/ecollege.haute-garonne.long.png"
-                       style="margin: auto"
-                       th:src="@{${casInfo.logoSrc}}"
-                       alt="CAS connector label"
-                       th:alt="${casInfo.label}">
-                </a>
+              <div class="cas-container">
+                <div class="cas-item" th:each="casInfo : ${casInfoList}">
+
+                  <a th:href="@{${casInfo.serverUrl}(service=${serviceUrlMap[casInfo.casKey]})}"
+                     th:title="${casInfo.label}"
+                     class="ui secondary button cas-button">
+                    <img src="/images/cas/ecollege.haute-garonne.long.png"
+                         th:src="@{${casInfo.logoSrc}}"
+                         alt="CAS connector label"
+                         th:alt="${casInfo.label}">
+                  </a>
+                </div>
               </div>
-            </div>
             </th:block>
           </div>
 
