@@ -35,7 +35,7 @@ abstract class LearnerPhase(
 
     abstract fun getViewModel(): PhaseViewModel
 
-    fun isVisible() =
+    open fun isVisible() =
         learnerSequence.isInProgress() && this.active
 
     fun isActive(): Boolean = this.active

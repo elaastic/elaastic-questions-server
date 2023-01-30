@@ -24,12 +24,12 @@ class LearnerResultPhase(
     override var learnerPhaseExecution: LearnerResultPhaseExecution? = null
 
     override fun loadPhaseExecution(learnerPhaseExecution: LearnerPhaseExecution) {
-        if(learnerPhaseExecution is LearnerResultPhaseExecution)
+        if (learnerPhaseExecution is LearnerResultPhaseExecution)
             this.learnerPhaseExecution = learnerPhaseExecution
         else throw IllegalArgumentException()
     }
 
-    override  fun getViewModel() = LearnerResultPhaseViewModel(
+    override fun getViewModel() = LearnerResultPhaseViewModel(
         learnerPhaseExecution!!.myResultsModel,
         ResultsModelFactory.build(
             teacher = false,
@@ -41,6 +41,7 @@ class LearnerResultPhase(
         )
     )
 
-
+    // Note JT : results are displayed even when the sequence is closed
+    override fun isVisible() = this.active && learnerSequence.sequence.resultsArePublished
 
 }
