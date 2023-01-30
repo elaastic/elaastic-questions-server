@@ -395,8 +395,10 @@ class SubjectService(
     }
 
     fun duplicate(user: User, initialSubject: Subject, inSameCourse: Boolean = true): Subject {
-        val indexTitle = subjectRepository.countAllStartingWithTitle(user, initialSubject.title) + 1
-        val duplicateTitle = if (indexTitle == 1) initialSubject.title else initialSubject.title + " ($indexTitle) "
+        val normalizedTitle = normalizeTitle(initialSubject.title)
+
+        val indexTitle = subjectRepository.countAllStartingWithTitle(user, normalizedTitle) + 1
+        val duplicateTitle = if (indexTitle == 1) initialSubject.title else "$normalizedTitle ($indexTitle) "
         val duplicateSubject = Subject(
             duplicateTitle,
             user
@@ -477,5 +479,13 @@ class SubjectService(
                 assignmentService.save(assignment)
             }
         }
+    }
+
+    fun normalizeTitle(title: String): String {
+        val regex = Regex("(.*)\\((\\d+)\\)")
+        val match = regex.find(title) ?: return title
+
+        val (radical) = match.destructured
+        return radical.trimEnd()
     }
 }
