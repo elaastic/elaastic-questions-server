@@ -76,9 +76,9 @@ class SubjectService(
             if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this subject")
             }
-            if (user != it.owner)
-                if (sharedSubjectRepository.findByTeacherAndSubject(user, it) == null)
-                    throw AccessDeniedException("The subject \"${it.title}\" is not shared with you")
+            if (user != it.owner && sharedSubjectRepository.findByTeacherAndSubject(user, it) == null) {
+                throw AccessDeniedException("The subject \"${it.title}\" is not shared with you")
+            }
             return it
         }
     }
@@ -89,9 +89,7 @@ class SubjectService(
 
     fun save(subject: Subject): Subject {
         subjectRepository.save(subject).let { savedSubject ->
-            savedSubject.course?.let { course ->
-                course.subjects.add(savedSubject)
-            }
+            savedSubject.course?.subjects?.add(savedSubject)
             return savedSubject
         }
     }
@@ -233,7 +231,10 @@ class SubjectService(
     }
 
     private fun deleteStatementIfNotUsed(statement: Statement) {
-        val statementAlreadyUsed = statementService.responsesExistForStatement(statement) || statementService.eventLogsExistForStatement(statement)
+        val statementAlreadyUsed =
+            statementService.responsesExistForStatement(statement) || statementService.eventLogsExistForStatement(
+                statement
+            )
         if (!statementAlreadyUsed) {
             sequenceService.findAllSequencesByStatement(statement).forEach {
                 assignmentService.removeSequence(statement.owner, it)
@@ -428,7 +429,7 @@ class SubjectService(
         subject: Subject,
         titleSuffixIfCopyInSameSubject: String = " (Copy)"
     ): Statement {
-        var duplicatedStatement = statementService.duplicate(statement)
+        val duplicatedStatement = statementService.duplicate(statement)
         if (subject == statement.subject) {
             duplicatedStatement.title += titleSuffixIfCopyInSameSubject
         }
@@ -437,7 +438,7 @@ class SubjectService(
     }
 
     fun newVersionOfStatementInSubject(statement: Statement): Statement {
-        var duplicatedStatement = statementService.duplicate(statement)
+        val duplicatedStatement = statementService.duplicate(statement)
         // update sequences with new statement
         sequenceService.findAllNotTerminatedSequencesByStatement(statement).forEach {
             it.statement = duplicatedStatement
