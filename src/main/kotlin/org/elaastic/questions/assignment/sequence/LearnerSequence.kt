@@ -68,7 +68,7 @@ class LearnerSequence(
 
     @Transient
     override fun loadPhase(learnerPhase: LearnerPhase) {
-        phaseList[learnerPhase.index] = learnerPhase
+        phaseList[learnerPhase.index - 1] = learnerPhase
     }
 
     @Transient
