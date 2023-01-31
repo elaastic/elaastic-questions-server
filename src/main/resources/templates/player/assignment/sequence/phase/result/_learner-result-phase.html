@@ -24,7 +24,7 @@
     th:if="${learnerResultPhaseViewModel.myResultsModel}"
     th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults('my-results', ${learnerResultPhaseViewModel.myResultsModel})"></div>
 
-  <div th:replace="player/assignment/sequence/components/results/_results :: results(${learnerResultPhaseViewModel.sequenceResultsModel})">
+  <div th:replace="player/assignment/sequence/components/results/_results :: results(${learnerResultPhaseViewModel.sequenceResultsModel}, false)">
   </div>
 
 </div>

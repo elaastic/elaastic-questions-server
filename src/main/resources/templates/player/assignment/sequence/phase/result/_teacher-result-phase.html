@@ -20,7 +20,7 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <div th:replace="player/assignment/sequence/components/results/_results :: results(${teacherResultPhaseViewModel.sequenceResultsModel})">
+  <div th:replace="player/assignment/sequence/components/results/_results :: results(${teacherResultPhaseViewModel.sequenceResultsModel}, true)">
   </div>
 
 </div>
