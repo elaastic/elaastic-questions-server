@@ -47,23 +47,23 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class SequenceService(
-        @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val fakeExplanationRepository: FakeExplanationRepository,
-        @Autowired val eventLogService: EventLogService,
-        @Autowired val interactionService: InteractionService,
-        @Autowired val interactionRepository: InteractionRepository,
-        @Autowired val resultsService: ResultsService,
-        @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
-        @Autowired val learnerSequenceService: LearnerSequenceService,
-        @Autowired val responseService: ResponseService,
-        @Autowired val peerGradingService: PeerGradingService
+    @Autowired val sequenceRepository: SequenceRepository,
+    @Autowired val fakeExplanationRepository: FakeExplanationRepository,
+    @Autowired val eventLogService: EventLogService,
+    @Autowired val interactionService: InteractionService,
+    @Autowired val interactionRepository: InteractionRepository,
+    @Autowired val resultsService: ResultsService,
+    @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
+    @Autowired val learnerSequenceService: LearnerSequenceService,
+    @Autowired val responseService: ResponseService,
+    @Autowired val peerGradingService: PeerGradingService
 ) {
 
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
-            get(id, fetchInteractions).let {
-                if (it.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
-                it
-            }
+        get(id, fetchInteractions).let {
+            if (it.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
+            it
+        }
 
 
     fun get(id: Long, fetchInteractions: Boolean = false): Sequence {
@@ -87,15 +87,17 @@ class SequenceService(
 
     fun findAllFakeExplanation(user: User, sequenceId: Long): List<FakeExplanation> {
         return fakeExplanationRepository.findAllByStatement(
-                get(user, sequenceId).statement
+            get(user, sequenceId).statement
         )
     }
 
-    fun start(user: User,
-              sequence: Sequence,
-              executionContext: ExecutionContext,
-              studentsProvideExplanation: Boolean,
-              nbResponseToEvaluate: Int): Sequence {
+    fun start(
+        user: User,
+        sequence: Sequence,
+        executionContext: ExecutionContext,
+        studentsProvideExplanation: Boolean,
+        nbResponseToEvaluate: Int
+    ): Sequence {
 
         require(user == sequence.owner) {
             "Only the owner of a sequence is allowed to start it"
@@ -121,8 +123,8 @@ class SequenceService(
         }
         if (studentsProvideExplanation) {
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                    sequence = sequence,
-                    teacher = sequence.owner
+                sequence = sequence,
+                teacher = sequence.owner
             )
             responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(sequence)
         }
@@ -130,45 +132,45 @@ class SequenceService(
     }
 
     internal fun initializeInteractionsForSequence(
-            sequence: Sequence,
-            studentsProvideExplanation: Boolean,
-            nbResponseToEvaluate: Int,
-            executionContext: ExecutionContext
+        sequence: Sequence,
+        studentsProvideExplanation: Boolean,
+        nbResponseToEvaluate: Int,
+        executionContext: ExecutionContext
     ): Sequence {
         sequence.interactions[InteractionType.ResponseSubmission] =
-                interactionService.create(
-                        sequence,
-                        ResponseSubmissionSpecification(
-                                studentsProvideExplanation,
-                                studentsProvideConfidenceDegree = studentsProvideExplanation
-                        ),
-                        1,
-                        State.show
-                )
+            interactionService.create(
+                sequence,
+                ResponseSubmissionSpecification(
+                    studentsProvideExplanation,
+                    studentsProvideConfidenceDegree = studentsProvideExplanation
+                ),
+                1,
+                State.show
+            )
 
         sequence.interactions[InteractionType.Evaluation] =
-                interactionService.create(
-                        sequence,
-                        EvaluationSpecification(
-                                nbResponseToEvaluate
-                        ),
-                        2,
-                        if (executionContext == ExecutionContext.FaceToFace)
-                            State.beforeStart
-                        else State.show
-                )
+            interactionService.create(
+                sequence,
+                EvaluationSpecification(
+                    nbResponseToEvaluate
+                ),
+                2,
+                if (executionContext == ExecutionContext.FaceToFace)
+                    State.beforeStart
+                else State.show
+            )
 
         sequence.interactions[InteractionType.Read] =
-                interactionService.create(
-                        sequence,
-                        ReadSpecification(),
-                        3,
-                        when (executionContext) {
-                            ExecutionContext.FaceToFace, ExecutionContext.Blended -> State.beforeStart
-                            ExecutionContext.Distance -> State.show
-                        }
+            interactionService.create(
+                sequence,
+                ReadSpecification(),
+                3,
+                when (executionContext) {
+                    ExecutionContext.FaceToFace, ExecutionContext.Blended -> State.beforeStart
+                    ExecutionContext.Distance -> State.show
+                }
 
-                )
+            )
         return sequence
     }
 
@@ -201,9 +203,11 @@ class SequenceService(
         }
     }
 
-    fun submitResponse(user: User,
-                       sequence: Sequence,
-                       responseSubmissionData: PlayerController.ResponseSubmissionData) {
+    fun submitResponse(
+        user: User,
+        sequence: Sequence,
+        responseSubmissionData: PlayerController.ResponseSubmissionData
+    ) {
         val choiceListSpecification = responseSubmissionData.choiceList?.let {
             LearnerChoice(it)
         }
@@ -211,24 +215,24 @@ class SequenceService(
         val userActiveInteraction = getActiveInteractionForLearner(sequence, user)
 
         responseService.save(
-                userActiveInteraction
-                        ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
-                Response(
-                        learner = user,
-                        interaction = sequence.getResponseSubmissionInteraction(),
-                        attempt = responseSubmissionData.attempt,
-                        confidenceDegree = responseSubmissionData.confidenceDegree,
-                        explanation = responseSubmissionData.explanation,  // TODO Sanitize
-                        learnerChoice = choiceListSpecification,
-                        score = choiceListSpecification?.let {
-                            Response.computeScore(
-                                    it,
-                                    sequence.statement.choiceSpecification
-                                            ?: error("The choice specification is undefined")
-                            )
-                        },
-                        statement = sequence.statement
-                )
+            userActiveInteraction
+                ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
+            Response(
+                learner = user,
+                interaction = sequence.getResponseSubmissionInteraction(),
+                attempt = responseSubmissionData.attempt,
+                confidenceDegree = responseSubmissionData.confidenceDegree,
+                explanation = responseSubmissionData.explanation,  // TODO Sanitize
+                learnerChoice = choiceListSpecification,
+                score = choiceListSpecification?.let {
+                    Response.computeScore(
+                        it,
+                        sequence.statement.choiceSpecification
+                            ?: error("The choice specification is undefined")
+                    )
+                },
+                statement = sequence.statement
+            )
         )
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
             nextInteractionForLearner(sequence, user)
@@ -289,27 +293,27 @@ class SequenceService(
     }
 
     fun getActiveInteractionForLearner(sequence: Sequence, learner: User): Interaction? =
-            if (sequence.executionIsFaceToFace())
-                sequence.activeInteraction
-            else learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).activeInteraction
+        if (sequence.executionIsFaceToFace())
+            sequence.activeInteraction
+        else learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).activeInteraction
 
     fun nextInteractionForLearner(sequence: Sequence, learner: User) {
         learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).let { learnerSequence ->
-            if (sequence.executionIsBlended() && sequence.resultsArePublished) {
-                learnerSequence.activeInteraction = sequence.interactions[InteractionType.Read]
-            } else {
-                learnerSequence.activeInteraction = sequence.getInteractionAt(
-                        (learnerSequence.activeInteraction ?: error("No active interaction, cannot select the next one") ).rank + 1
-                )
-            }
+            learnerSequence.activeInteraction = sequence.getInteractionAt(
+                (learnerSequence.activeInteraction
+                    ?: error("No active interaction, cannot select the next one")).rank + 1
+            )
             learnerSequenceRepository.save(learnerSequence)
         }
     }
 
     fun getStatistics(sequence: Sequence) = SequenceStatistics(
-            if(sequence.isNotStarted()) 0 else responseService.count(sequence, 1),
-            if(sequence.isNotStarted()) 0 else responseService.count(sequence, 2), // TODO should only compute this data if phase2 open or done
-            if(sequence.isNotStarted()) 0 else peerGradingService.countEvaluations(sequence) // TODO should only compute this data if phase2 open or done
+        if (sequence.isNotStarted()) 0 else responseService.count(sequence, 1),
+        if (sequence.isNotStarted()) 0 else responseService.count(
+            sequence,
+            2
+        ), // TODO should only compute this data if phase2 open or done
+        if (sequence.isNotStarted()) 0 else peerGradingService.countEvaluations(sequence) // TODO should only compute this data if phase2 open or done
     )
 
     fun findAllNotTerminatedSequencesByStatement(statement: Statement): List<Sequence> {
@@ -325,6 +329,6 @@ class SequenceService(
     }
 
     fun existsById(id: Long): Boolean =
-            sequenceRepository.existsById(id)
+        sequenceRepository.existsById(id)
 
 }
