@@ -21,17 +21,13 @@ package org.elaastic.questions.player
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
-import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
@@ -50,12 +46,9 @@ import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import org.togglz.core.manager.FeatureManager
 import java.lang.IllegalArgumentException
-import java.util.HashMap
 import javax.persistence.EntityNotFoundException
 import javax.servlet.http.HttpServletRequest
 import javax.transaction.Transactional
-import kotlin.IllegalStateException
-
 
 @Controller
 @RequestMapping("/player")
@@ -65,7 +58,6 @@ class PlayerController(
     @Autowired val learnerSequenceService: LearnerSequenceService,
     @Autowired val interactionService: InteractionService,
     @Autowired val responseService: ResponseService,
-    @Autowired val peerGradingService: PeerGradingService,
     @Autowired val messageBuilder: MessageBuilder,
     @Autowired val anonymousUserService: AnonymousUserService,
     @Autowired val learnerPhaseService: LearnerPhaseService,
@@ -502,81 +494,4 @@ class PlayerController(
         val confidenceDegree: ConfidenceDegree?,
         val explanation: String?
     )
-
-    @PostMapping("/sequence/{id}/submit-evaluation-and-second-attempt")
-    fun submitEvaluationAndSecondAttempt(
-        authentication: Authentication,
-        model: Model,
-        @ModelAttribute evaluationData: EvaluationData,
-        @PathVariable id: Long
-    ): String {
-        val user: User = authentication.principal as User
-        var assignment: Assignment?
-
-        sequenceService.get(id, true).let { sequence ->
-            assignment = sequence.assignment!!
-            evaluationData.getGrades().forEach {
-                peerGradingService.createOrUpdate(user, responseService.getOne(it.key), it.value.toBigDecimal())
-            }
-
-            if (sequence.isSecondAttemptAllowed()
-                && !responseService.hasResponseForUser(user, sequence, 2)
-            ) {
-                val choiceListSpecification = evaluationData.choiceList?.let {
-                    LearnerChoice(it)
-                }
-
-                // TODO I guess this code should be factorized
-                Response(
-                    learner = user,
-                    interaction = sequence.getResponseSubmissionInteraction(),
-                    attempt = 2,
-                    confidenceDegree = evaluationData.confidenceDegree,
-                    explanation = evaluationData.explanation,
-                    learnerChoice = choiceListSpecification,
-                    score = choiceListSpecification?.let {
-                        Response.computeScore(
-                            it,
-                            sequence.statement.choiceSpecification
-                                ?: error("The choice specification is undefined")
-                        )
-                    },
-                    statement = sequence.statement
-
-                )
-                    .let {
-                        val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
-                            ?: error("No active interaction, cannot submit a response") // TODO we should provide a user-friendly error page for this
-
-                        responseService.save(
-                            userActiveInteraction,
-                            it
-                        )
-                    }
-
-
-            }
-
-            if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-                sequenceService.nextInteractionForLearner(sequence, user)
-            }
-
-            return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
-        }
-    }
-
-    class EvaluationData(
-        val id: Long,
-        val choiceList: List<ItemIndex>?,
-        val confidenceDegree: ConfidenceDegree?,
-        val explanation: String?
-    ) {
-        private var grades = HashMap<Long, Int>()
-
-        fun getGrades() = grades
-
-        fun setGrades(value: HashMap<Long, Int>) {
-            grades = value
-        }
-    }
 }

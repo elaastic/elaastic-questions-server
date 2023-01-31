@@ -32,7 +32,7 @@
     </style>
 
     <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
-          th:action="@{/player/sequence/{sequenceId}/submit-evaluation-and-second-attempt(sequenceId=${model.sequenceId})}"
+          th:action="@{/player/sequence/{sequenceId}/phase/evaluation/all-at-once/submit-evaluation(sequenceId=${model.sequenceId})}"
           class="ui form"
           method="post">
       <input type="hidden" name="id" th:value="${model.interactionId}"/>
