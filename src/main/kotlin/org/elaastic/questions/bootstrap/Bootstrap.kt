@@ -19,7 +19,6 @@
 package org.elaastic.questions.bootstrap
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
@@ -27,10 +26,10 @@ import javax.annotation.PostConstruct
 
 @Component
 class Bootstrap(
-        @Autowired val bootstrapService: BootstrapService
+    @Autowired val bootstrapService: BootstrapService,
 ) {
 
-    val LOG : Logger = Logger.getLogger(Bootstrap::class.toString())
+    val LOG: Logger = Logger.getLogger(Bootstrap::class.toString())
 
     @PostConstruct
     fun init() {

@@ -4,6 +4,7 @@ import org.togglz.core.annotation.ActivationParameter
 import org.togglz.core.annotation.DefaultActivationStrategy
 import org.togglz.core.annotation.EnabledByDefault
 import org.togglz.core.context.FeatureContext
+import org.togglz.spring.activation.SpringProfileActivationStrategy
 
 /**
  * This enum declares the available features for elaastic
@@ -34,6 +35,13 @@ enum class ElaasticFeatures {
      * It also activate data generation for functional tests (including generating a test subject & scripting
      * learners interactions)
      */
+    @EnabledByDefault
+    @DefaultActivationStrategy(
+        id = SpringProfileActivationStrategy.ID,
+        parameters = [
+            ActivationParameter(name ="profiles", value = "testing")
+        ]
+    )
     FUNCTIONAL_TESTING,
 
     /**

@@ -94,7 +94,7 @@
        th:each="sequence, i : ${assignment.sequences}"
        th:id="|sequence_${sequence.id}|">
 
-    <div th:replace="player/assignment/sequence/components/_steps.html :: steps(${stepsModel}, ${sequenceStatistics})"></div>
+    <div th:replace="player/assignment/sequence/components/steps/_steps.html :: steps(${stepsModel}, ${sequenceStatistics})"></div>
   </div>
 
   <!--  TODO Migrate subtempplate (bind here the dynamic components assembly -->

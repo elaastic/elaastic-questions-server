@@ -204,10 +204,10 @@ class FunctionalTestingService(
             if (correct) {
                 choiceSpecification.expectedChoice.index
             } else {
-                (1 until choiceSpecification.nbCandidateItem)
+                (1 until choiceSpecification.nbCandidateItem + 1)
                     .filter {
                         it != choiceSpecification.expectedChoice.index
-                    }[Random.nextInt(choiceSpecification.nbCandidateItem - 2)]
+                    }[Random.nextInt(choiceSpecification.nbCandidateItem - 1)]
             }
         )
     }

@@ -33,6 +33,7 @@ enum class ObjectOfAction(val propertyString: String) {
     EXPLANATION_POPUP_P1("explanation_popup_p1"),
     RECOMMENDED_RATIONALES_ORDER("recommended_rationales_order"),
     RATIONALES_CORRECT_ANSWERS("rationales_correct_answers"),
+    RATIONALES_INCORRECT_ANSWERS_0("rationales_incorrect_answers_0"), // When no choices have been made
     RATIONALES_INCORRECT_ANSWERS_1("rationales_incorrect_answers_1"),
     RATIONALES_INCORRECT_ANSWERS_2("rationales_incorrect_answers_2"),
     RATIONALES_INCORRECT_ANSWERS_3("rationales_incorrect_answers_3"),

@@ -34,8 +34,8 @@ data class ChoiceResultsModel(
         override val userCanDisplayStudentsIdentity: Boolean = false,
         override val explanationViewerModel: ExplanationViewerModel? = null,
         override val recommendationModel: RecommendationModel? = null
-) : ResultsModel {
-    override val hasExplanations = explanationViewerModel?.nbExplanations ?: 0 > 0
+        ) : ResultsModel {
     val hasAnyResult = !responseDistributionChartModel?.results.isNullOrEmpty()
+    override val hasExplanations = (explanationViewerModel?.nbExplanations ?: 0) > 0
     override fun getHasChoices() = true
 }
