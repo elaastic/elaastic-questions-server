@@ -75,8 +75,10 @@ class OneByOneEvaluationPhaseExecutionController(
                             it
                         )
                     }
+            }
 
-
+            if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
+                sequenceService.nextInteractionForLearner(sequence, user)
             }
 
 
