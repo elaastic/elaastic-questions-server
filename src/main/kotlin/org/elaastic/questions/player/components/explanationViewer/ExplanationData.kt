@@ -32,8 +32,8 @@ class ExplanationData(
         val confidenceDegree: ConfidenceDegree? = null,
         val score: BigDecimal? = null,
         val correct: Boolean? = (score == BigDecimal(100)),
-        val choiceList: LearnerChoice? = null
-
+        val choiceList: LearnerChoice? = null,
+        val isFromTeacher: Boolean = false
 ) {
     constructor(response: Response) : this(
             content = response.explanation,
@@ -43,7 +43,8 @@ class ExplanationData(
             confidenceDegree = response.confidenceDegree,
             correct = response.score == BigDecimal(100),
             score = response.score,
-            choiceList = response.learnerChoice
+            choiceList = response.learnerChoice,
+            isFromTeacher = response.learner == response.statement.owner
     )
 
     val meanGrade = meanGrade
