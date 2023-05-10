@@ -125,13 +125,15 @@ class ExplanationDataBuilder {
     var nbEvaluations: Int = 0
     var meanGrade: BigDecimal? = null
     var confidenceDegree: ConfidenceDegree? = null
+    var fromTeacher: Boolean = false
 
     fun build() = ExplanationData(
             content = content,
             author = author,
             nbEvaluations = nbEvaluations,
             meanGrade = meanGrade,
-            confidenceDegree = confidenceDegree
+            confidenceDegree = confidenceDegree,
+            fromTeacher = fromTeacher
     )
 }
 

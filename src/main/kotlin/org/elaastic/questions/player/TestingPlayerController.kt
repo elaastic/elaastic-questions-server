@@ -325,7 +325,96 @@ class TestingPlayerController(
                                         }
                                     }
                                 }
-                            }
+                            },
+                            choiceQuestionSituation {
+                                    sequenceId = 7
+                                    description = "7. Uniquement l'explication de l'enseignant, pour une question a choix multiples"
+                                    explanationsByResponse {
+                                            response(listOf(1), 100, true) {
+                                                    explanation {
+                                                            author = "Franck Sil (@fsil)"
+                                                            confidenceDegree = ConfidenceDegree.CONFIDENT
+                                                            content = "Explication de l'enseignant"
+                                                            fromTeacher = true
+                                                    }
+                                            }
+                                    }
+                            },
+                            choiceQuestionSituation {
+                                    sequenceId = 8
+                                    description = "8. Plusieurs explications et explication de l'enseignant, pour une question a choix multiples"
+                                    explanationsByResponse {
+                                            response(listOf(1, 3), 100, true) {
+                                                    explanation {
+                                                            nbEvaluations = 3
+                                                            meanGrade = BigDecimal(3.25)
+                                                            author = "Franck Sil (@fsil)"
+                                                            confidenceDegree = ConfidenceDegree.CONFIDENT
+                                                            content = "Explication de l'enseignant"
+                                                            fromTeacher = true
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 1
+                                                            meanGrade = BigDecimal(3)
+                                                            author = "Joe Walson (@Jwal)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            content = "Explication B"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 4
+                                                            meanGrade = BigDecimal(5)
+                                                            author = "Bob Hart (@Bhar)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            content = "Explication C"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 0
+                                                            author = "Arthur Rodriguez (@Arod)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            content = "Explication D"
+                                                    }
+                                            }
+                                            response(listOf(1, 2), 30, false) {
+                                                    explanation {
+                                                            nbEvaluations = 2
+                                                            meanGrade = BigDecimal(1.33)
+                                                            author = "Bill Gates (@Bgat)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT
+                                                            content = "Explication A"
+                                                    }
+                                            }
+                                            response(listOf(3), 0, false) {
+                                                    explanation {
+                                                            nbEvaluations = 2
+                                                            meanGrade = BigDecimal(1.33)
+                                                            author = "Bill Gates (@Bgat)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            content = "Explication E"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 0
+                                                            meanGrade = null
+                                                            author = "Bill Gates (@Bgat)"
+                                                            confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT
+                                                            content = "Explication F"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 1
+                                                            meanGrade = BigDecimal(5)
+                                                            author = "Bill Gates (@Bgat)"
+                                                            confidenceDegree = ConfidenceDegree.CONFIDENT
+                                                            content = "Explication G"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 4
+                                                            meanGrade = BigDecimal(2)
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            author = "Bill Gates (@Bgat)"
+                                                            content = "Explication H"
+                                                    }
+                                            }
+                                    }
+                            },
                     )
                 }
         )
@@ -1245,7 +1334,7 @@ class TestingPlayerController(
                                                                 ExplanationData(
                                                                         "explication de l'enseignant",
                                                                         "Franck Sil (@fsil)",
-                                                                        isFromTeacher = true,
+                                                                        fromTeacher = true,
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                                                         score = BigDecimal("100")
                                                                 )
@@ -1338,7 +1427,7 @@ class TestingPlayerController(
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                                                         score = BigDecimal("0"),
                                                                         choiceList = LearnerChoice(listOf(2)),
-                                                                        isFromTeacher = true
+                                                                        fromTeacher = true
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 3",
@@ -1364,45 +1453,12 @@ class TestingPlayerController(
                                 )
                         ),
                         ResultsSituation(
-                                description = "14. Sequence running, Open question, has explanations",
-                                resultsModel = OpenResultsModel(
-                                        sequenceIsStopped = false,
-                                        sequenceId = 14,
-                                        explanationViewerModel = OpenExplanationViewerModel(
-                                                explanations = listOf(
-                                                        ExplanationData(
-                                                                "explication de l'enseignant",
-                                                                "Franck Sil (@fsil)",
-                                                                isFromTeacher = true
-                                                        ),
-                                                        ExplanationData(
-                                                                "explication 1",
-                                                                "Joe Walson (@Jwal)"
-                                                        ),
-                                                        ExplanationData(
-                                                                "explication 2",
-                                                                "Jack DiCaprio (@Jdic)"
-                                                        ),
-
-                                                        ExplanationData(
-                                                                "explication 3",
-                                                                "Wiliam Shakespeare (@Wsha)"
-                                                        ),
-                                                        ExplanationData(
-                                                                "explication 4",
-                                                                "Averell Collignon (@Acol)"
-                                                        )
-                                                )
-                                        )
-                                )
-                        ),
-                        ResultsSituation(
-                                description = "15. Sequence running, hasChoices, has results, only teacherExplanation",
+                                description = "14. Sequence running, hasChoices, has results, only teacherExplanation",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
-                                        sequenceId = 15,
+                                        sequenceId = 14,
                                         responseDistributionChartModel = ResponseDistributionChartModel(
-                                                interactionId = 15,
+                                                interactionId = 14,
                                                 choiceSpecification = ChoiceSpecificationData(
                                                         2,
                                                         listOf(2)
@@ -1412,7 +1468,7 @@ class TestingPlayerController(
                                                 ).toLegacyFormat()
                                         ),
                                         confidenceDistributionChartModel = ConfidenceDistributionChartModel(
-                                                interactionId = 15,
+                                                interactionId = 14,
                                                 choiceSpecification = ChoiceSpecificationData(
                                                         2,
                                                         listOf(2)
@@ -1442,7 +1498,7 @@ class TestingPlayerController(
                                                                 ExplanationData(
                                                                         "explication de l'enseignant",
                                                                         "Franck Sil (@fsil)",
-                                                                        isFromTeacher = true,
+                                                                        fromTeacher = true,
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                                                         score = BigDecimal("100")
                                                                 )
