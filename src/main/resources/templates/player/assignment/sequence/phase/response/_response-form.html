@@ -69,7 +69,7 @@
             </label>
             <textarea th:id="|explanation_${model.interactionId}|"
                       name="explanation"
-                      th:utext="${model.firstAttemptExplanation}"></textarea>
+                      th:text="${model.firstAttemptExplanation}"></textarea>
             <script th:inline="javascript">
                 CKEDITOR.replace('explanation_[[${model.interactionId}]]', {
                         customConfig: /*[[@{/ckeditor/config-elaastic.js}]]*/ ''
