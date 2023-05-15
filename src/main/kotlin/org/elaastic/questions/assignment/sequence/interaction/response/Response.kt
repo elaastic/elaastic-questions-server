@@ -32,6 +32,7 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -97,17 +98,14 @@ class Response(
                         run {
                             val zero = BigDecimal(0)
                             if (learnerChoice.size == choiceSpecification.nbCandidateItem) return zero
-                            val scorePerExpectedItem = BigDecimal(100) / BigDecimal(choiceSpecification.expectedChoiceList.size)
-                            val scorePerUnexpectedItem = BigDecimal(100) / BigDecimal(choiceSpecification.nbCandidateItem - choiceSpecification.expectedChoiceList.size)
                             val expectedIndexList = choiceSpecification.expectedChoiceList.map { it.index }
-                            var score = zero
-                            learnerChoice.forEach {
-                                if (it in expectedIndexList) {
-                                    score += scorePerExpectedItem
-                                } else {
-                                    score -= scorePerUnexpectedItem
-                                }
-                            }
+
+                            val nbCorrectLearnerChoices = learnerChoice.intersect(expectedIndexList).size
+                            val nbCorrectChoices = expectedIndexList.size
+                            val nbIncorrectLearnerChoices = learnerChoice.minus(expectedIndexList).size
+                            val nbIncorrectChoices = choiceSpecification.nbCandidateItem - nbCorrectChoices
+
+                            var score = BigDecimal(nbCorrectLearnerChoices * (100.0 / nbCorrectChoices) - nbIncorrectLearnerChoices * (100.0 / nbIncorrectChoices)).setScale(0, RoundingMode.HALF_UP)
                             if (score < zero) score = zero
                             score
                         }
