@@ -32,6 +32,6 @@ class OpenExplanationViewerModel(explanations: List<ExplanationData>,
     val nbExplanationsForCorrectResponse = nbExplanations
     override val hasMoreThanExcerpt = nbExplanations > 3
     val hasRecommendedExplanations = false
-    override val teacherExplanation = this.explanations.filter { it.fromTeacher }.firstOrNull()
+    override val teacherExplanation = this.explanations.firstOrNull { it.fromTeacher }
 
 }
