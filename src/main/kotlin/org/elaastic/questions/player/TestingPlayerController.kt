@@ -1331,10 +1331,9 @@ class TestingPlayerController(
                                                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
                                                                         score = BigDecimal("100")
                                                                 ),
-                                                                ExplanationData(
+                                                                TeacherExplanationData(
                                                                         "explication de l'enseignant",
                                                                         "Franck Sil (@fsil)",
-                                                                        fromTeacher = true,
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                                                         score = BigDecimal("100")
                                                                 )
@@ -1419,7 +1418,7 @@ class TestingPlayerController(
                                                                 true
                                                         )
                                                                 to listOf(
-                                                                ExplanationData(
+                                                                TeacherExplanationData(
                                                                         "explication de l'enseignant",
                                                                         "Franck Sil (@fsil)",
                                                                         3,
@@ -1427,7 +1426,6 @@ class TestingPlayerController(
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                                                         score = BigDecimal("0"),
                                                                         choiceList = LearnerChoice(listOf(2)),
-                                                                        fromTeacher = true
                                                                 ),
                                                                 ExplanationData(
                                                                         "explication 3",
@@ -1495,10 +1493,9 @@ class TestingPlayerController(
                                                                 true
                                                         )
                                                                 to listOf(
-                                                                ExplanationData(
+                                                                TeacherExplanationData(
                                                                         "explication de l'enseignant",
                                                                         "Franck Sil (@fsil)",
-                                                                        fromTeacher = true,
                                                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                                                         score = BigDecimal("100")
                                                                 )

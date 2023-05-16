@@ -24,30 +24,30 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-class ExplanationData(
-        val content: String? = null,
-        val author: String? = null,
-        val nbEvaluations: Int = 0,
-        meanGrade: BigDecimal? = null,
-        val confidenceDegree: ConfidenceDegree? = null,
-        val score: BigDecimal? = null,
-        val correct: Boolean? = (score == BigDecimal(100)),
-        val choiceList: LearnerChoice? = null,
-        val fromTeacher: Boolean = false
+open class ExplanationData(
+    val content: String? = null,
+    val author: String? = null,
+    val nbEvaluations: Int = 0,
+    meanGrade: BigDecimal? = null,
+    val confidenceDegree: ConfidenceDegree? = null,
+    val score: BigDecimal? = null,
+    val correct: Boolean? = (score == BigDecimal(100)),
+    val choiceList: LearnerChoice? = null,
 ) {
     constructor(response: Response) : this(
-            content = response.explanation,
-            author = response.learner.firstName + " " + response.learner.lastName + " (@" + response.learner.username + ")",
-            nbEvaluations = response.evaluationCount,
-            meanGrade = response.meanGrade,
-            confidenceDegree = response.confidenceDegree,
-            correct = response.score == BigDecimal(100),
-            score = response.score,
-            choiceList = response.learnerChoice,
-            fromTeacher = response.learner == response.statement.owner
+        content = response.explanation,
+        author = response.learner.firstName + " " + response.learner.lastName + " (@" + response.learner.username + ")",
+        nbEvaluations = response.evaluationCount,
+        meanGrade = response.meanGrade,
+        confidenceDegree = response.confidenceDegree,
+        correct = response.score == BigDecimal(100),
+        score = response.score,
+        choiceList = response.learnerChoice,
     )
 
     val meanGrade = meanGrade
-            ?.setScale(2, RoundingMode.CEILING)
-            ?.stripTrailingZeros()
+        ?.setScale(2, RoundingMode.CEILING)
+        ?.stripTrailingZeros()
+
+    open val fromTeacher = false
 }
