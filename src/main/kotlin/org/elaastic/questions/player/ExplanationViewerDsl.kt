@@ -19,10 +19,7 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.player.components.explanationViewer.ChoiceExplanationViewerModel
-import org.elaastic.questions.player.components.explanationViewer.ExplanationData
-import org.elaastic.questions.player.components.explanationViewer.OpenExplanationViewerModel
-import org.elaastic.questions.player.components.explanationViewer.ResponseData
+import org.elaastic.questions.player.components.explanationViewer.*
 import java.math.BigDecimal
 
 @DslMarker
@@ -125,13 +122,22 @@ class ExplanationDataBuilder {
     var nbEvaluations: Int = 0
     var meanGrade: BigDecimal? = null
     var confidenceDegree: ConfidenceDegree? = null
+    var fromTeacher: Boolean = false
 
-    fun build() = ExplanationData(
+    fun build() = if(fromTeacher)
+        TeacherExplanationData(
             content = content,
             author = author,
             nbEvaluations = nbEvaluations,
             meanGrade = meanGrade,
-            confidenceDegree = confidenceDegree
+            confidenceDegree = confidenceDegree,
+        )
+        else ExplanationData(
+            content = content,
+            author = author,
+            nbEvaluations = nbEvaluations,
+            meanGrade = meanGrade,
+            confidenceDegree = confidenceDegree,
     )
 }
 

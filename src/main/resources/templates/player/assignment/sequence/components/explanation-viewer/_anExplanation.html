@@ -18,10 +18,14 @@
 
 <div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices)"
      th:if="${!explanation.content.isBlank()}"
-     class="ui info message explanation"
-     th:styleappend="${explanation.meanGrade != null ? 'padding-top: 3em;' : ''}"
+     class="ui message explanation"
+     th:classappend="${explanation.fromTeacher ? 'success' : 'info'}"
+     th:styleappend="${explanation.meanGrade != null || explanation.fromTeacher ? 'padding-top: 3em;' : ''}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-    <div th:if="${explanation.meanGrade != null}" class="ui top left attached teal label">
+    <div th:if="${explanation.meanGrade != null}" class="ui top left attached label" th:classappend="${explanation.fromTeacher ? 'green' : 'teal'}">
+
+        <i th:if="${explanation.fromTeacher}" class="graduation cap icon" style="margin-right: 0.4em;"></i>
+        <span th:if="${explanation.fromTeacher}" th:text="#{player.sequence.explanation.teacher.label}" style="margin-right: 1em;"></span>
 
         <span th:text="${explanation.meanGrade}"></span>/5
 
@@ -30,6 +34,11 @@
         <span class="detail" th:if="${explanation.nbEvaluations > 1}"
               th:text="${explanation.nbEvaluations}+' '+#{common.evaluations}"></span>
     </div>
+    <div th:if="${explanation.meanGrade == null && explanation.fromTeacher}" class="ui top left attached label green">
+        <i class="graduation cap icon" style="margin-right: 0.4em;"></i>
+        <span th:text="#{player.sequence.explanation.teacher.label}"></span>
+    </div>
+
     <b>
         <span class="name-explanation" th:if="${studentsIdentitiesAreDisplayable}" th:text="|${explanation.author} - #{|player.sequence.interaction.confidenceDegree.${explanation.confidenceDegree}|}|">Blabla</span>
         <span th:if="${displayChoices && explanation.choiceList != null}" th:text="|#{player.sequence.users.responses}: ${explanation.choiceList}|">Responses: [2]</span>

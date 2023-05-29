@@ -67,7 +67,7 @@ class ChoiceExplanationStore(choiceSpecification: ChoiceSpecification) : Explana
         if (response.learnerChoice != null)
             add(
                     ResponseData(response),
-                    ExplanationData(response)
+                    ExplanationDataFactory.create(response)
             )
     }
 

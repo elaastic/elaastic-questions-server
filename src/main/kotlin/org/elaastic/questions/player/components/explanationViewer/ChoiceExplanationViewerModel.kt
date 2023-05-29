@@ -52,7 +52,8 @@ class ChoiceExplanationViewerModel(
                 explanationsByCorrectness.sortedWith(recommendedExplanationsComparator).reversed()
             else
                 explanationsForCorrectResponses
-    override val explanationsExcerpt = recommendedExplanations.take(3)
+    override val explanationsExcerpt = recommendedExplanations.filter { !it.fromTeacher }.take(3)
     override val nbExplanations = this.explanationsByResponse.values.flatten().count()
     override val hasMoreThanExcerpt = nbExplanationsForCorrectResponse > 3 || hasExplanationsForIncorrectResponse
+    override val teacherExplanation = explanationsForCorrectResponses.firstOrNull { it is TeacherExplanationData } as TeacherExplanationData
 }
