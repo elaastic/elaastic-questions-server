@@ -26,6 +26,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface SequenceRepository : JpaRepository<Sequence, Long> {
 
+    fun findAllByResultsArePublishedIsTrue() : List<Sequence>
+
     @EntityGraph(value = "Sequence.statement", type = EntityGraph.EntityGraphType.LOAD)
     fun findOneById(id: Long) : Sequence?
 

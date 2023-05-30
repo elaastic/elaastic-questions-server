@@ -79,10 +79,10 @@ internal class AssignmentServiceIntegrationTest(
         val teacher = integrationTestingService.getTestTeacher()
 
         assignmentService.findAllByOwner(teacher)
-                .tExpect {
-                    assertThat(it.totalElements, equalTo(0L))
-                    assertThat(it.totalPages, equalTo(0))
-                }
+            .tExpect {
+                assertThat(it.totalElements, equalTo(0L))
+                assertThat(it.totalPages, equalTo(0))
+            }
     }
 
     @Test
@@ -91,32 +91,33 @@ internal class AssignmentServiceIntegrationTest(
         createTestingData(teacher)
 
         assignmentService.findAllByOwner(teacher)
-                .tExpect {
-                    assertThat(it.totalElements, equalTo(10L))
-                    assertThat(it.totalPages, equalTo(1))
-                }
+            .tExpect {
+                assertThat(it.totalElements, equalTo(10L))
+                assertThat(it.totalPages, equalTo(1))
+            }
 
         assignmentService.findAllByOwner(teacher, PageRequest.of(0, 5))
-                .tExpect {
-                    assertThat(it.totalPages, equalTo(2))
-                }
+            .tExpect {
+                assertThat(it.totalPages, equalTo(2))
+            }
     }
 
     @Test
     fun `get an existing assignment without fetching sequences`() {
         val teacher = integrationTestingService.getTestTeacher()
+        val assignmentTitle = "An assignment"
         val assignmentId = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
+            Assignment(title = assignmentTitle, owner = teacher)
         ).id!!
 
         entityManager.clear()
 
         assignmentService.get(assignmentId).let {
             assertThat(it.id, equalTo(assignmentId))
-            assertThat(it.title, equalTo("Foo"))
+            assertThat(it.title, equalTo(assignmentTitle))
             assertThat(
-                    persistentUnitUtil.isLoaded(it, "sequences"),
-                    equalTo(false)
+                persistentUnitUtil.isLoaded(it, "sequences"),
+                equalTo(false)
             )
         }
     }
@@ -124,18 +125,19 @@ internal class AssignmentServiceIntegrationTest(
     @Test
     fun `get an existing assignment fetching sequences`() {
         val teacher = integrationTestingService.getTestTeacher()
+        val assignmentTitle = "An assignment"
         val assignmentId = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
+            Assignment(title = assignmentTitle, owner = teacher)
         ).id!!
 
         entityManager.clear()
 
         assignmentService.get(assignmentId, true).let {
             assertThat(it.id, equalTo(assignmentId))
-            assertThat(it.title, equalTo("Foo"))
+            assertThat(it.title, equalTo(assignmentTitle))
             assertThat(
-                    persistentUnitUtil.isLoaded(it, "sequences"),
-                    equalTo(true)
+                persistentUnitUtil.isLoaded(it, "sequences"),
+                equalTo(true)
             )
         }
     }
@@ -143,22 +145,22 @@ internal class AssignmentServiceIntegrationTest(
     @Test
     fun `get an assignment for a user - OK`() {
         val teacher = integrationTestingService.getTestTeacher()
+        val assignmentTitle = "An assignment"
         val assignmentId = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
+            Assignment(title = assignmentTitle, owner = teacher)
         ).id!!
 
         entityManager.clear()
 
-        assignmentService.get(teacher, assignmentId).let {
-            assertThat(it.id, equalTo(assignmentId))
-        }
+        assertThat(assignmentService.get(teacher, assignmentId).id, equalTo(assignmentId))
     }
 
     @Test
-    fun `try to get an assignement for a user that is owned by another user`() {
+    fun `try to get an assignment for a user that is owned by another user`() {
         val teacher = integrationTestingService.getTestTeacher()
+        val assignmentTitle = "An assignment"
         val assignmentId = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
+            Assignment(title = assignmentTitle, owner = teacher)
         ).id!!
 
         entityManager.clear()
@@ -179,13 +181,13 @@ internal class AssignmentServiceIntegrationTest(
     fun `save a valid assignment`() {
         val assignment = Assignment("title", integrationTestingService.getTestTeacher())
         tWhen { assignmentService.save(assignment) }
-                .tThen {
-                    assertThat(it.id, notNullValue())
-                    assertThat(it.version, equalTo(0L))
-                    assertThat(UUID.fromString(it.globalId), notNullValue())
-                    assertThat(it.sequences.size, equalTo(0))
-                    assertThat(it.owner, equalTo(integrationTestingService.getTestTeacher()))
-                }
+            .tThen {
+                assertThat(it.id, notNullValue())
+                assertThat(it.version, equalTo(0L))
+                assertThat(UUID.fromString(it.globalId), notNullValue())
+                assertThat(it.sequences.size, equalTo(0))
+                assertThat(it.owner, equalTo(integrationTestingService.getTestTeacher()))
+            }
     }
 
     @Test
@@ -196,8 +198,8 @@ internal class AssignmentServiceIntegrationTest(
 
         assertThat(exception.constraintViolations.size, equalTo(1))
         assertThat(
-                exception.constraintViolations.elementAt(0).propertyPath.toString(),
-                equalTo("title")
+            exception.constraintViolations.elementAt(0).propertyPath.toString(),
+            equalTo("title")
         )
     }
 
@@ -207,35 +209,38 @@ internal class AssignmentServiceIntegrationTest(
         val teacher = subject.owner
         val initialNbAssignment = assignmentService.count()
         val initialNbStatement = subjectService.countAllStatement(subject)
-        val assignment = subjectService.addAssignment(subject,
-                Assignment("Foo",teacher))
+        val assignmentTitle = "An assignment"
+        val assignment = subjectService.addAssignment(
+            subject,
+            Assignment(assignmentTitle, teacher)
+        )
         val student = integrationTestingService.getTestStudent()
 
-        sequenceService.start(teacher, assignment.sequences.first(), ExecutionContext.FaceToFace, false,0)
+        sequenceService.start(teacher, assignment.sequences.first(), ExecutionContext.FaceToFace, false, 0)
 
         val interaction =
-                Interaction(
-                        interactionType = InteractionType.ResponseSubmission,
-                        rank = 1,
-                        owner= student,
-                        sequence= assignment.sequences.first()
-                )
+            Interaction(
+                interactionType = InteractionType.ResponseSubmission,
+                rank = 1,
+                owner = student,
+                sequence = assignment.sequences.first()
+            )
         interactionService.interactionRepository.saveAndFlush(interaction)
         interactionService.start(student, interaction.id!!)
 
-        val initialNbResponse = responseService.count(assignment.sequences.first(),1)
+        val initialNbResponse = responseService.count(assignment.sequences.first(), 1)
 
         val choiceListSpecification = LearnerChoice(listOf<Int>(1, 3))
         val response = Response(
-                learner = student,
-                interaction = interaction,
-                attempt = 1,
-                explanation = "explanation",
-                confidenceDegree = ConfidenceDegree.CONFIDENT,
-                meanGrade = BigDecimal(1),
-                learnerChoice = choiceListSpecification,
-                score = BigDecimal(2),
-                statement = interaction.sequence.statement
+            learner = student,
+            interaction = interaction,
+            attempt = 1,
+            explanation = "explanation",
+            confidenceDegree = ConfidenceDegree.CONFIDENT,
+            meanGrade = BigDecimal(1),
+            learnerChoice = choiceListSpecification,
+            score = BigDecimal(2),
+            statement = interaction.sequence.statement
         )
         responseRepository.save(response)
 
@@ -244,7 +249,7 @@ internal class AssignmentServiceIntegrationTest(
         }.tThen {
             assertThat(assignmentService.count(), equalTo(initialNbAssignment))
             assertThat(subjectService.countAllStatement(subject), equalTo((initialNbStatement)))
-            assertThat(responseService.count(assignment.sequences.first(),1),equalTo(initialNbResponse))
+            assertThat(responseService.count(assignment.sequences.first(), 1), equalTo(initialNbResponse))
         }
     }
 
@@ -254,9 +259,12 @@ internal class AssignmentServiceIntegrationTest(
         val teacher = subject.owner
         val initialNbAssignment = assignmentService.count()
         val initialNbStatement = subjectService.countAllStatement(subject)
+        val assignmentTitle = "An assignment"
 
-        val assignment = subjectService.addAssignment(subject,
-                Assignment("Foo",teacher))
+        val assignment = subjectService.addAssignment(
+            subject,
+            Assignment(assignmentTitle, teacher)
+        )
 
         entityManager.clear()
 
@@ -272,7 +280,7 @@ internal class AssignmentServiceIntegrationTest(
     fun `try to delete an assignment of another user`() {
         val teacher = integrationTestingService.getTestTeacher()
         val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
+            Assignment(title = "An assignment", owner = teacher)
         )
 
         assertThrows<IllegalArgumentException> {
@@ -284,22 +292,22 @@ internal class AssignmentServiceIntegrationTest(
     fun `count sequences of empty assignment`() {
         val teacher = integrationTestingService.getTestTeacher()
         val assignment = assignmentService.save(
-                Assignment(title = "Foo", owner = teacher)
+            Assignment(title = "An assignment", owner = teacher)
         )
 
         assertThat(
-                assignmentService.countAllSequence(assignment),
-                equalTo(0)
+            assignmentService.countAllSequence(assignment),
+            equalTo(0)
         )
     }
 
     @Test
     fun `count sequences of the provided test assignment`() {
         assertThat(
-                assignmentService.countAllSequence(
-                        assignmentService.get(382)
-                ),
-                equalTo(2)
+            assignmentService.countAllSequence(
+                assignmentService.get(382)
+            ),
+            equalTo(2)
         )
     }
 
@@ -310,18 +318,18 @@ internal class AssignmentServiceIntegrationTest(
 
         tWhen {
             subjectService.addAssignment(
-                    subject,
-                    Assignment(title = "Foo", owner = subject.owner, subject = subject)
+                subject,
+                Assignment(title = "An assignment", owner = subject.owner, subject = subject)
             )
         }.tThen {
             assertThat(it.id, notNullValue())
             assertThat(
-                    assignmentService.countAllSequence(it),
-                    equalTo(initialCount)
+                assignmentService.countAllSequence(it),
+                equalTo(initialCount)
             )
             assertThat(
-                    subjectService.countAllStatement(subject),
-                    equalTo(initialCount)
+                subjectService.countAllStatement(subject),
+                equalTo(initialCount)
             ) // Should not add statement to subject
         }
     }
@@ -329,29 +337,29 @@ internal class AssignmentServiceIntegrationTest(
     @Test
     fun `add a sequence when a new statement is added to subject`() {
         val subject = integrationTestingService.getAnyTestSubject()
-        val assignment =  subjectService.addAssignment(
-                subject,
-                Assignment(title = "Foo", owner = subject.owner, subject = subject)
+        val assignment = subjectService.addAssignment(
+            subject,
+            Assignment(title = "An assignment", owner = subject.owner, subject = subject)
         )
         val initialCount = assignmentService.countAllSequence(assignment)
 
 
         tWhen {
             subjectService.addStatement(
-                    subject,
-                    Statement.createDefaultStatement(subject.owner)
-                            .title("Sequence n°1")
-                            .content("Content 1")
+                subject,
+                Statement.createDefaultStatement(subject.owner)
+                    .title("Sequence n°1")
+                    .content("Content 1")
             )
         }.tThen {
             assertThat(it.id, notNullValue())
             assertThat(
-                    assignmentService.countAllSequence(assignment),
-                    equalTo(initialCount+1)
+                assignmentService.countAllSequence(assignment),
+                equalTo(initialCount + 1)
             )
             assertThat(
-                    subjectService.countAllStatement(subject),
-                    equalTo(initialCount+1)
+                subjectService.countAllStatement(subject),
+                equalTo(initialCount + 1)
             )
         }
     }
@@ -361,30 +369,29 @@ internal class AssignmentServiceIntegrationTest(
     fun `remove a sequence without results when a statement is removed from subject`() {
         val subject = integrationTestingService.getAnyTestSubject()
         val statement1 = subjectService.addStatement(
-                subject,
-                Statement.createDefaultStatement(subject.owner)
-                        .title("Sequence n°1")
-                        .content("Content 1")
+            subject,
+            Statement.createDefaultStatement(subject.owner)
+                .title("Sequence n°1")
+                .content("Content 1")
         )
-        val assignment =  subjectService.addAssignment(
-                subject,
-                Assignment(title = "Foo", owner = subject.owner, subject = subject)
+        val assignment = subjectService.addAssignment(
+            subject,
+            Assignment(title = "An assignment", owner = subject.owner, subject = subject)
         )
         val initialCount = assignmentService.countAllSequence(assignment)
-        val stmtId = statement1.id!!
 
         tWhen {
             subjectService.removeStatement(subject.owner, statement1)
         }.tThen {
             assertThat(
-                    "1er",
-                    subjectService.countAllStatement(subject),
-                    equalTo(initialCount-1)
+                "1er",
+                subjectService.countAllStatement(subject),
+                equalTo(initialCount - 1)
             )
             assertThat(
-                    "2eme",
-                    assignmentService.countAllSequence(assignment),
-                    equalTo(initialCount-1)
+                "2eme",
+                assignmentService.countAllSequence(assignment),
+                equalTo(initialCount - 1)
             )
 
         }
@@ -403,34 +410,32 @@ internal class AssignmentServiceIntegrationTest(
 
         tWhen {
             assertThat(
-                    " Before ",
-                    assignmentService.countAllSequence(assignment),
-                    equalTo(initialCount)
+                " Before ",
+                assignmentService.countAllSequence(assignment),
+                equalTo(initialCount)
             )
             subjectService.removeStatement(subject.owner, statement1)
         }.tThen {
             assertThat(statementRepository.existsById(stmtId), equalTo(true))
             assertThat(
-                    " First ",
-                    assignmentService.countAllSequence(assignment),
-                    equalTo(initialCount)
+                " First ",
+                assignmentService.countAllSequence(assignment),
+                equalTo(initialCount)
             ) // The sequence must be kept
             assertThat(
-                    " Second ",
-                    subjectService.countAllStatement(subject),
-                    equalTo(initialCountStatements-1)
+                " Second ",
+                subjectService.countAllStatement(subject),
+                equalTo(initialCountStatements - 1)
             )
         }
     }
 
 
-
-
     @Test
     fun `findByGlobalId - not existing value`() {
         assertThat(
-                assignmentService.findByGlobalId("not existing"),
-                nullValue()
+            assignmentService.findByGlobalId("not existing"),
+            nullValue()
         )
     }
 
@@ -438,14 +443,14 @@ internal class AssignmentServiceIntegrationTest(
     fun `findByGlobalId - existing value`() {
         val teacher = integrationTestingService.getTestTeacher()
         assignmentService.save(
-                Assignment(
-                        title = "An assignment",
-                        owner = teacher
-                )
+            Assignment(
+                title = "An assignment",
+                owner = teacher
+            )
         ).tExpect {
             assertThat(
-                    assignmentService.findByGlobalId(it.globalId),
-                    equalTo(it)
+                assignmentService.findByGlobalId(it.globalId),
+                equalTo(it)
             )
         }
     }
@@ -456,10 +461,10 @@ internal class AssignmentServiceIntegrationTest(
         val student = integrationTestingService.getTestStudent()
 
         val assignment = assignmentService.save(
-                Assignment(
-                        title = "An assignment",
-                        owner = teacher
-                )
+            Assignment(
+                title = "An assignment",
+                owner = teacher
+            )
         )
 
         tWhen {
@@ -480,10 +485,10 @@ internal class AssignmentServiceIntegrationTest(
     private fun createTestingData(owner: User, n: Int = 10) {
         (1..n).forEach {
             assignmentService.save(
-                    Assignment(
-                            title = "Assignment n°$it",
-                            owner = owner
-                    )
+                Assignment(
+                    title = "Assignment n°$it",
+                    owner = owner
+                )
             )
         }
     }

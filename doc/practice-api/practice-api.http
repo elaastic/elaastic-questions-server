@@ -1,0 +1,17 @@
+###
+GET http://localhost:8080/api/practice/v1/subjects?since=2023-06-15T16:36:00Z
+Accept: application/vnd.api+json
+Authorization: Basic elaastic-api 1234
+
+###
+GET http://localhost:8080/api/practice/v1/subjects/386
+Accept: application/vnd.api+json
+Authorization: Basic elaastic-api 1234
+
+###
+GET http://localhost:8080/api/practice/v1/subjects/386/questions/625/attachment/3/blob
+Authorization: Basic elaastic-api 1234
+
+###
+GET http://localhost:8080/api/practice/v1/subjects/386/questions/625/attachment/4/blob
+Authorization: Basic elaastic-api 1234

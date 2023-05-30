@@ -1,0 +1,422 @@
+openapi: 3.0.3
+info:
+  title: Elaastic - Practice API 3.0
+  description: |-
+    The Elaastic Practice API allows you to retrieve subjects from completed Elaastic sequences that can be used by learners to practice on it.
+
+  contact:
+    email: franck.silvestre@irit.fr
+  license:
+    name: GNU Affero General Public License v3.0
+    url: https://www.gnu.org/licenses/#GPL
+  version: "1.0"
+servers:
+  - url: http://localhost:8080/api/practice/v1
+paths:
+  /subjects:
+    get:
+      tags:
+        - Subjects
+      summary: Get subjects ready for practicing
+      description: Get the subjects ready for practicing that has been published or updated since the provided date/time.
+      parameters:
+        - name: since
+          required: true
+          in: query
+          description: Date since when subjects should be considered
+          schema:
+            type: string
+            format: date-time
+            description: Date (ISO-8601 format) at which this bundle has been created
+            example: 2023-04-30T00:00:00.000Z
+      operationId: getSubjects
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SubjectSummary'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "http://localhost:8080/api/practice/v1/subjects?since=2023-06-15T16%3A36%3A00Z"
+        '400':
+          description: Bad request if the "since" parameter is missing or does not represents an ISO date
+        '401':
+          description: Unauthorized access
+      security:
+        - basicAuth: [ ]
+  /subjects/{subjectId}:
+    get:
+      tags:
+        - Subjects
+      summary: Get a practice subject
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful answer
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+  /subjects/{subjectId}/questions/{questionId}/attachment/{attachmentId}/blob:
+    get:
+      tags:
+        - Attachment
+      summary: Get the blob of an attachment of a question
+      description: Get the blob of an attachment of a question
+      parameters:
+        - name: subjectId
+          required: true
+          in: path
+          description: The ID of the subject (which must be ready to practice)
+          schema:
+            type: number
+            example: 243
+        - name: questionId
+          required: true
+          in: path
+          description: The ID of the question (which must be bounds to the subject & be ready to practice)
+          schema:
+            type: number
+            example: 11
+        - name: attachmentId
+          required: true
+          in: path
+          description: The ID of the attachment (which must be bound to the question)
+          schema:
+            type: number
+            example: 7628
+      operationId: getAttachmentBlob
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "%PDF-1.4 ..."
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Attachment filename and disposition
+            X-Content-Type-Options:
+              schema:
+                type: string
+              description: Content type options
+            X-XSS-Protection:
+              schema:
+                type: string
+              description: XSS protection mode
+            Vary:
+              schema:
+                type: string
+              description: Vary headers
+            Cache-Control:
+              schema:
+                type: string
+              description: Cache control directives
+            Pragma:
+              schema:
+                type: string
+              description: Pragma directives
+            Expires:
+              schema:
+                type: string
+              description: Expiration date and time
+            X-Frame-Options:
+              schema:
+                type: string
+              description: Frame options
+            Transfer-Encoding:
+              schema:
+                type: string
+              description: Transfer encoding
+            Date:
+              schema:
+                type: string
+              description: Response date and time
+            Keep-Alive:
+              schema:
+                type: string
+              description: Keep-alive timeout
+            Connection:
+              schema:
+                type: string
+              description: Connection status
+        '400':
+          description: Bad Request when the attachmentId does not corresponds to an attachment bounds to a question ready to practice, or when the question is not bound to the designated subject
+        '401':
+          description: Unauthorized access
+components:
+  schemas:
+    SubjectSummary:
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          example: 'practice-subject'
+        attributes:
+          type: object
+          properties:
+            title:
+              type: string
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: "http://localhost:8080/api/practice/v1/subjects/383"
+              description: URL of the practice subject
+    Subject:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+            attributes:
+              type: object
+              properties:
+                title:
+                  type: string
+            relationships:
+              type: object
+              properties:
+                learners:
+                  $ref: '#/components/schemas/PracticeLearnerRel'
+                questions:
+                  $ref: '#/components/schemas/PracticeQuestionRel'
+                topic:
+                  $ref: '#/components/schemas/TopicRel'
+        included:
+          type: array
+          items:
+            anyOf:
+              - $ref: "#/components/schemas/PracticeTopic"
+              - $ref: "#/components/schemas/PracticeQuestion"
+              - $ref: "#/components/schemas/PracticeLearnerExplanation"
+
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: "http://localhost:8080/api/practice/v1/subjects/386"
+    PracticeTopic:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the topic
+        type:
+          type: string
+          description: type
+        attributes:
+          type: object
+          properties:
+            title:
+              type: string
+              description: topic's title
+      example:
+        id: "1"
+        type: "practice-topic"
+        attributes:
+          title: "Computer Science"
+    PracticeQuestion:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "616"
+        type:
+          type: string
+          example: "practice-question"
+        attributes:
+          type: object
+          properties:
+            rank:
+              type: integer
+              example: 1
+            title:
+              type: string
+              example: "Question 1 - Open ended"
+            content:
+              type: string
+              example: "An open question for testing purpose"
+            expectedExplanation:
+              type: string
+              example: "Expected explanation for question 1"
+            specification:
+              oneOf:
+                - $ref: "#/components/schemas/OpenQuestionSpecification"
+                - $ref: "#/components/schemas/ExclusiveChoiceSpecification"
+                - $ref: "#/components/schemas/MultipleChoiceSpecification"
+
+        relationships:
+          type: object
+          properties:
+            attachment:
+              $ref: "#/components/schemas/PracticeAttachmentRel"
+            explanations:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                  example:
+                    - id: "11780"
+                      type: "practice-learner-explanation"
+                    - id: "11781"
+                      type: "practice-learner-explanation"
+      required:
+        - id
+        - type
+        - attributes
+        - relationships
+    PracticeLearnerExplanation:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          properties:
+            explanation:
+              type: string
+      required:
+        - id
+        - type
+        - attributes
+      example:
+        id: "11786"
+        type: "practice-learner-explanation"
+        attributes:
+          explanation: "That's my explanation"
+    PracticeLearnerRel:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                example: "practice-learner"
+    PracticeQuestionRel:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                example: "practice-question"
+    TopicRel:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+              example: "practice-topic"
+    PracticeAttachmentRel:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+              example: "practice-attachment"
+        links:
+          type: object
+          properties:
+            related:
+              type: string
+              example: "http://localhost:8080/api/practice/v1/subjects/386/questions/625/attachments/3"
+    PracticeLearnerExplanationRel:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+                example: "11789"
+              type:
+                type: string
+                example: "practice-learner-explanation"
+    OpenQuestionSpecification:
+      type: object
+      properties:
+        questionType:
+          type: string
+          example: "OpenEnded"
+    ExclusiveChoiceSpecification:
+      type: object
+      properties:
+        questionType:
+          type: string
+          example: "ExclusiveChoice"
+        nbCandidateItem:
+          type: number
+          example: 4
+        expectedChoiceIndex:
+          type: number
+          example: 3
+    MultipleChoiceSpecification:
+      type: object
+      properties:
+        questionType:
+          type: string
+          example: "MultipleChoice"
+        nbCandidateItem:
+          type: number
+          example: 4
+        expectedChoiceIndexList:
+          type: array
+          items:
+            type: number
+          example: [2,3]
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

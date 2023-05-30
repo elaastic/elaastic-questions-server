@@ -15,6 +15,8 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
+import org.elaastic.questions.course.Course
+import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.player.PlayerController
@@ -31,6 +33,7 @@ import kotlin.random.Random
 @Service
 @Transactional
 class FunctionalTestingService(
+    @Autowired val courseService: CourseService,
     @Autowired val subjectService: SubjectService,
     @Autowired val sequenceService: SequenceService,
     @Autowired val assignmentService: AssignmentService,
@@ -40,80 +43,104 @@ class FunctionalTestingService(
     @Autowired val interactionService: InteractionService,
 ) {
 
-    fun generateSubject(user: User): Subject {
-        // Subject
-        val subject = subjectService.save(
-            Subject(
-                "Test subject ${LocalDate.now()}",
-                user
-            )
-        )
-
-        // Questions
-        subjectService.addStatement(
-            subject,
-            Statement(
-                title = "Question 1 - Open ended",
+    fun createCourse(user: User, title: String = "Default course title") =
+        courseService.save(
+            Course(
                 owner = user,
-                questionType = QuestionType.OpenEnded,
-                content = "An open question for testing purpose",
-                rank = 0,
-                expectedExplanation = "Expected explanation for question 1"
+                title = title,
             )
         )
 
-        subjectService.addStatement(
+    fun createSubject(user: User,
+                      title: String = "Default subject title") =
+        subjectService.save(
+            Subject(title, user)
+        )
+
+    fun createSubject(user: User, course: Course, title: String = "Default subject title") =
+        createSubject(user, title)
+            .also { courseService.addSubjectToCourse(user, it, course) }
+
+    fun createAssignment(subject: Subject, title: String = "Default assignment title") =
+        subjectService.addAssignment(
             subject,
-            Statement(
-                title = "Question 2 - Exclusive choice",
-                owner = user,
-                questionType = QuestionType.ExclusiveChoice,
-                content = "An exclusive choice question for testing purpose",
-                choiceSpecification = ExclusiveChoiceSpecification(
-                    nbCandidateItem = 4,
-                    expectedChoice = ChoiceItem(3, 100f)
-                ),
-                rank = 1,
-                expectedExplanation = "Expected explanation for question 2"
+            Assignment(
+                owner = subject.owner,
+                title = title,
             )
         )
 
-        subjectService.addStatement(
-            subject,
-            Statement(
-                title = "Question 3 - Multiple choice",
-                owner = user,
-                questionType = QuestionType.MultipleChoice,
-                choiceSpecification = MultipleChoiceSpecification(
-                    nbCandidateItem = 3,
-                    expectedChoiceList = listOf(ChoiceItem(1, 50f), ChoiceItem(2, 50f))
-                ),
-                content = "A multiple choice question for testing purpose",
-                rank = 2,
-                expectedExplanation = "Expected explanation for question 3"
-            )
-        )
+    fun addQuestion(subject: Subject, statement: Statement) =
+        subjectService.addStatement(subject, statement)
 
-
-        // Assignments
-        listOf("Face-to-face", "Blended", "Distant").forEach {
-            subjectService.addAssignment(
+    fun addQuestion(subject: Subject, questionType: QuestionType) =
+        subject.statements.size.let { questionIndex ->
+            addQuestion(
                 subject,
-                Assignment(
-                    owner = user,
-                    title = "$it Test Assignment",
+                generateStatement(
+                    owner = subject.owner,
+                    questionType = questionType,
+                    questionIndex = questionIndex
                 )
             )
+
         }
 
-        return subject
+    fun generateStatement(
+        owner: User,
+        questionType: QuestionType,
+        questionIndex: Int
+    ): Statement {
+        val title = "Question ${questionIndex + 1} - $questionType"
+        val content = "Content of question ${questionIndex + 1}"
+        val expectedExplanation = "TODO"
+
+        return Statement(
+            title = title,
+            content = content,
+            owner = owner,
+            questionType = questionType,
+            rank = questionIndex,
+            expectedExplanation = expectedExplanation,
+            choiceSpecification = when (questionType) {
+                QuestionType.OpenEnded -> null
+
+                QuestionType.ExclusiveChoice ->
+                    ExclusiveChoiceSpecification(
+                        nbCandidateItem = 4,
+                        expectedChoice = ChoiceItem(3, 100f)
+                    )
+
+                QuestionType.MultipleChoice ->
+                    MultipleChoiceSpecification(
+                        nbCandidateItem = 3,
+                        expectedChoiceList = listOf(ChoiceItem(1, 50f), ChoiceItem(2, 50f))
+                    )
+            }
+        )
     }
+
+    fun generateSubjectWithQuestionsAndAssignments(user: User) =
+        createSubject(user, "Test subject ${LocalDate.now()}")
+            // Questions
+            .also { subject ->
+                addQuestion(subject, QuestionType.OpenEnded)
+                addQuestion(subject, QuestionType.ExclusiveChoice)
+                addQuestion(subject, QuestionType.MultipleChoice)
+            }
+            // Assignments
+            .also { subject ->
+                listOf("Face-to-face", "Blended", "Distant").forEach {
+                    createAssignment(subject, "$it Test Assignment")
+                }
+            }
+
 
     fun startSequence(
         sequence: Sequence,
-        executionContext: ExecutionContext,
-        studentsProvideExplanation: Boolean,
-        nbResponseToEvaluate: Int
+        executionContext: ExecutionContext = ExecutionContext.FaceToFace,
+        studentsProvideExplanation: Boolean = true,
+        nbResponseToEvaluate: Int = 3
     ) =
         sequenceService.start(
             sequence.owner,
@@ -182,6 +209,28 @@ class FunctionalTestingService(
     }
 
 
+    fun submitRandomResponses(
+        phase: Phase,
+        learners: List<User>,
+        sequence: Sequence,
+    ) =
+        learners.forEachIndexed { index, learner ->
+            submitResponse(
+                phase,
+                learner,
+                sequence,
+                Random.nextBoolean(),
+                ConfidenceDegree.values().random(),
+                "Random explanation n°$index by ${learner.username}"
+            )
+        }
+
+    fun curriedSubmitRandomResponses(
+        phase: Phase,
+        learners: List<User>
+    ) =
+        { sequence: Sequence -> submitRandomResponses(phase, learners, sequence) }
+
     fun evaluate(
         user: User,
         sequence: Sequence,
@@ -198,11 +247,26 @@ class FunctionalTestingService(
         }
     }
 
+    fun randomEvaluate(
+        learners: List<User>,
+        sequence: Sequence
+    ) =
+        learners.forEach {
+            evaluate(it, sequence, EvaluationStrategy.RANDOM)
+        }
+
+    fun curriedRandomEvaluate(learners: List<User>) =
+        { sequence: Sequence -> randomEvaluate(learners, sequence) }
+
+
     fun publishResults(sequence: Sequence) =
         sequenceService.publishResults(sequence.owner, sequence)
 
     fun stopSequence(sequence: Sequence) =
         sequenceService.stop(sequence.owner, sequence)
+
+    fun reopenSequence(sequence: Sequence) =
+        sequenceService.reopen(sequence.owner, sequence)
 
     fun nextPhase(sequence: Sequence) =
         sequence.activeInteraction.let { activeInteraction ->
@@ -263,6 +327,25 @@ class FunctionalTestingService(
 
             candidates
         }
+
+    fun randomlyPlaySequence(learners: List<User>, sequence: Sequence) =
+        startSequence(sequence)
+            .also(curriedSubmitRandomResponses(Phase.PHASE_1, learners))
+            .also(::nextPhase)
+            .also(curriedRandomEvaluate(learners))
+            .also(::nextPhase)
+            .also(::publishResults)
+            .also(::stopSequence)
+
+    fun curriedRandomlyPlaySequence(learners: List<User>) : (sequence: Sequence) -> Unit =
+        { sequence: Sequence -> randomlyPlaySequence(learners, sequence) }
+
+    fun randomlyPlayAllSequences(learners: List<User>, assignment: Assignment) =
+        assignment.sequences.forEach(curriedRandomlyPlaySequence(learners))
+
+    fun curriedRandomlyPlayAllSequences(learners: List<User>) : (assignment: Assignment) -> Unit =
+        { assignment -> randomlyPlayAllSequences(learners, assignment) }
+
 
     fun executeScript(sequenceId: Long, script: List<Command>) {
         val sequence = sequenceService.get(sequenceId, true)

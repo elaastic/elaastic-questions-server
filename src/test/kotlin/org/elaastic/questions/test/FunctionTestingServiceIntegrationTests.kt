@@ -23,7 +23,7 @@ internal class FunctionTestingServiceIntegrationTests(
     @Test
     fun `3 sequences should be started`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubject(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
 
         val sequences = subject.getAnyAssignment().getAnyNSequences(3)
 
@@ -44,7 +44,7 @@ internal class FunctionTestingServiceIntegrationTests(
     @Test
     fun `publish the results of a sequence`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubject(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
         val sequence = subject.getAnyAssignment().getAnySequence()
 
         assertThat(sequence.resultsArePublished, equalTo(false))
@@ -63,7 +63,7 @@ internal class FunctionTestingServiceIntegrationTests(
     @Test
     fun `stop a sequence`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubject(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
         val sequence = subject.getAnyAssignment().getAnySequence()
 
         assertThat(sequence.isNotStarted(), equalTo(true))
@@ -83,7 +83,7 @@ internal class FunctionTestingServiceIntegrationTests(
     @Test
     fun `start the next phase`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubject(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
         val sequence = subject.getAnyAssignment().getAnySequence()
 
         assertThat(sequence.activeInteraction, equalTo(null))

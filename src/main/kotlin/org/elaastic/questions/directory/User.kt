@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.directory
 
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -136,6 +137,9 @@ class User(
 
     @OneToOne(mappedBy = "user")
     var activationKey: ActivationKey? = null
+
+    @OneToMany(mappedBy = "learner")
+    var registrations: MutableSet<LearnerAssignment> = mutableSetOf()
 
     fun isLearner(): Boolean {
         return roles.map { it.name }.contains(Role.RoleId.STUDENT.roleName)

@@ -41,64 +41,69 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class ResponseService(
-        @Autowired val responseRepository: ResponseRepository,
-        @Autowired val learnerAssignmentService: LearnerAssignmentService,
-        @Autowired val entityManager: EntityManager,
-        @Autowired val recommendationService: ResponseRecommendationService,
-        @Autowired val statementService: StatementService,
-        @Autowired val userService: UserService
+    @Autowired val responseRepository: ResponseRepository,
+    @Autowired val learnerAssignmentService: LearnerAssignmentService,
+    @Autowired val entityManager: EntityManager,
+    @Autowired val recommendationService: ResponseRecommendationService,
+    @Autowired val statementService: StatementService,
+    @Autowired val userService: UserService
 ) {
 
     fun getOne(id: Long) = responseRepository.getOne(id)
 
     fun findAll(sequence: Sequence, excludeFakes: Boolean = true): ResponseSet =
-            findAll(sequence.getResponseSubmissionInteraction(), excludeFakes)
+        findAll(sequence.getResponseSubmissionInteraction(), excludeFakes)
 
     fun findAll(interaction: Interaction, excludeFakes: Boolean = true): ResponseSet =
-            ResponseSet(
-                    if (excludeFakes)
-                        responseRepository.findAllByInteractionAndFakeIsFalseOrderByMeanGradeDesc(interaction)
-                    else responseRepository.findAllByInteractionOrderByMeanGradeDesc(interaction)
-            )
+        ResponseSet(
+            if (excludeFakes)
+                responseRepository.findAllByInteractionAndFakeIsFalseOrderByMeanGradeDesc(interaction)
+            else responseRepository.findAllByInteractionOrderByMeanGradeDesc(interaction)
+        )
+
+    fun find3BestRankedResponses(sequence: Sequence): Triple<Response?, Response?, Response?> =
+        responseRepository.findAllByInteractionAndScoreAndFakeIsFalseOrderByMeanGradeDesc(
+            sequence.getResponseSubmissionInteraction()
+        ).let { return Triple(it.getOrNull(0), it.getOrNull(1), it.getOrNull(2)) }
 
     fun count(sequence: Sequence, attempt: AttemptNum) =
-            count(sequence.getResponseSubmissionInteraction(), attempt)
+        count(sequence.getResponseSubmissionInteraction(), attempt)
 
     fun count(interaction: Interaction, attempt: AttemptNum) =
-            responseRepository.countByInteractionAndAttemptAndFakeIsFalse(interaction, attempt)
+        responseRepository.countByInteractionAndAttemptAndFakeIsFalse(interaction, attempt)
 
     fun findAllRecommandedResponsesForUser(sequence: Sequence, user: User, attempt: AttemptNum): List<Response> =
-            if (sequence.executionIsFaceToFace()) {
-                // TODO (+) We should index the recommended explanations by userId to that we don't need to get the userResponse to find its recommendations
-                responseRepository.findByInteractionAndAttemptAndLearner(
-                        sequence.getResponseSubmissionInteraction(),
-                        1,
-                        user
-                )?.let { userResponse ->
-                    sequence.getResponseSubmissionInteraction().explanationRecommendationMapping?.getRecommandation(
-                            userResponse.id!!
-                    )?.let { responseRepository.getAllByIdIn(it) }
-                } ?: listOf<Response>()
+        if (sequence.executionIsFaceToFace()) {
+            // TODO (+) We should index the recommended explanations by userId to that we don't need to get the userResponse to find its recommendations
+            responseRepository.findByInteractionAndAttemptAndLearner(
+                sequence.getResponseSubmissionInteraction(),
+                1,
+                user
+            )?.let { userResponse ->
+                sequence.getResponseSubmissionInteraction().explanationRecommendationMapping?.getRecommandation(
+                    userResponse.id!!
+                )?.let { responseRepository.getAllByIdIn(it) }
+            } ?: listOf<Response>()
 
-            } else recommendationService.findAllResponsesOrderedByEvaluationCount(
-                    interaction = sequence.getResponseSubmissionInteraction(),
-                    attemptNum = attempt,
-                    limit = sequence.getEvaluationSpecification().responseToEvaluateCount
-            )
+        } else recommendationService.findAllResponsesOrderedByEvaluationCount(
+            interaction = sequence.getResponseSubmissionInteraction(),
+            attemptNum = attempt,
+            limit = sequence.getEvaluationSpecification().responseToEvaluateCount
+        )
 
     fun hasResponseForUser(learner: User, sequence: Sequence, attempt: AttemptNum = 1) =
-            responseRepository.countByLearnerAndInteractionAndAttempt(
-                    learner = learner,
-                    interaction = sequence.getResponseSubmissionInteraction(),
-                    attempt = attempt
-            ) > 0
+        responseRepository.countByLearnerAndInteractionAndAttempt(
+            learner = learner,
+            interaction = sequence.getResponseSubmissionInteraction(),
+            attempt = attempt
+        ) > 0
 
     fun find(learner: User, sequence: Sequence, attempt: AttemptNum = 1) =
-            responseRepository.findByInteractionAndAttemptAndLearner(
-                    sequence.getResponseSubmissionInteraction(),
-                    attempt,
-                    learner
-            )
+        responseRepository.findByInteractionAndAttemptAndLearner(
+            sequence.getResponseSubmissionInteraction(),
+            attempt,
+            learner
+        )
 
 
     /**
@@ -106,7 +111,8 @@ class ResponseService(
      *  bound the provided interaction
      */
     fun updateGradings(sequence: Sequence) {
-        entityManager.createNativeQuery("""
+        entityManager.createNativeQuery(
+            """
             UPDATE choice_interaction_response response
             INNER JOIN (
                     SELECT pg.response_id as rid,
@@ -120,14 +126,16 @@ class ResponseService(
                 evaluation_count = data.evaluationCount
             WHERE response.interaction_id = :interactionId
                 AND response.attempt = :attempt
-        """.trimIndent())
-                .setParameter("interactionId", sequence.getResponseSubmissionInteraction().id)
-                .setParameter("attempt", sequence.whichAttemptEvaluate())
-                .executeUpdate()
+        """.trimIndent()
+        )
+            .setParameter("interactionId", sequence.getResponseSubmissionInteraction().id)
+            .setParameter("attempt", sequence.whichAttemptEvaluate())
+            .executeUpdate()
     }
 
     fun updateMeanGradeAndEvaluationCount(response: Response): Response {
-        val res = entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.grade) as evaluationCount from PeerGrading pg where pg.response = :response and pg.grade <> -1")
+        val res =
+            entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.grade) as evaluationCount from PeerGrading pg where pg.response = :response and pg.grade <> -1")
                 .setParameter("response", response)
                 .singleResult as Array<Object?>
 
@@ -139,10 +147,10 @@ class ResponseService(
 
     fun save(userActiveInteraction: Interaction, response: Response): Response {
         require(
-                learnerAssignmentService.isRegistered(
-                        response.learner,
-                        response.interaction.sequence.assignment!!
-                )
+            learnerAssignmentService.isRegistered(
+                response.learner,
+                response.interaction.sequence.assignment!!
+            )
         ) { "You must be registered on the assignment to submit a response" }
         require(run {
             userActiveInteraction.isResponseSubmission() &&
@@ -167,9 +175,9 @@ class ResponseService(
      * @param sequence the sequence
      */
     fun buildResponseBasedOnTeacherExpectedExplanationForASequence(
-            sequence: Sequence,
-            teacher: User,
-            confidenceDegree: ConfidenceDegree = ConfidenceDegree.CONFIDENT
+        sequence: Sequence,
+        teacher: User,
+        confidenceDegree: ConfidenceDegree = ConfidenceDegree.CONFIDENT
     ): Response? {
         val statement = sequence.statement
         if (statement.expectedExplanation.isNullOrBlank()) {
@@ -185,17 +193,20 @@ class ResponseService(
                         score = Response.computeScore(it, choiceSpecification)
                     }
                 }
+
                 is MultipleChoiceSpecification -> {
                     LearnerChoice(choiceSpecification.expectedChoiceList.map { it.index }).also {
                         score = Response.computeScore(it, choiceSpecification)
                     }
                 }
+
                 else -> {
                     null
                 }
             }
         }
-        return responseRepository.save(Response(
+        return responseRepository.save(
+            Response(
                 learner = teacher,
                 explanation = statement.expectedExplanation,
                 confidenceDegree = confidenceDegree,
@@ -205,7 +216,8 @@ class ResponseService(
                 score = score,
                 fake = true,
                 statement = statement
-        ))
+            )
+        )
     }
 
 
@@ -213,8 +225,10 @@ class ResponseService(
      * Build  responses from teacher fake explanations
      * @param sequence the sequence
      */
-    fun buildResponsesBasedOnTeacherFakeExplanationsForASequence(sequence: Sequence,
-                                                                 confidenceDegree: ConfidenceDegree = ConfidenceDegree.CONFIDENT): List<Response> {
+    fun buildResponsesBasedOnTeacherFakeExplanationsForASequence(
+        sequence: Sequence,
+        confidenceDegree: ConfidenceDegree = ConfidenceDegree.CONFIDENT
+    ): List<Response> {
         val res = mutableListOf<Response>()
         val statement = sequence.statement
         val explanations = statementService.findAllFakeExplanationsForStatement(statement)
@@ -222,14 +236,19 @@ class ResponseService(
             val attempt = sequence.whichAttemptEvaluate()
             val interaction = sequence.getResponseSubmissionInteraction()
             explanations.forEachIndexed { index, fakeExplanation ->
-                val fakeLearner = entityManager.merge(userService.fakeUserList!![index % userService.fakeUserList!!.size])
+                val fakeLearner =
+                    entityManager.merge(userService.fakeUserList!![index % userService.fakeUserList!!.size])
                 var score: BigDecimal? = null
                 val learnerChoice = if (statement.hasChoices()) {
                     LearnerChoice(listOf(fakeExplanation.correspondingItem!!)).also {
-                        score = Response.computeScore(learnerChoice = it, choiceSpecification = statement.choiceSpecification!!)
+                        score = Response.computeScore(
+                            learnerChoice = it,
+                            choiceSpecification = statement.choiceSpecification!!
+                        )
                     }
                 } else null
-                responseRepository.save(Response(
+                responseRepository.save(
+                    Response(
                         learner = fakeLearner,
                         explanation = fakeExplanation.content,
                         confidenceDegree = confidenceDegree,
@@ -239,7 +258,8 @@ class ResponseService(
                         score = score,
                         fake = true,
                         statement = statement
-                )).let {
+                    )
+                ).let {
                     res.add(it)
                 }
             }

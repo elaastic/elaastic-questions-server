@@ -34,18 +34,28 @@ class TestSecurityConfig {
     @Primary
     fun userDetailsService(): UserDetailsService {
         val teacherRole = Role(Role.RoleId.TEACHER.name)
+        val restClientRole = Role(RestSecurityConfig.ROLE_REST_CLIENT)
 
 
         val teacher = User(
-                username = "teacher",
-                email = "teacher@elaastic.org",
-                firstName = "Franck",
-                lastName = "Sil",
-                plainTextPassword = "1234"
+            username = "teacher",
+            email = "teacher@elaastic.org",
+            firstName = "Franck",
+            lastName = "Sil",
+            plainTextPassword = "1234"
         ).addRole(teacherRole)
 
+        val restClient = User(
+            username = "rest-client",
+            email = "contact@elaastic.com",
+            firstName = "Rest",
+            lastName = "Client",
+            plainTextPassword = "1234"
+        ).addRole(restClientRole)
+
         val users = mapOf(
-                "teacher" to teacher
+            "teacher" to teacher,
+            "restClient" to restClient,
         )
 
         return UserDetailsService { username: String? -> users[username] }

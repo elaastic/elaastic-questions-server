@@ -19,10 +19,6 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.directory.User
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
@@ -35,4 +31,7 @@ interface LearnerAssignmentRepository : JpaRepository<LearnerAssignment, Long> {
     fun findAllAssignmentsForLearnerWithoutPage(user: User): List<Assignment>
 
     fun countAllByAssignment(assignment: Assignment): Int
+
+    @Query("SELECT DISTINCT u from User u  JOIN u.registrations la WHERE la.assignment = ?1")
+    fun findAllRegisteredLearnersOnAssignment(assignment: Assignment): List<User>
 }

@@ -41,6 +41,7 @@ import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
@@ -330,5 +331,4 @@ class SequenceService(
 
     fun existsById(id: Long): Boolean =
         sequenceRepository.existsById(id)
-
 }
