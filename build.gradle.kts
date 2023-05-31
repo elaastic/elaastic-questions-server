@@ -3,7 +3,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("plugin.jpa") version "1.4.31"
-    id("org.springframework.boot") version "2.5.5"
+    id("org.springframework.boot") version "2.6.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     war
     kotlin("jvm") version "1.4.31"
@@ -36,7 +36,7 @@ dependencies {
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-core:7.15.0") // Last version that supports mySQL 5.7
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-allopen")
