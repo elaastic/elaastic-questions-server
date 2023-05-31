@@ -3,7 +3,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("plugin.jpa") version "1.4.31"
-    id("org.springframework.boot") version "2.4.4"
+    id("org.springframework.boot") version "2.5.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     war
     kotlin("jvm") version "1.4.31"
@@ -13,7 +13,7 @@ plugins {
 
 group = "org.elaastic.questions"
 version = "5.1.5"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
