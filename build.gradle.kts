@@ -51,7 +51,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("com.icegreen:greenmail:1.5.10")
     implementation(files("lib/ApacheJMeter_oauth-v2.jar"))
-    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.google.code.gson:gson:2.8.9")
     implementation("commons-io:commons-io:2.6")
     implementation("org.apache.commons:commons-csv:1.5")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
