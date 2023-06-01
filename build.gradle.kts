@@ -52,7 +52,7 @@ dependencies {
     implementation("com.icegreen:greenmail:1.5.10")
     implementation(files("lib/ApacheJMeter_oauth-v2.jar"))
     implementation("com.google.code.gson:gson:2.8.9")
-    implementation("commons-io:commons-io:2.6")
+    implementation("commons-io:commons-io:2.7")
     implementation("org.apache.commons:commons-csv:1.5")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.togglz:togglz-spring-boot-starter:3.0.0")
