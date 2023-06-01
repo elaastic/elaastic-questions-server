@@ -17,12 +17,12 @@ The `docker-compose` file is used to start the MySQL 5 database services used to
 
 Launch the database for the application: 
 ````
-docker-compose start elaastic-questions-db
+docker-compose start elaastic-questions-db-8
 ````
 
 Launch the database for the tests: 
 ````
-docker-compose start elaastic-questions-db-test
+docker-compose start elaastic-questions-db-test-8
 ```` 
 
 

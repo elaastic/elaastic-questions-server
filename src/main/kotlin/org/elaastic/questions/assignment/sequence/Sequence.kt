@@ -56,6 +56,7 @@ class Sequence(
     @field:ManyToOne(fetch = FetchType.EAGER)
     var assignment: Assignment? = null,
 
+    @Column(name="`rank`")
     var rank: Int = 0,
 
     @Column(name = "phase_2_skipped")

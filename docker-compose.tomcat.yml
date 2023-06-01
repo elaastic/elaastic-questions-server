@@ -1,16 +1,16 @@
 version: '3'
 
 services:
-  elaastic-questions-db:
-    image: mysql:5
-    container_name: elaastic-questions-db
+  elaastic-questions-db-8:
+    image: mysql:8
+    container_name: elaastic-questions-db-8
     environment:
       - MYSQL_USER=elaastic
       - MYSQL_DATABASE=elaastic-questions
       - MYSQL_PASSWORD=elaastic
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - 6603:3306
+      - 6683:3306
     command: --character-set-server=utf8 --collation-server=utf8_general_ci
   elaastic-tomcat:
     build:
@@ -18,7 +18,7 @@ services:
     image: elaastic-tomcat
     container_name: elaastic-tomcat
     depends_on:
-      - elaastic-questions-db
+      - elaastic-questions-db-8
     ports:
       - 8088:8080
     volumes:
