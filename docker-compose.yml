@@ -1,27 +1,27 @@
 version: '3'
 
 services:
-  elaastic-questions-db:
-    image: mysql:5
-    container_name: elaastic-questions-db
+  elaastic-questions-db-8:
+    image: mysql:8
+    container_name: elaastic-questions-db-8
     environment:
       - MYSQL_USER=elaastic
       - MYSQL_DATABASE=elaastic-questions
       - MYSQL_PASSWORD=elaastic
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - "6603:3306"
+      - "6683:3306"
     command: --character-set-server=utf8 --collation-server=utf8_general_ci
-  elaastic-questions-db-test:
-    image: mysql:5
-    container_name: elaastic-questions-db-test
+  elaastic-questions-db-test-8:
+    image: mysql:8
+    container_name: elaastic-questions-db-test-8
     environment:
       - MYSQL_USER=elaastic
       - MYSQL_DATABASE=elaastic-questions-test
       - MYSQL_PASSWORD=elaastic
       - MYSQL_ROOT_PASSWORD=root
     ports:
-      - "6604:3306"
+      - "6684:3306"
     command: --character-set-server=utf8 --collation-server=utf8_general_ci
   cas:
     container_name: elaastic-cas

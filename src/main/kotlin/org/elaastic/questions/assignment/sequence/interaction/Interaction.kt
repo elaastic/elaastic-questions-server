@@ -41,6 +41,7 @@ class Interaction(
         @field:Enumerated(EnumType.STRING)
         var interactionType: InteractionType,
 
+        @Column(name="`rank`")
         var rank: Int,
 
         @field:Convert(converter = InteractionSpecificationConverter::class)

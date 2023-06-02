@@ -183,7 +183,7 @@ internal class AssignmentServiceIntegrationTest(
                     assertThat(it.id, notNullValue())
                     assertThat(it.version, equalTo(0L))
                     assertThat(UUID.fromString(it.globalId), notNullValue())
-                    assertThat(it.sequences, equalTo(ArrayList()))
+                    assertThat(it.sequences.size, equalTo(0))
                     assertThat(it.owner, equalTo(integrationTestingService.getTestTeacher()))
                 }
     }

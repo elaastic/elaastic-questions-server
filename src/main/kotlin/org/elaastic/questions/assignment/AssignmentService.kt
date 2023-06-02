@@ -136,7 +136,7 @@ class AssignmentService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE sequence SET rank = CASE " +
+                "UPDATE sequence SET `rank` = CASE " +
                         "WHEN id=${sequenceId} THEN ${pos} " +
                         "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
                         " END " +
@@ -154,7 +154,7 @@ class AssignmentService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE sequence SET rank = CASE " +
+                "UPDATE sequence SET `rank` = CASE " +
                         "WHEN id=${sequenceId} THEN ${pos + 1} " +
                         "WHEN id=${idsArray[pos + 1]} THEN ${pos} " +
                         " END " +
@@ -167,7 +167,7 @@ class AssignmentService(
         if (sequenceIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE sequence SET rank = CASE " +
+                "UPDATE sequence SET `rank` = CASE " +
                         sequenceIds.mapIndexed { index, id ->
                             "WHEN id=$id THEN $index"
                         }.joinToString(" ") +

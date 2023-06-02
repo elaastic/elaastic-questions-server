@@ -69,6 +69,7 @@ class Assignment(
         var subject: Subject? = null,
 
         @field:NotNull
+        @Column(name="`rank`")
         var rank: Int = 0,
 
         @field:NotNull

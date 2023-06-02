@@ -253,7 +253,7 @@ class SubjectService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE statement SET rank = CASE " +
+            "UPDATE statement SET `rank` = CASE " +
                     "WHEN id=${statementId} THEN ${pos} " +
                     "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
                     " END " +
@@ -272,7 +272,7 @@ class SubjectService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE statement SET rank = CASE " +
+            "UPDATE statement SET `rank` = CASE " +
                     "WHEN id=${statementId} THEN ${posValue + 1} " +
                     "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
                     " END " +
@@ -286,7 +286,7 @@ class SubjectService(
         if (statementIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE statement SET rank = CASE " +
+            "UPDATE statement SET `rank` = CASE " +
                     statementIds.mapIndexed { index, id ->
                         "WHEN id=$id THEN $index"
                     }.joinToString(" ") +
@@ -317,7 +317,7 @@ class SubjectService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE assignment SET rank = CASE " +
+            "UPDATE assignment SET `rank` = CASE " +
                     "WHEN id=${assignmentId} THEN ${pos} " +
                     "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
                     " END " +
@@ -336,7 +336,7 @@ class SubjectService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE assignment SET rank = CASE " +
+            "UPDATE assignment SET `rank` = CASE " +
                     "WHEN id=${assignmentId} THEN ${posValue + 1} " +
                     "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
                     " END " +
@@ -363,7 +363,7 @@ class SubjectService(
         if (assignmentIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE assignment SET rank = CASE " +
+            "UPDATE assignment SET `rank` = CASE " +
                     assignmentIds.mapIndexed { index, id ->
                         "WHEN id=$id THEN $index"
                     }.joinToString(" ") +

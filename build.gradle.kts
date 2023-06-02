@@ -1,19 +1,21 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
+ext["spring-security.version"]="5.8.3"
+
 plugins {
-    kotlin("plugin.jpa") version "1.4.31"
-    id("org.springframework.boot") version "2.4.4"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot") version "2.7.12"
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
     war
-    kotlin("jvm") version "1.4.31"
-    kotlin("plugin.spring") version "1.4.31"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.spring") version "1.6.21"
+    kotlin("plugin.jpa") version "1.6.21"
     id("com.palantir.docker") version "0.25.0"
 }
 
 group = "org.elaastic.questions"
 version = "5.1.5"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
@@ -21,6 +23,15 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-mysql")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    runtimeOnly("com.mysql:mysql-connector-j")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-mail")
@@ -32,20 +43,16 @@ dependencies {
 	implementation("org.springframework.security:spring-security-cas")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-allopen")
     implementation("org.springframework.data:spring-data-rest-hal-explorer")
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("com.icegreen:greenmail:1.5.10")
     implementation(files("lib/ApacheJMeter_oauth-v2.jar"))
-    implementation("com.google.code.gson:gson:2.8.5")
-    implementation("commons-io:commons-io:2.6")
+    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("commons-io:commons-io:2.7")
     implementation("org.apache.commons:commons-csv:1.5")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.togglz:togglz-spring-boot-starter:3.0.0")
@@ -54,8 +61,6 @@ dependencies {
     implementation("org.togglz:togglz-console:3.0.0")
 
 
-    runtimeOnly("mysql:mysql-connector-java")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -79,9 +84,10 @@ allOpen {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
+
 
 tasks.withType<Test> {
     useJUnitPlatform()

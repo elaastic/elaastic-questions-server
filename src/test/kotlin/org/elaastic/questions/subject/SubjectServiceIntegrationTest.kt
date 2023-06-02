@@ -219,7 +219,7 @@ internal class SubjectServiceIntegrationTest(
                 MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
                 MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(0L))
                 MatcherAssert.assertThat(UUID.fromString(it.globalId), CoreMatchers.notNullValue())
-                MatcherAssert.assertThat(it.statements, CoreMatchers.equalTo(ArrayList()))
+                MatcherAssert.assertThat(it.statements.size, CoreMatchers.equalTo(0))
                 MatcherAssert.assertThat(it.assignments, CoreMatchers.equalTo(mutableSetOf()))
                 MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("Subject"))
                 MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(integrationTestingService.getTestTeacher()))
