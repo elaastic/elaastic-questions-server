@@ -28,10 +28,14 @@ object CommandModelFactory {
     fun build(user: User, sequence: Sequence): CommandModel =
             sequence.activeInteraction.let { interaction ->
                 CommandModel(
-                        sequenceId = sequence.id ?: throw IllegalStateException("This sequence hos no ID"),
+                        sequenceId = sequence.id ?: throw IllegalStateException("This sequence has no ID"),
+                        statementId = sequence.statement.id ?: throw IllegalStateException("This statement has no ID"),
+                        subjectId = sequence.statement.subject?.id ?: throw IllegalStateException("This subject has no ID"),
                         interactionId = interaction?.id,
                         interactionRank = interaction?.rank,
                         questionType = sequence.statement.questionType,
+                        hasExpectedExplanation = !sequence.statement.expectedExplanation.isNullOrBlank(),
+
                         actionStartSequence =
                         if (sequence.state == State.beforeStart)
                             CommandModel.ActionStatus.ENABLED

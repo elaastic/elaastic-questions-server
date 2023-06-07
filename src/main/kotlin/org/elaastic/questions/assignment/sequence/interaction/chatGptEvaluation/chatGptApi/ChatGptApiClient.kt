@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.chatgptApi
+package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptApi
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate
 import java.net.URI
 
 @Service
-class ChatgptApiClient(
+class ChatGptApiClient(
 
     @Value("\${chatgptapi.token}")
     val apiToken: String,
@@ -22,10 +22,10 @@ class ChatgptApiClient(
     private fun getApi(
 
         model: String,
-        messages: List<ChatgptApiMessageData>,
+        messages: List<ChatGptApiMessageData>,
         maxTokens: Int
 
-    ): ChatgptApiResponseData? {
+    ): ChatGptApiResponseData? {
 
         val url = "https://api.openai.com/v1/chat/completions"
 
@@ -51,10 +51,10 @@ class ChatgptApiClient(
             val responseEntity = restTemplate.exchange(requestEntity, String::class.java)
 
             val module = SimpleModule()
-            module.addDeserializer(ChatgptApiResponseData::class.java, ChatgptApiDeserializer())
+            module.addDeserializer(ChatGptApiResponseData::class.java, ChatGptApiDeserializer())
             objectMapper.registerModule(module)
 
-            objectMapper.readValue(responseEntity.body, ChatgptApiResponseData::class.java)
+            objectMapper.readValue(responseEntity.body, ChatGptApiResponseData::class.java)
         } catch (e: Exception) {
             println("An exception occurred in API request: ${e.message}")
             println(requestEntity.headers.toString())
@@ -69,7 +69,7 @@ class ChatgptApiClient(
         model: String = "gpt-3.5-turbo",
         maxTokens: Int = 2000
     ): String? {
-        val response = getApi(model, listOf(ChatgptApiMessageData("user",prompt)), maxTokens)
+        val response = getApi(model, listOf(ChatGptApiMessageData("user",prompt)), maxTokens)
         return response?.message?.content
     }
 

@@ -1,7 +1,7 @@
-package org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation
+package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation
 
-import org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.chatgptApi.ChatgptApiClient
-import org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.chatgptPrompt.ChatgptPromptService
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptApi.ChatGptApiClient
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptPrompt.ChatGptPromptService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,17 +12,17 @@ import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @Service
-class ChatgptEvaluationService (
-    @Autowired val chatgptEvaluationRepository: ChatgptEvaluationRepository,
+class ChatGptEvaluationService (
+    @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val entityManager: EntityManager,
-    @Autowired val chatgptApiClient: ChatgptApiClient,
-    @Autowired val chatgptPromptService: ChatgptPromptService,
-    @Autowired val chatgptEvaluationSaver: ChatgptEvaluationSaver
+    @Autowired val chatGptApiClient: ChatGptApiClient,
+    @Autowired val chatGptPromptService: ChatGptPromptService,
+    @Autowired val chatGptEvaluationSaver: ChatGptEvaluationSaver
 ) {
     @Async
     @Transactional
-    fun createEvaluation(response: Response, chatgptExistingEvaluation : ChatgptEvaluation? = null) {
+    fun createEvaluation(response: Response, chatGptExistingEvaluation : ChatGptEvaluation? = null) {
 
         val language = LocaleContextHolder.getLocale().language
         val title = response.statement.title
@@ -33,23 +33,23 @@ class ChatgptEvaluationService (
         requireNotNull(teacherExplanation){ throw IllegalArgumentException("Error: You must define an expected explanation to create a ChatGPT evaluation") }
         requireNotNull(studentExplanation){ throw IllegalArgumentException("Error: No explanation to evaluate") }
 
-        val chatgptEvaluation = chatgptExistingEvaluation ?: ChatgptEvaluation(response = response)
-        chatgptEvaluation.status = "pending"
+        val chatGptEvaluation = chatGptExistingEvaluation ?: ChatGptEvaluation(response = response)
+        chatGptEvaluation.status = "pending"
 
-        val savedChatgptEvaluation = chatgptEvaluationSaver.saveEvaluation(chatgptEvaluation)
+        val savedChatGptEvaluation = chatGptEvaluationSaver.saveEvaluation(chatGptEvaluation)
 
         val regexHtml = Regex("<.*?>")
-        val chatgptPrompt = chatgptPromptService.getPrompt(language)
-        val prompt = chatgptPrompt.content
+        val chatGptPrompt = chatGptPromptService.getPrompt(language)
+        val prompt = chatGptPrompt.content
             .replace("\${title}", title.replace(regexHtml, ""))
             .replace("\${questionContent}", questionContent.replace(regexHtml, ""))
             .replace("\${teacherExplanation}", teacherExplanation.replace(regexHtml, ""))
             .replace("\${studentExplanation}", studentExplanation.replace(regexHtml, ""))
 
-        val generatedResponse = chatgptApiClient.generateResponseFromPrompt(prompt)
+        val generatedResponse = chatGptApiClient.generateResponseFromPrompt(prompt)
 
         if (generatedResponse == null) {
-            savedChatgptEvaluation.status = "error"
+            savedChatGptEvaluation.status = "error"
         }
         else {
             val regexGrade = Regex("""(?:Note)?\s*:?\s*\[(\d+(?:[.,]\d+)?)(?:/5)?]""")
@@ -59,19 +59,19 @@ class ChatgptEvaluationService (
             val matchResult = regexGrade.find(generatedResponse)
             val grade = matchResult?.groupValues?.last()?.toBigDecimal()
 
-            savedChatgptEvaluation.status = "done"
-            savedChatgptEvaluation.grade = grade
-            savedChatgptEvaluation.annotation = annotation
+            savedChatGptEvaluation.status = "done"
+            savedChatGptEvaluation.grade = grade
+            savedChatGptEvaluation.annotation = annotation
         }
 
-        chatgptEvaluationRepository.save(savedChatgptEvaluation)
+        chatGptEvaluationRepository.save(savedChatGptEvaluation)
     }
 
-    fun findEvaluationByResponse(response: Response?): ChatgptEvaluation? {
+    fun findEvaluationByResponse(response: Response?): ChatGptEvaluation? {
         if (response == null) {
             return null
         }
-        return chatgptEvaluationRepository.findByResponse(response)
+        return chatGptEvaluationRepository.findByResponse(response)
     }
 
 }

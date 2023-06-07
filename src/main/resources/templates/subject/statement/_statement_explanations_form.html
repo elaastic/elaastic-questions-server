@@ -23,19 +23,24 @@
   <div class="ui hidden divider"></div>
 
   <div id="explanation-section" class="ob-question-creation-10">
-    <a id="label-explanations"
-       v-on:click="toggleSection"
-       class="ui ribbon label"
-       th:text="#{subject.statement.explanation.label}">
-      Explanations
-      <i
-              v-bind:class="{'caret left icon': !isSectionOpen, 'caret down icon': isSectionOpen}"></i>
-    </a>
+    <div style="display: flex; align-items: center; margin-bottom: 1.5em;">
+      <a id="label-explanations"
+         class="ui ribbon label"
+         th:text="#{subject.statement.explanation.label}">
+        Explanations
+      </a>
+      <p class="ui label basic small"
+         style="color: grey"
+         th:text="#{subject.statement.optional.label}">Optional</p>
+      <p class="ui label basic small"
+         style="color: grey"
+         th:text="#{subject.statement.explanation.necessaryForChatGPT.label}"></p>
+    </div>
+
 
     <div xmlns:v-on="http://www.w3.org/1999/xhtml"
          xmlns:v-bind="http://www.w3.org/1999/xhtml"
-         class="ui accordion"
-         id="explanation-section-content" style="margin-top: 1em;">
+         id="explanation-section-content">
 
       <div class="title" style="display: none;">
         <i class="dropdown icon"></i>
@@ -141,7 +146,6 @@
     new Vue({
       el: '#explanation-section',
       data: {
-        isSectionOpen: false,
         expectedExplanation: null,
         fakeExplanationList: [],
         itemCount: parseInt($('#itemCount').val()),
@@ -156,26 +160,9 @@
 
         that.expectedExplanation = $(that.$refs.initialExpectedExplanation).val()
 
-        that.accordion = $('#explanation-section-content').accordion({
-          onOpen: function () {
-            Vue.nextTick(function () {
-              that.isSectionOpen = true
-            })
-          },
-          onClose: function () {
-            Vue.nextTick(function () {
-              that.isSectionOpen = false
-            })
-          }
-        })
-
         let expectedExplanation = /*[[${statementData?.expectedExplanation}]]*/ null
         this.fakeExplanationList = /*[[${statementData?.fakeExplanations}]]*/ null
 
-        if (expectedExplanation || (this.fakeExplanationList && this.fakeExplanationList.length > 0)) {
-          $('#explanation-section-content').accordion('open', 0)
-          this.isSectionOpen = true
-        }
       },
       beforeUpdate: function () {
         this.isOpenEnded = $('#hasChoices').val() === 'false'
@@ -183,15 +170,6 @@
       },
 
       methods: {
-        toggleSection: function () {
-          this.isSectionOpen = !this.isSectionOpen
-          if (this.isSectionOpen) {
-            this.accordion.accordion('open', 0)
-            introFakeExplanation()
-          } else {
-            this.accordion.accordion('close', 0)
-          }
-        },
 
         addFakeExplanation: function () {
           this.fakeExplanationList.push({content: '', correspondingItem: 1})

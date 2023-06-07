@@ -108,7 +108,8 @@ class SequenceService(
         sequence: Sequence,
         executionContext: ExecutionContext,
         studentsProvideExplanation: Boolean,
-        nbResponseToEvaluate: Int
+        nbResponseToEvaluate: Int,
+        chatGptExplanationEnabled: Boolean
     ): Sequence {
 
         require(user == sequence.owner) {
@@ -131,6 +132,7 @@ class SequenceService(
             it.state = State.show
             it.executionContext = executionContext
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
+            it.chatGptEvaluationEnabled = chatGptExplanationEnabled
             sequenceRepository.save(it)
         }
         if (studentsProvideExplanation) {
@@ -147,7 +149,7 @@ class SequenceService(
         sequence: Sequence,
         studentsProvideExplanation: Boolean,
         nbResponseToEvaluate: Int,
-        executionContext: ExecutionContext
+        executionContext: ExecutionContext,
     ): Sequence {
         sequence.interactions[InteractionType.ResponseSubmission] =
             interactionService.create(

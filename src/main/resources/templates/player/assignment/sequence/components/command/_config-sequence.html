@@ -17,7 +17,7 @@
   -->
 
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     th:fragment="configSequence(sequenceId, questionType)"
+     th:fragment="configSequence(subjectId, sequenceId, statementId, questionType, hasExpectedExplanation)"
      class="ui small modal"
      th:id="|sequenceSpec_${sequenceId}|">
 
@@ -149,6 +149,26 @@
                 </div>
             </div>
 
+            <div id="chat-gpt-panel">
+                <div class="ui divider"></div>
+
+                <div class="field">
+                    <div id="chat-gpt-checkbox" class="ui checkbox" th:classappend="${!hasExpectedExplanation}? 'disabled'" style="display: flex; align-items: center; width: fit-content">
+                        <input type="checkbox" name="chatGptEvaluation" th:value="false"/>
+                        <label th:text="#{sequence.interaction.toggleChatGptExplanations.label}"></label>
+                        <span style="margin-left: 2px;"
+                          data-position="top center"
+                          data-inverted=""
+                          th:attr="data-tooltip=#{sequence.interaction.toggleChatGptExplanations.tooltip}">
+                            <i class="question circle icon"></i>
+                        </span>
+                        <span th:unless="${hasExpectedExplanation}"
+                          th:utext="#{sequence.interaction.toggleChatGptExplanations.disabled.label(${sequenceId},${statementId})}">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <div class="ui hidden divider"></div>
 
             <div>
@@ -183,6 +203,14 @@
 
             $('.ui.checkbox').checkbox()
 
+            $('#chat-gpt-checkbox').checkbox({
+                onChange: function() {
+                    var isChecked = $(this).is(':checked');
+                    $(this).val(isChecked);
+                }
+            });
+
+
             var faceToFaceNotice = $('#context-faceToFace-notice')
             var distanceNotice = $('#context-distance-notice')
             var blendedNotice = $('#context-blended-notice')
@@ -190,6 +218,7 @@
             function manageConfigurationChange(sequenceId, questionType, sourceEvent) {
                 var phaseConfrontationPanel = $('#phaseConfrontation_' + sequenceId)
                 var phaseFirstSubmission = $('#phaseFirstSubmission_' + sequenceId)
+                var chatGptEvaluationPanel = $('#chat-gpt-panel')
                 if (questionType === 'OpenEnded') {
                     sourceEvent.prop('checked', true)
                     phaseFirstSubmission.hide()
@@ -198,9 +227,11 @@
                 } else if (sourceEvent.is(':checked')) {
                     sourceEvent.val(true)
                     phaseConfrontationPanel.show()
+                    chatGptEvaluationPanel.show()
                 } else {
                     sourceEvent.val(false)
                     phaseConfrontationPanel.hide()
+                    chatGptEvaluationPanel.hide()
                 }
             }
 

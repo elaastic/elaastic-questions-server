@@ -1,8 +1,8 @@
-package org.elaastic.questions.player.components.chatgptEvaluation
+package org.elaastic.questions.player.components.chatGptEvaluation
 
 import java.math.BigDecimal
 
-data class ChatgptEvaluationModel(
+data class ChatGptEvaluationModel(
     val annotation: String?,
     val grade: BigDecimal?,
     val status: String?,

@@ -29,11 +29,11 @@
 <section>
   <h2>ChatGPT Evaluation</h2>
 
-  <th:block th:each="situation,i : ${chatgptEvaluationSituations}">
+  <th:block th:each="situation,i : ${chatGptEvaluationSituations}">
     <h3 th:text="${situation.description}"></h3>
 
     <div
-            th:replace="player/assignment/sequence/components/chatgpt-evaluation/_chatgpt-evaluation.html :: chatgptEvaluation(${situation.model})"></div>
+            th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${situation.model})"></div>
   </th:block>
 
 </section>

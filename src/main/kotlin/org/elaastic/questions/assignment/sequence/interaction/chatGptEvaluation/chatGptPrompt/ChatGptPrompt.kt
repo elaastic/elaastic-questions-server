@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.chatgptPrompt
+package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptPrompt
 
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import java.util.*
@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 @Entity
-class ChatgptPrompt (
+class ChatGptPrompt (
 
     @NotNull
     var startDate: Date = Date(),

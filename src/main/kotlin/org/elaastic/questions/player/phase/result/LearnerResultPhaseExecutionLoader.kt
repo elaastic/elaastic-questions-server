@@ -1,11 +1,11 @@
 package org.elaastic.questions.player.phase.result
 
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.ChatgptEvaluationService
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.controller.MessageBuilder
-import org.elaastic.questions.player.components.chatgptEvaluation.ChatgptEvaluationModelFactory
+import org.elaastic.questions.player.components.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhaseExecution
 import org.elaastic.questions.player.phase.LearnerPhaseExecutionLoader
@@ -20,7 +20,7 @@ class LearnerResultPhaseExecutionLoader(
     @Autowired val responseService: ResponseService,
     @Autowired val featureManager: FeatureManager,
     @Autowired val messageBuilder: MessageBuilder,
-    @Autowired val chatgptEvaluationService: ChatgptEvaluationService
+    @Autowired val chatGptEvaluationService: ChatGptEvaluationService
 ) : LearnerPhaseExecutionLoader {
 
     override fun build(learnerPhase: LearnerPhase): LearnerPhaseExecution = run {
@@ -56,8 +56,8 @@ class LearnerResultPhaseExecutionLoader(
                 )
         }
 
-        val evaluation = chatgptEvaluationService.findEvaluationByResponse(secondResponse ?: firstResponse)
-        val myChatgptEvaluationModel = ChatgptEvaluationModelFactory.build(evaluation,learnerPhase.learnerSequence.sequence)
+        val evaluation = chatGptEvaluationService.findEvaluationByResponse(secondResponse ?: firstResponse)
+        val myChatGptEvaluationModel = ChatGptEvaluationModelFactory.build(evaluation,learnerPhase.learnerSequence.sequence)
 
         LearnerResultPhaseExecution(
             responseSet = responseService.findAll(learnerPhase.learnerSequence.sequence, excludeFakes = false),
@@ -68,7 +68,8 @@ class LearnerResultPhaseExecutionLoader(
             myResultsModel = myResultsModel,
             featureManager = featureManager,
             messageBuilder = messageBuilder,
-            myChatgptEvaluationModel = myChatgptEvaluationModel
+            myChatGptEvaluationModel = myChatGptEvaluationModel,
+            chatGptEvaluationEnabled = learnerPhase.learnerSequence.sequence.chatGptEvaluationEnabled
         )
     }
 }

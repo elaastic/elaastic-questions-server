@@ -1,6 +1,6 @@
-package org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.chatgptApi
+package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptApi
 
-data class ChatgptApiResponseData (
+data class ChatGptApiResponseData (
     val id: String,
     val objectValue: String,
     val created: Long,
@@ -8,6 +8,6 @@ data class ChatgptApiResponseData (
     val promptTokens: Int,
     val completionTokens: Int,
     val totalTokens: Int,
-    val message: ChatgptApiMessageData,
+    val message: ChatGptApiMessageData,
     val finishReason: String,
 )

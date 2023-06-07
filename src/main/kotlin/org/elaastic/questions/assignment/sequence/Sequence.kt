@@ -71,7 +71,9 @@ class Sequence(
     @field:Enumerated(EnumType.STRING)
     var state: State = State.beforeStart,
 
-    var resultsArePublished: Boolean = false
+    var resultsArePublished: Boolean = false,
+
+    var chatGptEvaluationEnabled: Boolean = false
 
 
 ) : AbstractJpaPersistable<Long>(),

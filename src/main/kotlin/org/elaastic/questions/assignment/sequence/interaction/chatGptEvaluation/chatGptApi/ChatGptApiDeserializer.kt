@@ -1,13 +1,12 @@
-package org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.chatgptApi
+package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptApi
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 
-class ChatgptApiDeserializer : JsonDeserializer<ChatgptApiResponseData>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): ChatgptApiResponseData {
+class ChatGptApiDeserializer : JsonDeserializer<ChatGptApiResponseData>() {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): ChatGptApiResponseData {
         val node: JsonNode = p.codec.readTree(p)
         val id: String = node.get("id").asText()
         val objectValue: String = node.get("object").asText()
@@ -23,7 +22,7 @@ class ChatgptApiDeserializer : JsonDeserializer<ChatgptApiResponseData>() {
         //val index: Int = firstChoice.get("index").asInt()
         val messageContent: String = messageNode.get("content").asText()
         val messageRole: String = messageNode.get("role").asText()
-        return ChatgptApiResponseData(
+        return ChatGptApiResponseData(
             id,
             objectValue,
             created,
@@ -31,7 +30,7 @@ class ChatgptApiDeserializer : JsonDeserializer<ChatgptApiResponseData>() {
             promptTokens,
             completionTokens,
             totalTokens,
-            ChatgptApiMessageData(messageRole, messageContent),
+            ChatGptApiMessageData(messageRole, messageContent),
             finishReason
         )
     }

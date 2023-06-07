@@ -34,7 +34,7 @@ import org.elaastic.questions.assignment.sequence.interaction.specification.Resp
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.features.ElaasticFeatures
-import org.elaastic.questions.player.components.chatgptEvaluation.ChatgptEvaluationModel
+import org.elaastic.questions.player.components.chatGptEvaluation.ChatGptEvaluationModel
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.explanationViewer.*
@@ -2848,8 +2848,7 @@ class TestingPlayerController(
         return "player/assignment/sequence/phase/evaluation/method/draxo/test-draxo-show-list"
     }
 
-
-    @GetMapping("/chatgpt-evaluation")
+    @GetMapping("/chat-gpt-evaluation")
     fun testChatGptResponse(
         authentication: Authentication,
         model: Model
@@ -2859,47 +2858,47 @@ class TestingPlayerController(
 
         model.addAttribute("user", user)
         model.addAttribute(
-            "chatgptEvaluationSituations",
+            "chatGptEvaluationSituations",
             listOf(
-                chatgptEvaluationSituations(
+                chatGptEvaluationSituations(
                     description = "Annotation with grade",
-                    model = ChatgptEvaluationModel(
+                    model = ChatGptEvaluationModel(
                         "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
                         BigDecimal(3),
                         "done",
                         0
                     )
                 ),
-                chatgptEvaluationSituations(
+                chatGptEvaluationSituations(
                     description = "Only annotation",
-                    model = ChatgptEvaluationModel(
+                    model = ChatGptEvaluationModel(
                         "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
                         null,
                         "done",
                         0
                     )
                 ),
-                chatgptEvaluationSituations(
+                chatGptEvaluationSituations(
                     description = "Not Found",
-                    model = ChatgptEvaluationModel(
+                    model = ChatGptEvaluationModel(
                         null,
                         null,
                         null,
                         0
                     )
                 ),
-                chatgptEvaluationSituations(
+                chatGptEvaluationSituations(
                     description = "In progress",
-                    model = ChatgptEvaluationModel(
+                    model = ChatGptEvaluationModel(
                         null,
                         null,
                         "pending",
                         0
                     )
                 ),
-                chatgptEvaluationSituations(
+                chatGptEvaluationSituations(
                     description = "Error",
-                    model = ChatgptEvaluationModel(
+                    model = ChatGptEvaluationModel(
                         null,
                         null,
                         "error",
@@ -2909,11 +2908,11 @@ class TestingPlayerController(
             )
         )
 
-        return "player/assignment/sequence/components/chatgpt-evaluation/test-chatgpt-evaluation"
+        return "player/assignment/sequence/components/chat-gpt-evaluation/test-chat-gpt-evaluation"
     }
 
-    data class chatgptEvaluationSituations(
+    data class chatGptEvaluationSituations(
         val description: String,
-        val model: ChatgptEvaluationModel
+        val model: ChatGptEvaluationModel
     )
 }
