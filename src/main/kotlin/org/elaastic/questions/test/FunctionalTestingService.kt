@@ -2,6 +2,7 @@ package org.elaastic.questions.test
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
@@ -106,6 +107,20 @@ class FunctionalTestingService(
         return subject
     }
 
+    fun startSequence(
+        sequence: Sequence,
+        executionContext: ExecutionContext,
+        studentsProvideExplanation: Boolean,
+        nbResponseToEvaluate: Int
+    ) =
+        sequenceService.start(
+            sequence.owner,
+            sequence,
+            executionContext,
+            studentsProvideExplanation,
+            nbResponseToEvaluate
+        )
+
     fun submitResponse(
         phase: Phase,
         user: User,
@@ -133,6 +148,7 @@ class FunctionalTestingService(
                     )
                 ) { "This user has already submitted its 1st attempt " }
             }
+
             Phase.PHASE_2 -> {
                 require(interaction.isEvaluation()) {
                     "The active interaction for this sequence and this learner is not evaluation"
@@ -166,10 +182,9 @@ class FunctionalTestingService(
 
     fun evaluate(
         user: User,
-        sequenceId: Long,
+        sequence: Sequence,
         evaluationStrategy: EvaluationStrategy,
     ) {
-        val sequence = sequenceService.get(sequenceId, true)
 
         // Evaluate other responses
         responseService.findAllRecommandedResponsesForUser(
@@ -233,12 +248,21 @@ class FunctionalTestingService(
         }
 
     fun executeScript(sequenceId: Long, script: List<Command>) {
+        val sequence = sequenceService.get(sequenceId, true)
+
         script.forEach { command ->
             when (command) {
+                is StartSequence -> startSequence(
+                    sequence,
+                    command.executionContext,
+                    command.studentsProvideExplanation,
+                    command.nbResponseToEvaluate
+                )
+
                 is SubmitResponse -> submitResponse(
                     phase = command.phase,
                     user = userRepository.getByUsername(command.username),
-                    sequence = sequenceService.get(sequenceId, true),
+                    sequence = sequence,
                     correct = command.correct,
                     confidenceDegree = command.confidenceDegree,
                     explanation = command.explanation
@@ -246,7 +270,7 @@ class FunctionalTestingService(
 
                 is Evaluate -> evaluate(
                     userRepository.getByUsername(command.username),
-                    sequenceId,
+                    sequence,
                     evaluationStrategy = command.strategy,
                 )
 

@@ -1,5 +1,6 @@
 package org.elaastic.questions.test.interpreter
 
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.test.interpreter.command.*
 
@@ -7,6 +8,13 @@ class FunctionalTestInterpreter : Interpreter() {
 
     override fun parseCommand(command: String, args: List<String>): Command {
         when (command) {
+            CommandDescriptor.START_SEQUENCE.command -> {
+                require(args.size == 1) { CommandDescriptor.START_SEQUENCE.displayUsage() }
+                return StartSequence(
+                    executionContext = ExecutionContext.valueOf(args[0])
+                )
+            }
+
             CommandDescriptor.SUBMIT_RESPONSE.command -> {
                 require(args.size == 4 || args.size == 5) { CommandDescriptor.SUBMIT_RESPONSE.displayUsage() }
                 return SubmitResponse(
