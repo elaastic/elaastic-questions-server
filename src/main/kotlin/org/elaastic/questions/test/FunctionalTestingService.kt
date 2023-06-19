@@ -11,6 +11,7 @@ import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -36,6 +37,7 @@ class FunctionalTestingService(
     @Autowired val userRepository: UserRepository,
     @Autowired val responseService: ResponseService,
     @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val interactionService: InteractionService,
 ) {
 
     fun generateSubject(user: User): Subject {
@@ -202,6 +204,20 @@ class FunctionalTestingService(
     fun stopSequence(sequence: Sequence) =
         sequenceService.stop(sequence.owner, sequence)
 
+    fun nextPhase(sequence: Sequence) =
+        sequence.activeInteraction.let { activeInteraction ->
+            if (activeInteraction == null) {
+                throw IllegalStateException("The sequence has no active interaction")
+            }
+
+            if (activeInteraction.rank == sequence.interactions.size) {
+                throw IllegalStateException("The active interaction is the last one")
+            }
+
+            interactionService.startNext(sequence.owner, activeInteraction)
+        }
+
+
     private fun generateChoiceResponse(
         choiceSpecification: ChoiceSpecification?,
         correct: Boolean
@@ -279,6 +295,8 @@ class FunctionalTestingService(
                     sequence,
                     evaluationStrategy = command.strategy,
                 )
+
+                is NextPhase -> nextPhase(sequence)
 
                 is PublishResults -> publishResults(sequence)
 

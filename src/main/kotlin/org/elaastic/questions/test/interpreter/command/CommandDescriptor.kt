@@ -25,6 +25,11 @@ enum class CommandDescriptor(
     usage = "publish"
     ),
 
+    NEXT_PHASE(
+        command = "next",
+        usage = "next"
+    ),
+
     STOP_SEQUENCE(
         command = "stop",
         usage = "stop"

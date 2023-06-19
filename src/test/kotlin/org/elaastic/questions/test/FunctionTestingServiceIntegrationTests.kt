@@ -1,6 +1,7 @@
 package org.elaastic.questions.test
 
 import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.test.interpreter.command.NextPhase
 import org.elaastic.questions.test.interpreter.command.PublishResults
 import org.elaastic.questions.test.interpreter.command.StartSequence
 import org.elaastic.questions.test.interpreter.command.StopSequence
@@ -77,5 +78,41 @@ internal class FunctionTestingServiceIntegrationTests(
         )
 
         assertThat(sequence.isStopped(), equalTo(true))
+    }
+
+    @Test
+    fun `start the next phase`() {
+        val teacher = integrationTestingService.getTestTeacher()
+        val subject = functionalTestingService.generateSubject(teacher)
+        val sequence = subject.getAnyAssignment().getAnySequence()
+
+        assertThat(sequence.activeInteraction, equalTo(null))
+
+        functionalTestingService.executeScript(
+            sequence.id!!,
+            listOf(
+                StartSequence(ExecutionContext.FaceToFace),
+            )
+        )
+
+        assertThat(sequence.activeInteraction?.isResponseSubmission(), equalTo(true))
+
+        functionalTestingService.executeScript(
+            sequence.id!!,
+            listOf(
+                NextPhase(),
+            )
+        )
+
+        assertThat(sequence.activeInteraction?.isEvaluation(), equalTo(true))
+        
+        functionalTestingService.executeScript(
+            sequence.id!!,
+            listOf(
+                NextPhase(),
+            )
+        )
+
+        assertThat(sequence.activeInteraction?.isRead(), equalTo(true))
     }
 }

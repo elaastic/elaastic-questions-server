@@ -38,6 +38,8 @@ class FunctionalTestInterpreter : Interpreter() {
                 )
             }
 
+            CommandDescriptor.NEXT_PHASE.command -> NextPhase()
+
             CommandDescriptor.PUBLISH_RESULTS.command -> PublishResults()
 
             CommandDescriptor.STOP_SEQUENCE.command -> StopSequence()
