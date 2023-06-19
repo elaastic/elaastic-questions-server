@@ -199,6 +199,9 @@ class FunctionalTestingService(
     fun publishResults(sequence: Sequence) =
         sequenceService.publishResults(sequence.owner, sequence)
 
+    fun stopSequence(sequence: Sequence) =
+        sequenceService.stop(sequence.owner, sequence)
+
     private fun generateChoiceResponse(
         choiceSpecification: ChoiceSpecification?,
         correct: Boolean
@@ -278,6 +281,8 @@ class FunctionalTestingService(
                 )
 
                 is PublishResults -> publishResults(sequence)
+
+                is StopSequence -> stopSequence(sequence)
 
                 else -> error("Unsupported command")
             }

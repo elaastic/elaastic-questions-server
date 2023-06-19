@@ -8,21 +8,26 @@ enum class CommandDescriptor(
     val usage: String,
 ) {
     START_SEQUENCE(
-        command = "start",
-        usage = "start      <context>",
+    command = "start",
+    usage = "start      <context>",
     ),
     SUBMIT_RESPONSE(
-        command = "response",
-        usage = "response   <phase> <username> <correctness> <confidence-degree> [<explanation>]"
+    command = "response",
+    usage = "response   <phase> <username> <correctness> <confidence-degree> [<explanation>]"
     ),
     EVAL(
-        command = "eval",
-        usage = "eval       <username> <evaluation-strategy>",
+    command = "eval",
+    usage = "eval       <username> <evaluation-strategy>",
     ),
 
     PUBLISH_RESULTS(
-        command = "publish",
-        usage = "publish"
+    command = "publish",
+    usage = "publish"
+    ),
+
+    STOP_SEQUENCE(
+        command = "stop",
+        usage = "stop"
     );
 
 

@@ -3,6 +3,7 @@ package org.elaastic.questions.test
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.test.interpreter.command.PublishResults
 import org.elaastic.questions.test.interpreter.command.StartSequence
+import org.elaastic.questions.test.interpreter.command.StopSequence
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.*
 import org.junit.jupiter.api.Test
@@ -56,5 +57,25 @@ internal class FunctionTestingServiceIntegrationTests(
         )
 
         assertThat(sequence.resultsArePublished, equalTo(true))
+    }
+
+    @Test
+    fun `stop a sequence`() {
+        val teacher = integrationTestingService.getTestTeacher()
+        val subject = functionalTestingService.generateSubject(teacher)
+        val sequence = subject.getAnyAssignment().getAnySequence()
+
+        assertThat(sequence.isNotStarted(), equalTo(true))
+        assertThat(sequence.isStopped(), equalTo(false))
+
+        functionalTestingService.executeScript(
+            sequence.id!!,
+            listOf(
+                StartSequence(ExecutionContext.Blended),
+                StopSequence(),
+            )
+        )
+
+        assertThat(sequence.isStopped(), equalTo(true))
     }
 }

@@ -6,18 +6,18 @@ import org.elaastic.questions.test.interpreter.command.*
 
 class FunctionalTestInterpreter : Interpreter() {
 
-    override fun parseCommand(command: String, args: List<String>): Command {
+    override fun parseCommand(command: String, args: List<String>) =
         when (command) {
             CommandDescriptor.START_SEQUENCE.command -> {
                 require(args.size == 1) { CommandDescriptor.START_SEQUENCE.displayUsage() }
-                return StartSequence(
+                StartSequence(
                     executionContext = ExecutionContext.valueOf(args[0])
                 )
             }
 
             CommandDescriptor.SUBMIT_RESPONSE.command -> {
                 require(args.size == 4 || args.size == 5) { CommandDescriptor.SUBMIT_RESPONSE.displayUsage() }
-                return SubmitResponse(
+                SubmitResponse(
                     phase = when (args[0]) {
                         "1" -> Phase.PHASE_1
                         "2" -> Phase.PHASE_2
@@ -32,15 +32,16 @@ class FunctionalTestInterpreter : Interpreter() {
 
             CommandDescriptor.EVAL.command -> {
                 require(args.size == 2) { CommandDescriptor.EVAL.displayUsage() }
-                return Evaluate(
+                Evaluate(
                     username = args[0],
                     strategy = EvaluationStrategy.valueOf(args[1]),
                 )
             }
 
-            CommandDescriptor.PUBLISH_RESULTS.command -> return PublishResults()
-            
+            CommandDescriptor.PUBLISH_RESULTS.command -> PublishResults()
+
+            CommandDescriptor.STOP_SEQUENCE.command -> StopSequence()
+
             else -> error("Unknown command: $command")
         }
-    }
 }
