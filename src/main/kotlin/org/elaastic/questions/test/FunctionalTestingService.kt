@@ -2,6 +2,7 @@ package org.elaastic.questions.test
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
@@ -10,6 +11,7 @@ import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -35,6 +37,7 @@ class FunctionalTestingService(
     @Autowired val userRepository: UserRepository,
     @Autowired val responseService: ResponseService,
     @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val interactionService: InteractionService,
 ) {
 
     fun generateSubject(user: User): Subject {
@@ -106,6 +109,20 @@ class FunctionalTestingService(
         return subject
     }
 
+    fun startSequence(
+        sequence: Sequence,
+        executionContext: ExecutionContext,
+        studentsProvideExplanation: Boolean,
+        nbResponseToEvaluate: Int
+    ) =
+        sequenceService.start(
+            sequence.owner,
+            sequence,
+            executionContext,
+            studentsProvideExplanation,
+            nbResponseToEvaluate
+        )
+
     fun submitResponse(
         phase: Phase,
         user: User,
@@ -133,6 +150,7 @@ class FunctionalTestingService(
                     )
                 ) { "This user has already submitted its 1st attempt " }
             }
+
             Phase.PHASE_2 -> {
                 require(interaction.isEvaluation()) {
                     "The active interaction for this sequence and this learner is not evaluation"
@@ -166,10 +184,9 @@ class FunctionalTestingService(
 
     fun evaluate(
         user: User,
-        sequenceId: Long,
+        sequence: Sequence,
         evaluationStrategy: EvaluationStrategy,
     ) {
-        val sequence = sequenceService.get(sequenceId, true)
 
         // Evaluate other responses
         responseService.findAllRecommandedResponsesForUser(
@@ -180,6 +197,26 @@ class FunctionalTestingService(
             peerGradingService.createOrUpdate(user, response, evaluationStrategy.evaluate(response))
         }
     }
+
+    fun publishResults(sequence: Sequence) =
+        sequenceService.publishResults(sequence.owner, sequence)
+
+    fun stopSequence(sequence: Sequence) =
+        sequenceService.stop(sequence.owner, sequence)
+
+    fun nextPhase(sequence: Sequence) =
+        sequence.activeInteraction.let { activeInteraction ->
+            if (activeInteraction == null) {
+                throw IllegalStateException("The sequence has no active interaction")
+            }
+
+            if (activeInteraction.rank == sequence.interactions.size) {
+                throw IllegalStateException("The active interaction is the last one")
+            }
+
+            interactionService.startNext(sequence.owner, activeInteraction)
+        }
+
 
     private fun generateChoiceResponse(
         choiceSpecification: ChoiceSpecification?,
@@ -233,12 +270,21 @@ class FunctionalTestingService(
         }
 
     fun executeScript(sequenceId: Long, script: List<Command>) {
+        val sequence = sequenceService.get(sequenceId, true)
+
         script.forEach { command ->
             when (command) {
+                is StartSequence -> startSequence(
+                    sequence,
+                    command.executionContext,
+                    command.studentsProvideExplanation,
+                    command.nbResponseToEvaluate
+                )
+
                 is SubmitResponse -> submitResponse(
                     phase = command.phase,
                     user = userRepository.getByUsername(command.username),
-                    sequence = sequenceService.get(sequenceId, true),
+                    sequence = sequence,
                     correct = command.correct,
                     confidenceDegree = command.confidenceDegree,
                     explanation = command.explanation
@@ -246,9 +292,15 @@ class FunctionalTestingService(
 
                 is Evaluate -> evaluate(
                     userRepository.getByUsername(command.username),
-                    sequenceId,
+                    sequence,
                     evaluationStrategy = command.strategy,
                 )
+
+                is NextPhase -> nextPhase(sequence)
+
+                is PublishResults -> publishResults(sequence)
+
+                is StopSequence -> stopSequence(sequence)
 
                 else -> error("Unsupported command")
             }
