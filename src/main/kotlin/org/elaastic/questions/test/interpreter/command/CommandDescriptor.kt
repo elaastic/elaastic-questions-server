@@ -18,7 +18,13 @@ enum class CommandDescriptor(
     EVAL(
         command = "eval",
         usage = "eval       <username> <evaluation-strategy>",
+    ),
+
+    PUBLISH_RESULTS(
+        command = "publish",
+        usage = "publish"
     );
+
 
     fun displayUsage() = "Usage: $usage"
 

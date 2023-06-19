@@ -1,6 +1,7 @@
 package org.elaastic.questions.test
 
 import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.test.interpreter.command.PublishResults
 import org.elaastic.questions.test.interpreter.command.StartSequence
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.*
@@ -36,7 +37,24 @@ internal class FunctionTestingServiceIntegrationTests(
             assertThat(sequences[index].isNotStarted(), equalTo(false))
             assertThat(sequences[index].executionContext, equalTo(executionContext))
         }
+    }
 
+    @Test
+    fun `publish the results of a sequence`() {
+        val teacher = integrationTestingService.getTestTeacher()
+        val subject = functionalTestingService.generateSubject(teacher)
+        val sequence = subject.getAnyAssignment().getAnySequence()
 
+        assertThat(sequence.resultsArePublished, equalTo(false))
+
+        functionalTestingService.executeScript(
+            sequence.id!!,
+            listOf(
+                StartSequence(ExecutionContext.Blended),
+                PublishResults()
+            )
+        )
+
+        assertThat(sequence.resultsArePublished, equalTo(true))
     }
 }

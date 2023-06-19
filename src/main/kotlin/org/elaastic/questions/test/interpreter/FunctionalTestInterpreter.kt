@@ -37,6 +37,8 @@ class FunctionalTestInterpreter : Interpreter() {
                     strategy = EvaluationStrategy.valueOf(args[1]),
                 )
             }
+
+            CommandDescriptor.PUBLISH_RESULTS.command -> return PublishResults()
             
             else -> error("Unknown command: $command")
         }
