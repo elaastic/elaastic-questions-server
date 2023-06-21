@@ -125,11 +125,9 @@ class FileDataStore : DataStore {
             if (verify && !file.exists()) {
                 return null
             }
-            if (minModifiedDate != 0L) {
-                // only check when running garbage collection
-                if (getLastModified(file) < minModifiedDate) {
-                    setLastModified(file, System.currentTimeMillis() + ACCESS_TIME_RESOLUTION)
-                }
+            // only check when running garbage collection
+            if (minModifiedDate != 0L && getLastModified(file) < minModifiedDate) {
+                setLastModified(file, System.currentTimeMillis() + ACCESS_TIME_RESOLUTION)
             }
             usesIdentifier(identifier)
             return FileDataRecord(identifier, file)

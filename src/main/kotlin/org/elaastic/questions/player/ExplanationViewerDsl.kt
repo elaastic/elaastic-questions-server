@@ -74,11 +74,6 @@ class ChoiceExplanationViewerSituationBuilder {
 @ExplanationViewerDsl
 class ExplanationsByResponse : HashMap<ResponseData, List<ExplanationData>>() {
 
-//    fun explanations(block: ResponseDataToExplanationDatasBuilder.() -> Unit) {
-//        plusAssign(ResponseDataToExplanationDatasBuilder().apply(block).build())
-//    }
-
-
     fun response(choices: List<Int>, score: Int, correct: Boolean, block: ResponseDataToExplanationDatasBuilder.() -> Unit) {
         plusAssign(
                 ResponseDataToExplanationDatasBuilder(

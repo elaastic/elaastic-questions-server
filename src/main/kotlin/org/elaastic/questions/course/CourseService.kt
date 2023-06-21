@@ -64,7 +64,7 @@ class CourseService(
         require(user == course.owner) {
             "Only the owner can delete an assignment"
         }
-        require(course.subjects.size == 0) {
+        require(course.subjects.isEmpty()) {
             "The course must be empty to be deleted"
         }
         courseRepository.delete(course)

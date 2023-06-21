@@ -1,6 +1,5 @@
 package org.elaastic.questions.controller
 
-import org.elaastic.questions.directory.User
 import javax.servlet.http.HttpServletRequest
 
 object ControllerUtil {
