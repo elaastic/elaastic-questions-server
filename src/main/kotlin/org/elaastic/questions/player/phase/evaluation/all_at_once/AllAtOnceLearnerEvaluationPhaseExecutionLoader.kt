@@ -16,8 +16,9 @@ class AllAtOnceLearnerEvaluationPhaseExecutionLoader(
 ) : AbstractLearnerEvaluationPhaseExecutionLoader() {
 
     override fun build(learnerPhase: LearnerPhase): LearnerPhaseExecution = run {
-        if (learnerPhase !is AllAtOnceLearnerEvaluationPhase)
-            throw IllegalArgumentException("LearnerResponsePhaseExecutionService only handle AllAtOnceLearnerEvaluationPhase interaction ; provided: ${learnerPhase.javaClass}")
+        require(learnerPhase is AllAtOnceLearnerEvaluationPhase) {
+            "LearnerResponsePhaseExecutionService only handle AllAtOnceLearnerEvaluationPhase interaction ; provided: ${learnerPhase.javaClass}"
+        }
 
         val sequence = learnerPhase.learnerSequence.sequence
         val learner = learnerPhase.learnerSequence.learner

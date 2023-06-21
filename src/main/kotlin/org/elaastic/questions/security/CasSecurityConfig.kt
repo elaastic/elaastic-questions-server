@@ -214,7 +214,7 @@ class CasSecurityConfig {
         private fun readOptionalProperty(propertyName: String, environment: ConfigurableEnvironment): String? =
             environment.propertySources.filterIsInstance<EnumerablePropertySource<Any>>()
                 .find { source: EnumerablePropertySource<Any> ->
-                    source.propertyNames.find { it.equals(propertyName) } != null
+                    source.propertyNames.find { it == propertyName } != null
                 }?.getProperty(propertyName) as String?
 
         private fun readProperty(propertyName: String, environment: ConfigurableEnvironment): String =

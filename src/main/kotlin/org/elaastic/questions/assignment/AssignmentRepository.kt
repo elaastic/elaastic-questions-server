@@ -19,7 +19,6 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.subject.Subject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph

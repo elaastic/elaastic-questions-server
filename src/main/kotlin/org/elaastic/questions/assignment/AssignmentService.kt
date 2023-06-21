@@ -34,7 +34,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.lang.IllegalStateException
 import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
@@ -130,8 +129,7 @@ class AssignmentService(
         val idsArray = assignment.sequences.map { it.id }.toTypedArray()
         val pos = idsArray.indexOf(sequenceId)
 
-        if (pos == -1)
-            throw IllegalStateException("This sequence $sequenceId does not belong to assignment ${assignment.id}")
+        check(pos != -1) { "This sequence $sequenceId does not belong to assignment ${assignment.id}" }
         if (pos == 0)
             return  // Nothing to do
 
@@ -148,8 +146,7 @@ class AssignmentService(
         val idsArray = assignment.sequences.map { it.id }.toTypedArray()
         val pos = idsArray.indexOf(sequenceId)
 
-        if (pos == -1)
-            throw IllegalStateException("This sequence $sequenceId does not belong to assignment ${assignment.id}")
+        check(pos != -1) { "This sequence $sequenceId does not belong to assignment ${assignment.id}" }
         if (pos == assignment.sequences.size - 1)
             return  // Nothing to do
 
