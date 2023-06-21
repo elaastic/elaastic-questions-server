@@ -46,7 +46,7 @@ class InteractionSpecificationConverter : AttributeConverter<InteractionSpecific
             isEvaluationSpecification(map) -> mapper.readValue(dbData, EvaluationSpecification::class.java)
             isResponseSubmissionSpecification(map) -> mapper.readValue(dbData, ResponseSubmissionSpecification::class.java)
             isReadSpecification(map) -> ReadSpecification()
-            else -> throw IllegalStateException("The type of interaction specification could not be determined: \"$dbData\"")
+            else -> error("The type of interaction specification could not be determined: \"$dbData\"")
         }
     }
 

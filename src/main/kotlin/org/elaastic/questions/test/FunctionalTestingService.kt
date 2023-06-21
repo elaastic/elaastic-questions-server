@@ -206,13 +206,8 @@ class FunctionalTestingService(
 
     fun nextPhase(sequence: Sequence) =
         sequence.activeInteraction.let { activeInteraction ->
-            if (activeInteraction == null) {
-                throw IllegalStateException("The sequence has no active interaction")
-            }
-
-            if (activeInteraction.rank == sequence.interactions.size) {
-                throw IllegalStateException("The active interaction is the last one")
-            }
+            checkNotNull(activeInteraction) { "The sequence has no active interaction" }
+            check(activeInteraction.rank != sequence.interactions.size) { "The active interaction is the last one" }
 
             interactionService.startNext(sequence.owner, activeInteraction)
         }

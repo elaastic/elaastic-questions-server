@@ -31,7 +31,7 @@ object IndicatorCalculator {
     fun computeP(responseList: List<Response>?): Float? {
         val notNullAnswers = responseList?.filter { response -> response.score != null}
         var res: Float? = null
-        if(notNullAnswers != null && !notNullAnswers.isEmpty()){
+        if(!notNullAnswers.isNullOrEmpty()){
             val nbCorrectAnswers = notNullAnswers.filter { response -> response.score!!.toInt() == 100 }.size
             res = nbCorrectAnswers.toFloat()/notNullAnswers.size.toFloat()
         }

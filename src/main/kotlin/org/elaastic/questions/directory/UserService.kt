@@ -133,7 +133,7 @@ class UserService(
         require(user.roles.isNotEmpty())
 
         with(user) {
-            enabled = if (checkEmailAccount) false else enable
+            enabled = !checkEmailAccount && enable
             password = passwordEncoder.encode(plainTextPassword)
             userRepository.save(this).let {
                 this.onboardingState = onboardingStateRepository.save(OnboardingState(user))
@@ -251,14 +251,14 @@ class UserService(
      */
     fun enableUserWithActivationKey(activationKey: String): User? {
         activationKeyRepository.findByActivationKey(activationKey).let {
-            when (it) {
-                null -> return null
+            return when (it) {
+                null -> null
                 else -> {
                     val user = it.user
                     user.enabled = true
                     userRepository.save(user)
                     activationKeyRepository.delete(it)
-                    return it.user
+                    it.user
                 }
             }
         }
@@ -304,7 +304,7 @@ class UserService(
      * @return the password reset key object user
      */
     fun generatePasswordResetKeyForUser(user: User, lifetime: Int = 1): PasswordResetKey {
-        var passwordResetKey = passwordResetKeyRepository.findByUser(user)
+        val passwordResetKey = passwordResetKeyRepository.findByUser(user)
         when (passwordResetKey) {
             null -> {
                 PasswordResetKey(
