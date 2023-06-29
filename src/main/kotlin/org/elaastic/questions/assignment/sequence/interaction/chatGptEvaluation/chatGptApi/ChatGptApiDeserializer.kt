@@ -8,30 +8,23 @@ import com.fasterxml.jackson.databind.JsonNode
 class ChatGptApiDeserializer : JsonDeserializer<ChatGptApiResponseData>() {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): ChatGptApiResponseData {
         val node: JsonNode = p.codec.readTree(p)
-        val id: String = node.get("id").asText()
-        val objectValue: String = node.get("object").asText()
-        val created: Long = node.get("created").asLong()
-        val model: String = node.get("model").asText()
-        val usage: JsonNode = node.get("usage")
-        val promptTokens: Int = usage.get("prompt_tokens").asInt()
-        val completionTokens: Int = usage.get("completion_tokens").asInt()
-        val totalTokens: Int = usage.get("total_tokens").asInt()
-        val firstChoice: JsonNode = node.get("choices").get(0)
-        val messageNode: JsonNode = firstChoice.get("message")
-        val finishReason: String = firstChoice.get("finish_reason").asText()
-        //val index: Int = firstChoice.get("index").asInt()
-        val messageContent: String = messageNode.get("content").asText()
-        val messageRole: String = messageNode.get("role").asText()
+        val usage: JsonNode = node["usage"]
+        val firstChoice: JsonNode = node["choices"][0]
+        val messageNode: JsonNode = firstChoice["message"]
+
         return ChatGptApiResponseData(
-            id,
-            objectValue,
-            created,
-            model,
-            promptTokens,
-            completionTokens,
-            totalTokens,
-            ChatGptApiMessageData(messageRole, messageContent),
-            finishReason
+            id = node["id"].asText(),
+            objectValue = node["object"].asText(),
+            created = node["created"].asLong(),
+            model = node["model"].asText(),
+            promptTokens = usage["prompt_tokens"].asInt(),
+            completionTokens = usage["completion_tokens"].asInt(),
+            totalTokens = usage["total_tokens"].asInt(),
+            ChatGptApiMessageData(
+                role = messageNode["role"].asText(),
+                content = messageNode["content"].asText()
+            ),
+            finishReason = firstChoice["finish_reason"].asText()
         )
     }
 }

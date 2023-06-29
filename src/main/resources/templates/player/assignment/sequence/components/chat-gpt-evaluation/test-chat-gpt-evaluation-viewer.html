@@ -33,7 +33,7 @@
     <h3 th:text="${situation.description}"></h3>
 
     <div
-            th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${situation.model})"></div>
+            th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer.html :: chatGptEvaluation(${situation.model})"></div>
   </th:block>
 
 </section>

@@ -16,85 +16,52 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-    <div id="chat-gpt-evaluation" th:fragment="chatGptEvaluation(chatGptEvaluationModel)"
+<div th:fragment="chatGptEvaluation(chatGptEvaluationModel)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <div class="ui accordion segment" id="chat-gpt-evaluation-accordion" style="padding-bottom: 0">
-        <div class="ui active title header">
-            <i class="dropdown icon"></i> <span>Evaluation de ChatGPT</span>
-        </div>
+    <th:block th:switch="${chatGptEvaluationModel.status}">
 
-        <div class="ui basic padded large text segment content active">
+        <th:block th:case="'DONE'">
+            <table class="ui celled table" style="background-color: #fafafb">
+                <tbody>
+                    <tr>
+                        <td th:if="${chatGptEvaluationModel.grade}"
+                            th:text="${chatGptEvaluationModel.grade} + '/5'"
+                            style="background-color: #f5f5f6"
+                            data-inverted="" th:data-tooltip="#{player.sequence.chatGptEvaluation.grade.tooltip}"
+                            data-position="top left">-/5</td>
+                        <td th:text="${chatGptEvaluationModel.annotation}" style="background-color: #fafafb"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
 
-            <th:block th:switch="${chatGptEvaluationModel.status}">
+        <th:block th:case="'ERROR'">
+            <div class="ui message error">
+                <span th:text="#{player.sequence.chatGptEvaluation.error}"></span>
+            </div>
+            <a class="ui button" th:href="@{/player/sequence/{id}/regenerate-chat-gpt-evaluation(id=${chatGptEvaluationModel.sequenceId})}" th:text="#{player.sequence.chatGptEvaluation.generate.button}"></a>
+        </th:block>
 
-                <th:block th:case="'done'">
-                    <table class="ui celled table">
-                        <tbody>
-                            <tr>
-                                <td th:if="${chatGptEvaluationModel.grade}"
-                                    th:text="${chatGptEvaluationModel.grade} + '/5'"
-                                    style="background-color: #f5f5f6"
-                                    data-inverted="" th:data-tooltip="#{player.sequence.chatGptExplanation.grade.tooltip}"
-                                    data-position="top left">-/5</td>
-                                <td th:text="${chatGptEvaluationModel.annotation}" style="background-color: #fafafb"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </th:block>
+        <th:block th:case="'PENDING'">
+            <div class="ui message">
+                <div class="ui active inverted dimmer" style="background-color: rgba(255,255,255,.60)">
+                    <div class="ui text loader" th:text="#{player.sequence.chatGptEvaluation.pending}">Loading</div>
+                </div>
+                <div class="placeholder" style="width: 590px"></div>
+                <div class="placeholder" style="width: 650px"></div>
+                <div class="placeholder" style="margin: 0; width: 400px"></div>
+            </div>
+        </th:block>
 
-                <th:block th:case="'error'">
-                    <div class="ui message error">
-                        <span th:text="#{player.sequence.chatGptExplanation.error}"></span>
-                    </div>
-                    <a class="ui button" th:href="@{/player/sequence/{id}/regenerate-chat-gpt-evaluation(id=${chatGptEvaluationModel.sequenceId})}" th:text="#{player.sequence.chatGptExplanation.generate.button}"></a>
-                </th:block>
+        <th:block th:case="*">
+            <div class="ui message warning">
+                <span th:text="#{player.sequence.chatGptEvaluation.notFound}"></span>
+            </div>
+            <a class="ui button" th:href="@{/player/sequence/{id}/regenerate-chat-gpt-evaluation(id=${chatGptEvaluationModel.sequenceId})}" th:text="#{player.sequence.chatGptEvaluation.generate.button}"></a>
+        </th:block>
 
-                <th:block th:case="'pending'">
-                    <div class="ui message">
-                        <div class="ui active inverted dimmer" style="background-color: rgba(255,255,255,.60)">
-                            <div class="ui text loader" th:text="#{player.sequence.chatGptExplanation.pending}">Loading</div>
-                        </div>
-                        <div class="placeholder" style="width: 590px"></div>
-                        <div class="placeholder" style="width: 650px"></div>
-                        <div class="placeholder" style="margin: 0; width: 400px"></div>
-                    </div>
-                </th:block>
-
-                <th:block th:case="*">
-                    <div class="ui message warning">
-                        <span th:text="#{player.sequence.chatGptExplanation.notFound}"></span>
-                    </div>
-                    <a class="ui button" th:href="@{/player/sequence/{id}/regenerate-chat-gpt-evaluation(id=${chatGptEvaluationModel.sequenceId})}" th:text="#{player.sequence.chatGptExplanation.generate.button}"></a>
-                </th:block>
-
-            </th:block>
-        </div>
-    </div>
-
-    <script>
-        $(document).ready(function () {
-            $('#chat-gpt-evaluation-accordion').accordion()
-        })
-    </script>
-
-    <script th:inline="javascript">
-        function refreshFragment() {
-            $.ajax({
-                url: '/player/sequence/'+[[${chatGptEvaluationModel.sequenceId}]]+'/chat-gpt-evaluation',
-                type: "GET",
-                success: function(data) {
-                    var chatGptEvaluationFragment = data.replace(/<!--[\s\S]*?-->/, '');
-                    $("#chat-gpt-evaluation").replaceWith(chatGptEvaluationFragment);
-                }
-            });
-        }
-        $(document).ready(function() {
-            if([[${chatGptEvaluationModel.status}]] === 'pending') {
-                setTimeout(refreshFragment, 5000);
-            }
-        });
-    </script>
+    </th:block>
 
     <style>
         .placeholder {
@@ -105,4 +72,5 @@
             border-radius: 5px;
         }
     </style>
+
 </div>

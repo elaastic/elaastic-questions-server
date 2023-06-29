@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation
 
+import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -14,9 +15,12 @@ import javax.persistence.*
 class ChatGptEvaluation (
     var grade: BigDecimal? = null,
     var annotation: String? = null,
-    var status: String? = null,
+    var status: String = ChatGptEvaluationStatus.UNKNOWN.name,
 
-    var reportedByStudent: Boolean = false,
+    var reportReasons: String? = null,
+    var reportComment: String? = null,
+    var utilityGrade: UtilityGrade? = null,
+
     var hiddenByTeacher: Boolean = false,
     var removedByTeacher: Boolean = false,
 

@@ -29,6 +29,7 @@ import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceGenerator
 import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationStatus
 import org.elaastic.questions.assignment.sequence.interaction.results.*
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.controller.MessageBuilder
@@ -2863,24 +2864,27 @@ class TestingPlayerController(
                 chatGptEvaluationSituations(
                     description = "Annotation with grade",
                     model = ChatGptEvaluationModel(
+                        0,
                         "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
                         BigDecimal(3),
-                        "done",
+                        ChatGptEvaluationStatus.DONE.name,
                         0
                     )
                 ),
                 chatGptEvaluationSituations(
                     description = "Only annotation",
                     model = ChatGptEvaluationModel(
+                        1,
                         "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
                         null,
-                        "done",
+                        ChatGptEvaluationStatus.DONE.name,
                         0
                     )
                 ),
                 chatGptEvaluationSituations(
                     description = "Not Found",
                     model = ChatGptEvaluationModel(
+                        2,
                         null,
                         null,
                         null,
@@ -2890,29 +2894,77 @@ class TestingPlayerController(
                 chatGptEvaluationSituations(
                     description = "In progress",
                     model = ChatGptEvaluationModel(
+                        3,
                         null,
                         null,
-                        "pending",
+                        ChatGptEvaluationStatus.PENDING.name,
                         0
                     )
                 ),
                 chatGptEvaluationSituations(
                     description = "Error",
                     model = ChatGptEvaluationModel(
+                        4,
                         null,
                         null,
-                        "error",
+                        ChatGptEvaluationStatus.ERROR.name,
                         0
                     )
                 )
             )
         )
 
-        return "player/assignment/sequence/components/chat-gpt-evaluation/test-chat-gpt-evaluation"
+        return "player/assignment/sequence/components/chat-gpt-evaluation/test-chat-gpt-evaluation-viewer"
     }
 
     data class chatGptEvaluationSituations(
         val description: String,
         val model: ChatGptEvaluationModel
+    )
+
+    @GetMapping("/explanation-details")
+    fun testExplanationDetails(
+        authentication: Authentication,
+        model: Model
+    ): String {
+
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+            "explanationDetailsSituations",
+            listOf(
+                explanationDetailsSituations(
+                    description = "",
+                    chatGptEvaluationModel = ChatGptEvaluationModel(
+                        0,
+                        "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
+                        BigDecimal(3),
+                        ChatGptEvaluationStatus.DONE.name,
+                        0
+                    ),
+                    learnerResultsModel = LearnerExclusiveChoiceResults(
+                        explanationFirstTry = ExplanationData(content = "I was wrong"),
+                        explanationSecondTry = ExplanationData(content = "And I've changed my mind"),
+                        choiceFirstTry = LearnerChoice(listOf(2)),
+                        choiceSecondTry = LearnerChoice(listOf(1)),
+                        scoreFirstTry = 0,
+                        scoreSecondTry = 100,
+                        expectedChoice = ExclusiveChoiceSpecification(
+                            nbCandidateItem = 4,
+                            expectedChoice = ChoiceItem(1, 1.0f)
+                        )
+                    )
+                )
+            )
+        )
+
+        return "player/assignment/sequence/components/explanation-details/test-explanation-details"
+    }
+
+    data class explanationDetailsSituations(
+        val description: String,
+        val chatGptEvaluationModel: ChatGptEvaluationModel,
+        val learnerResultsModel: LearnerResultsModel
     )
 }

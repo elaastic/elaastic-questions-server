@@ -155,15 +155,15 @@
                 <div class="field">
                     <div id="chat-gpt-checkbox" class="ui checkbox" th:classappend="${!hasExpectedExplanation}? 'disabled'" style="display: flex; align-items: center; width: fit-content">
                         <input type="checkbox" name="chatGptEvaluation" th:value="false"/>
-                        <label th:text="#{sequence.interaction.toggleChatGptExplanations.label}"></label>
+                        <label th:text="#{sequence.interaction.toggleChatGptEvaluations.label}"></label>
                         <span style="margin-left: 2px;"
                           data-position="top center"
                           data-inverted=""
-                          th:attr="data-tooltip=#{sequence.interaction.toggleChatGptExplanations.tooltip}">
+                          th:attr="data-tooltip=#{sequence.interaction.toggleChatGptEvaluations.tooltip}">
                             <i class="question circle icon"></i>
                         </span>
                         <span th:unless="${hasExpectedExplanation}"
-                          th:utext="#{sequence.interaction.toggleChatGptExplanations.disabled.label(${sequenceId},${statementId})}">
+                          th:utext="#{sequence.interaction.toggleChatGptEvaluations.disabled.label(${sequenceId},${statementId})}">
                         </span>
                     </div>
                 </div>

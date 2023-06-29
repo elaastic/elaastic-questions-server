@@ -19,13 +19,13 @@ class ChatGptApiClient(
 
 ) {
 
-    private fun getApi(
+    private fun get(
 
         model: String,
         messages: List<ChatGptApiMessageData>,
         maxTokens: Int
 
-    ): ChatGptApiResponseData? {
+    ): ChatGptApiResponseData {
 
         val url = "https://api.openai.com/v1/chat/completions"
 
@@ -47,20 +47,14 @@ class ChatGptApiClient(
         val restTemplate = RestTemplate()
         val requestEntity = RequestEntity<Any>(body, headers, HttpMethod.POST, URI(url))
 
-        return try {
-            val responseEntity = restTemplate.exchange(requestEntity, String::class.java)
+        val responseEntity = restTemplate.exchange(requestEntity, String::class.java)
 
-            val module = SimpleModule()
-            module.addDeserializer(ChatGptApiResponseData::class.java, ChatGptApiDeserializer())
-            objectMapper.registerModule(module)
+        val module = SimpleModule()
+        // TODO Review JT : It looks weird to reconstruct the tooling for querying at each query. I guess we should define a service for that
+        module.addDeserializer(ChatGptApiResponseData::class.java, ChatGptApiDeserializer())
+        objectMapper.registerModule(module)
 
-            objectMapper.readValue(responseEntity.body, ChatGptApiResponseData::class.java)
-        } catch (e: Exception) {
-            println("An exception occurred in API request: ${e.message}")
-            println(requestEntity.headers.toString())
-            println(requestEntity.body.toString())
-            null
-        }
+        return objectMapper.readValue(responseEntity.body, ChatGptApiResponseData::class.java)
 
     }
 
@@ -68,8 +62,8 @@ class ChatGptApiClient(
         prompt : String,
         model: String = "gpt-3.5-turbo",
         maxTokens: Int = 2000
-    ): String? {
-        val response = getApi(model, listOf(ChatGptApiMessageData("user",prompt)), maxTokens)
+    ): String {
+        val response = get(model, listOf(ChatGptApiMessageData("user",prompt)), maxTokens)
         return response?.message?.content
     }
 

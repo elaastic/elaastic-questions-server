@@ -21,10 +21,7 @@ package org.elaastic.questions.player
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.LearnerSequenceService
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
@@ -39,6 +36,7 @@ import org.elaastic.questions.player.components.results.TeacherResultDashboardSe
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
@@ -498,7 +496,8 @@ class PlayerController(
     }
 
     @GetMapping("/sequence/{id}/regenerate-chat-gpt-evaluation")
-    fun refreshChatGptExplanation(
+    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
+    fun refreshChatGptEvaluation(
         authentication: Authentication,
         model: Model,
         @PathVariable id: Long
@@ -516,7 +515,8 @@ class PlayerController(
     }
 
     @GetMapping("sequence/{id}/chat-gpt-evaluation")
-    fun viewChatGptExplanation(
+    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
+    fun viewChatGptEvaluation(
         authentication: Authentication,
         model: Model,
         @PathVariable id: Long
@@ -528,7 +528,43 @@ class PlayerController(
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         model.addAttribute("chatGptEvaluationModel",
             ChatGptEvaluationModelFactory.build(chatGptEvaluation, sequence))
-        return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation"
+        return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
+    }
+
+    @PostMapping("sequence/{id}/submit-utility-grade")
+    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
+    fun submitChatGptEvaluationUtilityGrade(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam(required = true) evaluationId: Long,
+        @RequestParam(required = true) utilityGrade: UtilityGrade,
+        @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val sequence = sequenceService.get(id, true)
+
+        val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
+        chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation!!, utilityGrade)
+        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
+    }
+
+    @PostMapping("sequence/{id}/report-chat-gpt-evaluation")
+    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
+    fun reportchatGptEvaluation(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam(required = true) evaluationId: Long,
+        @RequestParam(value = "reason", required = true) reasons : List<String>,
+        @RequestParam(value = "other-reason-comment", required = false) otherReasonComment : String,
+        @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val sequence = sequenceService.get(id, true)
+
+        val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
+        val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
+        chatGptEvaluationService.reportEvaluation(chatGptEvaluation!!, reasons, reasonComment)
+        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }
 
     data class ResponseSubmissionData(
