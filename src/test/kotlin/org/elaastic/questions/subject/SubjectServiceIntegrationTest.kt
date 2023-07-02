@@ -356,7 +356,7 @@ internal class SubjectServiceIntegrationTest(
     fun `remove used statement from a subject - keep the statement in database`() {
         val subject = integrationTestingService.getAnyTestSubject()
         val statement1 = statementService.get(618) // A statement linked to a sequence with results related
-        val assignment = subjectService.addAssignment(
+        subjectService.addAssignment(
             subject,
             Assignment(title = "Foo", owner = subject.owner, subject = subject)
         )

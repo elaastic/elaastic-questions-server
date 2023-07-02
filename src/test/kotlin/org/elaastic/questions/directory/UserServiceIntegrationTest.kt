@@ -535,7 +535,7 @@ internal class UserServiceIntegrationTest(
         }.tThen {
             assertThat(it!!.size, equalTo(9))
             for(i in 0..8) {
-                assertThat(it!![i].username, equalTo("${userService.FAKE_USER_PREFIX}${i+1}"))
+                assertThat(it[i].username, equalTo("${userService.FAKE_USER_PREFIX}${i+1}"))
             }
         }
     }

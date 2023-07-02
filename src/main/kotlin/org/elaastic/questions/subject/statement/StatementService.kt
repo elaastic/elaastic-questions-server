@@ -46,13 +46,11 @@ class StatementService(
 ) {
     fun get(user: User, id: Long): Statement {
         val statement:Statement = get(id)
-        if (statement.owner != user)
-            if (!user.isTeacher()) {
-                throw AccessDeniedException("You are not authorized to access to this statement")
-            }
+        if (statement.owner != user && !user.isTeacher()) {
+            throw AccessDeniedException("You are not authorized to access to this statement")
+        }
 
         return statement
-
     }
 
     fun get(statementId: Long): Statement{
