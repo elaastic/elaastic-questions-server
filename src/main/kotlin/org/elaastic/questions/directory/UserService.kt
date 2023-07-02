@@ -433,9 +433,6 @@ class UserService(
     fun updateOnboardingChapter(chapterToUpdate: OnboardingChapter, user: User?) {
         val onboardingState = user?.onboardingState
         if(onboardingState != null) {
-            if(onboardingState.chaptersSeen == null){
-                onboardingState.chaptersSeen = mutableSetOf()
-            }
             onboardingState.chaptersSeen.add(chapterToUpdate)
             onboardingStateRepository.save(onboardingState)
         }
@@ -449,7 +446,6 @@ class UserService(
 
     /**
      * Generate username from firstname and lastname
-     * @param sql the sql connection to check existing username
      * @param firstName the firstname
      * @param lastName the lastname
      * @return the username
@@ -461,9 +457,7 @@ class UserService(
                 replaceAccent(lastName.replace("\\s".toRegex(), "").lowercase().substring(0, indexLastname))
         val existingUsername = findMostRecentUsernameStartingWithUsername(username)
         if (existingUsername != null) {
-            "[0-9]+".toRegex().let {
-                it.findAll(existingUsername)
-            }.let {
+            "[0-9]+".toRegex().findAll(existingUsername).let {
                 username += if (it.count() == 0) {
                     2
                 } else {
@@ -490,7 +484,6 @@ class UserService(
 
     /**
      * Get the most recent user who begin with username param
-     * @param sql the sql object
      * @param username the username
      * @return a username if found else null
      */
