@@ -49,7 +49,7 @@ class ResponseService(
     @Autowired val userService: UserService
 ) {
 
-    fun getOne(id: Long) = responseRepository.getOne(id)
+    fun getReferenceById(id: Long) = responseRepository.getReferenceById(id)
 
     fun findAll(sequence: Sequence, excludeFakes: Boolean = true): ResponseSet =
         findAll(sequence.getResponseSubmissionInteraction(), excludeFakes)

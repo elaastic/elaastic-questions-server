@@ -39,7 +39,7 @@ class OneByOneEvaluationPhaseExecutionController(
             assignment = sequence.assignment!!
             peerGradingService.createOrUpdate(
                 user,
-                responseService.getOne(evaluationData.responseId),
+                responseService.getReferenceById(evaluationData.responseId),
                 evaluationData.grade.toBigDecimal()
             )
 

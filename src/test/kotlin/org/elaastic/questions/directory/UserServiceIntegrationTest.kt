@@ -424,7 +424,7 @@ internal class UserServiceIntegrationTest(
             it.filter {// for enabled users
                 it.enabled
             }.forEach { user -> // user and settings are still there
-                assertThat(userRepository.getOne(user.id!!), notNullValue())
+                assertThat(userRepository.getReferenceById(user.id!!), notNullValue())
                 assertThat(settingsRepository.findByUser(user), notNullValue())
                 assertThat(unsubscribeKeyRepository.findByUser(user), notNullValue())
             }

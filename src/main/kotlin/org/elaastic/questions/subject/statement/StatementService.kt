@@ -56,7 +56,7 @@ class StatementService(
     }
 
     fun get(statementId: Long): Statement{
-        return statementRepository.getOne(statementId)
+        return statementRepository.getReferenceById(statementId)
     }
 
     fun save(statement: Statement): Statement {

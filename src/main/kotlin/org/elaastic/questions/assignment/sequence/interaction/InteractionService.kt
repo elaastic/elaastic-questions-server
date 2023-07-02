@@ -61,7 +61,7 @@ class InteractionService(
             interactionRepository.findById(id).get()
 
     fun stop(user: User, interactionId: Long) =
-            stop(user, interactionRepository.getOne(interactionId))
+            stop(user, interactionRepository.getReferenceById(interactionId))
 
     fun stop(user: User, interaction: Interaction): Interaction {
         require(user == interaction.owner) {
@@ -108,10 +108,10 @@ class InteractionService(
     }
 
     fun start(user: User, interactionId: Long): Interaction =
-            start(user, interactionRepository.getOne(interactionId))
+            start(user, interactionRepository.getReferenceById(interactionId))
 
     fun restart(user: User, interactionId: Long): Interaction =
-            restart(user, interactionRepository.getOne(interactionId))
+            restart(user, interactionRepository.getReferenceById(interactionId))
 
     fun start(user: User, interaction: Interaction): Interaction {
         require(user == interaction.owner) {

@@ -215,7 +215,7 @@ class AssignmentService(
 
     fun getNbRegisteredUsers(assignmentId: Long): Int {
         return learnerAssignmentRepository.countAllByAssignment(
-            assignmentRepository.getOne(assignmentId)
+            assignmentRepository.getReferenceById(assignmentId)
         )
     }
 

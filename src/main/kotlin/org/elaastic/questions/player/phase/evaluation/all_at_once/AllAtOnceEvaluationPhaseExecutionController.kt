@@ -39,7 +39,7 @@ class AllAtOnceEvaluationPhaseExecutionController(
         sequenceService.get(sequenceId, true).let { sequence ->
             assignment = sequence.assignment!!
             evaluationData.getGrades().forEach {
-                peerGradingService.createOrUpdate(user, responseService.getOne(it.key), it.value.toBigDecimal())
+                peerGradingService.createOrUpdate(user, responseService.getReferenceById(it.key), it.value.toBigDecimal())
             }
 
             if (sequence.isSecondAttemptAllowed()
