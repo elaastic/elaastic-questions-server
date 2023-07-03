@@ -135,6 +135,8 @@ class WebSecurityConfig(
                 )
             }
 
+            cors {  }
+            csrf {  }
         }
     }
 

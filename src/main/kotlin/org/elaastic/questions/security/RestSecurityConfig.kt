@@ -54,22 +54,35 @@ class RestSecurityConfig(
     }
 
     override fun configure(http: HttpSecurity) {
-        http {
-
-            authorizeRequests {
-                authorize("/api/practice/**", hasAuthority(ROLE_REST_CLIENT))
+        http.securityMatcher("/api/practice/**")
+            .authorizeHttpRequests()
+            .requestMatchers("/api/practice/**").hasAuthority(ROLE_REST_CLIENT)
+            .and()
+            .sessionManagement { config ->
+                config.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
+            .httpBasic()
+            .and()
+            .cors()
+            .and()
+            .csrf { csrf -> csrf.disable() }
 
-            sessionManagement {
-                sessionCreationPolicy = SessionCreationPolicy.STATELESS
-            }
-
-            httpBasic {
-                realmName = "elaastic-api"
-            }
-
-            cors {  }
-            csrf { disable() }
-        }
+//        http {
+//
+//            authorizeRequests {
+//                authorize("/api/practice/**", hasAuthority(ROLE_REST_CLIENT))
+//            }
+//
+//            sessionManagement {
+//                sessionCreationPolicy = SessionCreationPolicy.STATELESS
+//            }
+//
+//            httpBasic {
+//                realmName = "elaastic-api"
+//            }
+//
+//            cors {  }
+//            csrf { disable() }
+//        }
     }
 }
