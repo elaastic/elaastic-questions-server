@@ -40,7 +40,8 @@ class RestSecurityConfig(
 
                     if (username == restUserName && password == restUserPassword) {
                         val authorities: List<GrantedAuthority> = listOf(SimpleGrantedAuthority(ROLE_REST_CLIENT))
-                        val userDetails: UserDetails = org.springframework.security.core.userdetails.User(username, password, authorities)
+                        val userDetails: UserDetails =
+                            org.springframework.security.core.userdetails.User(username, password, authorities)
                         return UsernamePasswordAuthenticationToken(userDetails, password, authorities)
                     }
 
@@ -54,35 +55,19 @@ class RestSecurityConfig(
     }
 
     override fun configure(http: HttpSecurity) {
-        http.securityMatcher("/api/practice/**")
-            .authorizeHttpRequests()
-            .requestMatchers("/api/practice/**").hasAuthority(ROLE_REST_CLIENT)
-            .and()
-            .sessionManagement { config ->
-                config.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }
-            .httpBasic()
-            .and()
-            .cors()
-            .and()
-            .csrf { csrf -> csrf.disable() }
 
-//        http {
-//
-//            authorizeRequests {
-//                authorize("/api/practice/**", hasAuthority(ROLE_REST_CLIENT))
-//            }
-//
-//            sessionManagement {
-//                sessionCreationPolicy = SessionCreationPolicy.STATELESS
-//            }
-//
-//            httpBasic {
-//                realmName = "elaastic-api"
-//            }
-//
-//            cors {  }
-//            csrf { disable() }
-//        }
+        (http.securityMatcher("/api/practice/**")) {
+            authorizeHttpRequests {
+                authorize("/api/practice/**", hasAuthority(ROLE_REST_CLIENT))
+            }
+
+            sessionManagement {
+                sessionCreationPolicy = SessionCreationPolicy.STATELESS
+            }
+
+            httpBasic {  }
+            cors {  }
+            csrf { disable() }
+        }
     }
 }
