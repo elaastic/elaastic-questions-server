@@ -26,16 +26,17 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
@@ -49,24 +50,31 @@ class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val encoder: PasswordEncoder,
     @Value("\${elaastic.questions.url}") val elaasticUrl: String,
-) : WebSecurityConfigurerAdapter() {
+) {
+
+    companion object {
+        const val LOGIN_URL = "/login"
+    }
 
     @Autowired var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
 
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        casSecurityConfigurer?.getCasAuthenticationProviderBeanList()?.forEach {
-            auth.authenticationProvider(it)
+    @Bean
+    fun webAuthenticationManager(): AuthenticationManager {
+        val providers =mutableListOf<AuthenticationProvider>()
+        providers.addAll(casSecurityConfigurer?.getCasAuthenticationProviderBeanList() ?: listOf())
+        providers.add(daoAuthenticationProvider())
+
+        return ProviderManager(providers)
+    }
+
+    @Bean
+    fun webSecurityCustomize() =
+        WebSecurityCustomizer { web ->
+            web.ignoring().requestMatchers(HttpMethod.POST, "/launch", "/elaastic-questions/launch")
         }
 
-        auth.authenticationProvider(authenticationProvider())
-    }
-
-    @Throws(Exception::class)
-    override fun configure(web: WebSecurity) {
-        web.ignoring().antMatchers(HttpMethod.POST, "/launch", "/elaastic-questions/launch")
-    }
-
-    override fun configure(http: HttpSecurity) {
+    @Bean
+    fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
 
             logout {
@@ -91,7 +99,7 @@ class WebSecurityConfig(
                 authorize("/ckeditor/**", permitAll)
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
-                authorize("/login", permitAll)
+                authorize(LOGIN_URL, permitAll)
 
                 // Allow access to this URL on which the CAS filter are applied
                 // A CAS filter will validate the provided ticket (URL argument) against the configured CAS server
@@ -113,7 +121,7 @@ class WebSecurityConfig(
             }
 
             formLogin {
-                loginPage = "/login"
+                loginPage = LOGIN_URL
                 defaultSuccessUrl("/home", false)
             }
 
@@ -127,9 +135,9 @@ class WebSecurityConfig(
                         // CasAuthenticationEntryPoint will be triggered (resulting in a redirect on the corresponding
                         // CAS server)
                         *casSecurityConfigurer?.getCasAuthenticationEntryPoints() ?: arrayOf(),
-                        
+
                         // Any other secured URL is handled by the native elaastic authentication (the formLogin)
-                        AnyRequestMatcher.INSTANCE to LoginUrlAuthenticationEntryPoint("/login")
+                        AnyRequestMatcher.INSTANCE to LoginUrlAuthenticationEntryPoint(LOGIN_URL)
                     )
 
                 )
@@ -138,20 +146,17 @@ class WebSecurityConfig(
             cors {  }
             csrf {  }
         }
+
+        return http.build()
     }
 
+
     @Bean
-    fun authenticationProvider(): DaoAuthenticationProvider {
+    fun daoAuthenticationProvider(): DaoAuthenticationProvider {
         DaoAuthenticationProvider().let {
             it.setUserDetailsService(userDetailsService)
             it.setPasswordEncoder(encoder)
             return it
         }
-    }
-
-    @Bean
-    @Throws(Exception::class)
-    override fun authenticationManagerBean(): AuthenticationManager {
-        return super.authenticationManagerBean()
     }
 }
