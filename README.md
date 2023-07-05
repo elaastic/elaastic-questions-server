@@ -74,6 +74,14 @@ Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 
 It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
 The application will be available at `http://localhost:8088`.
+       
+### Setup the dockerized CAS servers in dev mode
+ The generated autosigned certificate must be imported on the JDK used to launch elaastic.
+
+From `JAVA_HOME`, run the following command :
+``` 
+.\bin\keytool.exe -importcert -cacerts -alias "elaastic-cas" -file <elaastic-questions-server>\docker-resources\cas\etc\cas\config\elaastic-cas-certificate.cer
+```
 
 ## Licence
 
