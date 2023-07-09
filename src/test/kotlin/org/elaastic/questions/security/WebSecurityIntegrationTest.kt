@@ -52,4 +52,14 @@ internal class WebSecurityIntegrationTest(
             .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.redirectedUrl("/login?error"))
     }
+
+    @Test
+    fun `When a user access a protected URL without being authenticated, it should be redirected to the login form`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/subject")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())  // Add the CSRF token
+        )
+            .andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrlPattern("**/login"))
+    }
 }
