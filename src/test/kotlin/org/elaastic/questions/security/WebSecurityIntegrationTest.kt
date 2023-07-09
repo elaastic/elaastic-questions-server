@@ -38,4 +38,18 @@ internal class WebSecurityIntegrationTest(
             .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.redirectedUrl("/home"))
     }
+
+    @Test
+    @Throws(java.lang.Exception::class)
+    fun `test authentication failure`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/login")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())  // Add the CSRF token
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "testuser")
+                .param("password", "wrongpassword")
+        )
+            .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/login?error"))
+    }
 }
