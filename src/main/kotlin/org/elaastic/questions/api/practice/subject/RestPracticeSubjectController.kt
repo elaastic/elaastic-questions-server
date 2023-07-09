@@ -35,11 +35,15 @@ import javax.persistence.EntityNotFoundException
  *
  */
 @RestController
-@RequestMapping("/api/practice/v1")
+@RequestMapping(RestPracticeSubjectController.PRACTICE_API_URL)
 class RestPracticeSubjectController(
     @Autowired val practiceSubjectService: PracticeSubjectService,
     @Autowired val attachmentService: AttachmentService,
 ) {
+
+    companion object {
+        const val PRACTICE_API_URL = "/api/practice/v1"
+    }
 
     /**
      * Returns the list of available practice subjects that has been created or updated since the provided date
