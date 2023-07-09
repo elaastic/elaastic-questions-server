@@ -17,6 +17,9 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.web.client.RestTemplate
+import java.nio.charset.StandardCharsets
+import java.util.Base64
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -170,6 +173,18 @@ internal class WebSecurityIntegrationTest(
         )
 
         assertEquals(HttpStatus.UNAUTHORIZED, privateResponse.statusCode)
+    }
+
+    @Test
+    fun `A user cannot authenticate using Basic HTTP`() {
+        val authHeader = "Basic " + Base64.getEncoder().encodeToString("fsil:1234".toByteArray(Charsets.UTF_8))
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/subject")
+                .header(HttpHeaders.AUTHORIZATION, authHeader)
+        )
+            .andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrlPattern("**/login"))
     }
 
     private fun extractCsrfToken(responseBody: String): String? {
