@@ -1,5 +1,6 @@
 package org.elaastic.questions.security
 
+import org.elaastic.questions.api.practice.subject.RestPracticeSubjectController
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -128,6 +129,47 @@ internal class WebSecurityIntegrationTest(
                 ),
             )
         )
+    }
+
+    @Test
+    fun `An authenticated user cannot access the REST API`() {
+        val loginUrl = "http://localhost:$port/login"
+        val apiUrl = "http://localhost:$port"+RestPracticeSubjectController.PRACTICE_API_URL
+
+        // Authentication
+        val loginHeaders = HttpHeaders()
+        loginHeaders.contentType = MediaType.APPLICATION_FORM_URLENCODED
+        val loginPageResponse = restTemplate.getForEntity(
+            loginUrl,
+            String::class.java
+        )
+        val csrfToken: String? = extractCsrfToken(loginPageResponse.body!!)
+        loginHeaders[HttpHeaders.COOKIE] = loginPageResponse.headers.getFirst(HttpHeaders.SET_COOKIE)
+        loginHeaders[HttpHeaders.AUTHORIZATION] = "Bearer $csrfToken"
+        val loginRequest = HttpEntity("_csrf=$csrfToken&username=fsil&password=1234", loginHeaders)
+        val loginResponse = restTemplate.exchange(
+            loginUrl, HttpMethod.POST, loginRequest,
+            String::class.java
+        )
+
+        assertEquals(HttpStatus.FOUND, loginResponse.statusCode)
+
+        // Get the authentication cookie
+        val sessionCookie = loginResponse.headers.getFirst(HttpHeaders.SET_COOKIE)
+
+
+        // Access the REST API
+        val privateHeaders = HttpHeaders()
+        privateHeaders.set(HttpHeaders.COOKIE, sessionCookie)
+        val privateRequest = HttpEntity<String>(privateHeaders)
+        val privateResponse: ResponseEntity<String> = restTemplate.exchange(
+            apiUrl,
+            HttpMethod.GET,
+            privateRequest,
+            String::class.java
+        )
+
+        assertEquals(HttpStatus.UNAUTHORIZED, privateResponse.statusCode)
     }
 
     private fun extractCsrfToken(responseBody: String): String? {
