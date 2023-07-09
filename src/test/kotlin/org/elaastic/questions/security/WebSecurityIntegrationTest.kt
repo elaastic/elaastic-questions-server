@@ -17,8 +17,6 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.web.client.RestTemplate
-import java.nio.charset.StandardCharsets
 import java.util.Base64
 
 
