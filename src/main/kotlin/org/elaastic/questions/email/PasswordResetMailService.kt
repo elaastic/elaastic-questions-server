@@ -59,7 +59,7 @@ class PasswordResetMailService(
     @Transactional
     fun sendPasswordResetKeyEmails(lifetime: Int = 1) {
         val expirationDate = DateUtils.addHours(Date(), -lifetime)
-        var processedKeys = mutableListOf<PasswordResetKey>()
+        val processedKeys = mutableListOf<PasswordResetKey>()
         var nbSentEmail = 0
         val keysByUserEmail = mutableMapOf<String, MutableList<PasswordResetKey>>()
         passwordResetKeyRepository.findAllPasswordResetKeys(expirationDate).forEach {
