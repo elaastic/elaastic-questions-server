@@ -72,6 +72,10 @@ class Statement(
     @Version
     var version: Long? = null
 
+    @field:NotNull
+    @field:NotBlank
+    var uuid: String = UUID.randomUUID().toString()
+
     @Column(name = "date_created")
     @CreatedDate
     lateinit var dateCreated: Date

@@ -55,7 +55,8 @@ class Course (
 
     @field:NotNull
     @field:NotBlank
-    val globalId:String = UUID.randomUUID().toString()
+    @Column(name="`uuid`")
+    var globalId:String = UUID.randomUUID().toString()
 
     fun updateFrom(otherCourse: Course) {
         require(id == otherCourse.id)

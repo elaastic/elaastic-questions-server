@@ -26,6 +26,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
 import java.time.LocalDate
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.*
 import kotlin.collections.HashSet
@@ -62,6 +63,10 @@ class User(
 
     @Version
     var version: Long? = null
+
+    @field:NotNull
+    @field:NotBlank
+    var uuid: String = UUID.randomUUID().toString()
 
     @NotNull
     @Size(min = 1)

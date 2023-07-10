@@ -89,6 +89,7 @@ class Subject (
 
     @field:NotNull
     @field:NotBlank
+    @Column(name="`uuid`")
     val globalId:String = UUID.randomUUID().toString()
 
 

@@ -63,6 +63,7 @@ class Assignment(
 
         @field:NotNull
         @field:NotBlank
+        @Column(name="`uuid`")
         var globalId: String = UUID.randomUUID().toString(),
 
         @field:ManyToOne( fetch = FetchType.EAGER)

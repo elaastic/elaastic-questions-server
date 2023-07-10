@@ -35,6 +35,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 import javax.persistence.*
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 
@@ -75,6 +76,10 @@ class Response(
 ) : AbstractJpaPersistable<Long>() {
     @Version
     var version: Long? = null
+
+    @field:NotNull
+    @field:NotBlank
+    var uuid: String = UUID.randomUUID().toString()
 
     @Column(name = "date_created")
     @CreatedDate
