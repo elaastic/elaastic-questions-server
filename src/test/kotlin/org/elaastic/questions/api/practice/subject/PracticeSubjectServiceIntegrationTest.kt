@@ -140,6 +140,7 @@ internal class PracticeSubjectServiceIntegrationTest(
         val teacher = integrationTestingService.getTestTeacher()
         val learners = integrationTestingService.getNLearners(5)
         val t0 = LocalDateTime.now()
+        Thread.sleep(1000)
 
         assertThat(
             "Initially there is no practice subject",
