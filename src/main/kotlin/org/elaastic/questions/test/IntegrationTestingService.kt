@@ -67,6 +67,9 @@ class IntegrationTestingService(
         return userRepository.getByUsername("msil")
     }
 
+    fun getNLearners(n: Int) =
+        List(n) { userRepository.getByUsername("John_Doe___${it+1}") }
+
 
     fun getAnyStatement(): Statement {
         return statementRepository.findAll().iterator().next()

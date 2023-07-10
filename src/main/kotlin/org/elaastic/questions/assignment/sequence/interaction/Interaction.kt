@@ -32,7 +32,6 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotNull
 
 
 @Entity
@@ -41,6 +40,7 @@ class Interaction(
         @field:Enumerated(EnumType.STRING)
         var interactionType: InteractionType,
 
+        @Column(name="`rank`")
         var rank: Int,
 
         @field:Convert(converter = InteractionSpecificationConverter::class)

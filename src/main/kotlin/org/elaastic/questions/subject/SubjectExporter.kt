@@ -50,7 +50,7 @@ class SubjectExporter(
 
     /**
      * Export the subject to a ZIP archive include a JSON file for the subject data and 1 file for each
-     * attachments
+     * attachment
      */
     fun exportToZip(subject: Subject, filename: String, outputStream: OutputStream) {
         val exportSubjectData = exportToPojo(subject)

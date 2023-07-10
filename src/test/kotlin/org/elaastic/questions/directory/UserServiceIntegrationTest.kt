@@ -424,7 +424,7 @@ internal class UserServiceIntegrationTest(
             it.filter {// for enabled users
                 it.enabled
             }.forEach { user -> // user and settings are still there
-                assertThat(userRepository.getOne(user.id!!), notNullValue())
+                assertThat(userRepository.getReferenceById(user.id!!), notNullValue())
                 assertThat(settingsRepository.findByUser(user), notNullValue())
                 assertThat(unsubscribeKeyRepository.findByUser(user), notNullValue())
             }
@@ -535,7 +535,7 @@ internal class UserServiceIntegrationTest(
         }.tThen {
             assertThat(it!!.size, equalTo(9))
             for(i in 0..8) {
-                assertThat(it!![i].username, equalTo("${userService.FAKE_USER_PREFIX}${i+1}"))
+                assertThat(it[i].username, equalTo("${userService.FAKE_USER_PREFIX}${i+1}"))
             }
         }
     }

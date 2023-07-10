@@ -46,7 +46,7 @@ class TermsService(
      * get active terms
      */
     fun getActive(): Terms {
-        return termsRepository.getOne(ACTIVE_TERM_ID)
+        return termsRepository.getReferenceById(ACTIVE_TERM_ID)
     }
 
 
@@ -57,10 +57,10 @@ class TermsService(
      */
     fun getTermsContentByLanguage(language: String): String {
         return when(language) {
-            Locale.FRENCH.language -> termsContentRepository.getOne(TERM_CONTENT_FR_ID).content
-            Locale.ENGLISH.language -> termsContentRepository.getOne(TERM_CONTENT_EN_ID).content
-            "es" -> termsContentRepository.getOne(TERM_CONTENT_ES_ID).content
-            else -> termsContentRepository.getOne(TERM_CONTENT_EN_ID).content
+            Locale.FRENCH.language -> termsContentRepository.getReferenceById(TERM_CONTENT_FR_ID).content
+            Locale.ENGLISH.language -> termsContentRepository.getReferenceById(TERM_CONTENT_EN_ID).content
+            "es" -> termsContentRepository.getReferenceById(TERM_CONTENT_ES_ID).content
+            else -> termsContentRepository.getReferenceById(TERM_CONTENT_EN_ID).content
         }
     }
 

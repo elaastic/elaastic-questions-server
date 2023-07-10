@@ -19,9 +19,6 @@
 package org.elaastic.questions.player.components.command
 
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.directory.User
 
 data class CommandModel(
         val sequenceId: Long,

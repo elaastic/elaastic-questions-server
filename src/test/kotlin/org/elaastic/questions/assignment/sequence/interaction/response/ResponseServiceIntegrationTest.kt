@@ -356,7 +356,7 @@ internal class ResponseServiceIntegrationTest(
         }.tThen { responseList ->
             assertThat(responseList.size, equalTo(2))
             responseList.forEachIndexed { index, response ->
-                assertThat(response!!.id, notNullValue())
+                assertThat(response.id, notNullValue())
                 assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
                 assertThat(response.score, nullValue())
                 assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
@@ -427,7 +427,7 @@ internal class ResponseServiceIntegrationTest(
         }.tThen { responseList ->
             assertThat(responseList.size, equalTo(3))
             responseList.forEachIndexed { index, response ->
-                assertThat(response!!.id, notNullValue())
+                assertThat(response.id, notNullValue())
                 assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
                 assertThat(response.score, equalTo(if (index == 1) BigDecimal(100) else BigDecimal.ZERO))
                 assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
@@ -500,7 +500,7 @@ internal class ResponseServiceIntegrationTest(
         }.tThen { responseList ->
             assertThat(responseList.size, equalTo(3))
             responseList.forEachIndexed { index, response ->
-                assertThat(response!!.id, notNullValue())
+                assertThat(response.id, notNullValue())
                 assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
                 assertThat(response.score, equalTo(if (index == 1) BigDecimal(50) else BigDecimal.ZERO))
                 assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))

@@ -25,7 +25,7 @@ object ExplanationViewerModelFactory {
     fun buildOpen(teacher: Boolean,
                   responseList: List<Response>) =
             OpenExplanationViewerModel(
-                    responseList.map { ExplanationData(it) },
+                    responseList.map { ExplanationDataFactory.create(it) },
                     true,
                     studentsIdentitiesAreDisplayable = teacher
             )

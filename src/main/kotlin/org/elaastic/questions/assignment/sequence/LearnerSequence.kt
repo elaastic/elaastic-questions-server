@@ -21,12 +21,12 @@ package org.elaastic.questions.assignment.sequence
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.questions.player.phase.LearnerPhase
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotNull
 
 
 @Entity
@@ -34,16 +34,17 @@ import javax.validation.constraints.NotNull
 
 class LearnerSequence(
 
-        @field:ManyToOne
-        var learner: User,
+    @field:ManyToOne
+    override val learner: User,
 
-        @field:ManyToOne
-        var sequence: Sequence,
+    @field:ManyToOne
+    override val sequence: Sequence,
 
-        @field:ManyToOne
-        var activeInteraction: Interaction? = null
-
-) : AbstractJpaPersistable<Long>() {
+    @field:ManyToOne
+    override var activeInteraction: Interaction? = null
+) : AbstractJpaPersistable<Long>(),
+    ILearnerSequence,
+    SequenceProgress by sequence {
 
     @Version
     var version: Long? = null
@@ -55,4 +56,21 @@ class LearnerSequence(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
+
+    @Transient
+    override var phaseList: Array<LearnerPhase?> = arrayOf<LearnerPhase?>(null, null, null)
+        get() { // Needed because of JPA using a default empty constructor that bypass the var initialization...
+            if (field == null) {
+                field = arrayOf<LearnerPhase?>(null, null, null)
+            }
+            return field
+        }
+
+    @Transient
+    override fun loadPhase(learnerPhase: LearnerPhase) {
+        phaseList[learnerPhase.index - 1] = learnerPhase
+    }
+
+    @Transient
+    override fun getPhase(index: Int) = phaseList[index]!!
 }

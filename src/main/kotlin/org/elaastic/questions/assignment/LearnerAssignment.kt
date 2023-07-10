@@ -32,7 +32,7 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class LearnerAssignment(
 
-        @field:ManyToOne
+        @field:ManyToOne(fetch = FetchType.EAGER)
         var learner: User,
 
         @field:ManyToOne(fetch = FetchType.EAGER)

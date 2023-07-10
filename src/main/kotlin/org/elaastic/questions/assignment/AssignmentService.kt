@@ -27,6 +27,7 @@ import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.questions.util.toDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -34,7 +35,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.lang.IllegalStateException
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
@@ -44,17 +45,19 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class AssignmentService(
-        @Autowired val assignmentRepository: AssignmentRepository,
-        @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val learnerAssignmentRepository: LearnerAssignmentRepository,
-        @Autowired val statementService: StatementService,
-        @Autowired val attachmentService: AttachmentService,
-        @Autowired val entityManager: EntityManager,
-        @Autowired val responseService: ResponseService
+    @Autowired val assignmentRepository: AssignmentRepository,
+    @Autowired val sequenceRepository: SequenceRepository,
+    @Autowired val learnerAssignmentRepository: LearnerAssignmentRepository,
+    @Autowired val statementService: StatementService,
+    @Autowired val attachmentService: AttachmentService,
+    @Autowired val entityManager: EntityManager,
+    @Autowired val responseService: ResponseService,
 ) {
 
-    fun findAllByOwner(owner: User,
-                       pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated")))
+    fun findAllByOwner(
+        owner: User,
+        pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
+    )
             : Page<Assignment> {
         return assignmentRepository.findAllByOwner(owner, pageable)
     }
@@ -102,9 +105,9 @@ class AssignmentService(
 
     fun addSequence(assignment: Assignment, statement: Statement): Sequence {
         val sequence = Sequence(
-                owner = assignment.owner,
-                statement = statement,
-                rank = statement.rank
+            owner = assignment.owner,
+            statement = statement,
+            rank = statement.rank
         )
 
         assignment.addSequence(sequence)
@@ -130,17 +133,16 @@ class AssignmentService(
         val idsArray = assignment.sequences.map { it.id }.toTypedArray()
         val pos = idsArray.indexOf(sequenceId)
 
-        if (pos == -1)
-            throw IllegalStateException("This sequence $sequenceId does not belong to assignment ${assignment.id}")
+        check(pos != -1) { "This sequence $sequenceId does not belong to assignment ${assignment.id}" }
         if (pos == 0)
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE sequence SET rank = CASE " +
-                        "WHEN id=${sequenceId} THEN ${pos} " +
-                        "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
-                        " END " +
-                        "WHERE id in (${idsArray[pos - 1]}, ${sequenceId})"
+            "UPDATE sequence SET `rank` = CASE " +
+                    "WHEN id=${sequenceId} THEN ${pos} " +
+                    "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
+                    " END " +
+                    "WHERE id in (${idsArray[pos - 1]}, ${sequenceId})"
         ).executeUpdate()
     }
 
@@ -148,17 +150,16 @@ class AssignmentService(
         val idsArray = assignment.sequences.map { it.id }.toTypedArray()
         val pos = idsArray.indexOf(sequenceId)
 
-        if (pos == -1)
-            throw IllegalStateException("This sequence $sequenceId does not belong to assignment ${assignment.id}")
+        check(pos != -1) { "This sequence $sequenceId does not belong to assignment ${assignment.id}" }
         if (pos == assignment.sequences.size - 1)
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE sequence SET rank = CASE " +
-                        "WHEN id=${sequenceId} THEN ${pos + 1} " +
-                        "WHEN id=${idsArray[pos + 1]} THEN ${pos} " +
-                        " END " +
-                        "WHERE id in (${idsArray[pos + 1]}, ${sequenceId})"
+            "UPDATE sequence SET `rank` = CASE " +
+                    "WHEN id=${sequenceId} THEN ${pos + 1} " +
+                    "WHEN id=${idsArray[pos + 1]} THEN ${pos} " +
+                    " END " +
+                    "WHERE id in (${idsArray[pos + 1]}, ${sequenceId})"
         ).executeUpdate()
     }
 
@@ -167,12 +168,12 @@ class AssignmentService(
         if (sequenceIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
-                "UPDATE sequence SET rank = CASE " +
-                        sequenceIds.mapIndexed { index, id ->
-                            "WHEN id=$id THEN $index"
-                        }.joinToString(" ") +
-                        " END " +
-                        "WHERE id in (${sequenceIds.joinToString(",")})"
+            "UPDATE sequence SET `rank` = CASE " +
+                    sequenceIds.mapIndexed { index, id ->
+                        "WHEN id=$id THEN $index"
+                    }.joinToString(" ") +
+                    " END " +
+                    "WHERE id in (${sequenceIds.joinToString(",")})"
         ).executeUpdate()
 
         assignment.sequences.mapIndexed { index, sequence -> sequence.rank = index + 1 }
@@ -194,17 +195,17 @@ class AssignmentService(
         }
 
         return learnerAssignmentRepository.findByLearnerAndAssignment(
-                user,
-                assignment
+            user,
+            assignment
         ) ?: learnerAssignmentRepository.save(
-                LearnerAssignment(user, assignment)
+            LearnerAssignment(user, assignment)
         )
     }
 
     fun userIsRegisteredInAssignment(user: User, assignment: Assignment): Boolean {
         return learnerAssignmentRepository.findByLearnerAndAssignment(
-                user,
-                assignment
+            user,
+            assignment
         ) != null
     }
 
@@ -214,25 +215,25 @@ class AssignmentService(
 
     fun getNbRegisteredUsers(assignmentId: Long): Int {
         return learnerAssignmentRepository.countAllByAssignment(
-                assignmentRepository.getOne(assignmentId)
+            assignmentRepository.getReferenceById(assignmentId)
         )
     }
 
     fun buildFromSubject(assignment: Assignment, subject: Subject) {
-        for (statement: Statement in subject.statements){
-            this.addSequence(assignment,statement)
+        for (statement: Statement in subject.statements) {
+            this.addSequence(assignment, statement)
             touch(assignment)
         }
     }
 
-    fun getCoursesAssignmentsMap(assignments : List<Assignment>) : MutableMap<Course, MutableList<Assignment>> {
+    fun getCoursesAssignmentsMap(assignments: List<Assignment>): MutableMap<Course, MutableList<Assignment>> {
 
         // TODO rewrite this code in a more functional way
-        val mapResult : MutableMap<Course, MutableList<Assignment>> = mutableMapOf()
-        for(assignment in assignments) {
-            val course : Course? = assignment.subject?.course
-            if(course != null){
-                if(!mapResult.containsKey(course)) {
+        val mapResult: MutableMap<Course, MutableList<Assignment>> = mutableMapOf()
+        for (assignment in assignments) {
+            val course: Course? = assignment.subject?.course
+            if (course != null) {
+                if (!mapResult.containsKey(course)) {
                     mapResult[course] = mutableListOf(assignment)
                 } else {
                     mapResult[course]!!.add(assignment)
@@ -241,4 +242,10 @@ class AssignmentService(
         }
         return mapResult
     }
+
+    fun findAllAssignmentUpdatedSince(since: LocalDateTime): List<Assignment> =
+        assignmentRepository.findAllAssignmentUpdatedSince(since.toDate())
+
+fun findAllLearnersRegisteredOn(assignment: Assignment) =
+    learnerAssignmentRepository.findAllRegisteredLearnersOnAssignment(assignment).toSet()
 }

@@ -1,0 +1,55 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Test statement</title>
+</head>
+<body>
+<section>
+  <h2>Statement</h2>
+  <form class="ui form" method="get" th:action="@{/player/test/statement}">
+    <div class="fields">
+      <div class="field">
+        <label>panelClosed</label>
+        <input name="panelClosed" type="checkbox" th:checked="${statementPanelModel.panelClosed}"/>
+      </div>
+      <div class="field">
+        <label>hideQuestionType</label>
+        <input name="hideQuestionType" type="checkbox" th:checked="${statementPanelModel.hideQuestionType}"/>
+      </div>
+      <div class="field">
+        <label>hideStatement</label>
+        <input name="hideStatement" type="checkbox" th:checked="${statementPanelModel.hideStatement}"/>
+      </div>
+    </div>
+
+    <input type="submit" class="ui submit button"/>
+    <hr class="ui hidden divider"/>
+  </form>
+
+  <div
+    th:replace="player/assignment/sequence/components/statement/_statement.html :: statement(${statementPanelModel},${statement})"></div>
+</section>
+</body>
+</html>

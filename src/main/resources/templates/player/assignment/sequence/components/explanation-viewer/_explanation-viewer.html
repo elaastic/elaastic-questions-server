@@ -1,0 +1,50 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="explanationViewer(sequenceId, explanationViewerModel)"
+     style="font-size: 1rem"
+     th:with="components=${'player/assignment/sequence/components/explanation-viewer'}"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <!--  Teacher explanation -->
+    <div th:if="${explanationViewerModel.teacherExplanation != null}">
+        <div th:replace="|${components}/_anExplanation|::anExplanation(${explanationViewerModel.teacherExplanation}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.hasRecommendedExplanations})"></div>
+        <div th:if="${explanationViewerModel.nbExplanations > 1}" class="ui divider"></div>
+    </div>
+
+    <!--  The 3 best explanations -->
+    <div th:each="explanation : ${explanationViewerModel.explanationsExcerpt}"
+         th:remove="tag">
+        <div th:replace="|${components}/_anExplanation|::anExplanation(${explanation}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.hasRecommendedExplanations})"></div>
+    </div>
+
+    <!--  Message if there is no explanations -->
+    <div th:if="${explanationViewerModel.nbExplanations == 0}"
+         class="ui warning message"
+         th:text="#{player.sequence.explanation.noExplanation}">
+        There is no explanation.
+    </div>
+
+    <!--  Popup to visualize all explanations -->
+    <div
+            th:if="${explanationViewerModel.hasMoreThanExcerpt}">
+        <div
+                th:replace="|${components}/_allExplanationsPopup|::allExplanationsPopup(${sequenceId}, ${explanationViewerModel})"></div>
+    </div>
+
+</div>

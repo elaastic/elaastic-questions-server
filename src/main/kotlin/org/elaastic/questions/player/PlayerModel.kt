@@ -17,13 +17,10 @@
  */
 package org.elaastic.questions.player
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.player.phase.LearnerPhase
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel
 import org.elaastic.questions.player.components.command.CommandModel
-import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
-import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
-import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.statement.StatementInfo
@@ -31,24 +28,21 @@ import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModel
 
-open class PlayerModel(
-        val assignment: Assignment,
-        val sequence: Sequence,
-        val userRole: UserRole,
-        val assignmentOverviewModel: AssignmentOverviewModel,
-        val stepsModel: StepsModel,
-        val sequenceInfoModel: SequenceInfoModel,                       
-        val statementPanelModel: StatementPanelModel,
-        val statement: StatementInfo,
-        val showResponsePhase: Boolean,
-        val showEvaluationPhase: Boolean,
-        val showResults: Boolean,
-        val resultsModel: ResultsModel?,
-        val learnerResultsModel: LearnerResultsModel?
-)
+abstract class PlayerModel(
+    val sequence: Sequence,
+    val userRole: UserRole,
+    val assignmentOverviewModel: AssignmentOverviewModel,
+    val stepsModel: StepsModel,
+    val sequenceInfoModel: SequenceInfoModel,
+    val statementPanelModel: StatementPanelModel,
+    val statement: StatementInfo,
+) {
+    fun getAssignment() = sequence.assignment
+
+    abstract fun isTeacher(): Boolean
+}
 
 class TeacherPlayerModel(
-    assignment: Assignment,
     val serverBaseUrl: String,
     sequence: Sequence,
     assignmentOverviewModel: AssignmentOverviewModel,
@@ -58,54 +52,39 @@ class TeacherPlayerModel(
     sequenceInfoModel: SequenceInfoModel,
     statementPanelModel: StatementPanelModel,
     statement: StatementInfo,
-    showResults: Boolean,
-    resultsModel: ResultsModel?
+    val showResults: Boolean,
+    val resultsModel: ResultsModel?,
 ) : PlayerModel(
-        assignment = assignment,
-        sequence = sequence,
-        userRole = UserRole.Teacher, // TODO Check if we need it
-        assignmentOverviewModel = assignmentOverviewModel,
-        stepsModel = stepsModel,
-        sequenceInfoModel = sequenceInfoModel,
-        statementPanelModel = statementPanelModel, // TODO Perhaps we merge this one with the following
-        statement = statement,
-        showResponsePhase = false,
-        showEvaluationPhase = false,
-        showResults = showResults,
-        resultsModel = resultsModel,
-        learnerResultsModel = null
-)
+    sequence = sequence,
+    userRole = UserRole.Teacher, // TODO Check if we need it
+    assignmentOverviewModel = assignmentOverviewModel,
+    stepsModel = stepsModel,
+    sequenceInfoModel = sequenceInfoModel,
+    statementPanelModel = statementPanelModel, // TODO Perhaps we merge this one with the following
+    statement = statement,
+) {
+    override fun isTeacher() = true
+}
 
 class LearnerPlayerModel(
-    assignment: Assignment,
     sequence: Sequence,
     assignmentOverviewModel: AssignmentOverviewModel,
     stepsModel: StepsModel,
     sequenceInfoModel: SequenceInfoModel,
     statementPanelModel: StatementPanelModel,
     statement: StatementInfo,
-    showResponsePhase: Boolean,
-    val responsePhaseModel: ResponsePhaseModel?,
-    showEvaluationPhase: Boolean,
-    val evaluationPhaseModel: EvaluationPhaseModel?,
-    showResults: Boolean,
-    resultsModel: ResultsModel?,
-    learnerResultsModel: LearnerResultsModel?
+    val phaseList: List<LearnerPhase>
 ) : PlayerModel(
-        assignment = assignment,
-        sequence = sequence,
-        userRole = UserRole.Learner, // TODO Check if we need it
-        assignmentOverviewModel = assignmentOverviewModel,
-        stepsModel = stepsModel,
-        sequenceInfoModel = sequenceInfoModel,
-        statementPanelModel = statementPanelModel, // TODO Perhaps we merge this one with the following
-        statement = statement,
-        showResponsePhase = showResponsePhase,
-        showEvaluationPhase = showEvaluationPhase,
-        showResults = showResults,
-        resultsModel = resultsModel,
-        learnerResultsModel = learnerResultsModel
-)
+    sequence = sequence,
+    userRole = UserRole.Learner, // TODO Check if we need it
+    assignmentOverviewModel = assignmentOverviewModel,
+    stepsModel = stepsModel,
+    sequenceInfoModel = sequenceInfoModel,
+    statementPanelModel = statementPanelModel, // TODO Perhaps we merge this one with the following
+    statement = statement,
+) {
+    override fun isTeacher() = false
+}
 
 enum class UserRole {
     Teacher, Learner

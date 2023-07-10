@@ -23,6 +23,7 @@ import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.jpa.repository.JpaRepository
+import java.math.BigDecimal
 
 
 interface ResponseRepository : JpaRepository<Response, Long> {
@@ -32,6 +33,12 @@ interface ResponseRepository : JpaRepository<Response, Long> {
     fun findAllByInteractionOrderByMeanGradeDesc(interaction: Interaction): List<Response>
 
     fun findAllByInteractionAndFakeIsFalseOrderByMeanGradeDesc(interaction: Interaction): List<Response>
+
+    /**
+     * Query for retrieving only learner correct responses sorted by grades
+     */
+    fun findAllByInteractionAndScoreAndFakeIsFalseOrderByMeanGradeDesc(interaction: Interaction, score: BigDecimal = BigDecimal(100)): List<Response>
+
 
     fun findAllByInteractionAndAttempt(interaction: Interaction, attempt: Int = 1): List<Response>
 

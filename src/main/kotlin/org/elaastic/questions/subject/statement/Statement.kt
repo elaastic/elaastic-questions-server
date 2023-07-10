@@ -64,6 +64,7 @@ class Statement(
         @field:ManyToOne( fetch = FetchType.LAZY)
         var subject: Subject? = null,
 
+        @Column(name="`rank`")
         var rank: Int = 0
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {

@@ -18,7 +18,12 @@
 
 package org.elaastic.questions.config
 
+import org.elaastic.questions.player.phase.LearnerPhaseType
+import org.elaastic.questions.player.phase.descriptor.PhaseDescriptor
+import org.elaastic.questions.player.phase.descriptor.SequenceDescriptor
+import org.elaastic.questions.player.phase.evaluation.LearnerEvaluationPhaseConfig
 import org.springframework.cache.annotation.EnableCaching
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.scheduling.annotation.EnableScheduling
@@ -29,4 +34,13 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableJpaAuditing
 @EnableScheduling
 class ApplicationConfig {
+
+    @Bean(name = ["sequenceDescriptor"])
+    fun getSequenceDescriptor() = SequenceDescriptor(
+        listOf(
+            PhaseDescriptor(LearnerPhaseType.RESPONSE),
+            PhaseDescriptor(LearnerPhaseType.EVALUATION, LearnerEvaluationPhaseConfig.ALL_AT_ONCE),
+            PhaseDescriptor(LearnerPhaseType.RESULT),
+        )
+    )
 }

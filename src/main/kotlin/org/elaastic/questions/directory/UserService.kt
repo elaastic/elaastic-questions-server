@@ -133,7 +133,7 @@ class UserService(
         require(user.roles.isNotEmpty())
 
         with(user) {
-            enabled = if (checkEmailAccount) false else enable
+            enabled = !checkEmailAccount && enable
             password = passwordEncoder.encode(plainTextPassword)
             userRepository.save(this).let {
                 this.onboardingState = onboardingStateRepository.save(OnboardingState(user))
@@ -251,14 +251,14 @@ class UserService(
      */
     fun enableUserWithActivationKey(activationKey: String): User? {
         activationKeyRepository.findByActivationKey(activationKey).let {
-            when (it) {
-                null -> return null
+            return when (it) {
+                null -> null
                 else -> {
                     val user = it.user
                     user.enabled = true
                     userRepository.save(user)
                     activationKeyRepository.delete(it)
-                    return it.user
+                    it.user
                 }
             }
         }
@@ -304,7 +304,7 @@ class UserService(
      * @return the password reset key object user
      */
     fun generatePasswordResetKeyForUser(user: User, lifetime: Int = 1): PasswordResetKey {
-        var passwordResetKey = passwordResetKeyRepository.findByUser(user)
+        val passwordResetKey = passwordResetKeyRepository.findByUser(user)
         when (passwordResetKey) {
             null -> {
                 PasswordResetKey(
@@ -433,9 +433,6 @@ class UserService(
     fun updateOnboardingChapter(chapterToUpdate: OnboardingChapter, user: User?) {
         val onboardingState = user?.onboardingState
         if(onboardingState != null) {
-            if(onboardingState.chaptersSeen == null){
-                onboardingState.chaptersSeen = mutableSetOf()
-            }
             onboardingState.chaptersSeen.add(chapterToUpdate)
             onboardingStateRepository.save(onboardingState)
         }
@@ -449,7 +446,6 @@ class UserService(
 
     /**
      * Generate username from firstname and lastname
-     * @param sql the sql connection to check existing username
      * @param firstName the firstname
      * @param lastName the lastname
      * @return the username
@@ -457,13 +453,11 @@ class UserService(
     fun generateUsername(firstName: String, lastName: String): String {
         val indexLastname = MAX_INDEX_LASTNAME.coerceAtMost(lastName.length)
         val indexFirstName = MAX_INDEX_FIRSTNAME.coerceAtMost(firstName.length)
-        var username = replaceAccent(firstName.replace("\\s".toRegex(), "").toLowerCase().substring(0, indexFirstName)) +
-                replaceAccent(lastName.replace("\\s".toRegex(), "").toLowerCase().substring(0, indexLastname))
+        var username = replaceAccent(firstName.replace("\\s".toRegex(), "").lowercase().substring(0, indexFirstName)) +
+                replaceAccent(lastName.replace("\\s".toRegex(), "").lowercase().substring(0, indexLastname))
         val existingUsername = findMostRecentUsernameStartingWithUsername(username)
         if (existingUsername != null) {
-            "[0-9]+".toRegex().let {
-                it.findAll(existingUsername)
-            }.let {
+            "[0-9]+".toRegex().findAll(existingUsername).let {
                 username += if (it.count() == 0) {
                     2
                 } else {
@@ -490,7 +484,6 @@ class UserService(
 
     /**
      * Get the most recent user who begin with username param
-     * @param sql the sql object
      * @param username the username
      * @return a username if found else null
      */

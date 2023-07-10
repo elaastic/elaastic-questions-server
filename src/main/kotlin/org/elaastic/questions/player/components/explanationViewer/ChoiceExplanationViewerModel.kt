@@ -42,7 +42,7 @@ class ChoiceExplanationViewerModel(
     val explanationsByIncorrectResponses = this.explanationsByResponse.filter { !it.key.correct }
     val explanationsForCorrectResponses = this.explanationsByResponse.filter { it.key.correct }.values.flatten()
     val explanationsForIncorrectResponses = explanationsByIncorrectResponses.values.flatten()
-    val hasExplanationsForIncorrectResponse = this.explanationsByResponse.any { !it.key.correct && !it.value.isEmpty() }
+    val hasExplanationsForIncorrectResponse = this.explanationsByResponse.any { !it.key.correct && it.value.isNotEmpty() }
     val nbExplanationsForCorrectResponse = explanationsForCorrectResponses.count()
     val hasRecommendedExplanations = (recommendedExplanationsComparator != null)
     val correctAreRecommended = recommendedExplanationsComparator is CorrectAndMeanGradeComparator || recommendedExplanationsComparator is CorrectAndConfidenceDegreeComparator
@@ -52,7 +52,8 @@ class ChoiceExplanationViewerModel(
                 explanationsByCorrectness.sortedWith(recommendedExplanationsComparator).reversed()
             else
                 explanationsForCorrectResponses
-    override val explanationsExcerpt = recommendedExplanations.take(3)
+    override val explanationsExcerpt = recommendedExplanations.filter { !it.fromTeacher }.take(3)
     override val nbExplanations = this.explanationsByResponse.values.flatten().count()
     override val hasMoreThanExcerpt = nbExplanationsForCorrectResponse > 3 || hasExplanationsForIncorrectResponse
+    override val teacherExplanation = explanationsForCorrectResponses.firstOrNull { it is TeacherExplanationData } as TeacherExplanationData?
 }

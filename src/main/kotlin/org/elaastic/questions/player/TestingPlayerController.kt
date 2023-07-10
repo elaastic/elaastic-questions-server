@@ -36,13 +36,10 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.features.ElaasticFeatures
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
-import org.elaastic.questions.player.components.evaluationPhase.EvaluationPhaseModel
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.recommendation.*
 import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
 import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
-import org.elaastic.questions.player.components.responsePhase.ResponseFormModel
-import org.elaastic.questions.player.components.responsePhase.ResponsePhaseModel
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
 import org.elaastic.questions.player.components.results.OpenResultsModel
 import org.elaastic.questions.player.components.results.ResultsModel
@@ -56,6 +53,12 @@ import org.elaastic.questions.player.components.studentResults.LearnerExclusiveC
 import org.elaastic.questions.player.components.studentResults.LearnerMultipleChoiceResults
 import org.elaastic.questions.player.components.studentResults.LearnerOpenResults
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
+import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
+import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
+import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhase
+import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhaseViewModel
+import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
+import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -118,7 +121,7 @@ class TestingPlayerController(
         )
         model.addAttribute("sequenceStatistics", SequenceStatistics(10, 8, 5))
 
-        return "player/assignment/sequence/components/test-steps"
+        return "player/assignment/sequence/components/steps/test-steps"
     }
 
     @GetMapping("/explanation-viewer")
@@ -322,12 +325,101 @@ class TestingPlayerController(
                                         }
                                     }
                                 }
-                            }
+                            },
+                            choiceQuestionSituation {
+                                    sequenceId = 7
+                                    description = "7. Uniquement l'explication de l'enseignant, pour une question a choix multiples"
+                                    explanationsByResponse {
+                                            response(listOf(1), 100, true) {
+                                                    explanation {
+                                                            author = "Franck Sil (@fsil)"
+                                                            confidenceDegree = ConfidenceDegree.CONFIDENT
+                                                            content = "Explication de l'enseignant"
+                                                            fromTeacher = true
+                                                    }
+                                            }
+                                    }
+                            },
+                            choiceQuestionSituation {
+                                    sequenceId = 8
+                                    description = "8. Plusieurs explications et explication de l'enseignant, pour une question a choix multiples"
+                                    explanationsByResponse {
+                                            response(listOf(1, 3), 100, true) {
+                                                    explanation {
+                                                            nbEvaluations = 3
+                                                            meanGrade = BigDecimal(3.25)
+                                                            author = "Franck Sil (@fsil)"
+                                                            confidenceDegree = ConfidenceDegree.CONFIDENT
+                                                            content = "Explication de l'enseignant"
+                                                            fromTeacher = true
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 1
+                                                            meanGrade = BigDecimal(3)
+                                                            author = "Joe Walson (@Jwal)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            content = "Explication B"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 4
+                                                            meanGrade = BigDecimal(5)
+                                                            author = "Bob Hart (@Bhar)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            content = "Explication C"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 0
+                                                            author = "Arthur Rodriguez (@Arod)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            content = "Explication D"
+                                                    }
+                                            }
+                                            response(listOf(1, 2), 30, false) {
+                                                    explanation {
+                                                            nbEvaluations = 2
+                                                            meanGrade = BigDecimal(1.33)
+                                                            author = "Bill Gates (@Bgat)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT
+                                                            content = "Explication A"
+                                                    }
+                                            }
+                                            response(listOf(3), 0, false) {
+                                                    explanation {
+                                                            nbEvaluations = 2
+                                                            meanGrade = BigDecimal(1.33)
+                                                            author = "Bill Gates (@Bgat)"
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            content = "Explication E"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 0
+                                                            meanGrade = null
+                                                            author = "Bill Gates (@Bgat)"
+                                                            confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT
+                                                            content = "Explication F"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 1
+                                                            meanGrade = BigDecimal(5)
+                                                            author = "Bill Gates (@Bgat)"
+                                                            confidenceDegree = ConfidenceDegree.CONFIDENT
+                                                            content = "Explication G"
+                                                    }
+                                                    explanation {
+                                                            nbEvaluations = 4
+                                                            meanGrade = BigDecimal(2)
+                                                            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
+                                                            author = "Bill Gates (@Bgat)"
+                                                            content = "Explication H"
+                                                    }
+                                            }
+                                    }
+                            },
                     )
                 }
         )
 
-        return "player/assignment/sequence/components/test-explanation-viewer"
+        return "player/assignment/sequence/components/explanation-viewer/test-explanation-viewer"
     }
 
     class ExplanationViewerSituation(
@@ -483,7 +575,7 @@ class TestingPlayerController(
 
         )
 
-        return "player/assignment/sequence/components/test-response-distribution-chart"
+        return "player/assignment/sequence/components/response-distribution-chart/test-response-distribution-chart"
     }
 
     data class ResponseDistributionChartSituation(
@@ -519,7 +611,7 @@ class TestingPlayerController(
                 )
         )
 
-        return "player/assignment/sequence/components/test-statement"
+        return "player/assignment/sequence/components/statement/test-statement"
     }
 
     @GetMapping("/my-results")
@@ -642,7 +734,7 @@ class TestingPlayerController(
                 )
         )
 
-        return "player/assignment/sequence/components/test-my-results"
+        return "player/assignment/sequence/components/my-results/test-my-results"
     }
 
     data class MyResultsSituation(
@@ -666,21 +758,21 @@ class TestingPlayerController(
                                 description = "1. Sequence running, hasChoices, no results, no explanations",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
-                                        sequenceId = 1
+                        sequenceId = 1
                                 )
                         ),
                         ResultsSituation(
                                 description = "2. Sequence stopped, hasChoices, no results, no explanations",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = true,
-                                        sequenceId = 2
+                        sequenceId = 2
                                 )
                         ),
                         ResultsSituation(
                                 description = "3. Sequence running, Open question, no results, no explanations",
                                 resultsModel = ChoiceResultsModel(
                                         sequenceIsStopped = false,
-                                        sequenceId = 3
+                        sequenceId = 3
                                 )
                         ),
                         ResultsSituation(
@@ -1164,12 +1256,259 @@ class TestingPlayerController(
                                                 recommendedExplanationsComparator = IncorrectAndConfidenceDegreeComparator()
                                         )
                                 )
-                        )
+                        ),
+                        ResultsSituation(
+                                description = "12. Sequence running, hasChoices, has results, has explanations, teacherExplanation",
+                                resultsModel = ChoiceResultsModel(
+                                        sequenceIsStopped = false,
+                                        sequenceId = 12,
+                                        responseDistributionChartModel = ResponseDistributionChartModel(
+                                                interactionId = 12,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        2,
+                                                        listOf(2)
+                                                ),
+                                                results = ResponsesDistribution(
+                                                        ResponsesDistributionOnAttempt(4, arrayOf(1, 3), 0)
+                                                ).toLegacyFormat()
+                                        ),
+                                        confidenceDistributionChartModel = ConfidenceDistributionChartModel(
+                                                interactionId = 12,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        2,
+                                                        listOf(2)
+                                                ),
+                                                results = ConfidenceDistribution(
+                                                        listOf(
+                                                                ConfidenceDistributionOnResponse(1, arrayOf(0, 1, 0, 0), 0),
+                                                                ConfidenceDistributionOnResponse(3, arrayOf(1, 1, 1, 0), 0)
+                                                        )
+                                                ).toJSON()
+                                        ),
+                                        explanationViewerModel = ChoiceExplanationViewerModel(
+                                                explanationsByResponse = mapOf(
+                                                        ResponseData(
+                                                                listOf(1),
+                                                                0,
+                                                                false
+                                                        )
+                                                                to listOf(
+                                                                ExplanationData(
+                                                                        "explication 1",
+                                                                        "Joe Walson (@Jwal)",
+                                                                        confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
+                                                                        score = BigDecimal("0")
+
+                                                                ),
+                                                                ExplanationData(
+                                                                        "explication 2",
+                                                                        "Jack DiCaprio (@Jdic)",
+                                                                        confidenceDegree = ConfidenceDegree.CONFIDENT,
+                                                                        score = BigDecimal("0")
+                                                                ),
+                                                                ExplanationData(
+                                                                        "explication 3",
+                                                                        "Jane Doe (@Jdoe)",
+                                                                        confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
+                                                                        score = BigDecimal("0")
+                                                                )
+                                                        ),
+                                                        ResponseData(
+                                                                listOf(2),
+                                                                100,
+                                                                true
+                                                        )
+                                                                to listOf(
+                                                                ExplanationData(
+                                                                        "explication 4",
+                                                                        "Wiliam Shakespeare (@Wsha)",
+                                                                        confidenceDegree = ConfidenceDegree.CONFIDENT,
+                                                                        score = BigDecimal("100")
+                                                                ),
+                                                                ExplanationData(
+                                                                        "explication 5",
+                                                                        "Averell Collignon (@Acol)",
+                                                                        confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
+                                                                        score = BigDecimal("100")
+                                                                ),
+                                                                TeacherExplanationData(
+                                                                        "explication de l'enseignant",
+                                                                        "Franck Sil (@fsil)",
+                                                                        confidenceDegree = ConfidenceDegree.CONFIDENT,
+                                                                        score = BigDecimal("100")
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        ),
+                        ResultsSituation(
+                                description = "13. Sequence running, hasChoices, has results, has explanations, has evaluations, teacherExplanation",
+                                resultsModel = ChoiceResultsModel(
+                                        sequenceIsStopped = false,
+                                        sequenceId = 13,
+                                        responseDistributionChartModel = ResponseDistributionChartModel(
+                                                interactionId = 13,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        4,
+                                                        listOf(2)
+                                                ),
+                                                results = ResponsesDistribution(
+                                                        ResponsesDistributionOnAttempt(10, arrayOf(1, 3, 4, 2), 0)
+                                                ).toLegacyFormat()
+                                        ),
+                                        confidenceDistributionChartModel = ConfidenceDistributionChartModel(
+                                                interactionId = 13,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        4,
+                                                        listOf(2)
+                                                ),
+                                                results = ConfidenceDistribution(
+                                                        listOf(
+                                                                ConfidenceDistributionOnResponse(1, arrayOf(0, 1, 0, 0), 0),
+                                                                ConfidenceDistributionOnResponse(3, arrayOf(0, 2, 1, 0), 0),
+                                                                ConfidenceDistributionOnResponse(4, arrayOf(3, 1, 0, 0), 0),
+                                                                ConfidenceDistributionOnResponse(2, arrayOf(1, 0, 1, 0), 0)
+                                                        )
+                                                ).toJSON()
+                                        ),
+                                        evaluationDistributionChartModel = EvaluationDistributionChartModel(
+                                                interactionId = 13,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        4,
+                                                        listOf(2)
+                                                ),
+                                                results = GradingDistribution(listOf(
+                                                        GradingDistributionOnResponse(15, arrayOf(1, 7, 1, 1, 5), 0),
+                                                        GradingDistributionOnResponse(12, arrayOf(1, 0, 2, 8, 1), 0),
+                                                        GradingDistributionOnResponse(10, arrayOf(3, 0, 1, 4, 2), 0),
+                                                        GradingDistributionOnResponse(3, arrayOf(1, 0, 1, 1, 0), 0))
+                                                ).toLegacyFormat()
+                                        ),
+                                        explanationViewerModel = ChoiceExplanationViewerModel(
+                                                explanationsByResponse = mapOf(
+                                                        ResponseData(
+                                                                listOf(1),
+                                                                0,
+                                                                false
+                                                        )
+                                                                to listOf(
+                                                                ExplanationData(
+                                                                        "explication 1",
+                                                                        "Joe Walson (@Jwal)",
+                                                                        4,
+                                                                        BigDecimal("3.5"),
+                                                                        confidenceDegree = ConfidenceDegree.CONFIDENT,
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
+                                                                ),
+                                                                ExplanationData(
+                                                                        "explication 2",
+                                                                        "Jack DiCaprio (@Jdic)",
+                                                                        2,
+                                                                        BigDecimal("1.5"),
+                                                                        confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(1))
+                                                                )
+                                                        ),
+                                                        ResponseData(
+                                                                listOf(2),
+                                                                100,
+                                                                true
+                                                        )
+                                                                to listOf(
+                                                                TeacherExplanationData(
+                                                                        "explication de l'enseignant",
+                                                                        "Franck Sil (@fsil)",
+                                                                        3,
+                                                                        BigDecimal("2.75"),
+                                                                        confidenceDegree = ConfidenceDegree.CONFIDENT,
+                                                                        score = BigDecimal("0"),
+                                                                        choiceList = LearnerChoice(listOf(2)),
+                                                                ),
+                                                                ExplanationData(
+                                                                        "explication 3",
+                                                                        "Wiliam Shakespeare (@Wsha)",
+                                                                        1,
+                                                                        BigDecimal("5"),
+                                                                        confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
+                                                                ),
+                                                                ExplanationData(
+                                                                        "explication 4",
+                                                                        "Averell Collignon (@Acol)",
+                                                                        3,
+                                                                        BigDecimal("1"),
+                                                                        confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
+                                                                        score = BigDecimal("100"),
+                                                                        choiceList = LearnerChoice(listOf(2))
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        ),
+                        ResultsSituation(
+                                description = "14. Sequence running, hasChoices, has results, only teacherExplanation",
+                                resultsModel = ChoiceResultsModel(
+                                        sequenceIsStopped = false,
+                                        sequenceId = 14,
+                                        responseDistributionChartModel = ResponseDistributionChartModel(
+                                                interactionId = 14,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        2,
+                                                        listOf(2)
+                                                ),
+                                                results = ResponsesDistribution(
+                                                        ResponsesDistributionOnAttempt(1, arrayOf(0, 1), 0)
+                                                ).toLegacyFormat()
+                                        ),
+                                        confidenceDistributionChartModel = ConfidenceDistributionChartModel(
+                                                interactionId = 14,
+                                                choiceSpecification = ChoiceSpecificationData(
+                                                        2,
+                                                        listOf(2)
+                                                ),
+                                                results = ConfidenceDistribution(
+                                                        listOf(
+                                                                ConfidenceDistributionOnResponse(1, arrayOf(0, 0, 0, 0), 0),
+                                                                ConfidenceDistributionOnResponse(1, arrayOf(0, 0, 1, 0), 0)
+                                                        )
+                                                ).toJSON()
+                                        ),
+                                        explanationViewerModel = ChoiceExplanationViewerModel(
+                                                explanationsByResponse = mapOf(
+                                                        ResponseData(
+                                                                listOf(1),
+                                                                0,
+                                                                false
+                                                        )
+                                                                to listOf(
+                                                        ),
+                                                        ResponseData(
+                                                                listOf(2),
+                                                                100,
+                                                                true
+                                                        )
+                                                                to listOf(
+                                                                TeacherExplanationData(
+                                                                        "explication de l'enseignant",
+                                                                        "Franck Sil (@fsil)",
+                                                                        confidenceDegree = ConfidenceDegree.CONFIDENT,
+                                                                        score = BigDecimal("100")
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        ),
                 )
         )
 
 
-        return "player/assignment/sequence/components/test-results"
+        return "player/assignment/sequence/components/results/test-results"
     }
 
     data class ResultsSituation(
@@ -2004,46 +2343,46 @@ class TestingPlayerController(
 
     @GetMapping("/sequence-info")
     fun testSequenceInfo(
-            authentication: Authentication,
-            model: Model
+        authentication: Authentication,
+        model: Model
     ): String {
 
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
         model.addAttribute(
-                "sequenceInfoSituations",
-                SequenceGenerator.generateAllTypes(user)
-                        .map {
-                            SequenceInfoSituation(
-                                    describeSequence(it),
-                                    SequenceInfoResolver.resolve(true, it, messageBuilder)
-                            )
-                        }
+            "sequenceInfoSituations",
+            SequenceGenerator.generateAllTypes(user)
+                .map {
+                    SequenceInfoSituation(
+                        describeSequence(it),
+                        SequenceInfoResolver.resolve(true, it, messageBuilder)
+                    )
+                }
         )
 
-        return "player/assignment/sequence/components/test-sequence-info"
+        return "player/assignment/sequence/components/sequence-info/test-sequence-info"
     }
 
     data class SequenceInfoSituation(
-            val description: String,
-            val model: SequenceInfoModel
+        val description: String,
+        val model: SequenceInfoModel
     )
 
     private fun describeSequence(sequence: Sequence): String =
-            "sequenceState=${sequence.state}, " +
-                    "executionContext=${sequence.executionContext}, " +
-                    "resultsArePublished=${sequence.resultsArePublished}" +
+        "sequenceState=${sequence.state}, " +
+                "executionContext=${sequence.executionContext}, " +
+                "resultsArePublished=${sequence.resultsArePublished}" +
 
-                    (sequence.activeInteraction?.let {
-                        ", interaction=(${it.interactionType},${it.state} )"
-                    } ?: "")
+                (sequence.activeInteraction?.let {
+                    ", interaction=(${it.interactionType},${it.state} )"
+                } ?: "")
 
 
     @GetMapping("/command")
     fun testCommand(
-            authentication: Authentication,
-            model: Model
+        authentication: Authentication,
+        model: Model
     ): String {
         val user: User = authentication.principal as User
 
@@ -2059,7 +2398,7 @@ class TestingPlayerController(
                         }
         )
 
-        return "player/assignment/sequence/components/test-command"
+        return "player/assignment/sequence/components/command/test-command"
     }
 
     data class CommandSituation(
@@ -2076,85 +2415,144 @@ class TestingPlayerController(
 
         model.addAttribute("user", user)
         model.addAttribute(
-                "responsePhaseModel",
-                ResponsePhaseModel(
-                        sequenceId = 622L,
-                        interactionId = 1731L,
-                        userActiveInteractionState = State.show,
-                        responseSubmitted = false,
-                        responseFormModel = ResponseFormModel(
-                                interactionId = 1731L,
-                                attempt = 1,
-                                responseSubmissionSpecification = ResponseSubmissionSpecification(
-                                        studentsProvideExplanation = true,
-                                        studentsProvideConfidenceDegree = true
-                                ),
-                                timeToProvideExplanation = true,
-                                hasChoices = true,
-                                multipleChoice = true,
-                                firstAttemptChoices = arrayOf(2),
-                                firstAttemptExplanation = "Hello World",
-                                firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
-                                nbItem = 3
-                        )
-
+            "responsePhaseModel",
+            LearnerResponsePhaseViewModel(
+                sequenceId = 622L,
+                interactionId = 1731L,
+                learnerPhaseState = State.show,
+                responseSubmitted = false,
+                responseFormModel = LearnerResponseFormViewModel(
+                    interactionId = 1731L,
+                    attempt = 1,
+                    responseSubmissionSpecification = ResponseSubmissionSpecification(
+                        studentsProvideExplanation = true,
+                        studentsProvideConfidenceDegree = true
+                    ),
+                    timeToProvideExplanation = true,
+                    hasChoices = true,
+                    multipleChoice = true,
+                    firstAttemptChoices = arrayOf(2),
+                    firstAttemptExplanation = "Hello World",
+                    firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
+                    nbItem = 3
                 )
+
+            )
         )
 
-        return "player/assignment/sequence/components/test-response-phase"
+        return "player/assignment/sequence/phase/response/test-response-phase"
     }
 
     @GetMapping("/evaluation-phase")
     fun testEvaluationPhase(
-            authentication: Authentication,
-            model: Model
+        authentication: Authentication,
+        model: Model
     ): String {
         val user: User = authentication.principal as User
 
         model.addAttribute("user", user)
+        return "player/assignment/sequence/phase/evaluation/test-evaluation-phase-index"
+    }
+
+    @GetMapping("/evaluation-phase/one-by-one")
+    fun testEvaluationPhaseOneByOne(
+        authentication: Authentication,
+        model: Model
+    ): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute("phaseTemplate", OneByOneLearnerEvaluationPhase.TEMPLATE)
+
         model.addAttribute(
-                "evaluationPhaseModel",
-                EvaluationPhaseModel(
-                        sequenceId = 12,
-                        interactionId = 123,
-                        choices = true,
-                        activeInteractionRank = 2,
-                        userHasCompletedPhase2 = false,
-                        responsesToGrade = listOf(
-                                org.elaastic.questions.player.components.evaluationPhase.ResponseData(
-                                        id = 1,
-                                        choiceList = LearnerChoice(listOf(1)),
-                                        explanation = "1st explanation"
-                                ),
-                                org.elaastic.questions.player.components.evaluationPhase.ResponseData(
-                                        id = 2,
-                                        choiceList = listOf(2),
-                                        explanation = "2nd explanation"
-                                )
-                        ),
-                        secondAttemptAllowed = true,
-                        secondAttemptAlreadySubmitted = false,
-                        responseFormModel = ResponseFormModel(
-                                interactionId = 1731L,
-                                attempt = 2,
-                                responseSubmissionSpecification = ResponseSubmissionSpecification(
-                                        studentsProvideExplanation = true,
-                                        studentsProvideConfidenceDegree = true
-                                ),
-                                timeToProvideExplanation = true,
-                                hasChoices = true,
-                                multipleChoice = true,
-                                firstAttemptChoices = arrayOf(2),
-                                firstAttemptExplanation = "Hello World",
-                                firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
-                                nbItem = 3
-                        ),
-                        userActiveInteractionState = State.show,
-                        userHasPerformedEvaluation = false
-                )
+            "evaluationPhaseViewModel",
+            OneByOneLearnerEvaluationPhaseViewModel(
+                sequenceId = 12,
+                interactionId = 123,
+                choices = true,
+                userHasCompletedPhase2 = false,
+                nextResponseToGrade =
+                org.elaastic.questions.player.phase.evaluation.ResponseData(
+                    id = 1,
+                    choiceList = listOf(1),
+                    explanation = "1st explanation"
+                ),
+                secondAttemptAllowed = true,
+                secondAttemptAlreadySubmitted = false,
+                responseFormModel = LearnerResponseFormViewModel(
+                    interactionId = 1731L,
+                    attempt = 2,
+                    responseSubmissionSpecification = ResponseSubmissionSpecification(
+                        studentsProvideExplanation = true,
+                        studentsProvideConfidenceDegree = true
+                    ),
+                    timeToProvideExplanation = true,
+                    hasChoices = true,
+                    multipleChoice = true,
+                    firstAttemptChoices = arrayOf(2),
+                    firstAttemptExplanation = "Hello World",
+                    firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
+                    nbItem = 3
+                ),
+                phaseState = State.show,
+            )
         )
 
-        return "player/assignment/sequence/components/test-evaluation-phase"
+        return "player/assignment/sequence/phase/evaluation/test-evaluation-phase"
+    }
+
+    @GetMapping("/evaluation-phase/all-at-once")
+    fun testEvaluationPhaseAllAtOnce(
+        authentication: Authentication,
+        model: Model
+    ): String {
+        val user: User = authentication.principal as User
+
+        model.addAttribute("user", user)
+        model.addAttribute("phaseTemplate", AllAtOnceLearnerEvaluationPhase.TEMPLATE)
+
+        model.addAttribute(
+            "evaluationPhaseViewModel",
+            AllAtOnceLearnerEvaluationPhaseViewModel(
+                sequenceId = 12,
+                interactionId = 123,
+                choices = true,
+                userHasCompletedPhase2 = false,
+                responsesToGrade = listOf(
+                    org.elaastic.questions.player.phase.evaluation.ResponseData(
+                        id = 1,
+                        choiceList = listOf(1),
+                        explanation = "1st explanation"
+                    ),
+                    org.elaastic.questions.player.phase.evaluation.ResponseData(
+                        id = 2,
+                        choiceList = listOf(2),
+                        explanation = "2nd explanation"
+                    )
+                ),
+                secondAttemptAllowed = true,
+                secondAttemptAlreadySubmitted = false,
+                responseFormModel = LearnerResponseFormViewModel(
+                    interactionId = 1731L,
+                    attempt = 2,
+                    responseSubmissionSpecification = ResponseSubmissionSpecification(
+                        studentsProvideExplanation = true,
+                        studentsProvideConfidenceDegree = true
+                    ),
+                    timeToProvideExplanation = true,
+                    hasChoices = true,
+                    multipleChoice = true,
+                    firstAttemptChoices = arrayOf(2),
+                    firstAttemptExplanation = "Hello World",
+                    firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
+                    nbItem = 3
+                ),
+                phaseState = State.show,
+                userHasPerformedEvaluation = false
+            )
+        )
+
+        return "player/assignment/sequence/phase/evaluation/test-evaluation-phase"
     }
 
     @GetMapping("/recommendations")
@@ -2162,6 +2560,6 @@ class TestingPlayerController(
         val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
 
         return  ResponseEntity.ok("Recommendation feature : ${if(recommendationIsActive) "active" else "Inactive"}")
-
+        
     }
 }

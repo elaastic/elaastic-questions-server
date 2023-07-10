@@ -76,9 +76,9 @@ class SubjectService(
             if (!user.isTeacher()) {
                 throw AccessDeniedException("You are not authorized to access to this subject")
             }
-            if (user != it.owner)
-                if (sharedSubjectRepository.findByTeacherAndSubject(user, it) == null)
-                    throw AccessDeniedException("The subject \"${it.title}\" is not shared with you")
+            if (user != it.owner && sharedSubjectRepository.findByTeacherAndSubject(user, it) == null) {
+                throw AccessDeniedException("The subject \"${it.title}\" is not shared with you")
+            }
             return it
         }
     }
@@ -89,9 +89,7 @@ class SubjectService(
 
     fun save(subject: Subject): Subject {
         subjectRepository.save(subject).let { savedSubject ->
-            savedSubject.course?.let { course ->
-                course.subjects.add(savedSubject)
-            }
+            savedSubject.course?.subjects?.add(savedSubject)
             return savedSubject
         }
     }
@@ -233,7 +231,10 @@ class SubjectService(
     }
 
     private fun deleteStatementIfNotUsed(statement: Statement) {
-        val statementAlreadyUsed = statementService.responsesExistForStatement(statement) || statementService.eventLogsExistForStatement(statement)
+        val statementAlreadyUsed =
+            statementService.responsesExistForStatement(statement) || statementService.eventLogsExistForStatement(
+                statement
+            )
         if (!statementAlreadyUsed) {
             sequenceService.findAllSequencesByStatement(statement).forEach {
                 assignmentService.removeSequence(statement.owner, it)
@@ -252,7 +253,7 @@ class SubjectService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE statement SET rank = CASE " +
+            "UPDATE statement SET `rank` = CASE " +
                     "WHEN id=${statementId} THEN ${pos} " +
                     "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
                     " END " +
@@ -271,7 +272,7 @@ class SubjectService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE statement SET rank = CASE " +
+            "UPDATE statement SET `rank` = CASE " +
                     "WHEN id=${statementId} THEN ${posValue + 1} " +
                     "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
                     " END " +
@@ -285,7 +286,7 @@ class SubjectService(
         if (statementIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE statement SET rank = CASE " +
+            "UPDATE statement SET `rank` = CASE " +
                     statementIds.mapIndexed { index, id ->
                         "WHEN id=$id THEN $index"
                     }.joinToString(" ") +
@@ -316,7 +317,7 @@ class SubjectService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE assignment SET rank = CASE " +
+            "UPDATE assignment SET `rank` = CASE " +
                     "WHEN id=${assignmentId} THEN ${pos} " +
                     "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
                     " END " +
@@ -335,7 +336,7 @@ class SubjectService(
             return  // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE assignment SET rank = CASE " +
+            "UPDATE assignment SET `rank` = CASE " +
                     "WHEN id=${assignmentId} THEN ${posValue + 1} " +
                     "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
                     " END " +
@@ -362,7 +363,7 @@ class SubjectService(
         if (assignmentIds.isEmpty()) return // Nothing to do
 
         entityManager.createNativeQuery(
-            "UPDATE assignment SET rank = CASE " +
+            "UPDATE assignment SET `rank` = CASE " +
                     assignmentIds.mapIndexed { index, id ->
                         "WHEN id=$id THEN $index"
                     }.joinToString(" ") +
@@ -394,8 +395,10 @@ class SubjectService(
     }
 
     fun duplicate(user: User, initialSubject: Subject, inSameCourse: Boolean = true): Subject {
-        val indexTitle = subjectRepository.countAllStartingWithTitle(user, initialSubject.title) + 1
-        val duplicateTitle = if (indexTitle == 1) initialSubject.title else initialSubject.title + " ($indexTitle) "
+        val normalizedTitle = normalizeTitle(initialSubject.title)
+
+        val indexTitle = subjectRepository.countAllStartingWithTitle(user, normalizedTitle) + 1
+        val duplicateTitle = if (indexTitle == 1) initialSubject.title else "$normalizedTitle ($indexTitle) "
         val duplicateSubject = Subject(
             duplicateTitle,
             user
@@ -428,7 +431,7 @@ class SubjectService(
         subject: Subject,
         titleSuffixIfCopyInSameSubject: String = " (Copy)"
     ): Statement {
-        var duplicatedStatement = statementService.duplicate(statement)
+        val duplicatedStatement = statementService.duplicate(statement)
         if (subject == statement.subject) {
             duplicatedStatement.title += titleSuffixIfCopyInSameSubject
         }
@@ -437,7 +440,7 @@ class SubjectService(
     }
 
     fun newVersionOfStatementInSubject(statement: Statement): Statement {
-        var duplicatedStatement = statementService.duplicate(statement)
+        val duplicatedStatement = statementService.duplicate(statement)
         // update sequences with new statement
         sequenceService.findAllNotTerminatedSequencesByStatement(statement).forEach {
             it.statement = duplicatedStatement
@@ -478,7 +481,11 @@ class SubjectService(
         }
     }
 
-    fun findFirstSubjectByOwner(owner: User): Subject? {
-        return subjectRepository.findFirstByOwner(owner)
+    fun normalizeTitle(title: String): String {
+        val regex = Regex("(.*)\\((\\d+)\\)")
+        val match = regex.find(title) ?: return title
+
+        val (radical) = match.destructured
+        return radical.trimEnd()
     }
 }

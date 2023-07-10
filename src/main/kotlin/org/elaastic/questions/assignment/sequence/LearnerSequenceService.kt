@@ -31,6 +31,9 @@ class LearnerSequenceService(
     @Autowired val learnerSequenceRepository: LearnerSequenceRepository
 ) {
 
+    fun getActiveInteractionForLearner(learnerSequence: ILearnerSequence) =
+        getActiveInteractionForLearner(learnerSequence.learner, learnerSequence.sequence)
+
     fun getActiveInteractionForLearner(
         learner: User,
         sequence: Sequence
@@ -38,6 +41,16 @@ class LearnerSequenceService(
         when {
             sequence.executionIsFaceToFace() -> sequence.activeInteraction
             else -> findOrCreateLearnerSequence(learner, sequence).activeInteraction
+        }
+
+    fun getLearnerSequence(learner: User,
+                           sequence: Sequence): ILearnerSequence =
+        when {
+            // For synchronous sequences, we do not need a persistent LearnerSequence
+            sequence.executionIsFaceToFace() -> TransientLearnerSequence(learner, sequence)
+
+            // For asynchronous sequences, we need a persistent LearnerSequence
+            else -> findOrCreateLearnerSequence(learner, sequence)
         }
 
     fun findOrCreateLearnerSequence(
@@ -51,16 +64,12 @@ class LearnerSequenceService(
             it ?: LearnerSequence(learner, sequence)
                 .let { learnerSequenceRepository.save(it) }
         }.let {
-            if (sequence.executionIsBlended() && sequence.resultsArePublished &&
-                it.activeInteraction != sequence.interactions[InteractionType.Read]) {
-                it.activeInteraction = sequence.interactions[InteractionType.Read]
+            if (it.activeInteraction == null && sequence.activeInteraction != null) {
+                it.activeInteraction =
+                    sequence.interactions[InteractionType.ResponseSubmission]
                 learnerSequenceRepository.save(it)
-            } else {
-                if (it.activeInteraction == null && sequence.activeInteraction != null) {
-                    it.activeInteraction = sequence.interactions[InteractionType.ResponseSubmission]
-                    learnerSequenceRepository.save(it)
-                }
-            }
-            it
+                it
+            } else it
         }
+
 }

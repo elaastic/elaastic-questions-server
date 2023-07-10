@@ -44,7 +44,7 @@ abstract class AbstractDataRecord(override val identifier: DataIdentifier) : Dat
      * the same identifier as this one, `false` otherwise
      */
     override fun equals(other: Any?): Boolean {
-        return other is DataRecord && identifier.equals(other.identifier)
+        return other is DataRecord && identifier == other.identifier
     }
 
     /**

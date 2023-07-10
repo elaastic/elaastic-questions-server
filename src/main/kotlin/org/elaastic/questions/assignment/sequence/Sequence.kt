@@ -38,42 +38,44 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @NamedEntityGraph(
-        name = "Sequence.statement",
-        attributeNodes = [
-            NamedAttributeNode("statement"),
-            NamedAttributeNode("assignment")
-        ]
+    name = "Sequence.statement",
+    attributeNodes = [
+        NamedAttributeNode("statement"),
+        NamedAttributeNode("assignment")
+    ]
 )
 @EntityListeners(AuditingEntityListener::class)
 class Sequence(
-        @field:ManyToOne(fetch = FetchType.LAZY)
-        var owner: User,
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    var owner: User,
 
-        @field:ManyToOne(fetch = FetchType.EAGER)
-        var statement: Statement,
+    @field:ManyToOne(fetch = FetchType.EAGER)
+    var statement: Statement,
 
-        @field:NotNull
-        @field:ManyToOne(fetch = FetchType.EAGER)
-        var assignment: Assignment? = null,
+    @field:NotNull
+    @field:ManyToOne(fetch = FetchType.EAGER)
+    var assignment: Assignment? = null,
 
-        var rank: Int = 0,
+    @Column(name="`rank`")
+    var rank: Int = 0,
 
-        @Column(name= "phase_2_skipped")
-        var phase2Skipped: Boolean = false,
+    @Column(name = "phase_2_skipped")
+    var phase2Skipped: Boolean = false,
 
-        @field:Enumerated(EnumType.STRING)
-        var executionContext: ExecutionContext = ExecutionContext.FaceToFace,
+    @field:Enumerated(EnumType.STRING)
+    var executionContext: ExecutionContext = ExecutionContext.FaceToFace,
 
-        @field:OneToOne
-        var activeInteraction: Interaction? = null,
+    @field:OneToOne
+    var activeInteraction: Interaction? = null,
 
-        @field:Enumerated(EnumType.STRING)
-        var state: State = State.beforeStart,
+    @field:Enumerated(EnumType.STRING)
+    var state: State = State.beforeStart,
 
-        var resultsArePublished: Boolean = false
+    var resultsArePublished: Boolean = false
 
 
-) : AbstractJpaPersistable<Long>(), Comparable<Sequence> {
+) : AbstractJpaPersistable<Long>(),
+    Comparable<Sequence>, SequenceProgress {
 
     @Version
     var version: Long? = null
@@ -96,48 +98,48 @@ class Sequence(
         }
 
     fun getInteractionAt(rank: Int): Interaction {
-        return interactions.values?.find { it.rank == rank }
-                ?: error("There is no interaction for rank $rank in this sequence")
+        return interactions.values.find { it.rank == rank }
+            ?: error("There is no interaction for rank $rank in this sequence")
     }
 
     @Transient
     fun getResponseSubmissionInteraction() =
-            interactions[InteractionType.ResponseSubmission]
-                    ?: throw IllegalStateException("The response submission interaction is not initialized")
+        interactions[InteractionType.ResponseSubmission]
+            ?: throw IllegalStateException("The response submission interaction is not initialized")
 
     @Transient
     fun responseSubmissionInteractionIsInitialized() =
-            interactions[InteractionType.ResponseSubmission] != null
+        interactions[InteractionType.ResponseSubmission] != null
 
     @Transient
     fun getResponseSubmissionSpecification(): ResponseSubmissionSpecification =
-            getResponseSubmissionInteraction().specification.let { specification ->
-                when (specification) {
-                    null -> error("This interaction has no specification")
-                    is ResponseSubmissionSpecification -> specification
-                    else -> error("Expected a ResponseSubmissionSpecification but got a ${specification.javaClass}")
-                }
+        getResponseSubmissionInteraction().specification.let { specification ->
+            when (specification) {
+                null -> error("This interaction has no specification")
+                is ResponseSubmissionSpecification -> specification
+                else -> error("Expected a ResponseSubmissionSpecification but got a ${specification.javaClass}")
             }
+        }
 
     @Transient
     fun getEvaluationSpecification(): EvaluationSpecification =
-            getEvaluationInteraction().specification.let { specification ->
-                when (specification) {
-                    null -> error("This interaction has no specification")
-                    is EvaluationSpecification -> specification
-                    else -> error("Expected an EvaluationSpecification but got a ${specification.javaClass}")
-                }
+        getEvaluationInteraction().specification.let { specification ->
+            when (specification) {
+                null -> error("This interaction has no specification")
+                is EvaluationSpecification -> specification
+                else -> error("Expected an EvaluationSpecification but got a ${specification.javaClass}")
             }
+        }
 
     @Transient
     fun getEvaluationInteraction() =
-            interactions[InteractionType.Evaluation]
-                    ?: throw IllegalStateException("The evaluation interaction is not initialized")
+        interactions[InteractionType.Evaluation]
+            ?: throw IllegalStateException("The evaluation interaction is not initialized")
 
     @Transient
     fun getReadInteraction() =
-            interactions[InteractionType.Read]
-                    ?: throw IllegalStateException("The read interaction is not initialized")
+        interactions[InteractionType.Read]
+            ?: throw IllegalStateException("The read interaction is not initialized")
 
 
     override fun compareTo(other: Sequence): Int {
@@ -145,70 +147,78 @@ class Sequence(
     }
 
     @Transient
-    fun isNotStarted(): Boolean =
-            state == State.beforeStart
+    override fun isNotStarted(): Boolean =
+        state == State.beforeStart
 
     @Transient
-    fun hasStarted(): Boolean =
-            state != State.beforeStart
+    override fun hasStarted(): Boolean =
+        state != State.beforeStart
 
     @Transient
     fun isStopped(): Boolean =
-            state == State.afterStop
+        state == State.afterStop
+
+    @Transient
+    override fun isInProgress(): Boolean =
+        state == State.show
+
 
     @Transient
     fun executionIsFaceToFace(): Boolean =
-            executionContext == ExecutionContext.FaceToFace
+        executionContext == ExecutionContext.FaceToFace
 
     @Transient
     fun executionIsBlended(): Boolean =
-            executionContext == ExecutionContext.Blended
+        executionContext == ExecutionContext.Blended
 
     @Transient
     fun executionIsDistance(): Boolean =
-            executionContext == ExecutionContext.Distance
+        executionContext == ExecutionContext.Distance
 
     @Transient
     fun resultsCanBePublished() =
-            !resultsArePublished && (
-                    isStopped() ||
-                            (activeInteraction?.isRead() ?: false) ||
-                            interactions[InteractionType.Evaluation]?.state == State.afterStop
-                    )
+        !resultsArePublished && (
+                isStopped() ||
+                        (activeInteraction?.isRead() ?: false) ||
+                        interactions[InteractionType.Evaluation]?.state == State.afterStop
+                )
 
     fun selectActiveInteraction(interactionType: InteractionType) {
         interactions[interactionType]?.let {
             activeInteraction = it
-        } ?: throw IllegalStateException("No interaction ${interactionType} defined for this sequence")
+        } ?: throw IllegalStateException("No interaction $interactionType defined for this sequence")
     }
 
 
     @Transient
     fun isSecondAttemptAllowed() =
-            !(executionIsFaceToFace() && statement.isOpenEnded())
+        !(executionIsFaceToFace() && statement.isOpenEnded())
 
     fun whichAttemptEvaluate() =
-            if (executionIsFaceToFace()) 1 else 2
+        if (executionIsFaceToFace()) 1 else 2
 
-    fun recommendable() : Boolean =
+    fun recommendable(): Boolean =
 
-            /* is face to face */
-            executionContext == ExecutionContext.FaceToFace
+        /* is face to face */
+        executionContext == ExecutionContext.FaceToFace
 
-                    /* exclusive choice question */
-                    && statement.isExclusiveChoice()
+                /* exclusive choice question */
+                && statement.isExclusiveChoice()
 
-                    && getResponseSubmissionSpecification().studentsProvideExplanation
+                && getResponseSubmissionSpecification().studentsProvideExplanation
 
-                    && state == State.show
+                && state == State.show
 
-    fun recommendableAfterPhase1(): Boolean = recommendable() && activeInteraction?.state == State.afterStop && activeInteraction?.rank == 1
+    fun recommendableAfterPhase1(): Boolean =
+        recommendable() && activeInteraction?.state == State.afterStop && activeInteraction?.rank == 1
 
-    fun recommendableAfterPhase2(): Boolean = recommendable() && ((activeInteraction?.state == State.afterStop && activeInteraction?.rank == 2)
+    fun recommendableAfterPhase2(): Boolean =
+        recommendable() && ((activeInteraction?.state == State.afterStop && activeInteraction?.rank == 2)
 
-            || (activeInteraction?.state == State.show && activeInteraction?.rank == 3)
+                || (activeInteraction?.state == State.show && activeInteraction?.rank == 3)
 
-            || (activeInteraction?.state == State.beforeStart && activeInteraction?.rank == 3))
+                || (activeInteraction?.state == State.beforeStart && activeInteraction?.rank == 3))
+
 }
 
 enum class State {

@@ -7,7 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 
 @Controller
@@ -29,7 +28,7 @@ class TestingScenarioBuilderController(
     ): String {
 
         val user: User = authentication.principal as User
-        val subject = functionalTestingService.generateSubject(user)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(user)
 
 
 

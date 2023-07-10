@@ -223,7 +223,7 @@ elaastic.manageOnboarding = function(elaasticQuestionsUrl){
                 },
                 {
                     element: document.querySelector('.ob-question-creation-14'),
-                    intro: i18n['questionCreationPage14']
+                    intro: i18n['onboarding.content.question_creation.14']
                 }
             ].filter(function (obj) {
                 return !('element' in obj) || $(obj.element).length;

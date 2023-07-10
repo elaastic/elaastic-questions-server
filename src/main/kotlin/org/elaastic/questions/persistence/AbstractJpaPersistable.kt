@@ -46,7 +46,7 @@ abstract class AbstractJpaPersistable<T: Serializable> {
 
         other as AbstractJpaPersistable<*>
 
-        return if(null == this.id) false else this.id == other.id
+        return this.id != null && this.id == other.id
     }
 
     override fun hashCode(): Int {
