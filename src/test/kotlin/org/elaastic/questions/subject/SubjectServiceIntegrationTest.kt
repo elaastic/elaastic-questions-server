@@ -44,7 +44,6 @@ import javax.persistence.EntityNotFoundException
 import javax.persistence.PersistenceUnitUtil
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
-import kotlin.collections.ArrayList
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
@@ -218,7 +217,7 @@ internal class SubjectServiceIntegrationTest(
             .tThen {
                 MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
                 MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(0L))
-                MatcherAssert.assertThat(UUID.fromString(it.globalId), CoreMatchers.notNullValue())
+                MatcherAssert.assertThat(it.globalId, CoreMatchers.notNullValue())
                 MatcherAssert.assertThat(it.statements.size, CoreMatchers.equalTo(0))
                 MatcherAssert.assertThat(it.assignments, CoreMatchers.equalTo(mutableSetOf()))
                 MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("Subject"))
@@ -381,7 +380,7 @@ internal class SubjectServiceIntegrationTest(
     @Test
     fun `findByGlobalId - not existing value`() {
         MatcherAssert.assertThat(
-            subjectService.findByGlobalId("not existing"),
+            subjectService.findByGlobalId(UUID.randomUUID()),
             CoreMatchers.nullValue()
         )
     }

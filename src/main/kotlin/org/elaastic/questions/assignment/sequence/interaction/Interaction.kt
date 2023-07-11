@@ -32,6 +32,7 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
+import javax.validation.constraints.NotNull
 
 
 @Entity
@@ -58,6 +59,10 @@ class Interaction(
 
     @Version
     var version: Long? = null
+
+    @field:NotNull
+    @Column(columnDefinition = "BINARY(16)")
+    var uuid: UUID = UUID.randomUUID()
 
     @Column(name = "date_created")
     @CreatedDate

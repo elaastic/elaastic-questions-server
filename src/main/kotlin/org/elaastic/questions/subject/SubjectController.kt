@@ -474,7 +474,7 @@ class SubjectController(
             )
         }
 
-        subjectService.findByGlobalId(globalId).let {
+        subjectService.findByGlobalId(UUID.fromString(globalId)).let {
             if (it == null) {
                 throw EntityNotFoundException(
                     messageBuilder.message("subject.globalId.does.not.exist")

@@ -16,17 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.subject;
+package org.elaastic.questions.subject
 
 import org.elaastic.questions.directory.User
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
-import org.elaastic.questions.subject.Subject
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.Query
+import java.util.UUID
 
 
 interface SubjectRepository : JpaRepository<Subject?, Long> {
@@ -40,7 +38,7 @@ interface SubjectRepository : JpaRepository<Subject?, Long> {
 
     fun findOneById(id: Long): Subject?
 
-    fun findByGlobalId(globalId: String): Subject?
+    fun findByGlobalId(globalId: UUID): Subject?
 
     @Query("select count(s.id) from Subject as s where s.owner=?1 AND s.parentSubject = ?2")
     fun countAllByParentSubject(owner: User, parentSubject: Subject): Int

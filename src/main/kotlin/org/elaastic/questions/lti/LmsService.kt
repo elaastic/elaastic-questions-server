@@ -30,6 +30,7 @@ import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.UUID
 import java.util.logging.Logger
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
@@ -227,7 +228,7 @@ class LmsService(
 
 
     private fun findAssignmentWithIdFromLtiData(ltiGlobalId: String): Assignment {
-        assignmentRepository.findByGlobalId(ltiGlobalId).let {
+        assignmentRepository.findByGlobalId(UUID.fromString(ltiGlobalId)).let {
             if (it == null) {
                 logger.severe("No assignment found for global id $ltiGlobalId")
                 throw IllegalArgumentException("No assignment found for global id $ltiGlobalId")

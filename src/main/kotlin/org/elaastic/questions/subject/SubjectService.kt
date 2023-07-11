@@ -83,7 +83,7 @@ class SubjectService(
         }
     }
 
-    fun findByGlobalId(globalId: String): Subject? {
+    fun findByGlobalId(globalId: UUID): Subject? {
         return subjectRepository.findByGlobalId(globalId)
     }
 
@@ -301,7 +301,7 @@ class SubjectService(
         assignment.subject = subject
         assignment.rank = (subject.assignments.map { it.rank }.maxOrNull() ?: 0) + 1
         assignmentService.save(assignment)
-        assignmentService.buildFromSubject(assignment, subject);
+        assignmentService.buildFromSubject(assignment, subject)
         subject.assignments.add(assignment)
         touch(subject)
         return assignment

@@ -88,8 +88,8 @@ class Subject (
     var statements: MutableList<Statement> = ArrayList()
 
     @field:NotNull
-    @field:NotBlank
-    val globalId:String = UUID.randomUUID().toString()
+    @Column(name="`uuid`", columnDefinition = "BINARY(16)")
+    var globalId: UUID = UUID.randomUUID()
 
 
     fun updateFrom(otherSubject: Subject) {
@@ -107,8 +107,8 @@ class Subject (
             "The owner of the statement cannot be different from the owner of subject"
         }
 
-        statements.add(statement);
-        statement.subject = this;
+        statements.add(statement)
+        statement.subject = this
         statement.owner = owner
 
         return statement
@@ -119,8 +119,8 @@ class Subject (
             "The owner of the assignment cannot be different from the owner of subject"
         }
 
-        assignments.add(assignment);
-        assignment.subject = this;
+        assignments.add(assignment)
+        assignment.subject = this
         assignment.owner = owner
 
         return assignment

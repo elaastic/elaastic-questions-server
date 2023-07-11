@@ -185,7 +185,7 @@ class AssignmentService(
     }
 
 
-    fun findByGlobalId(globalId: String): Assignment? {
+    fun findByGlobalId(globalId: UUID): Assignment? {
         return assignmentRepository.findByGlobalId(globalId)
     }
 

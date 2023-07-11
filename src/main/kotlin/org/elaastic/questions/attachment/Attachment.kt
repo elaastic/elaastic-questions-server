@@ -20,6 +20,7 @@ package org.elaastic.questions.attachment
 
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
@@ -46,6 +47,10 @@ class Attachment(
 
     @Version
     var version: Long? = null
+
+    @field:NotNull
+    @Column(columnDefinition = "BINARY(16)")
+    var uuid: UUID = UUID.randomUUID()
 
     @NotNull @NotBlank
     var path: String? = null

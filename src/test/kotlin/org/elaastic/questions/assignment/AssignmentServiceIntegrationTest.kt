@@ -184,7 +184,7 @@ internal class AssignmentServiceIntegrationTest(
             .tThen {
                 assertThat(it.id, notNullValue())
                 assertThat(it.version, equalTo(0L))
-                assertThat(UUID.fromString(it.globalId), notNullValue())
+                assertThat(it.globalId, notNullValue())
                 assertThat(it.sequences.size, equalTo(0))
                 assertThat(it.owner, equalTo(integrationTestingService.getTestTeacher()))
             }
@@ -434,7 +434,7 @@ internal class AssignmentServiceIntegrationTest(
     @Test
     fun `findByGlobalId - not existing value`() {
         assertThat(
-            assignmentService.findByGlobalId("not existing"),
+            assignmentService.findByGlobalId(UUID.randomUUID()),
             nullValue()
         )
     }
