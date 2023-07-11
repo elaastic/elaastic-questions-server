@@ -62,9 +62,8 @@ class Assignment(
         var owner: User,
 
         @field:NotNull
-        @field:NotBlank
-        @Column(name="`uuid`")
-        var globalId: String = UUID.randomUUID().toString(),
+        @Column(name="`uuid`", columnDefinition = "BINARY(16)")
+        var globalId: UUID = UUID.randomUUID(),
 
         @field:ManyToOne( fetch = FetchType.EAGER)
         var subject: Subject? = null,

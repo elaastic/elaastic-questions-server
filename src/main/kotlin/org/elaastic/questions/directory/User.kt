@@ -65,8 +65,8 @@ class User(
     var version: Long? = null
 
     @field:NotNull
-    @field:NotBlank
-    var uuid: String = UUID.randomUUID().toString()
+    @Column(columnDefinition = "BINARY(16)")
+    var uuid: UUID = UUID.randomUUID()
 
     @NotNull
     @Size(min = 1)

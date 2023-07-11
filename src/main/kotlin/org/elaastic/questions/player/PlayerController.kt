@@ -46,6 +46,7 @@ import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import org.togglz.core.manager.FeatureManager
 import java.lang.IllegalArgumentException
+import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.servlet.http.HttpServletRequest
 import javax.transaction.Transactional
@@ -95,7 +96,8 @@ class PlayerController(
             )
         }
 
-        return assignmentService.findByGlobalId(globalId) ?: throw EntityNotFoundException(
+        return assignmentService.findByGlobalId(
+            UUID.fromString(globalId)) ?: throw EntityNotFoundException(
             messageBuilder.message("assignment.globalId.does.not.exist")
         )
     }

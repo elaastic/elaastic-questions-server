@@ -28,7 +28,7 @@ open class ExportSubjectData(
             subject.owner.lastName,
             subject.owner.email,
         ),
-        globalId = subject.globalId,
+        globalId = subject.globalId.toString(),
         dateCreated = subject.dateCreated,
         lastUpdated = subject.lastUpdated,
         statements = subject.statements.map { statement ->

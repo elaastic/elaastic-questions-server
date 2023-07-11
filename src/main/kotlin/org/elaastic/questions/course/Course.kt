@@ -3,7 +3,6 @@ package org.elaastic.questions.course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.Subject
-
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -54,9 +53,8 @@ class Course (
 
 
     @field:NotNull
-    @field:NotBlank
-    @Column(name="`uuid`")
-    var globalId:String = UUID.randomUUID().toString()
+    @Column(name="`uuid`", columnDefinition = "BINARY(16)")
+    var globalId: UUID = UUID.randomUUID()
 
     fun updateFrom(otherCourse: Course) {
         require(id == otherCourse.id)

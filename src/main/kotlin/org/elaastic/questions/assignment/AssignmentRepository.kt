@@ -25,6 +25,7 @@ import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.util.Date
+import java.util.UUID
 
 
 interface AssignmentRepository : JpaRepository<Assignment, Long> {
@@ -36,7 +37,7 @@ interface AssignmentRepository : JpaRepository<Assignment, Long> {
 
     fun findOneById(id: Long): Assignment?
 
-    fun findByGlobalId(globalId: String): Assignment?
+    fun findByGlobalId(globalId: UUID): Assignment?
 
     @EntityGraph(value = "Assignment.sequences", type = EntityGraph.EntityGraphType.LOAD)
     fun findAllBySubjectIsNull(): List<Assignment>

@@ -83,7 +83,7 @@ class SubjectService(
         }
     }
 
-    fun findByGlobalId(globalId: String): Subject? {
+    fun findByGlobalId(globalId: UUID): Subject? {
         return subjectRepository.findByGlobalId(globalId)
     }
 

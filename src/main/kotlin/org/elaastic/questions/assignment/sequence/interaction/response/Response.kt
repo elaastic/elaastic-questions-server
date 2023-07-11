@@ -35,7 +35,6 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 
@@ -78,8 +77,8 @@ class Response(
     var version: Long? = null
 
     @field:NotNull
-    @field:NotBlank
-    var uuid: String = UUID.randomUUID().toString()
+    @Column(columnDefinition = "BINARY(16)")
+    var uuid: UUID = UUID.randomUUID()
 
     @Column(name = "date_created")
     @CreatedDate

@@ -49,8 +49,8 @@ class Attachment(
     var version: Long? = null
 
     @field:NotNull
-    @field:NotBlank
-    var uuid: String = UUID.randomUUID().toString()
+    @Column(columnDefinition = "BINARY(16)")
+    var uuid: UUID = UUID.randomUUID()
 
     @NotNull @NotBlank
     var path: String? = null

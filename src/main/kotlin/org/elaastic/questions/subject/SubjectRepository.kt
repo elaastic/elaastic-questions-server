@@ -27,6 +27,7 @@ import org.elaastic.questions.subject.Subject
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.Query
+import java.util.UUID
 
 
 interface SubjectRepository : JpaRepository<Subject?, Long> {
@@ -40,7 +41,7 @@ interface SubjectRepository : JpaRepository<Subject?, Long> {
 
     fun findOneById(id: Long): Subject?
 
-    fun findByGlobalId(globalId: String): Subject?
+    fun findByGlobalId(globalId: UUID): Subject?
 
     @Query("select count(s.id) from Subject as s where s.owner=?1 AND s.parentSubject = ?2")
     fun countAllByParentSubject(owner: User, parentSubject: Subject): Int

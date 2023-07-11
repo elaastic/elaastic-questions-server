@@ -41,7 +41,7 @@ internal class AssignmentRepositoryIntegrationTest(
         Assignment(
                 "My test assignment",
                 integrationTestingService.getAnyUser(),
-                UUID.randomUUID().toString()
+                UUID.randomUUID()
         ).let {
             // When saving it
             assignmentRepository.saveAndFlush(it).let {

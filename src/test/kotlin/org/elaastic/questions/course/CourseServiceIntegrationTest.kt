@@ -64,7 +64,7 @@ class CourseServiceIntegrationTest(
                 .tThen {
                     MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
                     MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(0L))
-                    MatcherAssert.assertThat(UUID.fromString(it.globalId), CoreMatchers.notNullValue())
+                    MatcherAssert.assertThat(it.globalId, CoreMatchers.notNullValue())
                     MatcherAssert.assertThat(it.title, CoreMatchers.equalTo("A course"))
                     MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(integrationTestingService.getTestTeacher()))
                 }

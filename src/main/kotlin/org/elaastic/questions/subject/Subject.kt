@@ -88,9 +88,8 @@ class Subject (
     var statements: MutableList<Statement> = ArrayList()
 
     @field:NotNull
-    @field:NotBlank
-    @Column(name="`uuid`")
-    val globalId:String = UUID.randomUUID().toString()
+    @Column(name="`uuid`", columnDefinition = "BINARY(16)")
+    var globalId: UUID = UUID.randomUUID()
 
 
     fun updateFrom(otherSubject: Subject) {
