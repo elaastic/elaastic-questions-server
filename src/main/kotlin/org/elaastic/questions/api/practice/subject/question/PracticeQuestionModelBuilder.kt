@@ -4,6 +4,7 @@ import com.toedter.spring.hateoas.jsonapi.JsonApiModelBuilder
 import org.elaastic.questions.api.practice.subject.RestPracticeSubjectController
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.server.mvc.linkTo
+import java.util.*
 
 /**
  * @author John Tranier
@@ -14,7 +15,7 @@ object PracticeQuestionModelBuilder {
     /**
      * Builds the json:api entity representation of PracticeQuestion
      */
-    fun build(subjectId: Long, question: PracticeQuestion) =
+    fun build(subjectId: UUID, question: PracticeQuestion) =
         JsonApiModelBuilder.jsonApiModel()
             .model(question)
             .relationshipWithDataArray("explanations")

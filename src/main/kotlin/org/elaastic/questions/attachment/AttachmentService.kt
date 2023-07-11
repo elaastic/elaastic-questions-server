@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.io.InputStream
+import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
 import javax.imageio.ImageIO
@@ -45,6 +46,10 @@ class AttachmentService(
      */
     fun getAttachmentById(id: Long): Attachment {
         return attachmentRepository.findById(id).get()
+    }
+
+    fun getAttachmentByUuid(uuid: UUID): Attachment {
+        return attachmentRepository.findByUuid(uuid).get()
     }
 
     /**

@@ -3,6 +3,7 @@ package org.elaastic.questions.api.practice.subject
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.questions.course.Course
+import java.util.UUID
 
 /**
  * A practice topic is a folder of practice subjects allowing to organize
@@ -14,14 +15,14 @@ import org.elaastic.questions.course.Course
  */
 class PracticeTopic(
     @JsonApiId
-    val id: Long,
+    val id: UUID,
     val title: String
 ) {
     @JsonApiType
     val type = "practice-topic"
 
     constructor(course: Course): this(
-        id = course.id!!,
+        id = course.globalId,
         title = course.title
     )
 }

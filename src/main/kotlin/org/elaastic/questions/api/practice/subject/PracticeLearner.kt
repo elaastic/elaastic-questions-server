@@ -3,6 +3,7 @@ package org.elaastic.questions.api.practice.subject
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.questions.directory.User
+import java.util.*
 
 /**
  * Represents a learner
@@ -14,13 +15,13 @@ import org.elaastic.questions.directory.User
  */
 class PracticeLearner(
     @JsonApiId
-    val id: Long,
+    val id: UUID,
 ) {
 
     @JsonApiType
     val type = "practice-learner"
 
     constructor(user: User): this(
-        id = user.id!!
+        id = user.uuid
     )
 }

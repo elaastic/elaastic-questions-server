@@ -10,6 +10,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.ResponseS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.util.*
 
 /**
  * Service for manipulating practice subjects
@@ -35,17 +36,17 @@ class PracticeSubjectService(
             .map(::SummaryPracticeSubject)
 
     /**
-     * Get a practice subject from its id
-     * @param id identifier of the practice subject that directly matched the corresponding assignment id
+     * Get a practice subject from its uuid
+     * @param uuid of the practice subject that directly matched the corresponding assignment id
      */
-    fun getPracticeSubject(id: Long) =
-        assignmentService.get(id, true)
+    fun getPracticeSubject(uuid: UUID) =
+        assignmentService.findByUuid(uuid, true)
             .let { assignment ->
                 assignment.sequences.map(sequenceService::loadInteractions)
 
                 val sequences = assignment.sequences.filter(::isSequenceReadyToPractice)
 
-                check(sequences.isNotEmpty()) { "The subject $id is not ready to practice" }
+                check(sequences.isNotEmpty()) { "The subject $uuid is not ready to practice" }
 
                 val learners = assignmentService.findAllLearnersRegisteredOn(assignment)
 
@@ -69,14 +70,14 @@ class PracticeSubjectService(
     fun isSubjectReadyToPractice(assignment: Assignment) =
         assignment.sequences.any(::isSequenceReadyToPractice)
 
-    fun isAttachmentReadyToPractice(subjectId: Long, questionId: Long, attachmentId: Long): Boolean {
+    fun isAttachmentReadyToPractice(subjectUuid: UUID, questionUuid: UUID, attachmentUuid: UUID): Boolean {
         // Get the sequence bound to the question
-        val sequence = sequenceService.get(questionId, true)
+        val sequence = sequenceService.findByUuid(questionUuid, true)
         sequenceService.loadInteractions(sequence)
 
         return isSequenceReadyToPractice(sequence)
-                && sequence.statement.attachment?.id == attachmentId
-                && sequence.assignment?.id == subjectId
+                && sequence.statement.attachment?.uuid == attachmentUuid
+                && sequence.assignment?.globalId == subjectUuid
     }
 
 

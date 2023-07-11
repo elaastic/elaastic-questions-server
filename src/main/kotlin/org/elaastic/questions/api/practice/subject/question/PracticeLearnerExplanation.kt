@@ -3,6 +3,7 @@ package org.elaastic.questions.api.practice.subject.question
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import java.util.UUID
 
 /**
  * Represent an explanation of an answer to a question provided by a learner.
@@ -11,7 +12,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
  */
 class PracticeLearnerExplanation(
     @JsonApiId
-    val id: Long,
+    val id: UUID,
     val explanation: String
 ) {
 
@@ -19,7 +20,7 @@ class PracticeLearnerExplanation(
     val type = "practice-learner-explanation"
 
     constructor(response: Response): this(
-        id = response.id!!,
+        id = response.uuid,
         explanation = response.explanation ?: ""
     )
 }

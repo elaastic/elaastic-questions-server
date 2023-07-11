@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
+import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
 @ExtendWith(SpringExtension::class)
@@ -73,11 +74,13 @@ internal class RestPracticeSubjectControllerTest(
     @Test
     fun `test get subjects - nominal case`() {
         val subject1Title = "1st subject"
-        val subject1Id = 1L
+        val subject1Id = UUID.randomUUID()
+        val subject2Id = UUID.randomUUID()
+
         whenever(practiceSubjectService.findAllPracticeSubject(any())).thenReturn(
             listOf(
                 SummaryPracticeSubject(id = subject1Id, title = subject1Title),
-                SummaryPracticeSubject(id = 2L, title = "2nd subject")
+                SummaryPracticeSubject(id = subject2Id, title = "2nd subject")
             )
         )
 
@@ -91,7 +94,7 @@ internal class RestPracticeSubjectControllerTest(
                 }
                 content { contentType(MediaTypes.JSON_API) }
                 content { jsonPath("$.data.length()") { value(2) } }
-                content { jsonPath("$.data[0].id") { value(1) } }
+                content { jsonPath("$.data[0].id") { value(subject1Id.toString()) } }
                 content { jsonPath("$.data[0].type") { value("practice-subject") } }
                 content { jsonPath("$.data[0].attributes.title") { value(subject1Title) } }
                 content { jsonPath("$.data[0].links.self") { value(containsString("/subjects/$subject1Id")) } }
@@ -110,10 +113,12 @@ internal class RestPracticeSubjectControllerTest(
 
     @Test
     fun `test get subject - id not found`() {
-        whenever(practiceSubjectService.getPracticeSubject(-1L))
+        val unexistingId = UUID.randomUUID()
+
+        whenever(practiceSubjectService.getPracticeSubject(unexistingId))
             .thenThrow(EntityNotFoundException())
 
-        mockMvc.get("/api/practice/v1/subjects/-1") {
+        mockMvc.get("/api/practice/v1/subjects/$unexistingId") {
             accept(MediaTypes.JSON_API)
         }
             .andExpect {
@@ -125,28 +130,29 @@ internal class RestPracticeSubjectControllerTest(
 
     @Test
     fun `test get subject - nominal case`() {
-        val subjectId = 123L
+        val subjectId = UUID.randomUUID()
         val subjectTitle = "Subject title"
 
-        val topicId = 134L
+        val topicId = UUID.randomUUID()
         val topicTitle = "Topic title"
 
+        val question1Id = UUID.randomUUID()
         val questionOpen = PracticeQuestion(
-            id = 88L,
+            id = question1Id,
             rank = 1,
             title = "questionOpen",
             content = "Question 1",
             expectedExplanation = "Expected explanation 1",
             specification = OpenQuestionSpecification(),
-            attachment = PracticeAttachment(100L, "attachment"),
+            attachment = PracticeAttachment(UUID.randomUUID(), "attachment"),
             explanations = listOf(
-                PracticeLearnerExplanation(11L, "Explanation 1"),
-                PracticeLearnerExplanation(12L, "Explanation 2"),
-                PracticeLearnerExplanation(13L, "Explanation 3"),
+                PracticeLearnerExplanation(UUID.randomUUID(), "Explanation 1"),
+                PracticeLearnerExplanation(UUID.randomUUID(), "Explanation 2"),
+                PracticeLearnerExplanation(UUID.randomUUID(), "Explanation 3"),
             )
         )
         val questionExclusive = PracticeQuestion(
-            id = 2L,
+            id = UUID.randomUUID(),
             rank = 2,
             title = "questionExclusive",
             content = "Question 2",
@@ -155,15 +161,15 @@ internal class RestPracticeSubjectControllerTest(
                 nbCandidateItem = 4,
                 expectedChoiceIndex = 3
             ),
-            attachment = PracticeAttachment(101L, "attachment n2"),
+            attachment = PracticeAttachment(UUID.randomUUID(), "attachment n2"),
             explanations = listOf(
-                PracticeLearnerExplanation(21L, "Explanation 1"),
-                PracticeLearnerExplanation(22L, "Explanation 2"),
-                PracticeLearnerExplanation(23L, "Explanation 3"),
+                PracticeLearnerExplanation(UUID.randomUUID(), "Explanation 1"),
+                PracticeLearnerExplanation(UUID.randomUUID(), "Explanation 2"),
+                PracticeLearnerExplanation(UUID.randomUUID(), "Explanation 3"),
             )
         )
         val questionMultiple = PracticeQuestion(
-            id = 3L,
+            id = UUID.randomUUID(),
             rank = 3,
             title = "MultipleExclusive",
             content = "Question 3",
@@ -172,13 +178,13 @@ internal class RestPracticeSubjectControllerTest(
                 nbCandidateItem = 4,
                 expectedChoiceIndexList = listOf(1, 4)
             ),
-            attachment = PracticeAttachment(102L, "Attachment n3"),
+            attachment = PracticeAttachment(UUID.randomUUID(), "Attachment n3"),
             explanations = listOf(
-                PracticeLearnerExplanation(31L, "Explanation 1"),
+                PracticeLearnerExplanation(UUID.randomUUID(), "Explanation 1"),
             )
         )
         val questionNoAttachment = PracticeQuestion(
-            id = 4L,
+            id = UUID.randomUUID(),
             rank = 4,
             title = "No Attachment",
             content = "Question 4",
@@ -189,7 +195,7 @@ internal class RestPracticeSubjectControllerTest(
             ),
             attachment = null,
             explanations = listOf(
-                PracticeLearnerExplanation(41L, "Explanation 1"),
+                PracticeLearnerExplanation(UUID.randomUUID(), "Explanation 1"),
             )
         )
 
@@ -220,13 +226,13 @@ internal class RestPracticeSubjectControllerTest(
             }
             .andExpect {
                 content { contentType(MediaTypes.JSON_API) }
-                content { jsonPath("$.data.id") { value(subjectId) } }
+                content { jsonPath("$.data.id") { value(subjectId.toString()) } }
                 content { jsonPath("$.data.type") { value("practice-subject") } }
                 content { jsonPath("$.data.attributes.title") { value(subjectTitle) } }
-                content { jsonPath("$.data.relationships.topic.data.id") { value(topicId) } }
+                content { jsonPath("$.data.relationships.topic.data.id") { value(topicId.toString()) } }
                 content { jsonPath("$.data.relationships.topic.data.type") { value("practice-topic") } }
                 content { jsonPath("$.data.relationships.questions.data.length()") { value(4) } }
-                content { jsonPath("$.data.relationships.questions.data[0].id") { value(questionOpen.id) } }
+                content { jsonPath("$.data.relationships.questions.data[0].id") { value(questionOpen.id.toString()) } }
                 content { jsonPath("$.data.relationships.questions.data[0].type") { value("practice-question") } }
 
                 content { jsonPath("$.included") { isArray() } }
@@ -240,17 +246,17 @@ internal class RestPracticeSubjectControllerTest(
                         )
                     }
                 }
-                content { jsonPath("$.included[0:].id") { value(hasItem("88")) } }
-                content { jsonPath("$.included[?(@.id == '88' && @.type == 'practice-question')]") { exists() } }
-                content { jsonPath("$.included[?(@.id == $topicId && @.type == 'practice-topic')]") { exists() } }
+                content { jsonPath("$.included[0:].id") { value(hasItem(question1Id.toString())) } }
+                content { jsonPath("$.included[?(@.id == '$question1Id' && @.type == 'practice-question')]") { exists() } }
+                content { jsonPath("$.included[?(@.id == '$topicId' && @.type == 'practice-topic')]") { exists() } }
             }
     }
 
     @Test
     fun `getAttachmentBlob - when the attachment does not exist or is not bound to a question ready to practice`() {
-        val subjectId = -1L
-        val questionId = -1L
-        val attachmentId = -1L
+        val subjectId = UUID.randomUUID()
+        val questionId = UUID.randomUUID()
+        val attachmentId = UUID.randomUUID()
 
 
         whenever(practiceSubjectService.isAttachmentReadyToPractice(subjectId, questionId, attachmentId))
@@ -270,9 +276,9 @@ internal class RestPracticeSubjectControllerTest(
     @Test
     fun `getAttachmentBlob - should return the expected Attachment blob`() {
         // Given
-        val subjectId = 1L
-        val questionId = 12L
-        val attachmentId = 123L
+        val subjectId = UUID.randomUUID()
+        val questionId = UUID.randomUUID()
+        val attachmentId = UUID.randomUUID()
         val attachment = Attachment(name = "Testing attachment", originalFileName = "original.test")
         val inputStream = ByteArrayInputStream(
             "Faked content".toByteArray(StandardCharsets.UTF_8)
@@ -284,7 +290,7 @@ internal class RestPracticeSubjectControllerTest(
         val controller = RestPracticeSubjectController(practiceSubjectService, attachmentService)
 
         whenever(practiceSubjectService.isAttachmentReadyToPractice(subjectId, questionId, attachmentId)).thenReturn(true)
-        whenever(attachmentService.getAttachmentById(attachmentId)).thenReturn(attachment)
+        whenever(attachmentService.getAttachmentByUuid(attachmentId)).thenReturn(attachment)
         whenever(attachmentService.getInputStreamForAttachment(attachment)).thenReturn(inputStream)
 
         // Act

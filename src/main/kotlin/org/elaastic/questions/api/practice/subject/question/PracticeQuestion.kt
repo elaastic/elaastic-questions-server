@@ -5,6 +5,7 @@ import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.questions.api.practice.subject.question.attachment.PracticeAttachment
 import org.elaastic.questions.api.practice.subject.question.specification.QuestionSpecification
+import java.util.UUID
 
 /**
  * Represents a question of a practice subject
@@ -16,7 +17,7 @@ import org.elaastic.questions.api.practice.subject.question.specification.Questi
  */
 class PracticeQuestion(
     @JsonApiId
-    val id: Long,
+    val id: UUID,
     val rank: Int,
     val title: String,
     val content: String,

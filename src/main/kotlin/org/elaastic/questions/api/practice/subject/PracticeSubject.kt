@@ -3,6 +3,7 @@ package org.elaastic.questions.api.practice.subject
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.elaastic.questions.api.practice.subject.question.PracticeQuestion
 import org.elaastic.questions.assignment.Assignment
+import java.util.*
 
 /**
  * A practice subject contains questions on which learners can practice.
@@ -15,7 +16,7 @@ import org.elaastic.questions.assignment.Assignment
  * @author John Tranier
  */
 class PracticeSubject(
-    id: Long,
+    id: UUID,
     title: String,
 
     @JsonIgnore
@@ -34,7 +35,7 @@ class PracticeSubject(
         learners: Set<PracticeLearner>,
         topic: PracticeTopic? = null,
     ) : this(
-        id = assignment.id!!,
+        id = assignment.globalId,
         title = assignment.title,
         questions = questions,
         learners = learners,

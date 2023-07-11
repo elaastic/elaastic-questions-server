@@ -41,7 +41,7 @@ import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
+import java.util.UUID
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
@@ -76,6 +76,17 @@ class SequenceService(
 
             sequence
         } ?: throw EntityNotFoundException("There is no sequence for id \"$id\"")
+    }
+
+    fun findByUuid(uuid: UUID, fetchInteractions: Boolean = false): Sequence {
+        return sequenceRepository.findByUuid(uuid)?.let { sequence ->
+
+            if (fetchInteractions) {
+                loadInteractions(sequence)
+            }
+
+            sequence
+        } ?: throw EntityNotFoundException("There is no sequence for uuid \"$uuid\"")
     }
 
     fun loadInteractions(sequence: Sequence): Sequence {

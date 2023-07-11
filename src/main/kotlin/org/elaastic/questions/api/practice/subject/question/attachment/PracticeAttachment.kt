@@ -4,6 +4,7 @@ import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.attachment.Dimension
+import java.util.UUID
 
 /**
  * Represent an Attachment bound to a PracticeQuestion
@@ -12,7 +13,7 @@ import org.elaastic.questions.attachment.Dimension
  * @author John Tranier
  */
 class PracticeAttachment(
-    @JsonApiId val id: Long,
+    @JsonApiId val id: UUID,
     val name: String,
     val originalFileName: String? = null,
     val size: Long? = null,
@@ -23,7 +24,7 @@ class PracticeAttachment(
     val type = "practice-attachment"
 
     constructor(attachment: Attachment): this(
-        attachment.id!!,
+        attachment.uuid,
         attachment.name,
         attachment.originalFileName,
         attachment.size,

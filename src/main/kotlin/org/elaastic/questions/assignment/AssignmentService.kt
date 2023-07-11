@@ -70,10 +70,18 @@ class AssignmentService(
         } ?: throw EntityNotFoundException("There is no assignment for id \"$id\"")
     }
 
+    fun findByUuid(uuid: UUID, fetchSequences: Boolean = false): Assignment {
+        // TODO (+) i18n error message
+        return when (fetchSequences) {
+            true -> assignmentRepository.findWithSequenceByGlobalId(uuid)
+            false -> assignmentRepository.findByGlobalId(uuid)
+        } ?: throw EntityNotFoundException("There is no assignment for id \"$uuid\"")
+    }
+
     fun get(user: User, id: Long, fetchSequences: Boolean = false): Assignment {
         get(id, fetchSequences).let {
             if (it.owner != user) {
-                throw AccessDeniedException("You are not autorized to access to this assignment")
+                throw AccessDeniedException("You are not authorized to access to this assignment")
             }
             return it
         }

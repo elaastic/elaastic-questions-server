@@ -207,9 +207,9 @@ internal class PracticeSubjectServiceIntegrationTest(
         assertThat(assignment.id, notNullValue())
 
         val exception = assertThrows<IllegalStateException> {
-            practiceSubjectService.getPracticeSubject(assignment.id!!)
+            practiceSubjectService.getPracticeSubject(assignment.globalId)
         }
-        assertThat(exception.message, equalTo("The subject ${assignment.id} is not ready to practice"))
+        assertThat(exception.message, equalTo("The subject ${assignment.globalId} is not ready to practice"))
     }
 
     @Test
@@ -225,9 +225,9 @@ internal class PracticeSubjectServiceIntegrationTest(
                 .let { subject -> createAssignment(subject)  }
                 .also(curriedRandomlyPlayAllSequences(learners))
 
-            val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.id!!)
+            val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.globalId)
             assertThat(practiceSubject.topic, notNullValue())
-            assertThat(practiceSubject.topic?.id, equalTo(course.id))
+            assertThat(practiceSubject.topic?.id, equalTo(course.globalId))
             assertThat(practiceSubject.topic?.title, equalTo(course.title))
         }
     }
@@ -243,9 +243,9 @@ internal class PracticeSubjectServiceIntegrationTest(
                 .let { subject -> createAssignment(subject)  }
                 .also(curriedRandomlyPlayAllSequences(learners))
 
-            val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.id!!)
+            val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.globalId)
 
-            assertThat(practiceSubject.learners.map(PracticeLearner::id), equalTo(learners.map(User::id)))
+            assertThat(practiceSubject.learners.map(PracticeLearner::id), equalTo(learners.map(User::uuid)))
         }
     }
 
@@ -270,7 +270,7 @@ internal class PracticeSubjectServiceIntegrationTest(
                     randomlyPlaySequence(learners, assignment.sequences[2])
                 }
 
-            val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.id!!)
+            val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.globalId)
             assertThat(practiceSubject.questions.size, equalTo(2))
             assertThat(practiceSubject.questions[0].title, equalTo(assignment.sequences[0].statement.title))
             assertThat(practiceSubject.questions[1].title, equalTo(assignment.sequences[2].statement.title))

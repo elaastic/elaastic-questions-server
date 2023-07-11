@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import java.util.UUID
 
 
 interface SequenceRepository : JpaRepository<Sequence, Long> {
@@ -30,6 +31,9 @@ interface SequenceRepository : JpaRepository<Sequence, Long> {
 
     @EntityGraph(value = "Sequence.statement", type = EntityGraph.EntityGraphType.LOAD)
     fun findOneById(id: Long) : Sequence?
+
+    @EntityGraph(value = "Sequence.statement", type = EntityGraph.EntityGraphType.LOAD)
+    fun findByUuid(uuid: UUID) : Sequence?
 
     fun countAllByAssignment(assignment: Assignment) : Int
 

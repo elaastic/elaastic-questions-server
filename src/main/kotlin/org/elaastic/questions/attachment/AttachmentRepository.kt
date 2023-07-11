@@ -19,8 +19,11 @@
 package org.elaastic.questions.attachment
 
 import org.springframework.data.jpa.repository.JpaRepository
+import java.util.*
 
 interface AttachmentRepository : JpaRepository<Attachment, Long> {
+
+    fun findByUuid(uuid: UUID): Optional<Attachment>
 
     fun findAllByToDelete(toDelete: Boolean): MutableList<Attachment>
     fun findAllByPathAndIdNot(path: String, id: Long): Collection<Attachment>

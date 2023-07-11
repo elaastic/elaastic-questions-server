@@ -74,18 +74,18 @@ class RestPracticeSubjectController(
     }
 
     /**
-     * Returns the detailed representation of a practice subject from its id
+     * Returns the detailed representation of a practice subject from its uuid
      */
-    @GetMapping("subjects/{id}")
-    fun getPracticeSubject(@PathVariable id: Long): RepresentationModel<*> {
+    @GetMapping("subjects/{uuid}")
+    fun getPracticeSubject(@PathVariable uuid: UUID): RepresentationModel<*> {
         return try {
             practiceSubjectService
-                .getPracticeSubject(id)
+                .getPracticeSubject(uuid)
                 .let(PracticeSubjectModelBuilder::buildDetailed)
         } catch (e: EntityNotFoundException) {
             throw ResponseStatusException(
                 HttpStatus.NOT_FOUND,
-                "There is no subject for id='$id'",
+                "There is no subject for id='$uuid'",
                 e
             )
         }
@@ -94,17 +94,17 @@ class RestPracticeSubjectController(
     /**
      * Retrieve the blob of an attachment bound to a question itself bound to a practice subject
      */
-    @GetMapping("subjects/{subjectId}/questions/{questionId}/attachment/{attachmentId}/blob")
+    @GetMapping("subjects/{subjectUuid}/questions/{questionUuid}/attachment/{attachmentUuid}/blob")
     @ResponseBody
     fun getAttachmentBlob(
-        @PathVariable subjectId: Long,
-        @PathVariable questionId: Long,
-        @PathVariable attachmentId: Long
+        @PathVariable subjectUuid: UUID,
+        @PathVariable questionUuid: UUID,
+        @PathVariable attachmentUuid: UUID
     ): ResponseEntity<Resource>? {
         if (!practiceSubjectService.isAttachmentReadyToPractice(
-                subjectId,
-                questionId,
-                attachmentId
+                subjectUuid,
+                questionUuid,
+                attachmentUuid
             )
         ) {
             throw ResponseStatusException(
@@ -113,7 +113,7 @@ class RestPracticeSubjectController(
             )
         }
 
-        val attachment = attachmentService.getAttachmentById(attachmentId)
+        val attachment = attachmentService.getAttachmentByUuid(attachmentUuid)
 
         InputStreamResource(attachmentService.getInputStreamForAttachment(attachment)).let {
             return ResponseEntity.ok().header(

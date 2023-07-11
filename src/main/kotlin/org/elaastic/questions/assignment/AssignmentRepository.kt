@@ -40,6 +40,9 @@ interface AssignmentRepository : JpaRepository<Assignment, Long> {
     fun findByGlobalId(globalId: UUID): Assignment?
 
     @EntityGraph(value = "Assignment.sequences", type = EntityGraph.EntityGraphType.LOAD)
+    fun findWithSequenceByGlobalId(globalId: UUID): Assignment?
+
+    @EntityGraph(value = "Assignment.sequences", type = EntityGraph.EntityGraphType.LOAD)
     fun findAllBySubjectIsNull(): List<Assignment>
 
 

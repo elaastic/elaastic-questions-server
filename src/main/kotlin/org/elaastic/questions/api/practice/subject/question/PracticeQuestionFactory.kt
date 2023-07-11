@@ -12,7 +12,7 @@ object PracticeQuestionFactory {
 
     fun buildQuestion(sequence: Sequence, explanations: List<PracticeLearnerExplanation>) =
         PracticeQuestion(
-            id = sequence.id!!,
+            id = sequence.uuid,
             rank = sequence.rank,
             title = sequence.statement.title,
             content = sequence.statement.content,
