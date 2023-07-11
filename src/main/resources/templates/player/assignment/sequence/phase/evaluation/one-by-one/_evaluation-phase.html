@@ -41,79 +41,46 @@
           Here is presented an alternative response. Please indicate how much you agree with this answer.
         </div>
 
+
+        <div
+          th:replace="player/assignment/sequence/components/response/_response::response(${model.choices}, ${model.nextResponseToGrade.choiceList}, ${model.nextResponseToGrade.explanation})"></div>
+
+        <div class="ui hidden divider"></div>
+
+        <h4 class="ui header" th:text="#{player.sequence.interaction.your.evaluation}">Your evaluation</h4>
         <div id="phase2-evaluation-app">
-          <div class="ui attached segment">
-            <th:block th:if="${model.choices}">
-              <strong th:text="#{player.sequence.interaction.choice.label}">Choice</strong>
-              <strong th:text="${model.nextResponseToGrade.choiceList}"></strong>
-              <br/>
-            </th:block>
-            <span th:utext="${model.nextResponseToGrade.explanation}"></span>
-
-
-            <input type="hidden" name="responseId" th:value="${model.nextResponseToGrade.id}"/>
-            <evaluation-input th:attr="current-response-id=${model.nextResponseToGrade.id}"
-                              value="-1"></evaluation-input>
-
-          </div>
+          <input type="hidden" name="responseId" th:value="${model.nextResponseToGrade.id}"/>
+          <likert-scale-input th:attr="current-response-id=${model.nextResponseToGrade.id}"
+                              value="-1"
+                              @change-grade="onChangeGrade"></likert-scale-input>
         </div>
 
         <div class="ui hidden divider"></div>
 
       </th:block>
 
+      <script>
+        function onChangeGrade () {
+          // Just do nothing by default...
+        }
+
+        function onSubmitResponse () {
+          // Just do nothing by default...
+        }
+      </script>
 
       <th:block th:if="${model.secondAttemptAllowed && model.nextResponseToGrade != null}">
-        <div th:if="${model.secondAttemptAlreadySubmitted}"
-             class="ui blue message"
-             th:text="#{player.sequence.interaction.secondAttemptSubmitted}">
-          Your second response has been registered.
-        </div>
-        <th:block th:unless="${model.secondAttemptAlreadySubmitted}">
-          <div class="ui blue message"
-               th:text="#{player.sequence.phase.evaluation.oneByOne.changeAnswer.notice}">
-            You may change your answer if you wish.
-          </div>
+        <div th:replace="player/assignment/sequence/phase/evaluation/_change-answer-form::changeAnswerForm(${model.secondAttemptAlreadySubmitted}, ${model.responseFormModel}, ${model.lastResponseToGrade})"></div>
 
-          <div class="ui segment">
-            <div class="inline fields" style="margin-bottom: 0;">
-              <label for="change-answer">Souhaitez-vous changer d'avis ?</label>
-              <div class="field">
-                <div id="change-answer-radio" class="ui radio checkbox">
-                  <input type="radio" name="changeAnswer" checked="" tabindex="0" class="hidden" value="true">
-                  <label th:text="#{common.yes}">Yes</label>
-                </div>
-              </div>
-              <div class="field">
-                <div id="dont-change-answer-radio" class="ui radio checkbox">
-                  <input type="radio" name="changeAnswer" tabindex="0" class="hidden" checked="checked" value="false">
-                  <label th:text="#{common.no}">No</label>
-                </div>
-              </div>
-            </div>
-
-            <div id="response-div" class="ui basic segment" style="display: none;">
-              <div
-                th:replace="player/assignment/sequence/phase/response/_response-form.html :: responseForm(${model.responseFormModel})"></div>
-            </div>
-          </div>
-
-          <script>
-            $('.ui.radio.checkbox').checkbox();
-            $('#change-answer-radio').checkbox({
-              onChecked: function() {
-                $('#response-div').show();
-              }
-            });
-            $('#dont-change-answer-radio').checkbox({
-              onChecked: function() {
-                $('#response-div').hide();
-              }
-            })
-          </script>
-
-
-        </th:block>
+        <script>
+          function onChangeGrade (grade) {
+            if (grade > 0) {
+              $('#change-answer-section').show()
+            } else {
+              $('#change-answer-section').hide()
+            }
+          }
+        </script>
       </th:block>
 
       <th:block th:if="${!model.userHasCompletedPhase2}">
@@ -142,77 +109,6 @@
 
   </div>
 
-
-  <style>
-      .fieldgrade .active.item {
-          background-color: #dff0ff !important;
-          color: #0e6eb8 !important;
-      }
-  </style>
-
-  <script type="text/x-template" id="evaluation-input-template">
-    <div class="field grade">
-      <input type="hidden" id="grade" name="grade" v-model="grade"/>
-      <label>{{ i18n.yourEvaluation }}</label>
-      <div class="ui stackable pagination menu">
-        <a class="item" v-bind:class="{ active: grade === -1 }" v-on:click="grade = -1">{{ i18n.noGrade }}
-        </a>
-        <div class="disabled item"></div>
-        <a class="item"
-           v-bind:class="{ active: grade === 1 }"
-           v-on:click="grade=1"
-           data-inverted="" :data-tooltip="i18n.grade1"
-           data-position="top center">1</a>
-        <a class="item"
-           v-bind:class="{ active: grade === 2 }"
-           v-on:click="grade=2"
-           data-inverted="" :data-tooltip="i18n.grade2"
-           data-position="top center">2</a>
-        <a class="item"
-           v-bind:class="{ active: grade === 3 }"
-           v-on:click="grade=3"
-           data-inverted="" :data-tooltip="i18n.grade3"
-           data-position="top center">3</a>
-        <a class="item"
-           v-bind:class="{ active: grade === 4 }"
-           v-on:click="grade=4"
-           data-inverted="" :data-tooltip="i18n.grade4"
-           data-position="top center">4</a>
-        <a class="item"
-           v-bind:class="{ active: grade === 5 }"
-           v-on:click="grade=5"
-           data-inverted="" :data-tooltip="i18n.grade5"
-           data-position="top center">5</a>
-      </div>
-    </div>
-  </script>
-
-  <script th:inline="javascript">
-
-    new Vue({
-      el: '#phase2-evaluation-app',
-      components: {
-        'evaluation-input': {
-          props: ['currentResponseId', 'value'],
-          template: '#evaluation-input-template',
-          data: function () {
-            return {
-              grade: this.value,
-              i18n: {
-                yourEvaluation: [[#{player.sequence.interaction.your.evaluation}]],
-                noGrade: [[#{player.sequence.interaction.grade.-1}]],
-                grade1: [[#{player.sequence.interaction.grade.1}]],
-                grade2: [[#{player.sequence.interaction.grade.2}]],
-                grade3: [[#{player.sequence.interaction.grade.3}]],
-                grade4: [[#{player.sequence.interaction.grade.4}]],
-                grade5: [[#{player.sequence.interaction.grade.5}]],
-
-              }
-            }
-          }
-        }
-      }
-    })
-  </script>
+  <div th:replace="player/assignment/sequence/phase/evaluation/method/likert/_likert_scale_input"></div>
 
 </div>

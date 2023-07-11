@@ -37,18 +37,17 @@ class OneByOneEvaluationPhaseExecutionController(
 
         sequenceService.get(sequenceId, true).let { sequence ->
             assignment = sequence.assignment!!
-            peerGradingService.createOrUpdate(
+            peerGradingService.createOrUpdateLikert(
                 user,
                 responseService.getReferenceById(evaluationData.responseId),
                 evaluationData.grade.toBigDecimal()
             )
 
-            return if (evaluationData.changeAnswer
-                && sequence.isSecondAttemptAllowed()
-                && !responseService.hasResponseForUser(user, sequence, 2)
-            ) {
+            return if (evaluationData.changeAnswer) {
                 changeAnswer(
-                    user, sequence, Answer(
+                    user,
+                    sequence,
+                    Answer(
                         evaluationData.choiceList,
                         evaluationData.confidenceDegree,
                         evaluationData.explanation
@@ -56,7 +55,11 @@ class OneByOneEvaluationPhaseExecutionController(
                 )
                 finalizePhaseExecution(user, sequence, assignment.id!!)
             } else {
-                 "redirect:/player/assignment/${assignment.id}/play/sequence/${sequence.id}"
+                if(evaluationData.lastResponseToGrade) {
+                    finalizePhaseExecution(user, sequence, assignment.id!!)
+                }
+
+                "redirect:/player/assignment/${assignment.id}/play/sequence/${sequence.id}"
             }
 
         }
@@ -69,6 +72,7 @@ class OneByOneEvaluationPhaseExecutionController(
         val changeAnswer: Boolean = false,
         val choiceList: List<ItemIndex>?,
         val confidenceDegree: ConfidenceDegree?,
-        val explanation: String?
+        val explanation: String?,
+        val lastResponseToGrade: Boolean,
     )
 }

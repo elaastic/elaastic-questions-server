@@ -20,7 +20,6 @@ package org.elaastic.questions.player.components.results
 import ConfidenceDistributionChartModel
 import EvaluationDistributionChartModel
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
 import org.elaastic.questions.assignment.sequence.interaction.results.ConfidenceDistributionFactory
 import org.elaastic.questions.assignment.sequence.interaction.results.GradingDistributionFactory

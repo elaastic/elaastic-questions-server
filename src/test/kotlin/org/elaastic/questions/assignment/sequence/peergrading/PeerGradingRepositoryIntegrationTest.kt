@@ -16,10 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.questions.assignment.sequence.peergrading
 
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -45,7 +43,7 @@ class PeerGradingRepositoryIntegrationTest(
     fun `save a valid peer grading`() {
         val grader = integrationTestingService.getAnyUser()
         val response = integrationTestingService.getAnyResponse()
-        PeerGrading(
+        LikertPeerGrading(
                 grade = BigDecimal(2),
                 annotation = "Annotation",
                 grader = grader,

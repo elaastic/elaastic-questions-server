@@ -12,6 +12,7 @@ class OneByOneLearnerEvaluationPhaseViewModel(
     choices: Boolean,
     userHasCompletedPhase2: Boolean,
     val nextResponseToGrade: ResponseData?,
+    val lastResponseToGrade: Boolean,
     secondAttemptAllowed: Boolean,
     secondAttemptAlreadySubmitted: Boolean,
     responseFormModel: LearnerResponseFormViewModel

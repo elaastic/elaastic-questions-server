@@ -1,0 +1,130 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<div th:fragment="evaluationPhase(model)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <div class="ui segment">
+        <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
+            Comparing viewpoints
+        </div>
+
+        <style>
+
+            .ui.pagination.menu .active.item {
+                background-color: #dff0ff;
+                color: #0e6eb8;
+            }
+        </style>
+
+        <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
+              th:action="@{/player/sequence/{sequenceId}/phase/evaluation/draxo/close-evaluation(sequenceId=${model.sequenceId})}"
+              class="ui form"
+              method="post">
+            <input type="hidden" name="interactionId" th:value="${model.interactionId}"/>
+            <th:block th:if="${model.nextResponseToGrade}">
+                <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.draxo.intro}">
+                    Here is presented an alternative response. Please indicate how much you agree with this answer.
+                </div>
+
+                <div
+                        th:replace="player/assignment/sequence/components/response/_response::response(${model.choices}, ${model.nextResponseToGrade.choiceList}, ${model.nextResponseToGrade.explanation})"></div>
+
+                <div class="ui hidden divider"></div>
+
+                <script>
+                    function onEvaluationDone() {
+                        // Do nothing by default
+                    }
+                </script>
+
+                <h4 class="ui header" th:text="#{player.sequence.interaction.your.evaluation}">Your evaluation</h4>
+                <script>
+                    let eventBus = new Vue();
+                    eventBus.$on("evaluationSubmitted", function () {
+                        onEvaluationDone()
+                    })
+                </script>
+                <draxo-form id="draxo-form-app"
+                            :read-only="submitted"
+                            :criteria-valuation="criteriaValuation"
+                            :current-criteria="currentCriteria"
+                            :criteria-list="criteriaList"
+                            :messages="messages"
+                            :scales="scales"
+                            :explanation="explanation"
+                            @select-criteria="currentCriteria = $event"
+                            @select-option="selectOption"
+                            @update-explanation="updateExplanation"
+                            @submit-evaluation="submitEvaluation"
+                ></draxo-form>
+
+                <div
+                        th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo_form::draxoForm(${model.sequenceId},${model.nextResponseToGrade.id}, ${model.draxoEvaluation})"></div>
+
+                <div class="ui hidden divider"></div>
+
+            </th:block>
+
+
+            <th:block th:if="${model.secondAttemptAllowed && model.nextResponseToGrade != null}">
+                <div
+                        th:replace="player/assignment/sequence/phase/evaluation/_change-answer-form::changeAnswerForm(${model.secondAttemptAlreadySubmitted}, ${model.responseFormModel}, ${model.lastResponseToGrade})"></div>
+
+                <script>
+                    function onEvaluationDone() {
+                        $('#change-answer-section').show()
+                        $('#phase2-submit').show()
+                    }
+                </script>
+            </th:block>
+            <th:block th:if="${!model.secondAttemptAllowed}">
+                <script>
+                    function onEvaluationDone() {
+                        window.location.reload(true)
+                    }
+                </script>
+            </th:block>
+
+
+            <th:block th:if="${!model.userHasCompletedPhase2}">
+                <div class="ui hidden divider"></div>
+
+                <div class="ui basic segment" id="phase2-submit" style="display:none">
+                    <input type="submit"
+                           class="ui primary button"
+                           onclick="onSubmitResponse()"
+                           th:value="#{player.sequence.interaction.submitResponse}"/>
+                </div>
+            </th:block>
+
+        </form>
+
+        <div th:if="${model.userHasCompletedPhase2}"
+             class="ui blue message"
+             th:text="#{player.sequence.phase.completedByUser(${2})}">
+        </div>
+
+        <div th:if="${!model.userHasCompletedPhase2 && model.phaseState.name() == 'afterStop'}"
+             class="ui blue message"
+             th:text="#{player.sequence.interaction.evaluation.tooLate}">
+        </div>
+
+
+    </div>
+
+</div>

@@ -1,0 +1,33 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="response(hasChoices, choiceList, explanation)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <h4 class="ui header" th:text="#{player.sequence.interaction.evaluation.alternativeResponse}"></h4>
+    <div class="ui attached large piles segment">
+        <th:block th:if="${hasChoices}">
+            <h5 class="ui header" style="display: inline" th:text="#{player.sequence.interaction.choice.label}+' :'">Choice</h5>
+            <a th:each="choice : ${choiceList}" class="ui blue circular label" th:text="${choice}"></a>
+        </th:block>
+
+        <h5 class="ui header" th:if="${hasChoices}" th:text="#{common.explanation}"></h5>
+        <p th:utext="${explanation}"></p>
+
+    </div>
+</div>

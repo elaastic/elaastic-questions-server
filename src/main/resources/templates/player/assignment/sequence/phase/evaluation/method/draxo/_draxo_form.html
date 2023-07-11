@@ -1,0 +1,117 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<div th:fragment="draxoForm(sequenceId,responseId,draxoEvaluation)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <script type="text/x-template" id="draxo-evaluation-template">
+        <div class="ui form">
+
+            <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url')}">
+                <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}">
+                    <i class="question circle outline ui icon"/> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
+                </a>
+            </span>
+
+            <div class="ui attached steps">
+                <div class="step"
+                     :class="{active: criteria == currentCriteria, disabled: criteria !== currentCriteria && !criteriaValuation[criteria], completed: criteria !== currentCriteria && criteriaValuation[criteria]}"
+                     v-for="criteria in criteriaList"
+                     :key="'step-'+criteria">
+                    <div class="content">
+                        <div class="title">{{ criteria }}</div>
+                        <div class="description">{{ messages.header[criteria] }}</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="ui attached segment">
+
+                <div class="grouped fields"
+                     v-for="criteria in criteriaList"
+                     v-show="criteria == currentCriteria"
+                     :key="'criteria-'+criteria">
+                    <label>{{ messages.question[criteria] }} :</label>
+                    <div class="field" :class="{disabled : readOnly}" v-for="criteriaOption in scales[criteria]">
+                        <div class="ui radio checkbox">
+                            <input type="radio" :name="'value['+criteria+']'"
+                                   :checked="criteriaValuation[criteria] && criteriaValuation[criteria].optionId === criteriaOption.id"
+                                   @change="selectOption(criteria, criteriaOption)" tabindex="0" class="hidden">
+                            <label>{{ criteriaOption.label }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field" :class="{disabled : readOnly}" v-show="awaitedExplanation">
+                    <label for="explanation-field">{{ messages.rejectedQuestion[currentCriteria] }}</label>
+                    <textarea rows="3" id="explanation-field" :value="explanation"
+                              @input="$emit('update-explanation', $event)"></textarea>
+                </div>
+
+                <div v-if="!readOnly"
+                     style="margin-top: 3em;"
+                     v-show="canGoPrevious || canGoNext || canSubmit">
+
+
+                    <button @click.prevent="previousCriteria"
+                            v-show="canGoPrevious"
+                            class="ui button"
+                            style="margin-bottom: 8px;"
+                            th:text="#{common.previous}">Previous
+                    </button>
+
+                    <button @click.prevent="nextCriteria"
+                            v-show="canGoNext"
+                            class="ui secondary button"
+                            style="margin-bottom: 8px;"
+                            th:text="#{common.next}">Next
+                    </button>
+
+                    <button v-show="canSubmit"
+                            @click.prevent="submitEvaluation"
+                            class="ui primary button"
+                            style="margin-bottom: 8px;"
+                            th:text="#{common.save}">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script th:inline="javascript">
+        let serverData = {
+            criteriaValuation: /*[[${draxoEvaluation.criteriaValuation}]]*/ {},
+            currentCriteria: /*[[${draxoEvaluation.currentCriteria}]]*/ {},
+            criteriaList: /*[[${@draxoService.getCriteriaList()}]]*/ [],
+            messages: /*[[${@draxoService.getCriteriaMessages()}]]*/ {},
+            scales: /*[[${@draxoService.getCriteriaScales()}]]*/ {},
+            submitUrl: /*[[@{/player/sequence/{sequenceId}/phase/evaluation/draxo/response/{responseId}/submit-evaluation(sequenceId=${sequenceId},responseId=${responseId})}]]*/ "",
+        }
+    </script>
+
+    <script type="text/javascript" th:src="@{/js/elaastic/draxo/draxo-form-app.js}"></script>
+
+    <script>
+        $('.ui.radio.checkbox').checkbox()
+    </script>
+</div>

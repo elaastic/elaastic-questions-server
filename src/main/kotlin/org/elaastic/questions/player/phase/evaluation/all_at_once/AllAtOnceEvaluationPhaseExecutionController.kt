@@ -39,20 +39,22 @@ class AllAtOnceEvaluationPhaseExecutionController(
         sequenceService.get(sequenceId, true).let { sequence ->
             assignment = sequence.assignment!!
             evaluationData.getGrades().forEach {
-                peerGradingService.createOrUpdate(user, responseService.getReferenceById(it.key), it.value.toBigDecimal())
-            }
-
-            if (sequence.isSecondAttemptAllowed()
-                && !responseService.hasResponseForUser(user, sequence, 2)
-            ) {
-                changeAnswer(
-                    user, sequence, Answer(
-                        evaluationData.choiceList,
-                        evaluationData.confidenceDegree,
-                        evaluationData.explanation
-                    )
+                peerGradingService.createOrUpdateLikert(
+                    user,
+                    responseService.getReferenceById(it.key),
+                    it.value.toBigDecimal()
                 )
             }
+
+            changeAnswer(
+                user,
+                sequence,
+                Answer(
+                    evaluationData.choiceList,
+                    evaluationData.confidenceDegree,
+                    evaluationData.explanation
+                )
+            )
 
             return finalizePhaseExecution(user, sequence, assignment.id!!)
         }

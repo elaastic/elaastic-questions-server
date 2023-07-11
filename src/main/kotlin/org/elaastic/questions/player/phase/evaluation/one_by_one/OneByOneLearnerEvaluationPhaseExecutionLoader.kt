@@ -17,13 +17,17 @@ class OneByOneLearnerEvaluationPhaseExecutionLoader(
 ) : AbstractLearnerEvaluationPhaseExecutionLoader() {
 
     override fun build(learnerPhase: LearnerPhase): LearnerPhaseExecution = run {
-        if (learnerPhase !is OneByOneLearnerEvaluationPhase)
-            throw IllegalArgumentException("LearnerResponsePhaseExecutionService only handle OneByOneLearnerEvaluationPhase interaction ; provided: ${learnerPhase.javaClass}")
+        require(learnerPhase is OneByOneLearnerEvaluationPhase) {
+            "LearnerResponsePhaseExecutionService only handle OneByOneLearnerEvaluationPhase interaction ; provided: ${learnerPhase.javaClass}"
+        }
 
         val sequence = learnerPhase.learnerSequence.sequence
         val learner = learnerPhase.learnerSequence.learner
 
         val secondAttemptAlreadySubmitted = responseService.hasResponseForUser(learner, sequence, 2)
+
+        val responseIdAlreadyGradedList =
+            peerGradingService.findAllEvaluation(learner, sequence).map { it.response.id  }
 
         val responsesToGrade = if (secondAttemptAlreadySubmitted)
             listOf()
@@ -33,19 +37,15 @@ class OneByOneLearnerEvaluationPhaseExecutionLoader(
                 attempt = sequence.whichAttemptEvaluate(),
                 user = learner
             ).map { ResponseData(it) }
+                .filter { responseData -> responseData.id !in responseIdAlreadyGradedList }
 
-        val responsesAlreadyGraded: List<PeerGrading> = peerGradingService.findAllEvaluation(learner, sequence)
-
-        val nextResponseToGrade = responsesToGrade.find { responseData ->
-            responseData.id !in responsesAlreadyGraded.map {
-                it.response.id // TODO should be fetched first
-            }
-        }
+        val nextResponseToGrade = responsesToGrade.firstOrNull()
 
         return OneByOneLearnerEvaluationPhaseExecution(
             userHasCompletedPhase2 = nextResponseToGrade == null,
             secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
             nextResponseToGrade = nextResponseToGrade,
+            lastResponseToGrade =  responsesToGrade.size == 1,
             sequence = learnerPhase.learnerSequence.sequence,
             userActiveInteraction = learnerPhase.learnerSequence.activeInteraction,
             firstAttemptResponse = responseService.find(learner, sequence),

@@ -10,6 +10,7 @@ class OneByOneLearnerEvaluationPhaseExecution(
     userHasCompletedPhase2: Boolean,
     secondAttemptAlreadySubmitted: Boolean,
     val nextResponseToGrade: ResponseData?,
+    val lastResponseToGrade: Boolean,
     sequence: Sequence,
     userActiveInteraction: Interaction?,
     firstAttemptResponse: Response?

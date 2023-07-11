@@ -27,22 +27,27 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotNull
 
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "`type`", length = 12)
 @EntityListeners(AuditingEntityListener::class)
 class PeerGrading(
-        var grade: BigDecimal?,
-        var annotation: String? = null,
+    @Enumerated(EnumType.STRING)
+    @Column(name = "`type`", insertable = false, updatable = false)
+    var type: PeerGradingType = PeerGradingType.LIKERT,
 
-        @field:ManyToOne
-        var grader: User,
+    @field:ManyToOne
+    var grader: User,
 
-        @field:ManyToOne
-        var response: Response
+    @field:ManyToOne
+    var response: Response,
 
-) : AbstractJpaPersistable<Long>() {
+    var grade: BigDecimal?,
+    var annotation: String? = null,
+
+    ) : AbstractJpaPersistable<Long>() {
 
     @Version
     var version: Long? = null

@@ -53,6 +53,7 @@ class OneByOneLearnerEvaluationPhase(
             choices = sequence.statement.hasChoices(),
             userHasCompletedPhase2 = learnerPhaseExecution.userHasCompletedPhase2,
             nextResponseToGrade = learnerPhaseExecution.nextResponseToGrade,
+            lastResponseToGrade = learnerPhaseExecution.lastResponseToGrade,
             secondAttemptAllowed = sequence.isSecondAttemptAllowed(),
             secondAttemptAlreadySubmitted = learnerPhaseExecution.secondAttemptAlreadySubmitted,
             responseFormModel = LearnerResponseFormViewModelFactory.buildFor2ndAttempt(

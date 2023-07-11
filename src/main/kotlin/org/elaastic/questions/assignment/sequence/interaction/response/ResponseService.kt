@@ -83,7 +83,7 @@ class ResponseService(
                 sequence.getResponseSubmissionInteraction().explanationRecommendationMapping?.getRecommandation(
                     userResponse.id!!
                 )?.let { responseRepository.getAllByIdIn(it) }
-            } ?: listOf<Response>()
+            } ?: listOf()
 
         } else recommendationService.findAllResponsesOrderedByEvaluationCount(
             interaction = sequence.getResponseSubmissionInteraction(),

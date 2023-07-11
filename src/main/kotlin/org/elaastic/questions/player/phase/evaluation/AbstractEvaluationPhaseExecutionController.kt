@@ -19,6 +19,9 @@ abstract class AbstractEvaluationPhaseExecutionController(
             LearnerChoice(it)
         }
 
+        check(sequence.isSecondAttemptAllowed())
+        check(!responseService.hasResponseForUser(user, sequence, 2))
+
         Response(
             learner = user,
             interaction = sequence.getResponseSubmissionInteraction(),

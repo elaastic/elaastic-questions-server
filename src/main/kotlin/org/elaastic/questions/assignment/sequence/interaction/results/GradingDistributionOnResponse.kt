@@ -39,7 +39,8 @@ class GradingDistributionOnResponse(
     fun size() = getNbItem()
 
     fun incNbVotes(grade: BigDecimal) {
-        nbResponsesByEvaluation[grade.intValueExact() - 1]++
+        // TODO : check how we should round here...  nbResponsesByEvaluation[grade.intValueExact() - 1]++
+        nbResponsesByEvaluation[grade.toInt() - 1]++
     }
 
     override fun equals(other: Any?): Boolean {

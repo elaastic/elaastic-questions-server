@@ -243,7 +243,7 @@ class FunctionalTestingService(
             attempt = sequence.whichAttemptEvaluate(),
             user = user
         ).forEach { response: Response ->
-            peerGradingService.createOrUpdate(user, response, evaluationStrategy.evaluate(response))
+            peerGradingService.createOrUpdateLikert(user, response, evaluationStrategy.evaluate(response))
         }
     }
 

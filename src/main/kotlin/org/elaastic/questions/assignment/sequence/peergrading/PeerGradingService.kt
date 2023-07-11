@@ -5,8 +5,9 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -22,22 +23,44 @@ class PeerGradingService(
         @Autowired val entityManager: EntityManager
 ) {
 
-    // TODO (+) we should add a unicity constraint on <user, reponseId> so that we can use INSERT INTO / ON DUPLICATE KEY UPDATE syntax
-    fun createOrUpdate(grader: User, response: Response, grade: BigDecimal): PeerGrading {
-        require(
-                learnerAssignmentService.isRegistered(
-                        grader,
-                        response.interaction.sequence.assignment ?: error("The response is not bound to an assignment")
-                )
-        ) { "You must be registered on the assignment to provide evaluations" }
+    fun createOrUpdateLikert(grader: User, response: Response, grade: BigDecimal): LikertPeerGrading {
+        require(isGraderRegisteredOnAssignment(grader, response)) {
+            "You must be registered on the assignment to provide evaluations"
+        }
 
         val peerGrade = peerGradingRepository.findByGraderAndResponse(grader, response)
-                ?: PeerGrading(grader = grader, response = response, grade = grade)
+                ?: LikertPeerGrading(grader = grader, response = response, grade = grade)
+
+        require(peerGrade is LikertPeerGrading) {
+            "It already exist a peer grading for this response & this grader but it is not a LIKERT evaluation"
+        }
 
         peerGrade.grade = grade
-        peerGradingRepository.save(peerGrade)
-        return peerGrade
+        return peerGradingRepository.save(peerGrade)
     }
+
+    fun createOrUpdateDraxo(grader: User, response: Response, evaluation: DraxoEvaluation): DraxoPeerGrading {
+        require(isGraderRegisteredOnAssignment(grader, response)) {
+            "You must be registered on the assignment to provide evaluations"
+        }
+
+        val peerGrade = peerGradingRepository.findByGraderAndResponse(grader, response)
+            ?: DraxoPeerGrading(grader, response, evaluation)
+
+        require(peerGrade is DraxoPeerGrading) {
+            "It already exist a peer grading for this response & this grader but it is not a DRAXO evaluation"
+        }
+
+        peerGrade.updateFrom(evaluation)
+
+        return peerGradingRepository.save(peerGrade)
+    }
+
+    fun isGraderRegisteredOnAssignment(grader: User, response: Response) =
+        learnerAssignmentService.isRegistered(
+            grader,
+            response.interaction.sequence.assignment ?: error("The response is not bound to an assignment")
+        )
 
     fun userHasPerformedEvaluation(user: User, sequence: Sequence) =
             entityManager.createQuery("""

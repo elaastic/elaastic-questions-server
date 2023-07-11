@@ -27,7 +27,7 @@ import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.*
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
+import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
@@ -65,27 +65,29 @@ internal class ResponseServiceIntegrationTest(
     fun buildResponseBasedOnTeacherNullExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
             val subject = integrationTestingService.getAnyTestSubject()
-            val assignment =  integrationTestingService.getAnyAssignment()
+            val assignment = integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
-            val stmt1 = subjectService.addStatement( subject,
+            val stmt1 = subjectService.addStatement(
+                subject,
                 Statement(
-                owner = subject.owner,
-                title = "q1",
-                content = "question 1",
-                expectedExplanation = null,
-                questionType = QuestionType.OpenEnded,
-                subject = subject)
+                    owner = subject.owner,
+                    title = "q1",
+                    content = "question 1",
+                    expectedExplanation = null,
+                    questionType = QuestionType.OpenEnded,
+                    subject = subject
+                )
             )
             assignmentService.addSequence(
-                    assignment = assignment,
-                    statement = stmt1
+                assignment = assignment,
+                statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
-                        it,
-                        true,
-                        3,
-                        ExecutionContext.Blended
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.Blended
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -93,8 +95,8 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                    sequence = sequence,
-                    teacher = sequence.owner
+                sequence = sequence,
+                teacher = sequence.owner
             )
         }.tThen { response ->
             assertThat(response, nullValue())
@@ -105,30 +107,30 @@ internal class ResponseServiceIntegrationTest(
     fun buildResponseBasedOnTeacherEmptyExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
             val subject = integrationTestingService.getAnyTestSubject()
-            val assignment =  integrationTestingService.getAnyAssignment()
+            val assignment = integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement(
-                    subject,
-                    Statement(
-                            owner = assignment.owner,
-                            title = "q1",
-                            content = "question 1",
-                            expectedExplanation = "",
-                            questionType = QuestionType.OpenEnded,
-                            subject = subject
-                    )
+                subject,
+                Statement(
+                    owner = assignment.owner,
+                    title = "q1",
+                    content = "question 1",
+                    expectedExplanation = "",
+                    questionType = QuestionType.OpenEnded,
+                    subject = subject
+                )
             )
 
             assignmentService.addSequence(
-                    assignment = assignment,
-                    statement = stmt1
+                assignment = assignment,
+                statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
-                        it,
-                        true,
-                        3,
-                        ExecutionContext.Blended
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.Blended
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -136,8 +138,8 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                    sequence = sequence,
-                    teacher = sequence.owner
+                sequence = sequence,
+                teacher = sequence.owner
             )
         }.tThen { response ->
             assertThat(response, nullValue())
@@ -148,30 +150,30 @@ internal class ResponseServiceIntegrationTest(
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceOpenEndedBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
             val subject = integrationTestingService.getAnyTestSubject()
-            val assignment =  integrationTestingService.getAnyAssignment()
+            val assignment = integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement(
-                    subject,
-                    Statement(
-                            owner = assignment.owner,
-                            title = "q1",
-                            content = "question 1",
-                            expectedExplanation = "it is expected",
-                            questionType = QuestionType.OpenEnded,
-                            subject = subject
-                    )
+                subject,
+                Statement(
+                    owner = assignment.owner,
+                    title = "q1",
+                    content = "question 1",
+                    expectedExplanation = "it is expected",
+                    questionType = QuestionType.OpenEnded,
+                    subject = subject
+                )
             )
 
             assignmentService.addSequence(
-                    assignment = assignment,
-                    statement = stmt1
+                assignment = assignment,
+                statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
-                        it,
-                        true,
-                        3,
-                        ExecutionContext.Blended
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.Blended
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -179,8 +181,8 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                    sequence = sequence,
-                    teacher = sequence.owner
+                sequence = sequence,
+                teacher = sequence.owner
             )
         }.tThen { response ->
             assertThat(response!!.id, notNullValue())
@@ -197,34 +199,34 @@ internal class ResponseServiceIntegrationTest(
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceExclusiveChoiceBlended() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
             val subject = integrationTestingService.getAnyTestSubject()
-            val assignment =  integrationTestingService.getAnyAssignment()
+            val assignment = integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement(
-                    subject,
-                    Statement(
-                            owner = assignment.owner,
-                            title = "q1",
-                            content = "question 1",
-                            expectedExplanation = "it is expected",
-                            questionType = QuestionType.ExclusiveChoice,
-                            choiceSpecification = ExclusiveChoiceSpecification(
-                                    nbCandidateItem = 3,
-                                    expectedChoice = ChoiceItem(2, 100f)
-                            ),
-                            subject = subject
-                    )
+                subject,
+                Statement(
+                    owner = assignment.owner,
+                    title = "q1",
+                    content = "question 1",
+                    expectedExplanation = "it is expected",
+                    questionType = QuestionType.ExclusiveChoice,
+                    choiceSpecification = ExclusiveChoiceSpecification(
+                        nbCandidateItem = 3,
+                        expectedChoice = ChoiceItem(2, 100f)
+                    ),
+                    subject = subject
+                )
             )
 
             assignmentService.addSequence(
-                    assignment = assignment,
-                    statement = stmt1
+                assignment = assignment,
+                statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
-                        it,
-                        true,
-                        3,
-                        ExecutionContext.Blended
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.Blended
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -232,8 +234,8 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                    sequence = sequence,
-                    teacher = sequence.owner
+                sequence = sequence,
+                teacher = sequence.owner
             )
         }.tThen { response ->
             assertThat(response!!.id, notNullValue())
@@ -251,37 +253,37 @@ internal class ResponseServiceIntegrationTest(
     fun buildResponseBasedOnTeacherExpectedExplanationForASequenceMultipleChoiceFaceToFace() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
             val subject = integrationTestingService.getAnyTestSubject()
-            val assignment =  integrationTestingService.getAnyAssignment()
+            val assignment = integrationTestingService.getAnyAssignment()
             subject.owner = assignment.owner
 
             val stmt1 = subjectService.addStatement(
-                    subject,
-                    Statement(
-                            owner = assignment.owner,
-                            title = "q1",
-                            content = "question 1",
-                            expectedExplanation = "it is expected",
-                            questionType = QuestionType.MultipleChoice,
-                            choiceSpecification = MultipleChoiceSpecification(
-                                    nbCandidateItem = 4,
-                                    expectedChoiceList = listOf(
-                                            ChoiceItem(4, 50f),
-                                            ChoiceItem(2, 50f)
-                                    )
-                            ),
-                            subject = subject
-                    )
+                subject,
+                Statement(
+                    owner = assignment.owner,
+                    title = "q1",
+                    content = "question 1",
+                    expectedExplanation = "it is expected",
+                    questionType = QuestionType.MultipleChoice,
+                    choiceSpecification = MultipleChoiceSpecification(
+                        nbCandidateItem = 4,
+                        expectedChoiceList = listOf(
+                            ChoiceItem(4, 50f),
+                            ChoiceItem(2, 50f)
+                        )
+                    ),
+                    subject = subject
+                )
             )
 
             assignmentService.addSequence(
-                    assignment = assignment,
-                    statement = stmt1
+                assignment = assignment,
+                statement = stmt1
             ).let {
                 sequenceService.initializeInteractionsForSequence(
-                        it,
-                        true,
-                        3,
-                        ExecutionContext.FaceToFace
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.FaceToFace
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -289,8 +291,8 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                    sequence = sequence,
-                    teacher = sequence.owner
+                sequence = sequence,
+                teacher = sequence.owner
             )
         }.tThen { response ->
             assertThat(response!!.id, notNullValue())
@@ -308,42 +310,42 @@ internal class ResponseServiceIntegrationTest(
     fun buildResponseBasedOnTeacherFakeExplanationsForASequenceOpenEndedBlended() {
         //"given a sequence corresponding with an open ended question but with fake explanations"
         val fakeExplanations = listOf(
-                FakeExplanationData(
-                        null,
-                        content = "first fake"
-                ),
-                FakeExplanationData(
-                        null,
-                        content = "second fake"
-                )
+            FakeExplanationData(
+                null,
+                content = "first fake"
+            ),
+            FakeExplanationData(
+                null,
+                content = "second fake"
+            )
         )
 
         val subject = integrationTestingService.getAnyTestSubject()
-        val assignment =  integrationTestingService.getAnyAssignment()
+        val assignment = integrationTestingService.getAnyAssignment()
         subject.owner = assignment.owner
 
         val stmt1 = subjectService.addStatement(
-                subject,
-                Statement(
-                        owner = assignment.owner,
-                        title = "q1",
-                        content = "question 1",
-                        expectedExplanation = "it is expected",
-                        questionType = QuestionType.OpenEnded,
-                        subject = subject
-                )
+            subject,
+            Statement(
+                owner = assignment.owner,
+                title = "q1",
+                content = "question 1",
+                expectedExplanation = "it is expected",
+                questionType = QuestionType.OpenEnded,
+                subject = subject
+            )
         )
 
         assignmentService.addSequence(
-                assignment = assignment,
-                statement = stmt1
+            assignment = assignment,
+            statement = stmt1
         ).let {
             statementService.updateFakeExplanationList(it.statement, fakeExplanations)
             sequenceService.initializeInteractionsForSequence(
-                    it,
-                    true,
-                    3,
-                    ExecutionContext.Blended
+                it,
+                true,
+                3,
+                ExecutionContext.Blended
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.Blended
                 sequenceRepository.save(sequence)
@@ -351,7 +353,7 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(
-                    sequence = sequence
+                sequence = sequence
             )
         }.tThen { responseList ->
             assertThat(responseList.size, equalTo(2))
@@ -371,50 +373,50 @@ internal class ResponseServiceIntegrationTest(
     fun buildResponseBasedOnTeacherFakeExplanationsForASequenceExclusiveChoiceBlended() {
         //"given a sequence corresponding with an open ended question but with fake explanations"
         val fakeExplanations = listOf(
-                FakeExplanationData(
-                        1,
-                        content = "first fake"
-                ),
-                FakeExplanationData(
-                        2,
-                        content = "second fake"
-                ),
-                FakeExplanationData(
-                        3,
-                        content = "third fake"
-                )
+            FakeExplanationData(
+                1,
+                content = "first fake"
+            ),
+            FakeExplanationData(
+                2,
+                content = "second fake"
+            ),
+            FakeExplanationData(
+                3,
+                content = "third fake"
+            )
         )
 
         val subject = integrationTestingService.getAnyTestSubject()
-        val assignment =  integrationTestingService.getAnyAssignment()
+        val assignment = integrationTestingService.getAnyAssignment()
         subject.owner = assignment.owner
 
         val stmt1 = subjectService.addStatement(
-                subject,
-                Statement(
-                        owner = assignment.owner,
-                        title = "q1",
-                        content = "question 1",
-                        expectedExplanation = "it is expected",
-                        questionType = QuestionType.ExclusiveChoice,
-                        choiceSpecification = ExclusiveChoiceSpecification(
-                                nbCandidateItem = 3,
-                                expectedChoice = ChoiceItem(2, 100f)
-                        ),
-                        subject = subject
-                )
+            subject,
+            Statement(
+                owner = assignment.owner,
+                title = "q1",
+                content = "question 1",
+                expectedExplanation = "it is expected",
+                questionType = QuestionType.ExclusiveChoice,
+                choiceSpecification = ExclusiveChoiceSpecification(
+                    nbCandidateItem = 3,
+                    expectedChoice = ChoiceItem(2, 100f)
+                ),
+                subject = subject
+            )
         )
 
         assignmentService.addSequence(
-                assignment = assignment,
-                statement = stmt1
+            assignment = assignment,
+            statement = stmt1
         ).let {
             statementService.updateFakeExplanationList(it.statement, fakeExplanations)
             sequenceService.initializeInteractionsForSequence(
-                    it,
-                    true,
-                    3,
-                    ExecutionContext.Blended
+                it,
+                true,
+                3,
+                ExecutionContext.Blended
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.Blended
                 sequenceRepository.save(sequence)
@@ -422,7 +424,7 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(
-                    sequence = sequence
+                sequence = sequence
             )
         }.tThen { responseList ->
             assertThat(responseList.size, equalTo(3))
@@ -442,60 +444,60 @@ internal class ResponseServiceIntegrationTest(
     fun buildResponseBasedOnTeacherFakeExplanationsForASequenceMultipleChoiceFaceToFace() {
         //"given a sequence corresponding with an open ended question but with fake explanations"
         val fakeExplanations = listOf(
-                FakeExplanationData(
-                        1,
-                        content = "first fake"
-                ),
-                FakeExplanationData(
-                        2,
-                        content = "second fake"
-                ),
-                FakeExplanationData(
-                        3,
-                        content = "third fake"
-                )
+            FakeExplanationData(
+                1,
+                content = "first fake"
+            ),
+            FakeExplanationData(
+                2,
+                content = "second fake"
+            ),
+            FakeExplanationData(
+                3,
+                content = "third fake"
+            )
         )
 
         val subject = integrationTestingService.getAnyTestSubject()
-        val assignment =  integrationTestingService.getAnyAssignment()
+        val assignment = integrationTestingService.getAnyAssignment()
         subject.owner = assignment.owner
 
         val stmt1 = subjectService.addStatement(
-                subject,
-                Statement(
-                        owner = assignment.owner,
-                        title = "q1",
-                        content = "question 1",
-                        expectedExplanation = "it is expected",
-                        questionType = QuestionType.MultipleChoice,
-                        choiceSpecification = MultipleChoiceSpecification(
-                                nbCandidateItem = 4,
-                                expectedChoiceList = listOf(
-                                        ChoiceItem(4, 50f),
-                                        ChoiceItem(2, 50f)
-                                )
-                        ),
-                        subject = subject
-                )
+            subject,
+            Statement(
+                owner = assignment.owner,
+                title = "q1",
+                content = "question 1",
+                expectedExplanation = "it is expected",
+                questionType = QuestionType.MultipleChoice,
+                choiceSpecification = MultipleChoiceSpecification(
+                    nbCandidateItem = 4,
+                    expectedChoiceList = listOf(
+                        ChoiceItem(4, 50f),
+                        ChoiceItem(2, 50f)
+                    )
+                ),
+                subject = subject
+            )
         )
 
         assignmentService.addSequence(
-                assignment = assignment,
-                statement = stmt1
+            assignment = assignment,
+            statement = stmt1
         ).let {
             statementService.updateFakeExplanationList(it.statement, fakeExplanations)
             sequenceService.initializeInteractionsForSequence(
-                    it,
-                    true,
-                    3,
-                    ExecutionContext.FaceToFace
+                it,
+                true,
+                3,
+                ExecutionContext.FaceToFace
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.FaceToFace
                 sequenceRepository.save(sequence)
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponsesBasedOnTeacherFakeExplanationsForASequence(
-                    sequence = sequence
+                sequence = sequence
             )
         }.tThen { responseList ->
             assertThat(responseList.size, equalTo(3))
@@ -514,31 +516,32 @@ internal class ResponseServiceIntegrationTest(
     @Test
     fun testUpgradeMeanGradeAndEvaluationCount() {
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            statementService.save(Statement(
+            statementService.save(
+                Statement(
                     owner = integrationTestingService.getAnyAssignment().owner,
                     title = "q1",
                     content = "question 1",
                     expectedExplanation = "it is expected",
                     questionType = QuestionType.MultipleChoice,
                     choiceSpecification = MultipleChoiceSpecification(
-                            nbCandidateItem = 4,
-                            expectedChoiceList = listOf(
-                                    ChoiceItem(4, 50f),
-                                    ChoiceItem(2, 50f)
-                            )
+                        nbCandidateItem = 4,
+                        expectedChoiceList = listOf(
+                            ChoiceItem(4, 50f),
+                            ChoiceItem(2, 50f)
+                        )
                     )
                 )
             ).let {
                 assignmentService.addSequence(
-                        assignment = integrationTestingService.getAnyAssignment(),
-                        statement = it
+                    assignment = integrationTestingService.getAnyAssignment(),
+                    statement = it
                 )
             }.let {
                 sequenceService.initializeInteractionsForSequence(
-                        it,
-                        true,
-                        3,
-                        ExecutionContext.FaceToFace
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.FaceToFace
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -546,29 +549,26 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                    sequence = sequence,
-                    teacher = sequence.owner
+                sequence = sequence,
+                teacher = sequence.owner
             )
         }.tWhen("we build some peer grading") {
             listOf(
-                    PeerGrading(
-                            grade = BigDecimal(1),
-                            grader = userService.fakeUserList!![0],
-                            response = it!!,
-                            annotation = null
-                    ),
-                    PeerGrading(
-                            grade = BigDecimal(2),
-                            grader = userService.fakeUserList!![1],
-                            response = it,
-                            annotation = null
-                    ),
-                    PeerGrading(
-                            grade = BigDecimal(1),
-                            grader = userService.fakeUserList!![2],
-                            response = it,
-                            annotation = null
-                    )
+                LikertPeerGrading(
+                    grade = BigDecimal(1),
+                    grader = userService.fakeUserList!![0],
+                    response = it!!,
+                ),
+                LikertPeerGrading(
+                    grade = BigDecimal(2),
+                    grader = userService.fakeUserList!![1],
+                    response = it,
+                ),
+                LikertPeerGrading(
+                    grade = BigDecimal(1),
+                    grader = userService.fakeUserList!![2],
+                    response = it,
+                )
             ).map { peerGrading ->
                 peerGradingRepository.save(peerGrading)
             }.tWhen("update mean grade and evaluation count") { peerGradingList ->
@@ -584,30 +584,31 @@ internal class ResponseServiceIntegrationTest(
     fun testUpgradeMeanGradeAndEvaluationCountWhenNoPeerGrading() {
 
         tGiven("given a sequence corresponding with an open ended question but with expected explanation") {
-            val statement = statementService.save(Statement(
+            val statement = statementService.save(
+                Statement(
                     owner = integrationTestingService.getAnyAssignment().owner,
                     title = "q1",
                     content = "question 1",
                     expectedExplanation = "it is expected",
                     questionType = QuestionType.MultipleChoice,
                     choiceSpecification = MultipleChoiceSpecification(
-                            nbCandidateItem = 4,
-                            expectedChoiceList = listOf(
-                                    ChoiceItem(4, 50f),
-                                    ChoiceItem(2, 50f)
-                            )
+                        nbCandidateItem = 4,
+                        expectedChoiceList = listOf(
+                            ChoiceItem(4, 50f),
+                            ChoiceItem(2, 50f)
+                        )
                     )
                 )
             )
             assignmentService.addSequence(
-                    assignment = integrationTestingService.getAnyAssignment(),
-                    statement = statement
+                assignment = integrationTestingService.getAnyAssignment(),
+                statement = statement
             ).let {
                 sequenceService.initializeInteractionsForSequence(
-                        it,
-                        true,
-                        3,
-                        ExecutionContext.FaceToFace
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.FaceToFace
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -615,8 +616,8 @@ internal class ResponseServiceIntegrationTest(
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
-                    sequence = sequence,
-                    teacher = sequence.owner
+                sequence = sequence,
+                teacher = sequence.owner
             )
         }.tWhen("update mean grade and evaluation count") { response ->
             responseService.updateMeanGradeAndEvaluationCount(response = response!!)
