@@ -43,7 +43,7 @@ class OneByOneEvaluationPhaseExecutionController(
                 evaluationData.grade.toBigDecimal()
             )
 
-            if (evaluationData.changeAnswer
+            return if (evaluationData.changeAnswer
                 && sequence.isSecondAttemptAllowed()
                 && !responseService.hasResponseForUser(user, sequence, 2)
             ) {
@@ -54,9 +54,11 @@ class OneByOneEvaluationPhaseExecutionController(
                         evaluationData.explanation
                     )
                 )
+                finalizePhaseExecution(user, sequence, assignment.id!!)
+            } else {
+                 "redirect:/player/assignment/${assignment.id}/play/sequence/${sequence.id}"
             }
 
-            return finalizePhaseExecution(user, sequence, assignment.id!!)
         }
     }
 
