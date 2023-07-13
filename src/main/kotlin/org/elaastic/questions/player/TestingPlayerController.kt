@@ -2443,17 +2443,6 @@ class TestingPlayerController(
         return "player/assignment/sequence/phase/response/test-response-phase"
     }
 
-    @GetMapping("/evaluation-phase")
-    fun testEvaluationPhase(
-        authentication: Authentication,
-        model: Model
-    ): String {
-        val user: User = authentication.principal as User
-
-        model.addAttribute("user", user)
-        return "player/assignment/sequence/phase/evaluation/test-evaluation-phase-index"
-    }
-
     @GetMapping("/evaluation-phase/one-by-one")
     fun testEvaluationPhaseOneByOne(
         authentication: Authentication,

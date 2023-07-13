@@ -34,7 +34,13 @@
     <li><a th:href="@{/player/test/my-results}">My results</a> </li>
     <li><a th:href="@{/player/test/command}">Command</a> </li>
     <li><a th:href="@{/player/test/response-phase}">Response phase</a> </li>
-    <li><a th:href="@{/player/test/evaluation-phase}">Evaluation phase</a> </li>
+    <li>
+      Evaluation phase
+      <ul>
+        <li><a th:href="@{/player/test/evaluation-phase/one-by-one}">One-by-One</a> </li>
+        <li><a th:href="@{/player/test/evaluation-phase/all-at-once}">All-at-once</a> </li>
+      </ul>
+    </li>
     <li><a th:href="@{/player/test/results}">Results</a> </li>
     <li><a th:href="@{/player/test/explanation-viewer}">Explanation viewer</a> </li>
     <li><a th:href="@{/player/test/sequence-info}">Sequence info</a> </li>
