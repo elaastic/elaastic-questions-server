@@ -93,7 +93,7 @@ class FunctionalTestingService(
     ): Statement {
         val title = "Question ${questionIndex + 1} - $questionType"
         val content = "Content of question ${questionIndex + 1}"
-        val expectedExplanation = "TODO"
+        val expectedExplanation = "Expected answer to question ${questionIndex + 1}"
 
         return Statement(
             title = title,
