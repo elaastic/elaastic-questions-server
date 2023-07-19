@@ -1,8 +1,15 @@
-FROM openjdk:11
-VOLUME /tmp
-ARG JAR_FILE=build/libs/elaastic-questions-server-5.1.5.jar
-ARG CONF_FILE=docker-resources/elaastic-questions/elaastic-questions.properties
-ADD ${JAR_FILE} elaastic-questions.jar
-ADD ${CONF_FILE} elaastic-questions.properties
+# Production stage
+FROM openjdk:17
 
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.config.additional-location=/elaastic-questions.properties","-jar","/elaastic-questions.jar"]
+# Create a non-root user
+RUN useradd -m elaastic
+USER elaastic
+
+VOLUME /tmp
+
+# Copy application JAR
+COPY build/libs/*.jar /app/lib/
+
+EXPOSE 8080
+
+ENTRYPOINT ["java","-cp","app:app/lib/*","org.elaastic.questions.ElaasticQuestionsServer","-Djava.security.egd=file:/dev/./urandom","-Dspring.config.additional-location=file:/config/"]

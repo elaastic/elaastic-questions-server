@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.springframework.boot.gradle.tasks.bundling.BootWar
 
 ext["spring-security.version"]="5.8.3"
 
@@ -10,7 +11,7 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
-    id("com.palantir.docker") version "0.25.0"
+    id("com.palantir.docker") version "0.26.0"
 }
 
 group = "org.elaastic.questions"
@@ -92,26 +93,25 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+val bootJar: BootJar by tasks
+
+docker {
+    name = "elaastic-questions-server-standalone:${version}"
+    copySpec.from(bootJar.outputs.files.singleFile)
+        .into("docker-build")
+    buildArgs(mapOf(
+        "JAR_FILE" to "docker-build/${bootJar.archiveFileName.get()}"
+    ))
+}
+
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-apply(plugin = "com.palantir.docker")
-
-val bootJar: BootJar by tasks
-
-docker {
-    name = "elaastic-questions-server-standalone:latest"
-    copySpec.from(bootJar.outputs.files.singleFile)
-            .from("docker-resources/elaastic-questions/elaastic-questions.properties")
-            .into("docker-build")
-    buildArgs(mapOf(
-            "JAR_FILE" to "docker-build/${bootJar.archiveFileName.get()}",
-            "CONF_FILE" to "docker-build/elaastic-questions.properties"
-    ))
-}
-
-tasks.getByName<War>("war") {
+tasks.getByName<BootJar>("bootJar") {
     enabled = true
+}
+tasks.getByName<BootWar>("bootWar") {
+    enabled = false
 }
