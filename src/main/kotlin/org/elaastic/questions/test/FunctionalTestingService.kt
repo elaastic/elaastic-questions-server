@@ -273,6 +273,7 @@ class FunctionalTestingService(
             checkNotNull(activeInteraction) { "The sequence has no active interaction" }
             check(activeInteraction.rank != sequence.interactions.size) { "The active interaction is the last one" }
 
+            interactionService.stop(sequence.owner, activeInteraction)
             interactionService.startNext(sequence.owner, activeInteraction)
         }
 
