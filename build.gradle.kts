@@ -1,22 +1,21 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.springframework.boot.gradle.tasks.bundling.BootJar
-import org.springframework.boot.gradle.tasks.bundling.BootWar
 
 ext["spring-security.version"]="5.8.3"
 
 plugins {
-    id("org.springframework.boot") version "2.7.12"
+    id("org.springframework.boot") version "2.7.13"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
-    war
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
-    id("com.palantir.docker") version "0.26.0"
 }
 
 group = "org.elaastic.questions"
 version = "5.1.5"
-java.sourceCompatibility = JavaVersion.VERSION_17
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
     mavenCentral()
@@ -44,7 +43,6 @@ dependencies {
 	implementation("org.springframework.security:spring-security-cas")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-allopen")
@@ -88,30 +86,11 @@ allOpen {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+        freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "17"
     }
 }
 
-val bootJar: BootJar by tasks
-
-docker {
-    name = "elaastic-questions-server-standalone:${version}"
-    copySpec.from(bootJar.outputs.files.singleFile)
-        .into("docker-build")
-    buildArgs(mapOf(
-        "JAR_FILE" to "docker-build/${bootJar.archiveFileName.get()}"
-    ))
-}
-
-
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-tasks.getByName<BootJar>("bootJar") {
-    enabled = true
-}
-tasks.getByName<BootWar>("bootWar") {
-    enabled = false
 }
