@@ -12,4 +12,4 @@ COPY build/libs/elaastic-questions-server-5.1.5.jar /app/lib/elaastic-questions-
 
 EXPOSE 8080
 
-#ENTRYPOINT ["java","-jar","/app/lib/elaastic-questions-server.jar","-Djava.security.egd=file:/dev/./urandom","--spring.config.additional-location=file:/config/"]
+ENTRYPOINT ["java","-jar","/app/lib/elaastic-questions-server.jar","-Djava.security.egd=file:/dev/./urandom","--spring.config.additional-location=file:/config/"]
