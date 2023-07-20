@@ -92,3 +92,14 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+
+tasks.register("dockerBuild") {
+    group = "Docker"
+    description = "Builds the Docker image"
+    doLast {
+        exec {
+            commandLine("docker", "build", "-t", "elaastic-questions-server-standalone:latest", ".")
+        }
+    }
+}

@@ -17,6 +17,8 @@ services:
       context: .
     image: elaastic-questions-server-standalone:latest
     container_name: elaastic-questions-server
+    volumes:
+      - ./config/:/config/
     depends_on:
       - elaastic-questions-db-8
     ports:

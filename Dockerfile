@@ -8,8 +8,8 @@ USER elaastic
 VOLUME /tmp
 
 # Copy application JAR
-COPY build/libs/*.jar /app/lib/
+COPY build/libs/elaastic-questions-server-5.1.5.jar /app/lib/elaastic-questions-server.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-cp","app:app/lib/*","org.elaastic.questions.ElaasticQuestionsServer","-Djava.security.egd=file:/dev/./urandom","-Dspring.config.additional-location=file:/config/"]
+#ENTRYPOINT ["java","-jar","/app/lib/elaastic-questions-server.jar","-Djava.security.egd=file:/dev/./urandom","--spring.config.additional-location=file:/config/"]
