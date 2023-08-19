@@ -1,7 +1,7 @@
-package org.elaastic.questions.player.phase.evaluation.draxo.criteria
+package org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import org.elaastic.questions.player.phase.evaluation.draxo.option.OptionId
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class CriteriaEvaluation(val criteria: Criteria,

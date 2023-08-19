@@ -24,51 +24,59 @@ import org.elaastic.questions.player.components.explanationViewer.ExplanationDat
 internal class IncorrectAndMeanGradeComparatorTest {
 
     val joe: ExplanationData = ExplanationData(
-            author = "Joe",
-            meanGrade = BigDecimal("3.5"),
-            score = BigDecimal("0")
+        responseId = 1L,
+        author = "Joe",
+        meanGrade = BigDecimal("3.5"),
+        score = BigDecimal("0")
     )
 
     val jack: ExplanationData = ExplanationData(
-            author = "Jack",
-            meanGrade = BigDecimal("1.5"),
-            score = BigDecimal("0")
+        responseId = 2L,
+        author = "Jack",
+        meanGrade = BigDecimal("1.5"),
+        score = BigDecimal("0")
     )
 
     val william: ExplanationData = ExplanationData(
-            author = "William",
-            meanGrade = BigDecimal("5"),
-            score = BigDecimal("100")
+        responseId = 3L,
+        author = "William",
+        meanGrade = BigDecimal("5"),
+        score = BigDecimal("100")
     )
 
     val averell: ExplanationData = ExplanationData(
-            author = "Averell",
-            meanGrade = BigDecimal("1"),
-            score = BigDecimal("100")
+        responseId = 4L,
+        author = "Averell",
+        meanGrade = BigDecimal("1"),
+        score = BigDecimal("100")
     )
 
     val luke: ExplanationData = ExplanationData(
-            author = "Luke",
-            meanGrade = BigDecimal("1"),
-            score = BigDecimal("100")
+        responseId = 5L,
+        author = "Luke",
+        meanGrade = BigDecimal("1"),
+        score = BigDecimal("100")
     )
 
     val scoreNull: ExplanationData = ExplanationData(
-            meanGrade = BigDecimal("1")
+        responseId = 6L,
+        meanGrade = BigDecimal("1")
     )
 
     val scoreNull2: ExplanationData = ExplanationData(
-            meanGrade = BigDecimal("1")
+        responseId = 7L,
+        meanGrade = BigDecimal("1")
     )
 
     val gradeNull: ExplanationData = ExplanationData(
-            score = BigDecimal("100")
+        responseId = 8L,
+        score = BigDecimal("100")
     )
 
     val gradeNull2: ExplanationData = ExplanationData(
-            score = BigDecimal("100")
+        responseId = 9L,
+        score = BigDecimal("100")
     )
-
 
 
     @Test

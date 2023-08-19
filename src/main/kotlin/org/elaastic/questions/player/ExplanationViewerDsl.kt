@@ -27,10 +27,10 @@ annotation class ExplanationViewerDsl
 
 object ExplanationViewerCmd {
     fun openQuestionSituation(block: OpenExplanationViewerSituationBuilder.() -> Unit): TestingPlayerController.ExplanationViewerSituation =
-            OpenExplanationViewerSituationBuilder().apply(block).build()
+        OpenExplanationViewerSituationBuilder().apply(block).build()
 
     fun choiceQuestionSituation(block: ChoiceExplanationViewerSituationBuilder.() -> Unit): TestingPlayerController.ExplanationViewerSituation =
-            ChoiceExplanationViewerSituationBuilder().apply(block).build()
+        ChoiceExplanationViewerSituationBuilder().apply(block).build()
 }
 
 @ExplanationViewerDsl
@@ -45,10 +45,10 @@ class OpenExplanationViewerSituationBuilder {
     }
 
     fun build() = TestingPlayerController.ExplanationViewerSituation(
-            sequenceId = sequenceId!!,
-            description = description,
-            explanationViewerModel =
-            OpenExplanationViewerModel(explanations)
+        sequenceId = sequenceId!!,
+        description = description,
+        explanationViewerModel =
+        OpenExplanationViewerModel(explanations)
     )
 }
 
@@ -64,32 +64,37 @@ class ChoiceExplanationViewerSituationBuilder {
     }
 
     fun build() = TestingPlayerController.ExplanationViewerSituation(
-            sequenceId = sequenceId!!,
-            description = description,
-            explanationViewerModel =
-            ChoiceExplanationViewerModel(explanationsByResponse)
+        sequenceId = sequenceId!!,
+        description = description,
+        explanationViewerModel =
+        ChoiceExplanationViewerModel(explanationsByResponse)
     )
 }
 
 @ExplanationViewerDsl
 class ExplanationsByResponse : HashMap<ResponseData, List<ExplanationData>>() {
 
-    fun response(choices: List<Int>, score: Int, correct: Boolean, block: ResponseDataToExplanationDatasBuilder.() -> Unit) {
+    fun response(
+        choices: List<Int>,
+        score: Int,
+        correct: Boolean,
+        block: ResponseDataToExplanationDatasBuilder.() -> Unit
+    ) {
         plusAssign(
-                ResponseDataToExplanationDatasBuilder(
-                        choices,
-                        score,
-                        correct
-                ).apply(block).build()
+            ResponseDataToExplanationDatasBuilder(
+                choices,
+                score,
+                correct
+            ).apply(block).build()
         )
     }
 }
 
 @ExplanationViewerDsl
 class ResponseDataToExplanationDatasBuilder(
-        val choices: List<Int>,
-        val score: Int = 0,
-        val correct: Boolean = false
+    val choices: List<Int>,
+    val score: Int = 0,
+    val correct: Boolean = false
 ) {
     private var explanations = mutableListOf<ExplanationData>()
 
@@ -98,8 +103,8 @@ class ResponseDataToExplanationDatasBuilder(
     }
 
     fun build() = Pair(
-            ResponseData(choices, score, correct),
-            explanations
+        ResponseData(choices, score, correct),
+        explanations
     )
 }
 
@@ -112,27 +117,33 @@ class Explanations : ArrayList<ExplanationData>() {
 
 @ExplanationViewerDsl
 class ExplanationDataBuilder {
+    var responseId: Long = 123L
     var content: String? = null
     var author: String? = null
     var nbEvaluations: Int = 0
+    var nbDraxoEvaluations: Int = 0
     var meanGrade: BigDecimal? = null
     var confidenceDegree: ConfidenceDegree? = null
     var fromTeacher: Boolean = false
 
-    fun build() = if(fromTeacher)
+    fun build() = if (fromTeacher)
         TeacherExplanationData(
+            responseId = responseId,
             content = content,
             author = author,
             nbEvaluations = nbEvaluations,
+            nbDraxoEvaluations = nbDraxoEvaluations,
             meanGrade = meanGrade,
             confidenceDegree = confidenceDegree,
         )
-        else ExplanationData(
-            content = content,
-            author = author,
-            nbEvaluations = nbEvaluations,
-            meanGrade = meanGrade,
-            confidenceDegree = confidenceDegree,
+    else ExplanationData(
+        responseId = responseId,
+        content = content,
+        author = author,
+        nbEvaluations = nbEvaluations,
+        nbDraxoEvaluations = nbDraxoEvaluations,
+        meanGrade = meanGrade,
+        confidenceDegree = confidenceDegree,
     )
 }
 

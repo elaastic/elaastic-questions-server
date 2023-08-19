@@ -18,31 +18,20 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body},extraHeader=~{::head/script})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
   <meta charset="UTF-8">
-  <title>Test ExplanationViewer component</title>
+  <title>Test Show DRAXO Evaluation</title>
+  <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
 </head>
 <body>
 <section>
-  <h2>Explanation viewer</h2>
+  <h2>Show a DRAXO evaluation</h2>
 
-  <script th:inline="javascript">
-    saveAction = function(sequenceId, action, object){
-      if(sequenceId != null){
-        fetch([[${@environment.getProperty('elaastic.questions.url')}]] + 'action/' + sequenceId + '/saveAction/' + action + '/' + object)
-      }
-    }
-  </script>
+  <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model.graderName},${model.score},${model.draxoEvaluation})"></div>
 
-  <div th:each="explanationViewerSituation : ${explanationViewerSituationArray}"
-       class="ui segment">
-    <h3 th:text="${explanationViewerSituation.description}"></h3>
-    <div
-      th:replace="player/assignment/sequence/components/explanation-viewer/_explanation-viewer.html :: explanationViewer(${explanationViewerSituation.sequenceId}, ${explanationViewerSituation.explanationViewerModel})"></div>
-  </div>
 </section>
 </body>
 </html>

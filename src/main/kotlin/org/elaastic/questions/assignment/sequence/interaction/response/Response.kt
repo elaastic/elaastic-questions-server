@@ -68,6 +68,7 @@ class Response(
         var fake: Boolean = false,
 
         var evaluationCount: Int = 0,
+        var draxoEvaluationCount: Int = 0,
 
         @field:ManyToOne
         var statement: Statement

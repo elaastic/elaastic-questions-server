@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.persistence.EntityManager
+import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
 @Service
@@ -50,6 +51,14 @@ class ResponseService(
 ) {
 
     fun getReferenceById(id: Long) = responseRepository.getReferenceById(id)
+
+    /**
+     * It will immediately throw an exception if it does not exists (while getReferenceById will delay the query
+     * and so the eventual exception)
+     */
+    fun findById(id: Long) = responseRepository.findById(id).orElseThrow {
+        EntityNotFoundException("There is no response with id='$id'")
+    }
 
     fun findAll(sequence: Sequence, excludeFakes: Boolean = true): ResponseSet =
         findAll(sequence.getResponseSubmissionInteraction(), excludeFakes)
@@ -110,6 +119,7 @@ class ResponseService(
      *  Update the mean grade and nb of evaluations for every responses
      *  bound the provided interaction
      */
+    // TODO (JT) : I feel like removing this global update triggered at some specific events to replace it by a systematic update at each PeerGrading insertion / update
     fun updateGradings(sequence: Sequence) {
         entityManager.createNativeQuery(
             """
@@ -117,13 +127,15 @@ class ResponseService(
             INNER JOIN (
                     SELECT pg.response_id as rid,
                            avg(pg.grade) as meanGrade,
-                           count(pg.grade) as evaluationCount
-                    FROM peer_grading pg WHERE pg.grade <> -1
+                           count(pg.id) as evaluationCount,
+                           sum(IF(pg.`type` = 'DRAXO', 1, 0)) as draxoEvaluationCount
+                    FROM peer_grading pg 
                     GROUP BY pg.response_id
                 ) data ON rid = response.id
             SET
                 mean_grade = data.meanGrade,
-                evaluation_count = data.evaluationCount
+                evaluation_count = data.evaluationCount,
+                draxo_evaluation_count = data.draxoEvaluationCount
             WHERE response.interaction_id = :interactionId
                 AND response.attempt = :attempt
         """.trimIndent()
@@ -135,12 +147,13 @@ class ResponseService(
 
     fun updateMeanGradeAndEvaluationCount(response: Response): Response {
         val res =
-            entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.grade) as evaluationCount from PeerGrading pg where pg.response = :response and pg.grade <> -1")
+            entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.id) as evaluationCount, sum(CASE WHEN pg.type = 'DRAXO' THEN 1 ELSE 0 END) from PeerGrading pg where pg.response = :response")
                 .setParameter("response", response)
                 .singleResult as Array<Object?>
 
         response.meanGrade = res[0]?.let { BigDecimal(it as Double).setScale(2, RoundingMode.HALF_UP) }
         response.evaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
+        response.draxoEvaluationCount  = res[2]?.let { (it as Long).toInt() } ?: 0
 
         return responseRepository.save(response)
     }

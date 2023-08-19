@@ -1,7 +1,7 @@
 package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
-import org.elaastic.questions.player.phase.evaluation.draxo.criteria.Criteria
-import org.elaastic.questions.player.phase.evaluation.draxo.option.OptionId
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.*
 import org.junit.jupiter.api.Test
@@ -78,7 +78,7 @@ class DraxoEvaluationTest {
                 .addEvaluation(Criteria.R, OptionId.YES)
                 .addEvaluation(Criteria.A, OptionId.YES)
                 .addEvaluation(Criteria.X, OptionId.YES)
-                .addEvaluation(Criteria.O, OptionId.YES),
+                .addEvaluation(Criteria.O, OptionId.NO),
         )
             .forEach { evaluation -> assertThat(evaluation.isValid(), equalTo(true)) }
     }

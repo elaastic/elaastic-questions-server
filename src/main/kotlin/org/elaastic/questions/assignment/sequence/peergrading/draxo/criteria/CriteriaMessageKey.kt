@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.phase.evaluation.draxo.criteria
+package org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria
 
 enum class CriteriaMessageKey(val code: String) {
     Header("header"),

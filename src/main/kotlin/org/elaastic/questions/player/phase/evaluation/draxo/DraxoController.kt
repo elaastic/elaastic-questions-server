@@ -4,7 +4,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.ResponseS
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.player.phase.evaluation.draxo.criteria.CriteriaEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaEvaluation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication

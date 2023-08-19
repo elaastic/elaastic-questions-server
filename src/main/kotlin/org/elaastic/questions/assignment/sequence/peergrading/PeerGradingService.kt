@@ -5,6 +5,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
@@ -19,6 +20,7 @@ import javax.transaction.Transactional
 class PeerGradingService(
         @Autowired val peerGradingRepository: PeerGradingRepository,
         @Autowired val responseRepository: ResponseRepository,
+        @Autowired val responseService: ResponseService,
         @Autowired val learnerAssignmentService: LearnerAssignmentService,
         @Autowired val entityManager: EntityManager
 ) {
@@ -36,7 +38,10 @@ class PeerGradingService(
         }
 
         peerGrade.grade = grade
-        return peerGradingRepository.save(peerGrade)
+        peerGradingRepository.save(peerGrade)
+        responseService.updateMeanGradeAndEvaluationCount(response)
+
+        return peerGrade
     }
 
     fun createOrUpdateDraxo(grader: User, response: Response, evaluation: DraxoEvaluation): DraxoPeerGrading {
@@ -53,8 +58,14 @@ class PeerGradingService(
 
         peerGrade.updateFrom(evaluation)
 
-        return peerGradingRepository.save(peerGrade)
+        peerGradingRepository.save(peerGrade)
+        responseService.updateMeanGradeAndEvaluationCount(response)
+
+        return peerGrade
     }
+
+    fun findAllDraxo(response: Response): List<DraxoPeerGrading> =
+        peerGradingRepository.findAllByResponseAndType(response, PeerGradingType.DRAXO)
 
     fun isGraderRegisteredOnAssignment(grader: User, response: Response) =
         learnerAssignmentService.isRegistered(

@@ -3,7 +3,6 @@ package org.elaastic.questions.player.phase
 import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.player.phase.descriptor.PhaseConfig
 import org.elaastic.questions.player.phase.descriptor.PhaseDescriptor
 import org.elaastic.questions.player.phase.descriptor.SequenceDescriptor
 import org.springframework.beans.factory.annotation.Autowired

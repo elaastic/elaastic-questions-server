@@ -1,8 +1,8 @@
-package org.elaastic.questions.player.phase.evaluation.draxo.criteria
+package org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria
 
-import org.elaastic.questions.player.phase.evaluation.draxo.option.OptionId as Id
-import org.elaastic.questions.player.phase.evaluation.draxo.option.OptionSpecification
-import org.elaastic.questions.player.phase.evaluation.draxo.option.OptionType as Type
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId as Id
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionSpecification
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionType as Type
 import java.math.BigDecimal
 
 enum class Criteria(val scale: Map<Id, OptionSpecification>) {
@@ -17,7 +17,7 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
     R(
         mapOf(
             Id.NO to OptionSpecification(Type.NEGATIVE, BigDecimal(1)),
-            Id.PARTIALLY to OptionSpecification(Type.NEGATIVE, BigDecimal(1.5)),
+            Id.PARTIALLY to OptionSpecification(Type.NEGATIVE, BigDecimal("1.5")),
             Id.YES to OptionSpecification(Type.POSITIVE, BigDecimal(2)),
             Id.DONT_KNOW to OptionSpecification(Type.UNKNOWN)
         )
@@ -33,14 +33,14 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
     X(
         mapOf(
             Id.NO to OptionSpecification(Type.NEGATIVE),
-            Id.YES to OptionSpecification(Type.POSITIVE, BigDecimal(0.5)),
+            Id.YES to OptionSpecification(Type.POSITIVE, BigDecimal("0.5")),
             Id.DONT_KNOW to OptionSpecification(Type.UNKNOWN),
         )
     ),
     O(
         mapOf(
             Id.YES to OptionSpecification(Type.NEGATIVE),
-            Id.NO to OptionSpecification(Type.POSITIVE, BigDecimal(0.5)),
+            Id.NO to OptionSpecification(Type.POSITIVE, BigDecimal("0.5")),
             Id.DONT_KNOW to OptionSpecification(Type.UNKNOWN)
         )
     );
@@ -51,7 +51,7 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
 
     fun next() =
         when (ordinal) {
-            values().size -> null
+            values().size - 1 -> null
             else -> values()[ordinal + 1]
         }
 
@@ -66,8 +66,8 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
     fun isPositiveOption(optionId: Id) =
         scale.getValue(optionId).type == Type.POSITIVE
 
-    fun getOptionType(optionId: Id) =
-        scale.getValue(optionId).type
+    fun getOptionType(optionId: Id?) =
+        if(optionId == null) null else scale.getValue(optionId).type
 
     fun value(optionId: Id?) =
         if (optionId == null)
