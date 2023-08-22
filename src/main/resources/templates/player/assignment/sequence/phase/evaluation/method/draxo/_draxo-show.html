@@ -22,7 +22,7 @@
     <table class="ui definition table" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
         <tbody>
         <tr>
-            <td style="width: 15em;" th:text="#{draxo.reviewer}">Reviewer</td>
+            <td style="width: 12em;" th:text="#{draxo.reviewer}">Reviewer</td>
             <td><span class="name-explanation" th:styleappend="${hideName} ? 'display: none'"  th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span></td>
         </tr>
 
@@ -36,7 +36,7 @@
         <tr>
             <td th:text="#{draxo.evaluationGrid}">Evaluation grid</td>
             <td>
-                <div class="ui mini steps">
+                <div class="ui tiny tablet stackable  fluid steps" style="margin-right: 3em;">
                     <th:block
                             th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
                             th:with="optionType = ${criteria.getOptionType(model.draxoEvaluation.get(criteria))}">
