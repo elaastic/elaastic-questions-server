@@ -125,4 +125,4 @@ emailconfig.properties
 /src/test/resources/lti-consumers-export-file.csv
 /paper.pdf
 .DS_Store
-/config
+/configuration
