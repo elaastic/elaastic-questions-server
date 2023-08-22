@@ -101,7 +101,7 @@ tasks.register("dockerBuild") {
     description = "Builds the Docker image"
     doLast {
         exec {
-            commandLine("docker", "build", "-t", "elaastic-questions-server-standalone:latest", ".")
+            commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server", ".")
         }
     }
 }

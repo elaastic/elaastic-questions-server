@@ -15,10 +15,11 @@ services:
   elaastic-questions-server-standalone:
     build:
       context: .
-    image: elaastic-questions-server-standalone:latest
+    image: elaastic/elaastic-questions-server:latest
     container_name: elaastic-questions-server
     volumes:
-      - ./config/:/config/
+      - ./configuration/:/configuration/
+      - ./elaastic/datastore/:/datastore/
     depends_on:
       - elaastic-questions-db-8
     ports:
