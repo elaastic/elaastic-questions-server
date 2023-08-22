@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-<div th:fragment="draxoShow(model)"
+<div th:fragment="draxoShow(model, hideName)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -23,7 +23,7 @@
         <tbody>
         <tr>
             <td style="width: 15em;" th:text="#{draxo.reviewer}">Reviewer</td>
-            <td><span class="name-explanation"  th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span></td>
+            <td><span class="name-explanation" th:styleappend="${hideName} ? 'display: none'"  th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span></td>
         </tr>
 
         <tr>

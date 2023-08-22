@@ -30,6 +30,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/peer-grading/draxo")
@@ -43,7 +44,8 @@ class DraxoPeerGradingController(
     fun getAll(
         authentication: Authentication,
         model: Model,
-        @PathVariable responseId: Long
+        @PathVariable responseId: Long,
+        @RequestParam hideName: Boolean?
     ): String {
         val user: User = authentication.principal as User
 
@@ -67,6 +69,9 @@ class DraxoPeerGradingController(
                 DraxoEvaluationModel(index, draxoPeerGrading, user == assignment.owner)
             }
         )
+        if(hideName == true) {
+            model.addAttribute("hideName", true)
+        }
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
     }

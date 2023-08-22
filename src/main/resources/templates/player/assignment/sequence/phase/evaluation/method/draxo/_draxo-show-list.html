@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-<div th:fragment="draxoShowList(evaluationModelList)"
+<div th:fragment="draxoShowList(evaluationModelList, hideName)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -25,7 +25,7 @@
                 </a>
             </span>
     <th:block th:each="model : ${evaluationModelList}">
-        <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model})"></div>
+        <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model},${hideName})"></div>
     </th:block>
 
 </div>

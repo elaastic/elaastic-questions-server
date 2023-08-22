@@ -39,9 +39,15 @@ var elaastic = elaastic || {};
 
             $(target).html(buildHtmlLoader())
 
+            let data = {}
+            if(new URLSearchParams(location.search).get("hideName")) {
+                data.hideName = true
+            }
+
             $.ajax({
                 url: baseUrl+'/'+responseId,
                 method: 'GET',
+                data,
                 success: function(data) {
                     $(target).html(data);
                 },

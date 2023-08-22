@@ -49,7 +49,7 @@
 
     <b>
         <span class="name-explanation" th:if="${studentsIdentitiesAreDisplayable}"
-              th:text="|${explanation.author} - #{|player.sequence.interaction.confidenceDegree.${explanation.confidenceDegree}|}|">Blabla</span>
+              th:text="|${explanation.author} - #{|player.sequence.interaction.confidenceDegree.${explanation.confidenceDegree}|}|"></span>
         <span th:if="${displayChoices && explanation.choiceList != null}"
               th:text="|#{player.sequence.users.responses}: ${explanation.choiceList}|">Responses: [2]</span>
     </b>
