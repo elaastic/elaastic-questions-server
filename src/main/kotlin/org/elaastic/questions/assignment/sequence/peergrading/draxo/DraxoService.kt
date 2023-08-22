@@ -1,8 +1,8 @@
 package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
-import org.elaastic.questions.player.phase.evaluation.draxo.criteria.Criteria
-import org.elaastic.questions.player.phase.evaluation.draxo.criteria.CriteriaMessageKey
-import org.elaastic.questions.player.phase.evaluation.draxo.option.Option
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.Option
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder

@@ -25,46 +25,54 @@ import org.elaastic.questions.player.components.explanationViewer.ExplanationDat
 internal class IncorrectAndConfidenceDegreeComparatorTest {
 
     val joe: ExplanationData = ExplanationData(
-            confidenceDegree = ConfidenceDegree.CONFIDENT,
-            score = BigDecimal("0")
+        responseId = 1L,
+        confidenceDegree = ConfidenceDegree.CONFIDENT,
+        score = BigDecimal("0")
     )
 
     val jack: ExplanationData = ExplanationData(
-            confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
-            score = BigDecimal("0")
+        responseId = 2L,
+        confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
+        score = BigDecimal("0")
     )
 
     val william: ExplanationData = ExplanationData(
-            confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
-            score = BigDecimal("100")
+        responseId = 3L,
+        confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
+        score = BigDecimal("100")
     )
 
     val averell: ExplanationData = ExplanationData(
-            confidenceDegree = ConfidenceDegree.CONFIDENT,
-            score = BigDecimal("100")
+        responseId = 4L,
+        confidenceDegree = ConfidenceDegree.CONFIDENT,
+        score = BigDecimal("100")
     )
 
     val luke: ExplanationData = ExplanationData(
-            confidenceDegree = ConfidenceDegree.CONFIDENT,
-            score = BigDecimal("100")
+        responseId = 5L,
+        confidenceDegree = ConfidenceDegree.CONFIDENT,
+        score = BigDecimal("100")
     )
 
     val scoreNull: ExplanationData = ExplanationData(
-            confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT
+        responseId = 6L,
+        confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT
     )
 
     val scoreNull2: ExplanationData = ExplanationData(
-            confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT
+        responseId = 7L,
+        confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT
     )
 
     val confidenceDegreeNull: ExplanationData = ExplanationData(
-            score = BigDecimal("100")
+        responseId = 8L,
+        score = BigDecimal("100")
     )
 
     val confidenceDegreeNull2: ExplanationData = ExplanationData(
-            score = BigDecimal("100")
+        responseId = 9L,
+        score = BigDecimal("100")
     )
-
 
 
     @Test

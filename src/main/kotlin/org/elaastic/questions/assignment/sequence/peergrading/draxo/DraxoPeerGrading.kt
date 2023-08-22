@@ -21,8 +21,8 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.player.phase.evaluation.draxo.criteria.Criteria
-import org.elaastic.questions.player.phase.evaluation.draxo.option.OptionId
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import javax.persistence.*
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
@@ -63,28 +63,8 @@ class DraxoPeerGrading(
     grader = grader,
     response = response,
     annotation = annotation,
-    grade = computeGrade(criteriaD, criteriaR, criteriaA, criteriaX, criteriaO)
+    grade = DraxoGrading.computeGrade(criteriaD, criteriaR, criteriaA, criteriaX, criteriaO)
 ) {
-
-    companion object {
-        fun computeGrade(
-            d: OptionId?,
-            r: OptionId?,
-            a: OptionId?,
-            x: OptionId?,
-            o: OptionId?
-        ) =
-            when {
-                d != Criteria.D[OptionId.YES] -> null
-                listOfNotNull(r, a, x, o).isEmpty() -> null
-                r == Criteria.R[OptionId.DONT_KNOW] -> null
-                a == Criteria.A[OptionId.NO_OPINION] -> null
-                else -> Criteria.R.value(r) +
-                        Criteria.A.value(a) +
-                        Criteria.X.value(x) +
-                        Criteria.O.value(o)
-            }
-    }
 
     constructor(
         grader: User,

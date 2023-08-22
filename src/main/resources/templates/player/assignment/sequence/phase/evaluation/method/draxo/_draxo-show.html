@@ -1,0 +1,79 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<div th:fragment="draxoShow(model, hideName)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <table class="ui definition table" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
+        <tbody>
+        <tr>
+            <td style="width: 12em;" th:text="#{draxo.reviewer}">Reviewer</td>
+            <td><span class="name-explanation" th:styleappend="${hideName} ? 'display: none'"  th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span></td>
+        </tr>
+
+        <tr>
+            <td th:text="#{draxo.score}">Score</td>
+            <td>
+                <div class="ui label" th:text="${model.score ?: '-'}">2.5</div>
+            </td>
+        </tr>
+
+        <tr>
+            <td th:text="#{draxo.evaluationGrid}">Evaluation grid</td>
+            <td>
+                <div class="ui tiny tablet stackable  fluid steps" style="margin-right: 3em;">
+                    <th:block
+                            th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
+                            th:with="optionType = ${criteria.getOptionType(model.draxoEvaluation.get(criteria))}">
+
+                        <div class="step" th:classappend="${optionType == null} ? 'disabled' : null">
+                            <i class="green check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
+                            <i class="red x icon" th:if="${optionType?.name == 'NEGATIVE'}"></i>
+                            <i class="question icon" th:if="${optionType?.name == 'UNKNOWN'}"></i>
+
+                            <div class="content">
+                                <div class="title" th:text="${criteria}">R</div>
+                                <div class="description"
+                                     th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">
+                                    ...
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+
+                <th:block th:with="rejectedCriteria = ${model.draxoEvaluation.getRejectedCriteria()}">
+                    <div class="ui form" th:if="${rejectedCriteria}">
+                        <div class="inline field">
+                            <label th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'"></label>
+                            <span th:text="#{${model.draxoEvaluation.get(rejectedCriteria).codeI18n}}"></span>
+                        </div>
+
+                        <div class="field" th:if="${model.draxoEvaluation.getExplanation()}">
+                            <label th:text="#{draxo.feedback.label}">Feedback:</label>
+                            <p th:text="${model.draxoEvaluation.getExplanation()}"></p>
+                        </div>
+                    </div>
+                </th:block>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</div>

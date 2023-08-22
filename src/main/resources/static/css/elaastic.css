@@ -80,3 +80,11 @@ html.elaastic.three-columns, .elaastic.three-columns body {
 .ui.steps .step.active-phase .title, .ui.steps .step.active-phase i.phase-icon:before {
   color: #4183c4;
 }
+
+.detail a.detail-link {
+  color: white;
+}
+
+.detail a.detail-link:hover {
+  color: yellow;
+}

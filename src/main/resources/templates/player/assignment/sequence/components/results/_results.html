@@ -131,7 +131,7 @@
       <div>
         <th:block th:if="${resultsModel.hasExplanations}">
           <a th:if="${resultsModel.userCanDisplayStudentsIdentity}"
-             id="hide-name"
+             id="hide-name-btn"
              onclick="nameStudents.hide()"
              style="margin-bottom: 10px; cursor: pointer;">
             <i class="toggle off icon big teal"></i>
@@ -139,7 +139,7 @@
           </a>
 
           <a th:if="${resultsModel.userCanDisplayStudentsIdentity}"
-             id="show-name"
+             id="show-name-btn"
              onclick="nameStudents.show()"
              style="margin-bottom: 10px; cursor: pointer; display: none;">
             <i class="toggle on icon big teal"></i>
@@ -185,26 +185,30 @@
       let nameStudents = {}
 
       $(document).ready(function () {
-        let listNames = $('.name-explanation');
-        let showName = $('#show-name')
-        let hideName = $('#hide-name')
-        let urlParams = new URLSearchParams(location.search)
+        let currentUrl = new URL(window.location.href)
+        let showName = $('#show-name-btn')
+        let hideName = $('#hide-name-btn')
+        let urlParams = new URLSearchParams(currentUrl.search)
 
         nameStudents.show = function () {
-          listNames.show()
+          $('.name-explanation').show()
           showName.hide()
           hideName.show()
           urlParams.delete('hideName')
-          window.location.search = urlParams.toString()
+          currentUrl.search = urlParams.toString();
+          window.history.pushState(null, "", currentUrl.toString());
           Cookies.set('hideName', 'false')
         }
 
         nameStudents.hide = function () {
-          listNames.hide()
+          $('.name-explanation').hide()
           showName.show()
           hideName.hide()
           urlParams.set('hideName', 'true')
+          currentUrl.search = urlParams.toString();
+          window.history.pushState(null, "", currentUrl.toString());
           Cookies.set('hideName', 'true')
+
         }
 
         if (urlParams.has('hideName')) {
@@ -221,3 +225,4 @@
       })
     </script>
   </div>
+</div>

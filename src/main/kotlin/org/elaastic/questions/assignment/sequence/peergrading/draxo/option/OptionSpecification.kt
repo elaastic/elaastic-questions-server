@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.phase.evaluation.draxo.option
+package org.elaastic.questions.assignment.sequence.peergrading.draxo.option
 
 import java.math.BigDecimal
 

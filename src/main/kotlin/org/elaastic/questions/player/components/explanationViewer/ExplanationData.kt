@@ -25,9 +25,11 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 open class ExplanationData(
+    val responseId: Long,
     val content: String? = null,
     val author: String? = null,
     val nbEvaluations: Int = 0,
+    val nbDraxoEvaluations: Int = 0,
     meanGrade: BigDecimal? = null,
     val confidenceDegree: ConfidenceDegree? = null,
     val score: BigDecimal? = null,
@@ -35,9 +37,11 @@ open class ExplanationData(
     val choiceList: LearnerChoice? = null,
 ) {
     constructor(response: Response) : this(
+        responseId = response.id!!,
         content = response.explanation,
         author = response.learner.firstName + " " + response.learner.lastName + " (@" + response.learner.username + ")",
         nbEvaluations = response.evaluationCount,
+        nbDraxoEvaluations = response.draxoEvaluationCount,
         meanGrade = response.meanGrade,
         confidenceDegree = response.confidenceDegree,
         correct = response.score == BigDecimal(100),

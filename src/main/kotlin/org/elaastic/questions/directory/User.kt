@@ -166,6 +166,9 @@ class User(
         username = value
     }
 
+    fun getDisplayName() =
+        "$firstName $lastName (@$username)"
+
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return roles
     }

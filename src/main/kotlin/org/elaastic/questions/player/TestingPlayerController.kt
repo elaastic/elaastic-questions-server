@@ -56,10 +56,12 @@ import org.elaastic.questions.player.components.studentResults.LearnerResultsMod
 import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
+import org.elaastic.questions.player.components.draxo.DraxoEvaluationModel
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
-import org.elaastic.questions.player.phase.evaluation.draxo.criteria.Criteria
-import org.elaastic.questions.player.phase.evaluation.draxo.option.OptionId
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhase
 import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
@@ -76,6 +78,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.togglz.core.Feature
 import org.togglz.core.manager.FeatureManager
 import java.math.BigDecimal
+import kotlin.random.Random
 
 @Controller
 @RequestMapping("/player/test")
@@ -170,7 +173,7 @@ class TestingPlayerController(
                             response(listOf(2), 0, false) {
                                 explanation {
                                     nbEvaluations = 2
-                                    meanGrade = BigDecimal(1.33)
+                                    meanGrade = BigDecimal("1.33")
                                     author = "Bill Gates (@Bgat)"
                                     confidenceDegree = ConfidenceDegree.CONFIDENT
                                     content = "Explication A"
@@ -237,7 +240,7 @@ class TestingPlayerController(
                         explanations {
                             explanation {
                                 nbEvaluations = 2
-                                meanGrade = BigDecimal(1.33)
+                                meanGrade = BigDecimal("1.33")
                                 author = "Bill Gates (@Bgat)"
                                 confidenceDegree = ConfidenceDegree.CONFIDENT
                                 content = "Explication A"
@@ -293,7 +296,7 @@ class TestingPlayerController(
                             response(listOf(1, 2), 30, false) {
                                 explanation {
                                     nbEvaluations = 2
-                                    meanGrade = BigDecimal(1.33)
+                                    meanGrade = BigDecimal("1.33")
                                     author = "Bill Gates (@Bgat)"
                                     confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT
                                     content = "Explication A"
@@ -302,7 +305,7 @@ class TestingPlayerController(
                             response(listOf(3), 0, false) {
                                 explanation {
                                     nbEvaluations = 2
-                                    meanGrade = BigDecimal(1.33)
+                                    meanGrade = BigDecimal("1.33")
                                     author = "Bill Gates (@Bgat)"
                                     confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
                                     content = "Explication E"
@@ -353,7 +356,7 @@ class TestingPlayerController(
                             response(listOf(1, 3), 100, true) {
                                 explanation {
                                     nbEvaluations = 3
-                                    meanGrade = BigDecimal(3.25)
+                                    meanGrade = BigDecimal("3.25")
                                     author = "Franck Sil (@fsil)"
                                     confidenceDegree = ConfidenceDegree.CONFIDENT
                                     content = "Explication de l'enseignant"
@@ -383,7 +386,7 @@ class TestingPlayerController(
                             response(listOf(1, 2), 30, false) {
                                 explanation {
                                     nbEvaluations = 2
-                                    meanGrade = BigDecimal(1.33)
+                                    meanGrade = BigDecimal("1.33")
                                     author = "Bill Gates (@Bgat)"
                                     confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT
                                     content = "Explication A"
@@ -392,7 +395,7 @@ class TestingPlayerController(
                             response(listOf(3), 0, false) {
                                 explanation {
                                     nbEvaluations = 2
-                                    meanGrade = BigDecimal(1.33)
+                                    meanGrade = BigDecimal("1.33")
                                     author = "Bill Gates (@Bgat)"
                                     confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL
                                     content = "Explication E"
@@ -634,8 +637,8 @@ class TestingPlayerController(
                 MyResultsSituation(
                     description = "Choix exclusif, incorrect puis correct, avec explications",
                     learnerResultsModel = LearnerExclusiveChoiceResults(
-                        explanationFirstTry = ExplanationData(content = "I was wrong"),
-                        explanationSecondTry = ExplanationData(content = "And I've changed my mind"),
+                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "I was wrong"),
+                        explanationSecondTry = ExplanationData(responseId = Random.nextLong(), content = "And I've changed my mind"),
                         choiceFirstTry = LearnerChoice(listOf(2)),
                         choiceSecondTry = LearnerChoice(listOf(1)),
                         scoreFirstTry = 0,
@@ -679,8 +682,8 @@ class TestingPlayerController(
                 MyResultsSituation(
                     description = "Choix multiple, résultats qui s'améliorent, avec explications",
                     learnerResultsModel = LearnerMultipleChoiceResults(
-                        explanationFirstTry = ExplanationData(content = "so-so"),
-                        explanationSecondTry = ExplanationData(content = "a bit better"),
+                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "so-so"),
+                        explanationSecondTry = ExplanationData(responseId = Random.nextLong(), content = "a bit better"),
                         choiceFirstTry = LearnerChoice(listOf(2, 4)),
                         choiceSecondTry = LearnerChoice(listOf(2, 3, 4)),
                         scoreFirstTry = 0,
@@ -697,32 +700,33 @@ class TestingPlayerController(
                 MyResultsSituation(
                     description = "Question ouverte - 2 explanations",
                     learnerResultsModel = LearnerOpenResults(
-                        explanationFirstTry = ExplanationData(content = "1st guess"),
-                        explanationSecondTry = ExplanationData(content = "2nd guess")
+                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "1st guess"),
+                        explanationSecondTry = ExplanationData(responseId = Random.nextLong(), content = "2nd guess")
                     )
                 ),
                 MyResultsSituation(
                     description = "Question ouverte - 1 explanation only",
                     learnerResultsModel = LearnerOpenResults(
-                        explanationFirstTry = ExplanationData(content = "Only one"),
+                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "Only one"),
                         explanationSecondTry = null
                     )
                 ),
                 MyResultsSituation(
                     description = "Question ouverte - 2 identical explanations",
                     learnerResultsModel = LearnerOpenResults(
-                        explanationFirstTry = ExplanationData(content = "same explanation"),
-                        explanationSecondTry = ExplanationData(content = "same explanation")
+                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "same explanation"),
+                        explanationSecondTry = ExplanationData(responseId = Random.nextLong(), content = "same explanation")
                     )
                 ),
                 MyResultsSituation(
                     description = "Question ouverte - 2 identical explanations, second graded",
                     learnerResultsModel = LearnerOpenResults(
-                        explanationFirstTry = ExplanationData(content = "same explanation"),
+                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "same explanation"),
                         explanationSecondTry = ExplanationData(
+                            responseId = 456L,
                             content = "same explanation",
                             nbEvaluations = 2,
-                            meanGrade = BigDecimal(3.5)
+                            meanGrade = BigDecimal("3.5")
                         )
                     )
                 ),
@@ -730,7 +734,7 @@ class TestingPlayerController(
                     description = "Question ouverte - only the second explanation",
                     learnerResultsModel = LearnerOpenResults(
                         explanationFirstTry = null,
-                        explanationSecondTry = ExplanationData(content = "Just the 2nd")
+                        explanationSecondTry = ExplanationData(responseId = Random.nextLong(), content = "Just the 2nd")
                     )
                 ),
                 MyResultsSituation(
@@ -859,6 +863,7 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 1",
                                         "Joe Walson (@Jwal)",
                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
@@ -866,12 +871,14 @@ class TestingPlayerController(
 
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 2",
                                         "Jack DiCaprio (@Jdic)",
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                         score = BigDecimal("0")
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 3",
                                         "Jane Doe (@Jdoe)",
                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
@@ -885,12 +892,14 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 4",
                                         "Wiliam Shakespeare (@Wsha)",
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                         score = BigDecimal("100")
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 5",
                                         "Averell Collignon (@Acol)",
                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
@@ -909,19 +918,23 @@ class TestingPlayerController(
                         explanationViewerModel = OpenExplanationViewerModel(
                             explanations = listOf(
                                 ExplanationData(
+                                    responseId = Random.nextLong(),
                                     "explication 1",
                                     "Joe Walson (@Jwal)"
                                 ),
                                 ExplanationData(
+                                    responseId = Random.nextLong(),
                                     "explication 2",
                                     "Jack DiCaprio (@Jdic)"
                                 ),
 
                                 ExplanationData(
+                                    responseId = Random.nextLong(),
                                     "explication 3",
                                     "Wiliam Shakespeare (@Wsha)"
                                 ),
                                 ExplanationData(
+                                    responseId = Random.nextLong(),
                                     "explication 4",
                                     "Averell Collignon (@Acol)"
                                 )
@@ -966,16 +979,20 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
-                                        "explication 1",
+                                        responseId = Random.nextLong(),
+                                        "explication 1 With Draxo eval",
                                         "Joe Walson (@Jwal)",
+                                        4,
                                         4,
                                         BigDecimal("3.5"),
                                         score = BigDecimal("0"),
                                         choiceList = LearnerChoice(listOf(1))
                                     ),
                                     ExplanationData(
-                                        "explication 2",
+                                        responseId = Random.nextLong(),
+                                        "explication 2 With Draxo eval",
                                         "Jack DiCaprio (@Jdic)",
+                                        2,
                                         2,
                                         BigDecimal("1.5"),
                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
@@ -990,18 +1007,22 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
-                                        "explication 3",
+                                        responseId = Random.nextLong(),
+                                        "explication 3 without Draxo Eval",
                                         "Wiliam Shakespeare (@Wsha)",
                                         1,
+                                        0,
                                         BigDecimal("5"),
                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
                                         score = BigDecimal("100"),
                                         choiceList = LearnerChoice(listOf(2))
                                     ),
                                     ExplanationData(
-                                        "explication 4",
+                                        responseId = Random.nextLong(),
+                                        "explication 4 without Draxo Eval",
                                         "Averell Collignon (@Acol)",
                                         3,
+                                        0,
                                         BigDecimal("1"),
                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
                                         score = BigDecimal("100"),
@@ -1067,8 +1088,10 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 1",
                                         "Joe Walson (@Jwal)",
+                                        4,
                                         4,
                                         BigDecimal("3.5"),
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -1076,8 +1099,10 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(1))
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 2",
                                         "Jack DiCaprio (@Jdic)",
+                                        2,
                                         2,
                                         BigDecimal("1.5"),
                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
@@ -1092,8 +1117,10 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 3",
                                         "Wiliam Shakespeare (@Wsha)",
+                                        1,
                                         1,
                                         BigDecimal("5"),
                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
@@ -1101,8 +1128,10 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(2))
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 4",
                                         "Averell Collignon (@Acol)",
+                                        3,
                                         3,
                                         BigDecimal("1"),
                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
@@ -1154,6 +1183,7 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 1",
                                         "Joe Walson (@Jwal)",
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -1161,6 +1191,7 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(1))
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 2",
                                         "Jack DiCaprio (@Jdic)",
                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
@@ -1175,6 +1206,7 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 3",
                                         "Wiliam Shakespeare (@Wsha)",
                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
@@ -1182,6 +1214,7 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(2))
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 4",
                                         "Averell Collignon (@Acol)",
                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
@@ -1233,6 +1266,7 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 1",
                                         "Joe Walson (@Jwal)",
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -1240,6 +1274,7 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(1))
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 2",
                                         "Jack DiCaprio (@Jdic)",
                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
@@ -1254,6 +1289,7 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 3",
                                         "Wiliam Shakespeare (@Wsha)",
                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
@@ -1261,6 +1297,7 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(2))
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 4",
                                         "Averell Collignon (@Acol)",
                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
@@ -1310,6 +1347,7 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 1",
                                         "Joe Walson (@Jwal)",
                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
@@ -1317,12 +1355,14 @@ class TestingPlayerController(
 
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 2",
                                         "Jack DiCaprio (@Jdic)",
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                         score = BigDecimal("0")
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 3",
                                         "Jane Doe (@Jdoe)",
                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
@@ -1336,18 +1376,21 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 4",
                                         "Wiliam Shakespeare (@Wsha)",
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
                                         score = BigDecimal("100")
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 5",
                                         "Averell Collignon (@Acol)",
                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
                                         score = BigDecimal("100")
                                     ),
                                     TeacherExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication de l'enseignant",
                                         "Franck Sil (@fsil)",
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -1412,8 +1455,10 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 1",
                                         "Joe Walson (@Jwal)",
+                                        4,
                                         4,
                                         BigDecimal("3.5"),
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -1421,8 +1466,10 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(1))
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 2",
                                         "Jack DiCaprio (@Jdic)",
+                                        2,
                                         2,
                                         BigDecimal("1.5"),
                                         confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
@@ -1437,8 +1484,10 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     TeacherExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication de l'enseignant",
                                         "Franck Sil (@fsil)",
+                                        3,
                                         3,
                                         BigDecimal("2.75"),
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -1446,8 +1495,10 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(2)),
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 3",
                                         "Wiliam Shakespeare (@Wsha)",
+                                        1,
                                         1,
                                         BigDecimal("5"),
                                         confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
@@ -1455,8 +1506,10 @@ class TestingPlayerController(
                                         choiceList = LearnerChoice(listOf(2))
                                     ),
                                     ExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication 4",
                                         "Averell Collignon (@Acol)",
+                                        3,
                                         3,
                                         BigDecimal("1"),
                                         confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
@@ -1512,6 +1565,7 @@ class TestingPlayerController(
                                 )
                                         to listOf(
                                     TeacherExplanationData(
+                                        responseId = Random.nextLong(),
                                         "explication de l'enseignant",
                                         "Franck Sil (@fsil)",
                                         confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -2666,7 +2720,7 @@ class TestingPlayerController(
         val user: User = authentication.principal as User
         val draxoEvaluation = DraxoEvaluation()
             .addEvaluation(Criteria.D, OptionId.YES)
-            .addEvaluation(Criteria.R,OptionId.NO, "Off-topic !")
+            .addEvaluation(Criteria.R, OptionId.NO, "Off-topic !")
 
         model.addAttribute("user", user)
         model.addAttribute("sequenceId", 123L)
@@ -2674,6 +2728,123 @@ class TestingPlayerController(
         model.addAttribute("draxoEvaluation", draxoEvaluation)
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/test-draxo-form"
+    }
+
+    @GetMapping("/evaluation-phase/draxo-show")
+    fun testDraxoShow(
+        authentication: Authentication,
+        model: Model
+    ): String {
+        val user: User = authentication.principal as User
+        val draxoEvaluation = DraxoEvaluation()
+            .addEvaluation(Criteria.D, OptionId.YES)
+            .addEvaluation(Criteria.R, OptionId.NO, "Off-topic !")
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+            "model",
+            DraxoEvaluationModel(
+                graderName = "Joe",
+                graderNum = 1,
+                score = DraxoGrading.computeGrade(draxoEvaluation),
+                draxoEvaluation
+            )
+        )
+
+        return "player/assignment/sequence/phase/evaluation/method/draxo/test-draxo-show"
+    }
+
+    @GetMapping("/evaluation-phase/draxo-show-list")
+    fun testDraxoShowList(
+        authentication: Authentication,
+        model: Model
+    ): String {
+        val user: User = authentication.principal as User
+        val draxoEvaluationList =
+            listOf(
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.NO, "I don't get it..."),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.PARTIALLY, "I partially get it..."),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.NO, "Off-topic !"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.PARTIALLY, "Partially off-topic..."),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.DONT_KNOW),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.NO, "I disagree"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.PARTIALLY, "I partially agree"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.NO_OPINION),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.NO, "Man, it's incomplete"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.DONT_KNOW),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.YES)
+                    .addEvaluation(Criteria.O, OptionId.YES, "I know how to do better"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.YES)
+                    .addEvaluation(Criteria.O, OptionId.YES, "I just have no idea"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.YES)
+                    .addEvaluation(Criteria.O, OptionId.NO),
+            )
+
+
+
+        model.addAttribute("user", user)
+        model.addAttribute(
+            "evaluationModelList",
+            draxoEvaluationList.mapIndexed() { i, draxoEvaluation ->
+                DraxoEvaluationModel(
+                    (i + 1).toString(),
+                    (i + 1),
+                    DraxoGrading.computeGrade(draxoEvaluation),
+                    draxoEvaluation,
+                )
+            }
+        )
+
+        return "player/assignment/sequence/phase/evaluation/method/draxo/test-draxo-show-list"
     }
 
 }

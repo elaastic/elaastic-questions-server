@@ -15,19 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.elaastic.questions.player.components.draxo
 
-package org.elaastic.questions.assignment.sequence.peergrading
-
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.directory.User
-import org.springframework.data.jpa.repository.JpaRepository
+import java.math.BigDecimal
 
-
-interface PeerGradingRepository : JpaRepository<PeerGrading, Long> {
-    fun findByGraderAndResponse(grader: User, response: Response): PeerGrading?
-
-    fun findAllByResponseIn(response: List<Response>): List<PeerGrading>
-
-    fun findAllByResponseAndType(response: Response, type: PeerGradingType): List<DraxoPeerGrading>
+data class DraxoEvaluationModel(
+    val graderName: String,
+    val graderNum: Int,
+    val score: BigDecimal?,
+    val draxoEvaluation: DraxoEvaluation,
+    val userCanDisplayStudentsIdentity: Boolean = false,
+) {
+    constructor(
+        graderIndex: Int,
+        draxoPeerGrading: DraxoPeerGrading,
+        userCanDisplayStudentsIdentity: Boolean = false
+    ) : this(
+        draxoPeerGrading.grader.getDisplayName(),
+        graderIndex + 1,
+        DraxoGrading.computeGrade(draxoPeerGrading),
+        draxoPeerGrading.getDraxoEvaluation(),
+        userCanDisplayStudentsIdentity,
+    )
 }
