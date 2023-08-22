@@ -19,6 +19,11 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
+    <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url')}">
+                <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}">
+                    <i class="question circle outline ui icon"></i> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
+                </a>
+            </span>
     <th:block th:each="model : ${evaluationModelList}">
         <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model})"></div>
     </th:block>
