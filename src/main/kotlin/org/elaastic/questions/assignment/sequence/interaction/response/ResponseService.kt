@@ -119,33 +119,34 @@ class ResponseService(
      *  Update the mean grade and nb of evaluations for every responses
      *  bound the provided interaction
      */
-    // TODO (JT) : I feel like removing this global update triggered at some specific events to replace it by a systematic update at each PeerGrading insertion / update
     fun updateGradings(sequence: Sequence) {
-        entityManager.createNativeQuery(
-            """
-            UPDATE choice_interaction_response response
-            INNER JOIN (
-                    SELECT pg.response_id as rid,
-                           avg(pg.grade) as meanGrade,
-                           count(pg.id) as evaluationCount,
-                           sum(IF(pg.`type` = 'DRAXO', 1, 0)) as draxoEvaluationCount
-                    FROM peer_grading pg 
-                    GROUP BY pg.response_id
-                ) data ON rid = response.id
-            SET
-                mean_grade = data.meanGrade,
-                evaluation_count = data.evaluationCount,
-                draxo_evaluation_count = data.draxoEvaluationCount
-            WHERE response.interaction_id = :interactionId
-                AND response.attempt = :attempt
-        """.trimIndent()
-        )
-            .setParameter("interactionId", sequence.getResponseSubmissionInteraction().id)
-            .setParameter("attempt", sequence.whichAttemptEvaluate())
-            .executeUpdate()
+        // TODO Attempt to deactivate this global stat update in favor of micro update a each peer grading deposit ; this code is kept in comment the time to check everything is working properly
+//        entityManager.createNativeQuery(
+//            """
+//            UPDATE choice_interaction_response response
+//            INNER JOIN (
+//                    SELECT pg.response_id as rid,
+//                           avg(pg.grade) as meanGrade,
+//                           count(pg.id) as evaluationCount,
+//                           sum(IF(pg.`type` = 'DRAXO', 1, 0)) as draxoEvaluationCount
+//                    FROM peer_grading pg
+//                    GROUP BY pg.response_id
+//                ) data ON rid = response.id
+//            SET
+//                mean_grade = data.meanGrade,
+//                evaluation_count = data.evaluationCount,
+//                draxo_evaluation_count = data.draxoEvaluationCount
+//            WHERE response.interaction_id = :interactionId
+//                AND response.attempt = :attempt
+//        """.trimIndent()
+//        )
+//            .setParameter("interactionId", sequence.getResponseSubmissionInteraction().id)
+//            .setParameter("attempt", sequence.whichAttemptEvaluate())
+//            .executeUpdate()
     }
 
     fun updateMeanGradeAndEvaluationCount(response: Response): Response {
+        // TODO Update the stats in one single query
         val res =
             entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.id) as evaluationCount, sum(CASE WHEN pg.type = 'DRAXO' THEN 1 ELSE 0 END) from PeerGrading pg where pg.response = :response")
                 .setParameter("response", response)
