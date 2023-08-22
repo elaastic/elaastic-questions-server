@@ -39,7 +39,7 @@ class ApplicationConfig {
     fun getSequenceDescriptor() = SequenceDescriptor(
         listOf(
             PhaseDescriptor(LearnerPhaseType.RESPONSE),
-            PhaseDescriptor(LearnerPhaseType.EVALUATION, LearnerEvaluationPhaseConfig.DRAXO),
+            PhaseDescriptor(LearnerPhaseType.EVALUATION, LearnerEvaluationPhaseConfig.ALL_AT_ONCE),
             PhaseDescriptor(LearnerPhaseType.RESULT),
         )
     )
