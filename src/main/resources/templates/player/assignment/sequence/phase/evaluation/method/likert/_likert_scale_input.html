@@ -23,7 +23,8 @@
 
   <script type="text/x-template" id="likert-scale-input-template">
     <div class="field grade">
-      <input type="hidden" id="grade" name="grade" v-model="grade"/>
+      <input type="hidden" :id="'grades['+currentResponseId+']'" :name="'grades['+currentResponseId+']'"
+             v-model="grade"/>
       <div class="ui stackable pagination menu">
         <a class="item" v-bind:class="{ active: grade === -1 }" v-on:click="selectGrade(-1)">{{ i18n.noGrade }}
         </a>

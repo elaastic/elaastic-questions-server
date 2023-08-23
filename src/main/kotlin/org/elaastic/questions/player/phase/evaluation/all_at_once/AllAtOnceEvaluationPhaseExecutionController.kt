@@ -46,15 +46,19 @@ class AllAtOnceEvaluationPhaseExecutionController(
                 )
             }
 
-            changeAnswer(
-                user,
-                sequence,
-                Answer(
-                    evaluationData.choiceList,
-                    evaluationData.confidenceDegree,
-                    evaluationData.explanation
+            if (sequence.isSecondAttemptAllowed()
+                && !responseService.hasResponseForUser(user, sequence, 2)
+            ) {
+                changeAnswer(
+                    user,
+                    sequence,
+                    Answer(
+                        evaluationData.choiceList,
+                        evaluationData.confidenceDegree,
+                        evaluationData.explanation
+                    )
                 )
-            )
+            }
 
             return finalizePhaseExecution(user, sequence, assignment.id!!)
         }
