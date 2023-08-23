@@ -5,6 +5,7 @@ import org.elaastic.questions.player.components.studentResults.LearnerResultsMod
 import org.elaastic.questions.player.phase.PhaseViewModel
 
 class LearnerResultPhaseViewModel(
+    val resultsArePublished: Boolean,
     val myResultsModel: LearnerResultsModel,
     val sequenceResultsModel: ResultsModel
 ) : PhaseViewModel

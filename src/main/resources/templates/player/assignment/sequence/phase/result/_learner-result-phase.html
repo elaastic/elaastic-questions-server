@@ -20,11 +20,33 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <div
-    th:if="${learnerResultPhaseViewModel.myResultsModel}"
-    th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults('my-results', ${learnerResultPhaseViewModel.myResultsModel})"></div>
+    <div class="ui accordion segment" th:unless="${learnerResultPhaseViewModel.resultsArePublished}">
 
-  <div th:replace="player/assignment/sequence/components/results/_results :: results(${learnerResultPhaseViewModel.sequenceResultsModel}, false)">
-  </div>
+        <div class="ui dividing active title header" style="margin-right: 1.25em;">
+            <span th:text="#{questions.results}">Results</span>
+
+            <a href="#"
+               onclick="window.location.reload()"
+               style="position: absolute; top: 0.5em; right: 1em; font-size: 1.2em"
+               th:attr="data-tooltip=#{player.sequence.readinteraction.updateAllResults}"
+               data-inverted=""
+               class="ob-play-sequence-2" data-position="top right">
+                <i class="small refresh icon"></i>
+            </a>
+        </div>
+
+        <div class="ui blue message"
+             th:text="#{sequence.state.notPublishedYet}">
+        </div>
+    </div>
+
+    <th:block th:if="${learnerResultPhaseViewModel.resultsArePublished}">
+        <div
+                th:if="${learnerResultPhaseViewModel.myResultsModel}"
+                th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults('my-results', ${learnerResultPhaseViewModel.myResultsModel})"></div>
+
+        <div th:replace="player/assignment/sequence/components/results/_results :: results(${learnerResultPhaseViewModel.sequenceResultsModel}, false)">
+        </div>
+    </th:block>
 
 </div>

@@ -30,6 +30,7 @@ class LearnerResultPhase(
     }
 
     override fun getViewModel() = LearnerResultPhaseViewModel(
+        learnerSequence.sequence.resultsArePublished,
         learnerPhaseExecution!!.myResultsModel,
         ResultsModelFactory.build(
             teacher = false,
@@ -42,6 +43,6 @@ class LearnerResultPhase(
     )
 
     // Note JT : results are displayed even when the sequence is closed
-    override fun isVisible() = this.active && learnerSequence.sequence.resultsArePublished
+    override fun isVisible() = this.active
 
 }
