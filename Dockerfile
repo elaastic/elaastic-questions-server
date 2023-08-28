@@ -6,10 +6,15 @@ ENV ELAASTIC_VERSION 5.1.5
 
 # Create a non-root user
 RUN useradd -m elaastic
+
+# Initialize datastore
+RUN mkdir -p /app/datastore && chown -R  elaastic:elaastic /app/datastore
+
 USER elaastic
 
 # Copy application JAR
 COPY build/libs/elaastic-questions-server-$ELAASTIC_VERSION.jar /app/lib/elaastic-questions-server.jar
+
 
 EXPOSE 8080
 
