@@ -95,13 +95,16 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.getByName<Jar>("jar") {
+    enabled = false
+}
 
 tasks.register("dockerBuild") {
     group = "Docker"
     description = "Builds the Docker image"
     doLast {
         exec {
-            commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server", ".")
+            commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server:$version", ".")
         }
     }
 }

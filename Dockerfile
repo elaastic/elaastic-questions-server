@@ -1,21 +1,41 @@
-# Production stage
-FROM openjdk:17
+# Build stage
+# ----------------
+FROM eclipse-temurin:17-jdk-alpine as build
 
 ENV REFRESHED_AT 2023-08-25
-ENV ELAASTIC_VERSION 5.1.5
+
+WORKDIR /workspace/app
+
+COPY gradle gradle
+COPY build.gradle.kts settings.gradle.kts gradlew ./
+COPY src src
+COPY lib lib
+
+RUN ./gradlew build -x test
+RUN mkdir -p build/libs/dependency && (cd build/libs/dependency; jar -xf ../*.jar)
+
+
+# Production stage
+#-----------------
+FROM eclipse-temurin:17-jdk-alpine
+
+ENV REFRESHED_AT 2023-08-25
 
 # Create a non-root user
-RUN useradd -m elaastic
+RUN addgroup -S elaastic && adduser -S elaastic -G elaastic
 
 # Initialize datastore
-RUN mkdir -p /app/datastore && chown -R  elaastic:elaastic /app/datastore
+RUN mkdir -p /datastore && chown -R  elaastic:elaastic /datastore
 
 USER elaastic
 
-# Copy application JAR
-COPY build/libs/elaastic-questions-server-$ELAASTIC_VERSION.jar /app/lib/elaastic-questions-server.jar
+# Copy application ressources
+ARG DEPENDENCY=/workspace/app/build/libs/dependency
+COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
+COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app/lib/elaastic-questions-server.jar","-Djava.security.egd=file:/dev/./urandom","-Djava.io.tmpdir=/tmp/","--spring.config.additional-location=file:/app/configuration/"]
+ENTRYPOINT ["java","-cp","/app:/app/lib/*","-Djava.security.egd=file:/dev/./urandom","-Djava.io.tmpdir=/tmp/","--spring.config.additional-location=file:/app/configuration/"]
