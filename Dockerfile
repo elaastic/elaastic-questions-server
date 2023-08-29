@@ -19,8 +19,6 @@ RUN mkdir -p build/libs/dependency && (cd build/libs/dependency; jar -xf ../*.ja
 #-----------------
 FROM eclipse-temurin:17-jdk-alpine
 
-ENV REFRESHED_AT 2023-08-25
-
 # Create a non-root user
 RUN addgroup -S elaastic && adduser -S elaastic -G elaastic
 
@@ -38,4 +36,12 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-cp","/app:/app/lib/*","-Djava.security.egd=file:/dev/./urandom","-Djava.io.tmpdir=/tmp/","--spring.config.additional-location=file:/app/configuration/"]
+ENTRYPOINT [ \
+    "java", \
+    "-cp", \
+    "/app:/app/lib/*", \
+    "-Djava.security.egd=file:/dev/./urandom", \
+    "-Djava.io.tmpdir=/tmp/", \
+    "org.elaastic.questions.ElaasticQuestionsServerKt", \
+    "--spring.config.additional-location=file:/configuration/" \
+]

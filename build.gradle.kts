@@ -101,10 +101,20 @@ tasks.getByName<Jar>("jar") {
 
 tasks.register("dockerBuild") {
     group = "Docker"
-    description = "Builds the Docker image"
+    description = "Builds the Docker image aligned with the elaastic version"
     doLast {
         exec {
             commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server:$version", ".")
+        }
+    }
+}
+
+tasks.register("dockerBuildLatest") {
+    group = "Docker"
+    description = "Builds the Docker image with tag `latest`"
+    doLast {
+        exec {
+            commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server:latest", ".")
         }
     }
 }
