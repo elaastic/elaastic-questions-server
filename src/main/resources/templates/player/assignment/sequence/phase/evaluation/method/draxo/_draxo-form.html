@@ -89,9 +89,9 @@
                     <button v-show="canSubmit"
                             @click.prevent="submitEvaluation"
                             class="ui primary button"
-                            style="margin-bottom: 8px;"
-                            th:text="#{common.save}">
-                        Save
+                            style="margin-bottom: 8px;">
+                        <i class="loading spinner icon" v-show="loading" style="margin-right: 1em;"></i>
+                        <span th:text="#{common.save}"></span>
                     </button>
                 </div>
             </div>
