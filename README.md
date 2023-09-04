@@ -83,6 +83,13 @@ From `JAVA_HOME`, run the following command :
 .\bin\keytool.exe -importcert -cacerts -alias "elaastic-cas" -file <elaastic-questions-server>\docker-resources\cas\etc\cas\config\elaastic-cas-certificate.cer
 ```
 
+## Configuration options
+
+### Activate DRAXO Evaluation
+There is no external configuration to activate DRAXO yet. 
+You have to use  `LearnerEvaluationPhaseConfig.DRAXO` config option for the phase `EVALUATION` defined in `org.elaastic.questions.config.ApplicationConfig`.
+
+
 ## Licence
 
 Elaastic - formative assessment system
