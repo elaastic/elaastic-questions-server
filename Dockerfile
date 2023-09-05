@@ -2,7 +2,7 @@
 # ----------------
 FROM eclipse-temurin:17-jdk-alpine as build
 
-ENV REFRESHED_AT 2023-08-25
+ENV REFRESHED_AT 2023-09-05
 
 WORKDIR /workspace/app
 
