@@ -19,14 +19,26 @@
 package org.elaastic.questions.assignment.sequence.interaction.specification
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import javax.persistence.AttributeConverter
+import javax.persistence.Converter
 
 
+@Converter
 class InteractionSpecificationConverter : AttributeConverter<InteractionSpecification?, String?> {
 
-    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val mapper: ObjectMapper = ObjectMapper().registerModule(
+        KotlinModule.Builder()
+            .withReflectionCacheSize(512)
+            .configure(KotlinFeature.NullToEmptyCollection, false)
+            .configure(KotlinFeature.NullToEmptyMap, false)
+            .configure(KotlinFeature.NullIsSameAsDefault, false)
+            .configure(KotlinFeature.SingletonSupport, false)
+            .configure(KotlinFeature.StrictNullChecks, false)
+            .build()
+    )
 
     override fun convertToDatabaseColumn(attribute: InteractionSpecification?): String? {
         return when(attribute) {

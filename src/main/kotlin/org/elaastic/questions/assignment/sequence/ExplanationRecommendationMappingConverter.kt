@@ -19,15 +19,27 @@
 package org.elaastic.questions.assignment.sequence
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.elaastic.questions.assignment.sequence.interaction.ExplanationRecommendationMapping
 import javax.persistence.AttributeConverter
+import javax.persistence.Converter
 
 
+@Converter
 class ExplanationRecommendationMappingConverter :
         AttributeConverter<ExplanationRecommendationMapping?, String?> {
 
-    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val mapper: ObjectMapper = ObjectMapper().registerModule(
+        KotlinModule.Builder()
+            .withReflectionCacheSize(512)
+            .configure(KotlinFeature.NullToEmptyCollection, false)
+            .configure(KotlinFeature.NullToEmptyMap, false)
+            .configure(KotlinFeature.NullIsSameAsDefault, false)
+            .configure(KotlinFeature.SingletonSupport, false)
+            .configure(KotlinFeature.StrictNullChecks, false)
+            .build()
+    )
 
     override fun convertToDatabaseColumn(attribute: ExplanationRecommendationMapping?): String? {
         return when(attribute) {
