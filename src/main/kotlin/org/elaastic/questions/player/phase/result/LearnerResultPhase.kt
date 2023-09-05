@@ -39,7 +39,8 @@ class LearnerResultPhase(
             userCanRefreshResults = learnerPhaseExecution!!.userCanRefreshResults,
             featureManager = learnerPhaseExecution!!.featureManager,
             messageBuilder = learnerPhaseExecution!!.messageBuilder,
-        )
+        ),
+        learnerPhaseExecution!!.myChatgptEvaluationModel
     )
 
     // Note JT : results are displayed even when the sequence is closed

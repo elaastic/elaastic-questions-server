@@ -1,0 +1,108 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+    <div id="chatgpt-evaluation" th:fragment="chatgptEvaluation(chatgptEvaluationModel)"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <div class="ui accordion segment" id="chatgpt-evaluation-accordion" style="padding-bottom: 0">
+        <div class="ui active title header">
+            <i class="dropdown icon"></i> <span>Evaluation de ChatGPT</span>
+        </div>
+
+        <div class="ui basic padded large text segment content active">
+
+            <th:block th:switch="${chatgptEvaluationModel.status}">
+
+                <th:block th:case="'done'">
+                    <table class="ui celled table">
+                        <tbody>
+                            <tr>
+                                <td th:if="${chatgptEvaluationModel.grade}"
+                                    th:text="${chatgptEvaluationModel.grade} + '/5'"
+                                    style="background-color: #f5f5f6"
+                                    data-inverted="" th:data-tooltip="#{player.sequence.chatgptExplanation.grade.tooltip}"
+                                    data-position="top center">-/5</td>
+                                <td th:text="${chatgptEvaluationModel.annotation}" style="background-color: #fafafb"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </th:block>
+
+                <th:block th:case="'error'">
+                    <div class="ui message error">
+                        <span th:text="#{player.sequence.chatgptExplanation.error}"></span>
+                    </div>
+                    <a class="ui button" th:href="@{/player/sequence/{id}/regenerate-chatgpt-evaluation(id=${chatgptEvaluationModel.sequenceId})}" th:text="#{player.sequence.chatgptExplanation.generate.button}"></a>
+                </th:block>
+
+                <th:block th:case="'pending'">
+                    <div class="ui message">
+                        <div class="ui active inverted dimmer" style="background-color: rgba(255,255,255,.60)">
+                            <div class="ui text loader" th:text="#{player.sequence.chatgptExplanation.pending}">Loading</div>
+                        </div>
+                        <div class="placeholder" style="width: 590px"></div>
+                        <div class="placeholder" style="width: 650px"></div>
+                        <div class="placeholder" style="margin: 0; width: 400px"></div>
+                    </div>
+                </th:block>
+
+                <th:block th:case="*">
+                    <div class="ui message warning">
+                        <span th:text="#{player.sequence.chatgptExplanation.notFound}"></span>
+                    </div>
+                    <a class="ui button" th:href="@{/player/sequence/{id}/regenerate-chatgpt-evaluation(id=${chatgptEvaluationModel.sequenceId})}" th:text="#{player.sequence.chatgptExplanation.generate.button}"></a>
+                </th:block>
+
+            </th:block>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#chatgpt-evaluation-accordion').accordion()
+        })
+    </script>
+
+    <script th:inline="javascript">
+        function refreshFragment() {
+            $.ajax({
+                url: '/player/sequence/'+[[${chatgptEvaluationModel.sequenceId}]]+'/chatgpt-evaluation',
+                type: "GET",
+                success: function(data) {
+                    var chatgptEvaluationFragment = data.replace(/<!--[\s\S]*?-->/, '');
+                    $("#chatgpt-evaluation").replaceWith(chatgptEvaluationFragment);
+                }
+            });
+        }
+        $(document).ready(function() {
+            if([[${chatgptEvaluationModel.status}]] === 'pending') {
+                setTimeout(refreshFragment, 5000);
+            }
+        });
+    </script>
+
+    <style>
+        .placeholder {
+            margin: 0 0 10px 0;
+            max-width: 700px;
+            min-height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+        }
+    </style>
+</div>

@@ -2,6 +2,7 @@ package org.elaastic.questions.player.phase.result
 
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
 import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.questions.player.components.chatgptEvaluation.ChatgptEvaluationModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.phase.LearnerPhaseExecution
 import org.togglz.core.manager.FeatureManager
@@ -12,5 +13,6 @@ class LearnerResultPhaseExecution(
     val myResultsModel: LearnerResultsModel,
     val featureManager: FeatureManager,
     val messageBuilder: MessageBuilder,
+    val myChatgptEvaluationModel: ChatgptEvaluationModel
 ) : LearnerPhaseExecution {
 }

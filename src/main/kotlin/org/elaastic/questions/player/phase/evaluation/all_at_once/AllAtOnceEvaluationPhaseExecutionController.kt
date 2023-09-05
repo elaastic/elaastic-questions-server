@@ -3,6 +3,7 @@ package org.elaastic.questions.player.phase.evaluation.all_at_once
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.ChatgptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -21,9 +22,11 @@ class AllAtOnceEvaluationPhaseExecutionController(
     @Autowired override val sequenceService: SequenceService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired override val responseService: ResponseService,
+    @Autowired override val chatgptEvaluationService: ChatgptEvaluationService
 ) : AbstractEvaluationPhaseExecutionController(
     sequenceService,
-    responseService
+    responseService,
+    chatgptEvaluationService
 ) {
 
     @PostMapping("/submit-evaluation")

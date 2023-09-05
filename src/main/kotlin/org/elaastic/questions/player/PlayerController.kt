@@ -26,6 +26,7 @@ import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.ChatgptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.controller.ControllerUtil
@@ -33,6 +34,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.*
+import org.elaastic.questions.player.components.chatgptEvaluation.ChatgptEvaluationModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
@@ -65,6 +67,7 @@ class PlayerController(
     @Autowired val userService: UserService,
     @Autowired val featureManager: FeatureManager,
     @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
+    @Autowired val chatgptEvaluationService: ChatgptEvaluationService
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
@@ -484,9 +487,46 @@ class PlayerController(
         val user: User = authentication.principal as User
 
         val sequence = sequenceService.get(id, true)
-        sequenceService.submitResponse(user, sequence, responseSubmissionData)
+        val response = sequenceService.submitResponse(user, sequence, responseSubmissionData)
+        if (!sequence.isSecondAttemptAllowed()) {
+            chatgptEvaluationService.createEvaluation(response)
+        }
 
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
+    }
+
+    @GetMapping("/sequence/{id}/regenerate-chatgpt-evaluation")
+    fun refreshChatgptExplanation(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val sequence = sequenceService.get(id, true)
+
+        val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
+        if(response != null) {
+            val chatgptEvaluation = chatgptEvaluationService.findEvaluationByResponse(response)
+            chatgptEvaluationService.createEvaluation(response, chatgptEvaluation)
+        }
+
+        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
+    }
+
+    @GetMapping("sequence/{id}/chatgpt-evaluation")
+    fun viewChatgptExplanation(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val sequence = sequenceService.get(id, true)
+
+        val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
+        val chatgptEvaluation = chatgptEvaluationService.findEvaluationByResponse(response)
+        model.addAttribute("chatgptEvaluationModel",
+            ChatgptEvaluationModelFactory.build(chatgptEvaluation, sequence))
+        return "player/assignment/sequence/components/chatgpt-evaluation/_chatgpt-evaluation"
     }
 
     data class ResponseSubmissionData(

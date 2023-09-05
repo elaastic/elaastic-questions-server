@@ -4,6 +4,7 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.chatgptEvaluation.ChatgptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
@@ -12,6 +13,7 @@ import org.elaastic.questions.directory.User
 abstract class AbstractEvaluationPhaseExecutionController(
     open val sequenceService: SequenceService,
     open val responseService: ResponseService,
+    open val chatgptEvaluationService: ChatgptEvaluationService
 ) {
 
     fun changeAnswer(user: User, sequence: Sequence, answer: Answer) {
@@ -43,10 +45,11 @@ abstract class AbstractEvaluationPhaseExecutionController(
                 val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
                     ?: error("No active interaction, cannot submit a response")
 
-                responseService.save(
+                val savedResponse = responseService.save(
                     userActiveInteraction,
                     it
                 )
+                chatgptEvaluationService.createEvaluation(savedResponse)
             }
     }
 
