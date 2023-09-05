@@ -2,6 +2,7 @@ package org.elaastic.questions.assignment.sequence.interaction
 
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluation
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationRepository
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationStatus
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -39,7 +40,7 @@ internal class ChatGptEvaluationRepositoryIntegrationTest (
 
                 MatcherAssert.assertThat(it.annotation, CoreMatchers.nullValue())
                 MatcherAssert.assertThat(it.grade, CoreMatchers.nullValue())
-                MatcherAssert.assertThat(it.status, CoreMatchers.nullValue())
+                MatcherAssert.assertThat(it.status, CoreMatchers.equalTo(ChatGptEvaluationStatus.UNKNOWN.name))
 
                 MatcherAssert.assertThat(it.reportReasons, CoreMatchers.nullValue())
                 MatcherAssert.assertThat(it.reportComment, CoreMatchers.nullValue())
