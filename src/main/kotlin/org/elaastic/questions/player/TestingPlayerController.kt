@@ -640,7 +640,10 @@ class TestingPlayerController(
                     description = "Choix exclusif, incorrect puis correct, avec explications",
                     learnerResultsModel = LearnerExclusiveChoiceResults(
                         explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "I was wrong"),
-                        explanationSecondTry = ExplanationData(responseId = Random.nextLong(), content = "And I've changed my mind"),
+                        explanationSecondTry = ExplanationData(
+                            responseId = Random.nextLong(),
+                            content = "And I've changed my mind"
+                        ),
                         choiceFirstTry = LearnerChoice(listOf(2)),
                         choiceSecondTry = LearnerChoice(listOf(1)),
                         scoreFirstTry = 0,
@@ -685,7 +688,10 @@ class TestingPlayerController(
                     description = "Choix multiple, résultats qui s'améliorent, avec explications",
                     learnerResultsModel = LearnerMultipleChoiceResults(
                         explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "so-so"),
-                        explanationSecondTry = ExplanationData(responseId = Random.nextLong(), content = "a bit better"),
+                        explanationSecondTry = ExplanationData(
+                            responseId = Random.nextLong(),
+                            content = "a bit better"
+                        ),
                         choiceFirstTry = LearnerChoice(listOf(2, 4)),
                         choiceSecondTry = LearnerChoice(listOf(2, 3, 4)),
                         scoreFirstTry = 0,
@@ -716,14 +722,23 @@ class TestingPlayerController(
                 MyResultsSituation(
                     description = "Question ouverte - 2 identical explanations",
                     learnerResultsModel = LearnerOpenResults(
-                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "same explanation"),
-                        explanationSecondTry = ExplanationData(responseId = Random.nextLong(), content = "same explanation")
+                        explanationFirstTry = ExplanationData(
+                            responseId = Random.nextLong(),
+                            content = "same explanation"
+                        ),
+                        explanationSecondTry = ExplanationData(
+                            responseId = Random.nextLong(),
+                            content = "same explanation"
+                        )
                     )
                 ),
                 MyResultsSituation(
                     description = "Question ouverte - 2 identical explanations, second graded",
                     learnerResultsModel = LearnerOpenResults(
-                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "same explanation"),
+                        explanationFirstTry = ExplanationData(
+                            responseId = Random.nextLong(),
+                            content = "same explanation"
+                        ),
                         explanationSecondTry = ExplanationData(
                             responseId = 456L,
                             content = "same explanation",
@@ -2944,8 +2959,11 @@ class TestingPlayerController(
                         0
                     ),
                     learnerResultsModel = LearnerExclusiveChoiceResults(
-                        explanationFirstTry = ExplanationData(content = "I was wrong"),
-                        explanationSecondTry = ExplanationData(content = "And I've changed my mind"),
+                        explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "I was wrong"),
+                        explanationSecondTry = ExplanationData(
+                            responseId = Random.nextLong(),
+                            content = "And I've changed my mind"
+                        ),
                         choiceFirstTry = LearnerChoice(listOf(2)),
                         choiceSecondTry = LearnerChoice(listOf(1)),
                         scoreFirstTry = 0,

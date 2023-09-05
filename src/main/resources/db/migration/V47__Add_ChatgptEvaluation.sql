@@ -42,3 +42,28 @@ CREATE TABLE `chatgpt_prompt`(
      `language` varchar(16) DEFAULT 'fr' NOT NULL,
      PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `chatgpt_prompt`
+    MODIFY COLUMN `end_date` datetime DEFAULT NULL;
+
+ALTER TABLE `chatgpt_evaluation`
+    ADD COLUMN `status` varchar(32) DEFAULT NULL;
+
+RENAME TABLE chatgpt_evaluation TO chat_gpt_evaluation;
+ALTER TABLE chat_gpt_evaluation RENAME INDEX idx_chatgpt_evaluation_response_id TO idx_chat_gpt_evaluation_response_id;
+ALTER TABLE chat_gpt_evaluation DROP FOREIGN KEY fk_chatgpt_evaluation_id;
+ALTER TABLE chat_gpt_evaluation ADD CONSTRAINT fk_chat_gpt_evaluation_id FOREIGN KEY (response_id) REFERENCES choice_interaction_response (id);
+
+RENAME TABLE chatgpt_prompt TO chat_gpt_prompt;
+
+ALTER TABLE sequence ADD COLUMN `chat_gpt_evaluation_enabled` boolean NOT NULL DEFAULT false;
+
+ALTER TABLE chat_gpt_evaluation DROP COLUMN reported_by_student;
+
+ALTER TABLE chat_gpt_evaluation ADD COLUMN report_reason varchar(64) DEFAULT NULL;
+ALTER TABLE chat_gpt_evaluation ADD COLUMN report_comment text DEFAULT NULL;
+ALTER TABLE chat_gpt_evaluation ADD COLUMN utility_grade text DEFAULT NULL;
+
+ALTER TABLE chat_gpt_evaluation CHANGE COLUMN report_reason report_reasons TEXT;
+ALTER TABLE chat_gpt_evaluation MODIFY COLUMN utility_grade TINYINT(2);
+ALTER TABLE chat_gpt_prompt ADD CONSTRAINT unique_prompt_active_by_language UNIQUE (language, active);
