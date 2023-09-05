@@ -19,6 +19,7 @@ services:
     container_name: elaastic-questions-server
     volumes:
       - ./docker-resources/elaastic-questions-server/configuration/:/configuration/
+      - ./docker-resources/elaastic-questions-server/certificates/:/certificates/
       - datastore:/datastore/
       - tmp:/tmp/
     depends_on:
@@ -26,6 +27,7 @@ services:
     ports:
       - "8081:8080"
     environment:
+      - USE_SYSTEM_CA_CERTS=1
       - DATABASE_HOST=elaastic-questions-db-8
       - DATABASE_USER=elaastic
       - DATABASE_NAME=elaastic-questions

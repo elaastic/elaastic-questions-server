@@ -40,6 +40,8 @@ ENTRYPOINT [ \
     "java", \
     "-cp", \
     "/app:/app/lib/*", \
+    "-Xms512M",  "-Xmx2048M", \
+    "-server", "-XX:+UseParallelGC", \
     "-Djava.security.egd=file:/dev/./urandom", \
     "-Djava.io.tmpdir=/tmp/", \
     "org.elaastic.questions.ElaasticQuestionsServerKt", \
