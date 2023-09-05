@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class ChatGptPromptService (
+class ChatGptPromptService(
     @Autowired val chatGptPromptRepository: ChatGptPromptRepository
 ) {
 
-    fun getPrompt(language: String) : ChatGptPrompt {
-        return chatGptPromptRepository.findByLanguageAndActive(language) ?: chatGptPromptRepository.findByLanguageAndActive("en")!!
+    fun getPrompt(language: String): ChatGptPrompt {
+        return chatGptPromptRepository.findByLanguageAndActive(language)
+            ?: chatGptPromptRepository.findByLanguageAndActive("en")!!
     }
 }

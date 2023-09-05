@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional
 @ActiveProfiles(profiles = ["no-async"])
 internal class ChatGptEvaluationServiceIntegrationTest (
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
@@ -22,6 +22,7 @@ internal class ChatGptEvaluationServiceIntegrationTest (
 ){
 
     @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     fun `get a chatgpt evaluation - valid`() {
 
         val response = integrationTestingService.getAnyResponse()
@@ -31,7 +32,7 @@ internal class ChatGptEvaluationServiceIntegrationTest (
             chatGptEvaluationService.createEvaluation(response)
         }.tThen {
             MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
-            MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(0L))
+            MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(1L))
             MatcherAssert.assertThat(it.dateCreated, CoreMatchers.notNullValue())
             MatcherAssert.assertThat(it.lastUpdated, CoreMatchers.notNullValue())
 
