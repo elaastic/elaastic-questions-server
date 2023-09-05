@@ -29,7 +29,7 @@ CREATE TABLE `chatgpt_evaluation`(
      `response_id` bigint(20) NOT NULL,
      PRIMARY KEY (`id`),
      UNIQUE KEY `idx_chatgpt_evaluation_response_id` (`response_id`),
-     CONSTRAINT `fk_chatgpt_evaluation_id` FOREIGN KEY (`response_id`) REFERENCES `choice_interaction_response` (`id`)
+     CONSTRAINT fk_chat_gpt_evaluation_id FOREIGN KEY (response_id) REFERENCES choice_interaction_response (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `chatgpt_prompt`(
@@ -51,8 +51,6 @@ ALTER TABLE `chatgpt_evaluation`
 
 RENAME TABLE chatgpt_evaluation TO chat_gpt_evaluation;
 ALTER TABLE chat_gpt_evaluation RENAME INDEX idx_chatgpt_evaluation_response_id TO idx_chat_gpt_evaluation_response_id;
-ALTER TABLE chat_gpt_evaluation DROP FOREIGN KEY fk_chatgpt_evaluation_id;
-ALTER TABLE chat_gpt_evaluation ADD CONSTRAINT fk_chat_gpt_evaluation_id FOREIGN KEY (response_id) REFERENCES choice_interaction_response (id);
 
 RENAME TABLE chatgpt_prompt TO chat_gpt_prompt;
 
