@@ -7,7 +7,6 @@ import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Lazy
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -19,15 +18,13 @@ import javax.persistence.EntityManager
 class ChatGptEvaluationService (
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val responseRepository: ResponseRepository,
-    @Autowired val entityManager: EntityManager,
     @Autowired val chatGptApiClient: ChatGptApiClient,
     @Autowired val chatGptPromptService: ChatGptPromptService,
-    @Autowired @Lazy val self: ChatGptEvaluationService // self-injection to bypass Spring AOP limitations to create a new transaction
 ) {
 
 
     @Async
-    @Transactional
+    @Transactional(propagation = Propagation.NEVER)
     fun createEvaluation(response: Response, chatGptExistingEvaluation : ChatGptEvaluation? = null): ChatGptEvaluation {
 
 
@@ -41,9 +38,7 @@ class ChatGptEvaluationService (
         requireNotNull(studentExplanation){ throw IllegalArgumentException("Error: No explanation to evaluate") }
 
         val chatGptEvaluation = chatGptExistingEvaluation ?: ChatGptEvaluation(response = response)
-        chatGptEvaluation.status = ChatGptEvaluationStatus.PENDING.name
-
-        val savedChatGptEvaluation = self.saveEvaluation(chatGptEvaluation)
+        markEvaluationAsPending(chatGptEvaluation)
 
         val regexHtml = Regex("<.*?>")
         val chatGptPrompt = chatGptPromptService.getPrompt(language)
@@ -65,15 +60,15 @@ class ChatGptEvaluationService (
             val matchResult = regexGrade.find(generatedResponse)
             val grade = matchResult?.groupValues?.last()?.toBigDecimal()
 
-            savedChatGptEvaluation.status = ChatGptEvaluationStatus.DONE.name
-            savedChatGptEvaluation.grade = grade
-            savedChatGptEvaluation.annotation = annotation
+            chatGptEvaluation.status = ChatGptEvaluationStatus.DONE.name
+            chatGptEvaluation.grade = grade
+            chatGptEvaluation.annotation = annotation
 
         } catch (e: Exception) {
-            savedChatGptEvaluation.status = ChatGptEvaluationStatus.ERROR.name
+            chatGptEvaluation.status = ChatGptEvaluationStatus.ERROR.name
         }
 
-        return chatGptEvaluationRepository.save(savedChatGptEvaluation)
+        return chatGptEvaluationRepository.save(chatGptEvaluation)
 
     }
 
@@ -102,6 +97,9 @@ class ChatGptEvaluationService (
         chatGptEvaluationRepository.save(chatGptEvaluation)
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun saveEvaluation(chatGptEvaluation: ChatGptEvaluation) = chatGptEvaluationRepository.saveAndFlush(chatGptEvaluation)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    fun markEvaluationAsPending(chatGptEvaluation: ChatGptEvaluation) : ChatGptEvaluation {
+        chatGptEvaluation.status = ChatGptEvaluationStatus.PENDING.name
+        return chatGptEvaluationRepository.saveAndFlush(chatGptEvaluation)
+    }
 }
