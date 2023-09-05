@@ -19,14 +19,26 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistribution
 import javax.persistence.AttributeConverter
+import javax.persistence.Converter
 
 
+@Converter
 class ResponseDistributionConverter : AttributeConverter<ResponsesDistribution?, String?> {
 
-    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val mapper: ObjectMapper = ObjectMapper().registerModule(
+        KotlinModule.Builder()
+            .withReflectionCacheSize(512)
+            .configure(KotlinFeature.NullToEmptyCollection, false)
+            .configure(KotlinFeature.NullToEmptyMap, false)
+            .configure(KotlinFeature.NullIsSameAsDefault, false)
+            .configure(KotlinFeature.SingletonSupport, false)
+            .configure(KotlinFeature.StrictNullChecks, false)
+            .build()
+    )
 
     override fun convertToDatabaseColumn(attribute: ResponsesDistribution?): String? {
         return when (attribute) {

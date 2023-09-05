@@ -150,7 +150,7 @@ class ResponseService(
         val res =
             entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.id) as evaluationCount, sum(CASE WHEN pg.type = 'DRAXO' THEN 1 ELSE 0 END) from PeerGrading pg where pg.response = :response")
                 .setParameter("response", response)
-                .singleResult as Array<Object?>
+                .singleResult as Array<Any?>
 
         response.meanGrade = res[0]?.let { BigDecimal(it as Double).setScale(2, RoundingMode.HALF_UP) }
         response.evaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
