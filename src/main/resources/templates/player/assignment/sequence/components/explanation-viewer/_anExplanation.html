@@ -54,21 +54,6 @@
               th:text="|#{player.sequence.users.responses}: ${explanation.choiceList}|">Responses: [2]</span>
     </b>
     <span th:utext="${explanation.content}"></span>
-  <div id="show-more" style="position: absolute; bottom: 5px; right: 5px;"><a href="#">voir plus</a></div>
-
-  <style>
-      #show-more{
-          position: absolute;
-          opacity: 50%;
-          bottom: 5px;
-          right: 5px;
-          transition-duration: 0.1s;
-      }
-
-      #show-more:hover{
-          opacity: 100%;
-      }
-  </style>
 
     <div class="reviews-container"></div>
 </div>
