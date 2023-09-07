@@ -49,7 +49,7 @@ enum class ElaasticFeatures {
      */
     IMPORT_EXPORT,
 
-    @EnabledByDefault
+    // Disabled by default
     CHATGPT_EVALUATION;
 
     fun isActive(): Boolean {
