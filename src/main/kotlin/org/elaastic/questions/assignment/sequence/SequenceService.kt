@@ -108,7 +108,8 @@ class SequenceService(
         sequence: Sequence,
         executionContext: ExecutionContext,
         studentsProvideExplanation: Boolean,
-        nbResponseToEvaluate: Int
+        nbResponseToEvaluate: Int,
+        chatGptEvaluationEnable: Boolean = false
     ): Sequence {
 
         require(user == sequence.owner) {
@@ -131,6 +132,7 @@ class SequenceService(
             it.state = State.show
             it.executionContext = executionContext
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
+            it.chatGptEvaluationEnabled = chatGptEvaluationEnable
             sequenceRepository.save(it)
         }
         if (studentsProvideExplanation) {
@@ -147,7 +149,7 @@ class SequenceService(
         sequence: Sequence,
         studentsProvideExplanation: Boolean,
         nbResponseToEvaluate: Int,
-        executionContext: ExecutionContext
+        executionContext: ExecutionContext,
     ): Sequence {
         sequence.interactions[InteractionType.ResponseSubmission] =
             interactionService.create(
@@ -219,14 +221,14 @@ class SequenceService(
         user: User,
         sequence: Sequence,
         responseSubmissionData: PlayerController.ResponseSubmissionData
-    ) {
+    ) : Response {
         val choiceListSpecification = responseSubmissionData.choiceList?.let {
             LearnerChoice(it)
         }
 
         val userActiveInteraction = getActiveInteractionForLearner(sequence, user)
 
-        responseService.save(
+        val submitedResponse = responseService.save(
             userActiveInteraction
                 ?: error("No active interaction, cannot submit a response"), // TODO we should provide a user-friendly error page for this
             Response(
@@ -249,6 +251,8 @@ class SequenceService(
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
             nextInteractionForLearner(sequence, user)
         }
+
+        return submitedResponse
     }
 
     fun refreshResults(user: User, sequence: Sequence): Sequence {

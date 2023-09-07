@@ -1,0 +1,88 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     th:fragment="chatGptEvaluationCommand(chatGptEvaluationModel)">
+
+  <form class="ui form"
+        style="align-items: end;"
+        th:action="@{/player/sequence/{sequenceId}/submit-utility-grade(sequenceId=${chatGptEvaluationModel.sequenceId})}"
+        method="post">
+    <input type="hidden" name="evaluationId" th:value="${chatGptEvaluationModel.evaluationId}">
+    <div class="ui grid stackable" style="align-items: end;">
+      <div class="field twelve wide column" id="utilitySelectionApp" style="flex-grow: 4;">
+        <label th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label}"></label>
+        <input type="hidden"
+               name="utilityGrade"
+               v-model="selectedUtilityGrade"/>
+
+        <div class="ui menu stackable fluid pagination">
+          <a th:each="utilityGrade : ${chatGptEvaluationModel.utilityGradeValues}" class="item"
+             th:attr="'v-on:click'=|setSelectedUtilityGrade('${utilityGrade.name()}')|,'v-bind:class'=|{ active: selectedUtilityGrade === '${utilityGrade.name()}' }|"
+             th:text="#{|player.sequence.chatGptEvaluation.utilityGrade.${utilityGrade.name()}|}">
+          </a>
+        </div>
+      </div>
+      <div class="field four wide column" id="reportSelectionApp" style="margin-bottom: 1em; flex-grow: 1;">
+        <div class="ui menu pagination" style="width: 100%;">
+          <a
+                  class="item"
+                  style="color: #b03060; width: 100%;"
+                  th:onclick="|$('#reportModal_${chatGptEvaluationModel.sequenceId}').modal('show');|">
+            <i class="exclamation triangle icon"></i><span th:text="#{player.sequence.chatGptEvaluation.reportButton}"></span></a>
+        </div>
+      </div>
+    </div>
+    <div id="submit-button-utility-grade" style="display: none">
+      <input type="submit" value="Soumettre" class="ui primary button">
+    </div>
+  </form>
+
+  <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-report-modal.html :: reportModal(${chatGptEvaluationModel.sequenceId},${chatGptEvaluationModel.annotation},${chatGptEvaluationModel.reportValues},${chatGptEvaluationModel.evaluationId})"></div>
+
+
+  <script th:inline="javascript">
+    new Vue({
+      el: '#utilitySelectionApp',
+      data: {
+        selectedUtilityGrade: [[${chatGptEvaluationModel.utilityGrade?.name()}]]
+      },
+      methods: {
+        setSelectedUtilityGrade: function (clickedUtilityGrade) {
+          this.selectedUtilityGrade = clickedUtilityGrade
+          $("#submit-button-utility-grade").slideDown();
+        }
+      }
+    })
+  </script>
+
+  <style>
+    .item{
+      justify-content: center;
+    }
+    #utilitySelectionApp .item {
+      width: 25%;
+    }
+    #utilitySelectionApp .active.item {
+      background-color: #dff0ff;
+      color: #0e6eb8;
+    }
+  </style>
+
+</div>
+

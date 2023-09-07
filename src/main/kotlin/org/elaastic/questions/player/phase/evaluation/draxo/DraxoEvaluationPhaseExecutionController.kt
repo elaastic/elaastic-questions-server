@@ -3,6 +3,7 @@ package org.elaastic.questions.player.phase.evaluation.draxo
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -20,9 +21,11 @@ class DraxoEvaluationPhaseExecutionController(
     @Autowired override val sequenceService: SequenceService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired override val responseService: ResponseService,
+    @Autowired override val chatGptEvaluationService: ChatGptEvaluationService,
 ) : AbstractEvaluationPhaseExecutionController(
     sequenceService,
-    responseService
+    responseService,
+    chatGptEvaluationService
 ) {
 
     @PostMapping("/close-evaluation")

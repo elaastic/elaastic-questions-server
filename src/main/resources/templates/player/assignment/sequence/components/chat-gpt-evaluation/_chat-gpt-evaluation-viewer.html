@@ -1,0 +1,60 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     th:fragment="chatGptEvaluation(chatGptEvaluationModel)"
+     class="ui accordion segment" id="chat-gpt-evaluation-accordion" style="padding-bottom: 0">
+
+    <div class="ui active title header">
+        <i class="dropdown icon"></i>
+        <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
+    </div>
+
+    <div class="ui basic padded large text segment content active">
+
+        <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
+        <th:block th:if="${chatGptEvaluationModel.status == 'DONE'}">
+            <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-student-command.html :: chatGptEvaluationCommand(${chatGptEvaluationModel})"></div>
+        </th:block>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#chat-gpt-evaluation-accordion').accordion()
+        })
+    </script>
+
+    <script th:inline="javascript">
+        function refreshFragment() {
+            $.ajax({
+                url: '/player/sequence/'+[[${chatGptEvaluationModel.sequenceId}]]+'/chat-gpt-evaluation',
+                type: "GET",
+                success: function(data) {
+                    var chatGptEvaluationFragment = data.replace(/<!--[\s\S]*?-->/, '');
+                    $("#chat-gpt-evaluation-accordion").replaceWith(chatGptEvaluationFragment);
+                }
+            });
+        }
+        $(document).ready(function() {
+            if([[${chatGptEvaluationModel.status}]] === 'PENDING') {
+                setTimeout(refreshFragment, 5000);
+            }
+        });
+    </script>
+
+</div>

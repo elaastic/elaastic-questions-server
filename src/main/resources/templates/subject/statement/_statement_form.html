@@ -51,8 +51,16 @@
 
         <div class="ob-question-creation-4">
             <div class="ui hidden divider"></div>
-            <a class="ui ribbon label" style="margin-bottom: 1em;" th:text="#{statement.attachment.label}">Pièce
-                jointe</a>
+            <div style="display: flex; align-items: center; margin-bottom: 1em;">
+                <a class="ui ribbon label" th:text="#{statement.attachment.label}">Pièce
+                    jointe</a>
+                <p class="ui label basic small"
+                   style="color: grey"
+                   th:text="#{subject.statement.optional.label}">Optional</p>
+                <p class="ui label basic small"
+                   style="color: grey"
+                   th:text="#{statement.attachment.maxSize.label}">Max 10MB</p>
+            </div>
             <div id="attachment" v-show="anAttachmentIsSelected == false">
                 <input type="file" th:if="${subject.owner==user}"
                        name="fileToAttached"

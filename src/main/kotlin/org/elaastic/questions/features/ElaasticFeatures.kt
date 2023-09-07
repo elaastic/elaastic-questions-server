@@ -47,7 +47,10 @@ enum class ElaasticFeatures {
     /**
      * Import and Export Subjects as a ZIP archive
      */
-    IMPORT_EXPORT;
+    IMPORT_EXPORT,
+
+    // Disabled by default
+    CHATGPT_EVALUATION;
 
     fun isActive(): Boolean {
         return FeatureContext.getFeatureManager().isActive { name }
