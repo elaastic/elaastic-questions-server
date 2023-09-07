@@ -5,19 +5,20 @@ import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.*
+import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit.jupiter.EnabledIf
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
-import javax.persistence.EntityManager
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = ["no-async"])
+@EnabledIf(value = "#{@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))}", loadContext = true)
 internal class ChatGptEvaluationServiceIntegrationTest (
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val integrationTestingService: IntegrationTestingService,
@@ -31,24 +32,26 @@ internal class ChatGptEvaluationServiceIntegrationTest (
         val response = integrationTestingService.getAnyResponse()
         response.explanation = "explanation test"
 
+        // Precondition
+        assertThat(chatGptEvaluationRepository.findAll(), `is`(empty()))
+
         tWhen {
             chatGptEvaluationService.createEvaluation(response)
         }.tThen {
-            MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
-            MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(1L))
-            MatcherAssert.assertThat(it.dateCreated, CoreMatchers.notNullValue())
-            MatcherAssert.assertThat(it.lastUpdated, CoreMatchers.notNullValue())
+            assertThat(it.id, notNullValue())
+            assertThat(it.version, equalTo(1L))
+            assertThat(it.dateCreated, notNullValue())
+            assertThat(it.lastUpdated, notNullValue())
 
-            MatcherAssert.assertThat(it.annotation, CoreMatchers.notNullValue())
-            //MatcherAssert.assertThat(it.grade, CoreMatchers.notNullValue())
-            MatcherAssert.assertThat(it.status, CoreMatchers.equalTo("DONE"))
+            assertThat(it.status, equalTo("DONE"))
+            assertThat(it.annotation, notNullValue())
 
-            MatcherAssert.assertThat(it.reportReasons, CoreMatchers.nullValue())
-            MatcherAssert.assertThat(it.reportComment, CoreMatchers.nullValue())
-            MatcherAssert.assertThat(it.utilityGrade, CoreMatchers.nullValue())
+            assertThat(it.reportReasons, nullValue())
+            assertThat(it.reportComment, nullValue())
+            assertThat(it.utilityGrade, nullValue())
 
-            MatcherAssert.assertThat(it.hiddenByTeacher, CoreMatchers.equalTo(false))
-            MatcherAssert.assertThat(it.removedByTeacher, CoreMatchers.equalTo(false))
+            assertThat(it.hiddenByTeacher, equalTo(false))
+            assertThat(it.removedByTeacher, equalTo(false))
         }
     }
 
