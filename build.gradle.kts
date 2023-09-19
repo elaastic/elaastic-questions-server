@@ -8,6 +8,7 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
+    id("org.sonarqube") version "4.2.1.3168"
 }
 
 group = "org.elaastic.questions"
@@ -15,6 +16,13 @@ version = "5.2-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "elaastic-questions-server")
+        property("sonar.projectName", "elaastic-questions-server")
+    }
 }
 
 repositories {

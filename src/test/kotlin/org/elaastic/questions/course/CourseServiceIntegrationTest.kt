@@ -20,10 +20,9 @@ import java.util.*
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
-@SpringBootTest
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
-@WebAppConfiguration
 class CourseServiceIntegrationTest(
         @Autowired val courseService: CourseService,
         @Autowired val subjectService: SubjectService,
