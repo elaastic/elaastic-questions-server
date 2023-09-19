@@ -32,7 +32,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Run Elaastic DB test
-          run: docker-compose up -d  elaastic-questions-db-test-8
+        run: docker-compose up -d  elaastic-questions-db-test-8
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
