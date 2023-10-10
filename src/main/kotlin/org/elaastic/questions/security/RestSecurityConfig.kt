@@ -26,7 +26,7 @@ import org.springframework.security.web.SecurityFilterChain
 class RestSecurityConfig(
     @Value("\${rest.user.name}") private val restUserName: String,
     @Value("\${rest.user.password}") private val restUserPassword: String,
-)  {
+) {
 
     companion object {
         const val ROLE_REST_CLIENT = "rest-client"
@@ -44,9 +44,11 @@ class RestSecurityConfig(
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
 
-            httpBasic {  }
-            cors {  }
+            httpBasic { }
+            cors { }
             csrf { disable() }
+
+            exceptionHandling {}
         }
 
         http.authenticationManager(restAuthenticationManager())
