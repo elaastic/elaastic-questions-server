@@ -48,7 +48,7 @@ class PracticeSubjectService(
 
                 check(sequences.isNotEmpty()) { "The subject $uuid is not ready to practice" }
 
-                val learners = assignmentService.findAllLearnersRegisteredOn(assignment)
+                val learners = assignmentService.findAllLearnersRegisteredOnWithCasUser(assignment)
 
                 PracticeSubject(
                     assignment =  assignment,
