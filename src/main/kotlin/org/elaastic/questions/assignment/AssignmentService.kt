@@ -254,6 +254,6 @@ class AssignmentService(
     fun findAllAssignmentUpdatedSince(since: LocalDateTime): List<Assignment> =
         assignmentRepository.findAllAssignmentUpdatedSince(since.toDate())
 
-fun findAllLearnersRegisteredOn(assignment: Assignment) =
-    learnerAssignmentRepository.findAllRegisteredLearnersOnAssignment(assignment).toSet()
+fun findAllLearnersRegisteredOnWithCasUser(assignment: Assignment) =
+    learnerAssignmentRepository.findAllRegisteredLearnersOnAssignmentWithCasUser(assignment).toSet()
 }

@@ -17,17 +17,14 @@ import java.util.*
 class PracticeLearner(
     @JsonApiId
     val id: UUID,
+    val externalUserRef: ExternalUserRef?
 ) {
 
     @JsonApiType
     val type = "practice-learner"
 
-    val externalUserRef = listOf(
-        ExternalUserRef("ENT_1", "123456"),
-        ExternalUserRef("ENT_2", "789456"),
-    )
-
-    constructor(user: User): this(
-        id = user.uuid
+    constructor(user: User) : this(
+        id = user.uuid,
+        externalUserRef = user.casUser?.let { ExternalUserRef(it.casKey, it.casUserId) }
     )
 }
