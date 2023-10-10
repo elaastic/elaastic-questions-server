@@ -2,6 +2,7 @@ package org.elaastic.questions.api.practice.subject
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
+import org.elaastic.questions.directory.ExternalUserRef
 import org.elaastic.questions.directory.User
 import java.util.*
 
@@ -20,6 +21,11 @@ class PracticeLearner(
 
     @JsonApiType
     val type = "practice-learner"
+
+    val externalUserRef = listOf(
+        ExternalUserRef("ENT_1", "123456"),
+        ExternalUserRef("ENT_2", "789456"),
+    )
 
     constructor(user: User): this(
         id = user.uuid

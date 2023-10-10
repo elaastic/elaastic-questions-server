@@ -73,6 +73,7 @@ object PracticeSubjectModelBuilder {
             modelBuilder
                 .relationshipWithDataArray("learners")
                 .relationship("learners", subject.learners)
+                .included(subject.learners.map { EntityModel.of(it) })
 
             modelBuilder
 
