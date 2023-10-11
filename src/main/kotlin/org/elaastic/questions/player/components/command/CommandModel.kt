@@ -23,7 +23,6 @@ import org.elaastic.questions.assignment.QuestionType
 data class CommandModel(
         val sequenceId: Long,
         val statementId: Long,
-        val subjectId: Long,
         val interactionId: Long?,
         val interactionRank: Int?,
         val questionType: QuestionType,

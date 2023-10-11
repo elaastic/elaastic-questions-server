@@ -30,7 +30,6 @@ object CommandModelFactory {
                 CommandModel(
                         sequenceId = sequence.id ?: throw IllegalStateException("This sequence has no ID"),
                         statementId = sequence.statement.id ?: throw IllegalStateException("This statement has no ID"),
-                        subjectId = sequence.statement.subject?.id ?: throw IllegalStateException("This subject has no ID"),
                         interactionId = interaction?.id,
                         interactionRank = interaction?.rank,
                         questionType = sequence.statement.questionType,

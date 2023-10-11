@@ -107,7 +107,7 @@
             <i class="red close icon"></i>
             <span th:text="#{player.sequence.unpublishResults}">
           Cancel the publication of results
-        </span>
+        </span>                         model.subjectId
         </a>
 
     </div>
@@ -115,7 +115,7 @@
     <div th:if="${model.actionStartSequence.name() == 'ENABLED'}"
          th:remove="tag">
         <div
-      th:replace="player/assignment/sequence/components/command/_config-sequence.html :: configSequence(${model.subjectId}, ${model.sequenceId}, ${model.statementId}, ${model.questionType}, ${model.hasExpectedExplanation})"></div>
+      th:replace="player/assignment/sequence/components/command/_config-sequence.html :: configSequence(${model.sequenceId}, ${model.statementId}, ${model.questionType}, ${model.hasExpectedExplanation})"></div>
     </div>
 
 
