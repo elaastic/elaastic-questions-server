@@ -58,7 +58,7 @@ class OneByOneLearnerEvaluationPhase(
             secondAttemptAlreadySubmitted = learnerPhaseExecution.secondAttemptAlreadySubmitted,
             responseFormModel = LearnerResponseFormViewModelFactory.buildFor2ndAttempt(
                 learnerSequence,
-                learnerPhaseExecution.firstAttemptResponse
+                learnerPhaseExecution.lastAttemptResponse
             )
         )
     }

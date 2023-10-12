@@ -10,6 +10,6 @@ abstract class AbstractLearnerEvaluationPhaseExecution(
     val secondAttemptAlreadySubmitted: Boolean,
     val sequence: Sequence,
     val userActiveInteraction: Interaction?,
-    val firstAttemptResponse: Response?
+    val lastAttemptResponse: Response?
 ) : LearnerPhaseExecution {
 }

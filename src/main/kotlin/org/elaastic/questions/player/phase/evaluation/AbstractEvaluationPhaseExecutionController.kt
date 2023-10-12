@@ -22,9 +22,9 @@ abstract class AbstractEvaluationPhaseExecutionController(
         }
 
         check(sequence.isSecondAttemptAllowed())
-        check(!responseService.hasResponseForUser(user, sequence, 2))
+        val previousResponse = responseService.find(user, sequence, 2)
 
-        Response(
+        val response = Response(
             learner = user,
             interaction = sequence.getResponseSubmissionInteraction(),
             attempt = 2,
@@ -41,18 +41,24 @@ abstract class AbstractEvaluationPhaseExecutionController(
             statement = sequence.statement
 
         )
-            .let {
-                val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
-                    ?: error("No active interaction, cannot submit a response")
 
-                val savedResponse = responseService.save(
-                    userActiveInteraction,
-                    it
-                )
-                if(sequence.chatGptEvaluationEnabled){
-                    chatGptEvaluationService.createEvaluation(savedResponse)
-                }
-            }
+        if(previousResponse != null)  {
+            response.makeAsUpdateOf(previousResponse)
+        }
+
+
+        val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
+            ?: error("No active interaction, cannot submit a response")
+
+        val savedResponse = responseService.save(
+            userActiveInteraction,
+            response
+        )
+        if (sequence.chatGptEvaluationEnabled) { // TODO Should be created at the end... not at each change...
+            chatGptEvaluationService.createEvaluation(savedResponse)
+        }
+
+
     }
 
     fun finalizePhaseExecution(user: User, sequence: Sequence, assignmentId: Long): String {

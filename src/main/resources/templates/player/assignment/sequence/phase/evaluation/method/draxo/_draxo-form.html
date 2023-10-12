@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-<div th:fragment="draxoForm(sequenceId,responseId,draxoEvaluation)"
+<div th:fragment="draxoForm(sequenceId,responseId,draxoEvaluation,lastResponseToGrade)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -105,7 +105,7 @@
             criteriaList: /*[[${@draxoService.getCriteriaList()}]]*/ [],
             messages: /*[[${@draxoService.getCriteriaMessages()}]]*/ {},
             scales: /*[[${@draxoService.getCriteriaScales()}]]*/ {},
-            submitUrl: /*[[@{/player/sequence/{sequenceId}/phase/evaluation/draxo/response/{responseId}/submit-evaluation(sequenceId=${sequenceId},responseId=${responseId})}]]*/ "",
+            submitUrl: /*[[@{/player/sequence/{sequenceId}/phase/evaluation/draxo/response/{responseId}/submit-evaluation(sequenceId=${sequenceId},responseId=${responseId},lastResponseToGrade=${lastResponseToGrade})}]]*/ "",
         }
     </script>
 

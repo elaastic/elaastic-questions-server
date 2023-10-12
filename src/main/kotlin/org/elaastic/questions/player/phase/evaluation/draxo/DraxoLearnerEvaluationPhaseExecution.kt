@@ -14,13 +14,13 @@ class DraxoLearnerEvaluationPhaseExecution(
     val lastResponseToGrade: Boolean,
     sequence: Sequence,
     userActiveInteraction: Interaction?,
-    firstAttemptResponse: Response?,
+    lastAttemptResponse: Response?,
     val draxoEvaluation: DraxoEvaluation = DraxoEvaluation()
 ): AbstractLearnerEvaluationPhaseExecution(
     userHasCompletedPhase2,
     secondAttemptAlreadySubmitted,
     sequence,
     userActiveInteraction,
-    firstAttemptResponse
+    lastAttemptResponse
 ) {
 }

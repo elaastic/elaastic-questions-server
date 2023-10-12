@@ -45,6 +45,7 @@ class DraxoLearnerEvaluationPhase(
             learnerPhaseExecution
                 ?: throw IllegalStateException("LearnerEvaluationInteraction has not been loaded")
 
+        val lastUserResponse = learnerPhaseExecution.lastAttemptResponse
 
         DraxoLearnerEvaluationPhaseViewModel(
             sequenceId = sequence.id ?: error("The sequence must have an ID during evaluation phase"),
@@ -57,7 +58,7 @@ class DraxoLearnerEvaluationPhase(
             secondAttemptAlreadySubmitted = learnerPhaseExecution.secondAttemptAlreadySubmitted,
             responseFormModel = LearnerResponseFormViewModelFactory.buildFor2ndAttempt(
                 learnerSequence,
-                learnerPhaseExecution.firstAttemptResponse
+                lastUserResponse
             ),
             lastResponseToGrade = learnerPhaseExecution.lastResponseToGrade,
             draxoEvaluation = learnerPhaseExecution.draxoEvaluation

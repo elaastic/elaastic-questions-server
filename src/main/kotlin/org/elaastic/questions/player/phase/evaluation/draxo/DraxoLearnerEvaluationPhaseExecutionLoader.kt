@@ -26,19 +26,15 @@ class DraxoLearnerEvaluationPhaseExecutionLoader(
         val secondAttemptAlreadySubmitted = responseService.hasResponseForUser(learner, sequence, 2)
 
         val responseIdAlreadyGradedList =
-            peerGradingService.findAllEvaluation(learner, sequence).map { it.response.id  }
+            peerGradingService.findAllEvaluation(learner, sequence).map { it.response.id }
 
 
-        val responsesToGrade = if (secondAttemptAlreadySubmitted)
-            listOf()
-        else
-            responseService.findAllRecommandedResponsesForUser(
-                sequence = sequence,
-                attempt = sequence.whichAttemptEvaluate(),
-                user = learner
-            ).map { ResponseData(it) }
-                .filter { responseData -> responseData.id !in responseIdAlreadyGradedList }
-
+        val responsesToGrade = responseService.findAllRecommandedResponsesForUser(
+            sequence = sequence,
+            attempt = sequence.whichAttemptEvaluate(),
+            user = learner
+        ).map { ResponseData(it) }
+            .filter { responseData -> responseData.id !in responseIdAlreadyGradedList }
 
 
         val nextResponseToGrade = responsesToGrade.firstOrNull()
@@ -47,10 +43,14 @@ class DraxoLearnerEvaluationPhaseExecutionLoader(
             userHasCompletedPhase2 = nextResponseToGrade == null,
             secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
             nextResponseToGrade = nextResponseToGrade,
-            lastResponseToGrade =  responsesToGrade.size == 1,
+            lastResponseToGrade = responsesToGrade.size == 1,
             sequence = learnerPhase.learnerSequence.sequence,
             userActiveInteraction = learnerPhase.learnerSequence.activeInteraction,
-            firstAttemptResponse = responseService.find(learner, sequence),
+            lastAttemptResponse = responseService.find(learner, sequence, 2) ?: responseService.find(
+                learner,
+                sequence,
+                1
+            ),
         )
     }
 

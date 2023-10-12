@@ -58,18 +58,22 @@ class DraxoPeerGrading(
     var criteriaO: OptionId? = null,
 
     annotation: String? = null,
+
+    lastSequencePeerGrading: Boolean
 ) : PeerGrading(
     type = PeerGradingType.DRAXO,
     grader = grader,
     response = response,
     annotation = annotation,
-    grade = DraxoGrading.computeGrade(criteriaD, criteriaR, criteriaA, criteriaX, criteriaO)
+    grade = DraxoGrading.computeGrade(criteriaD, criteriaR, criteriaA, criteriaX, criteriaO),
+    lastSequencePeerGrading = lastSequencePeerGrading
 ) {
 
     constructor(
         grader: User,
         response: Response,
-        draxoEvaluation: DraxoEvaluation
+        draxoEvaluation: DraxoEvaluation,
+        lastSequencePeerGrading: Boolean
     ) : this(
         grader,
         response,
@@ -78,7 +82,8 @@ class DraxoPeerGrading(
         criteriaA = draxoEvaluation.criteriaValuation[Criteria.A]?.optionId,
         criteriaX = draxoEvaluation.criteriaValuation[Criteria.X]?.optionId,
         criteriaO = draxoEvaluation.criteriaValuation[Criteria.O]?.optionId,
-        annotation = draxoEvaluation.getExplanation()
+        annotation = draxoEvaluation.getExplanation(),
+        lastSequencePeerGrading = lastSequencePeerGrading
     )
 
     operator fun set(criteria: Criteria, optionId: OptionId?) {

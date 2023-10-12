@@ -44,13 +44,16 @@ class PeerGradingService(
         return peerGrade
     }
 
-    fun createOrUpdateDraxo(grader: User, response: Response, evaluation: DraxoEvaluation): DraxoPeerGrading {
+    fun createOrUpdateDraxo(grader: User,
+                            response: Response,
+                            evaluation: DraxoEvaluation,
+                            lastSequencePeerGrading: Boolean): DraxoPeerGrading {
         require(isGraderRegisteredOnAssignment(grader, response)) {
             "You must be registered on the assignment to provide evaluations"
         }
 
         val peerGrade = peerGradingRepository.findByGraderAndResponse(grader, response)
-            ?: DraxoPeerGrading(grader, response, evaluation)
+            ?: DraxoPeerGrading(grader, response, evaluation, lastSequencePeerGrading)
 
         require(peerGrade is DraxoPeerGrading) {
             "It already exist a peer grading for this response & this grader but it is not a DRAXO evaluation"
@@ -111,7 +114,7 @@ class PeerGradingService(
             (entityManager.createQuery("""
                 SELECT COUNT(DISTINCT pg.grader) 
                 FROM PeerGrading pg
-                WHERE pg.response IN (FROM  Response resp where resp.interaction = :interaction)
+                WHERE pg.response IN (FROM  Response resp where resp.interaction = :interaction) AND pg.lastSequencePeerGrading IS TRUE 
             """.trimIndent())
                     .setParameter("interaction", interaction)
                     .singleResult as Long).toInt()

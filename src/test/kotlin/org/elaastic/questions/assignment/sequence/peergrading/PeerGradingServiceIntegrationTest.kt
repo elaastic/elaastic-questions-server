@@ -49,7 +49,7 @@ class PeerGradingServiceIntegrationTest(
             .addEvaluation(Criteria.D, OptionId.YES)
             .addEvaluation(Criteria.R, OptionId.PARTIALLY, explanation)
             .tWhen {draxoEvaluation ->
-                val peerGrading = peerGradingService.createOrUpdateDraxo(grader, response, draxoEvaluation)
+                val peerGrading = peerGradingService.createOrUpdateDraxo(grader, response, draxoEvaluation ,false)
                 entityManager.flush()
                 entityManager.clear()
                 peerGrading

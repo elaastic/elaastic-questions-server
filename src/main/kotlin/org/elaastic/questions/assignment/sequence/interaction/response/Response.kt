@@ -89,6 +89,16 @@ class Response(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
+    /**
+     * Allow to treat this response as an update of an existing response
+     */
+    fun makeAsUpdateOf(initialResponse: Response) {
+        this.id = initialResponse.id
+        this.uuid = initialResponse.uuid
+        this.version = initialResponse.version
+        this.dateCreated = initialResponse.dateCreated
+    }
+
     companion object {
         fun computeScore(learnerChoice: LearnerChoice,
                          choiceSpecification: ChoiceSpecification): BigDecimal =

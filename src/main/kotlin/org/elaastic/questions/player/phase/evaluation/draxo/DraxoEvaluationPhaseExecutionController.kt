@@ -41,7 +41,8 @@ class DraxoEvaluationPhaseExecutionController(
         sequenceService.get(sequenceId, true).let { sequence ->
             assignment = sequence.assignment!!
 
-            return if (changeAnswerData.changeAnswer) {
+            // Note : we systematically add a 2nd attempt at the end of the review ; if the learner didn't change its response, we store a copy of its 1st attempts as the 2nd attempt
+            if (changeAnswerData.changeAnswer || changeAnswerData.lastResponseToGrade) {
                 changeAnswer(
                     user,
                     sequence,
@@ -51,15 +52,14 @@ class DraxoEvaluationPhaseExecutionController(
                         changeAnswerData.explanation
                     )
                 )
-                finalizePhaseExecution(user, sequence, assignment.id!!)
-            } else {
-                if(changeAnswerData.lastResponseToGrade) {
-                    finalizePhaseExecution(user, sequence, assignment.id!!)
-                }
-
-                "redirect:/player/assignment/${assignment.id}/play/sequence/${sequence.id}"
             }
 
+
+            if(changeAnswerData.lastResponseToGrade) {
+                finalizePhaseExecution(user, sequence, assignment.id!!)
+            }
+
+            return "redirect:/player/assignment/${assignment.id}/play/sequence/${sequence.id}"
         }
     }
 
