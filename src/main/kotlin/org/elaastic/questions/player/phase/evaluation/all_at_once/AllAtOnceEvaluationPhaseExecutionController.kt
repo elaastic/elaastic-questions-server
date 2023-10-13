@@ -4,6 +4,7 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -49,10 +50,11 @@ class AllAtOnceEvaluationPhaseExecutionController(
                 )
             }
 
+            var lastResponse: Response? = null
             if (sequence.isSecondAttemptAllowed()
                 && !responseService.hasResponseForUser(user, sequence, 2)
             ) {
-                changeAnswer(
+                lastResponse = changeAnswer(
                     user,
                     sequence,
                     Answer(
@@ -63,7 +65,7 @@ class AllAtOnceEvaluationPhaseExecutionController(
                 )
             }
 
-            return finalizePhaseExecution(user, sequence, assignment.id!!)
+            return finalizePhaseExecution(user, sequence, assignment.id!!, lastResponse)
         }
     }
 

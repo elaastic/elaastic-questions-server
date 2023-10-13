@@ -16,7 +16,7 @@ abstract class AbstractEvaluationPhaseExecutionController(
     open val chatGptEvaluationService: ChatGptEvaluationService
 ) {
 
-    fun changeAnswer(user: User, sequence: Sequence, answer: Answer) {
+    fun changeAnswer(user: User, sequence: Sequence, answer: Answer): Response {
         val choiceListSpecification = answer.choiceList?.let {
             LearnerChoice(it)
         }
@@ -50,23 +50,21 @@ abstract class AbstractEvaluationPhaseExecutionController(
         val userActiveInteraction = sequenceService.getActiveInteractionForLearner(sequence, user)
             ?: error("No active interaction, cannot submit a response")
 
-        val savedResponse = responseService.save(
+        return responseService.save(
             userActiveInteraction,
             response
         )
-        if (sequence.chatGptEvaluationEnabled) { // TODO Should be created at the end... not at each change...
-            chatGptEvaluationService.createEvaluation(savedResponse)
-        }
-
 
     }
 
-    fun finalizePhaseExecution(user: User, sequence: Sequence, assignmentId: Long): String {
+    fun finalizePhaseExecution(user: User, sequence: Sequence, assignmentId: Long, lastResponse: Response? = null): String {
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
             sequenceService.nextInteractionForLearner(sequence, user)
         }
 
-
+        if (sequence.chatGptEvaluationEnabled && lastResponse != null) {
+            chatGptEvaluationService.createEvaluation(lastResponse)
+        }
 
         return "redirect:/player/assignment/${assignmentId}/play/sequence/${sequence.id}"
     }

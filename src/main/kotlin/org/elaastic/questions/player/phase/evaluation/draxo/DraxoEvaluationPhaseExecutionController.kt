@@ -4,6 +4,7 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -41,9 +42,10 @@ class DraxoEvaluationPhaseExecutionController(
         sequenceService.get(sequenceId, true).let { sequence ->
             assignment = sequence.assignment!!
 
+            var lastResponse: Response? = null
             // Note : we systematically add a 2nd attempt at the end of the review ; if the learner didn't change its response, we store a copy of its 1st attempts as the 2nd attempt
             if (changeAnswerData.changeAnswer || changeAnswerData.lastResponseToGrade) {
-                changeAnswer(
+                lastResponse = changeAnswer(
                     user,
                     sequence,
                     Answer(
@@ -56,7 +58,7 @@ class DraxoEvaluationPhaseExecutionController(
 
 
             if(changeAnswerData.lastResponseToGrade) {
-                finalizePhaseExecution(user, sequence, assignment.id!!)
+                finalizePhaseExecution(user, sequence, assignment.id!!, lastResponse)
             }
 
             return "redirect:/player/assignment/${assignment.id}/play/sequence/${sequence.id}"
