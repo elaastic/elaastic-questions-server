@@ -28,7 +28,6 @@ data class ResponseFormModel(
         val multipleChoice: Boolean,
         val nbItem: Int? = null,
         val firstAttemptChoices: Array<Int> = arrayOf(),
-        val timeToProvideExplanation: Boolean,
         val firstAttemptExplanation: String? = null,
         val firstAttemptConfidenceDegree: ConfidenceDegree? = null,
         val responseSubmissionSpecification: ResponseSubmissionSpecification,

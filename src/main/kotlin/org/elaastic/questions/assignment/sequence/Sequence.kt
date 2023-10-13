@@ -197,8 +197,7 @@ class Sequence(
 
 
     @Transient
-    fun isSecondAttemptAllowed() =
-        !(executionIsFaceToFace() && statement.isOpenEnded())
+    fun isSecondAttemptAllowed() = true
 
     fun whichAttemptEvaluate() =
         if (executionIsFaceToFace()) 1 else 2

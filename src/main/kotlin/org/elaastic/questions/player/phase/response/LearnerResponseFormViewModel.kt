@@ -30,7 +30,6 @@ data class LearnerResponseFormViewModel(
         val multipleChoice: Boolean,
         val nbItem: Int? = null,
         val firstAttemptChoices: Array<Int> = arrayOf(),
-        val timeToProvideExplanation: Boolean,
         val firstAttemptExplanation: String? = null,
         val firstAttemptConfidenceDegree: ConfidenceDegree? = null,
         val responseSubmissionSpecification: ResponseSubmissionSpecification,
@@ -50,7 +49,6 @@ object LearnerResponseFormViewModelFactory {
                         interactionId = interactionId,
                         attempt = 2,
                         responseSubmissionSpecification = sequence.getResponseSubmissionSpecification(),
-                        timeToProvideExplanation = (sequence.executionIsBlended() || sequence.executionIsDistance()), // TODO I don't understand this logic
                         hasChoices = sequence.statement.hasChoices(),
                         multipleChoice = sequence.statement.isMultipleChoice(),
                         nbItem = sequence.statement.choiceSpecification?.nbCandidateItem,

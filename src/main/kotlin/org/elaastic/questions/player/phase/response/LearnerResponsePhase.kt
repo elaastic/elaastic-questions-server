@@ -44,7 +44,6 @@ class LearnerResponsePhase(
                 interactionId = interaction.id ?: error("Interaction must have an ID to get response"),
                 attempt = 1,
                 responseSubmissionSpecification = interaction.specification as ResponseSubmissionSpecification,
-                timeToProvideExplanation = true,
                 hasChoices = learnerSequence.sequence.statement.hasChoices(),
                 multipleChoice = learnerSequence.sequence.statement.isMultipleChoice(),
                 nbItem = learnerSequence.sequence.statement.choiceSpecification?.nbCandidateItem

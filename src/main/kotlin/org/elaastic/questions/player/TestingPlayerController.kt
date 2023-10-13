@@ -2553,7 +2553,6 @@ class TestingPlayerController(
                         studentsProvideExplanation = true,
                         studentsProvideConfidenceDegree = true
                     ),
-                    timeToProvideExplanation = true,
                     hasChoices = true,
                     multipleChoice = true,
                     firstAttemptChoices = arrayOf(2),
@@ -2606,7 +2605,6 @@ class TestingPlayerController(
                         studentsProvideExplanation = true,
                         studentsProvideConfidenceDegree = true
                     ),
-                    timeToProvideExplanation = true,
                     hasChoices = true,
                     multipleChoice = true,
                     firstAttemptChoices = arrayOf(2),
@@ -2655,7 +2653,6 @@ class TestingPlayerController(
                         studentsProvideExplanation = true,
                         studentsProvideConfidenceDegree = true
                     ),
-                    timeToProvideExplanation = true,
                     hasChoices = true,
                     multipleChoice = true,
                     firstAttemptChoices = arrayOf(2),
