@@ -47,7 +47,7 @@ class PeerGrading(
     var grade: BigDecimal?,
     var annotation: String? = null,
 
-    // Indicates that this grading is the last one for this grader & this sequence (useful in ONE-BY-ONE & DRAXO strategies)
+    // Indicates that this grading is the last one for this grader & this sequence (useful for DRAXO strategy)
     var lastSequencePeerGrading: Boolean = true,
     ) : AbstractJpaPersistable<Long>() {
 
