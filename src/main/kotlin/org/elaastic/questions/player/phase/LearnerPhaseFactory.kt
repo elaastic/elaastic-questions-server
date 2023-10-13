@@ -6,7 +6,6 @@ import org.elaastic.questions.player.phase.descriptor.PhaseDescriptor
 import org.elaastic.questions.player.phase.evaluation.LearnerEvaluationPhaseConfig
 import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
-import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhase
 import org.elaastic.questions.player.phase.response.LearnerResponsePhase
 import org.elaastic.questions.player.phase.result.LearnerResultPhase
 import org.springframework.stereotype.Service
@@ -27,13 +26,6 @@ class LearnerPhaseFactory {
         LearnerPhaseType.RESPONSE -> LearnerResponsePhase(learnerSequence, phaseIndex, active, state)
         LearnerPhaseType.EVALUATION -> when (phaseDescriptor.config) {
             LearnerEvaluationPhaseConfig.ALL_AT_ONCE -> AllAtOnceLearnerEvaluationPhase(
-                learnerSequence,
-                phaseIndex,
-                active,
-                state,
-            )
-
-            LearnerEvaluationPhaseConfig.ONE_BY_ONE -> OneByOneLearnerEvaluationPhase(
                 learnerSequence,
                 phaseIndex,
                 active,

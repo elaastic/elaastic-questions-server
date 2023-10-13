@@ -64,8 +64,6 @@ import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluati
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhase
-import org.elaastic.questions.player.phase.evaluation.one_by_one.OneByOneLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
 import org.springframework.beans.factory.annotation.Autowired
@@ -2568,54 +2566,6 @@ class TestingPlayerController(
         )
 
         return "player/assignment/sequence/phase/response/test-response-phase"
-    }
-
-    @GetMapping("/evaluation-phase/one-by-one")
-    fun testEvaluationPhaseOneByOne(
-        authentication: Authentication,
-        model: Model
-    ): String {
-        val user: User = authentication.principal as User
-
-        model.addAttribute("user", user)
-        model.addAttribute("phaseTemplate", OneByOneLearnerEvaluationPhase.TEMPLATE)
-
-        model.addAttribute(
-            "evaluationPhaseViewModel",
-            OneByOneLearnerEvaluationPhaseViewModel(
-                sequenceId = 12,
-                interactionId = 123,
-                choices = true,
-                userHasCompletedPhase2 = false,
-                nextResponseToGrade =
-                org.elaastic.questions.player.phase.evaluation.ResponseData(
-                    id = 1,
-                    choiceList = listOf(1),
-                    explanation = "1st explanation"
-                ),
-                lastResponseToGrade = false,
-                secondAttemptAllowed = true,
-                secondAttemptAlreadySubmitted = false,
-                responseFormModel = LearnerResponseFormViewModel(
-                    interactionId = 1731L,
-                    attempt = 2,
-                    responseSubmissionSpecification = ResponseSubmissionSpecification(
-                        studentsProvideExplanation = true,
-                        studentsProvideConfidenceDegree = true
-                    ),
-                    timeToProvideExplanation = true,
-                    hasChoices = true,
-                    multipleChoice = true,
-                    firstAttemptChoices = arrayOf(2),
-                    firstAttemptExplanation = "Hello World",
-                    firstAttemptConfidenceDegree = ConfidenceDegree.CONFIDENT,
-                    nbItem = 3
-                ),
-                phaseState = State.show,
-            )
-        )
-
-        return "player/assignment/sequence/phase/evaluation/test-evaluation-phase"
     }
 
     @GetMapping("/evaluation-phase/all-at-once")
