@@ -37,6 +37,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.player.components.steps.SequenceStatistics
+import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
@@ -109,6 +110,7 @@ class SequenceService(
         executionContext: ExecutionContext,
         studentsProvideExplanation: Boolean,
         nbResponseToEvaluate: Int,
+        evaluationPhaseConfig: EvaluationPhaseConfig?,
         chatGptEvaluationEnable: Boolean = false
     ): Sequence {
 
@@ -132,6 +134,7 @@ class SequenceService(
             it.state = State.show
             it.executionContext = executionContext
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
+            it.evaluationPhaseConfig = evaluationPhaseConfig ?: EvaluationPhaseConfig.ALL_AT_ONCE
             it.chatGptEvaluationEnabled = chatGptEvaluationEnable
             sequenceRepository.save(it)
         }

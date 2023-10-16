@@ -20,6 +20,7 @@ import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.player.PlayerController
+import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
@@ -147,7 +148,8 @@ class FunctionalTestingService(
             sequence,
             executionContext,
             studentsProvideExplanation,
-            nbResponseToEvaluate
+            nbResponseToEvaluate,
+            EvaluationPhaseConfig.ALL_AT_ONCE,
         )
 
     fun submitResponse(

@@ -216,7 +216,14 @@ internal class AssignmentServiceIntegrationTest(
         )
         val student = integrationTestingService.getTestStudent()
 
-        sequenceService.start(teacher, assignment.sequences.first(), ExecutionContext.FaceToFace, false, 0)
+        sequenceService.start(
+            teacher,
+            assignment.sequences.first(),
+            ExecutionContext.FaceToFace,
+            false,
+            0,
+            null
+        )
 
         val interaction =
             Interaction(

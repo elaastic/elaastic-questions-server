@@ -34,6 +34,7 @@ import org.elaastic.questions.directory.*
 import org.elaastic.questions.player.components.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.phase.LearnerPhaseService
+import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -45,7 +46,6 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import org.togglz.core.manager.FeatureManager
-import java.lang.IllegalArgumentException
 import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.servlet.http.HttpServletRequest
@@ -91,10 +91,8 @@ class PlayerController(
     }
 
     private fun findAssignment(globalId: String?): Assignment {
-        if (globalId == null || globalId == "") {
-            throw IllegalArgumentException(
-                messageBuilder.message("assignment.register.empty.globalId")
-            )
+        require(!(globalId == null || globalId == "")) {
+            messageBuilder.message("assignment.register.empty.globalId")
         }
 
         return assignmentService.findByGlobalId(
@@ -293,7 +291,8 @@ class PlayerController(
         @RequestParam executionContext: ExecutionContext,
         @RequestParam studentsProvideExplanation: Boolean?,
         @RequestParam responseToEvaluateCount: Int?,
-        @RequestParam chatGptEvaluation: Boolean?
+        @RequestParam chatGptEvaluation: Boolean?,
+        @RequestParam evaluationPhaseConfig: EvaluationPhaseConfig?,
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment?
@@ -306,6 +305,7 @@ class PlayerController(
                     executionContext,
                     studentsProvideExplanation ?: false,
                     responseToEvaluateCount ?: 0,
+                    evaluationPhaseConfig,
                     chatGptEvaluation ?: false && studentsProvideExplanation ?: false
                 )
                 userService.updateUserActiveSince(user)

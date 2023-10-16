@@ -27,6 +27,7 @@ import org.elaastic.questions.assignment.sequence.interaction.specification.Eval
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -64,6 +65,9 @@ class Sequence(
 
     @field:Enumerated(EnumType.STRING)
     var executionContext: ExecutionContext = ExecutionContext.FaceToFace,
+
+    @field:Enumerated(EnumType.STRING)
+    var evaluationPhaseConfig: EvaluationPhaseConfig = EvaluationPhaseConfig.ALL_AT_ONCE,
 
     @field:OneToOne
     var activeInteraction: Interaction? = null,
