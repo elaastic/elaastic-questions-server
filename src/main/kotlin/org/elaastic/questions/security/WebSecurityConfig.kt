@@ -71,6 +71,8 @@ class WebSecurityConfig(
     fun webSecurityCustomize() =
         WebSecurityCustomizer { web ->
             web.ignoring().requestMatchers(HttpMethod.POST, "/launch", "/elaastic-questions/launch")
+            web.ignoring().requestMatchers(HttpMethod.GET, "/images/**", "/css/**", "/js/**", "/semantic/**", "/ckeditor/**")
+
         }
 
     @Bean
@@ -90,13 +92,8 @@ class WebSecurityConfig(
             }
 
             authorizeRequests {
-                authorize("/images/**", permitAll)
-                authorize("/css/**", permitAll)
-                authorize("/js/**", permitAll)
-                authorize("/semantic/**", permitAll)
                 authorize("/", permitAll)
                 authorize("/demo", permitAll)
-                authorize("/ckeditor/**", permitAll)
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
                 authorize(LOGIN_URL, permitAll)
