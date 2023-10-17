@@ -35,8 +35,8 @@
 
         <tr>
             <td th:text="#{draxo.evaluationGrid}">Evaluation grid</td>
-            <td>
-                <div class="ui tiny tablet stackable  fluid steps" style="margin-right: 3em;">
+            <td class="container" style="max-width: 100%">
+                <div class="ui mini tablet stackable fluid steps" style="margin-right: 3em;">
                     <th:block
                             th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
                             th:with="optionType = ${criteria.getOptionType(model.draxoEvaluation.get(criteria))}">
