@@ -47,15 +47,16 @@ class CasSecurityConfig {
 
     companion object {
         private fun getServiceUrl(casKey: String) = "$SERVICE_URL_PREFIX/$casKey"
+
+        @Bean
+        fun casSecurityConfigurer(
+            context: ApplicationContext,
+            environment: ConfigurableEnvironment
+        ): CasSecurityConfigurer {
+            return CasSecurityConfigurer(context, environment)
+        }
     }
 
-    @Bean
-    fun casSecurityConfigurer(
-        context: ApplicationContext,
-        environment: ConfigurableEnvironment
-    ): CasSecurityConfigurer {
-        return CasSecurityConfigurer(context, environment)
-    }
 
     class CasSecurityConfigurer(
         val context: ApplicationContext,
@@ -64,7 +65,8 @@ class CasSecurityConfig {
 
         private val elaasticServerUrl = readProperty("elaastic.questions.url", environment)
         val casInfoList = readCasConfiguration(environment)
-        val casKeyToServerUrl = casInfoList.map { it.casKey }.associateWith { readCasProperty("server.url", it, environment) }
+        val casKeyToServerUrl =
+            casInfoList.map { it.casKey }.associateWith { readCasProperty("server.url", it, environment) }
 
         fun getServiceCasLoginUrl(casKey: String): String =
             context.getBean("$SERVICE_PROPERTIES_BEAN_PREFIX${casKey}", ServiceProperties::class.java).service
