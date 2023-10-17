@@ -42,6 +42,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
 
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
@@ -56,11 +57,12 @@ class WebSecurityConfig(
         const val LOGIN_URL = "/login"
     }
 
-    @Autowired var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
+    @Autowired
+    var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
 
     @Bean
     fun webAuthenticationManager(): AuthenticationManager {
-        val providers =mutableListOf<AuthenticationProvider>()
+        val providers = mutableListOf<AuthenticationProvider>()
         providers.addAll(casSecurityConfigurer?.getCasAuthenticationProviderBeanList() ?: listOf())
         providers.add(daoAuthenticationProvider())
 
@@ -71,9 +73,21 @@ class WebSecurityConfig(
     fun webSecurityCustomize() =
         WebSecurityCustomizer { web ->
             web.ignoring().requestMatchers(HttpMethod.POST, "/launch", "/elaastic-questions/launch")
-            web.ignoring().requestMatchers(HttpMethod.GET, "/images/**", "/css/**", "/js/**", "/semantic/**", "/ckeditor/**")
 
         }
+
+    @Bean
+    @Order(0)
+    fun resourceFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .securityMatcher("/images/**", "/css/**", "/js/**", "/semantic/**", "/ckeditor/**")
+            .authorizeHttpRequests { authorize -> authorize.anyRequest().permitAll() }
+            .requestCache().disable()
+            .securityContext().disable()
+            .sessionManagement().disable()
+
+        return http.build()
+    }
 
     @Bean
     fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -140,8 +154,8 @@ class WebSecurityConfig(
                 )
             }
 
-            cors {  }
-            csrf {  }
+            cors { }
+            csrf { }
         }
 
         return http.build()
