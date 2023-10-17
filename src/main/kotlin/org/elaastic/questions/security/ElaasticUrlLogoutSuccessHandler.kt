@@ -27,11 +27,11 @@ class ElaasticUrlLogoutSuccessHandler(
     override fun determineTargetUrl(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authentication: Authentication
+        authentication: Authentication?
     ): String {
-        val user = authentication.principal as User
+        val user = authentication?.principal as User?
 
-        return if (user.casKey != null) {
+        return if (user?.casKey != null) {
             (casKeyToServerUrl[user.casKey]
                 ?: throw IllegalStateException("No logout URL configured for the CAS server [${user.casKey}]")) +
                         casLogoutSuccessUrl
