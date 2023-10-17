@@ -31,7 +31,7 @@
     <h2>Show a list of DRAXO evaluations</h2>
 
     <th:block th:each="model : ${evaluationModelList}">
-        <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList(${evaluationModelList})"></div>
+        <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList(${model}, ${false})"></div>
     </th:block>
 </section>
 </body>
