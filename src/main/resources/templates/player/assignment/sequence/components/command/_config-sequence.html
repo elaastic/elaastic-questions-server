@@ -16,7 +16,9 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns="http://www.w3.org/1999/html"
+     xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
      th:fragment="configSequence(sequenceId, statementId, questionType, hasExpectedExplanation)"
      class="ui small modal"
      th:id="|sequenceSpec_${sequenceId}|">
@@ -170,7 +172,9 @@
 
                     </div>
 
-                    <div class="field">
+                    <div class="field" togglz:active="'CHATGPT_EVALUATION'">
+                        <label for="chat-gpt-checkbox" th:text="#{sequence.interaction.toggleChatGptEvaluations.section.label}">Automatic feedback:</label>
+
                         <div id="chat-gpt-checkbox" class="ui checkbox"
                              style="display: flex; align-items: center; width: fit-content">
                             <input type="checkbox" name="chatGptEvaluation" th:value="false"/>
