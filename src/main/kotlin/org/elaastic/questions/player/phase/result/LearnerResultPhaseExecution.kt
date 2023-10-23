@@ -13,7 +13,6 @@ class LearnerResultPhaseExecution(
     val myResultsModel: LearnerResultsModel,
     val featureManager: FeatureManager,
     val messageBuilder: MessageBuilder,
-    val myChatGptEvaluationModel: ChatGptEvaluationModel,
-    val chatGptEvaluationEnabled: Boolean
+    val myChatGptEvaluationModel: ChatGptEvaluationModel?,
 ) : LearnerPhaseExecution {
 }
