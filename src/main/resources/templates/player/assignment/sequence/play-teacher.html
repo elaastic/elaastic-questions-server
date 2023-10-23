@@ -19,7 +19,9 @@
 <!DOCTYPE html>
 <html lang="en"
       th:replace="layout/3columns :: 3columns(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, aside=~{::#layout-aside}, modalAside=~{::#modal-aside}, content=~{::section},extraHeader=~{::head/script})"
-      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
+      xmlns="http://www.w3.org/1999/html">
 <!--/*@thymesVar id="playerModel" type="org.elaastic.questions.player.PlayerModel"*/-->
 <head>
   <title th:text="|elaastic: ${playerModel.assignment.title}|"></title>
@@ -108,14 +110,7 @@
       <div th:replace="|${components}/results/_results.html| :: results(${playerModel.resultsModel}, true)"></div>
     </div>
 
-<!--    <th:block th:each="phase : ${playerModel.phaseList}">-->
-<!--      <th:block th:if="${phase.isVisible()}">-->
-<!--        <div-->
-<!--          th:replace="|${phase.getPlayerTemplate().fileName}| :: ${phase.getPlayerTemplate().fragmentName}(${phase.viewModel})"></div>-->
-<!--      </th:block>-->
-<!--    </th:block>-->
-
-    <div togglz:active="FUNCTIONAL_TESTING" th:remove="tag">
+    <div togglz:active="'FUNCTIONAL_TESTING'" th:remove="tag">
       <div
         th:replace="|${components}/functional-testing/functional-test.html| :: functionalTesting(${playerModel.assignment.id},${playerModel.sequence.id})"></div>
     </div>

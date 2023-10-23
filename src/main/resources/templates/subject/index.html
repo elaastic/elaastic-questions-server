@@ -19,7 +19,9 @@
 <!DOCTYPE html>
 <html lang="en"
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section}, currentSection='my-subjects')"
-      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
+      xmlns="http://www.w3.org/1999/html">
 <head>
   <title th:text="|elaastic: #{subject.my.list.label}|">elaastic: My Subjects</title>
 </head>
@@ -37,7 +39,7 @@
   </a>
 
   <a th:href="@{/subject/upload-form}"
-     togglz:active="IMPORT_EXPORT"
+     togglz:active="'IMPORT_EXPORT'"
      href="showUploadForm"
      class="item"
      th:attr="data-tooltip=#{subject.upload.label}"
@@ -134,7 +136,7 @@
                     </span>
         </a>
 
-        <a togglz:active="FUNCTIONAL_TESTING"
+        <a togglz:active="'FUNCTIONAL_TESTING'"
            th:href="@{/test/generate-subject}"
            href="create"
            class="ui inverted red button">
