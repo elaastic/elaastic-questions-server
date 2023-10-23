@@ -18,7 +18,9 @@
 
 <div th:fragment="statementExplanationForm(statement, urlFindAllFakeExplanation)"
      th:remove="tag"
-     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
+     xmlns="http://www.w3.org/1999/html">
 
   <div class="ui hidden divider"></div>
 
@@ -33,6 +35,7 @@
          style="color: grey"
          th:text="#{subject.statement.optional.label}">Optional</p>
       <p class="ui label basic small"
+         togglz:active="'CHATGPT_EVALUATION'"
          style="color: grey"
          th:text="#{subject.statement.explanation.necessaryForChatGPT.label}"></p>
     </div>

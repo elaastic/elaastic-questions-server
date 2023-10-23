@@ -41,7 +41,6 @@ class LearnerResultPhase(
             messageBuilder = learnerPhaseExecution!!.messageBuilder,
         ),
         learnerPhaseExecution!!.myChatGptEvaluationModel,
-        learnerPhaseExecution!!.chatGptEvaluationEnabled
     )
 
     // Note JT : results are displayed even when the sequence is closed

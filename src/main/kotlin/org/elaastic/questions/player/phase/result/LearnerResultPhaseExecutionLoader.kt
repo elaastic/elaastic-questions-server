@@ -42,12 +42,14 @@ class LearnerResultPhaseExecutionLoader(
                     firstResponse,
                     secondResponse
                 )
+
             QuestionType.ExclusiveChoice ->
                 LearnerResultsModelFactory.buildExclusiveChoiceResult(
                     firstResponse,
                     secondResponse,
                     learnerPhase.learnerSequence.sequence.statement
                 )
+
             QuestionType.MultipleChoice ->
                 LearnerResultsModelFactory.buildMultipleChoiceResult(
                     firstResponse,
@@ -57,7 +59,10 @@ class LearnerResultPhaseExecutionLoader(
         }
 
         val evaluation = chatGptEvaluationService.findEvaluationByResponse(secondResponse ?: firstResponse)
-        val myChatGptEvaluationModel = ChatGptEvaluationModelFactory.build(evaluation,learnerPhase.learnerSequence.sequence)
+
+        val myChatGptEvaluationModel = if (learnerPhase.learnerSequence.sequence.chatGptEvaluationEnabled) {
+            ChatGptEvaluationModelFactory.build(evaluation, learnerPhase.learnerSequence.sequence)
+        } else null
 
         LearnerResultPhaseExecution(
             responseSet = responseService.findAll(learnerPhase.learnerSequence.sequence, excludeFakes = false),
@@ -69,7 +74,6 @@ class LearnerResultPhaseExecutionLoader(
             featureManager = featureManager,
             messageBuilder = messageBuilder,
             myChatGptEvaluationModel = myChatGptEvaluationModel,
-            chatGptEvaluationEnabled = learnerPhase.learnerSequence.sequence.chatGptEvaluationEnabled
         )
     }
 }

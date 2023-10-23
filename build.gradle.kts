@@ -59,6 +59,7 @@ dependencies {
     implementation("org.togglz:togglz-spring-security:3.0.0")
     implementation("org.togglz:togglz-kotlin:3.0.0")
     implementation("org.togglz:togglz-console:3.0.0")
+    implementation("com.github.heneke.thymeleaf:thymeleaf-extras-togglz:1.0.1.RELEASE")
     implementation("com.toedter:spring-hateoas-jsonapi:1.6.0")
     implementation("org.jsoup:jsoup:1.16.1")
     

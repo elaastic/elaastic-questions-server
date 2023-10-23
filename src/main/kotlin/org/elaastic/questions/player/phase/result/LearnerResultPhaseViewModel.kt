@@ -10,6 +10,5 @@ class LearnerResultPhaseViewModel(
     val resultsArePublished: Boolean,
     val myResultsModel: LearnerResultsModel,
     val sequenceResultsModel: ResultsModel,
-    val myChatGptEvaluationModel: ChatGptEvaluationModel,
-    val chatGptEvaluationEnabled: Boolean
+    val myChatGptEvaluationModel: ChatGptEvaluationModel?,
 ) : PhaseViewModel
