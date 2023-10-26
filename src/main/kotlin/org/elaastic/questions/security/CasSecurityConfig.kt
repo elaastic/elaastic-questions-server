@@ -144,11 +144,12 @@ class CasSecurityConfig {
         }
 
         private fun registerCasAuthenticationFilter(registry: BeanDefinitionRegistry, casKey: String) {
-            BeanDefinitionBuilder.genericBeanDefinition(CasAuthenticationFilter::class.java).setLazyInit(true)
+            BeanDefinitionBuilder.genericBeanDefinition(ElaasticCasAuthenticationFilter::class.java).setLazyInit(true)
                 .let { builder ->
                     builder.addAutowiredProperty("authenticationManager")
                     builder.addPropertyReference("serviceProperties", "$SERVICE_PROPERTIES_BEAN_PREFIX${casKey}")
                     builder.addPropertyValue("filterProcessesUrl", "/${getServiceUrl(casKey)}")
+                    builder.addPropertyValue("casKey", casKey)
                     registry.registerBeanDefinition(
                         "$CAS_AUTHENTICATION_FILTER_BEAN_PREFIX${casKey}",
                         builder.beanDefinition
