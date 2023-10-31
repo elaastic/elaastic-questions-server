@@ -19,6 +19,7 @@
 package org.elaastic.questions.directory
 
 import org.elaastic.questions.assignment.LearnerAssignment
+import org.elaastic.questions.directory.cas.CasUser
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -57,7 +58,10 @@ class User(
     private var source: UserSource = UserSource.ELAASTIC,
 
     @Transient
-    var casKey: String? = null
+    var casKey: String? = null,
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    val casUser: CasUser? = null
 
 ) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource {
 
