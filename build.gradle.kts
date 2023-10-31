@@ -1,21 +1,29 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 ext["spring-security.version"]="5.8.3"
 
 plugins {
-    id("org.springframework.boot") version "2.7.12"
+    id("org.springframework.boot") version "2.7.13"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
-    war
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
-    id("com.palantir.docker") version "0.25.0"
+    id("org.sonarqube") version "4.2.1.3168"
 }
 
 group = "org.elaastic.questions"
-version = "5.1.5"
-java.sourceCompatibility = JavaVersion.VERSION_17
+version = "5.2-SNAPSHOT"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "elaastic-questions-server")
+        property("sonar.projectName", "elaastic-questions-server")
+    }
+}
 
 repositories {
     mavenCentral()
@@ -43,7 +51,6 @@ dependencies {
 	implementation("org.springframework.security:spring-security-cas")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-allopen")
@@ -87,31 +94,35 @@ allOpen {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+        freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "17"
     }
 }
-
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-apply(plugin = "com.palantir.docker")
-
-val bootJar: BootJar by tasks
-
-docker {
-    name = "elaastic-questions-server-standalone:latest"
-    copySpec.from(bootJar.outputs.files.singleFile)
-            .from("docker-resources/elaastic-questions/elaastic-questions.properties")
-            .into("docker-build")
-    buildArgs(mapOf(
-            "JAR_FILE" to "docker-build/${bootJar.archiveFileName.get()}",
-            "CONF_FILE" to "docker-build/elaastic-questions.properties"
-    ))
+tasks.getByName<Jar>("jar") {
+    enabled = false
 }
 
-tasks.getByName<War>("war") {
-    enabled = true
+tasks.register("dockerBuild") {
+    group = "Docker"
+    description = "Builds the Docker image aligned with the elaastic version"
+    doLast {
+        exec {
+            commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server:$version", ".")
+        }
+    }
+}
+
+tasks.register("dockerBuildLatest") {
+    group = "Docker"
+    description = "Builds the Docker image with tag `latest`"
+    doLast {
+        exec {
+            commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server:latest", ".")
+        }
+    }
 }

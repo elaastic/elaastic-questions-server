@@ -18,12 +18,14 @@
 
 package org.elaastic.questions.player.websocket
 
+import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import javax.websocket.*
 import javax.websocket.server.PathParam
 import javax.websocket.server.ServerEndpoint
 
 @ServerEndpoint(value = "/player/sequence/auto-reload/{id}")
+@Component
 class AutoReloadServer {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler

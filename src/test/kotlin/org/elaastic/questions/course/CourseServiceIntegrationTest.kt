@@ -15,13 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
+import org.springframework.test.context.web.WebAppConfiguration
 import java.util.*
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
-@SpringBootTest
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
 class CourseServiceIntegrationTest(
         @Autowired val courseService: CourseService,
         @Autowired val subjectService: SubjectService,
