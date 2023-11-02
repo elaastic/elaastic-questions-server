@@ -28,26 +28,6 @@
         <i class="trash icon"></i>
     </a>
 
-    <a th:unless="${position == nbAssignment}"
-       class="ui right floated icon tiny button"
-       th:href="@{/assignment/{id}/down(subjectId=${assignment.subject.id},id=${assignment.id})}"
-       href="/assignment/123/downStatement"
-       th:attr="data-tooltip=#{common.moveDown}"
-       data-tooltip="Move down"
-       data-inverted="">
-        <i class="arrow down icon"></i>
-    </a>
-
-    <a th:unless="${position == 1}"
-       class="ui right floated icon tiny button"
-       th:href="@{/assignment/{id}/up(subjectId=${assignment.subject.id},id=${assignment.id})}"
-       href="/assignment/123/upStatement"
-       th:attr="data-tooltip=#{common.moveUp}"
-       data-tooltip="Move up"
-       data-inverted="">
-        <i class="arrow up icon"></i>
-    </a>
-
     <a class="ui right floated icon secondary tiny button ob-assignment-creation-14"
        th:href="@{/assignment/{id}/edit(id=${assignment.id})}"
        href="/assignment/123/edit"

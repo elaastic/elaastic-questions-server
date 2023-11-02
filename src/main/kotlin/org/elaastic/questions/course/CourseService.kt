@@ -112,12 +112,20 @@ class CourseService(
         return courseRepository.count()
     }
 
-    fun findAllByOwner(
+    fun findPageOfAllByOwner(
         owner: User,
         pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
     )
             : Page<Course> {
         return courseRepository.findAllByOwner(owner, pageable)
+    }
+
+    fun findAllByOwner(
+        owner: User,
+        sort: Sort = Sort.by(Sort.Direction.DESC, "lastUpdated")
+    )
+            : List<Course> {
+        return courseRepository.findAllByOwner(owner, sort)
     }
 
     fun findAllWithSubjectsByOwner(

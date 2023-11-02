@@ -212,7 +212,7 @@ class SubjectController(
             if (!statements.contains(statement)) statements.add(statement)
         }
         model.addAttribute("statements", statements)
-        model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
+        model.addAttribute("listCourse", courseService.findAllByOwner(user))
         model.addAttribute("alreadyImported", subjectService.isUsedAsParentSubject(user, subject))
         model.addAttribute("subjectData", SubjectData(owner = user))
         model.addAttribute("activeTab", activeTab)
@@ -239,7 +239,7 @@ class SubjectController(
             model.addAttribute("subjectData", SubjectData(owner = user))
         }
         model.addAttribute("user", user)
-        model.addAttribute("listCourse", courseService.findAllByOwner(user).toList())
+        model.addAttribute("listCourse", courseService.findAllByOwner(user))
 
         return "subject/create"
     }

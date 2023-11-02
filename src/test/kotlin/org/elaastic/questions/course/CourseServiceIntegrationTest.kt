@@ -13,10 +13,7 @@ import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
-import org.springframework.test.context.web.WebAppConfiguration
-import java.util.*
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
@@ -33,7 +30,7 @@ class CourseServiceIntegrationTest(
     fun `findAllByOwner - no course`() {
         val teacher = integrationTestingService.getAnotherTestTeacher()
 
-        courseService.findAllByOwner(teacher)
+        courseService.findPageOfAllByOwner(teacher)
                 .tExpect {
                     MatcherAssert.assertThat(it.totalElements, CoreMatchers.equalTo(0L))
                     MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(0))
@@ -45,13 +42,13 @@ class CourseServiceIntegrationTest(
         val teacher = integrationTestingService.getAnotherTestTeacher()
         createTestingData(teacher)
 
-        courseService.findAllByOwner(teacher)
+        courseService.findPageOfAllByOwner(teacher)
                 .tExpect {
                     MatcherAssert.assertThat(it.totalElements, CoreMatchers.equalTo(10L))
                     MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(1))
                 }
 
-        courseService.findAllByOwner(teacher, PageRequest.of(0, 5))
+        courseService.findPageOfAllByOwner(teacher, PageRequest.of(0, 5))
                 .tExpect {
                     MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(2))
                 }
