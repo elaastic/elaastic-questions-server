@@ -76,12 +76,10 @@ internal class LmsServiceIntegrationTest(
     @Test
     fun testGetLmsAssignment() {
         tGiven("lti data and corresponding lms user") {
-            val lmsUser = lmsService.getLmsUser(ltiData.toLtiUser())
-            val lmsCourse = lmsService.getLmsCourse(lmsUser, ltiData.toLtiActivity())
-            Pair<LmsUser, LmsCourse>(lmsUser, lmsCourse)
+            lmsService.getLmsUser(ltiData.toLtiUser())
         }.tWhen("assignment is asked") {
             lmsService.getLmsAssignment(
-                lmsUser = it.first,
+                lmsUser = it,
                 ltiActivity = ltiData.toLtiActivity()
             )
         }.tThen("a new assignment is created and returned") {
@@ -91,7 +89,6 @@ internal class LmsServiceIntegrationTest(
             assertThat(it.assignment.owner, equalTo(lmsService.getLmsUser(ltiData.toLtiUser()).user))
             assertThat(it.lmsCourseTitle, equalTo(ltiData.context_title))
             assertThat(it.assignment.title, equalTo(ltiData.resource_link_title))
-            assertThat(it.assignment.subject?.course?.title, equalTo(ltiData.toLtiActivity().lmsCourseTitle))
             it
         }.tWhen("assignment with same lti data is asked") {
             lmsService.getLmsUser(ltiData.toLtiUser()).let { lmsuser ->

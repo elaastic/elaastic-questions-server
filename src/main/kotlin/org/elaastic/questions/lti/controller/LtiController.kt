@@ -20,7 +20,6 @@ package org.elaastic.questions.lti.controller
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.lti.LmsCourse
 import org.elaastic.questions.lti.LmsService
 import org.elaastic.questions.lti.LmsUser
 import org.elaastic.questions.lti.LtiConsumerService

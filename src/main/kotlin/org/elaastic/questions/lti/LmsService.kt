@@ -41,7 +41,6 @@ import javax.transaction.Transactional
 class LmsService(
     @Autowired val ltiConsumerRepository: LtiConsumerRepository,
     @Autowired val lmsUserRepository: LmsUserRepository,
-    @Autowired val lmsCourseRepository: LmsCourseRepository,
     @Autowired val assignmentRepository: AssignmentRepository,
     @Autowired val lmsAssignmentRepository: LmsAssignmentRepository,
     @Autowired val userService: UserService,
@@ -133,63 +132,7 @@ class LmsService(
                 )
             }
         }
-        // in the case assignment is not associated with a course
-        // linked it to the course created from the LMS
-        if (lmsAssignment?.assignment?.subject?.course == null) {
-            courseService.addSubjectToCourse(
-                lmsUser.user,
-                lmsAssignment!!.assignment.subject!!,
-                getLmsCourse(lmsUser, ltiActivity).course
-            )
-        }
         return lmsAssignment!!
-    }
-
-    /**
-     * Get lms course based on tool provider information. Create a new one if required
-     *
-     * @param lmsUser the lms user
-     * @param ltiActivity activity built from lti consumer information
-     * @return the lms course
-     */
-    fun getLmsCourse(
-        lmsUser: LmsUser,
-        ltiActivity: LtiActivity
-    ): LmsCourse {
-        var lmsCourse = lmsCourseRepository.findByLmsCourseIdAndLms(
-            ltiActivity.lmsCourseId,
-            lmsUser.lms
-        )
-        if (lmsCourse == null) {
-            createCourseFromLtiData(lmsUser, ltiActivity).let {
-                lmsCourse = createLmsCourse(ltiActivity, lmsUser.lms, it)
-            }
-        }
-        return lmsCourse!!
-    }
-
-    private fun createCourseFromLtiData(
-        lmsUser: LmsUser,
-        ltiActivity: LtiActivity
-    ): Course {
-        Course(ltiActivity.lmsCourseTitle, lmsUser.user).let {
-            return courseService.save(it)
-        }
-    }
-
-    private fun createLmsCourse(
-        ltiActivity: LtiActivity,
-        lms: LtiConsumer,
-        course: Course
-    ): LmsCourse {
-        LmsCourse(
-            lms = lms,
-            lmsCourseId = ltiActivity.lmsCourseId,
-            lmsCourseTitle = ltiActivity.lmsCourseTitle,
-            course = course
-        ). let {
-            return lmsCourseRepository.save(it)
-        }
     }
 
     private fun createLmsAssignment(
@@ -215,8 +158,7 @@ class LmsService(
         return if (ltiActivity.globalId != null) {
             findAssignmentWithIdFromLtiData(ltiActivity.globalId)
         } else {
-            val lmsCourse = getLmsCourse(lmsUser, ltiActivity)
-            Subject(ltiActivity.title, lmsUser.user, course = lmsCourse.course).let {
+            Subject(ltiActivity.title, lmsUser.user).let {
                 subjectService.save(it)
             }.let { subject ->
                 Assignment(ltiActivity.title, lmsUser.user, subject = subject).let {
