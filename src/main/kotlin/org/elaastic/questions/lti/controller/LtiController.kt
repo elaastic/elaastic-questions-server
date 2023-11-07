@@ -54,7 +54,7 @@ class LtiController(
 
     internal var logger = Logger.getLogger(LtiController::class.java.name)
 
-    @PostMapping("/launch")
+    @PostMapping("/launch", "/elaastic-questions/launch")
     fun launch(
         ltiLaunchData: LtiLaunchData,
         request: HttpServletRequest,
