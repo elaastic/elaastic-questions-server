@@ -86,6 +86,8 @@ class PasswordResetMailService(
 
             } catch (e: Exception) {
                 logger.severe("Error with ${email}: ${e.message}")
+            } catch(err: Error) {
+                logger.severe("Error with ${email}: ${err.message}")
             }
         }
 
