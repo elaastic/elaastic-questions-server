@@ -58,7 +58,7 @@ import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
 
 @Controller
-@RequestMapping("/subject")
+@RequestMapping("/subject", "/elaastic-questions/subject")
 @Transactional
 class SubjectController(
     @Autowired val subjectService: SubjectService,

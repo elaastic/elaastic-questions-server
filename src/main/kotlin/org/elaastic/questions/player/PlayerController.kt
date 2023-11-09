@@ -52,7 +52,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.transaction.Transactional
 
 @Controller
-@RequestMapping("/player")
+@RequestMapping("/player", "/elaastic-questions/player")
 class PlayerController(
     @Autowired val assignmentService: AssignmentService,
     @Autowired val sequenceService: SequenceService,

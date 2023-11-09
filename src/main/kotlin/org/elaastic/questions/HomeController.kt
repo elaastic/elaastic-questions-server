@@ -32,7 +32,7 @@ import org.springframework.web.servlet.ModelAndView
 @Controller
 class HomeController {
 
-    @GetMapping("/home")
+    @GetMapping("/home", "/elaastic-questions/home")
     fun home(authentication: Authentication): ModelAndView {
         val user: User = authentication.principal as User
 

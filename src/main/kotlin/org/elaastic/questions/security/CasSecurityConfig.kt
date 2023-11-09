@@ -102,12 +102,19 @@ class CasSecurityConfig {
          *
          */
         fun getCasAuthenticationEntryPoints(): Array<Pair<AntPathRequestMatcher, CasAuthenticationEntryPoint>> =
-            casInfoList.map { casInfo ->
-                AntPathRequestMatcher("/cas/${casInfo.casKey}/**") to
-                        context.getBean(
-                            "$CAS_AUTHENTICATION_ENTRY_POINT${casInfo.casKey}",
-                            CasAuthenticationEntryPoint::class.java
-                        )
+            casInfoList.flatMap { casInfo ->
+                listOf(
+                    AntPathRequestMatcher("/cas/${casInfo.casKey}/**") to
+                            context.getBean(
+                                "$CAS_AUTHENTICATION_ENTRY_POINT${casInfo.casKey}",
+                                CasAuthenticationEntryPoint::class.java
+                            ),
+                    AntPathRequestMatcher("/elaastic-questions/cas/${casInfo.casKey}/**") to
+                            context.getBean(
+                                "$CAS_AUTHENTICATION_ENTRY_POINT${casInfo.casKey}",
+                                CasAuthenticationEntryPoint::class.java
+                            ),
+                )
             }.toTypedArray()
 
         fun getCasAuthenticationEntryPointBean(casKey: String): CasAuthenticationEntryPoint =

@@ -14,7 +14,7 @@ class CasController {
      * any is preserved)
      * When there is no authentication, the security config will handle to redirect the user on the CAS server login page.
      */
-    @GetMapping("/cas/{casKey}/**")
+    @GetMapping("/cas/{casKey}/**", "/elaastic-questions/cas/{casKey}/**" )
     fun casRedirect(request: HttpServletRequest, @PathVariable casKey: String) =
         request.requestURL.toString().replace("/cas/$casKey", "", true).let {url ->
             "redirect:$url"   +
