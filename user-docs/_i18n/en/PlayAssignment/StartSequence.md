@@ -20,7 +20,8 @@ A popup appears, from here, you can configure the sequence before you start it.
 1. Choose the execution context. It will determine how the phases will link up for learners. Une brief description of each of them appears below.
 2. Choose whether learners must provide a written explanation or not.
 3. Choose the number of explanations that each learner will see and be asked to grade during phase 2 of the sequence.
-4. Confirm.
+4. Choose the peer review method for the second phase.
+5. Confirm.
 
 ![Vue sur play assignment]({{ "images/fr/play_assignment/configure_sequence.png"| relative_url }})
 

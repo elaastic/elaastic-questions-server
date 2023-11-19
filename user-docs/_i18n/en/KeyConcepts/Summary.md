@@ -1,4 +1,4 @@
-## 2.6. Summary
+## 2.7. Summary
 
 A *subject* is composed of *questions*.
 
