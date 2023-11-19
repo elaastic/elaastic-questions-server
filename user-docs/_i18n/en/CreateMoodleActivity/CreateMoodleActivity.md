@@ -1,3 +1,3 @@
-# 7. Créer une activité Moodle
+# 7. Create an Elaastic activity from Moodle
 
-Vous pouvez créer un devoir Elaastic directement depuis Moodle. Le but de ce chapitre est de vous montrer comment.
+You can create an Elaastic assignment directly from Moodle. This chapter will show you how this can be done.
