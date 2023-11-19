@@ -25,8 +25,6 @@ A popup appears, from here, you can configure the sequence before you start it.
 
 ![Vue sur play assignment]({{ "images/fr/play_assignment/configure_sequence.png"| relative_url }})
 
-
-
 Phase 1 has started ! To know how to drive the phases of a sequence, go to chapter 4.2., 4.3. and 4.4. .
 
 
