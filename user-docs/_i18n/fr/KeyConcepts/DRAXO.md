@@ -1,4 +1,4 @@
-## 2.7. DRAXO
+## 2.6. DRAXO
 
 DRAXO est une grille d'évaluation pour évaluer des réponses données à des questions de compréhension. 
 Ces réponses exposent engénéral, des explications, justifications ou argumentation.
@@ -7,7 +7,7 @@ venant en soutien à l'évaluation formative. DRAXO a pour objectif l'améliorat
 DRAXO peut être utilisée durant la deuxième phase d'une séquence Elaastic pour guider les apprenants dans
 leur activité d'évaluation par les pairs.
 
-### 2.7.1. Les critères DRAXO
+### 2.6.1. Les critères DRAXO
 
 La grille est structurée autour de plusieurs critères identifiés par les lettres D, R, A, X, et O. Voici une description détaillée de chaque critère :
 
@@ -69,7 +69,7 @@ feedback textuel. Dans ce cas, il est considéré que l'évaluateur n'est pas en
   - Si une des options _Non_ ou _Je ne sais pas_ est choisie, l'évaluation se termine sans demande de
     feedback textuel.
 
-### 2.7.2. Calcul du score d’une réponse
+### 2.6.2. Calcul du score d’une réponse
 
 Le score, s'il peut être caculé, prend une valeur comprise entre 1 et 5.
 

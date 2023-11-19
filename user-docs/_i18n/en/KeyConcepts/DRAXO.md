@@ -1,4 +1,4 @@
-## 2.7. DRAXO
+## 2.6. DRAXO
 
 DRAXO is an assessment grid for evaluating answers given to comprehension questions. 
 These responses generally present explanations, justifications, or arguments.
@@ -7,7 +7,7 @@ supporting formative assessment. DRAXO's goal is to improve the production of te
 DRAXO can be used during the second phase of an Elaastic sequence to guide learners in
 their peer assessment activity.
 
-### 2.7.1. The DRAXO criteria
+### 2.6.1. The DRAXO criteria
 
 The grid is structured around several criteria identified by the letters D, R, A, X, and O. Here is a detailed description of each criterion:
 
@@ -68,7 +68,7 @@ textual feedback.
   - If the options _No_ or _I don't know_ are chosen, the assessment ends without a request for
 textual feedback.
 
-### 2.7.2 Scoring of an answer
+### 2.6.2 Scoring of an answer
 
 The score, if it can be calculated, ranges from 1 to 5.
 

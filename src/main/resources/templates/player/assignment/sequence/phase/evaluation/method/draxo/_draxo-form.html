@@ -26,7 +26,7 @@
     <div class="ui form">
 
             <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url')}">
-                <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}">
+                <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}" target="_blank">
                     <i class="question circle outline ui icon"></i> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
                 </a>
             </span>

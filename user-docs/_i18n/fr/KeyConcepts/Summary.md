@@ -1,4 +1,4 @@
-## 2.6. En synthèse
+## 2.7. En synthèse
 
 Un *sujet* est composé de *questions*. 
 
