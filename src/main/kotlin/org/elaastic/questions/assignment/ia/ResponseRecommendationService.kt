@@ -27,6 +27,7 @@ import java.math.BigInteger
 import java.util.*
 import javax.persistence.EntityManager
 import kotlin.Comparator
+import kotlin.collections.ArrayList
 
 @Service
 class ResponseRecommendationService(
@@ -78,7 +79,11 @@ class ResponseRecommendationService(
                                        responsePool: RecommendationResponsePool,
                                        recommendationsMapping: ExplanationRecommendationMapping) {
         forResponseList.forEach { forResponse ->
-            responsePool.next(except = recommendationsMapping[forResponse.id])?.let { recommendedResponse ->
+            var except = ArrayList<Long>(recommendationsMapping[forResponse.id])
+            if (!except.contains(forResponse.id)) { // to avoid self-evaluation
+                except.add(forResponse.id)
+            }
+            responsePool.next(except = except)?.let { recommendedResponse ->
                 recommendationsMapping.addRecommandation(forResponse.id, recommendedResponse.id)
             }
         }
