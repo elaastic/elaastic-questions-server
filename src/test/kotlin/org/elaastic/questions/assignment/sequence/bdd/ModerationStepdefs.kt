@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment.sequence.bdd;
 
+import io.cucumber.java.PendingException
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -18,8 +19,7 @@ import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.getAnyAssignment
 import org.elaastic.questions.test.getAnySequence
 import org.elaastic.questions.test.interpreter.command.Phase
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import javax.persistence.EntityManager
@@ -33,14 +33,20 @@ class ModerationStepdefs(
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val responseService: ResponseService,
     @Autowired val entityManager: EntityManager,
-    val teacher: User = integrationTestingService.getTestTeacher(),
-    val subject: Subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher),
-    val sequence: Sequence = subject.getAnyAssignment().getAnySequence(),
-    var peerGrading: PeerGrading? = null
 ) {
 
+    lateinit var teacher: User
+    lateinit var subject: Subject
+    lateinit var sequence: Sequence
+    lateinit var peerGrading: PeerGrading
+
     @Given("a peer grading")
+    @Transactional
     fun aPeerGrading() {
+
+        teacher = integrationTestingService.getTestTeacher()
+        subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
+        sequence = subject.getAnyAssignment().getAnySequence()
 
         val learners = integrationTestingService.getNLearners(3)
         functionalTestingService.startSequence(sequence)
@@ -67,13 +73,13 @@ class ModerationStepdefs(
     @When("The teacher hide the peer grading")
     fun theTeacherHideThePeerGrading() {
         peerGrading = entityManager.merge(peerGrading!!)
-        peerGradingService.markAsHidden(peerGrading!!, teacher)
+        peerGradingService.markAsHidden(teacher, peerGrading!!)
     }
 
     @When("The teacher remove the peer grading")
     fun theTeacherRemoveThePeerGrading() {
         peerGrading = entityManager.merge(peerGrading!!)
-        peerGradingService.markAsRemoved(peerGrading!!, teacher)
+        peerGradingService.markAsRemoved(teacher, peerGrading!!)
     }
 
     @Then("the peer grading is mark as hidden")
@@ -84,5 +90,38 @@ class ModerationStepdefs(
     @Then("the peer grading is mark as removed")
     fun thePeerGradingIsMarkAsRemoved() {
         assertTrue(peerGrading!!.removedByTeacher)
+    }
+
+    @Given("the learner owner of the response the peer grading belongs to")
+    fun the_learner_owner_of_the_response_the_peer_grading_belongs_to() {
+        assertNotNull( peerGrading.response.learner)
+    }
+
+    @When("The learner report the peer grading without comment")
+    fun the_learner_report_the_peer_grading_without_comment() {
+        val learner = peerGrading.response.learner
+        peerGradingService.updateReport(learner, peerGrading, listOf("reason1", "reason2"))
+    }
+
+    @When("The learner report the peer grading with comment")
+    fun the_learner_report_the_peer_grading_with_comment() {
+        val learner = peerGrading.response.learner
+        peerGradingService.updateReport(learner, peerGrading, listOf("reason1", "reason2"), "a comment")
+    }
+
+    @Then("the peer grading has report reason")
+    fun the_peer_grading_has_report_reason() {
+        assertNotNull(peerGrading.reportReasons)
+        assertFalse(peerGrading.reportReasons!!.isEmpty())
+    }
+
+    @Then("the peer grading have no comment in the report")
+    fun the_peer_grading_have_no_comment_in_the_report() {
+        assertNull(peerGrading.reportComment)
+    }
+
+    @Then("the peer grading have a comment attached to the report")
+    fun the_peer_grading_have_a_comment_attached_to_the_report() {
+        assertNotNull(peerGrading.reportComment)
     }
 }

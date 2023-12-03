@@ -127,10 +127,10 @@ class PeerGradingService(
     /**
      * Mark peer grading as hidden by teacher.
      *
-     * @param peerGrading the peer grading to hide.
      * @param teacher the teacher who hide the peer grading.
+     * @param peerGrading the peer grading to hide
      */
-    fun markAsHidden(peerGrading: PeerGrading, teacher: User) {
+    fun markAsHidden(teacher: User, peerGrading: PeerGrading) {
         require(teacher == peerGrading.response.interaction.sequence.owner) {
             "Only the teacher who own the sequence can hide a peer grading"
         }
@@ -140,13 +140,28 @@ class PeerGradingService(
     /**
      * Mark peer grading as removed by teacher.
      *
-     * @param peerGrading the peer grading to remove.
      * @param teacher the teacher who remove the peer grading.
+     * @param peerGrading the peer grading to remove.
      */
-    fun markAsRemoved(peerGrading: PeerGrading, teacher: User) {
+    fun markAsRemoved(teacher: User, peerGrading: PeerGrading) {
         require(teacher == peerGrading.response.interaction.sequence.owner) {
             "Only the teacher who own the sequence can remove a peer grading"
         }
         moderationCandidateService.markAsRemoved(peerGrading, peerGradingRepository)
+    }
+
+    /**
+     * Update the report of a peer grading.
+     *
+     * @param learner the learner who own the response.
+     * @param peerGrading the peer grading to update.
+     * @param listOf the list of report.
+     * @param comment the comment of the report.
+     */
+    fun updateReport(learner: User, peerGrading: PeerGrading, listOf: List<String>, comment: String? = null) {
+        require(learner == peerGrading.response.learner) {
+            "Only the learner who own the response can report a peer grading"
+        }
+        moderationCandidateService.updateReport(peerGrading, listOf, comment, peerGradingRepository)
     }
 }
