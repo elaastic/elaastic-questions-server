@@ -83,6 +83,10 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:2.13.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
+    implementation("io.cucumber:cucumber-spring:7.14.1")
+    testImplementation("io.cucumber:cucumber-java:7.14.1")
+    testImplementation("io.cucumber:cucumber-junit:7.14.1")
+
 
 }
 

@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation
 
+import org.elaastic.questions.assignment.sequence.moderation.ModerationCandidate
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.persistence.AbstractJpaPersistable
@@ -17,17 +18,17 @@ class ChatGptEvaluation (
     var annotation: String? = null,
     var status: String = ChatGptEvaluationStatus.UNKNOWN.name,
 
-    var reportReasons: String? = null,
-    var reportComment: String? = null,
-    var utilityGrade: UtilityGrade? = null,
+    override var reportReasons: String? = null,
+    override var reportComment: String? = null,
+    override var utilityGrade: UtilityGrade? = null,
 
-    var hiddenByTeacher: Boolean = false,
-    var removedByTeacher: Boolean = false,
+    override var hiddenByTeacher: Boolean = false,
+    override var removedByTeacher: Boolean = false,
 
     @field:OneToOne
     var response: Response
 
-) : AbstractJpaPersistable<Long>() {
+) : AbstractJpaPersistable<Long>(), ModerationCandidate {
 
     @Version
     var version: Long? = null

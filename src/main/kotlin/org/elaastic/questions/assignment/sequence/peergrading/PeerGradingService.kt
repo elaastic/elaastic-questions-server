@@ -6,6 +6,7 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.moderation.ModerationCandidateService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
@@ -22,6 +23,7 @@ class PeerGradingService(
         @Autowired val responseRepository: ResponseRepository,
         @Autowired val responseService: ResponseService,
         @Autowired val learnerAssignmentService: LearnerAssignmentService,
+        @Autowired val moderationCandidateService: ModerationCandidateService,
         @Autowired val entityManager: EntityManager
 ) {
 
@@ -121,4 +123,30 @@ class PeerGradingService(
 
     fun findAll(sequence: Sequence): List<PeerGrading> =
             peerGradingRepository.findAllByResponseIn(responseRepository.findAllByInteractionAndAttempt(sequence.getResponseSubmissionInteraction(), 1))
+
+    /**
+     * Mark peer grading as hidden by teacher.
+     *
+     * @param peerGrading the peer grading to hide.
+     * @param teacher the teacher who hide the peer grading.
+     */
+    fun markAsHidden(peerGrading: PeerGrading, teacher: User) {
+        require(teacher == peerGrading.response.interaction.sequence.owner) {
+            "Only the teacher who own the sequence can hide a peer grading"
+        }
+        moderationCandidateService.markAsHidden(peerGrading, peerGradingRepository)
+    }
+
+    /**
+     * Mark peer grading as removed by teacher.
+     *
+     * @param peerGrading the peer grading to remove.
+     * @param teacher the teacher who remove the peer grading.
+     */
+    fun markAsRemoved(peerGrading: PeerGrading, teacher: User) {
+        require(teacher == peerGrading.response.interaction.sequence.owner) {
+            "Only the teacher who own the sequence can remove a peer grading"
+        }
+        moderationCandidateService.markAsRemoved(peerGrading, peerGradingRepository)
+    }
 }
