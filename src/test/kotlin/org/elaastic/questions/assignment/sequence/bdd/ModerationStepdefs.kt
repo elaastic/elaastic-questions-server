@@ -26,7 +26,6 @@ import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional
 class ModerationStepdefs(
     @Autowired val functionalTestingService: FunctionalTestingService,
     @Autowired val peerGradingService: PeerGradingService,
@@ -41,7 +40,6 @@ class ModerationStepdefs(
     lateinit var peerGrading: PeerGrading
 
     @Given("a peer grading")
-    @Transactional
     fun aPeerGrading() {
 
         teacher = integrationTestingService.getTestTeacher()

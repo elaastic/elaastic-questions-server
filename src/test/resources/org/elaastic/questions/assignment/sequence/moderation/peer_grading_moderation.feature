@@ -1,3 +1,4 @@
+@txn
 Feature: Peer grading moderation
 
   Rule: A peer grading can be moderated by a teacher

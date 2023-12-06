@@ -9,6 +9,7 @@ plugins {
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
     id("org.sonarqube") version "4.2.1.3168"
+    jacoco
 }
 
 group = "org.elaastic.questions"
@@ -86,7 +87,8 @@ dependencies {
     implementation("io.cucumber:cucumber-spring:7.14.1")
     testImplementation("io.cucumber:cucumber-java:7.14.1")
     testImplementation("io.cucumber:cucumber-junit:7.14.1")
-
+    testImplementation("io.cucumber:cucumber-junit-platform-engine:7.14.1")
+    testImplementation("org.junit.platform:junit-platform-suite:1.10.1")
 
 }
 
@@ -94,6 +96,13 @@ allOpen {
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.MappedSuperclass")
     annotation("javax.persistence.Embeddable")
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
 }
 
 tasks.withType<KotlinCompile> {
