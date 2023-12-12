@@ -21,8 +21,9 @@ java {
 
 sonar {
     properties {
-        property("sonar.projectKey", "elaastic-questions-server")
-        property("sonar.projectName", "elaastic-questions-server")
+        property("sonar.projectKey", "elaastic_elaastic-questions-server")
+        property("sonar.organization", "elaastic")
+        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
@@ -101,8 +102,14 @@ allOpen {
 tasks.test {
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
+
+
+
 tasks.jacocoTestReport {
     dependsOn(tasks.test) // tests are required to run before generating the report
+    reports {
+        xml.required.set(true)
+    }
 }
 
 tasks.withType<KotlinCompile> {
