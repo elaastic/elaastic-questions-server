@@ -3,7 +3,7 @@ package org.elaastic.questions.assignment.sequence.moderation
 /**
  * Marker interface for moderation candidate repository
  */
-interface ModerationCandidateRepository {
+fun interface ModerationCandidateRepository {
 
     /**
      * Save the candidate.

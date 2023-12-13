@@ -40,10 +40,10 @@ class PeerGradingService(
         }
 
         peerGrade.grade = grade
-        peerGradingRepository.save(peerGrade)
+        val savedPeerGrade = peerGradingRepository.save(peerGrade)
         responseService.updateMeanGradeAndEvaluationCount(response)
 
-        return peerGrade
+        return savedPeerGrade
     }
 
     fun createOrUpdateDraxo(grader: User,
@@ -63,10 +63,10 @@ class PeerGradingService(
 
         peerGrade.updateFrom(evaluation)
 
-        peerGradingRepository.save(peerGrade)
+        val savedPeerGrade = peerGradingRepository.save(peerGrade)
         responseService.updateMeanGradeAndEvaluationCount(response)
 
-        return peerGrade
+        return savedPeerGrade
     }
 
     fun findAllDraxo(response: Response): List<DraxoPeerGrading> =
