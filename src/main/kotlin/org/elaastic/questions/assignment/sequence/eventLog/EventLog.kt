@@ -33,20 +33,23 @@ import javax.persistence.*
 class EventLog(
 
         @field:ManyToOne
-        var sequence: Sequence,
+        val sequence: Sequence,
 
         @field:ManyToOne(fetch = FetchType.LAZY)
-        var user: User,
+        val user: User,
 
         @field:Enumerated(EnumType.STRING)
-        var role: Role.RoleId,
+        val role: Role.RoleId,
 
         @field:Enumerated(EnumType.STRING)
-        var action: Action,
+        val action: Action,
 
         @field:Enumerated(EnumType.STRING)
         @Column(name = "object")
-        var obj: ObjectOfAction
+        val obj: ObjectOfAction,
+
+        @Column(name = "user_agent")
+        val userAgent: String? = null,
 
 ) : AbstractJpaPersistable<Long>() {
 

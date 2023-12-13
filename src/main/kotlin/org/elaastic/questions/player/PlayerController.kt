@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.*
+import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
@@ -65,7 +66,8 @@ class PlayerController(
     @Autowired val userService: UserService,
     @Autowired val featureManager: FeatureManager,
     @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
-    @Autowired val chatGptEvaluationService: ChatGptEvaluationService
+    @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
+    @Autowired val eventLogService: EventLogService
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
@@ -209,7 +211,7 @@ class PlayerController(
 
             return if (teacher)
                 playAssignmentForTeacher(user, model, sequence, httpServletRequest)
-            else playAssignmentForLearner(user, model, sequence)
+            else playAssignmentForLearner(user, model, sequence, httpServletRequest)
         }
 
     }
@@ -245,7 +247,8 @@ class PlayerController(
     private fun playAssignmentForLearner(
         user: User,
         model: Model,
-        sequence: Sequence
+        sequence: Sequence,
+        httpServletRequest: HttpServletRequest,
     ): String {
 
         val assignment = sequence.assignment!!
@@ -272,6 +275,16 @@ class PlayerController(
                 learnerSequence = learnerSequence
             )
         )
+
+        val userAgent = httpServletRequest.getHeader("User-Agent")
+        if (learnerSequence.sequence.resultsArePublished)
+            if (learnerSequence.sequence.executionIsFaceToFace())
+                eventLogService.consultResults(sequence, user, userAgent)
+            else
+                if (learnerSequence.activeInteraction?.isRead() == true)
+                    eventLogService.consultResults(sequence, user, userAgent)
+
+
 
         return "player/assignment/sequence/play-learner"
     }

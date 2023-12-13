@@ -34,12 +34,14 @@ class EventLogService(
     fun create(sequence: Sequence,
                user: User,
                action: Action,
-               obj: ObjectOfAction): EventLog =
+               obj: ObjectOfAction,
+               userAgent : String? = null): EventLog =
             EventLog(sequence = sequence,
                     user = user,
                     role = if(user != sequence.owner) Role.RoleId.STUDENT else Role.RoleId.TEACHER,
                     action = action,
-                    obj = obj
+                    obj = obj,
+                    userAgent = userAgent
             ).let(eventLogRepository::save)
 
     fun findById(id: Long): EventLog =
@@ -89,5 +91,9 @@ class EventLogService(
 
     fun refreshResults(sequence: Sequence) {
         create(sequence, sequence.owner, Action.UPDATE, ObjectOfAction.RESULT)
+    }
+
+    fun consultResults(sequence: Sequence, user: User, userAgent: String?) {
+        create(sequence, user, Action.CONSULT, ObjectOfAction.RESULT, userAgent)
     }
 }
