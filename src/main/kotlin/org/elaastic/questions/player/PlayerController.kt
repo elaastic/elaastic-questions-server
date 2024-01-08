@@ -284,8 +284,6 @@ class PlayerController(
                 if (learnerSequence.activeInteraction?.isRead() == true)
                     eventLogService.consultResults(sequence, user, userAgent)
 
-
-
         return "player/assignment/sequence/play-learner"
     }
 
