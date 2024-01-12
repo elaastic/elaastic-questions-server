@@ -20,7 +20,7 @@
      th:if="${!explanation.content.isBlank()}"
      class="ui message explanation"
      th:classappend="${explanation.fromTeacher ? 'success' : 'info'}"
-     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher ? 'padding-top: 3em;' : ''}"
+     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher ? 'padding-top: 3em; overflow: unset' : ''}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div th:if="${explanation.nbEvaluations > 0}" class="ui top left attached label"
          th:classappend="${explanation.fromTeacher ? 'green' : 'teal'}">
@@ -42,6 +42,21 @@
                 th:text="${(explanation.nbEvaluations > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
         </span>
     </div>
+
+    <!-- TODO : only display this to a teacher -->
+    <div class="ui top right attached label" style="padding: 0; margin-top: -0.6rem; margin-right: 0.5rem"
+         th:unless="${explanation.fromTeacher}"
+    >
+        <div style="display: inline-flex; border-radius: 14px">
+            <button class="ui icon button" style="padding: 0.5rem; margin-right: 0;">
+                <i class="star icon"></i>
+            </button>
+            <button class="ui icon button" style="padding: 0.5rem; margin-right: 0;">
+                <i class="eye icon"></i>
+            </button>
+        </div>
+    </div>
+
     <div th:if="${explanation.nbEvaluations == 0 && explanation.fromTeacher}" class="ui top left attached label green">
         <i class="graduation cap icon" style="margin-right: 0.4em;"></i>
         <span th:text="#{player.sequence.explanation.teacher.label}"></span>
