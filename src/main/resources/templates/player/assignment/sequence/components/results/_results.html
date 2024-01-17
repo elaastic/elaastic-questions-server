@@ -146,7 +146,7 @@
             <span class="small teal" th:text="#{common.show-name}">Show student names</span>
           </a>
           <div
-            th:replace="player/assignment/sequence/components/explanation-viewer/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel})"></div>
+            th:replace="player/assignment/sequence/components/explanation-viewer/_explanation-viewer.html :: explanationViewer(${resultsModel.sequenceId}, ${resultsModel.explanationViewerModel}, ${isTeacher})"></div>
         </th:block>
         <th:block th:if="${!resultsModel.hasExplanations}">
           <div th:replace="::noContribution"></div>

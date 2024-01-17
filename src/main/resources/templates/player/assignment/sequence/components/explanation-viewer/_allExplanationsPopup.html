@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="allExplanationsPopup(sequenceId,explanationViewerModel)"
+<div th:fragment="allExplanationsPopup(sequenceId,explanationViewerModel, isTeacher)"
      th:with="components=${'player/assignment/sequence/components/explanation-viewer'}"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
@@ -49,24 +49,24 @@
             <div th:if="${explanationViewerModel.hasChoice}">
                 <div class="ui styled fluid accordion" th:id="|accordion-explanation-viewer-${sequenceId}|">
                     <th:block th:if="${explanationViewerModel.hasRecommendedExplanations}">
-                        <div th:replace="|${components}/_recommendedResponseTab|::recommendedResponseTab(${explanationViewerModel.recommendedExplanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.correctAreRecommended})"></div>
+                        <div th:replace="|${components}/_recommendedResponseTab|::recommendedResponseTab(${explanationViewerModel.recommendedExplanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.correctAreRecommended}, ${isTeacher})"></div>
                     </th:block>
                     <div
-                            th:replace="|${components}/_responseTab|::responseTab(${!explanationViewerModel.hasRecommendedExplanations}, ${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponses}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
+                            th:replace="|${components}/_responseTab|::responseTab(${!explanationViewerModel.hasRecommendedExplanations}, ${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponses}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${isTeacher})"></div>
 
 
                     <th:block th:unless="${explanationViewerModel.showOnlyCorrectResponse}">
                         <div th:each="explanationsByResponse, i : ${explanationViewerModel.explanationsByIncorrectResponses}"
                              th:remove="tag">
                             <div
-                                    th:replace="|${components}/_responseTab|::responseTab(${false}, ${false}, ${explanationsByResponse.key}, ${explanationsByResponse.value}, ${explanationViewerModel.studentsIdentitiesAreDisplayable})"></div>
+                                    th:replace="|${components}/_responseTab|::responseTab(${false}, ${false}, ${explanationsByResponse.key}, ${explanationsByResponse.value}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${isTeacher})"></div>
                         </div>
                     </th:block>
                 </div>
             </div>
             <div th:if="${!explanationViewerModel.hasChoice}">
                 <div
-                        th:replace="|${components}/_explanationList|::explanationList(${explanationViewerModel.explanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${false})"></div>
+                        th:replace="|${components}/_explanationList|::explanationList(${explanationViewerModel.explanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${false}, ${isTeacher})"></div>
             </div>
         </div>
 

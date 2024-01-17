@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="responseTab(activate, correct, response, explanations, studentsIdentitiesAreDisplayable)"
+<div th:fragment="responseTab(activate, correct, response, explanations, studentsIdentitiesAreDisplayable, isTeacher)"
      th:remove="tag"
      th:with="components=${'player/assignment/sequence/components/explanation-viewer'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
@@ -31,7 +31,7 @@
 
     <div class="content" th:classappend="${activate ? 'active' : ''}">
         <p class="panel-body">
-        <div th:replace="|${components}/_explanationList|::explanationList(${explanations}, ${studentsIdentitiesAreDisplayable}, ${false})"></div>
+        <div th:replace="|${components}/_explanationList|::explanationList(${explanations}, ${studentsIdentitiesAreDisplayable}, ${false}, ${isTeacher})"></div>
         </p>
     </div>
 </div>

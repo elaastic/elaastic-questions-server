@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices)"
+<div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices, isTeacher)"
      th:if="${!explanation.content.isBlank()}"
      class="ui message explanation"
      th:classappend="${explanation.fromTeacher ? 'success' : 'info'}"
@@ -43,19 +43,23 @@
         </span>
     </div>
 
-    <!-- TODO : only display this to a teacher -->
     <div class="ui top right attached label" style="padding: 0; margin-top: -0.6rem; margin-right: 0.5rem"
-         th:unless="${explanation.fromTeacher}"
+         th:if="${isTeacher} and ${!explanation.fromTeacher}"
     >
-        <div style="display: inline-flex; border-radius: 14px">
-            <button class="ui icon button" style="padding: 0.5rem; margin-right: 0;">
-                <i class="star icon"></i>
-            </button>
-            <button class="ui icon button" style="padding: 0.5rem; margin-right: 0;">
-                <i class="eye icon"></i>
-            </button>
+        <div class="floating ui icon buttons" style="display: inline-flex; border-radius: 14px">
+            <!-- If explanation is not hidden -->
+            <a  th:if="${!explanation.hiddenByTeacher}"
+                    th:href="@{/player/response/{responseId}/hide-response(responseId=${explanation.responseId})}"
+                    type="button" data-position="bottom right" data-tooltip="Masquer l'explication" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                <i class="unhide icon"></i>
+            </a>
+            <a  th:if="${explanation.hiddenByTeacher}"
+                th:href="@{/player/response/{responseId}/unhide-response(responseId=${explanation.responseId})}"
+                type="button" data-position="bottom right" data-tooltip="Afficher l'explication" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                <i class="hide icon"></i>
+            </a>
         </div>
-    </div>
+    </div >
 
     <div th:if="${explanation.nbEvaluations == 0 && explanation.fromTeacher}" class="ui top left attached label green">
         <i class="graduation cap icon" style="margin-right: 0.4em;"></i>
