@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence.moderation;
+package org.elaastic.questions.assignment.sequence.report;
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elaastic.questions.assignment.sequence.UtilityGrade
@@ -8,26 +8,26 @@ import org.springframework.stereotype.Service;
  * Service for moderation management
  */
 @Service
-public class ModerationCandidateService {
+public class ReportCandidateService {
 
     /**
      * Hide a ModerationCandidate.
      */
-    fun markAsHidden(moderationCandidate: ModerationCandidate,
-                     repository: ModerationCandidateRepository,
+    fun markAsHidden(reportCandidate: ReportCandidate,
+                     repository: ReportCandidateRepository,
     ) {
-        moderationCandidate.hiddenByTeacher = true
-        repository.save(moderationCandidate)
+        reportCandidate.hiddenByTeacher = true
+        repository.save(reportCandidate)
     }
 
     /**
      * Remove a ModerationCandidate.
      */
-    fun markAsRemoved(moderationCandidate: ModerationCandidate,
-                      repository: ModerationCandidateRepository
+    fun markAsRemoved(reportCandidate: ReportCandidate,
+                      repository: ReportCandidateRepository
     ) {
-        moderationCandidate.removedByTeacher = true
-        repository.save(moderationCandidate)
+        reportCandidate.removedByTeacher = true
+        repository.save(reportCandidate)
     }
 
     /**
@@ -38,10 +38,10 @@ public class ModerationCandidateService {
      * @param reportComment the comment for the report
      * @param repository the repository to save the candidate
      */
-    fun updateReport(reportCandidate: ModerationCandidate,
+    fun updateReport(reportCandidate: ReportCandidate,
                      reportReasons: List<String>,
                      reportComment : String? = null,
-                     repository: ModerationCandidateRepository
+                     repository: ReportCandidateRepository
     ) {
         val objectMapper = ObjectMapper()
         val jsonString = objectMapper.writeValueAsString(reportReasons)
@@ -57,9 +57,9 @@ public class ModerationCandidateService {
      * @param grade the grade
      * @param repository the repository to save the candidate
      */
-    fun updateGrade(utilityGradeCandidate: ModerationCandidate,
+    fun updateGrade(utilityGradeCandidate: ReportCandidate,
                     grade: UtilityGrade,
-                    repository: ModerationCandidateRepository
+                    repository: ReportCandidateRepository
     ) {
         utilityGradeCandidate.utilityGrade = grade
         repository.save(utilityGradeCandidate)

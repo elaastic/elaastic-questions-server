@@ -6,7 +6,7 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.moderation.ModerationCandidateService
+import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
@@ -19,12 +19,12 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class PeerGradingService(
-        @Autowired val peerGradingRepository: PeerGradingRepository,
-        @Autowired val responseRepository: ResponseRepository,
-        @Autowired val responseService: ResponseService,
-        @Autowired val learnerAssignmentService: LearnerAssignmentService,
-        @Autowired val moderationCandidateService: ModerationCandidateService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val responseRepository: ResponseRepository,
+    @Autowired val responseService: ResponseService,
+    @Autowired val learnerAssignmentService: LearnerAssignmentService,
+    @Autowired val reportCandidateService: ReportCandidateService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     fun createOrUpdateLikert(grader: User, response: Response, grade: BigDecimal): LikertPeerGrading {
@@ -134,7 +134,7 @@ class PeerGradingService(
         require(teacher == peerGrading.response.interaction.sequence.owner) {
             "Only the teacher who own the sequence can hide a peer grading"
         }
-        moderationCandidateService.markAsHidden(peerGrading, peerGradingRepository)
+        reportCandidateService.markAsHidden(peerGrading, peerGradingRepository)
     }
 
     /**
@@ -147,7 +147,7 @@ class PeerGradingService(
         require(teacher == peerGrading.response.interaction.sequence.owner) {
             "Only the teacher who own the sequence can remove a peer grading"
         }
-        moderationCandidateService.markAsRemoved(peerGrading, peerGradingRepository)
+        reportCandidateService.markAsRemoved(peerGrading, peerGradingRepository)
     }
 
     /**
@@ -162,6 +162,6 @@ class PeerGradingService(
         require(learner == peerGrading.response.learner) {
             "Only the learner who own the response can report a peer grading"
         }
-        moderationCandidateService.updateReport(peerGrading, listOf, comment, peerGradingRepository)
+        reportCandidateService.updateReport(peerGrading, listOf, comment, peerGradingRepository)
     }
 }

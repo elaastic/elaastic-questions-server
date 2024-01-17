@@ -1,6 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation
 
-import org.elaastic.questions.assignment.sequence.moderation.ModerationCandidateService
+import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptApi.ChatGptApiClient
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptPrompt.ChatGptPromptService
@@ -19,7 +19,7 @@ class ChatGptEvaluationService (
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val chatGptApiClient: ChatGptApiClient,
     @Autowired val chatGptPromptService: ChatGptPromptService,
-    @Autowired val moderationCandidateService: ModerationCandidateService
+    @Autowired val reportCandidateService: ReportCandidateService
 ) {
 
 
@@ -91,7 +91,7 @@ class ChatGptEvaluationService (
      * @param chatGptEvaluation the chatGPT evaluation to hide.
      */
     fun markAsHidden(chatGptEvaluation: ChatGptEvaluation) {
-        moderationCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
+        reportCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
     }
 
     /**
@@ -100,7 +100,7 @@ class ChatGptEvaluationService (
      * @param chatGptEvaluation the chatGPT evaluation to remove.
      */
     fun markAsRemoved(chatGptEvaluation: ChatGptEvaluation) {
-        moderationCandidateService.markAsRemoved(chatGptEvaluation, chatGptEvaluationRepository)
+        reportCandidateService.markAsRemoved(chatGptEvaluation, chatGptEvaluationRepository)
     }
 
     /**
@@ -110,7 +110,7 @@ class ChatGptEvaluationService (
      *  @param utilityGrade the utility grade.
      */
     fun changeUtilityGrade(chatGptEvaluation: ChatGptEvaluation, utilityGrade: UtilityGrade) {
-        moderationCandidateService.updateGrade(chatGptEvaluation, utilityGrade, chatGptEvaluationRepository)
+        reportCandidateService.updateGrade(chatGptEvaluation, utilityGrade, chatGptEvaluationRepository)
     }
 
     /**
@@ -121,7 +121,7 @@ class ChatGptEvaluationService (
      *  @param reportComment the comment for the report.
      */
     fun reportEvaluation(chatGptEvaluation: ChatGptEvaluation, reportReasons: List<String>, reportComment : String? = null) {
-        moderationCandidateService.updateReport(chatGptEvaluation, reportReasons, reportComment, chatGptEvaluationRepository)
+        reportCandidateService.updateReport(chatGptEvaluation, reportReasons, reportComment, chatGptEvaluationRepository)
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)

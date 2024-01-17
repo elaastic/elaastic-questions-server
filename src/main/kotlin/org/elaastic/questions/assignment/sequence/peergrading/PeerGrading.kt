@@ -20,7 +20,7 @@ package org.elaastic.questions.assignment.sequence.peergrading
 
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.moderation.ModerationCandidate
+import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -58,7 +58,7 @@ class PeerGrading(
     override var reportReasons: String? = null,
     override var reportComment: String? = null,
     override var utilityGrade: UtilityGrade? = null,
-    ) : AbstractJpaPersistable<Long>(), ModerationCandidate {
+    ) : AbstractJpaPersistable<Long>(), ReportCandidate {
 
     @Version
     var version: Long? = null
