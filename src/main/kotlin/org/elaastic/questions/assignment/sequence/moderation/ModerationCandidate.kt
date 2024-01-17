@@ -1,11 +1,9 @@
 package org.elaastic.questions.assignment.sequence.moderation
 
-import org.elaastic.questions.assignment.sequence.UtilityGrade
-
 /**
  * Interface describing an object that may be candidate for moderation.
  *
- * Such a candidate (explanantion, human or AI feedback, can be hidden or removed by a teacher.
+ * Such a candidate (explanantion, human or AI feedback, can be hidden by a teacher.
  */
 interface ModerationCandidate {
 
@@ -13,22 +11,4 @@ interface ModerationCandidate {
      * Flag that indicates if the candidate is hidden by the teacher.
      */
     var hiddenByTeacher: Boolean
-    /**
-     * Flag that indicates if the candidate is removed by the teacher.
-     */
-    var removedByTeacher: Boolean
-
-    /**
-     * The reason(s) for the report.
-     */
-    var reportReasons: String?
-    /**
-     * The comment of the reporter.
-     */
-    var reportComment: String?
-
-    /**
-     * The utility grade of the candidate.
-     */
-    var utilityGrade: UtilityGrade?
 }

@@ -25,6 +25,7 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoiceConverter
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.moderation.ModerationCandidate
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.statement.Statement
@@ -43,37 +44,40 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class Response(
 
-        @field:ManyToOne
+    @field:ManyToOne
         var learner: User,
 
-        @field:ManyToOne
+    @field:ManyToOne
         var interaction: Interaction,
 
-        var attempt: Int = 1,
+    var attempt: Int = 1,
 
-        var explanation: String? = null,
+    var explanation: String? = null,
 
-        @field:Enumerated(EnumType.ORDINAL)
+    @field:Enumerated(EnumType.ORDINAL)
         var confidenceDegree: ConfidenceDegree? = null,
 
-        var meanGrade: BigDecimal? = null,
+    var meanGrade: BigDecimal? = null,
 
-        @field:Convert(converter = LearnerChoiceConverter::class)
+    @field:Convert(converter = LearnerChoiceConverter::class)
         @field:Column(name = "choiceListSpecification")
         var learnerChoice: LearnerChoice? = null,
 
-        var score: BigDecimal? = null,
+    var score: BigDecimal? = null,
 
-        @field:Column(name = "is_a_fake")
+    @field:Column(name = "is_a_fake")
         var fake: Boolean = false,
 
-        var evaluationCount: Int = 0,
-        var draxoEvaluationCount: Int = 0,
+    var evaluationCount: Int = 0,
+    var draxoEvaluationCount: Int = 0,
 
-        @field:ManyToOne
-        var statement: Statement
+    @field:ManyToOne
+        var statement: Statement,
 
-) : AbstractJpaPersistable<Long>() {
+    @field:Column(name = "is_hidden_by_teacher")
+    override var hiddenByTeacher: Boolean = false
+
+) : AbstractJpaPersistable<Long>(), ModerationCandidate {
     @Version
     var version: Long? = null
 
