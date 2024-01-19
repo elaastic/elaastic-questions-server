@@ -71,7 +71,7 @@ class ResponseService(
         )
 
     fun find3BestRankedResponses(sequence: Sequence): Triple<Response?, Response?, Response?> =
-        responseRepository.findAllByInteractionAndScoreAndFakeIsFalseOrderByMeanGradeDesc(
+        responseRepository.findTop3ByInteractionAndScoreAndFakeIsFalseAndHiddenByTeacherIsFalseOrderByMeanGradeDesc(
             sequence.getResponseSubmissionInteraction()
         ).let { return Triple(it.getOrNull(0), it.getOrNull(1), it.getOrNull(2)) }
 
