@@ -18,7 +18,9 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
+import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
@@ -49,7 +51,14 @@ class PeerGrading(
 
     // Indicates that this grading is the last one for this grader & this sequence (useful for DRAXO strategy)
     var lastSequencePeerGrading: Boolean = true,
-    ) : AbstractJpaPersistable<Long>() {
+
+    // Moderation attributes
+    override var hiddenByTeacher: Boolean = false,
+    override var removedByTeacher: Boolean = false,
+    override var reportReasons: String? = null,
+    override var reportComment: String? = null,
+    override var utilityGrade: UtilityGrade? = null,
+    ) : AbstractJpaPersistable<Long>(), ReportCandidate {
 
     @Version
     var version: Long? = null

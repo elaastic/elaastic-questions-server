@@ -28,7 +28,7 @@ class OpenExplanationViewerModel(explanations: List<ExplanationData>,
             )
     override val hasChoice = false
     override val nbExplanations = this.explanations.count()
-    override val explanationsExcerpt = this.explanations.filter { !it.fromTeacher }.take(3)
+    override val explanationsExcerpt = this.explanations.filter { !it.fromTeacher && !it.hiddenByTeacher }.take(3)
     val nbExplanationsForCorrectResponse = nbExplanations
     override val hasMoreThanExcerpt = nbExplanations > 3
     val hasRecommendedExplanations = false

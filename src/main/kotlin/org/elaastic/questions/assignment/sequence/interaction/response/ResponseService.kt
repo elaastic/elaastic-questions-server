@@ -71,7 +71,7 @@ class ResponseService(
         )
 
     fun find3BestRankedResponses(sequence: Sequence): Triple<Response?, Response?, Response?> =
-        responseRepository.findAllByInteractionAndScoreAndFakeIsFalseOrderByMeanGradeDesc(
+        responseRepository.findTop3ByInteractionAndScoreAndFakeIsFalseAndHiddenByTeacherIsFalseOrderByMeanGradeDesc(
             sequence.getResponseSubmissionInteraction()
         ).let { return Triple(it.getOrNull(0), it.getOrNull(1), it.getOrNull(2)) }
 
@@ -281,4 +281,39 @@ class ResponseService(
         return res
     }
 
+    /**
+     * Mark a response as hidden by a teacher
+     * @param response the response to hide
+     * @return the response
+     */
+    fun hideResponse(user: User, response: Response) : Response {
+        // Only a teacher can hide a response
+        require(user.isTeacher()) {
+            "Only a teacher can hide a response"
+        }
+
+        if (!response.hiddenByTeacher) {
+            response.hiddenByTeacher = true
+            return responseRepository.save(response)
+        }
+        return response
+    }
+
+    /**
+     * Mark a response as NOT hidden by a teacher
+     * @param response the previously hidden response to show again
+     * @return the response
+     */
+    fun unhideResponse(user: User, response: Response) : Response {
+        // Only a teacher can unhide a response
+        require(user.isTeacher()) {
+            "Only a teacher can unhide a response"
+        }
+
+        if (response.hiddenByTeacher) {
+            response.hiddenByTeacher = false
+            return responseRepository.save(response)
+        }
+        return response
+    }
 }

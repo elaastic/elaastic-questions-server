@@ -17,6 +17,7 @@ object ExplanationDataFactory {
             correct = response.score == BigDecimal(100),
             score = response.score,
             choiceList = response.learnerChoice,
+            hiddenByTeacher = response.hiddenByTeacher,
         )
 
 

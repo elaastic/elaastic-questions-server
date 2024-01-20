@@ -1,6 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptApi.ChatGptApiClient
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptPrompt.ChatGptPromptService
@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
-import javax.persistence.EntityManager
 
 @Service
 class ChatGptEvaluationService (
@@ -20,6 +19,7 @@ class ChatGptEvaluationService (
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val chatGptApiClient: ChatGptApiClient,
     @Autowired val chatGptPromptService: ChatGptPromptService,
+    @Autowired val reportCandidateService: ReportCandidateService
 ) {
 
 
@@ -84,17 +84,44 @@ class ChatGptEvaluationService (
         return chatGptEvaluationRepository.findById(id).get()
     }
 
-    fun changeUtilityGrade(chatGptEvaluation: ChatGptEvaluation, utilityGrade: UtilityGrade) {
-        chatGptEvaluation.utilityGrade = utilityGrade
-        chatGptEvaluationRepository.save(chatGptEvaluation)
+
+    /**
+     * Mark a chatGPT evaluation as hidden by a teacher.
+     *
+     * @param chatGptEvaluation the chatGPT evaluation to hide.
+     */
+    fun markAsHidden(chatGptEvaluation: ChatGptEvaluation) {
+        reportCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
     }
 
+    /**
+     * Mark a chatGPT evaluation as removed by a teacher.
+     *
+     * @param chatGptEvaluation the chatGPT evaluation to remove.
+     */
+    fun markAsRemoved(chatGptEvaluation: ChatGptEvaluation) {
+        reportCandidateService.markAsRemoved(chatGptEvaluation, chatGptEvaluationRepository)
+    }
+
+    /**
+     *  Update the utility grade associated with a chatGPT evaluation.
+     *
+     *  @param chatGptEvaluation the chatGPT evaluation to update.
+     *  @param utilityGrade the utility grade.
+     */
+    fun changeUtilityGrade(chatGptEvaluation: ChatGptEvaluation, utilityGrade: UtilityGrade) {
+        reportCandidateService.updateGrade(chatGptEvaluation, utilityGrade, chatGptEvaluationRepository)
+    }
+
+    /**
+     *  Update the report associated with a chatGPT evaluation.
+     *
+     *  @param chatGptEvaluation the chatGPT evaluation to update.
+     *  @param reportReasons the reasons for the report.
+     *  @param reportComment the comment for the report.
+     */
     fun reportEvaluation(chatGptEvaluation: ChatGptEvaluation, reportReasons: List<String>, reportComment : String? = null) {
-        val objectMapper = ObjectMapper()
-        val jsonString = objectMapper.writeValueAsString(reportReasons)
-        chatGptEvaluation.reportReasons = jsonString
-        chatGptEvaluation.reportComment = reportComment
-        chatGptEvaluationRepository.save(chatGptEvaluation)
+        reportCandidateService.updateReport(chatGptEvaluation, reportReasons, reportComment, chatGptEvaluationRepository)
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)

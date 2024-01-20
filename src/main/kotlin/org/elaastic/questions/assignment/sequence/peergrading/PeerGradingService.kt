@@ -6,6 +6,7 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
@@ -18,11 +19,12 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class PeerGradingService(
-        @Autowired val peerGradingRepository: PeerGradingRepository,
-        @Autowired val responseRepository: ResponseRepository,
-        @Autowired val responseService: ResponseService,
-        @Autowired val learnerAssignmentService: LearnerAssignmentService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val responseRepository: ResponseRepository,
+    @Autowired val responseService: ResponseService,
+    @Autowired val learnerAssignmentService: LearnerAssignmentService,
+    @Autowired val reportCandidateService: ReportCandidateService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     fun createOrUpdateLikert(grader: User, response: Response, grade: BigDecimal): LikertPeerGrading {
@@ -38,10 +40,10 @@ class PeerGradingService(
         }
 
         peerGrade.grade = grade
-        peerGradingRepository.save(peerGrade)
+        val savedPeerGrade = peerGradingRepository.save(peerGrade)
         responseService.updateMeanGradeAndEvaluationCount(response)
 
-        return peerGrade
+        return savedPeerGrade
     }
 
     fun createOrUpdateDraxo(grader: User,
@@ -61,10 +63,10 @@ class PeerGradingService(
 
         peerGrade.updateFrom(evaluation)
 
-        peerGradingRepository.save(peerGrade)
+        val savedPeerGrade = peerGradingRepository.save(peerGrade)
         responseService.updateMeanGradeAndEvaluationCount(response)
 
-        return peerGrade
+        return savedPeerGrade
     }
 
     fun findAllDraxo(response: Response): List<DraxoPeerGrading> =
@@ -121,4 +123,45 @@ class PeerGradingService(
 
     fun findAll(sequence: Sequence): List<PeerGrading> =
             peerGradingRepository.findAllByResponseIn(responseRepository.findAllByInteractionAndAttempt(sequence.getResponseSubmissionInteraction(), 1))
+
+    /**
+     * Mark peer grading as hidden by teacher.
+     *
+     * @param teacher the teacher who hide the peer grading.
+     * @param peerGrading the peer grading to hide
+     */
+    fun markAsHidden(teacher: User, peerGrading: PeerGrading) {
+        require(teacher == peerGrading.response.interaction.sequence.owner) {
+            "Only the teacher who own the sequence can hide a peer grading"
+        }
+        reportCandidateService.markAsHidden(peerGrading, peerGradingRepository)
+    }
+
+    /**
+     * Mark peer grading as removed by teacher.
+     *
+     * @param teacher the teacher who remove the peer grading.
+     * @param peerGrading the peer grading to remove.
+     */
+    fun markAsRemoved(teacher: User, peerGrading: PeerGrading) {
+        require(teacher == peerGrading.response.interaction.sequence.owner) {
+            "Only the teacher who own the sequence can remove a peer grading"
+        }
+        reportCandidateService.markAsRemoved(peerGrading, peerGradingRepository)
+    }
+
+    /**
+     * Update the report of a peer grading.
+     *
+     * @param learner the learner who own the response.
+     * @param peerGrading the peer grading to update.
+     * @param listOf the list of report.
+     * @param comment the comment of the report.
+     */
+    fun updateReport(learner: User, peerGrading: PeerGrading, listOf: List<String>, comment: String? = null) {
+        require(learner == peerGrading.response.learner) {
+            "Only the learner who own the response can report a peer grading"
+        }
+        reportCandidateService.updateReport(peerGrading, listOf, comment, peerGradingRepository)
+    }
 }

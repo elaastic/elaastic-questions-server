@@ -495,6 +495,42 @@ class PlayerController(
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }
 
+    @GetMapping("/response/{responseId}/hide-response")
+    fun hideResponse(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        // Get response from database
+        var response = responseService.findById(responseId)
+
+        println(response);
+        // Update response visibility
+        response = responseService.hideResponse(user, response)
+        println("Response hidden by teacher: ${response.hiddenByTeacher}")
+
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play"
+    }
+
+    @GetMapping("/response/{responseId}/unhide-response")
+    fun unhideResponse(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        // Get response from database
+        var response = responseService.findById(responseId)
+        // Update response visibility
+        response = responseService.unhideResponse(user, response)
+        println("Response hidden by teacher: ${response.hiddenByTeacher}")
+
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play"
+    }
+
     @GetMapping("/sequence/{id}/regenerate-chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun refreshChatGptEvaluation(

@@ -16,14 +16,14 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices)"
-     th:if="${!explanation.content.isBlank()}"
+<div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices, isTeacher)"
+     th:if="${!explanation.content.isBlank() and (!explanation.hiddenByTeacher or isTeacher)}"
      class="ui message explanation"
-     th:classappend="${explanation.fromTeacher ? 'success' : 'info'}"
-     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher ? 'padding-top: 3em;' : ''}"
+     th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
+     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher ? 'padding-top: 3em; overflow: unset' : ''}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div th:if="${explanation.nbEvaluations > 0}" class="ui top left attached label"
-         th:classappend="${explanation.fromTeacher ? 'green' : 'teal'}">
+         th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
 
         <i th:if="${explanation.fromTeacher}" class="graduation cap icon" style="margin-right: 0.4em;"></i>
         <span th:if="${explanation.fromTeacher}" th:text="#{player.sequence.explanation.teacher.label}"
@@ -37,23 +37,50 @@
               th:text="${explanation.nbEvaluations}+' '+#{common.evaluations}"></span>
 
         <span class="detail" th:if="${explanation.nbDraxoEvaluations > 0}">
-            (<a class="detail-link" href="#"
-                th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'"
-                th:text="${(explanation.nbEvaluations > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
+        (<a class="detail-link" href="#"
+            th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'"
+            th:text="${(explanation.nbEvaluations > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
+        </span>
+        <span th:if="${explanation.hiddenByTeacher}">
+            <i class="exclamation triangle icon" style="margin: 0 0.4em;"></i>
+            <span th:text="#{player.sequence.explanation.hiddenExplanation}"></span>
         </span>
     </div>
+
+
+    <div class="ui top right attached label" style="padding: 0; margin-top: -0.6rem; margin-right: 0.5rem"
+         th:if="${isTeacher} and ${!explanation.fromTeacher}"
+    >
+        <div class="floating ui icon buttons" style="display: inline-flex; border-radius: 14px">
+            <!-- If explanation is not hidden -->
+            <a  th:if="${!explanation.hiddenByTeacher}"
+                    th:href="@{/player/response/{responseId}/hide-response(responseId=${explanation.responseId})}"
+                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.hideExplanation}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                <i class="unhide icon"></i>
+            </a>
+            <a  th:if="${explanation.hiddenByTeacher}"
+                th:href="@{/player/response/{responseId}/unhide-response(responseId=${explanation.responseId})}"
+                type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.showExplanation}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                <i class="hide icon"></i>
+            </a>
+        </div>
+    </div >
+
     <div th:if="${explanation.nbEvaluations == 0 && explanation.fromTeacher}" class="ui top left attached label green">
         <i class="graduation cap icon" style="margin-right: 0.4em;"></i>
         <span th:text="#{player.sequence.explanation.teacher.label}"></span>
     </div>
 
     <b>
-        <span class="name-explanation" th:if="${studentsIdentitiesAreDisplayable}"
+        <span class="name-explanation" th:if="${studentsIdentitiesAreDisplayable && !explanation.hiddenByTeacher}"
               th:text="|${explanation.author} - #{|player.sequence.interaction.confidenceDegree.${explanation.confidenceDegree}|}|"></span>
         <span th:if="${displayChoices && explanation.choiceList != null}"
               th:text="|#{player.sequence.users.responses}: ${explanation.choiceList}|">Responses: [2]</span>
     </b>
-    <span th:utext="${explanation.content}"></span>
+    <span th:if="${explanation.hiddenByTeacher}" th:text="#{player.sequence.explanation.hiddenContent}">
+        Hidden content
+    </span>
+    <span th:if="!${explanation.hiddenByTeacher}" th:utext="${explanation.content}"></span>
 
     <div class="reviews-container"></div>
 </div>

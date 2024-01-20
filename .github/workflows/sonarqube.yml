@@ -1,38 +1,30 @@
-name: Sonarqube
-
+name: SonarCloud
 on:
   push:
     branches:
-      - fsil/prod-dockerization
-
-
+      - fsil/feedback-of-feedback
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Sonarque analysis
+    name: Build and analyze
     runs-on: ubuntu-latest
-    permissions: read-all
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 17
-      - name: Cache SonarQube packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Gradle packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+          distribution: 'zulu' # Alternative distribution options are available
+
+      - name: Run Elaastic DB test
+        run: docker-compose up -d  elaastic-questions-db-test-8
+
       - name: Build and analyze
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: ./gradlew build -x test sonar --info
+        run: ./gradlew build sonar --info
