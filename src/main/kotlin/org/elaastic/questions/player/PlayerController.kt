@@ -277,12 +277,7 @@ class PlayerController(
         )
 
         val userAgent = httpServletRequest.getHeader("User-Agent")
-        if (learnerSequence.sequence.resultsArePublished)
-            if (learnerSequence.sequence.executionIsFaceToFace())
-                eventLogService.consultResults(sequence, user, userAgent)
-            else
-                if (learnerSequence.activeInteraction?.isRead() == true)
-                    eventLogService.consultResults(sequence, user, userAgent)
+        eventLogService.consultPlayer(sequence, user, learnerSequence, userAgent)
 
         return "player/assignment/sequence/play-learner"
     }
