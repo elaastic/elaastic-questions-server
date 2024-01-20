@@ -167,7 +167,7 @@ internal class PlayerControllerTest(
 
     @After
     fun afterTests() {
-        unmockkObject(PlayerModelFactory)
+        unmockkAll()
     }
 }
 
