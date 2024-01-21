@@ -29,7 +29,8 @@ enum class Action(val propertyString: String) {
     UPDATE("update"),
     LOAD("load"),
     CLICK("click"),
-    RESTART("restart");
+    RESTART("restart"),
+    CONSULT("consult");
 
     companion object {
         fun from(findValue: String): Action = values().first { it.propertyString == findValue }
