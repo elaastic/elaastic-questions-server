@@ -17,7 +17,9 @@ class PracticeAttachment(
     val name: String,
     val originalFileName: String? = null,
     val size: Long? = null,
-    val dimension: Dimension? = null
+    val dimension: Dimension? = null,
+    val mimeType: String? = null
+
     ) {
 
     @JsonApiType
@@ -29,5 +31,6 @@ class PracticeAttachment(
         attachment.originalFileName,
         attachment.size,
         attachment.dimension,
+        attachment.mimeType?.label
     )
 }
