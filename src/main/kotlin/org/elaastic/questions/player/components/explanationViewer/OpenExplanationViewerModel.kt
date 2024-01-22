@@ -31,6 +31,7 @@ class OpenExplanationViewerModel(explanations: List<ExplanationData>,
     override val explanationsExcerpt = this.explanations.filter { !it.fromTeacher && !it.hiddenByTeacher }.take(3)
     val nbExplanationsForCorrectResponse = nbExplanations
     override val hasMoreThanExcerpt = nbExplanations > 3
+    override val hasHiddenByTeacherExplanations = this.explanations.any { it.hiddenByTeacher }
     val hasRecommendedExplanations = false
     override val teacherExplanation = this.explanations.firstOrNull { it is TeacherExplanationData } as TeacherExplanationData?
 

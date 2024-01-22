@@ -20,7 +20,7 @@
      th:if="${!explanation.content.isBlank() and (!explanation.hiddenByTeacher or isTeacher)}"
      class="ui message explanation"
      th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
-     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher ? 'padding-top: 3em; overflow: unset' : ''}"
+     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div th:if="${explanation.nbEvaluations > 0}" class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
