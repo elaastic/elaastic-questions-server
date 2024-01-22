@@ -2,7 +2,7 @@ name: SonarCloud
 on:
   push:
     branches:
-      - fsil/feedback-of-feedback
+      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
