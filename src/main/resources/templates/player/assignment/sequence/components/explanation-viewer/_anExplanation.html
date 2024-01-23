@@ -16,11 +16,11 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices, isTeacher)"
-     th:if="${!explanation.content.isBlank() and (!explanation.hiddenByTeacher or isTeacher)}"
+<div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices, isTeacher, isOwner)"
+     th:if="${!explanation.content.isBlank() and (!explanation.hiddenByTeacher or isTeacher or isOwner)}"
      class="ui message explanation"
      th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
-     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
+     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher || (isOwner && explanation.hiddenByTeacher) ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <div th:if="${explanation.nbEvaluations > 0}" class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
@@ -77,10 +77,13 @@
         <span th:if="${displayChoices && explanation.choiceList != null}"
               th:text="|#{player.sequence.users.responses}: ${explanation.choiceList}|">Responses: [2]</span>
     </b>
-    <span th:if="${explanation.hiddenByTeacher}" th:text="#{player.sequence.explanation.hiddenContent}">
+    <span th:if="${explanation.hiddenByTeacher and !isOwner}" th:text="#{player.sequence.explanation.hiddenContent}">
         Hidden content
     </span>
-    <span th:if="!${explanation.hiddenByTeacher}" th:utext="${explanation.content}"></span>
+    <div th:if="${explanation.hiddenByTeacher and isOwner}" class="ui top left attached label grey">
+        <span th:text="#{player.sequence.explanation.moderatedContentByTheTeacher}"></span>
+    </div>
+    <span th:if="${!explanation.hiddenByTeacher or isOwner}" th:utext="${explanation.content}"></span>
 
     <div class="reviews-container"></div>
 </div>
