@@ -517,7 +517,7 @@ class PlayerController(
         response = responseService.hideResponse(user, response)
         println("Response hidden by teacher: ${response.hiddenByTeacher}")
 
-        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play"
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
     @GetMapping("/response/{responseId}/unhide-response")
@@ -534,7 +534,39 @@ class PlayerController(
         response = responseService.unhideResponse(user, response)
         println("Response hidden by teacher: ${response.hiddenByTeacher}")
 
-        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play"
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
+    }
+
+    @GetMapping("/response/{responseId}/add-favourite")
+    fun addFavourite(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        // Get response from database
+        var response = responseService.findById(responseId)
+        // Update response favourite
+        response = responseService.addFavourite(user, response)
+
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
+    }
+
+    @GetMapping("/response/{responseId}/remove-favourite")
+    fun removeFavourite(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        // Get response from database
+        var response = responseService.findById(responseId)
+        // Update response not favourite
+        response = responseService.removeFavourite(user, response)
+
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
     @GetMapping("/sequence/{id}/regenerate-chat-gpt-evaluation")
