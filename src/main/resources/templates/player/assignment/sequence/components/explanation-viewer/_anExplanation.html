@@ -52,19 +52,25 @@
          th:if="${isTeacher} and ${!explanation.fromTeacher}"
     >
         <div class="floating ui icon buttons" style="display: inline-flex; border-radius: 14px">
-            <!-- If explanation is in favourites -->
-            <a th:if="${explanation.favourite}"
-               th:href="@{/player/response/{responseId}/remove-favourite(responseId=${explanation.responseId})}"
-               type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
-                <i class="star icon"></i>
-            </a>
 
-            <!-- If explanation is not in favourites -->
-            <a th:if="${!explanation.favourite}"
-               th:href="@{/player/response/{responseId}/add-favourite(responseId=${explanation.responseId})}"
-                type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
-                <i class="empty star icon"></i>
-            </a>
+            <!-- If explanation is correct, you can add / remove as favourite -->
+            <div th:if="${!explanation.hiddenByTeacher
+                        and explanation.score == 100 or explanation.score == null}">
+
+                <!-- If explanation is in favourites -->
+                <a th:if="${explanation.favourite}"
+                   th:href="@{/player/response/{responseId}/remove-favourite(responseId=${explanation.responseId})}"
+                   type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                    <i class="star icon"></i>
+                </a>
+
+                <!-- If explanation is not in favourites -->
+                <a th:if="${!explanation.favourite}"
+                   th:href="@{/player/response/{responseId}/add-favourite(responseId=${explanation.responseId})}"
+                   type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                    <i class="empty star icon"></i>
+                </a>
+            </div>
 
             <!-- If explanation is not hidden -->
             <a  th:if="${!explanation.hiddenByTeacher}"
