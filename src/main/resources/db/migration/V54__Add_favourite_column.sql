@@ -1,3 +1,6 @@
+ALTER TABLE `choice_interaction_response`
+    DROP COLUMN `is_favourite`;
+
 -- Add the is_favourite column
 ALTER TABLE `choice_interaction_response`
     ADD COLUMN `is_favourite` bool NOT NULL DEFAULT FALSE;
