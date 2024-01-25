@@ -36,6 +36,7 @@ open class ExplanationData(
     val correct: Boolean? = (score == BigDecimal(100)),
     val choiceList: LearnerChoice? = null,
     val hiddenByTeacher: Boolean = false,
+    val favourite: Boolean = false,
 ) {
     constructor(response: Response) : this(
         responseId = response.id!!,
@@ -49,6 +50,7 @@ open class ExplanationData(
         score = response.score,
         choiceList = response.learnerChoice,
         hiddenByTeacher = response.hiddenByTeacher,
+        favourite = response.favourite,
     )
 
     val meanGrade = meanGrade
