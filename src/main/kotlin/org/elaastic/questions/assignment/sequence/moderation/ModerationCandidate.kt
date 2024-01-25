@@ -11,4 +11,9 @@ interface ModerationCandidate {
      * Flag that indicates if the candidate is hidden by the teacher.
      */
     var hiddenByTeacher: Boolean
+
+    /**
+     * Flag that indicates if the candidate is a favourite of the teacher.
+     */
+    var favourite: Boolean
 }
