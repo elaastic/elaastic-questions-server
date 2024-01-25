@@ -357,7 +357,7 @@ class ResponseService(
             "Only a teacher can unhide a response"
         }
 
-        if (!response.favourite) {
+        if (!response.favourite && !response.hiddenByTeacher) {
             response.favourite = true
             return responseRepository.save(response)
         }
