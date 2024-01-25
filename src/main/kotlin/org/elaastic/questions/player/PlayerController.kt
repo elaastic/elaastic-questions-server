@@ -537,6 +537,38 @@ class PlayerController(
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
+    @GetMapping("/response/{responseId}/add-favourite")
+    fun addFavourite(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        // Get response from database
+        var response = responseService.findById(responseId)
+        // Update response favourite
+        response = responseService.addFavourite(user, response)
+
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
+    }
+
+    @GetMapping("/response/{responseId}/remove-favourite")
+    fun removeFavourite(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        // Get response from database
+        var response = responseService.findById(responseId)
+        // Update response not favourite
+        response = responseService.removeFavourite(user, response)
+
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
+    }
+
     @GetMapping("/sequence/{id}/regenerate-chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun refreshChatGptEvaluation(
