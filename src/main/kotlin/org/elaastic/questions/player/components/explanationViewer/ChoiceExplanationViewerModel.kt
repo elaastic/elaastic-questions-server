@@ -52,7 +52,26 @@ class ChoiceExplanationViewerModel(
                 explanationsByCorrectness.sortedWith(recommendedExplanationsComparator).reversed()
             else
                 explanationsForCorrectResponses
-    override val explanationsExcerpt = recommendedExplanations.filter { !it.fromTeacher && !it.hiddenByTeacher }.take(3)
+
+    // Get recommended explanations from students which are not hidden
+    val recommendedStudentsExplanations = recommendedExplanations
+        .filter { !it.fromTeacher && !it.hiddenByTeacher }
+
+    override val explanationsExcerpt = recommendedStudentsExplanations
+        .let { recommendedStudentsExplanations ->
+            if (recommendedStudentsExplanations.any { it.favourite }) {
+                recommendedStudentsExplanations.filter { it.favourite }
+            } else {
+                recommendedStudentsExplanations.take(3)
+            }
+        }
+
+    override val hasFavouritesAndNotFavouritesExplanations = recommendedStudentsExplanations
+            .let { recommendedStudentsExplanations ->
+                recommendedStudentsExplanations.any { it.favourite }
+                && recommendedStudentsExplanations.any { !it.favourite }
+            }
+
     override val nbExplanations = this.explanationsByResponse.values.flatten().count()
     override val hasMoreThanExcerpt = nbExplanationsForCorrectResponse > 3 || hasExplanationsForIncorrectResponse
     override val hasHiddenByTeacherExplanations = allResponses.any { it.hiddenByTeacher }
