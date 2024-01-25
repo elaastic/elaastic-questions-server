@@ -318,6 +318,10 @@ class ResponseService(
         }
 
         if (!response.hiddenByTeacher) {
+            // A response hidden must not be favourite
+            if (response.favourite) {
+                response.favourite = false
+            }
             response.hiddenByTeacher = true
             return responseRepository.save(response)
         }
@@ -337,6 +341,42 @@ class ResponseService(
 
         if (response.hiddenByTeacher) {
             response.hiddenByTeacher = false
+            return responseRepository.save(response)
+        }
+        return response
+    }
+
+    /**
+     * Mark a response as favourite by a teacher
+     * @param response the response to add as favourite
+     * @return the response
+     */
+    fun addFavourite(user: User, response: Response) : Response {
+        // Only a teacher can add a response as favourite
+        require(user.isTeacher()) {
+            "Only a teacher can unhide a response"
+        }
+
+        if (!response.favourite) {
+            response.favourite = true
+            return responseRepository.save(response)
+        }
+        return response
+    }
+
+    /**
+     * Mark a response as NOT favourite by a teacher
+     * @param response the previously favourite response
+     * @return the response
+     */
+    fun removeFavourite(user: User, response: Response) : Response {
+        // Only a teacher can remove a response as favourite
+        require(user.isTeacher()) {
+            "Only a teacher can unhide a response"
+        }
+
+        if (response.favourite) {
+            response.favourite = false
             return responseRepository.save(response)
         }
         return response
