@@ -13,7 +13,7 @@ class TeacherExplanationData(
     meanGrade: BigDecimal? = null,
     confidenceDegree: ConfidenceDegree? = null,
     score: BigDecimal? = null,
-    correct: Boolean? = (score == BigDecimal(100)),
+    correct: Boolean? = (score?.compareTo(BigDecimal(100)) == 0),
     choiceList: LearnerChoice? = null,
 ) : ExplanationData(
     responseId,
@@ -35,7 +35,7 @@ class TeacherExplanationData(
         nbDraxoEvaluations = explanationData.nbDraxoEvaluations,
         meanGrade = explanationData.meanGrade,
         confidenceDegree = explanationData.confidenceDegree,
-        correct = explanationData.score == BigDecimal(100),
+        correct = explanationData.correct,
         score = explanationData.score,
         choiceList = explanationData.choiceList,
     )
