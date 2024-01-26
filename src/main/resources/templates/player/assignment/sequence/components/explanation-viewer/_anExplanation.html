@@ -55,7 +55,7 @@
 
             <!-- If explanation is correct, you can add / remove as favourite -->
             <div th:if="${!explanation.hiddenByTeacher
-                        and explanation.score == 100 or explanation.score == null}">
+                        and (explanation.correct or explanation.score == null)}">
 
                 <!-- If explanation is in favourites -->
                 <a th:if="${explanation.favourite}"
