@@ -14,7 +14,7 @@ object ExplanationDataFactory {
             nbDraxoEvaluations = response.draxoEvaluationCount,
             meanGrade = response.meanGrade,
             confidenceDegree = response.confidenceDegree,
-            correct = response.score == BigDecimal(100),
+            correct = response.score?.compareTo(BigDecimal(100)) == 0,
             score = response.score,
             choiceList = response.learnerChoice,
             hiddenByTeacher = response.hiddenByTeacher,
