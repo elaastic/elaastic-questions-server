@@ -517,7 +517,7 @@ class PlayerController(
         response = responseService.hideResponse(user, response)
         println("Response hidden by teacher: ${response.hiddenByTeacher}")
 
-        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play"
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
     @GetMapping("/response/{responseId}/unhide-response")
@@ -534,7 +534,7 @@ class PlayerController(
         response = responseService.unhideResponse(user, response)
         println("Response hidden by teacher: ${response.hiddenByTeacher}")
 
-        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play"
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
     @GetMapping("/sequence/{id}/regenerate-chat-gpt-evaluation")
