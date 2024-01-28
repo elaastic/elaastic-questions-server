@@ -95,10 +95,23 @@ class ResponseService(
             } ?: listOf()
 
         } else recommendationService.findAllResponsesOrderedByEvaluationCount(
+            evaluator = user,
             interaction = sequence.getResponseSubmissionInteraction(),
             attemptNum = attempt,
             limit = sequence.getEvaluationSpecification().responseToEvaluateCount
         )
+
+    fun findNextResponseToGrade(sequence: Sequence,
+                                user: User,
+                                attempt: AttemptNum,
+                                excludedIds: List<Long>) =
+        recommendationService.findAllResponsesOrderedByEvaluationCount(
+            evaluator = user,
+            interaction = sequence.getResponseSubmissionInteraction(),
+            attemptNum = attempt,
+            excludedIds = excludedIds,
+            limit = 1
+        ).firstOrNull()
 
     fun hasResponseForUser(learner: User, sequence: Sequence, attempt: AttemptNum = 1) =
         responseRepository.countByLearnerAndInteractionAndAttempt(
