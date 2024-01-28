@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.questions.directory.User
 import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.util.*
@@ -89,18 +90,28 @@ class ResponseRecommendationService(
         }
     }
 
-    fun findAllResponsesOrderedByEvaluationCount(interaction: Interaction,
+    fun findAllResponsesOrderedByEvaluationCount(evaluator: User,
+                                                 interaction: Interaction,
                                                  attemptNum: AttemptNum,
                                                  limit: Int,
+                                                 excludedIds: List<Long> = listOf(),
                                                  seed: Long = System.nanoTime()): List<Response> =
             entityManager.createNativeQuery("""
         SELECT cir.id as responseId, (select count(*) from peer_grading pg where pg.response_id = cir.id) as evalCount
         FROM choice_interaction_response cir 
-        WHERE cir.interaction_id = :interactionId and cir.attempt = :attempt
+        WHERE cir.interaction_id = :interactionId 
+              and cir.learner_id != :evaluatorId
+              and cir.attempt = :attempt
               and cir.explanation is not null and CHAR_LENGTH(cir.explanation) > $MIN_SIZE_OF_EXPLANATION_TO_BE_EVALUATED
+              
+              """.trimIndent()+
+                    if(excludedIds.isNotEmpty()) {
+                        "and cir.id not in (${excludedIds.joinToString()})" } else { "" } +
+                    """
         ORDER BY evalCount ASC LIMIT :limit            
         """.trimIndent())
                     .setParameter("interactionId", interaction.id)
+                    .setParameter("evaluatorId", evaluator.id)
                     .setParameter("attempt", attemptNum)
                     .setParameter("limit", limit)
                     .resultList.let { rawData ->
