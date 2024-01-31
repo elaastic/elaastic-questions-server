@@ -58,14 +58,14 @@
                         and (explanation.correct or explanation.score == null)}">
 
                 <!-- If explanation is in favourites -->
-                <a th:if="${explanation.favourite}"
+                <a th:if="${explanation.recommendedByTeacher || explanation.recommendedBySystem}"
                    th:href="@{/player/response/{responseId}/remove-favourite(responseId=${explanation.responseId})}"
                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
-                    <i class="star icon"></i>
+                    <i class="star icon" th:classappend="|${explanation.recommendedByTeacher ? 'orange' : ''}|"></i>
                 </a>
 
                 <!-- If explanation is not in favourites -->
-                <a th:if="${!explanation.favourite}"
+                <a th:if="${!explanation.recommendedByTeacher && !explanation.recommendedBySystem}"
                    th:href="@{/player/response/{responseId}/add-favourite(responseId=${explanation.responseId})}"
                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                     <i class="empty star icon"></i>
