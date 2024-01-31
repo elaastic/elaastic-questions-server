@@ -45,7 +45,6 @@
             th:if="${
             explanationViewerModel.hasMoreThanExcerpt
             or explanationViewerModel.hasHiddenByTeacherExplanations
-            or explanationViewerModel.hasFavouritesAndNotFavouritesExplanations
             }">
         <div
                 th:replace="|${components}/_allExplanationsPopup|::allExplanationsPopup(${sequenceId}, ${explanationViewerModel}, ${isTeacher})"></div>
