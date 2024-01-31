@@ -18,7 +18,8 @@ object ExplanationDataFactory {
             score = response.score,
             choiceList = response.learnerChoice,
             hiddenByTeacher = response.hiddenByTeacher,
-            favourite = response.favourite,
+            recommendedBySystem = response.recommendedBySystem,
+            recommendedByTeacher = response.recommendedByTeacher,
         )
 
 
