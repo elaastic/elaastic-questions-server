@@ -13,7 +13,12 @@ interface ModerationCandidate {
     var hiddenByTeacher: Boolean
 
     /**
-     * Flag that indicates if the candidate is a favourite of the teacher.
+     * Flag that indicates if the candidate is recommended by the system (ONLY FACETOFACE).
      */
-    var favourite: Boolean
+    var recommendedBySystem: Boolean
+
+    /**
+     * Flag that indicates if the candidate is recommended by the teacher.
+     */
+    var recommendedByTeacher: Boolean
 }

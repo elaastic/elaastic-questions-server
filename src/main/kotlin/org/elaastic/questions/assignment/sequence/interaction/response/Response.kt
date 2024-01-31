@@ -77,8 +77,11 @@ class Response(
     @field:Column(name = "is_hidden_by_teacher")
     override var hiddenByTeacher: Boolean = false,
 
-    @field:Column(name = "is_favourite")
-    override var favourite: Boolean = false
+    @field:Column(name = "is_recommended_by_system")
+    override var recommendedBySystem: Boolean = false,
+
+    @field:Column(name = "is_recommended_by_teacher")
+    override var recommendedByTeacher: Boolean = false
 
 ) : AbstractJpaPersistable<Long>(), ModerationCandidate {
     @Version
@@ -104,6 +107,15 @@ class Response(
         this.uuid = initialResponse.uuid
         this.version = initialResponse.version
         this.dateCreated = initialResponse.dateCreated
+    }
+
+    fun isRecommended(): Boolean {
+        return recommendedBySystem || recommendedByTeacher
+    }
+
+    fun removeFromBothRecommendation() {
+        recommendedBySystem = false
+        recommendedByTeacher = false
     }
 
     companion object {

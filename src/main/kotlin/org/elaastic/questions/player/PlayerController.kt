@@ -389,6 +389,11 @@ class PlayerController(
         interactionService.findById(id).let {
             sequenceService.loadInteractions(it.sequence)
             interactionService.stop(user, id)
+            // If FaceToFace, compute system recommended favourites for the sequence
+            // TODO : NEED TO COMPUTE ONLY IN PHASE 2
+            if (it.sequence.executionIsFaceToFace()) {
+                responseService.computeSystemRecommendedFavourites(it)
+            }
             autoReloadSessionHandler.broadcastReload(it.sequence.id!!)
             return "redirect:/player/assignment/${it.sequence.assignment!!.id}/play/sequence/${it.sequence.id}"
         }
@@ -548,7 +553,7 @@ class PlayerController(
         // Get response from database
         var response = responseService.findById(responseId)
         // Update response favourite
-        response = responseService.addFavourite(user, response)
+        response = responseService.addRecommendedByTeacher(user, response)
 
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
@@ -564,7 +569,7 @@ class PlayerController(
         // Get response from database
         var response = responseService.findById(responseId)
         // Update response not favourite
-        response = responseService.removeFavourite(user, response)
+        response = responseService.removeRecommendedByTeacher(user, response)
 
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
