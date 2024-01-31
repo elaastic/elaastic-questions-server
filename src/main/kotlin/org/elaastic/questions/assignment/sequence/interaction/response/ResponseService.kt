@@ -184,6 +184,18 @@ class ResponseService(
     }
 
     /**
+     * Compute the system recommended favourites for a given interaction
+     * @param interaction the interaction
+     */
+    fun computeSystemRecommendedFavourites(interaction: Interaction) {
+        val responses = responseRepository.findTop3ByInteractionAndScoreAndFakeIsFalseAndHiddenByTeacherIsFalseOrderByMeanGradeDesc(interaction)
+        responses.forEach {
+            it.recommendedBySystem = true
+        }
+        responseRepository.saveAll(responses)
+    }
+
+    /**
      * Build response from teacher expected explanation
      * @param teacher the teacher
      * @param sequence the sequence
@@ -293,9 +305,9 @@ class ResponseService(
         }
 
         if (!response.hiddenByTeacher) {
-            // A response hidden must not be favourite
-            if (response.favourite) {
-                response.favourite = false
+            // A response hidden must not be recommended
+            if (response.isRecommended()) {
+                response.removeFromBothRecommendation()
             }
             response.hiddenByTeacher = true
             return responseRepository.save(response)
@@ -322,36 +334,36 @@ class ResponseService(
     }
 
     /**
-     * Mark a response as favourite by a teacher
-     * @param response the response to add as favourite
+     * Mark a response as recommended by a teacher
+     * @param response the response to add as recommended
      * @return the response
      */
-    fun addFavourite(user: User, response: Response) : Response {
+    fun addRecommendedByTeacher(user: User, response: Response) : Response {
         // Only a teacher can add a response as favourite
         require(user.isTeacher()) {
             "Only a teacher can unhide a response"
         }
 
-        if (!response.favourite && !response.hiddenByTeacher) {
-            response.favourite = true
+        if (!response.recommendedByTeacher && !response.hiddenByTeacher) {
+            response.recommendedByTeacher = true
             return responseRepository.save(response)
         }
         return response
     }
 
     /**
-     * Mark a response as NOT favourite by a teacher
-     * @param response the previously favourite response
+     * Mark a response as NOT recommended by a teacher
+     * @param response the previously recommended response
      * @return the response
      */
-    fun removeFavourite(user: User, response: Response) : Response {
+    fun removeRecommendedByTeacher(user: User, response: Response) : Response {
         // Only a teacher can remove a response as favourite
         require(user.isTeacher()) {
             "Only a teacher can unhide a response"
         }
 
-        if (response.favourite) {
-            response.favourite = false
+        if (response.recommendedByTeacher) {
+            response.removeFromBothRecommendation()
             return responseRepository.save(response)
         }
         return response

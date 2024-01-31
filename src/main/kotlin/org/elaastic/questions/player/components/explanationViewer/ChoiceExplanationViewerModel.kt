@@ -57,20 +57,18 @@ class ChoiceExplanationViewerModel(
     val recommendedStudentsExplanations = recommendedExplanations
         .filter { !it.fromTeacher && !it.hiddenByTeacher }
 
-    override val explanationsExcerpt = recommendedStudentsExplanations
-        .let { recommendedStudentsExplanations ->
-            if (recommendedStudentsExplanations.any { it.favourite }) {
-                recommendedStudentsExplanations.filter { it.favourite }
-            } else {
-                recommendedStudentsExplanations.take(3)
-            }
-        }
+    override val nbFavouriteExplanations = recommendedStudentsExplanations.count { it.recommendedBySystem || it.recommendedByTeacher }
 
-    override val hasFavouritesAndNotFavouritesExplanations = recommendedStudentsExplanations
-            .let { recommendedStudentsExplanations ->
-                recommendedStudentsExplanations.any { it.favourite }
-                && recommendedStudentsExplanations.any { !it.favourite }
-            }
+    override val explanationsExcerpt =
+        if (nbFavouriteExplanations < 3) {
+            recommendedStudentsExplanations
+                .sortedWith(compareByDescending<ExplanationData> { it.recommendedByTeacher }
+                .thenByDescending { it.recommendedBySystem }
+                .thenByDescending { it.meanGrade })
+                .take(3)
+        } else {
+            recommendedStudentsExplanations.filter { it.recommendedBySystem || it.recommendedByTeacher }
+        }
 
     override val nbExplanations = this.explanationsByResponse.values.flatten().count()
     override val hasMoreThanExcerpt = nbExplanationsForCorrectResponse > 3 || hasExplanationsForIncorrectResponse

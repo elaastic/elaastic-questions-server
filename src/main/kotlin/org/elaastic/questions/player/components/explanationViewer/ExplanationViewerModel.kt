@@ -23,8 +23,8 @@ interface ExplanationViewerModel {
     val explanationsExcerpt: List<ExplanationData>
     val hasMoreThanExcerpt: Boolean
     val hasHiddenByTeacherExplanations: Boolean?
-    val hasFavouritesAndNotFavouritesExplanations: Boolean?
     val nbExplanations: Int
     val studentsIdentitiesAreDisplayable: Boolean
     val teacherExplanation: TeacherExplanationData?
+    val nbFavouriteExplanations: Int
 }

@@ -39,7 +39,6 @@ interface ResponseRepository : JpaRepository<Response, Long> {
      */
     fun findTop3ByInteractionAndScoreAndFakeIsFalseAndHiddenByTeacherIsFalseOrderByMeanGradeDesc(interaction: Interaction, score: BigDecimal = BigDecimal(100)): List<Response>
 
-
     fun findAllByInteractionAndAttempt(interaction: Interaction, attempt: Int = 1): List<Response>
 
     fun findByInteractionAndAttemptAndLearner(interaction: Interaction, attempt: AttemptNum, learner: User): Response?
