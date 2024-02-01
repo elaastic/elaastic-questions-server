@@ -70,10 +70,10 @@ class ResponseService(
             else responseRepository.findAllByInteractionOrderByMeanGradeDesc(interaction)
         )
 
-    fun find3BestRankedResponses(sequence: Sequence): Triple<Response?, Response?, Response?> =
-        responseRepository.findTop3ByInteractionAndScoreAndFakeIsFalseAndHiddenByTeacherIsFalseOrderByMeanGradeDesc(
+    fun findRecommendedByTeacherResponses(sequence: Sequence): List<Response> =
+        responseRepository.findAllByInteractionAndRecommendedByTeacherIsTrue(
             sequence.getResponseSubmissionInteraction()
-        ).let { return Triple(it.getOrNull(0), it.getOrNull(1), it.getOrNull(2)) }
+        )
 
     fun count(sequence: Sequence, attempt: AttemptNum) =
         count(sequence.getResponseSubmissionInteraction(), attempt)
