@@ -59,14 +59,16 @@
 
                 <!-- If explanation is in favourites -->
                 <a th:if="${explanation.recommendedByTeacher}"
-                   th:href="@{/player/response/{responseId}/remove-recommended-by-teacher(responseId=${explanation.responseId})}"
+                   id="removeRecommendation"
+                   th:onclick="removeRecommendation([[${explanation.responseId}]])"
                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                     <i class="star icon"></i>
                 </a>
 
                 <!-- If explanation is not in favourites -->
                 <a th:if="${!explanation.recommendedByTeacher}"
-                   th:href="@{/player/response/{responseId}/add-recommended-by-teacher(responseId=${explanation.responseId})}"
+                   id="addRecommendation"
+                   th:onclick="addRecommendation([[${explanation.responseId}]])"
                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                     <i class="empty star icon"></i>
                 </a>
@@ -108,4 +110,38 @@
     <span th:if="${!explanation.hiddenByTeacher or isOwner}" th:utext="${explanation.content}"></span>
 
     <div class="reviews-container"></div>
+    <script th:inline="javascript">
+        function removeRecommendation(responseId) {
+            $.ajax({
+                type: "GET",
+                url: '/player/response/' + responseId + '/remove-recommended-by-teacher',
+                success: function() {
+                    // TODO : Lazy reload ?
+                    window.location.reload();
+                },
+                error: function(error) {
+                    // Handle error
+                    console.error(error);
+                }
+            });
+        }
+
+        function addRecommendation(responseId) {
+            $.ajax({
+                type: "GET",
+                url: '/player/response/' + responseId + '/add-recommended-by-teacher',
+                success: function() {
+                    // TODO : Lazy reload ?
+
+                    window.location.reload();
+                },
+                error: function(error) {
+                    // Handle error
+                    console.error(error);
+                }
+            });
+        }
+    </script>
 </div>
+
+
