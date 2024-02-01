@@ -81,7 +81,8 @@ class ResponseRepositoryIntegrationTest(
                 meanGrade = BigDecimal(1),
                 learnerChoice = choiceListSpecification,
                 score = BigDecimal(2),
-                statement = interaction.sequence.statement
+                statement = interaction.sequence.statement,
+                recommendedByTeacher = true
         ).tWhen {
             responseRepository.saveAndFlush(it)
             entityManager.refresh(it)
@@ -93,6 +94,7 @@ class ResponseRepositoryIntegrationTest(
             assertThat(it.meanGrade?.toDouble(), equalTo(BigDecimal(1).toDouble()))
             assertThat(it.learnerChoice, equalTo(choiceListSpecification))
             assertThat(it.score?.toDouble(), equalTo(BigDecimal(2).toDouble()))
+            assertThat(it.recommendedByTeacher, equalTo(true))
         }
     }
 }
