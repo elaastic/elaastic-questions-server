@@ -82,7 +82,7 @@ class PracticeSubjectService(
 
 
     private fun findBestExplanations(sequence: Sequence) =
-        responseService.find3BestRankedResponses(sequence)
+        responseService.findRecommendedByTeacherResponses(sequence)
             .toList()
             .filterNotNull()
             .map { response -> PracticeLearnerExplanation(response) }
