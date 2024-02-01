@@ -184,18 +184,6 @@ class ResponseService(
     }
 
     /**
-     * Compute the system recommended favourites for a given interaction
-     * @param interaction the interaction
-     */
-    fun computeSystemRecommendedFavourites(interaction: Interaction) {
-        val responses = responseRepository.findTop3ByInteractionAndScoreAndFakeIsFalseAndHiddenByTeacherIsFalseOrderByMeanGradeDesc(interaction)
-        responses.forEach {
-            it.recommendedBySystem = true
-        }
-        responseRepository.saveAll(responses)
-    }
-
-    /**
      * Build response from teacher expected explanation
      * @param teacher the teacher
      * @param sequence the sequence
@@ -306,8 +294,8 @@ class ResponseService(
 
         if (!response.hiddenByTeacher) {
             // A response hidden must not be recommended
-            if (response.isRecommended()) {
-                response.removeFromBothRecommendation()
+            if (response.recommendedByTeacher) {
+                response.recommendedByTeacher = false
             }
             response.hiddenByTeacher = true
             return responseRepository.save(response)
@@ -363,7 +351,7 @@ class ResponseService(
         }
 
         if (response.recommendedByTeacher) {
-            response.removeFromBothRecommendation()
+            response.recommendedByTeacher = false
             return responseRepository.save(response)
         }
         return response

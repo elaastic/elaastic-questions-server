@@ -31,13 +31,13 @@ class OpenExplanationViewerModel(explanations: List<ExplanationData>,
     val recommendedStudentsExplanations = this.explanations
         .filter { !it.fromTeacher && !it.hiddenByTeacher }
 
-    override val nbFavouriteExplanations = recommendedStudentsExplanations.count { it.recommendedBySystem || it.recommendedByTeacher }
+    override val nbRecommendedExplanations = recommendedStudentsExplanations.count { it.recommendedByTeacher }
 
     override val explanationsExcerpt =
-        if (nbFavouriteExplanations > 3) {
-            recommendedStudentsExplanations.filter { it.recommendedBySystem || it.recommendedByTeacher }
+        if (nbRecommendedExplanations > 3) {
+            recommendedStudentsExplanations.filter { it.recommendedByTeacher }
         } else {
-            recommendedStudentsExplanations.sortedWith(compareByDescending<ExplanationData> { it.recommendedByTeacher }.thenByDescending { it.recommendedBySystem })
+            recommendedStudentsExplanations.sortedWith(compareByDescending<ExplanationData> { it.recommendedByTeacher }.thenByDescending { it.meanGrade }.thenByDescending { it.nbEvaluations })
         }
     val nbExplanationsForCorrectResponse = nbExplanations
     override val hasMoreThanExcerpt = nbExplanations > 3

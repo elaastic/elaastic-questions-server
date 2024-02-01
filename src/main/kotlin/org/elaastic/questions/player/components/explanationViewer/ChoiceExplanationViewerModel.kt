@@ -26,7 +26,7 @@ class ChoiceExplanationViewerModel(
         val showOnlyCorrectResponse: Boolean = false,
         alreadySorted: Boolean = false,
         override val studentsIdentitiesAreDisplayable: Boolean = false,
-        val recommendedExplanationsComparator: Comparator<ExplanationData>? = CorrectAndMeanGradeComparator()
+        val recommendedExplanationsComparator: Comparator<ExplanationData>? = CorrectAndMeanGradeComparator(),
 ) : ExplanationViewerModel {
     override val hasChoice = true
     val explanationsByResponse =
@@ -57,17 +57,17 @@ class ChoiceExplanationViewerModel(
     val recommendedStudentsExplanations = recommendedExplanations
         .filter { !it.fromTeacher && !it.hiddenByTeacher }
 
-    override val nbFavouriteExplanations = recommendedStudentsExplanations.count { it.recommendedBySystem || it.recommendedByTeacher }
+    override val nbRecommendedExplanations = recommendedStudentsExplanations.count {it.recommendedByTeacher }
 
     override val explanationsExcerpt =
-        if (nbFavouriteExplanations < 3) {
+        if (nbRecommendedExplanations < 3) {
             recommendedStudentsExplanations
                 .sortedWith(compareByDescending<ExplanationData> { it.recommendedByTeacher }
-                .thenByDescending { it.recommendedBySystem }
-                .thenByDescending { it.meanGrade })
+                .thenByDescending { it.meanGrade }
+                .thenByDescending { it.nbEvaluations })
                 .take(3)
         } else {
-            recommendedStudentsExplanations.filter { it.recommendedBySystem || it.recommendedByTeacher }
+            recommendedStudentsExplanations.filter { it.recommendedByTeacher }
         }
 
     override val nbExplanations = this.explanationsByResponse.values.flatten().count()

@@ -389,11 +389,6 @@ class PlayerController(
         interactionService.findById(id).let {
             sequenceService.loadInteractions(it.sequence)
             interactionService.stop(user, id)
-            // If FaceToFace, compute system recommended favourites for the sequence
-            // TODO : NEED TO COMPUTE ONLY IN PHASE 2
-            if (it.sequence.executionIsFaceToFace()) {
-                responseService.computeSystemRecommendedFavourites(it)
-            }
             autoReloadSessionHandler.broadcastReload(it.sequence.id!!)
             return "redirect:/player/assignment/${it.sequence.assignment!!.id}/play/sequence/${it.sequence.id}"
         }
@@ -542,8 +537,8 @@ class PlayerController(
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
-    @GetMapping("/response/{responseId}/add-favourite")
-    fun addFavourite(
+    @GetMapping("/response/{responseId}/add-recommended-by-teacher")
+    fun addRecommendedByTeacher(
         authentication: Authentication,
         model: Model,
         @PathVariable responseId: Long
@@ -558,8 +553,8 @@ class PlayerController(
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
-    @GetMapping("/response/{responseId}/remove-favourite")
-    fun removeFavourite(
+    @GetMapping("/response/{responseId}/remove-recommended-by-teacher")
+    fun removeRecommendedByTeacher(
         authentication: Authentication,
         model: Model,
         @PathVariable responseId: Long
