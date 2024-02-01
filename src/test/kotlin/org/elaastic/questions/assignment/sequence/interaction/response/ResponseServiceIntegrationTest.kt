@@ -29,6 +29,7 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
+import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.StatementService
@@ -626,5 +627,50 @@ internal class ResponseServiceIntegrationTest(
             assertThat(response.meanGrade, nullValue())
         }
     }
+
+    @Test
+    fun testResponseIsRecommendedByTeacher() {
+        tGiven("given a sequence corresponding with an exclusive choice question") {
+            val subject = integrationTestingService.getAnyTestSubject()
+            val assignment = integrationTestingService.getAnyAssignment()
+            subject.owner = assignment.owner
+
+            val stmt1 = subjectService.addStatement(
+                subject,
+                Statement(
+                    owner = subject.owner,
+                    title = "q1",
+                    content = "question 1",
+                    expectedExplanation = "Some stuff",
+                    questionType = QuestionType.ExclusiveChoice,
+                    subject = subject
+                )
+            )
+            assignmentService.addSequence(
+                assignment = assignment,
+                statement = stmt1
+            ).let {
+                sequenceService.initializeInteractionsForSequence(
+                    it,
+                    true,
+                    3,
+                    ExecutionContext.Blended
+                ).let { sequence ->
+                    sequence.executionContext = ExecutionContext.Blended
+                    sequenceRepository.save(sequence)
+                }
+            }
+        }.tWhen("we build a response based on expected explanations") { sequence ->
+           responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
+                sequence = sequence,
+                teacher = sequence.owner,
+            )
+        }.tWhen("we mark this response as recommended by the teacher") { response ->
+            responseService.addRecommendedByTeacher(integrationTestingService.getTestTeacher(), response!!)
+        }.tThen { response ->
+            assertThat(response.recommendedByTeacher, equalTo(true))
+        }
+    }
+
 }
 
