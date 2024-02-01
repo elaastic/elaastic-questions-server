@@ -53,20 +53,20 @@
     >
         <div class="floating ui icon buttons" style="display: inline-flex; border-radius: 14px">
 
-            <!-- If explanation is correct, you can add / remove as favourite -->
+            <!-- If explanation is correct, you can add / remove as recommendedByTeacher -->
             <div th:if="${!explanation.hiddenByTeacher
                         and (explanation.correct or explanation.score == null)}">
 
                 <!-- If explanation is in favourites -->
-                <a th:if="${explanation.recommendedByTeacher || explanation.recommendedBySystem}"
-                   th:href="@{/player/response/{responseId}/remove-favourite(responseId=${explanation.responseId})}"
+                <a th:if="${explanation.recommendedByTeacher}"
+                   th:href="@{/player/response/{responseId}/remove-recommended-by-teacher(responseId=${explanation.responseId})}"
                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
-                    <i class="star icon" th:classappend="|${explanation.recommendedByTeacher ? 'orange' : ''}|"></i>
+                    <i class="star icon"></i>
                 </a>
 
                 <!-- If explanation is not in favourites -->
-                <a th:if="${!explanation.recommendedByTeacher && !explanation.recommendedBySystem}"
-                   th:href="@{/player/response/{responseId}/add-favourite(responseId=${explanation.responseId})}"
+                <a th:if="${!explanation.recommendedByTeacher}"
+                   th:href="@{/player/response/{responseId}/add-recommended-by-teacher(responseId=${explanation.responseId})}"
                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                     <i class="empty star icon"></i>
                 </a>
