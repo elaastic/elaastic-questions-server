@@ -13,11 +13,6 @@ interface ModerationCandidate {
     var hiddenByTeacher: Boolean
 
     /**
-     * Flag that indicates if the candidate is recommended by the system (ONLY FACETOFACE).
-     */
-    var recommendedBySystem: Boolean
-
-    /**
      * Flag that indicates if the candidate is recommended by the teacher.
      */
     var recommendedByTeacher: Boolean

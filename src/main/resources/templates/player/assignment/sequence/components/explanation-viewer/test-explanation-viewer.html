@@ -41,7 +41,7 @@
        class="ui segment">
     <h3 th:text="${explanationViewerSituation.description}"></h3>
     <div
-      th:replace="player/assignment/sequence/components/explanation-viewer/_explanation-viewer.html :: explanationViewer(${explanationViewerSituation.sequenceId}, ${explanationViewerSituation.explanationViewerModel})"></div>
+      th:replace="player/assignment/sequence/components/explanation-viewer/_explanation-viewer.html :: explanationViewer(${explanationViewerSituation.sequenceId}, ${explanationViewerSituation.explanationViewerModel}, ${true})"></div>
   </div>
 </section>
 </body>
