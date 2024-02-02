@@ -51,7 +51,7 @@ internal class PracticeSubjectServiceIntegrationTest(
 
         with(functionalTestingService) {
             createSubject(teacher)
-                .let { createAssignment(it) }
+                .let { createAssignmentReadyToPractice(it) }
         }
 
         tWhen {
@@ -73,7 +73,54 @@ internal class PracticeSubjectServiceIntegrationTest(
                     addQuestion(it, QuestionType.MultipleChoice)
 
                 }
-                .let { createAssignment(it) }
+                .let { createAssignmentReadyToPractice(it) }
+        }
+
+        tWhen {
+            practiceSubjectService.findAllPracticeSubject(LocalDateTime.now().minusDays(1))
+        }
+            .tExpect { result ->
+                assertThat(result.size, equalTo(0))
+            }
+    }
+
+    @Test
+    fun `An assignment with revisionMode set to immediately is ready to practice`() {
+        val teacher = integrationTestingService.getTestTeacher()
+
+        with(functionalTestingService) {
+            createSubject(teacher)
+                .also {
+                    addQuestion(it, QuestionType.OpenEnded)
+                    addQuestion(it, QuestionType.MultipleChoice)
+
+                }
+                .let { createAssignmentReadyImmediatelyForPractice(it) }
+        }
+
+        tWhen {
+            practiceSubjectService.findAllPracticeSubject(LocalDateTime.now().minusDays(1))
+        }
+            .tExpect { result ->
+                assertThat(result.size, equalTo(1))
+            }
+    }
+
+    @Test
+    fun `An assignment with revisionMode set to notAtAll is not ready to practice`() {
+        val teacher = integrationTestingService.getTestTeacher()
+        val learners = integrationTestingService.getNLearners(5)
+
+        with(functionalTestingService) {
+            createSubject(teacher)
+                .also {
+                    addQuestion(it, QuestionType.OpenEnded)
+                    addQuestion(it, QuestionType.MultipleChoice)
+
+                }
+                .let(this::createAssignment)
+                .sequences.first().let(curriedRandomlyPlaySequence(learners))
+
         }
 
         tWhen {
@@ -96,7 +143,7 @@ internal class PracticeSubjectServiceIntegrationTest(
                     addQuestion(it, QuestionType.MultipleChoice)
 
                 }
-                .let(this::createAssignment)
+                .let(this::createAssignmentReadyToPractice)
                 .sequences.first().let(curriedRandomlyPlaySequence(learners))
 
         }
@@ -122,9 +169,9 @@ internal class PracticeSubjectServiceIntegrationTest(
 
                 }
                 // 1st assignment
-                .also { createAssignment(it).let(curriedRandomlyPlayAllSequences(learners)) }
+                .also { createAssignmentReadyToPractice(it).let(curriedRandomlyPlayAllSequences(learners)) }
                 // 2nd assignment
-                .also { createAssignment(it).let(curriedRandomlyPlayAllSequences(learners)) }
+                .also { createAssignmentReadyToPractice(it).let(curriedRandomlyPlayAllSequences(learners)) }
         }
 
         tWhen {
@@ -157,7 +204,7 @@ internal class PracticeSubjectServiceIntegrationTest(
 
                 }
                 .also { subject ->
-                    createAssignment(subject)
+                    createAssignmentReadyToPractice(subject)
                         .sequences.forEach(curriedRandomlyPlaySequence(learners))
                 }
         }
@@ -222,7 +269,7 @@ internal class PracticeSubjectServiceIntegrationTest(
 
             val assignment = createSubject(teacher, course)
                 .also { subject -> addQuestion(subject, QuestionType.MultipleChoice) }
-                .let { subject -> createAssignment(subject)  }
+                .let { subject -> createAssignmentReadyToPractice(subject)  }
                 .also(curriedRandomlyPlayAllSequences(learners))
 
             val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.globalId)
@@ -240,7 +287,7 @@ internal class PracticeSubjectServiceIntegrationTest(
         with(functionalTestingService) {
             val assignment = createSubject(teacher)
                 .also { subject -> addQuestion(subject, QuestionType.MultipleChoice) }
-                .let { subject -> createAssignment(subject)  }
+                .let { subject -> createAssignmentReadyToPractice(subject)  }
                 .also(curriedRandomlyPlayAllSequences(learners))
 
             val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.globalId)
@@ -264,7 +311,7 @@ internal class PracticeSubjectServiceIntegrationTest(
                     addQuestion(subject, QuestionType.ExclusiveChoice)
                     addQuestion(subject, QuestionType.OpenEnded)
                 }
-                .let { subject -> createAssignment(subject)  }
+                .let { subject -> createAssignmentReadyToPractice(subject)  }
                 .also {assignment ->
                     randomlyPlaySequence(learners, assignment.sequences[0])
                     randomlyPlaySequence(learners, assignment.sequences[2])

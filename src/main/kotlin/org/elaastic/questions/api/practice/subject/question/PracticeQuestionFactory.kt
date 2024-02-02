@@ -10,7 +10,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 
 object PracticeQuestionFactory {
 
-    fun buildQuestion(sequence: Sequence, explanations: List<PracticeLearnerExplanation>) =
+    fun buildQuestion(sequence: Sequence, explanations: List<PracticeLearnerExplanation>?) =
         PracticeQuestion(
             id = sequence.uuid,
             rank = sequence.rank,
@@ -23,7 +23,7 @@ object PracticeQuestionFactory {
                 QuestionType.MultipleChoice -> parseMultipleChoiceSpecification(sequence.statement.choiceSpecification)
             },
             attachment = sequence.statement.attachment?.let(::PracticeAttachment),
-            explanations = explanations
+            explanations = if (explanations != null) explanations else emptyList()
         )
 
     private fun parseMultipleChoiceSpecification(choiceSpecification: ChoiceSpecification?) =

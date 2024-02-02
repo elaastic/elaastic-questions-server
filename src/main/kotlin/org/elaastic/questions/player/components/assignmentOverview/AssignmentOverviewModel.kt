@@ -38,8 +38,13 @@ data class AssignmentOverviewModel(
             val title: String,
             val content: String,
             val icons: List<PhaseIcon>,
-            val hideStatementContent: Boolean
+            val hideStatementContent: Boolean,
+            val revisionTag: Boolean
     )
-}
 
-typealias PhaseIcon = String
+    data class PhaseIcon(
+            val icon: String,
+            val title: String,
+    )
+
+}
