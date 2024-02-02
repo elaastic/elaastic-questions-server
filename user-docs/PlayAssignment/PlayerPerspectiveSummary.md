@@ -4,7 +4,7 @@ title: play_assignment.player_perspective_summary
 permalink: lancer_devoir/recapitulatif_perspective_player/
 permalink_en: play_assignment/player_perspective_summary/
 parent: play_assignment.play_assignment
-nav_order: 6
+nav_order: 8
 has_children: false
 ---
 
