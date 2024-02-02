@@ -107,12 +107,12 @@ class AssignmentController(
             response.status = HttpStatus.BAD_REQUEST.value()
             model.addAttribute("user", user)
             model.addAttribute("assignment", assignmentData)
-            redirectAttributes.addAttribute("activeTab", "assignments");
+            redirectAttributes.addAttribute("activeTab", "assignments")
             "/subject/${subject.id}/addAssignment"
         } else {
             val assignment = assignmentData.toEntity()
             assignmentService.save(assignment)
-            redirectAttributes.addAttribute("activeTab", "assignments");
+            redirectAttributes.addAttribute("activeTab", "assignments")
             "/subject/${subject.id}"
         }
     }
@@ -155,7 +155,7 @@ class AssignmentController(
             if (!model.containsAttribute("assignment")) {
                 model.addAttribute(
                     "assignment",
-                    AssignmentController.AssignmentData(owner = user, subject = assignment.subject!!)
+                    AssignmentData(owner = user, subject = assignment.subject!!, revisionMode = assignment.revisionMode)
                 )
             }
             return "assignment/create"
@@ -175,7 +175,7 @@ class AssignmentController(
                         )
                     )
                 }
-                redirectAttributes.addAttribute("activeTab", "assignments");
+                redirectAttributes.addAttribute("activeTab", "assignments")
                 "redirect:/subject/${assignment.subject!!.id}"
             }
         }
@@ -202,7 +202,7 @@ class AssignmentController(
                 )
             )
         }
-        redirectAttributes.addAttribute("activeTab", "assignments");
+        redirectAttributes.addAttribute("activeTab", "assignments")
         return "redirect:/subject/${assignment.subject!!.id}"
     }
 
@@ -242,7 +242,7 @@ class AssignmentController(
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveUpAssignment(subject, id)
-        redirectAttributes.addAttribute("activeTab", "assignments");
+        redirectAttributes.addAttribute("activeTab", "assignments")
         return "redirect:/subject/$subjectId#assignment_${id}"
     }
 
@@ -257,7 +257,7 @@ class AssignmentController(
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveDownAssignment(subject, id)
-        redirectAttributes.addAttribute("activeTab", "assignments");
+        redirectAttributes.addAttribute("activeTab", "assignments")
         return "redirect:/subject/$subjectId#assignment_${id}"
     }
 
@@ -271,7 +271,8 @@ class AssignmentController(
         var audience: String = "",
         var description: String = "",
         var scholarYear: String = "",
-        var acceptAnonymousUsers: Boolean = false
+        var acceptAnonymousUsers: Boolean = false,
+        var revisionMode: RevisionMode = RevisionMode.NotAtAll
     ) {
         fun toEntity(): Assignment {
             return Assignment(
@@ -280,7 +281,8 @@ class AssignmentController(
                 subject = subject,
                 scholarYear = scholarYear,
                 audience = audience,
-                acceptAnonymousUsers = acceptAnonymousUsers
+                acceptAnonymousUsers = acceptAnonymousUsers,
+                revisionMode = revisionMode,
             ).let {
                 it.id = id
                 it.version = version

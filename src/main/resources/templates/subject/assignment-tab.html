@@ -97,6 +97,26 @@
                             <span style="font-size: smaller" th:text="${assignment.description}">content</span>
                         </div>
                     </div>
+                    <div class="ui row" style="align-items: center">
+                        <span class="ui seven wide column" th:text="#{assignment.autorize.revisionMode}" >
+                            Ce sujet peut servir aux révisions
+                        </span>
+                        <span>
+                            <label class="ui button disabled column active"
+                                   th:if="${#strings.toString(assignment.revisionMode)=='NotAtAll'}"
+                                   th:text="#{assignment.autorize.notAtAll}">Pas du tout </label>
+                        </span>
+                        <span>
+                            <label class="ui button disabled column active"
+                                   th:if="${#strings.toString(assignment.revisionMode)=='AfterTeachings'}"
+                                   th:text="#{assignment.autorize.afterTeachings}">Après travail avec enseignant </label>
+                        </span>
+                        <span>
+                            <label class="ui button disabled column active"
+                                   th:if="${#strings.toString(assignment.revisionMode)=='Immediately'}"
+                                   th:text="#{assignment.autorize.immediately}">Immédiatement </label>
+                        </span>
+                    </div>
                     <div class="ui row">
                         <span class="ui sixteen wide column" style="font-size: smaller"
                                   th:text="#{assignment.learnerAccess.description}">

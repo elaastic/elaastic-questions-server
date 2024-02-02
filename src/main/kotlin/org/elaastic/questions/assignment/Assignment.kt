@@ -83,7 +83,11 @@ class Assignment(
 
         @Column(name = "accept_anonymous_users")
         @field:NotNull
-        var acceptAnonymousUsers: Boolean = false
+        var acceptAnonymousUsers: Boolean = false,
+
+        @Column(name = "revision_mode")
+        @Enumerated(EnumType.STRING)
+        var revisionMode: RevisionMode = RevisionMode.NotAtAll
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
@@ -130,6 +134,7 @@ class Assignment(
         this.scholarYear = otherAssignment.scholarYear
         this.description = otherAssignment.description
         this.acceptAnonymousUsers = otherAssignment.acceptAnonymousUsers
+        this.revisionMode = otherAssignment.revisionMode
     }
 
     fun addSequence(sequence: Sequence): Sequence {
