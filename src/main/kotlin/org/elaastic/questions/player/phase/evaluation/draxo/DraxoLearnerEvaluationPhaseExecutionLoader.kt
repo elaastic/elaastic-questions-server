@@ -25,21 +25,26 @@ class DraxoLearnerEvaluationPhaseExecutionLoader(
 
         val secondAttemptAlreadySubmitted = responseService.hasResponseForUser(learner, sequence, 2)
 
+        val responseToEvaluateCount = sequence.getEvaluationSpecification().responseToEvaluateCount
+
         val responseIdAlreadyGradedList =
             peerGradingService.findAllEvaluation(learner, sequence).map { it.response.id!! }
 
-        val nextResponseToGrade = responseService.findNextResponseToGrade(
-            sequence = sequence,
-            attempt = sequence.whichAttemptEvaluate(),
-            user = learner,
-            excludedIds = responseIdAlreadyGradedList,
-        )?.let { ResponseData(it) }
+        val nextResponseToGrade =
+            if(responseIdAlreadyGradedList.size < responseToEvaluateCount) {
+                responseService.findNextResponseToGrade(
+                    sequence = sequence,
+                    attempt = sequence.whichAttemptEvaluate(),
+                    user = learner,
+                    excludedIds = responseIdAlreadyGradedList,
+                )?.let { ResponseData(it) }
+            } else null
 
         return DraxoLearnerEvaluationPhaseExecution(
             userHasCompletedPhase2 = nextResponseToGrade == null,
             secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
             nextResponseToGrade = nextResponseToGrade,
-            lastResponseToGrade = responseIdAlreadyGradedList.size >= sequence.getEvaluationSpecification().responseToEvaluateCount - 1,
+            lastResponseToGrade = responseIdAlreadyGradedList.size == responseToEvaluateCount - 1,
             sequence = learnerPhase.learnerSequence.sequence,
             userActiveInteraction = learnerPhase.learnerSequence.activeInteraction,
             lastAttemptResponse = responseService.find(learner, sequence, 2) ?: responseService.find(
