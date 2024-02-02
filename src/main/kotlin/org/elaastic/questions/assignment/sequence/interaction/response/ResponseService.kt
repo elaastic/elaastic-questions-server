@@ -105,7 +105,19 @@ class ResponseService(
                                 user: User,
                                 attempt: AttemptNum,
                                 excludedIds: List<Long>) =
-        recommendationService.findAllResponsesOrderedByEvaluationCount(
+        if (sequence.executionIsFaceToFace()) {
+            val recommendedResponses = responseRepository.findByInteractionAndAttemptAndLearner(
+                sequence.getResponseSubmissionInteraction(),
+                1,
+                user
+            )?.let { userResponse ->
+                sequence.getResponseSubmissionInteraction().explanationRecommendationMapping?.getRecommandation(
+                    userResponse.id!!
+                )?.let { responseRepository.getAllByIdIn(it) }
+            } ?: listOf()
+            recommendedResponses.firstOrNull { it.id !in excludedIds }
+        }
+        else recommendationService.findAllResponsesOrderedByEvaluationCount(
             evaluator = user,
             interaction = sequence.getResponseSubmissionInteraction(),
             attemptNum = attempt,
