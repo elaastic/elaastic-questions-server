@@ -60,7 +60,7 @@ class LearnerPhaseService(
                         else learnerSequence.sequence.getInteractionAt(phaseIndex).state,
                     )
 
-            if (learnerSequence.hasStarted()) {
+            if (learnerSequence.hasStarted() && learnerPhase.isVisible()) {
                 learnerPhase.loadPhaseExecution(
                     ctx.getBean<LearnerPhaseExecutionLoader>(
                         learnerPhase.getLearnerPhaseExecutionLoaderName()
