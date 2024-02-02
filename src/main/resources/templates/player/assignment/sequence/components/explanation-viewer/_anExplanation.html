@@ -57,7 +57,7 @@
             <div th:if="${!explanation.hiddenByTeacher
                         and (explanation.correct or explanation.score == null)}">
 
-                <!-- If explanation is in favourites -->
+                <!-- If explanation is in recommended -->
                 <a th:if="${explanation.recommendedByTeacher}"
                    id="removeRecommendation"
                    th:onclick="removeRecommendation([[${explanation.responseId}]])"
@@ -65,7 +65,7 @@
                     <i class="star icon"></i>
                 </a>
 
-                <!-- If explanation is not in favourites -->
+                <!-- If explanation is not in recommended -->
                 <a th:if="${!explanation.recommendedByTeacher}"
                    id="addRecommendation"
                    th:onclick="addRecommendation([[${explanation.responseId}]])"
