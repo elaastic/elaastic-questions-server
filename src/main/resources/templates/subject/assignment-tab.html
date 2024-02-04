@@ -98,6 +98,24 @@
                         </div>
                     </div>
                     <div class="ui row">
+                        <span class="ui eight wide column" th:text="#{assignment.autorize.revisionMode}" >
+                            Ce sujet peut servir aux révisions
+                        </span>
+                    </div>
+                    <div class="ui row">
+                        <div class="field ui buttons sixteen wide column">
+                            <span>
+                                <label class="ui button disabled " th:classappend="${#strings.toString(assignment.revisionMode)=='NotAtAll'} ? active" th:text="#{assignment.autorize.notAtAll}">Pas du tout </label>
+                            </span>
+                            <span>
+                                <label class="ui button disabled " th:classappend="${#strings.toString(assignment.revisionMode)=='AfterTeachings'} ? active" th:text="#{assignment.autorize.afterTeachings}">Après travail avec enseignant </label>
+                            </span>
+                            <span>
+                                <label class="ui button disabled " th:classappend="${#strings.toString(assignment.revisionMode)=='Immediately'} ? active" th:text="#{assignment.autorize.immediately}">Immédiatement </label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="ui row">
                         <span class="ui sixteen wide column" style="font-size: smaller"
                                   th:text="#{assignment.learnerAccess.description}">
           Here is the URL to communicate to learners so they can sign up on the
