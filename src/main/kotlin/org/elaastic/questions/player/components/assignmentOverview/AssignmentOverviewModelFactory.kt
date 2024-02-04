@@ -19,12 +19,20 @@
 package org.elaastic.questions.player.components.assignmentOverview
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.RevisionMode
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 
 object AssignmentOverviewModelFactory {
+
+    const val revisionIcon = "big grey graduation cap"
+    const val chartIcon = "big grey bar chart outline"
+    const val lockIcon = "big grey lock"
+    const val minusIcon = "big grey minus"
+    const val commentIcon = "big grey comment outline"
+    const val commentsIcon = "big grey comments outline"
 
     fun build(
         teacher: Boolean,
@@ -56,7 +64,8 @@ object AssignmentOverviewModelFactory {
                 icons = resolveIcons(
                     teacher,
                     it,
-                    sequenceToUserActiveInteraction[it]
+                    sequenceToUserActiveInteraction[it],
+                    assignment.revisionMode
                 )
             )
         },
@@ -66,45 +75,64 @@ object AssignmentOverviewModelFactory {
     private fun resolveIcons(
         teacher: Boolean,
         sequence: Sequence,
-        userActiveInteraction: Interaction?
+        userActiveInteraction: Interaction?,
+        revisionMode: RevisionMode
     ): List<PhaseIcon> =
-        if (sequence.executionIsFaceToFace() || !teacher) {
+            if (sequence.executionIsFaceToFace() || !teacher) {
             when {
                 sequence.isStopped() ->
                     if (sequence.resultsArePublished)
-                        listOf("grey bar chart outline")
-                    else listOf("big grey lock")
+                        if (revisionMode != RevisionMode.NotAtAll)
+                            listOf(chartIcon, revisionIcon)
+                        else
+                            listOf(chartIcon)
+                    else
+                        if (revisionMode == RevisionMode.Immediately)
+                            listOf(lockIcon, revisionIcon)
+                        else
+                            listOf(lockIcon)
 
                 else -> when (userActiveInteraction?.interactionType) {
-                    null -> listOf("big grey minus")
-                    InteractionType.ResponseSubmission -> listOf("big grey comment outline")
-                    InteractionType.Evaluation -> listOf("big grey comments outline")
-                    InteractionType.Read -> listOf("big grey bar chart outline")
+                    null -> if (revisionMode == RevisionMode.Immediately) listOf(minusIcon, revisionIcon)
+                            else listOf(minusIcon)
+                    InteractionType.ResponseSubmission ->
+                            if (revisionMode == RevisionMode.Immediately) listOf(commentIcon, revisionIcon)
+                            else listOf(commentIcon)
+                    InteractionType.Evaluation ->
+                            if (revisionMode == RevisionMode.Immediately) listOf(commentsIcon, revisionIcon)
+                            else listOf(commentsIcon)
+                    InteractionType.Read ->
+                            if (revisionMode == RevisionMode.Immediately) listOf(chartIcon, revisionIcon)
+                            else listOf(chartIcon)
                 }
 
             }
 
         } else { // Distance & blended for teacher
             when (sequence.state) {
-                State.beforeStart -> listOf("big grey minus")
+                State.beforeStart ->
+                    if (revisionMode == RevisionMode.Immediately) listOf(minusIcon, revisionIcon)
+                    else listOf(minusIcon)
                 State.afterStop ->
                     if (sequence.resultsArePublished)
-                        listOf("big grey bar chart outline")
-                    else listOf("big grey lock")
+                        if (revisionMode != RevisionMode.NotAtAll) listOf(chartIcon, revisionIcon)
+                        else listOf(chartIcon)
+
+                    else
+                        if (revisionMode == RevisionMode.Immediately) listOf(lockIcon, revisionIcon)
+                        else listOf(lockIcon)
 
                 else ->
                     if (sequence.resultsArePublished)
-                        listOf(
-                            "large grey comment outline",
-                            "large grey comments outline",
-                            "large  grey bar chart outline"
-                        )
-                    else listOf(
-                        "large grey comment outline",
-                        "large grey comments outline"
-                    )
+                        if (revisionMode != RevisionMode.NotAtAll)
+                            listOf(commentIcon, commentsIcon, chartIcon, revisionIcon)
+                        else
+                            listOf(commentIcon, commentsIcon, chartIcon)
+                    else
+                        if (revisionMode == RevisionMode.Immediately)
+                            listOf(commentIcon, commentsIcon, revisionIcon)
+                        else
+                            listOf(commentIcon, commentsIcon )
             }
         }
-
-
 }
