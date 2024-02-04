@@ -4,6 +4,7 @@ import org.elaastic.questions.api.practice.subject.question.PracticeLearnerExpla
 import org.elaastic.questions.api.practice.subject.question.PracticeQuestionFactory
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.RevisionMode
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
@@ -65,7 +66,10 @@ class PracticeSubjectService(
             }
 
     fun isSequenceReadyToPractice(sequence: Sequence) =
-        sequence.isStopped() && sequence.resultsArePublished
+        sequence.assignment?.revisionMode == RevisionMode.Immediately ||
+            sequence.assignment?.revisionMode == RevisionMode.AfterTeachings
+            && sequence.resultsArePublished
+            && (sequence.executionIsFaceToFace() || sequence.isStopped())
 
     fun isSubjectReadyToPractice(assignment: Assignment) =
         assignment.sequences.any(::isSequenceReadyToPractice)
