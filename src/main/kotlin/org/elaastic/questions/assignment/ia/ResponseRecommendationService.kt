@@ -97,7 +97,10 @@ class ResponseRecommendationService(
                                                  excludedIds: List<Long> = listOf(),
                                                  seed: Long = System.nanoTime()): List<Response> =
             entityManager.createNativeQuery("""
-        SELECT cir.id as responseId, (select count(*) from peer_grading pg where pg.response_id = cir.id) as evalCount
+        SELECT 
+            cir.id as responseId, 
+            (select count(*) from peer_grading pg where pg.response_id = cir.id) as evalCount,
+            rand() as randomIndex
         FROM choice_interaction_response cir 
         WHERE cir.interaction_id = :interactionId 
               and cir.learner_id != :evaluatorId
@@ -108,7 +111,7 @@ class ResponseRecommendationService(
                     if(excludedIds.isNotEmpty()) {
                         "and cir.id not in (${excludedIds.joinToString()})" } else { "" } +
                     """
-        ORDER BY evalCount ASC LIMIT :limit            
+        ORDER BY evalCount ASC, randomIndex ASC LIMIT :limit            
         """.trimIndent())
                     .setParameter("interactionId", interaction.id)
                     .setParameter("evaluatorId", evaluator.id)
