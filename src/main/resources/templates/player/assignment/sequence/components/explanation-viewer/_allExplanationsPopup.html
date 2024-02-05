@@ -26,6 +26,7 @@
             th:onclick="|$('#all_explanations_for_${sequenceId}').modal({
                 onHide: function(){
                     saveAction(${sequenceId}, 'close', 'rationales_popup')
+                    window.location.reload()
                 },
                 onShow: function(){
                     saveAction(${sequenceId}, 'open', 'rationales_popup')

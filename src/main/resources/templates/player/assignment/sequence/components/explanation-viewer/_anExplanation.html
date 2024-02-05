@@ -58,16 +58,14 @@
                         and (explanation.correct or explanation.score == null)}">
 
                 <!-- If explanation is in recommended -->
-                <a th:if="${explanation.recommendedByTeacher}"
-                   id="removeRecommendation"
+                <a th:classappend="'removeRecommendation-' + ${explanation.responseId}"
                    th:onclick="removeRecommendation([[${explanation.responseId}]])"
                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                     <i class="star icon"></i>
                 </a>
 
                 <!-- If explanation is not in recommended -->
-                <a th:if="${!explanation.recommendedByTeacher}"
-                   id="addRecommendation"
+                <a th:classappend="'addRecommendation-' + ${explanation.responseId}"
                    th:onclick="addRecommendation([[${explanation.responseId}]])"
                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                     <i class="empty star icon"></i>
@@ -111,13 +109,25 @@
 
     <div class="reviews-container"></div>
     <script th:inline="javascript">
+
+        $(document).ready(function() {
+            setupRecommendedByTeacher([[${explanation.responseId}]],[[${explanation.recommendedByTeacher}]])
+        });
+
+        function setupRecommendedByTeacher(responseId, recommendedByTeacher) {
+            if (recommendedByTeacher) {
+                $('.addRecommendation-' + responseId).hide()
+            } else {
+                $('.removeRecommendation-' + responseId).hide()
+            }
+        }
         function removeRecommendation(responseId) {
             $.ajax({
                 type: "GET",
                 url: '/player/response/' + responseId + '/remove-recommended-by-teacher',
-                success: function() {
-                    // TODO : Lazy reload ?
-                    window.location.reload();
+                success: () => {
+                    $('.removeRecommendation-' + responseId).hide()
+                    $('.addRecommendation-' + + responseId).show()
                 },
                 error: function(error) {
                     // Handle error
@@ -130,10 +140,9 @@
             $.ajax({
                 type: "GET",
                 url: '/player/response/' + responseId + '/add-recommended-by-teacher',
-                success: function() {
-                    // TODO : Lazy reload ?
-
-                    window.location.reload();
+                success: () => {
+                    $('.addRecommendation-' + responseId).hide()
+                    $(".removeRecommendation-" + responseId).show()
                 },
                 error: function(error) {
                     // Handle error
@@ -141,6 +150,7 @@
                 }
             });
         }
+
     </script>
 </div>
 
