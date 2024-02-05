@@ -110,6 +110,8 @@
     <div class="reviews-container"></div>
     <script th:inline="javascript">
 
+        var toReload = false;
+
         $(document).ready(function() {
             setupRecommendedByTeacher([[${explanation.responseId}]],[[${explanation.recommendedByTeacher}]])
         });
@@ -122,6 +124,7 @@
             }
         }
         function removeRecommendation(responseId) {
+            toReload = true
             $.ajax({
                 type: "GET",
                 url: '/player/response/' + responseId + '/remove-recommended-by-teacher',
@@ -137,6 +140,7 @@
         }
 
         function addRecommendation(responseId) {
+            toReload = true
             $.ajax({
                 type: "GET",
                 url: '/player/response/' + responseId + '/add-recommended-by-teacher',
