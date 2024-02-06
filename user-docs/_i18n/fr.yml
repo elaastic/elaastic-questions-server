@@ -30,7 +30,9 @@ play_assignment:
   phase_1: "4.3. Phase 1"
   phase_2: "4.4. Phase 2"
   phase_3: "4.5. Phase 3"
-  player_perspective_summary: "4.6. Récapitulatif de la perspective player"
+  hide_responses: "4.6. Masquer les réponses"
+  recommended_responses: "4.7. Ajouter / retirer aux meilleures réponses"
+  player_perspective_summary: "4.8. Récapitulatif de la perspective player"
 share_subject:
   share_subject: "5. Partager un sujet"
   get_share_link: "5.1. Obtenir le lien de partage"

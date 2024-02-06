@@ -1,4 +1,4 @@
-## 4.6. Récapitulatif de la perspective player
+## 4.8. Récapitulatif de la perspective player
 
 Ce chapitre a pour objectif de fournir plus de détails sur la perspective "Player" ainsi que son fonctionnement.
 
