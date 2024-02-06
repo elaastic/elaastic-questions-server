@@ -60,14 +60,14 @@
                 <!-- If explanation is in recommended -->
                 <a th:classappend="'removeRecommendation-' + ${explanation.responseId}"
                    th:onclick="removeRecommendation([[${explanation.responseId}]])"
-                   type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                   type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeRecommended}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                     <i class="star icon"></i>
                 </a>
 
                 <!-- If explanation is not in recommended -->
                 <a th:classappend="'addRecommendation-' + ${explanation.responseId}"
                    th:onclick="addRecommendation([[${explanation.responseId}]])"
-                   type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addFavourite}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                   type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addRecommended}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                     <i class="empty star icon"></i>
                 </a>
             </div>
