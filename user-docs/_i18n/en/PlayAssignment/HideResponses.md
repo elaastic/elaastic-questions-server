@@ -1,4 +1,4 @@
-## 4.6. Hide the responses
+## 4.6. Hide responses
 
 It is now possible for a teacher to hide learners' answers.\
 Right from phase 1, when the results are visible to the teacher, it is possible to hide an inappropriate learner response.
