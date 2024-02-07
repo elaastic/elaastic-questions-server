@@ -1,4 +1,4 @@
-## 4.7. Ajouter / retirer aux meilleures réponses
+## 4.7. Ajouter aux meilleures réponses
 
 Vous avez la possibilité d'ajouter ou de retirer des "meilleures" réponses pour une séquence.\
 Ce bouton n'apparait que si la réponse est correcte.\
