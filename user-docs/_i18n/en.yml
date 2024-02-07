@@ -31,7 +31,7 @@ play_assignment:
   phase_2: "4.4. Phase 2"
   phase_3: "4.5. Phase 3"
   hide_responses: "4.6. Hide responses"
-  recommended_responses: "4.7. Add / remove from best responses"
+  recommended_responses: "4.7. Add as best responses"
   player_perspective_summary: "4.8. Player perspective summary"
 share_subject:
   share_subject: "5. Share a subject"
