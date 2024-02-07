@@ -75,14 +75,14 @@
             <!-- If explanation is not hidden -->
             <a  th:if="${!explanation.hiddenByTeacher}"
                     th:href="@{/player/response/{responseId}/hide-response(responseId=${explanation.responseId})}"
-                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.hideExplanation}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.hideResponse}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                 <i class="unhide icon"></i>
             </a>
 
             <!-- If explanation is hidden -->
             <a  th:if="${explanation.hiddenByTeacher}"
                 th:href="@{/player/response/{responseId}/unhide-response(responseId=${explanation.responseId})}"
-                type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.showExplanation}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.showResponse}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
                 <i class="hide icon"></i>
             </a>
         </div>
