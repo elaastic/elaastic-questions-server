@@ -85,6 +85,53 @@ internal class PracticeSubjectServiceIntegrationTest(
     }
 
     @Test
+    fun `An assignment with revisionMode set to immediately is ready to practice`() {
+        val teacher = integrationTestingService.getTestTeacher()
+
+        with(functionalTestingService) {
+            createSubject(teacher)
+                .also {
+                    addQuestion(it, QuestionType.OpenEnded)
+                    addQuestion(it, QuestionType.MultipleChoice)
+
+                }
+                .let { createAssignmentReadyImmediatelyForPractice(it) }
+        }
+
+        tWhen {
+            practiceSubjectService.findAllPracticeSubject(LocalDateTime.now().minusDays(1))
+        }
+            .tExpect { result ->
+                assertThat(result.size, equalTo(1))
+            }
+    }
+
+    @Test
+    fun `An assignment with revisionMode set to notAtAll is not ready to practice`() {
+        val teacher = integrationTestingService.getTestTeacher()
+        val learners = integrationTestingService.getNLearners(5)
+
+        with(functionalTestingService) {
+            createSubject(teacher)
+                .also {
+                    addQuestion(it, QuestionType.OpenEnded)
+                    addQuestion(it, QuestionType.MultipleChoice)
+
+                }
+                .let(this::createAssignment)
+                .sequences.first().let(curriedRandomlyPlaySequence(learners))
+
+        }
+
+        tWhen {
+            practiceSubjectService.findAllPracticeSubject(LocalDateTime.now().minusDays(1))
+        }
+            .tExpect { result ->
+                assertThat(result.size, equalTo(0))
+            }
+    }
+
+    @Test
     fun `An assignment with some sequences ready to practice is itself ready to practice`() {
         val teacher = integrationTestingService.getTestTeacher()
         val learners = integrationTestingService.getNLearners(5)
