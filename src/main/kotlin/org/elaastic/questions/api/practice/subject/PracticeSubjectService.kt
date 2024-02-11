@@ -49,6 +49,8 @@ class PracticeSubjectService(
 
                 check(sequences.isNotEmpty()) { "The subject $uuid is not ready to practice" }
 
+                System.out.println("sequences: $sequences")
+
                 val learners = assignmentService.findAllLearnersRegisteredOnWithCasUser(assignment)
 
                 PracticeSubject(
@@ -57,7 +59,9 @@ class PracticeSubjectService(
                         .map { sequence ->
                             PracticeQuestionFactory.buildQuestion(
                                 sequence,
-                                findBestExplanations(sequence)
+                                if (assignment.revisionMode.equals(RevisionMode.Immediately))
+                                   emptyList()
+                                else findBestExplanations(sequence)
                             )
                         },
                     topic = assignment.subject?.course?.let(::PracticeTopic),
