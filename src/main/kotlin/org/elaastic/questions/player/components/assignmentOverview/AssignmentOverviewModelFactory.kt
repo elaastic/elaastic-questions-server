@@ -24,15 +24,15 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 
 object AssignmentOverviewModelFactory {
 
-    const val revisionIcon = "big grey graduation cap"
-    const val chartIcon = "big grey bar chart outline"
-    const val lockIcon = "big grey lock"
-    const val minusIcon = "big grey minus"
-    const val commentIcon = "big grey comment outline"
-    const val commentsIcon = "big grey comments outline"
+    val chartIcon = AssignmentOverviewModel.PhaseIcon("big grey bar chart outline", "assignment.overview.chartIcon")
+    val lockIcon = AssignmentOverviewModel.PhaseIcon("big grey lock", "assignment.overview.lockIcon")
+    val minusIcon = AssignmentOverviewModel.PhaseIcon("big grey minus", "assignment.overview.minusIcon")
+    val commentIcon = AssignmentOverviewModel.PhaseIcon("big grey comment outline", "assignment.overview.commentIcon")
+    val commentsIcon = AssignmentOverviewModel.PhaseIcon("big grey comments outline", "assignment.overview.commentsIcon")
 
     fun build(
         teacher: Boolean,
@@ -64,75 +64,94 @@ object AssignmentOverviewModelFactory {
                 icons = resolveIcons(
                     teacher,
                     it,
-                    sequenceToUserActiveInteraction[it],
-                    assignment.revisionMode
-                )
+                    sequenceToUserActiveInteraction[it]
+                ),
+                revisionTag = resolveRevisionTag(it, assignment.revisionMode),
+                contextInformation = resolveContextInformation(it, it.interactions[InteractionType.Evaluation], assignment.revisionMode)
             )
         },
-        selectedSequenceId = selectedSequenceId
+        selectedSequenceId = selectedSequenceId,
+
     )
 
     private fun resolveIcons(
         teacher: Boolean,
         sequence: Sequence,
-        userActiveInteraction: Interaction?,
-        revisionMode: RevisionMode
-    ): List<PhaseIcon> =
+        userActiveInteraction: Interaction?
+    ): List<AssignmentOverviewModel.PhaseIcon> =
             if (sequence.executionIsFaceToFace() || !teacher) {
             when {
                 sequence.isStopped() ->
                     if (sequence.resultsArePublished)
-                        if (revisionMode != RevisionMode.NotAtAll)
-                            listOf(chartIcon, revisionIcon)
-                        else
-                            listOf(chartIcon)
+                        listOf(chartIcon)
                     else
-                        if (revisionMode == RevisionMode.Immediately)
-                            listOf(lockIcon, revisionIcon)
-                        else
-                            listOf(lockIcon)
+                        listOf(lockIcon)
 
                 else -> when (userActiveInteraction?.interactionType) {
-                    null -> if (revisionMode == RevisionMode.Immediately) listOf(minusIcon, revisionIcon)
-                            else listOf(minusIcon)
-                    InteractionType.ResponseSubmission ->
-                            if (revisionMode == RevisionMode.Immediately) listOf(commentIcon, revisionIcon)
-                            else listOf(commentIcon)
-                    InteractionType.Evaluation ->
-                            if (revisionMode == RevisionMode.Immediately) listOf(commentsIcon, revisionIcon)
-                            else listOf(commentsIcon)
-                    InteractionType.Read ->
-                            if (revisionMode == RevisionMode.Immediately) listOf(chartIcon, revisionIcon)
-                            else listOf(chartIcon)
+                    null -> listOf(minusIcon)
+                    InteractionType.ResponseSubmission -> listOf(commentIcon)
+                    InteractionType.Evaluation -> listOf(commentsIcon)
+                    InteractionType.Read -> listOf(chartIcon)
                 }
 
             }
 
         } else { // Distance & blended for teacher
             when (sequence.state) {
-                State.beforeStart ->
-                    if (revisionMode == RevisionMode.Immediately) listOf(minusIcon, revisionIcon)
-                    else listOf(minusIcon)
+                State.beforeStart -> listOf(minusIcon)
                 State.afterStop ->
-                    if (sequence.resultsArePublished)
-                        if (revisionMode != RevisionMode.NotAtAll) listOf(chartIcon, revisionIcon)
-                        else listOf(chartIcon)
-
-                    else
-                        if (revisionMode == RevisionMode.Immediately) listOf(lockIcon, revisionIcon)
-                        else listOf(lockIcon)
+                    if (sequence.resultsArePublished) listOf(chartIcon)
+                    else listOf(lockIcon)
 
                 else ->
-                    if (sequence.resultsArePublished)
-                        if (revisionMode != RevisionMode.NotAtAll)
-                            listOf(commentIcon, commentsIcon, chartIcon, revisionIcon)
-                        else
-                            listOf(commentIcon, commentsIcon, chartIcon)
-                    else
-                        if (revisionMode == RevisionMode.Immediately)
-                            listOf(commentIcon, commentsIcon, revisionIcon)
-                        else
-                            listOf(commentIcon, commentsIcon )
+                    if (sequence.resultsArePublished) listOf(commentIcon, commentsIcon, chartIcon)
+                    else listOf(commentIcon, commentsIcon )
             }
         }
+
+    private fun resolveRevisionTag(
+        sequence: Sequence,
+        revisionMode: RevisionMode
+    ): Boolean = when (revisionMode){
+        RevisionMode.NotAtAll -> false
+        RevisionMode.Immediately -> true
+        RevisionMode.AfterTeachings -> sequence.resultsArePublished && (sequence.executionIsFaceToFace() || sequence.isStopped())
+    }
+
+    private fun resolveContextInformation(
+        sequence: Sequence,
+        interactions: Interaction?,
+        revisionMode: RevisionMode
+    ): AssignmentOverviewModel.ContextInformation {
+
+        var context = "sequence" + sequence.id + " :" + sequence.hasStarted()
+        var evaluationType = ""
+        var nbEvaluation = ""
+
+        if (sequence.hasStarted()) {
+
+            context = if (sequence.executionIsFaceToFace()) "sequence.interaction.executionContext.faceToFace"
+            else (if (sequence.executionIsBlended()) "sequence.interaction.executionContext.blended"
+            else "sequence.interaction.executionContext.distance")
+
+            evaluationType = if (sequence.evaluationPhaseConfig== EvaluationPhaseConfig.ALL_AT_ONCE )
+                "player.sequence.interaction.evaluation.method.ALL_AT_ONCE"
+            else "player.sequence.interaction.evaluation.method.DRAXO"
+
+            if (interactions != null)
+                nbEvaluation = sequence.getEvaluationSpecification().responseToEvaluateCount.toString()
+        }
+
+        val revisionMode = if (revisionMode==RevisionMode.NotAtAll) "assignment.autorize.notAtAll"
+            else if (revisionMode==RevisionMode.Immediately) "assignment.autorize.immediately"
+                 else "assignment.autorize.afterTeachings"
+
+        return AssignmentOverviewModel.ContextInformation(
+            sequence.hasStarted(),
+            context,
+            evaluationType,
+            nbEvaluation,
+            revisionMode)
+    }
+
 }

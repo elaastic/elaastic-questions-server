@@ -99,7 +99,6 @@
                  style="margin-right: 1em;"
                  th:text="|${i.index+1}.|">
             </div>
-            <span th:utext="${sequence.title}"></span>
           </h4>
 
           <div style="height: 4em; overflow: hidden;"
@@ -111,9 +110,21 @@
       </div>
 
       <div class="four wide middle aligned column" style="text-align: center;">
-        <i th:each="icon : ${sequence.icons}"
-           class="elaastic-phase icon"
-           th:classappend="${icon}"></i>
+        <div>
+          <h4 class="ui header circular basic blue label" style="height: 0.6em !important;"
+          th:if="${sequence.revisionTag}"
+          th:text="#{assignment.overview.revisionTag}">
+            Revisions
+          </h4>
+
+        </div>
+        <div>
+          <i th:each="icon : ${sequence.icons}"
+             class="elaastic-phase icon"
+             th:classappend="${icon.icon}"
+             th:title="#{${icon.title}}"
+          ></i>
+        </div>
       </div>
     </div>
 
