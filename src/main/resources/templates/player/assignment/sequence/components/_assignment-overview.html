@@ -116,6 +116,14 @@
           th:text="#{assignment.overview.revisionTag}">
             Revisions
           </h4>
+          <th:block th:if="${sequence.contextInformation.hasStarted}">
+            <i class="ui grey big icon info circle"
+               th:title="#{${sequence.contextInformation.context}} + '&#10' +
+                              #{${sequence.contextInformation.evaluationType}} +
+                              ${sequence.contextInformation.nbEvaluation} + '&#10' +
+                              #{${sequence.contextInformation.revisionMode}}">
+            </i>
+          </th:block>
 
         </div>
         <div>
