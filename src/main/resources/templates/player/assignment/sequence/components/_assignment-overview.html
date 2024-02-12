@@ -109,26 +109,19 @@
         </div>
       </div>
 
-      <div class="four wide middle aligned column" style="text-align: center;">
+      <div class="four wide column" style="text-align: center;">
         <div>
-          <h4 class="ui header circular basic blue label" style="height: 0.6em !important;"
+          <h4 class="ui header circular small basic blue label" style="height: 0.6em !important; padding-top: 2px;"
           th:if="${sequence.revisionTag}"
+          th:title="#{assignment.overview.revisionAvailability}"
           th:text="#{assignment.overview.revisionTag}">
             Revisions
           </h4>
-          <th:block th:if="${sequence.contextInformation.hasStarted}">
-            <i class="ui grey big icon info circle"
-               th:title="#{${sequence.contextInformation.context}} + '&#10' +
-                              #{${sequence.contextInformation.evaluationType}} +
-                              ${sequence.contextInformation.nbEvaluation} + '&#10' +
-                              #{${sequence.contextInformation.revisionMode}}">
-            </i>
-          </th:block>
-
         </div>
-        <div>
+        <div style="height: 80%; display:flex">
           <i th:each="icon : ${sequence.icons}"
              class="elaastic-phase icon"
+             style="margin: auto"
              th:classappend="${icon.icon}"
              th:title="#{${icon.title}}"
           ></i>

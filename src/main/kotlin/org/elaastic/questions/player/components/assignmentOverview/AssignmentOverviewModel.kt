@@ -39,8 +39,7 @@ data class AssignmentOverviewModel(
             val content: String,
             val icons: List<PhaseIcon>,
             val hideStatementContent: Boolean,
-            val revisionTag: Boolean,
-            val contextInformation: ContextInformation
+            val revisionTag: Boolean
     )
 
     data class PhaseIcon(
@@ -48,11 +47,4 @@ data class AssignmentOverviewModel(
             val title: String,
     )
 
-    data class ContextInformation(
-            val hasStarted: Boolean,
-            val context: String,
-            val evaluationType: String,
-            val nbEvaluation: String,
-            val revisionMode: String
-    )
 }

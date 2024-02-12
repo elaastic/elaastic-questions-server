@@ -66,8 +66,7 @@ object AssignmentOverviewModelFactory {
                     it,
                     sequenceToUserActiveInteraction[it]
                 ),
-                revisionTag = resolveRevisionTag(it, assignment.revisionMode),
-                contextInformation = resolveContextInformation(it, it.interactions[InteractionType.Evaluation], assignment.revisionMode)
+                revisionTag = resolveRevisionTag(it, assignment.revisionMode)
             )
         },
         selectedSequenceId = selectedSequenceId,
@@ -116,42 +115,6 @@ object AssignmentOverviewModelFactory {
         RevisionMode.NotAtAll -> false
         RevisionMode.Immediately -> true
         RevisionMode.AfterTeachings -> sequence.resultsArePublished && (sequence.executionIsFaceToFace() || sequence.isStopped())
-    }
-
-    private fun resolveContextInformation(
-        sequence: Sequence,
-        interactions: Interaction?,
-        revisionMode: RevisionMode
-    ): AssignmentOverviewModel.ContextInformation {
-
-        var context = "sequence" + sequence.id + " :" + sequence.hasStarted()
-        var evaluationType = ""
-        var nbEvaluation = ""
-
-        if (sequence.hasStarted()) {
-
-            context = if (sequence.executionIsFaceToFace()) "sequence.interaction.executionContext.faceToFace"
-            else (if (sequence.executionIsBlended()) "sequence.interaction.executionContext.blended"
-            else "sequence.interaction.executionContext.distance")
-
-            evaluationType = if (sequence.evaluationPhaseConfig== EvaluationPhaseConfig.ALL_AT_ONCE )
-                "player.sequence.interaction.evaluation.method.ALL_AT_ONCE"
-            else "player.sequence.interaction.evaluation.method.DRAXO"
-
-            if (interactions != null)
-                nbEvaluation = sequence.getEvaluationSpecification().responseToEvaluateCount.toString()
-        }
-
-        val revisionMode = if (revisionMode==RevisionMode.NotAtAll) "assignment.autorize.notAtAll"
-            else if (revisionMode==RevisionMode.Immediately) "assignment.autorize.immediately"
-                 else "assignment.autorize.afterTeachings"
-
-        return AssignmentOverviewModel.ContextInformation(
-            sequence.hasStarted(),
-            context,
-            evaluationType,
-            nbEvaluation,
-            revisionMode)
     }
 
 }
