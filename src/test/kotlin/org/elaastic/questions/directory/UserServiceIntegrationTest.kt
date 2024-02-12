@@ -643,6 +643,21 @@ internal class UserServiceIntegrationTest(
     }
 
     @Test
+    fun `test generate username with apostrophe`() {
+        tWhen {
+            // I generate a username with firsname and lastname with  apostrophe
+            userService.generateUsername("Pap'", "N'Diaye")
+        }.tThen {
+            assertThat(it, equalTo("papndia"))
+        }.tWhen {
+            // I generate a username with firsname and lastname with  apostrophe but very short
+            userService.generateUsername("P'", "N'")
+        }.tThen {
+            assertThat(it, equalTo("pn"))
+        }
+    }
+
+    @Test
     fun `test generate username with spaces in firstname or lastname`() {
         tWhen {
             // I generate a username with firsname and lastname with  accents

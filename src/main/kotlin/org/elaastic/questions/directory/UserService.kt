@@ -451,10 +451,12 @@ class UserService(
      * @return the username
      */
     fun generateUsername(firstName: String, lastName: String): String {
-        val indexLastname = MAX_INDEX_LASTNAME.coerceAtMost(lastName.length)
-        val indexFirstName = MAX_INDEX_FIRSTNAME.coerceAtMost(firstName.length)
-        var username = replaceAccent(firstName.replace("\\s".toRegex(), "").lowercase().substring(0, indexFirstName)) +
-                replaceAccent(lastName.replace("\\s".toRegex(), "").lowercase().substring(0, indexLastname))
+        val shortenedFirstname = firstName.replace("[\\s']".toRegex(), "")
+        val shortenedLastname = lastName.replace("[\\s']".toRegex(), "")
+        val indexLastname = MAX_INDEX_LASTNAME.coerceAtMost(shortenedLastname.length)
+        val indexFirstName = MAX_INDEX_FIRSTNAME.coerceAtMost(shortenedFirstname.length)
+        var username = replaceAccent(shortenedFirstname.lowercase().substring(0, indexFirstName)) +
+                replaceAccent(shortenedLastname.lowercase().substring(0, indexLastname))
         val existingUsername = findMostRecentUsernameStartingWithUsername(username)
         if (existingUsername != null) {
             "[0-9]+".toRegex().findAll(existingUsername).let {
