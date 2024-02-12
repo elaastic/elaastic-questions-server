@@ -133,17 +133,11 @@ tasks.register("dockerBuild") {
     description = "Builds the Docker image aligned with the elaastic version"
     doLast {
         exec {
-            commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server:$version", ".")
+            commandLine("docker", "build",
+                "-t", "elaastic/elaastic-questions-server:v$version",
+                "-t", "elaastic/elaastic-questions-server:latest",
+                ".")
         }
     }
 }
 
-tasks.register("dockerBuildLatest") {
-    group = "Docker"
-    description = "Builds the Docker image with tag `latest`"
-    doLast {
-        exec {
-            commandLine("docker", "build", "-t", "elaastic/elaastic-questions-server:latest", ".")
-        }
-    }
-}
