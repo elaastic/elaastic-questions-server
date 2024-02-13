@@ -66,14 +66,29 @@ class StatementController(
         val statementBase = statementService.get(user, id)
         val subject = statementBase.subject!!
         val fakeExplanations = fakeExplanationService.findAllByStatement(statementBase)
-        val statement = StatementData(statementBase, fakeExplanations)
+        var newStatement = statementBase
+
+        val statementAlreadyUsed = statementService.responsesExistForStatement(statementBase)
+        var statementData = StatementData(statementBase, fakeExplanations)
+
+        if (statementAlreadyUsed) {
+            newStatement = subjectService.newVersionOfStatementInSubject(statementBase)
+            statementService.assignStatementToSequences(newStatement)
+            subjectService.removeStatementFromSubject(user, statementBase)
+            statementData = StatementData(newStatement, fakeExplanations)
+        }
 
         model.addAttribute("user", user)
         model.addAttribute("subject", subject)
-        model.addAttribute("statementData",statement)
+        model.addAttribute("statementData",statementData)
         model.addAttribute("rank",statementBase.rank)
 
-        return "subject/statement/edit"
+        return if(statementAlreadyUsed) {
+            "redirect:/subject/"+subject.id+"/statement/${newStatement.id}/edit"
+        } else {
+            "/subject/statement/edit"
+        }
+
     }
 
     @PostMapping("{id}/update")

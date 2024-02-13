@@ -144,7 +144,8 @@ class StatementService(
         val subject: Subject = newStatement.subject!!
         for (assignment: Assignment in subject.assignments){
             for (sequence: Sequence in assignment.sequences){
-                if (sequence.statement == newStatement.parentStatement)
+                if ((sequence.statement == newStatement.parentStatement)&&
+                    (sequence.activeInteraction == null))
                     sequence.statement = newStatement
             }
         }
