@@ -23,6 +23,7 @@ resources_creation:
   subject_creation: "3.2. Subject creation"
   question_creation: "3.3. Question creation"
   assignment_creation: "3.4. Assignment creation"
+  revision_creation: "3.5. Revision assignment creation"
 play_assignment:
   play_assignment: "4. Play an assignment"
   start_sequence: "4.1. Start a sequence"

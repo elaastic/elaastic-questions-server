@@ -1,6 +1,6 @@
 ## 4.1. Lancer une séquence
 
-Pour démarrer une séquence, vous devez lancer un devoir. Pour cela, cliquez sur la flèche blanche sur fond vert.
+Pour démarrer une séquence, vous devez lancer une diffusion. Pour cela, cliquez sur la flèche blanche sur fond vert.
 
 ![Vue sur play assignment]({{ "images/fr/play_assignment/play_assignment.png"| relative_url }})
 

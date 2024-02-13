@@ -2,14 +2,14 @@
 
 Ce chapitre a pour objectif de fournir plus de détails sur la perspective "Player" ainsi que son fonctionnement.
 
-Vous êtes désormais sur la page d'exécution d'un devoir. Elle vous permettra de piloter votre séquence.
+Vous êtes désormais sur la page d'exécution d'une diffusion. Elle vous permettra de piloter votre séquence.
 1. Récapitulatif de votre sujet.
 2. Récapitulatif de la question sélectionnée.
 3. Frise chronologique décrivant l'évolution de votre séquence.
 4. Section pour piloter la séquence.
 5. Diagrammes des résultats (dans le cas d'une question à choix). Chaque choix (représenté en abscisse) comporte deux colonnes. Celle de gauche correspond au vote de la phase 1 tandis que celle de droite correspond au vote de la phase 2.
 6. Explications écrites de quelques apprenants.
-7. Nombre d'apprenant inscrit au devoir.
+7. Nombre d'apprenant inscrit à la diffusion.
 8. Nombre d'apprenant ayant fourni une réponse lors de la phase 1.
 9. Nombre d'apprenant ayant terminé la phase d'évaluation par les pairs.
 10. Nombre d'apprenant ayant fourni une réponse lors de la phase 2.
