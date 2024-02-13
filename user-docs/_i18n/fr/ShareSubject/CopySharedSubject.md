@@ -12,7 +12,7 @@ Un message de confirmation de copie apparait pour vous informer que l'importatio
 
 ![Vue sur shared subject]({{ "images/fr/share_subject/message.png"| relative_url }})
 
-Si vous vous rendez sur la liste de vos sujets, la copie apparait. Nous remarquons que le cours associé au sujet a également été copié. Vous pouvez désormais modifier le sujet ou créer un devoir pour l'utiliser.
+Si vous vous rendez sur la liste de vos sujets, la copie apparait. Nous remarquons que le cours associé au sujet a également été copié. Vous pouvez désormais modifier le sujet ou créer une diffusion pour l'utiliser.
 
 ![Vue sur shared subject]({{ "images/fr/share_subject/subjects_list.png"| relative_url }})
 

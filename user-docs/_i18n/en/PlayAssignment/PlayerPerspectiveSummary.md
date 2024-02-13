@@ -15,15 +15,15 @@ You are on the page to play an assignment. From here, you can drive your sequenc
 10. Number of learners who provded an answer for phase 2.
 11. Button to show all learners explanation as well as their mean grade given by peers.
 
-![Vue sur player summary]({{ "images/fr/play_assignment/player_summary.png"| relative_url }})
+![Vue sur player summary]({{ "../images/en/play_assignment/player_summary.png"| relative_url }})
 
 By clicking on "Show all explanations", a popup appears. It contains all the explanations of learners as well as the fake explanations you created. If it's a choice question, these explanation a grouped by selected choice.
 
-![Vue sur player summary 2]({{ "images/fr/play_assignment/explanation_popup.png"| relative_url }})
+![Vue sur player summary 2]({{ "../images/en/play_assignment/explanation_popup.png"| relative_url }})
 
 For each answer, you can view the following informations:
 1. Content of the explanation.
 2. Mean grade given.
 3. Number of learners who provided a grade.
 
-![Vue sur player summary 3]({{ "images/fr/play_assignment/an_explanation.png"| relative_url }})
+![Vue sur player summary 3]({{ "../images/en/play_assignment/an_explanation.png"| relative_url }})

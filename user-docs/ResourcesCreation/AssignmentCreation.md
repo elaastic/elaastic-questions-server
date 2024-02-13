@@ -1,7 +1,7 @@
 ---
 layout: page
 title: resources_creation.assignment_creation
-permalink: /creation_ressources/creation_devoir
+permalink: /creation_ressources/creation_diffusion
 permalink_en: /resources_creation/assignment_creation
 parent: resources_creation.resources_creation
 nav_order: 4

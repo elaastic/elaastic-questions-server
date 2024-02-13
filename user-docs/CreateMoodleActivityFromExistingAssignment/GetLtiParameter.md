@@ -1,7 +1,7 @@
 ---
 layout: page
 title: create_moodle_activity_from_existing_assignment.get_lti_parameter
-permalink: /creer_activite_moodle_depuis_devoir_existant/recuperer_parametre_lti
+permalink: /creer_activite_moodle_depuis_diffusion_existant/recuperer_parametre_lti
 permalink_en: /create_moodle_activity_from_existing_assignment/get_lti_parameter
 parent: create_moodle_activity_from_existing_assignment.create_moodle_activity_from_existing_assignment
 nav_order: 1

@@ -21,6 +21,8 @@ The grid is structured around several criteria identified by the letters D, R, A
 - **End of the assessment**:
   - If textual feedback is provided, the assessment is considered completed.
 
+![View on DRAXO grid]({{ "../images/en/key_concepts/draxo_d.png" | relative_url }})
+
 **Criterion "R" (Relevant)**
 - **Prompt proposed to the evaluator**: I think that the answer corresponds to the asked question.
 - **Response options**: No, Partially, Yes, I don't know.
@@ -32,6 +34,8 @@ The grid is structured around several criteria identified by the letters D, R, A
   - If textual feedback is provided, the assessment is considered completed.
   - If the option _I don't know_ is chosen, the assessment is interrupted without a request for
 textual feedback. In this case, it is considered that the evaluator is not in a position to assess the answer.
+
+![View on DRAXO grid]({{ "../images/en/key_concepts/draxo_r.png" | relative_url }})
 
 **Criterion "A" (Agreed)**
 - **Prompt proposed to the evaluator**: I agree with the proposed answer.
@@ -45,6 +49,8 @@ textual feedback. In this case, it is considered that the evaluator is not in a 
   - If the option _I do not pronounce myself_ is chosen, the assessment is interrupted without a request for
 textual feedback. In this case, it is considered that the evaluator is not in a position to assess the answer.
 
+![View on DRAXO grid]({{ "../images/en/key_concepts/draxo_a.png" | relative_url }})
+
 **Criterion "X" (Exhaustive)**
 - **Prompt proposed to the evaluator**: I think that the answer is complete.
 - **Response options**: No, Yes, I don't know.
@@ -57,6 +63,8 @@ textual feedback. In this case, it is considered that the evaluator is not in a 
   - If the option _I don't know_ is chosen, the assessment ends without a request for
 textual feedback.
 
+![View on DRAXO grid]({{ "../images/en/key_concepts/draxo_x.png" | relative_url }})
+
 **Criterion "O" (Optimal)**
 - **Prompt proposed to the evaluator**: I think that the answer can be improved.
 - **Response options**: No, Yes, I don't know.
@@ -67,6 +75,8 @@ textual feedback.
   - If textual feedback is provided, the assessment is considered completed.
   - If the options _No_ or _I don't know_ are chosen, the assessment ends without a request for
 textual feedback.
+
+![View on DRAXO grid]({{ "../images/en/key_concepts/draxo_o.png" | relative_url }})
 
 ### 2.6.2 Scoring of an answer
 

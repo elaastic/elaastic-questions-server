@@ -1,6 +1,6 @@
 ## 8.1. Récupération du paramètre LTI
 
-Depuis la perspective player d'un devoir, cliquez sur l'icône représentant un chapeau sur le menu à gauche de votre écran.
+Depuis la perspective player d'une diffusion, cliquez sur l'icône représentant un chapeau sur le menu à gauche de votre écran.
 
 ![Vue sur lti get]({{ "images/fr/create_moodle_activity_from_existing_assignment/lti_icon.png"| relative_url }})
 
