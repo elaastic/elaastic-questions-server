@@ -1,3 +1,3 @@
-# 4. Lancer un devoir
+# 4. Lancer une diffusion
 
-Lancer un devoir vous permet de poser l'ensemble des questions du sujet à une audience.
+Lancer une diffusion vous permet de poser l'ensemble des questions du sujet à une audience.

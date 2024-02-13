@@ -1,7 +1,7 @@
 ## 2.6. DRAXO
 
 DRAXO est une grille d'évaluation pour évaluer des réponses données à des questions de compréhension. 
-Ces réponses exposent engénéral, des explications, justifications ou argumentation.
+Ces réponses exposent en général, des explications, justifications ou argumentation.
 DRAXO a été mise au point dans le cadre des recherches menées à l'IRIT sur les systèmes technologiques 
 venant en soutien à l'évaluation formative. DRAXO a pour objectif l'amélioration de la production de feedback textuel.
 DRAXO peut être utilisée durant la deuxième phase d'une séquence Elaastic pour guider les apprenants dans

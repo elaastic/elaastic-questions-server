@@ -12,7 +12,7 @@ Click on the green button "Add an assignment".
 2. Name your audience which is an overview of the learners that will answer your questions.
 3. Define the scholar year.
 4. Add a description.
-5. If you wish, anonymous users can participae to the assignment through guest accounts.
+5. If you wish, anonymous users can participate in the assignment through guest accounts.
 Once you're done, click on the green button "Create".
 
 ![Vue sur assignment creation 3]({{ "../images/en/resources_creation/create_assignment_form.png"| relative_url }})

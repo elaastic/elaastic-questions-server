@@ -31,13 +31,13 @@ Lorsque votre sujet contient plusieurs questions, vous pouvez les organiser avec
 
 ![Vue sur subject 6]({{ "images/fr/resources_creation/question_management.png" | relative_url }})
 
-De plus, votre sujet ne contient pour le moment aucun devoir. Pour créer un devoir, rendez vous sur le tutoriel de création d'un devoir qui est le chapitre 3.4. .
+De plus, votre sujet ne contient pour le moment aucune diffusion. Pour créer une diffusion, rendez vous sur le tutoriel de création d'une diffusion qui est le chapitre 3.4. .
 
-Lorsque votre sujet contient plusieurs devoirs, vous pouvez les gérer avec les boutons à droite de chacun d'entre eux.
-1. Lancer le devoir.
-2. Modifier le devoir.
-3. Faire monter le devoir d'un cran dans la liste.
-4. Faire descendre le devoir d'un cran dans la liste.
-3. Supprimer le devoir.
+Lorsque votre sujet contient plusieurs diffusions, vous pouvez les gérer avec les boutons à droite de chacun d'entre eux.
+1. Lancer la diffusion.
+2. Modifier la diffusion.
+3. Faire monter la diffusion d'un cran dans la liste.
+4. Faire descendre la diffusion d'un cran dans la liste.
+3. Supprimer la diffusion.
 
 ![Vue sur subject 7]({{ "images/fr/resources_creation/assignment_management.png" | relative_url }})
