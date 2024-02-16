@@ -31,3 +31,9 @@ Le tag de révision vous rappelle le paramètrage que vous avez défini si vous 
 
 ![Vue sur assignment creation 4]({{ "images/fr/resources_creation/create_assignment_result.png"| relative_url }})
 
+Lors de la lecture d'une séquence, le tag de révision apparait dans l'aperçu de la diffusion sur la gauche de l'écran.
+Chaque séquence affichera le tag si elle est disponible en révision. La diffusion ici est en mode "Après enseignement".
+1. Le tag est affiché, cela signifie que les résultats sont publiés et que la séquence est disponible en révision.
+2. Le tag n'est pas affiché, cela signifie que la séquence n'est pas disponible en révision.
+
+![Vue sur assignment creation 5]({{"images/fr/resources_creation/player_display.png"| relative_url }})

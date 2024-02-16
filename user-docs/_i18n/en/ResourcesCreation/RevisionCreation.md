@@ -4,11 +4,11 @@ If the feature is enabled for your account, you can create revisions.
 To do this, go to your subject management page and click on the "Assignments" tab.
 Creating a revision works in the same way as creating an assignment.
 
-![View on assignment creation]({{"images/en/resources_creation/go_to_assignment_tab.png"| relative_url }})
+![View on assignment creation]({{"../images/en/resources_creation/go_to_assignment_tab.png"| relative_url }})
 
 Click on the green "Add an assignment" button.
 
-![View on assignment creation 2]({{ "images/en/resources_creation/create_assignment.png"| relative_url }})
+![View on assignment creation 2]({{ "../images/en/resources_creation/create_assignment.png"| relative_url }})
 
 1. Name the assignment (required).
 2. Name your audience, i.e. the group of learners who will answer your questions.
@@ -24,10 +24,17 @@ Click on the green "Add an assignment" button.
 
 When you're finished, click on the green "Create" button.
 
-![View on assignment creation 3]({{ "images/en/resources_creation/create_assignment_form.png"| relative_url }})
+![View on assignment creation 3]({{ "../images/en/resources_creation/create_assignment_form.png"| relative_url }})
 
 Once you've done this, you're automatically redirected to the assignment tab of your topic's edit page. The assignment you've created now appears.
 The revision tag reminds you of the settings you've made if you've authorized revisions, and doesn't appear if you've chosen the "Not at all" option.
 
-![View on assignment creation 4]({{"images/en/resources_creation/create_assignment_result.png"| relative_url }})
+![View on assignment creation 4]({{"../images/en/resources_creation/create_assignment_result.png"| relative_url }})
+
+While playing a sequence, the revision tag will appear in the assignment overview on the left side of the screen.
+Each sequence will display the tag if it is available for revision. The assignement here is in "Only after supervised work" mode.
+1. The tag is displayed, which means the results are published, and the sequence is available for revision.
+2. The tag is not displayed, this mean the sequence is not available for revision.
+
+![View on assignment creation 5]({{"../images/en/resources_creation/player_display.png"| relative_url }})
    
