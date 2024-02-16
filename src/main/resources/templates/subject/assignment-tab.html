@@ -81,6 +81,9 @@
                             padding-top: 0.5rem;
                             padding-bottom: 0.5rem;
                         }
+                        .ui.label {
+                            font-size: 1rem;
+                        }
                     </style>
                     <div class="ui row">
                         <span class="ui tiny warning compact message" th:if="${#lists.isEmpty(assignment.sequences)}" th:text="#{assignment.empty}">No sequences</span>
@@ -97,48 +100,80 @@
                             <span style="font-size: smaller" th:text="${assignment.description}">content</span>
                         </div>
                     </div>
-                    <div class="ui row" style="align-items: center">
-                        <span class="ui seven wide column" th:text="#{assignment.autorize.revisionMode}" >
-                            Ce sujet peut servir aux révisions
+                </div>
+
+
+                <div class="ui row" style="margin-top: 1em;">
+                    <div class="ui circular basic green label"
+                           style="margin:.5em; padding: .4em !important">
+                        <label th:id="|assignment-learner-link-${assignment.id}|"
+                              th:title="#{assignment.learnerAccess.description}"
+                              th:text="#{assignment.learnerAccess.oneLine}"
+                              style="padding-right: .8em; padding-left: .8em; vertical-align: middle;"> Lien élèves
+                            </label>
+                        <button class="ui button"
+                                style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
+                                th:attr="onclick='copyToClipboard(\'' + (${serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})})  + '\',\'' + ${assignment.id} + '\')'">
+                            <i class="copy outline large icon"></i>
+                        </button>
+
+                        <button class="ui button"
+                                style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
+                                th:attr="onclick='displayOrHideStudent(\'' + ${assignment.id} + '\')'">
+                            <i class="linkify large icon"></i>
+                        </button>
+                    </div>
+
+                    <div class="ui circular basic orange label"
+                           style="margin:.5em; padding: .4em !important">
+                        <label th:id="|assignment-moodle-parameter-${assignment.id}|"
+                              th:title="#{assignment.ltiparameter.description}"
+                              th:text="#{assignment.ltiparameter.oneLine}"
+                              style="padding-right: .8em; padding-left: .8em; vertical-align: middle;"> Lien LTI/Moodle
+                        </label>
+                        <button class="ui button"
+                                style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
+                                th:attr="onclick='copyToClipboard(assignmentid=\'' + ${assignment.globalId}  + '\',\'' + ${assignment.id} + '\')'">
+                            <i class="copy outline large icon"></i>
+                        </button>
+
+                        <button class="ui button"
+                                style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
+                                th:attr="onclick='displayOrHideLTI(\'' + ${assignment.id} + '\')'">
+                            <i class="linkify large icon"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="ui circular basic blue label"
+                           style="margin:.5em; padding:1.09em !important; vertical-align: middle;"
+                       th:if="${#strings.toString(assignment.revisionMode)!='NotAtAll'}" >
+
+                        <span th:title="#{assignment.overview.revisionAvailability}"
+                              th:text="#{assignment.overview.revisionTag}">
                         </span>
-                        <span>
-                            <label class="ui button disabled column active"
-                                   th:if="${#strings.toString(assignment.revisionMode)=='NotAtAll'}"
-                                   th:text="#{assignment.autorize.notAtAll}">Pas du tout </label>
+
+                        <span th:if="${#strings.toString(assignment.revisionMode)=='AfterTeachings'}"
+                              th:text="': ' + #{assignment.autorize.afterTeachings}">
                         </span>
-                        <span>
-                            <label class="ui button disabled column active"
-                                   th:if="${#strings.toString(assignment.revisionMode)=='AfterTeachings'}"
-                                   th:text="#{assignment.autorize.afterTeachings}">Après travail avec enseignant </label>
-                        </span>
-                        <span>
-                            <label class="ui button disabled column active"
-                                   th:if="${#strings.toString(assignment.revisionMode)=='Immediately'}"
-                                   th:text="#{assignment.autorize.immediately}">Immédiatement </label>
+
+                        <span th:if="${#strings.toString(assignment.revisionMode)=='Immediately'}"
+                              th:text="': ' + #{assignment.autorize.immediately}">
                         </span>
                     </div>
-                    <div class="ui row">
-                        <span class="ui sixteen wide column" style="font-size: smaller"
-                                  th:text="#{assignment.learnerAccess.description}">
-          Here is the URL to communicate to learners so they can sign up on the
-                        </span>
-                        <span class="ui message sixteen wide column" style="font-size: smaller"
-                              th:id="|assignment-learner-link-${assignment.id}|"
-                              th:text="${serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})}">
-                                https://link
-                        </span>
-                    </div>
-                    <div class="ui row">
-                        <span class="ui sixteen wide column" style="font-size: smaller"
-                              th:text="#{assignment.ltiparameter.description}">
-                            Here is the parameter to use in lti configuration
-                        </span>
-                        <span class="ui message sixteen wide column" style="font-size: smaller"
-                              th:id="|assignment-moodle-parameter-${assignment.id}|"
-                              th:text="'assignmentid='+${assignment.globalId}">
-                                assignmentid=qjg666gsggs
-                        </span>
-                    </div>
+
+                </div>
+
+                <div th:id="|copySuccessMessage-${assignment.id}|" class="ui label grey" style="display: none; margin:.5em;"
+                     th:text="#{common.copyButton.succefullyCopied}">
+                </div>
+
+                <div th:id="|displayStudent-${assignment.id}|" class="ui row label basic green" style="display: none;"
+                     th:text="#{assignment.learnerAccess.oneLine} + ${' : ' + serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})}">
+                </div>
+
+                <div th:id="|displayLTI-${assignment.id}|" class="ui row label basic orange" style="display: none;"
+                     th:text="#{assignment.ltiparameter.oneLine} + ${' : assignmentid=' + assignment.globalId}">
                 </div>
 
             </div>
@@ -172,7 +207,6 @@
                         $(window.location.hash).scrollTop(400)
                     }
                 })
-
         </script>
 
         <script th:inline="javascript">
@@ -203,6 +237,62 @@
 
                 confirmDeleteAssignmentModal.modal('show')
             }
+
+            function copyToClipboard(content, assignmentId) {
+                var copySuccessMessage = document.getElementById('copySuccessMessage-'+assignmentId);
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(content)
+                        .then(() => {
+                            // console.log('Text successfully copied to clipboard');
+                            // Show success message
+                            copySuccessMessage.style.display = 'inline-block';
+                            setTimeout(function() {
+                                copySuccessMessage.style.display = 'none';
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            console.error('Unable to copy text to clipboard', err);
+                        });
+                } else {
+                    // Fallback for browsers that do not support the Clipboard API
+                    var tempInput = document.createElement('input');
+                    tempInput.value = content;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+
+                    // Show success message
+                    copySuccessMessage.style.display = 'inline-block';
+                    setTimeout(function() {
+                        copySuccessMessage.style.display = 'none';
+                    }, 2000);
+                }
+            }
+
+            function displayOrHide(item, otherItem) {
+                if (item.style.display === 'none') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+                if (otherItem.style.display === 'block') {
+                    otherItem.style.display = 'none';
+                }
+            }
+
+            function displayOrHideStudent(id) {
+                var item = document.getElementById('displayStudent-' + id);
+                var otherItem = document.getElementById('displayLTI-' + id);
+                displayOrHide(item, otherItem);
+            }
+
+            function displayOrHideLTI(id) {
+                var item = document.getElementById('displayLTI-' + id);
+                var otherItem = document.getElementById('displayStudent-' + id);
+                displayOrHide(item, otherItem);
+            }
+
         </script>
 
         <!--  Delete confirm modal-->
