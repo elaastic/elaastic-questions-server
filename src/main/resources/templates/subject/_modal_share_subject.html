@@ -38,9 +38,14 @@
           <input id="shareUrl"
                  type="text"
                  v-model="shareSubjectUrl" readonly>
-          <button class="ui right icon button" onclick="document.execCommand('copy');">
+          <button class="ui right icon button" th:attr="onclick='copyToClipboard(\'copySuccessMessageShare\', '
+                      + shareUrl.value + ')'">
             <i class="copy icon"></i>
           </button>
+        </div>
+
+        <div th:id="copySuccessMessageShare" class="ui label" style="display: none; margin:.5em;"
+             th:text="#{common.copyButton.succefullyCopied}">
         </div>
       </div>
     </div>

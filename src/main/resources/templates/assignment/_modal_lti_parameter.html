@@ -40,9 +40,13 @@
           <input id="ltiParameter"
                  type="text"
                  v-model="currentAssignmentLtiParameter" readonly>
-          <button class="ui right icon button" onclick="document.execCommand('copy');">
-            <i class="copy icon"></i>
+          <button class="ui right icon button" th:attr="onclick='copyToClipboard(\'copySuccessMessageLTI\','
+                      + ltiParameter.value + ')'"><i class="copy icon"></i>
           </button>
+        </div>
+
+        <div th:id="copySuccessMessageLTI" class="ui label" style="display: none; margin:.5em;"
+             th:text="#{common.copyButton.succefullyCopied}">
         </div>
       </div>
     </div>
@@ -57,6 +61,24 @@
   <script type="text/javascript" th:inline="javascript"
           th:with="ltiParameter='assignmentid='+${assignment.globalId}">
     /*<![CDATA[*/
+
+    function copyToClipboard(messageHolder, content, color="grey") {
+      var copySuccessMessage = document.getElementById(messageHolder);
+      copySuccessMessage.classList.add(color);
+      navigator.clipboard.writeText(content)
+              .then(() => {
+                // console.log(messageHolder + 'Displays :' + content +"in color : " + color);
+                // Show success message
+                copySuccessMessage.style.display = 'inline-block';
+                setTimeout(function() {
+                  copySuccessMessage.style.display = 'none';
+                  copySuccessMessage.classList.remove(color);
+                }, 3000);
+              })
+              .catch(err => {
+                console.error('Unable to copy text to clipboard', err);
+              });
+    }
 
     elaastic.showLtiParameterModal = function () {
       window.ltiParameterModalApp.showLtiParameterModal(

@@ -113,14 +113,10 @@
                             </label>
                         <button class="ui button"
                                 style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
-                                th:attr="onclick='copyToClipboard(\'' + (${serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})})  + '\',\'' + ${assignment.id} + '\')'">
+                                th:attr="onclick='copyToClipboard(\'copySuccessMessage1-' + ${assignment.id} +
+                                '\',\'' + (${serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})}) +
+                                '\',\'green\' )'">
                             <i class="copy outline large icon"></i>
-                        </button>
-
-                        <button class="ui button"
-                                style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
-                                th:attr="onclick='displayOrHideStudent(\'' + ${assignment.id} + '\')'">
-                            <i class="linkify large icon"></i>
                         </button>
                     </div>
 
@@ -133,14 +129,9 @@
                         </label>
                         <button class="ui button"
                                 style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
-                                th:attr="onclick='copyToClipboard(assignmentid=\'' + ${assignment.globalId}  + '\',\'' + ${assignment.id} + '\')'">
+                                th:attr="onclick='copyToClipboard(\'copySuccessMessage2-' + ${assignment.id} +
+                                '\',\'assignmentid=' + ${assignment.globalId} + '\',\'orange\')'">
                             <i class="copy outline large icon"></i>
-                        </button>
-
-                        <button class="ui button"
-                                style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
-                                th:attr="onclick='displayOrHideLTI(\'' + ${assignment.id} + '\')'">
-                            <i class="linkify large icon"></i>
                         </button>
 
                     </div>
@@ -164,16 +155,12 @@
 
                 </div>
 
-                <div th:id="|copySuccessMessage-${assignment.id}|" class="ui label grey" style="display: none; margin:.5em;"
+                <div th:id="|copySuccessMessage1-${assignment.id}|" class="ui label" style="display: none; margin:.5em;"
                      th:text="#{common.copyButton.succefullyCopied}">
                 </div>
 
-                <div th:id="|displayStudent-${assignment.id}|" class="ui row label basic green" style="display: none;"
-                     th:text="#{assignment.learnerAccess.oneLine} + ${' : ' + serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})}">
-                </div>
-
-                <div th:id="|displayLTI-${assignment.id}|" class="ui row label basic orange" style="display: none;"
-                     th:text="#{assignment.ltiparameter.oneLine} + ${' : assignmentid=' + assignment.globalId}">
+                <div th:id="|copySuccessMessage2-${assignment.id}|" class="ui label" style="display: none; margin:.5em;"
+                     th:text="#{common.copyButton.succefullyCopied}">
                 </div>
 
             </div>
@@ -210,6 +197,10 @@
         </script>
 
         <script th:inline="javascript">
+
+            const baseUrlLearner = "https://elaastic.irit.fr:443/player/register?globalId="
+
+
             $(document).ready(function () {
                 let selectedAssignment = $(location.hash)
                 if (selectedAssignment) {
@@ -238,59 +229,23 @@
                 confirmDeleteAssignmentModal.modal('show')
             }
 
-            function copyToClipboard(content, assignmentId) {
-                var copySuccessMessage = document.getElementById('copySuccessMessage-'+assignmentId);
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(content)
-                        .then(() => {
-                            // console.log('Text successfully copied to clipboard');
-                            // Show success message
-                            copySuccessMessage.style.display = 'inline-block';
-                            setTimeout(function() {
-                                copySuccessMessage.style.display = 'none';
-                            }, 2000);
-                        })
-                        .catch(err => {
-                            console.error('Unable to copy text to clipboard', err);
-                        });
-                } else {
-                    // Fallback for browsers that do not support the Clipboard API
-                    var tempInput = document.createElement('input');
-                    tempInput.value = content;
-                    document.body.appendChild(tempInput);
-                    tempInput.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(tempInput);
-
-                    // Show success message
-                    copySuccessMessage.style.display = 'inline-block';
-                    setTimeout(function() {
-                        copySuccessMessage.style.display = 'none';
-                    }, 2000);
-                }
-            }
-
-            function displayOrHide(item, otherItem) {
-                if (item.style.display === 'none') {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-                if (otherItem.style.display === 'block') {
-                    otherItem.style.display = 'none';
-                }
-            }
-
-            function displayOrHideStudent(id) {
-                var item = document.getElementById('displayStudent-' + id);
-                var otherItem = document.getElementById('displayLTI-' + id);
-                displayOrHide(item, otherItem);
-            }
-
-            function displayOrHideLTI(id) {
-                var item = document.getElementById('displayLTI-' + id);
-                var otherItem = document.getElementById('displayStudent-' + id);
-                displayOrHide(item, otherItem);
+            function copyToClipboard(messageHolder, content, color="grey") {
+                var copySuccessMessage = document.getElementById(messageHolder);
+                copySuccessMessage.classList.add(color);
+                navigator.clipboard.writeText(content)
+                    .then(() => {
+                        // console.log(messageHolder + 'Displays :' + content +"in color : " + color);
+                        // console.log(messageHolder + 'Displays :' + content +"in color : " + color);
+                        // Show success message
+                        copySuccessMessage.style.display = 'inline-block';
+                        setTimeout(function() {
+                            copySuccessMessage.style.display = 'none';
+                            copySuccessMessage.classList.remove(color);
+                        }, 3000);
+                    })
+                    .catch(err => {
+                        console.error('Unable to copy text to clipboard', err);
+                    });
             }
 
         </script>
