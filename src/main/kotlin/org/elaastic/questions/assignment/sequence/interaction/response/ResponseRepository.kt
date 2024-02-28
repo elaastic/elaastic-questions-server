@@ -35,11 +35,9 @@ interface ResponseRepository : JpaRepository<Response, Long> {
     fun findAllByInteractionAndFakeIsFalseOrderByMeanGradeDesc(interaction: Interaction): List<Response>
 
     /**
-     * Query for retrieving only learner correct responses (LIMIT 3), not hidden by teacher, sorted by grades
+     * Query for the API : retrive only the recommended responses
      */
-    fun findTop3ByInteractionAndScoreAndFakeIsFalseAndHiddenByTeacherIsFalseOrderByMeanGradeDesc(interaction: Interaction, score: BigDecimal = BigDecimal(100)): List<Response>
-
-
+    fun findAllByInteractionAndRecommendedByTeacherIsTrue(interaction: Interaction): List<Response>
     fun findAllByInteractionAndAttempt(interaction: Interaction, attempt: Int = 1): List<Response>
 
     fun findByInteractionAndAttemptAndLearner(interaction: Interaction, attempt: AttemptNum, learner: User): Response?

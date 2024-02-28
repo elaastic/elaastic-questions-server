@@ -33,9 +33,10 @@ open class ExplanationData(
     meanGrade: BigDecimal? = null,
     val confidenceDegree: ConfidenceDegree? = null,
     val score: BigDecimal? = null,
-    val correct: Boolean? = (score == BigDecimal(100)),
+    val correct: Boolean? = (score?.compareTo(BigDecimal(100)) == 0),
     val choiceList: LearnerChoice? = null,
     val hiddenByTeacher: Boolean = false,
+    val recommendedByTeacher: Boolean = false,
 ) {
     constructor(response: Response) : this(
         responseId = response.id!!,
@@ -45,10 +46,11 @@ open class ExplanationData(
         nbDraxoEvaluations = response.draxoEvaluationCount,
         meanGrade = response.meanGrade,
         confidenceDegree = response.confidenceDegree,
-        correct = response.score == BigDecimal(100),
+        correct = response.score?.compareTo(BigDecimal(100)) == 0,
         score = response.score,
         choiceList = response.learnerChoice,
         hiddenByTeacher = response.hiddenByTeacher,
+        recommendedByTeacher = response.recommendedByTeacher,
     )
 
     val meanGrade = meanGrade

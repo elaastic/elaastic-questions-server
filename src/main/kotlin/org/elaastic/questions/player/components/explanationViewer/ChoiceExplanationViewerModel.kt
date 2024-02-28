@@ -26,7 +26,7 @@ class ChoiceExplanationViewerModel(
         val showOnlyCorrectResponse: Boolean = false,
         alreadySorted: Boolean = false,
         override val studentsIdentitiesAreDisplayable: Boolean = false,
-        val recommendedExplanationsComparator: Comparator<ExplanationData>? = CorrectAndMeanGradeComparator()
+        val recommendedExplanationsComparator: Comparator<ExplanationData>? = CorrectAndMeanGradeComparator(),
 ) : ExplanationViewerModel {
     override val hasChoice = true
     val explanationsByResponse =
@@ -52,7 +52,24 @@ class ChoiceExplanationViewerModel(
                 explanationsByCorrectness.sortedWith(recommendedExplanationsComparator).reversed()
             else
                 explanationsForCorrectResponses
-    override val explanationsExcerpt = recommendedExplanations.filter { !it.fromTeacher && !it.hiddenByTeacher }.take(3)
+
+    // Get recommended explanations from students which are not hidden
+    val recommendedStudentsExplanations = recommendedExplanations
+        .filter { !it.fromTeacher && !it.hiddenByTeacher }
+
+    override val nbRecommendedExplanations = recommendedStudentsExplanations.count {it.recommendedByTeacher }
+
+    override val explanationsExcerpt =
+        if (nbRecommendedExplanations < 3) {
+            recommendedStudentsExplanations
+                .sortedWith(compareByDescending<ExplanationData> { it.recommendedByTeacher }
+                .thenByDescending { it.meanGrade }
+                .thenByDescending { it.nbEvaluations })
+                .take(3)
+        } else {
+            recommendedStudentsExplanations.filter { it.recommendedByTeacher }
+        }
+
     override val nbExplanations = this.explanationsByResponse.values.flatten().count()
     override val hasMoreThanExcerpt = nbExplanationsForCorrectResponse > 3 || hasExplanationsForIncorrectResponse
     override val hasHiddenByTeacherExplanations = allResponses.any { it.hiddenByTeacher }

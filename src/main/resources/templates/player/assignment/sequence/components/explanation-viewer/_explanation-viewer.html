@@ -42,7 +42,10 @@
 
     <!--  Popup to visualize all explanations -->
     <div
-            th:if="${explanationViewerModel.hasMoreThanExcerpt or explanationViewerModel.hasHiddenByTeacherExplanations}">
+            th:if="${
+            explanationViewerModel.hasMoreThanExcerpt
+            or explanationViewerModel.hasHiddenByTeacherExplanations
+            }">
         <div
                 th:replace="|${components}/_allExplanationsPopup|::allExplanationsPopup(${sequenceId}, ${explanationViewerModel}, ${isTeacher})"></div>
     </div>

@@ -537,6 +537,38 @@ class PlayerController(
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
+    @GetMapping("/response/{responseId}/add-recommended-by-teacher")
+    fun addRecommendedByTeacher(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        // Get response from database
+        var response = responseService.findById(responseId)
+        // Update response favourite
+        response = responseService.addRecommendedByTeacher(user, response)
+
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
+    }
+
+    @GetMapping("/response/{responseId}/remove-recommended-by-teacher")
+    fun removeRecommendedByTeacher(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        // Get response from database
+        var response = responseService.findById(responseId)
+        // Update response not favourite
+        response = responseService.removeRecommendedByTeacher(user, response)
+
+        return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
+    }
+
     @GetMapping("/sequence/{id}/regenerate-chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun refreshChatGptEvaluation(

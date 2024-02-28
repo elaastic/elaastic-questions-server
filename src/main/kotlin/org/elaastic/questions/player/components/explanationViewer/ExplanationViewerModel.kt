@@ -26,4 +26,5 @@ interface ExplanationViewerModel {
     val nbExplanations: Int
     val studentsIdentitiesAreDisplayable: Boolean
     val teacherExplanation: TeacherExplanationData?
+    val nbRecommendedExplanations: Int
 }

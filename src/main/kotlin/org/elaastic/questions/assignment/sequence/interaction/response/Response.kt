@@ -75,7 +75,10 @@ class Response(
         var statement: Statement,
 
     @field:Column(name = "is_hidden_by_teacher")
-    override var hiddenByTeacher: Boolean = false
+    override var hiddenByTeacher: Boolean = false,
+
+    @field:Column(name = "is_recommended_by_teacher")
+    override var recommendedByTeacher: Boolean = false
 
 ) : AbstractJpaPersistable<Long>(), ModerationCandidate {
     @Version

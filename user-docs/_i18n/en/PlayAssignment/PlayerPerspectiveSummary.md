@@ -1,4 +1,4 @@
-## 4.5. Player perspective summary
+## 4.8. Player perspective summary
 
 This chapter details the "Player" perspective as well as the way it works.
 

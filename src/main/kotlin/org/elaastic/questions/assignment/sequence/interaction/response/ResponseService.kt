@@ -70,10 +70,10 @@ class ResponseService(
             else responseRepository.findAllByInteractionOrderByMeanGradeDesc(interaction)
         )
 
-    fun find3BestRankedResponses(sequence: Sequence): Triple<Response?, Response?, Response?> =
-        responseRepository.findTop3ByInteractionAndScoreAndFakeIsFalseAndHiddenByTeacherIsFalseOrderByMeanGradeDesc(
+    fun findRecommendedByTeacherResponses(sequence: Sequence): List<Response> =
+        responseRepository.findAllByInteractionAndRecommendedByTeacherIsTrue(
             sequence.getResponseSubmissionInteraction()
-        ).let { return Triple(it.getOrNull(0), it.getOrNull(1), it.getOrNull(2)) }
+        )
 
     fun count(sequence: Sequence, attempt: AttemptNum) =
         count(sequence.getResponseSubmissionInteraction(), attempt)
@@ -318,6 +318,10 @@ class ResponseService(
         }
 
         if (!response.hiddenByTeacher) {
+            // A response hidden must not be recommended
+            if (response.recommendedByTeacher) {
+                response.recommendedByTeacher = false
+            }
             response.hiddenByTeacher = true
             return responseRepository.save(response)
         }
@@ -337,6 +341,42 @@ class ResponseService(
 
         if (response.hiddenByTeacher) {
             response.hiddenByTeacher = false
+            return responseRepository.save(response)
+        }
+        return response
+    }
+
+    /**
+     * Mark a response as recommended by a teacher
+     * @param response the response to add as recommended
+     * @return the response
+     */
+    fun addRecommendedByTeacher(user: User, response: Response) : Response {
+        // Only a teacher can add a response as favourite
+        require(user.isTeacher()) {
+            "Only a teacher can unhide a response"
+        }
+
+        if (!response.recommendedByTeacher && !response.hiddenByTeacher) {
+            response.recommendedByTeacher = true
+            return responseRepository.save(response)
+        }
+        return response
+    }
+
+    /**
+     * Mark a response as NOT recommended by a teacher
+     * @param response the previously recommended response
+     * @return the response
+     */
+    fun removeRecommendedByTeacher(user: User, response: Response) : Response {
+        // Only a teacher can remove a response as favourite
+        require(user.isTeacher()) {
+            "Only a teacher can unhide a response"
+        }
+
+        if (response.recommendedByTeacher) {
+            response.recommendedByTeacher = false
             return responseRepository.save(response)
         }
         return response
