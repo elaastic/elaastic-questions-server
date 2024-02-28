@@ -16,6 +16,6 @@ L’activité apparaît alors dans la liste des activités de la section.
 
 ![Vue sur click course]({{ "images/fr/create_moodle_activity/activity_created.png"| relative_url }})
 
-Lorsque vous créez une activité Elaastic sur Moodle comme décrit ci-dessus, un sujet vierge et un devoir correspondant vont être automatiquement créés au sein de la plateforme Elaastic.
-Lorsque les étudiants cliquent sur le lien de l’activité, ils sont directement redirigés vers la page du devoir Elaastic.
-En tant qu’enseignant et créateur de l'activité, lors du premier clic sur l’activité, vous devenez le possesseur du sujet et vous êtes redirigé.e sur l’interface permettant d’ajouter des questions au sujet correspondant à ce devoir. Lors des prochains clics, vous serez dirigé.e directement sur le devoir.
+Lorsque vous créez une activité Elaastic sur Moodle comme décrit ci-dessus, un sujet vierge et une diffusion correspondant vont être automatiquement créés au sein de la plateforme Elaastic.
+Lorsque les étudiants cliquent sur le lien de l’activité, ils sont directement redirigés vers la page de la diffusion Elaastic.
+En tant qu’enseignant et créateur de l'activité, lors du premier clic sur l’activité, vous devenez le possesseur du sujet et vous êtes redirigé.e sur l’interface permettant d’ajouter des questions au sujet correspondant à cette diffusion. Lors des prochains clics, vous serez dirigé.e directement sur la diffusion.

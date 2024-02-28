@@ -1,7 +1,7 @@
 ---
 layout: page
 title: key_concepts.assignments
-permalink: /concepts_cles/devoirs
+permalink: /concepts_cles/diffusions
 permalink_en: /key_concepts/assignments
 parent: key_concepts.key_concepts
 nav_order: 4

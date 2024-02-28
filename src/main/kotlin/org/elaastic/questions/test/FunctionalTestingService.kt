@@ -1,9 +1,6 @@
 package org.elaastic.questions.test
 
-import org.elaastic.questions.assignment.Assignment
-import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
@@ -71,6 +68,26 @@ class FunctionalTestingService(
             )
         )
 
+    fun createAssignmentReadyToPractice(subject: Subject, title: String = "Default assignment title") =
+        subjectService.addAssignment(
+            subject,
+            Assignment(
+                owner = subject.owner,
+                title = title,
+                revisionMode = RevisionMode.AfterTeachings
+            )
+        )
+
+    fun createAssignmentReadyImmediatelyForPractice(subject: Subject, title: String = "Default assignment title") =
+        subjectService.addAssignment(
+            subject,
+            Assignment(
+                owner = subject.owner,
+                title = title,
+                revisionMode = RevisionMode.Immediately
+            )
+        )
+
     fun addQuestion(subject: Subject, statement: Statement) =
         subjectService.addStatement(subject, statement)
 
@@ -132,7 +149,7 @@ class FunctionalTestingService(
             // Assignments
             .also { subject ->
                 listOf("Face-to-face", "Blended", "Distant").forEach {
-                    createAssignment(subject, "$it Test Assignment")
+                    createAssignmentReadyToPractice(subject, "$it Test Assignment")
                 }
             }
 

@@ -19,12 +19,20 @@
 package org.elaastic.questions.player.components.assignmentOverview
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.RevisionMode
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 
 object AssignmentOverviewModelFactory {
+
+    val chartIcon = AssignmentOverviewModel.PhaseIcon("big grey bar chart outline", "assignment.overview.chartIcon")
+    val lockIcon = AssignmentOverviewModel.PhaseIcon("big grey lock", "assignment.overview.lockIcon")
+    val minusIcon = AssignmentOverviewModel.PhaseIcon("big grey minus", "assignment.overview.minusIcon")
+    val commentIcon = AssignmentOverviewModel.PhaseIcon("big grey comment outline", "assignment.overview.commentIcon")
+    val commentsIcon = AssignmentOverviewModel.PhaseIcon("big grey comments outline", "assignment.overview.commentsIcon")
 
     fun build(
         teacher: Boolean,
@@ -57,54 +65,56 @@ object AssignmentOverviewModelFactory {
                     teacher,
                     it,
                     sequenceToUserActiveInteraction[it]
-                )
+                ),
+                revisionTag = resolveRevisionTag(it, assignment.revisionMode)
             )
         },
-        selectedSequenceId = selectedSequenceId
+        selectedSequenceId = selectedSequenceId,
+
     )
 
     private fun resolveIcons(
         teacher: Boolean,
         sequence: Sequence,
         userActiveInteraction: Interaction?
-    ): List<PhaseIcon> =
-        if (sequence.executionIsFaceToFace() || !teacher) {
+    ): List<AssignmentOverviewModel.PhaseIcon> =
+            if (sequence.executionIsFaceToFace() || !teacher) {
             when {
                 sequence.isStopped() ->
                     if (sequence.resultsArePublished)
-                        listOf("grey bar chart outline")
-                    else listOf("big grey lock")
+                        listOf(chartIcon)
+                    else
+                        listOf(lockIcon)
 
                 else -> when (userActiveInteraction?.interactionType) {
-                    null -> listOf("big grey minus")
-                    InteractionType.ResponseSubmission -> listOf("big grey comment outline")
-                    InteractionType.Evaluation -> listOf("big grey comments outline")
-                    InteractionType.Read -> listOf("big grey bar chart outline")
+                    null -> listOf(minusIcon)
+                    InteractionType.ResponseSubmission -> listOf(commentIcon)
+                    InteractionType.Evaluation -> listOf(commentsIcon)
+                    InteractionType.Read -> listOf(chartIcon)
                 }
 
             }
 
         } else { // Distance & blended for teacher
             when (sequence.state) {
-                State.beforeStart -> listOf("big grey minus")
+                State.beforeStart -> listOf(minusIcon)
                 State.afterStop ->
-                    if (sequence.resultsArePublished)
-                        listOf("big grey bar chart outline")
-                    else listOf("big grey lock")
+                    if (sequence.resultsArePublished) listOf(chartIcon)
+                    else listOf(lockIcon)
 
                 else ->
-                    if (sequence.resultsArePublished)
-                        listOf(
-                            "large grey comment outline",
-                            "large grey comments outline",
-                            "large  grey bar chart outline"
-                        )
-                    else listOf(
-                        "large grey comment outline",
-                        "large grey comments outline"
-                    )
+                    if (sequence.resultsArePublished) listOf(commentIcon, commentsIcon, chartIcon)
+                    else listOf(commentIcon, commentsIcon )
             }
         }
 
+    private fun resolveRevisionTag(
+        sequence: Sequence,
+        revisionMode: RevisionMode
+    ): Boolean = when (revisionMode){
+        RevisionMode.NotAtAll -> false
+        RevisionMode.Immediately -> true
+        RevisionMode.AfterTeachings -> sequence.resultsArePublished && (sequence.executionIsFaceToFace() || sequence.isStopped())
+    }
 
 }

@@ -81,6 +81,9 @@
                             padding-top: 0.5rem;
                             padding-bottom: 0.5rem;
                         }
+                        .ui.label {
+                            font-size: 1rem;
+                        }
                     </style>
                     <div class="ui row">
                         <span class="ui tiny warning compact message" th:if="${#lists.isEmpty(assignment.sequences)}" th:text="#{assignment.empty}">No sequences</span>
@@ -97,28 +100,67 @@
                             <span style="font-size: smaller" th:text="${assignment.description}">content</span>
                         </div>
                     </div>
-                    <div class="ui row">
-                        <span class="ui sixteen wide column" style="font-size: smaller"
-                                  th:text="#{assignment.learnerAccess.description}">
-          Here is the URL to communicate to learners so they can sign up on the
+                </div>
+
+
+                <div class="ui row" style="margin-top: 1em;">
+                    <div class="ui circular basic green label"
+                           style="margin:.5em; padding: .4em !important">
+                        <label th:id="|assignment-learner-link-${assignment.id}|"
+                              th:title="#{assignment.learnerAccess.description}"
+                              th:text="#{assignment.learnerAccess.oneLine}"
+                              style="padding-right: .8em; padding-left: .8em; vertical-align: middle;"> Lien élèves
+                            </label>
+                        <button class="ui button"
+                                style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
+                                th:attr="onclick='copyToClipboard(\'copySuccessMessage1-' + ${assignment.id} +
+                                '\',\'' + (${serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})}) +
+                                '\',\'green\' )'">
+                            <i class="copy outline large icon"></i>
+                        </button>
+                    </div>
+
+                    <div class="ui circular basic orange label"
+                           style="margin:.5em; padding: .4em !important">
+                        <label th:id="|assignment-moodle-parameter-${assignment.id}|"
+                              th:title="#{assignment.ltiparameter.description}"
+                              th:text="#{assignment.ltiparameter.oneLine}"
+                              style="padding-right: .8em; padding-left: .8em; vertical-align: middle;"> Lien LTI/Moodle
+                        </label>
+                        <button class="ui button"
+                                style="padding : .5em .4em .8em 1.2em; border-radius: 10em;"
+                                th:attr="onclick='copyToClipboard(\'copySuccessMessage2-' + ${assignment.id} +
+                                '\',\'assignmentid=' + ${assignment.globalId} + '\',\'orange\')'">
+                            <i class="copy outline large icon"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="ui circular basic blue label"
+                           style="margin:.5em; padding:1.09em !important; vertical-align: middle;"
+                       th:if="${#strings.toString(assignment.revisionMode)!='NotAtAll'}" >
+
+                        <span th:title="#{assignment.overview.revisionAvailability}"
+                              th:text="#{assignment.overview.revisionTag}">
                         </span>
-                        <span class="ui message sixteen wide column" style="font-size: smaller"
-                              th:id="|assignment-learner-link-${assignment.id}|"
-                              th:text="${serverBaseUrl} + @{/player/register(globalId=${assignment.globalId})}">
-                                https://link
+
+                        <span th:if="${#strings.toString(assignment.revisionMode)=='AfterTeachings'}"
+                              th:text="': ' + #{assignment.autorize.afterTeachings}">
+                        </span>
+
+                        <span th:if="${#strings.toString(assignment.revisionMode)=='Immediately'}"
+                              th:text="': ' + #{assignment.autorize.immediately}">
                         </span>
                     </div>
-                    <div class="ui row">
-                        <span class="ui sixteen wide column" style="font-size: smaller"
-                              th:text="#{assignment.ltiparameter.description}">
-                            Here is the parameter to use in lti configuration
-                        </span>
-                        <span class="ui message sixteen wide column" style="font-size: smaller"
-                              th:id="|assignment-moodle-parameter-${assignment.id}|"
-                              th:text="'assignmentid='+${assignment.globalId}">
-                                assignmentid=qjg666gsggs
-                        </span>
-                    </div>
+
+                </div>
+
+                <div th:id="|copySuccessMessage1-${assignment.id}|" class="ui label" style="display: none; margin:.5em;"
+                     th:text="#{common.copyButton.succefullyCopied}">
+                </div>
+
+                <div th:id="|copySuccessMessage2-${assignment.id}|" class="ui label" style="display: none; margin:.5em;"
+                     th:text="#{common.copyButton.succefullyCopied}">
                 </div>
 
             </div>
@@ -152,10 +194,13 @@
                         $(window.location.hash).scrollTop(400)
                     }
                 })
-
         </script>
 
         <script th:inline="javascript">
+
+            const baseUrlLearner = "https://elaastic.irit.fr:443/player/register?globalId="
+
+
             $(document).ready(function () {
                 let selectedAssignment = $(location.hash)
                 if (selectedAssignment) {
@@ -183,6 +228,26 @@
 
                 confirmDeleteAssignmentModal.modal('show')
             }
+
+            function copyToClipboard(messageHolder, content, color="grey") {
+                var copySuccessMessage = document.getElementById(messageHolder);
+                copySuccessMessage.classList.add(color);
+                navigator.clipboard.writeText(content)
+                    .then(() => {
+                        // console.log(messageHolder + 'Displays :' + content +"in color : " + color);
+                        // console.log(messageHolder + 'Displays :' + content +"in color : " + color);
+                        // Show success message
+                        copySuccessMessage.style.display = 'inline-block';
+                        setTimeout(function() {
+                            copySuccessMessage.style.display = 'none';
+                            copySuccessMessage.classList.remove(color);
+                        }, 3000);
+                    })
+                    .catch(err => {
+                        console.error('Unable to copy text to clipboard', err);
+                    });
+            }
+
         </script>
 
         <!--  Delete confirm modal-->
