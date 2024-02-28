@@ -33,11 +33,11 @@ Once you subject contains questions, you can organise them with the buttons on t
 
 Furthermore, your subject doesn't contain any assignments. To create an assignment, go to chapter 3.4. of this tutorial.
 
-Once your subject contains assignments, you can organise them with the buttons on the right.
+When your subject contains at least one assignment, you'll find details of the assignments on this summary, and can take various actions to manage it and retrieve links.
 1. Play the assignment.
 2. Edit the assignment.
-3. Move the assignment up on the list.
-4. Move the assignment down on the list.
-5. Delete the assignment.
+3. Delete the assignment.
+4. Get the link to give to students to register to the assignment.
+5. Get the link to use for Moodle / LTI integration.
 
 ![Vue sur subject 7]({{ "../images/en/resources_creation/assignment_management.png" | relative_url }})

@@ -21,6 +21,8 @@ La grille est structurée autour de plusieurs critères identifiés par les lett
 - **Fin de l'évaluation** :
   - Si fourniture du feedback textuel, l'évaluation est considérée comme achevée. 
 
+![Vue sur la grille draxo]({{ "images/fr/key_concepts/draxo_d.png" | relative_url }})
+
 **Critère « R » (Répond à la question)**
 - **Libellé proposé à l'évaluateur** : Je trouve que la réponse correspond à la question posée.
 - **Options de réponse** : Non, En partie, Oui, Je ne sais pas.
@@ -32,6 +34,8 @@ La grille est structurée autour de plusieurs critères identifiés par les lett
   - Si fourniture du feedback textuel, l'évaluation est considérée comme achevée.
   - Si l'option _Je ne sais pas_ est choisie, l'évaluation est interrompue sans demande de 
 feedback textuel. Dans ce cas, il est considéré que l'évaluateur n'est pas en mesure d'évaluer la réponse.
+
+![Vue sur la grille draxo]({{ "images/fr/key_concepts/draxo_r.png" | relative_url }})
 
 **Critère « A » (Acceptable)**
 - **Libellé proposé à l'évaluateur** : Je suis d’accord avec la réponse proposée.
@@ -45,6 +49,7 @@ feedback textuel. Dans ce cas, il est considéré que l'évaluateur n'est pas en
   - Si l'option _Je ne me prononce pas_ est choisie, l'évaluation est interrompue sans demande de
     feedback textuel. Dans ce cas, il est considéré que l'évaluateur n'est pas en mesure d'évaluer la réponse.
 
+![Vue sur la grille draxo]({{ "images/fr/key_concepts/draxo_a.png" | relative_url }})
 
 **Critère « X » (eXhaustive)**
 - **Libellé proposé à l'évaluateur** : Je pense que la réponse est complète.
@@ -58,6 +63,8 @@ feedback textuel. Dans ce cas, il est considéré que l'évaluateur n'est pas en
   - Si l'option _Je ne sais pas_ est choisie, l'évaluation s'achève sans demande de
     feedback textuel.
 
+![Vue sur la grille draxo]({{ "images/fr/key_concepts/draxo_x.png" | relative_url }})
+
 **Critère « O » (Optimale)**
 - **Libellé proposé à l'évaluateur** : Je pense que la réponse peut être améliorée.
 - **Options de réponse** : Non, Oui, Je ne sais pas.
@@ -68,6 +75,8 @@ feedback textuel. Dans ce cas, il est considéré que l'évaluateur n'est pas en
   - Si fourniture du feedback textuel, l'évaluation est considérée comme achevée. 
   - Si une des options _Non_ ou _Je ne sais pas_ est choisie, l'évaluation se termine sans demande de
     feedback textuel.
+
+![Vue sur la grille draxo]({{ "images/fr/key_concepts/draxo_o.png" | relative_url }})
 
 ### 2.6.2. Calcul du score d’une réponse
 
