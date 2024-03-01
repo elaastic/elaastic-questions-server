@@ -18,6 +18,8 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +28,7 @@ import org.springframework.security.web.SecurityFilterChain
 class RestSecurityConfig(
     @Value("\${rest.user.name}") private val restUserName: String,
     @Value("\${rest.user.password}") private val restUserPassword: String,
+    @Value("\${rest.api.allowed_url}") private val restAllowedUrl: String
 ) {
 
     companion object {
@@ -45,7 +48,19 @@ class RestSecurityConfig(
             }
 
             httpBasic { }
-            cors { }
+
+            cors {
+                val config = CorsConfiguration().apply {
+                    allowedOrigins = listOf(restAllowedUrl)
+                    allowedMethods = listOf("GET")
+                    allowedHeaders = listOf("*")
+                    allowCredentials = true
+                }
+                UrlBasedCorsConfigurationSource().apply {
+                    registerCorsConfiguration("/api/practice/**", config)
+                }
+            }
+
             csrf { disable() }
 
             exceptionHandling {}

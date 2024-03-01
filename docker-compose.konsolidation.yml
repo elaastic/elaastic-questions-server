@@ -1,0 +1,51 @@
+#
+# Doker-compose file for elaastic-questions-server to be launched in the development
+# context of konsolidation project.
+#
+
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      - MYSQL_USER=elaastic
+      - MYSQL_DATABASE=elaastic-questions
+      - MYSQL_PASSWORD=elaastic
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "6683:3306"
+    networks:
+      net:
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
+    volumes:
+      - db_data:/var/lib/mysql
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./config:/configuration/
+      - datastore:/datastore/
+      - tmp:/tmp/
+    depends_on:
+      - mysql
+    ports:
+      - "8081:8080"
+    networks:
+          net:
+    environment:
+      - DATABASE_HOST=mysql_elaastic
+      - DATABASE_USER=elaastic
+      - DATABASE_NAME=elaastic-questions
+      - DATABASE_PASSWORD=elaastic
+      - DATABASE_PORT=3306
+
+networks:
+      net:
+        external: true
+
+volumes:
+  datastore: # For storing attachments
+  db_data: # For storing data from DB
+  tmp: # for temporary files
