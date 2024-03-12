@@ -21,10 +21,11 @@ package org.elaastic.questions.assignment.choice
 import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotEmpty
 
 data class MultipleChoiceSpecification(
         @field:Max(10) override var nbCandidateItem: Int,
-        @field:Min(1) var expectedChoiceList: List<ChoiceItem> = listOf(),
+        @field:NotEmpty var expectedChoiceList: List<ChoiceItem> = listOf(),
         var explanationChoiceList: List<TeacherExplanation> = listOf()
 ) : ChoiceSpecification {
 

@@ -24,7 +24,7 @@ import javax.validation.constraints.Min
 
 data class ExclusiveChoiceSpecification(
         @field:Max(10) override var nbCandidateItem: Int,
-        @field:Min(1) var expectedChoice: ChoiceItem,
+        var expectedChoice: ChoiceItem,
         var explanationChoiceList: List<TeacherExplanation> = listOf()
 ) : ChoiceSpecification {
 

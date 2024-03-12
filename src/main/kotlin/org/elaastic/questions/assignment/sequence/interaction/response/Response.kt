@@ -113,21 +113,31 @@ class Response(
                     is ExclusiveChoiceSpecification ->
                         run {
                             require(learnerChoice.size <= 1) { "Cannot select more than one item with exclusive choice" }
-                            if (learnerChoice.first() == choiceSpecification.expectedChoice.index) BigDecimal(100) else BigDecimal(0)
+                            if (learnerChoice.isEmpty()
+                                || learnerChoice.first() != choiceSpecification.expectedChoice.index
+                                ) BigDecimal(0) else BigDecimal(100)
                         }
 
                     is MultipleChoiceSpecification ->
                         run {
                             val zero = BigDecimal(0)
-                            if (learnerChoice.size == choiceSpecification.nbCandidateItem) return zero
+                            val oneHundred = BigDecimal(100)
                             val expectedIndexList = choiceSpecification.expectedChoiceList.map { it.index }
+                            var positiveScore = zero
+                            var negativeScore = zero
+                            if (expectedIndexList.size == choiceSpecification.nbCandidateItem) { // limit case: all choices are correct
+                                    positiveScore = BigDecimal(learnerChoice.size * 100.0 / choiceSpecification.nbCandidateItem)
+                                    negativeScore = zero
+                            } else { // nominal case: only some choices are correct
+                                val nbCorrectLearnerChoices = learnerChoice.intersect(expectedIndexList).size
+                                val nbCorrectChoices = expectedIndexList.size
+                                val nbIncorrectLearnerChoices = learnerChoice.minus(expectedIndexList).size
+                                val nbIncorrectChoices = choiceSpecification.nbCandidateItem - nbCorrectChoices
+                                positiveScore = BigDecimal(nbCorrectLearnerChoices * (100.0 / nbCorrectChoices))
+                                negativeScore = BigDecimal(nbIncorrectLearnerChoices * (100.0 / nbIncorrectChoices))
+                            }
 
-                            val nbCorrectLearnerChoices = learnerChoice.intersect(expectedIndexList).size
-                            val nbCorrectChoices = expectedIndexList.size
-                            val nbIncorrectLearnerChoices = learnerChoice.minus(expectedIndexList).size
-                            val nbIncorrectChoices = choiceSpecification.nbCandidateItem - nbCorrectChoices
-
-                            var score = BigDecimal(nbCorrectLearnerChoices * (100.0 / nbCorrectChoices) - nbIncorrectLearnerChoices * (100.0 / nbIncorrectChoices)).setScale(0, RoundingMode.HALF_UP)
+                            var score = (positiveScore - negativeScore).setScale(0, RoundingMode.HALF_UP)
                             if (score < zero) score = zero
                             score
                         }
