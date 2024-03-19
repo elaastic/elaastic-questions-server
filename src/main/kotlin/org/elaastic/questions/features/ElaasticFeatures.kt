@@ -4,6 +4,7 @@ import org.togglz.core.annotation.ActivationParameter
 import org.togglz.core.annotation.DefaultActivationStrategy
 import org.togglz.core.annotation.EnabledByDefault
 import org.togglz.core.context.FeatureContext
+import org.togglz.core.spi.FeatureManagerProvider
 import org.togglz.spring.activation.SpringProfileActivationStrategy
 
 /**
@@ -50,7 +51,10 @@ enum class ElaasticFeatures {
     IMPORT_EXPORT,
 
     // Disabled by default
-    CHATGPT_EVALUATION;
+    CHATGPT_EVALUATION,
+
+    // Disabled by default, accessible on username strategy
+    REVISION_ASSIGNMENT;
 
     fun isActive(): Boolean {
         return FeatureContext.getFeatureManager().isActive { name }

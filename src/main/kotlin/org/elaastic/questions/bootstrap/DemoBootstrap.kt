@@ -36,6 +36,7 @@ class DemoBootstrap(
     @PostConstruct
     fun init() {
         LOG.info("Bootstrapping elaastic-questions in demo and testing mode")
+        bootstrapService.initializeDevUsers()
         bootstrapService.initializeDemoContent()
         LOG.info("End of the bootstrap")
     }
