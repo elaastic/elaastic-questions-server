@@ -43,7 +43,7 @@ class OnlyKonsolidationExperimentationTeachersStrategy : ActivationStrategy  {
 
     override fun getParameters(): Array<Parameter> {
         return arrayOf(
-            ParameterBuilder.create(ShowRecommendationsActivationStrategy.PARAM_USERS)
+            ParameterBuilder.create(PARAM_USERS)
             .label("Users")
             .largeText()
             .description("A list of users for which the feature is active.")
