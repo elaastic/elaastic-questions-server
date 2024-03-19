@@ -53,13 +53,7 @@ enum class ElaasticFeatures {
     // Disabled by default
     CHATGPT_EVALUATION,
 
-    @EnabledByDefault
-    @DefaultActivationStrategy(
-        id = OnlyKonsolidationExperimentationTeachersStrategy.ID,
-        parameters = [
-            ActivationParameter(name = "users", value = "fsil") // Define allowed user here
-        ]
-    )
+    // Disabled by default, accessible on username strategy
     REVISION_ASSIGNMENT;
 
     fun isActive(): Boolean {
