@@ -201,7 +201,8 @@ class AssignmentService(
         if (assignment.owner == user) {
             return null
         }
-        // TODO : UPDATE LAST_UPDATED WHEN LEARNER ASSIGNMENT IS REGISTERED
+
+        assignmentRepository.updateLastUpdated(assignment.id!!, Date())
 
         return learnerAssignmentRepository.findByLearnerAndAssignment(
             user,

@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.util.Date
 import java.util.UUID
@@ -49,4 +50,8 @@ interface AssignmentRepository : JpaRepository<Assignment, Long> {
     @Query("SELECT DISTINCT a FROM Assignment a LEFT JOIN FETCH a.sequences s " +
             "WHERE a.lastUpdated > :since OR s.lastUpdated > :since")
     fun findAllAssignmentUpdatedSince(since: Date): List<Assignment>
+
+    @Modifying
+    @Query("UPDATE assignment a SET a.last_updated = :now WHERE a.id = :assignmentId", nativeQuery = true)
+    fun updateLastUpdated(assignmentId: Long, now: Date)
 }
