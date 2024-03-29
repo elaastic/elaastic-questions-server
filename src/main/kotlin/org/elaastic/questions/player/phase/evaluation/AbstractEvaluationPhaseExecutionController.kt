@@ -9,6 +9,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.directory.User
+import java.util.Locale
 
 abstract class AbstractEvaluationPhaseExecutionController(
     open val sequenceService: SequenceService,
@@ -57,13 +58,17 @@ abstract class AbstractEvaluationPhaseExecutionController(
 
     }
 
-    fun finalizePhaseExecution(user: User, sequence: Sequence, assignmentId: Long, lastResponse: Response? = null): String {
+    fun finalizePhaseExecution(user: User,
+                               sequence: Sequence,
+                               assignmentId: Long,
+                               locale: Locale,
+                               lastResponse: Response? = null): String {
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
             sequenceService.nextInteractionForLearner(sequence, user)
         }
 
         if (sequence.chatGptEvaluationEnabled && lastResponse != null) {
-            chatGptEvaluationService.createEvaluation(lastResponse)
+            chatGptEvaluationService.createEvaluation(lastResponse, locale.language)
         }
 
         return "redirect:/player/assignment/${assignmentId}/play/sequence/${sequence.id}"

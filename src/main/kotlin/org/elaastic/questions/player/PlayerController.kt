@@ -488,14 +488,15 @@ class PlayerController(
         authentication: Authentication,
         model: Model,
         @ModelAttribute responseSubmissionData: ResponseSubmissionData,
-        @PathVariable id: Long
+        @PathVariable id: Long,
+        locale: Locale
     ): String {
         val user: User = authentication.principal as User
 
         val sequence = sequenceService.get(id, true)
         val response = sequenceService.submitResponse(user, sequence, responseSubmissionData)
         if (sequence.chatGptEvaluationEnabled && !sequence.isSecondAttemptAllowed()) {
-            chatGptEvaluationService.createEvaluation(response)
+            chatGptEvaluationService.createEvaluation(response, locale.language)
         }
 
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
@@ -574,7 +575,8 @@ class PlayerController(
     fun refreshChatGptEvaluation(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
+        @PathVariable id: Long,
+        locale: Locale
     ): String {
         val user: User = authentication.principal as User
         val sequence = sequenceService.get(id, true)
@@ -582,7 +584,7 @@ class PlayerController(
         val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
         if(response != null) {
             val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
-            chatGptEvaluationService.createEvaluation(response, chatGptEvaluation)
+            chatGptEvaluationService.createEvaluation(response, locale.language, chatGptEvaluation)
         }
 
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"

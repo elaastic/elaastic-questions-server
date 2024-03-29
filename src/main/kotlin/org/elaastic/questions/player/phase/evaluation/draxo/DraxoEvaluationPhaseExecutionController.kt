@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @Controller
 @RequestMapping("/player/sequence/{sequenceId}/phase/evaluation/draxo")
@@ -35,6 +36,7 @@ class DraxoEvaluationPhaseExecutionController(
         model: Model,
         @PathVariable sequenceId: Long,
         @ModelAttribute changeAnswerData: ChangeAnswerData,
+        locale: Locale
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment
@@ -58,7 +60,7 @@ class DraxoEvaluationPhaseExecutionController(
 
 
             if(changeAnswerData.lastResponseToGrade) {
-                finalizePhaseExecution(user, sequence, assignment.id!!, lastResponse)
+                finalizePhaseExecution(user, sequence, assignment.id!!, locale, lastResponse)
             }
 
             return "redirect:/player/assignment/${assignment.id}/play/sequence/${sequence.id}"

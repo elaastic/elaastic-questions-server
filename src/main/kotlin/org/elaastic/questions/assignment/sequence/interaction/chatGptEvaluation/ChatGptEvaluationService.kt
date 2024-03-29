@@ -25,10 +25,8 @@ class ChatGptEvaluationService (
 
     @Async
     @Transactional(propagation = Propagation.NEVER)
-    fun createEvaluation(response: Response, chatGptExistingEvaluation : ChatGptEvaluation? = null): ChatGptEvaluation {
+    fun createEvaluation(response: Response, language: String, chatGptExistingEvaluation : ChatGptEvaluation? = null): ChatGptEvaluation {
 
-
-        val language = LocaleContextHolder.getLocale().language
         val title = response.statement.title
         val questionContent = response.statement.content
         val teacherExplanation = response.statement.expectedExplanation

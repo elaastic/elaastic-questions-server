@@ -36,7 +36,7 @@ internal class ChatGptEvaluationServiceIntegrationTest (
         assertThat(chatGptEvaluationRepository.findAll(), `is`(empty()))
 
         tWhen {
-            chatGptEvaluationService.createEvaluation(response)
+            chatGptEvaluationService.createEvaluation(response, "fr")
         }.tThen {
             assertThat(it.id, notNullValue())
             assertThat(it.version, equalTo(1L))

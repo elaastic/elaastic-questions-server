@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.HashMap
+import java.util.Locale
 
 @Controller
 @RequestMapping("/player/sequence/{sequenceId}/phase/evaluation/all-at-once")
@@ -36,6 +37,7 @@ class AllAtOnceEvaluationPhaseExecutionController(
         model: Model,
         @PathVariable sequenceId: Long,
         @ModelAttribute evaluationData: EvaluationData,
+        locale: Locale
     ): String {
         val user: User = authentication.principal as User
         var assignment: Assignment
@@ -65,7 +67,7 @@ class AllAtOnceEvaluationPhaseExecutionController(
                 )
             }
 
-            return finalizePhaseExecution(user, sequence, assignment.id!!, lastResponse)
+            return finalizePhaseExecution(user, sequence, assignment.id!!, locale, lastResponse)
         }
     }
 
