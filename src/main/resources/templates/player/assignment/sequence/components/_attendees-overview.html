@@ -1,0 +1,109 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="attendeesOverview(model, context)"
+     th:remove="tag"
+     th:if="${model.teacher}"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+  <!-- TODO: verify if th:if is teacher works successfully!! -->
+
+
+  <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
+    <i class="users alternate outline icon"></i>
+
+    <div class="content" th:text="${model.attendeesTitle}"></div>
+  </h3>
+
+  <div class="ui segment attached"
+       th:if="${#lists.isEmpty(model.attendees)}"
+       th:text="#{attendees.empty}">
+    This assignment is empty.
+  </div>
+
+  <div th:each="attendee, i : ${model.attendees}"
+       class="ui clearing attached segment"
+       th:id="|${context}-${attendee.id}|"
+       style="padding-bottom: 1em; cursor: pointer; ">
+
+    <!--
+    <div class="ui grid">
+      <div class="twelve wide column">
+        <div style="overflow: hidden; height: 100%; padding-top: 2px;">
+          <h4 class="ui header">
+            <div class="ui tiny circular label"
+                 style="margin-right: 1em;"
+                 th:text="|${i.index+1}.|">
+            </div>
+            <span th:utext="${attendee.title}"></span>
+          </h4>
+
+          <div style="height: 4em; overflow: hidden;"
+               th:unless="${attendee.hideStatementContent}"
+               th:utext="${attendee.content}">
+          </div>
+
+        </div>
+      </div>
+
+      <div class="four wide column" style="text-align: center;">
+        <div>
+          <h4 class="ui header circular small basic blue label" style="height: 0.6em !important; padding-top: 2px;"
+          th:if="${sequence.revisionTag}"
+          th:title="#{assignment.overview.revisionAvailability}"
+          th:text="#{assignment.overview.revisionTag}">
+            Revisions
+          </h4>
+        </div>
+        <div style="height: 80%; display:flex">
+          <i th:each="icon : ${sequence.icons}"
+             class="elaastic-phase icon"
+             style="margin: auto"
+             th:classappend="${icon.icon}"
+             th:title="#{${icon.title}}"
+          ></i>
+        </div>
+      </div>
+    </div>
+    -->
+
+  </div>
+
+  <script th:if="${context == 'aside' && model.selectedSequenceId != null}" th:inline="javascript">
+    (function () {
+      var container = $('#layout-aside')
+      var target = $('#' + [[${context}]] + '-[[${model.selectedSequenceId}]]')
+
+      if (!elaastic.util.isVisible(target, container, 50)) {
+        elaastic.util.ensureIsVisible(target, container)
+      }
+    })()
+
+  </script>
+
+
+  <style>
+      .ui.selected.segment {
+          background-color: #fffaf3;
+          color: #573a08;
+      }
+
+      .ui.selected.segment .elaastic-phase.icon {
+          display: none !important;
+      }
+  </style>
+</div>
