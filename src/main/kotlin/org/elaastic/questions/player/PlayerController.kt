@@ -21,6 +21,7 @@ package org.elaastic.questions.player
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
@@ -229,6 +230,7 @@ class PlayerController(
 
         val assignment = sequence.assignment!!
         val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
+        val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
 
         model.addAttribute(
             "playerModel",
@@ -237,6 +239,7 @@ class PlayerController(
                 sequence = sequence,
                 serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
                 nbRegisteredUsers = nbRegisteredUsers,
+                attendees = registeredUsers,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                 messageBuilder = messageBuilder,
                 sequenceStatistics = sequenceService.getStatistics(sequence),
