@@ -17,6 +17,7 @@
  */
 package org.elaastic.questions.player
 
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
@@ -39,6 +40,7 @@ object PlayerModelFactory {
         sequence: Sequence,
         serverBaseUrl: String,
         nbRegisteredUsers: Int,
+        attendees: List<LearnerAssignment>,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
         sequenceStatistics: SequenceStatistics,
@@ -52,6 +54,7 @@ object PlayerModelFactory {
             sequence = sequence,
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
+                attendees = attendees,
                 assignment = assignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
@@ -88,6 +91,7 @@ object PlayerModelFactory {
             sequence = sequence,
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
+                attendees = arrayListOf(),  // Empty list because useless for student to see attendees list.
                 assignment = assignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
