@@ -16,46 +16,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="assignmentNavigator(model, context)"
-     th:remove="tag"
-     th:if="${model.assignmentOverviewModel.teacher}"
-     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-    <!-- TODO: verify if th:if is teacher works successfully!! -->
-
-
-  <h3 class="ui top attached block header">
-    <i class="question circle outline icon"></i>
-
-    <div class="content" th:text="${model.statement.getTitle()}"></div>
-  </h3>
-
-  <div class="ui segment attached"
-       th:text="${model.statement.getContent()}">
-  </div>
-
-  <div class="ui header attached block assignment-navigator-actions">
-    <button class="ui button">
-      <i class="angle left icon"></i>
-
-      Lorem ipsum dolor sit amet.
-    </button>
-
-    <button class="ui button">
-      Lorem ipsum dolor sit amet.
-
-      <i class="angle right icon"></i>
-    </button>
-  </div>
-
-  <style>
-    .assignment-navigator-actions {
-      display: flex;
-      justify-content: space-between;
-      column-gap: 10px;
-    }
-  </style>
-
-</div>
 
 <div th:fragment="attendeesOverview(model, context)"
      th:remove="tag"
@@ -64,10 +24,10 @@
   <!-- TODO: verify if th:if is teacher works successfully!! -->
 
 
-  <h3 class="ui top attached block header">
+  <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
     <i class="users alternate outline icon"></i>
 
-    <div class="content" th:text="#{attendees.sectionTitle(${model.nbRegisteredUser})}"></div>
+    <div class="content" th:text="${model.attendeesTitle}"></div>
   </h3>
 
   <div class="ui segment attached"
