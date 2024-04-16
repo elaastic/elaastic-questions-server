@@ -26,4 +26,5 @@ elaastic.toggleDashboardVisibility = () => {
     const ATTENDEES_MENU = document.querySelector("#attendees_container");
 
     ATTENDEES_MENU.style.display = elaastic.isDashboardOpened ? "none" : "";
-}
+};
+elaastic.toggleDashboardVisibility();
