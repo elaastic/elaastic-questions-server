@@ -19,6 +19,7 @@
 package org.elaastic.questions.player.components.assignmentOverview
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.RevisionMode
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
@@ -38,11 +39,13 @@ object AssignmentOverviewModelFactory {
         teacher: Boolean,
         assignment: Assignment,
         nbRegisteredUser: Int,
+        attendees: List<LearnerAssignment>,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         selectedSequenceId: Long? = null
     ): AssignmentOverviewModel = AssignmentOverviewModel(
         teacher = teacher,
         nbRegisteredUser = nbRegisteredUser,
+        attendees = attendees,
         assignmentTitle = assignment.title,
         courseTitle = if (teacher) assignment.subject?.course?.title else null,
         courseId = if (teacher) assignment.subject?.course?.id else null,
