@@ -25,6 +25,7 @@ data class AssignmentOverviewModel(
         val nbRegisteredUser: Int,
         val attendees: List<LearnerAssignment>,
         val openedPane: String,
+
         val assignmentTitle: String,
         val courseTitle: String?,
         val courseId: Long?,
