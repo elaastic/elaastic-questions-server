@@ -20,9 +20,6 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <!-- Link to the css file for the custom DRAXO grid -->
-    <link rel="stylesheet" type="text/css" th:href="@{'/css/draxo-show.css'}"/>
-
     <div class="review" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
         <div class="review-header review-border">
             <div class="reviewer">
