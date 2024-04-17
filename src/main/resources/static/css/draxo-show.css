@@ -40,6 +40,27 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+    font-size: 1rem;
+}
+
+.custom-step {
+    font-size: 1em;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex: 1 0 auto;
+    flex-wrap: wrap;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0;
+    padding: 1em 0 1em 0;
+    height: 3.5em;
+
+    /* Par défaut un segment est désactivé*/
+    background-color: var(--default-bg-color);
+    border: 1px solid #D9D9D9;
+    color: var(--default-color);
 }
 
 .custom-step::after {
@@ -49,8 +70,8 @@
     top: 50.5%;
     right: -0.7px;
     background-color: inherit;
-    width: 2.8em;
-    height: 2.8em;
+    width:  2.5em;
+    height: 2.5em;
 
     /* On ne garde que les bordure haute et droite */
     border-width: 0 1px 1px 0;
@@ -65,31 +86,20 @@
     display: none;
 }
 
-.custom-step {
-    font-size: .78rem;
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    flex: 1 0 auto;
-    flex-wrap: wrap;
-    vertical-align: middle;
-    align-items: center;
-    justify-content: center;
-    margin: 0 0;
-    padding: 1em 0 1em 0;
-
-    /* Par défaut un segment est désactivé*/
-    background-color: var(--default-bg-color);
-    border: 1px solid #D9D9D9;
-    color: var(--default-color);
-}
-
 .custom-step:first-child {
     border-radius: .28571429rem 0 0 .28571429rem;
 }
 
 .custom-step:last-child {
     border-radius: 0 .28571429rem .28571429rem 0;
+}
+
+.custom-step:not(:first-child) {
+    border-left-width: 0 !important;
+}
+
+.custom-step:not(:last-child) {
+    border-right-width: 0 !important;
 }
 
 .custom-step.positive {
