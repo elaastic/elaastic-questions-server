@@ -22,17 +22,17 @@
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <!-- Link to the css file for the custom DRAXO grid -->
-    <link rel="stylesheet" th:href="@{'/css/draxo-show.css'}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{'/css/draxo-show.css?version=2'}"/>
 
     <div class="ui container evaluation" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
         <div class="evaluation-entete evaluation-border">
             <div class="evaluateurs">
-                <span th:text="#{draxo.reviewer}">Reviewer</span>
+                <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
                 <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
                       th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span>
             </div>
             <div class="score">
-                <span th:text="#{draxo.score}">Score</span>
+                <span th:text="#{draxo.score} + ' :'">Score</span>
                 <span class="ui label" th:text="${model.score ?: '-'}">2.5</span>
             </div>
         </div>

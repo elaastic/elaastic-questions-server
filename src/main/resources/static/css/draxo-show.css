@@ -1,3 +1,9 @@
+.evaluation {
+    background-color: white;
+    border-radius: 10px;
+    color: black;
+}
+
 .evaluation-entete {
     display: flex;
     flex-direction: row;
