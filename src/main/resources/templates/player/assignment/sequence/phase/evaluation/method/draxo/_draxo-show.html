@@ -43,11 +43,8 @@
                         th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
                         th:with="optionType = ${criteria.getOptionType(model.draxoEvaluation.get(criteria))}">
 
-                    <!-- FIXME Les classes ne s'affiche pas -->
                     <div class="custom-step"
-                         th:classappend="|${optionType == 'POSITIVE' ? 'positive' : ''}
-                                          ${optionType == 'NEGATIVE' ? 'negative' : ''}
-                                          ${optionType == 'UNKNOWN'  ? 'unknown'  : ''}|">
+                         th:classappend="${optionType?.getCSSClass()}">
 
                         <div class="contenue">
                             <span class="lettreCapital" th:text="${criteria}">R</span>
