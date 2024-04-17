@@ -23,9 +23,9 @@
     <!-- Link to the css file for the custom DRAXO grid -->
     <link rel="stylesheet" type="text/css" th:href="@{'/css/draxo-show.css'}"/>
 
-    <div class="evaluation" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
-        <div class="evaluation-entete evaluation-border">
-            <div class="evaluateurs">
+    <div class="review" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
+        <div class="review-header review-border">
+            <div class="reviewer">
                 <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
                 <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
                       th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span>
@@ -35,9 +35,9 @@
                 <span class="ui label" th:text="${model.score ?: '-'}">2.5</span>
             </div>
         </div>
-        <div class="grille-DRAXO evaluation-border">
+        <div class="review-DRAXO review-border">
             <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
-            <div class="frise">
+            <div class="DRAXO-grid">
                 <th:block
                         th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
                         th:with="optionType = ${criteria.getOptionType(model.draxoEvaluation.get(criteria))}">
@@ -45,8 +45,8 @@
                     <div class="custom-step"
                          th:classappend="${optionType?.getCSSClass()}">
 
-                        <div class="contenue">
-                            <span class="lettreCapital" th:text="${criteria}">R</span>
+                        <div class="custom-step-content">
+                            <span class="capital-letter" th:text="${criteria}">R</span>
                             <span th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">...</span>
 
                             <i class="green check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
@@ -58,15 +58,15 @@
             </div>
 
             <th:block th:with="rejectedCriteria = ${model.draxoEvaluation.getRejectedCriteria()}">
-                <div class="zone-commentaire" th:if="${rejectedCriteria}">
-                    <div class="intitule">
+                <div class="comment-area" th:if="${rejectedCriteria}">
+                    <div class="comment-header">
                         <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'">
                             The answer is readable :</h4>
                         <div class="ui label" th:text="#{${model.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
                             No
                         </div>
                     </div>
-                    <div class="commentaire" th:if="${model.draxoEvaluation.getExplanation()}">
+                    <div class="comment" th:if="${model.draxoEvaluation.getExplanation()}">
                         <h4 th:text="#{draxo.feedback.label}">Feedback:</h4>
                         <div class="ui label" th:text="${model.draxoEvaluation.getExplanation()}">
                             I am a relevant and constructive comment, in order to explain why the answer provided above is not decipherable.

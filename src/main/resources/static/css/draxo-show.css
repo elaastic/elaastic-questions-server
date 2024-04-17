@@ -1,4 +1,4 @@
-.evaluation {
+.review {
     background-color: white;
     border-radius: 10px;
     color: black;
@@ -7,23 +7,23 @@
     width: 100%;
 }
 
-.evaluation-entete {
+.review-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.evaluation-border {
+.review-border {
     border: 1px solid var(--border-color);
     border-bottom-width: 0;
     padding: 10px;
 }
 
-.evaluation-border:first-child {
+.review-border:first-child {
     border-radius: 10px 10px 0 0;
 }
 
-.evaluation-border:last-child {
+.review-border:last-child {
     border-radius: 0 0 10px 10px;
     border-bottom-width: 1px;
 }
@@ -36,7 +36,7 @@
     --default-bg-color: #F2F2F2;
 }
 
-.frise {
+.DRAXO-grid {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -129,7 +129,7 @@
     font-size: 1.5em;
 }
 
-.custom-step > .contenue {
+.custom-step > .custom-step-content {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -141,28 +141,28 @@
     font-size: 1rem;
 }
 
-.custom-step:not(:first-child) > .contenue {
+.custom-step:not(:first-child) > .custom-step-content {
     margin-left: 1.1em;
 }
 
-.lettreCapital {
+.capital-letter {
     display: none;
 }
 
 @media (max-width: 768px) {
 
-    .custom-step > .contenue > :not(.icon, .lettreCapital) {
+    .custom-step > .custom-step-content > :not(.icon, .capital-letter) {
         display: none;
     }
 
-    .lettreCapital {
+    .capital-letter {
         display: block;
     }
 }
 
 /*////////////////*/
 
-.grille-DRAXO {
+.review-DRAXO {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -175,7 +175,7 @@
 
 /*////////////////*/
 
-.zone-commentaire {
+.comment-area {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -185,11 +185,11 @@
     width: 100%;
 }
 
-.intitule {
+.comment-header {
     flex: 1
 }
 
-.commentaire {
+.comment {
     flex: 2
 }
 
@@ -199,7 +199,7 @@
 
 @media (max-width: 768px) {
 
-    .zone-commentaire {
+    .comment-area {
         flex-direction: column !important;
         align-items: start !important;
     }
