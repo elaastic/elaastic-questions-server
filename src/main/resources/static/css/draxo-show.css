@@ -5,7 +5,8 @@
 }
 
 .evaluation-border {
-    border: 1px solid black;
+    border: 1px solid var(--border-color);
+    border-bottom-width: 0;
     padding: 10px;
 }
 
@@ -15,6 +16,7 @@
 
 .evaluation-border:last-child {
     border-radius: 0 0 10px 10px;
+    border-bottom-width: 1px;
 }
 
 /*////////////////*/
