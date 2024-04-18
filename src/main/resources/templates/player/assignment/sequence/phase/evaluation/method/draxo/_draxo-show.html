@@ -16,6 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <!-- This fragment is used to display the evaluation of a Draxo method -->
+<!-- To find the CSS file folow the path : static/css/draxo-show.css -->
 <div th:fragment="draxoShow(model, hideName)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
@@ -63,6 +64,7 @@
                             No
                         </div>
                     </div>
+                    <div class="separator" th:if="${model.draxoEvaluation.getExplanation()}"></div>
                     <div class="comment" th:if="${model.draxoEvaluation.getExplanation()}">
                         <h4 th:text="#{draxo.feedback.label}">Feedback:</h4>
                         <div class="ui label" th:text="${model.draxoEvaluation.getExplanation()}">

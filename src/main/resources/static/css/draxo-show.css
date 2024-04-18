@@ -158,6 +158,10 @@
     .capital-letter {
         display: block;
     }
+
+    .custom-step::after {
+        display: none;
+    }
 }
 
 /*////////////////*/
@@ -174,6 +178,13 @@
 }
 
 /*////////////////*/
+
+.separator {
+    border: 1px solid var(--border-color);
+    height: inherit;
+    align-self: stretch;
+    margin: 0 3%;
+}
 
 .comment-area {
     display: flex;
@@ -202,5 +213,9 @@
     .comment-area {
         flex-direction: column !important;
         align-items: start !important;
+    }
+
+    .separator {
+        display: none;
     }
 }
