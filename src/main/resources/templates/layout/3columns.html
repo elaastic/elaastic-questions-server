@@ -212,7 +212,15 @@
             showPaneBtn.hide();
             hidePaneBtn.show();
             Cookies.set('currentPane', currentPane);
-            urlParams.set("currentPane", "assignments");
+
+            if (!urlParams.has("currentPane")
+                || urlParams.get("currentPane") === ''
+                || urlParams.get("currentPane") !== "assignments"
+                && urlParams.get("currentPane") !== "attendees") {
+
+              urlParams.set("currentPane", "assignments");
+            }
+
             //urlParams.delete('currentPane');
             window.location.search = urlParams.toString();
           };
