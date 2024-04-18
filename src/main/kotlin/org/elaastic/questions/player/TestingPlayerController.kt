@@ -72,6 +72,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -2932,4 +2933,51 @@ class TestingPlayerController(
         val chatGptEvaluationModel: ChatGptEvaluationModel,
         val learnerResultsModel: LearnerResultsModel
     )
+
+    @GetMapping("/peer-evaluation")
+    fun testPeerEvaluation(
+        authentication: Authentication,
+        model: Model
+    ): String {
+
+        val user: User = authentication.principal as User
+
+        val draxoEvaluationList =
+            listOf(
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.NO, "I don't get it..."),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.NO, "I disagree"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.PARTIALLY, "I partially agree"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.NO, "Man, it's incomplete"),
+            )
+
+
+
+        model["evaluationModelList"] =
+            draxoEvaluationList.mapIndexed() { i, draxoEvaluation ->
+                DraxoEvaluationModel(
+                    (i + 1).toString(),
+                    (i + 1),
+                    DraxoGrading.computeGrade(draxoEvaluation),
+                    draxoEvaluation,
+                )
+            }
+
+        model["user"] = user
+
+        return "player/assignment/sequence/components/peer-grading-evaluation/test-peer-grading-draxo-evaluation"
+    }
 }
