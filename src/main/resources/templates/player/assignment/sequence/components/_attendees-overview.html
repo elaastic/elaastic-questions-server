@@ -75,54 +75,14 @@
   <div class="ui segment attached"
        th:if="${#lists.isEmpty(model.attendees)}"
        th:text="#{attendees.empty}">
-    This assignment is empty.
-  </div>
+    This assignment is empty.</div>
 
   <div th:each="attendee, i : ${model.attendees}"
        class="ui clearing attached segment"
        th:id="|${context}-${attendee.id}|"
        style="padding-bottom: 1em; cursor: pointer; ">
 
-    <!--
-    <div class="ui grid">
-      <div class="twelve wide column">
-        <div style="overflow: hidden; height: 100%; padding-top: 2px;">
-          <h4 class="ui header">
-            <div class="ui tiny circular label"
-                 style="margin-right: 1em;"
-                 th:text="|${i.index+1}.|">
-            </div>
-            <span th:utext="${attendee.title}"></span>
-          </h4>
-
-          <div style="height: 4em; overflow: hidden;"
-               th:unless="${attendee.hideStatementContent}"
-               th:utext="${attendee.content}">
-          </div>
-
-        </div>
-      </div>
-
-      <div class="four wide column" style="text-align: center;">
-        <div>
-          <h4 class="ui header circular small basic blue label" style="height: 0.6em !important; padding-top: 2px;"
-          th:if="${sequence.revisionTag}"
-          th:title="#{assignment.overview.revisionAvailability}"
-          th:text="#{assignment.overview.revisionTag}">
-            Revisions
-          </h4>
-        </div>
-        <div style="height: 80%; display:flex">
-          <i th:each="icon : ${sequence.icons}"
-             class="elaastic-phase icon"
-             style="margin: auto"
-             th:classappend="${icon.icon}"
-             th:title="#{${icon.title}}"
-          ></i>
-        </div>
-      </div>
-    </div>
-    -->
+    <!--  -->
 
   </div>
 
