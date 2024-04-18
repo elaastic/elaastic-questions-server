@@ -180,10 +180,10 @@
           let layoutAside = $('#layout-aside')
           let assignmentsPane = $("#assignments_container");
           let attendeesPane = $("#attendees_container");
-          let showAsideBtn = $('#show-aside');
-          let hideAsideBtn = $('#hide-aside');
           let showPaneBtn = $("#open_pane_button");
           let hidePaneBtn = $("#close_pane_button");
+          let showAssignmentsBtn = $("#show_assignments_button");
+          let showAttendeesBtn = $("#show_attendees_button");
           let urlParams = new URLSearchParams(location.search);
           let currentPane = urlParams.get("currentPane");
 
@@ -219,6 +219,9 @@
             attendeesPane.hide();
             assignmentsPane.show();
 
+            showAssignmentsBtn.addClass("active");
+            showAttendeesBtn.removeClass("active");
+
             urlParams.set("currentPane", "assignments");
             window.location.search = urlParams.toString();
           };
@@ -226,6 +229,9 @@
           tableOfContent.showAttendees = function () {
             assignmentsPane.hide();
             attendeesPane.show();
+
+            showAttendeesBtn.addClass("active");
+            showAssignmentsBtn.removeClass("active");
 
             urlParams.set("currentPane", "attendees");
             window.location.search = urlParams.toString();
@@ -239,9 +245,15 @@
 
             Cookies.set("currentPane", "assignments");
             assignmentsPane.show();
+
+            showAssignmentsBtn.addClass("active");
+            showAttendeesBtn.removeClass("active");
           } else if (urlParams.has("currentPane") && urlParams.get("currentPane") === "attendees") {
             Cookies.set("currentPane", "attendees");
             attendeesPane.show();
+
+            showAttendeesBtn.addClass("active");
+            showAssignmentsBtn.removeClass("active");
           } else {
             Cookies.set("currentPane", "none");
             layoutAside.hide();
