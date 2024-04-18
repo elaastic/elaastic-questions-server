@@ -106,6 +106,7 @@
               onclick="tableOfContent.showAttendees()">
 
         <i class="icon users alternate outline"></i>
+
         <span th:text="#{dashboard.navigation.attendees(${playerModel.assignmentOverviewModel.getNbRegisteredUser()})}">
           attendees_label</span>
       </button>
@@ -135,11 +136,6 @@
 
     <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 
-<<<<<<< HEAD
-=======
-    <!--<p th:each="attendee: ${playerModel.getAssignmentOverviewModel().getAttendees()}"
-       th:text="${attendee.getLearner().getDisplayName()}"></p>-->
->>>>>>> d8cc189a (feat(Attendees): update attendees container)
   </div>
 </aside>
 
