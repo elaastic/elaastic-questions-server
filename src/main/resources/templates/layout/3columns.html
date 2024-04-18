@@ -272,16 +272,20 @@
         <aside id="layout-aside" th:replace="${aside}">
         </aside>
 
-        <article>
-          <button id="open_pane_button"
-                  class="ui button"
-                  style="margin-bottom: 20px;"
-                  onclick="tableOfContent.showAside()">
+        <article style="display: flex; column-gap: 10px;">
+          <section id="pane_actions"
+                   style="display: flex; flex-direction: column; row-gap: 20px; flex: none;">
 
-            <span th:text="#{dashboard.open}">
-              open_pane_button_label</span>
-            <i class="icon angle double right"></i>
-          </button>
+            <button id="open_pane_button"
+                    class="ui button"
+                    style="margin-bottom: 20px;"
+                    onclick="tableOfContent.showAside()">
+
+              <span th:text="#{dashboard.open}">
+                open_pane_button_label</span>
+              <i class="icon angle double right"></i>
+            </button>
+          </section>
 
           <div class="ui container">
             <div th:replace="${content}"></div>
