@@ -222,6 +222,7 @@
             showAssignmentsBtn.addClass("active");
             showAttendeesBtn.removeClass("active");
 
+
             urlParams.set("currentPane", "assignments");
             window.location.search = urlParams.toString();
           };
@@ -245,7 +246,6 @@
 
             Cookies.set("currentPane", "assignments");
             assignmentsPane.show();
-
             showAssignmentsBtn.addClass("active");
             showAttendeesBtn.removeClass("active");
           } else if (urlParams.has("currentPane") && urlParams.get("currentPane") === "attendees") {
@@ -286,6 +286,7 @@
               <i class="icon angle double right"></i>
             </button>
           </section>
+
 
           <div class="ui container">
             <div th:replace="${content}"></div>
