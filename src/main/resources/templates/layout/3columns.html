@@ -170,7 +170,7 @@
 
       <div class="not mobile item"
            id="hide-aside"
-           onclick="tableOfContent.hide()"
+           onclick="tableOfContent.hideAside()"
            th:attr="data-tooltip=#{common.table-of-content.hide}"
            data-position="right center"
            data-inverted="">
@@ -180,7 +180,7 @@
       <div class="not mobile item"
            id="show-aside"
            style="display: none"
-           onclick="tableOfContent.show()"
+           onclick="tableOfContent.showAside()"
            th:attr="data-tooltip=#{common.table-of-content.show}"
            data-position="right center"
            data-inverted="">
@@ -197,38 +197,67 @@
 
         $(document).ready(function () {
           let layoutAside = $('#layout-aside')
-          let showAsideBtn = $('#show-aside')
-          let hideAsideBtn = $('#hide-aside')
-          let urlParams = new URLSearchParams(location.search)
+          let assignmentsPane = $("#assignments_container");
+          let attendeesPane = $("#attendees_container");
+          let showAsideBtn = $('#show-aside');
+          let hideAsideBtn = $('#hide-aside');
+          let showPaneBtn = $("#open_pane_button");
+          let hidePaneBtn = $("#close_pane_button");
+          let urlParams = new URLSearchParams(location.search);
+          let currentPane = urlParams.get("currentPane");
 
-          tableOfContent.show = function () {
-            layoutAside.show()
-            showAsideBtn.hide()
-            hideAsideBtn.show()
-            urlParams.delete('hideToc')
-            window.location.search = urlParams.toString()
-            Cookies.set('hideToc', 'false')
-          }
+          tableOfContent.showAside = function () {
+            layoutAside.show();
 
-          tableOfContent.hide = function () {
-            layoutAside.hide()
-            showAsideBtn.show()
-            hideAsideBtn.hide()
-            urlParams.set('hideToc', 'true')
-            Cookies.set('hideToc', 'true')
-          }
+            showPaneBtn.hide();
+            hidePaneBtn.show();
+            Cookies.set('currentPane', currentPane);
+            urlParams.set("currentPane", "assignments");
+            //urlParams.delete('currentPane');
+            window.location.search = urlParams.toString();
+          };
 
-          if (urlParams.has('hideToc')) {
-            if (urlParams.get('hideToc') === 'true') {
-              Cookies.set('hideToc', 'true')
-            } else {
-              Cookies.remove('hideToc')
-            }
+          tableOfContent.hideAside = function () {
+            layoutAside.hide();
 
-          }
+            showPaneBtn.show();
+            hidePaneBtn.hide();
+            //urlParams.set('currentPane', 'none');
+            //Cookies.set('currentPane', 'none');
+          };
+de
+          tableOfContent.showAssignments = function () {
+            attendeesPane.hide();
+            assignmentsPane.show();
 
-          if (Cookies.get('hideToc') === 'true') {
-            tableOfContent.hide()
+            urlParams.set("currentPane", "assignments");
+            window.location.search = urlParams.toString();
+          };
+
+          tableOfContent.showAttendees = function () {
+            assignmentsPane.hide();
+            attendeesPane.show();
+
+            urlParams.set("currentPane", "attendees");
+            window.location.search = urlParams.toString();
+          };
+
+          showPaneBtn.hide();
+
+          if (!urlParams.has('currentPane')
+              || urlParams.get("currentPane") === ''
+              || urlParams.get("currentPane") === "assignments") {
+
+            Cookies.set("currentPane", "assignments");
+            assignmentsPane.show();
+          } else if (urlParams.has("currentPane") && urlParams.get("currentPane") === "attendees") {
+            Cookies.set("currentPane", "attendees");
+            attendeesPane.show();
+          } else {
+            Cookies.set("currentPane", "none");
+            layoutAside.hide();
+            showPaneBtn.show();
+            hidePaneBtn.hide();
           }
 
         })
@@ -243,6 +272,15 @@
         </aside>
 
         <article>
+          <button id="open_pane_button"
+                  class="ui button"
+                  style="margin-bottom: 20px;"
+                  onclick="tableOfContent.showAside()">
+
+            open_pane_button_label
+            <i class="icon angle double right"></i>
+          </button>
+
           <div class="ui container">
             <div th:replace="${content}"></div>
           </div>
