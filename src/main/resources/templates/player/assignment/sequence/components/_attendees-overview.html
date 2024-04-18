@@ -78,11 +78,49 @@
     This assignment is empty.</div>
 
   <div th:each="attendee, i : ${model.attendees}"
-       class="ui clearing attached segment"
-       th:id="|${context}-${attendee.id}|"
-       style="padding-bottom: 1em; cursor: pointer; ">
+       class="ui clearing attached segment grid attendee-item"
+       th:id="|${context}-${attendee.id}|">
 
-    <!--  -->
+    <div class="row two column">
+      <div class="attendee-information column"
+           style="display: flex; column-gap: 10px; align-items: center;">
+
+        <div class="attendee-picture"
+             style="border-radius: 999px; background-color: #e0e0e0;
+                  display: flex; justify-content: center; align-items: center; column-gap: 10px;
+                  flex: none; aspect-ratio: 1; padding: 5px;">
+
+          <i class="icon user outline large" style="margin: 0;"></i>
+        </div>
+
+        <div class="attendee-name ui header"
+             style="margin: 0;"
+             th:text="${attendee.learner.getFullname()}">
+          attendee_name</div>
+      </div>
+
+      <div class="attendee-insights column"
+           style="display: flex; justify-content: flex-end; column-gap: 15px; align-items: center;">
+
+        <div style="color: #B03060;">   <!-- LABEL: REPORTS COUNT -->
+          <i class="icon flag outline"></i>
+          <span>
+          0</span>
+        </div>
+
+        <div style="color: #535353;">   <!-- LABEL: IN COURSE... -->
+          <i class="icon pencil alternate"></i>
+          <span>
+          in_course_label</span>
+        </div>
+
+        <!--<div style="color: #259C31;">   <!- - LABEL: FINISHED -- >
+          <i class="icon pencil alternate"></i>
+          <span>
+            finished_label</span>
+        </div>-->
+      </div>
+    </div>
 
   </div>
 
@@ -107,6 +145,14 @@
 
       .ui.selected.segment .elaastic-phase.icon {
           display: none !important;
+      }
+
+      /* Attendees lit item CSS */
+      @media only screen and (min-width: 1200px) {
+        .attendee-item {
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+        }
       }
   </style>
 </div>
