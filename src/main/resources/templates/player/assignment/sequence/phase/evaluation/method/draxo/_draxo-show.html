@@ -15,65 +15,64 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
+<!-- This fragment is used to display the evaluation of a Draxo method -->
+<!-- To find the CSS file folow the path : static/css/draxo-show.css -->
 <div th:fragment="draxoShow(model, hideName)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <table class="ui definition table" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
-        <tbody>
-        <tr>
-            <td style="width: 12em;" th:text="#{draxo.reviewer}">Reviewer</td>
-            <td><span class="name-explanation" th:styleappend="${hideName} ? 'display: none'"  th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span></td>
-        </tr>
+    <div class="review" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
+        <div class="review-header review-border">
+            <div class="reviewer">
+                <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
+                <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
+                      th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span>
+            </div>
+            <div class="score">
+                <span th:text="#{draxo.score} + ' :'">Score</span>
+                <span class="ui label" th:text="${model.score ?: '-'}">2.5</span>
+            </div>
+        </div>
+        <div class="review-DRAXO review-border">
+            <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
+            <div class="DRAXO-grid">
+                <th:block
+                        th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
+                        th:with="optionType = ${criteria.getOptionType(model.draxoEvaluation.get(criteria))}">
 
-        <tr>
-            <td th:text="#{draxo.score}">Score</td>
-            <td>
-                <div class="ui label" th:text="${model.score ?: '-'}">2.5</div>
-            </td>
-        </tr>
+                    <div class="custom-step"
+                         th:classappend="${optionType?.getCSSClass()}">
 
-        <tr>
-            <td th:text="#{draxo.evaluationGrid}">Evaluation grid</td>
-            <td class="container" style="max-width: 100%">
-                <div class="ui mini tablet stackable fluid steps" style="margin-right: 3em;">
-                    <th:block
-                            th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
-                            th:with="optionType = ${criteria.getOptionType(model.draxoEvaluation.get(criteria))}">
+                        <div class="custom-step-content">
+                            <span class="capital-letter" th:text="${criteria}">R</span>
+                            <span th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">...</span>
 
-                        <div class="step" th:classappend="${optionType == null} ? 'disabled' : null">
                             <i class="green check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
                             <i class="red x icon" th:if="${optionType?.name == 'NEGATIVE'}"></i>
                             <i class="question icon" th:if="${optionType?.name == 'UNKNOWN'}"></i>
-
-                            <div class="content">
-                                <div class="title" th:text="${criteria}">R</div>
-                                <div class="description"
-                                     th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">
-                                    ...
-                                </div>
-                            </div>
-                        </div>
-                    </th:block>
-                </div>
-
-                <th:block th:with="rejectedCriteria = ${model.draxoEvaluation.getRejectedCriteria()}">
-                    <div class="ui form" th:if="${rejectedCriteria}">
-                        <div class="inline field">
-                            <label th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'"></label>
-                            <span th:text="#{${model.draxoEvaluation.get(rejectedCriteria).codeI18n}}"></span>
-                        </div>
-
-                        <div class="field" th:if="${model.draxoEvaluation.getExplanation()}">
-                            <label th:text="#{draxo.feedback.label}">Feedback:</label>
-                            <p th:text="${model.draxoEvaluation.getExplanation()}"></p>
                         </div>
                     </div>
                 </th:block>
-            </td>
-        </tr>
+            </div>
 
-        </tbody>
-    </table>
-
+            <th:block th:with="rejectedCriteria = ${model.draxoEvaluation.getRejectedCriteria()}">
+                <div class="comment-area" th:if="${rejectedCriteria}">
+                    <div class="comment-header">
+                        <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'">
+                            The answer is readable :</h4>
+                        <div class="ui label" th:text="#{${model.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
+                            No
+                        </div>
+                    </div>
+                    <div class="separator" th:if="${model.draxoEvaluation.getExplanation()}"></div>
+                    <div class="comment" th:if="${model.draxoEvaluation.getExplanation()}">
+                        <h4 th:text="#{draxo.feedback.label}">Feedback:</h4>
+                        <div class="ui label" th:text="${model.draxoEvaluation.getExplanation()}">
+                            I am a relevant and constructive comment, in order to explain why the answer provided above is not decipherable.
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
 </div>

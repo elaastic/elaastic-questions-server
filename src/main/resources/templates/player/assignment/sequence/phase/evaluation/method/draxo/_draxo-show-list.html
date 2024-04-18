@@ -24,6 +24,9 @@
                     <i class="question circle outline ui icon"></i> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
                 </a>
             </span>
+
+    <!-- Link to the css file for the custom DRAXO grid -->
+    <link rel="stylesheet" type="text/css" th:href="@{'/css/draxo-show.css'}"/>
     <th:block th:each="model : ${evaluationModelList}">
         <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model},${hideName})"></div>
     </th:block>
