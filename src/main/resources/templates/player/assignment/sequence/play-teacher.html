@@ -33,7 +33,6 @@
   <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
   <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
   <script type="text/javascript" th:src="@{/js/elaastic/auto-reload.js}"></script>
-  <script type="text/javascript" th:src="@{/js/elaastic/player/aside-nav.js}"></script>
   <script th:inline="javascript">
     saveAction = function(sequenceId, action, object){
       if(sequenceId != null){
@@ -50,16 +49,6 @@
      th:data-opened-aside-pane="${playerModel.openedPane}"></div>
 
 <div id="pageSpecificMenu">
-  <div class="item"
-       onclick="elaastic.toggleDashboardVisibility()"
-       data-tooltip="Open dashboard"
-       data-position="right center"
-       data-inverted="">
-       <!-- TODO: replace onclick attributes by JS listeners?? -->
-
-    <i class="yellow users icon"></i>
-  </div>
-
   <a class="item"
      th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='questions')}"
      th:attr="data-tooltip=#{subject.action.show.label}"
@@ -99,7 +88,6 @@
 </div>
 
 <aside class="ob-start-sequence-2" id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
-
   <header id="aside_header" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
     <div class="ui buttons">
       <button id="show_assignments_button"
@@ -147,6 +135,11 @@
 
     <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 
+<<<<<<< HEAD
+=======
+    <!--<p th:each="attendee: ${playerModel.getAssignmentOverviewModel().getAttendees()}"
+       th:text="${attendee.getLearner().getDisplayName()}"></p>-->
+>>>>>>> d8cc189a (feat(Attendees): update attendees container)
   </div>
 </aside>
 
