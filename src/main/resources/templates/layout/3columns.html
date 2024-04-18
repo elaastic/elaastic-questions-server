@@ -225,7 +225,7 @@
             //urlParams.set('currentPane', 'none');
             //Cookies.set('currentPane', 'none');
           };
-de
+
           tableOfContent.showAssignments = function () {
             attendeesPane.hide();
             assignmentsPane.show();
@@ -277,7 +277,8 @@ de
                   style="margin-bottom: 20px;"
                   onclick="tableOfContent.showAside()">
 
-            open_pane_button_label
+            <span th:text="#{dashboard.open}">
+              open_pane_button_label</span>
             <i class="icon angle double right"></i>
           </button>
 

@@ -95,7 +95,8 @@
               onclick="tableOfContent.showAssignments()">
 
         <i class="icon list ul"></i>
-        assignments_list
+        <span th:text="#{dashboard.navigation.assignments}">
+          assignments_list</span>
       </button>
 
       <button class="ui button"
@@ -103,7 +104,8 @@
               onclick="tableOfContent.showAttendees()">
 
         <i class="icon list ul"></i>
-        attendees_label
+        <span th:text="#{dashboard.navigation.attendees(${playerModel.assignmentOverviewModel.getNbRegisteredUser()})}">
+          attendees_label</span>
       </button>
     </div>
 
