@@ -40,12 +40,14 @@ object AssignmentOverviewModelFactory {
         assignment: Assignment,
         nbRegisteredUser: Int,
         attendees: List<LearnerAssignment>,
+        openedPane: String,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         selectedSequenceId: Long? = null
     ): AssignmentOverviewModel = AssignmentOverviewModel(
         teacher = teacher,
         nbRegisteredUser = nbRegisteredUser,
         attendees = attendees,
+        openedPane = openedPane,
         assignmentTitle = assignment.title,
         courseTitle = if (teacher) assignment.subject?.course?.title else null,
         courseId = if (teacher) assignment.subject?.course?.id else null,

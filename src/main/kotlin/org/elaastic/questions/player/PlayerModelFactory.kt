@@ -41,6 +41,7 @@ object PlayerModelFactory {
         serverBaseUrl: String,
         nbRegisteredUsers: Int,
         attendees: List<LearnerAssignment>,
+        openedPane: String,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
         sequenceStatistics: SequenceStatistics,
@@ -56,6 +57,7 @@ object PlayerModelFactory {
                 nbRegisteredUser = nbRegisteredUsers,
                 attendees = attendees,
                 assignment = assignment,
+                openedPane = openedPane,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
                 teacher = true
@@ -80,6 +82,7 @@ object PlayerModelFactory {
     fun buildForLearner(
         sequence: Sequence,
         nbRegisteredUsers: Int,
+        openedPane: String,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
         activeInteraction: Interaction?,
@@ -92,6 +95,7 @@ object PlayerModelFactory {
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
                 attendees = arrayListOf(),  // Empty list because useless for student to see attendees list.
+                openedPane = openedPane,
                 assignment = assignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,

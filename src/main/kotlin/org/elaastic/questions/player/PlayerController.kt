@@ -195,7 +195,8 @@ class PlayerController(
         httpServletRequest: HttpServletRequest,
         model: Model,
         @PathVariable assignmentId: Long,
-        @PathVariable sequenceId: Long?
+        @PathVariable sequenceId: Long?,
+        @RequestParam("currentPane", required = false) openedPane: String?,
     ): String {
 
         val user: User = authentication.principal as User
@@ -214,8 +215,17 @@ class PlayerController(
             val teacher = user == sequence.owner
 
             return if (teacher)
-                playAssignmentForTeacher(user, model, sequence, httpServletRequest)
-            else playAssignmentForLearner(user, model, sequence, httpServletRequest)
+                playAssignmentForTeacher(user,
+                                         model,
+                                         sequence,
+                                         openedPane ?: "assignments",
+                                         httpServletRequest)
+            else
+                playAssignmentForLearner(user,
+                                         model,
+                                         sequence,
+                                         openedPane ?: "assignments",
+                                         httpServletRequest)
         }
 
     }
@@ -225,6 +235,7 @@ class PlayerController(
         user: User,
         model: Model,
         sequence: Sequence,
+        openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
 
@@ -240,6 +251,7 @@ class PlayerController(
                 serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
                 nbRegisteredUsers = nbRegisteredUsers,
                 attendees = registeredUsers,
+                openedPane = openedPane,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                 messageBuilder = messageBuilder,
                 sequenceStatistics = sequenceService.getStatistics(sequence),
@@ -254,6 +266,7 @@ class PlayerController(
         user: User,
         model: Model,
         sequence: Sequence,
+        openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
 
@@ -268,6 +281,7 @@ class PlayerController(
             PlayerModelFactory.buildForLearner(
                 sequence = sequence,
                 nbRegisteredUsers = nbRegisteredUsers,
+                openedPane = openedPane,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith {
                     if (it.executionIsFaceToFace())
                         it.activeInteraction
