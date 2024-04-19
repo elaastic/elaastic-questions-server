@@ -35,16 +35,20 @@
   </div>
 
   <div class="ui header attached block assignment-navigator-actions">
-    <button class="ui button">
-      <i class="angle left icon"></i>
+    <button class="ui button" style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
+                                     padding: 10px;">
 
-      Lorem ipsum dolor sit amet.
+      <i class="angle left icon" style="margin: 0;"></i>
+      <p style="margin: 0;">
+        previous_assignment</p>
     </button>
 
-    <button class="ui button">
-      Lorem ipsum dolor sit amet.
+    <button class="ui button" style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
+                                     padding: 10px;">
 
-      <i class="angle right icon"></i>
+      <p style="margin: 0;">
+        next_assignment</p>
+      <i class="angle right icon" style="margin: 0;"></i>
     </button>
   </div>
 
@@ -66,11 +70,22 @@
   <!-- TODO: verify if th:if is teacher works successfully!! -->
 
 
-  <h3 class="ui top attached block header">
-    <i class="users alternate outline icon"></i>
+  <div class="ui top attached block header" style="display: flex; align-items: center">
+    <i class="users alternate outline icon" style="flex: none;"></i>
 
-    <div class="content" th:text="#{attendees.sectionTitle(${model.nbRegisteredUser})}"></div>
-  </h3>
+    <h3 class="content"
+        style="flex: 1; margin: 0;"
+        th:text="#{attendees.sectionTitle(${model.nbRegisteredUser})}"></h3>
+
+    <button class="ui button"
+            style="height: 30px; flex: none; padding: 10px;"
+            onclick="window.location.reload()">
+
+      <i class="icon refresh"></i>
+      <span>
+        refresh_button</span>
+    </button>
+  </div>
 
   <div class="ui segment attached"
        th:if="${#lists.isEmpty(model.attendees)}"
@@ -79,7 +94,8 @@
 
   <div th:each="attendee, i : ${model.attendees}"
        class="ui clearing attached segment grid attendee-item"
-       th:id="|${context}-${attendee.id}|">
+       th:id="|${context}-${attendee.id}|"
+       style="margin: 0;">
 
     <div class="row two column">
       <div class="attendee-information column"
