@@ -17,6 +17,7 @@
  */
 package org.elaastic.questions.player.components.draxo
 
+import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
@@ -28,6 +29,8 @@ data class DraxoEvaluationModel(
     val score: BigDecimal?,
     val draxoEvaluation: DraxoEvaluation,
     val userCanDisplayStudentsIdentity: Boolean = false,
+    val draxoPeerGradingId : Long? = null,
+    val utilityGrade: UtilityGrade? = null,
 ) {
     constructor(
         graderIndex: Int,
@@ -39,5 +42,7 @@ data class DraxoEvaluationModel(
         DraxoGrading.computeGrade(draxoPeerGrading),
         draxoPeerGrading.getDraxoEvaluation(),
         userCanDisplayStudentsIdentity,
+        draxoPeerGrading.id,
+        draxoPeerGrading.utilityGrade
     )
 }

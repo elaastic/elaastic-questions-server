@@ -17,9 +17,9 @@
   -->
 <!-- Pop up modal to report an evaluation from a peer -->
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     th:fragment="reportModal(sequenceId, reportContent, reportReasons, evaluationId)"
+     th:fragment="reportModal(reportContent, evaluationId)"
      class="ui small modal"
-     th:id="|reportModal_${sequenceId}|">
+     th:id="|reportModal_${evaluationId}|">
 
     <div class="header"
          style="border-bottom: 1px solid rgba(14, 110, 184, .15);"
@@ -28,7 +28,7 @@
     </div>
 
     <div class="content">
-        <form id="report-form" th:action="@{/player/sequence/{sequenceId}/report-chat-gpt-evaluation(sequenceId=${chatGptEvaluationModel.sequenceId})}" method="post">
+        <form id="report-form" th:action="@{/player/report-draxo-evaluation}" method="post">
             <div class="ui form">
                 <input type="hidden" name="evaluationId" th:value="${evaluationId}">
                 <div class="field">
@@ -38,18 +38,18 @@
                 <div class="field">
                     <label th:text="#{player.sequence.chatGptEvaluation.reportModal.reportReason}"></label>
                     <div class="grouped fields">
-                        <div th:each="reportReason : ${reportReasons}"
+                        <div th:each="reportReason : ${T(org.elaastic.questions.assignment.sequence.ReportReason).values()}"
                              class="field">
                             <div class="ui checkbox">
-                                <input type="checkbox" name="reason" th:value="${reportReason}">
-                                <label th:text="#{|player.sequence.chatGptEvaluation.reportReason.${reportReason.name()}|}"></label>
+                                <input type="checkbox" name="reason" th:value="${reportReason}" th:id="${reportReason}">
+                                <label th:text="#{|player.sequence.chatGptEvaluation.reportReason.${reportReason.name()}|}" th:for="${reportReason}"></label>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="field" id="other-text-field">
-                    <label th:text="#{player.sequence.chatGptEvaluation.reportModal.reportDetails}"></label>
-                    <textarea rows="2" name="other-reason-comment" th:placeholder="#{player.sequence.chatGptEvaluation.reportModal.reportDetails.placeholder}"></textarea>
+                    <label for="other-reason-comment" th:text="#{player.sequence.chatGptEvaluation.reportModal.reportDetails}"></label>
+                    <textarea name="other-reason-comment" th:placeholder="#{player.sequence.chatGptEvaluation.reportModal.reportDetails.placeholder}" rows="2" id="other-reason-comment"></textarea>
                 </div>
             </div>
         </form>

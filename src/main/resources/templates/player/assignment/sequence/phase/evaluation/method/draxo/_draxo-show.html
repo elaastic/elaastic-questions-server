@@ -17,20 +17,20 @@
   -->
 <!-- This fragment is used to display the evaluation of a Draxo method -->
 <!-- To find the CSS file folow the path : static/css/draxo-show.css -->
-<div th:fragment="draxoShow(model, hideName)"
+<div th:fragment="draxoShow(draxoEvaluationModel, hideName)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <div class="review" th:with="explanation = ${model.draxoEvaluation.getExplanation()}">
+    <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
         <div class="review-header review-border">
             <div class="reviewer">
                 <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
                 <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
-                      th:text="${model.userCanDisplayStudentsIdentity} ? ${model.graderName} : ${model.graderNum}"></span>
+                      th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
             </div>
             <div class="score">
                 <span th:text="#{draxo.score} + ' :'">Score</span>
-                <span class="ui label" th:text="${model.score ?: '-'}">2.5</span>
+                <span class="ui label" th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
             </div>
         </div>
         <div class="review-DRAXO review-border">
@@ -38,7 +38,7 @@
             <div class="DRAXO-grid">
                 <th:block
                         th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
-                        th:with="optionType = ${criteria.getOptionType(model.draxoEvaluation.get(criteria))}">
+                        th:with="optionType = ${criteria.getOptionType(draxoEvaluationModel.draxoEvaluation.get(criteria))}">
 
                     <div class="custom-step"
                          th:classappend="${optionType?.getCSSClass()}">
@@ -55,24 +55,32 @@
                 </th:block>
             </div>
 
-            <th:block th:with="rejectedCriteria = ${model.draxoEvaluation.getRejectedCriteria()}">
+            <th:block th:with="rejectedCriteria = ${draxoEvaluationModel.draxoEvaluation.getRejectedCriteria()}">
                 <div class="comment-area" th:if="${rejectedCriteria}">
                     <div class="comment-header">
                         <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'">
                             The answer is readable :</h4>
-                        <div class="ui label" th:text="#{${model.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
+                        <div class="ui label" th:text="#{${draxoEvaluationModel.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
                             No
                         </div>
                     </div>
-                    <div class="separator" th:if="${model.draxoEvaluation.getExplanation()}"></div>
-                    <div class="comment" th:if="${model.draxoEvaluation.getExplanation()}">
+                    <div class="separator" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}"></div>
+                    <div class="comment" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
                         <h4 th:text="#{draxo.feedback.label}">Feedback:</h4>
-                        <div class="ui label" th:text="${model.draxoEvaluation.getExplanation()}">
-                            I am a relevant and constructive comment, in order to explain why the answer provided above is not decipherable.
+                        <div class="ui label" th:text="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
+                            I am a relevant and constructive comment, in order to explain why the answer provided above
+                            is not decipherable.
                         </div>
                     </div>
                 </div>
             </th:block>
+
+        </div>
+
+        <div class="review-border">
+            <th:block
+                    th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})"></th:block>
         </div>
     </div>
+
 </div>

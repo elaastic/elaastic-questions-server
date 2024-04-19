@@ -64,6 +64,7 @@ import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluati
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
+import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
 import org.springframework.beans.factory.annotation.Autowired
@@ -2962,9 +2963,14 @@ class TestingPlayerController(
                     .addEvaluation(Criteria.R, OptionId.YES)
                     .addEvaluation(Criteria.A, OptionId.YES)
                     .addEvaluation(Criteria.X, OptionId.NO, "Man, it's incomplete"),
+
+                DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.YES)
+                    .addEvaluation(Criteria.O, OptionId.NO),
             )
-
-
 
         model["evaluationModelList"] =
             draxoEvaluationList.mapIndexed() { i, draxoEvaluation ->
@@ -2973,11 +2979,12 @@ class TestingPlayerController(
                     (i + 1),
                     DraxoGrading.computeGrade(draxoEvaluation),
                     draxoEvaluation,
+                    draxoPeerGradingId = (i + 1).toLong()
                 )
             }
 
         model["user"] = user
 
-        return "player/assignment/sequence/components/peer-grading-evaluation/test-peer-grading-draxo-evaluation"
+        return "player/assignment/sequence/components/peer-grading-reaction/test-peer-grading-draxo-reaction"
     }
 }
