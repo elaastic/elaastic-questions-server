@@ -40,4 +40,6 @@ interface SequenceRepository : JpaRepository<Sequence, Long> {
     fun findAllByStatementAndStateNot(statement: Statement, state:State) : List<Sequence>
 
     fun findAllByStatement(statement: Statement) : List<Sequence>
+
+    fun findSequenceByIdAndAssignment(id: Long, assignment: Assignment): Sequence?
 }
