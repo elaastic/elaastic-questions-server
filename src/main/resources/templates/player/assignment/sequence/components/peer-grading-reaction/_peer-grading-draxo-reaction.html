@@ -27,19 +27,22 @@
             <div class="field twelve wide column" id="utilitySelectionApp">
                 <label th:text="#{player.sequence.peerGradingEvaluation.utilityGrade.label}"></label>
                 <input type="hidden"
+                       th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
                        name="utilityGrade"
-                       v-model="selectedUtilityGrade"/>
+                       id="selectedUtilityGrade"
+                />
 
                 <div class="ui menu stackable fluid pagination">
                     <a th:each="utilityGrade : ${T(org.elaastic.questions.assignment.sequence.UtilityGrade).values()}"
-                       class="item"
-                       th:attr="'v-on:click'=|setSelectedUtilityGrade('${utilityGrade.name()}')|,'v-bind:class'=|{ active: selectedUtilityGrade === '${utilityGrade.name()}' }|"
+                       class="item utilityGrade"
+                       th:attr="utilityGradeName=${utilityGrade.name()},
+                                data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
                        th:text="#{|player.sequence.chatGptEvaluation.utilityGrade.${utilityGrade.name()}|}">
                     </a>
                 </div>
             </div>
-            <div class="field four wide column" id="reportSelectionApp" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
-                <div class="ui menu pagination">
+            <div class="field four wide column" id="reportSelectionApp">
+                <div class="ui menu pagination" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
                     <a class="item"
                        th:onclick="|$('#reportModal_${draxoEvaluationModel.draxoPeerGradingId}').modal('show');|">
 
@@ -49,7 +52,8 @@
                 </div>
             </div>
         </div>
-        <div id="submit-button-utility-grade">
+        <div id="submit-button-utility-grade"
+             th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}">
             <input type="submit" value="Soumettre" class="ui primary button">
         </div>
     </form>
@@ -58,18 +62,26 @@
 
 
     <script th:inline="javascript">
-        new Vue({
-            el: '#utilitySelectionApp',
-            data: {
-                selectedUtilityGrade: [[${draxoEvaluationModel.utilityGrade?.name()}]]
-            },
-            methods: {
-                setSelectedUtilityGrade: function (clickedUtilityGrade) {
-                    this.selectedUtilityGrade = clickedUtilityGrade
-                    $("#submit-button-utility-grade").slideDown();
-                }
-            }
-        })
+        $(function () {
+            /*<![CDATA[*/
+            const evaluationId = [[${draxoEvaluationModel.draxoPeerGradingId}]];
+            /*]]> */
+
+            const utilityGradeBtns = $('.utilityGrade[data-evaluation-id="' + evaluationId + '"]')
+
+            console.log(utilityGradeBtns)
+
+            utilityGradeBtns.click(function () {
+                utilityGradeBtns.removeClass("active")
+                $(this).addClass("active")
+
+                // Set the grade of the selected button in the hidden field
+                $('#selectedUtilityGrade[data-evaluation-id="' + evaluationId + '"]').val($(this).attr("utilityGradeName"))
+
+                // Show the submit button
+                $('#submit-button-utility-grade[data-evaluation-id="' + evaluationId + '"]').slideDown()
+            })
+        });
     </script>
 
     <style>
