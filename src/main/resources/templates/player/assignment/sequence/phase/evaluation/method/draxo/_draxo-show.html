@@ -60,7 +60,8 @@
                     <div class="comment-header">
                         <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'">
                             The answer is readable :</h4>
-                        <div class="ui label" th:text="#{${draxoEvaluationModel.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
+                        <div class="ui label"
+                             th:text="#{${draxoEvaluationModel.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
                             No
                         </div>
                     </div>
@@ -77,9 +78,11 @@
 
         </div>
 
+        <!--/* Reaction for the feedback */-->
         <div class="review-border">
             <th:block
-                    th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})"></th:block>
+                    th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
+            </th:block>
         </div>
     </div>
 
