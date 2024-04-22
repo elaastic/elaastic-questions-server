@@ -35,6 +35,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.*
 import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
+import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
@@ -230,7 +231,6 @@ class PlayerController(
 
     }
 
-
     private fun playAssignmentForTeacher(
         user: User,
         model: Model,
@@ -240,8 +240,18 @@ class PlayerController(
     ): String {
 
         val assignment = sequence.assignment!!
+        var previousAssignment: Long? = null
+        var nextAssignment: Long? = null
         val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
+
+        try {
+            previousAssignment = sequenceService.getIfSameAssignment(sequence.id!! - 1, assignment).id
+        } catch (_: EntityNotFoundException) { }
+
+        try {
+            nextAssignment = sequenceService.getIfSameAssignment(sequence.id!! + 1, assignment).id
+        } catch (_: EntityNotFoundException) { }
 
         model.addAttribute(
             "playerModel",
@@ -252,6 +262,8 @@ class PlayerController(
                 nbRegisteredUsers = nbRegisteredUsers,
                 attendees = registeredUsers,
                 openedPane = openedPane,
+                previousAssignment = previousAssignment,
+                nextAssignment = nextAssignment,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                 messageBuilder = messageBuilder,
                 sequenceStatistics = sequenceService.getStatistics(sequence),
