@@ -30,8 +30,8 @@
     <div class="content" th:text="${model.statement.getTitle()}"></div>
   </h3>
 
-  <div class="ui segment attached"
-       th:text="${model.statement.getContent()}">
+  <div class="ui segment attached sequence-content"
+       th:utext="${model.statement.getContent()}">
   </div>
 
   <div class="ui header attached block assignment-navigator-actions">
@@ -196,6 +196,11 @@
 
       .ui.selected.segment .elaastic-phase.icon {
           display: none !important;
+      }
+
+      .sequence-content {
+        max-height: 500px;
+        overflow: hidden;
       }
 
       /* Attendees lit item CSS */
