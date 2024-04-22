@@ -2712,8 +2712,9 @@ class TestingPlayerController(
                 graderName = "Joe",
                 graderNum = 1,
                 score = DraxoGrading.computeGrade(draxoEvaluation),
-                draxoEvaluation
-            )
+                draxoEvaluation,
+
+                )
         )
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/test-draxo-show"
@@ -2805,7 +2806,8 @@ class TestingPlayerController(
                     (i + 1),
                     DraxoGrading.computeGrade(draxoEvaluation),
                     draxoEvaluation,
-                )
+
+                    )
             }
         )
 
@@ -2971,16 +2973,17 @@ class TestingPlayerController(
                     .addEvaluation(Criteria.O, OptionId.NO),
             )
 
-        model["evaluationModelList"] =
-            draxoEvaluationList.mapIndexed() { i, draxoEvaluation ->
-                DraxoEvaluationModel(
-                    (i + 1).toString(),
-                    (i + 1),
-                    DraxoGrading.computeGrade(draxoEvaluation),
-                    draxoEvaluation,
-                    draxoPeerGradingId = (i + 1).toLong()
-                )
-            }
+        val draxoEvaluationModelList = draxoEvaluationList.mapIndexed() { i, draxoEvaluation ->
+            DraxoEvaluationModel(
+                graderName = (i + 1).toString(),
+                graderNum = (i + 1),
+                score = DraxoGrading.computeGrade(draxoEvaluation),
+                draxoEvaluation = draxoEvaluation,
+                draxoPeerGradingId = 1L + i
+            )
+        }
+
+        model["evaluationModelList"] = draxoEvaluationModelList
 
         model["user"] = user
 

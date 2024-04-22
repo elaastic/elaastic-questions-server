@@ -28,7 +28,8 @@
     </div>
 
     <div class="content">
-        <form id="report-form" th:action="@{/player/report-draxo-evaluation}" method="post">
+        <form th:id="report-form" th:action="@{/player/report-draxo-evaluation}" method="post"
+              th:attr="data-modal-id=${evaluationId}">
             <div class="ui form">
                 <input type="hidden" name="evaluationId" th:value="${evaluationId}">
                 <div class="field">
@@ -41,15 +42,22 @@
                         <div th:each="reportReason : ${T(org.elaastic.questions.assignment.sequence.ReportReason).values()}"
                              class="field">
                             <div class="ui checkbox">
-                                <input type="checkbox" name="reason" th:value="${reportReason}" th:id="${reportReason}">
-                                <label th:text="#{|player.sequence.chatGptEvaluation.reportReason.${reportReason.name()}|}" th:for="${reportReason}"></label>
+                                <!--/* To distinguish between the different checkboxes, we add the ID of the evaluation to their current ID, so that each checkbox has a unique ID */-->
+                                <input type="checkbox" name="reason" th:value="${reportReason}"
+                                       th:id="${reportReason + '_' + evaluationId}"
+                                       th:attr="data-modal-id=${evaluationId}">
+                                <label th:text="#{|player.sequence.chatGptEvaluation.reportReason.${reportReason.name()}|}"
+                                       th:for="${reportReason + '_' + evaluationId}"></label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="field" id="other-text-field">
-                    <label for="other-reason-comment" th:text="#{player.sequence.chatGptEvaluation.reportModal.reportDetails}"></label>
-                    <textarea name="other-reason-comment" th:placeholder="#{player.sequence.chatGptEvaluation.reportModal.reportDetails.placeholder}" rows="2" id="other-reason-comment"></textarea>
+                <div class="field" th:id="other-text-field" th:attr="data-modal-id=${evaluationId}" style="display: none">
+                    <label for="other-reason-comment"
+                           th:text="#{player.sequence.chatGptEvaluation.reportModal.reportDetails}"></label>
+                    <textarea name="other-reason-comment"
+                              th:placeholder="#{player.sequence.chatGptEvaluation.reportModal.reportDetails.placeholder}"
+                              rows="2" id="other-reason-comment"></textarea>
                 </div>
             </div>
         </form>
@@ -59,37 +67,47 @@
 
     <div class="actions">
         <div id="submit-button" class="ui approve primary button ob-start-sequence-8"
-             th:onclick="|document.getElementById('report-form').submit();|"
+             th:attr="data-modal-id=${evaluationId}"
              th:text="#{player.sequence.chatGptEvaluation.reportModal.send}">
             Send
         </div>
 
         <div class="ui cancel button"
              th:text="#{common.cancel}"
-             th:onclick="||">
+             th:onclick="">
             Cancel
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            $("#other-text-field").hide();
-            $('#submit-button').addClass('disabled');
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            /*<![CDATA[*/
+            const evaluationId = [[${evaluationId}]];
+            /*]]> */
 
-            $("input[name='reason']").change(function() {
-                if ($("input[value='OTHER']").is(":checked")) {
-                    $("#other-text-field").stop().slideDown();
+            $("#other-text-field").hide(); // Hide every text field for the "other reason"
+            $('#submit-button').addClass('disabled'); // Disable every submit button
+
+            $("input[name='reason']").change(function () { // When a checkbox is checked
+                let evaluationId = $(this).attr('data-modal-id'); // Then get the `evaluationId` from the checkbox
+                if ($("input[value='OTHER']").is(":checked")) { // And show ( or hide ) the text field for the "other reason" when the evaluationId is matched
+                    $('#other-text-field[data-modal-id="' + evaluationId + '"]').stop().slideDown();
                 } else {
-                    $("#other-text-field").stop().slideUp();
+                    $('#other-text-field[data-modal-id="' + evaluationId + '"]').stop().slideUp();
                 }
 
+                // Same thing for the submit button, we enable (or disable) only if the `evaluationId` is matched
                 if ($('input[name="reason"]:checked').length > 0) {
-                    $('#submit-button').removeClass('disabled');
+                    $('#submit-button[data-modal-id="' + evaluationId + '"]').removeClass('disabled');
                 } else {
-                    $('#submit-button').addClass('disabled');
+                    $('#submit-button[data-modal-id="' + evaluationId + '"]').addClass('disabled');
                 }
             });
-
+                
+            $('#submit-button[data-modal-id="' + evaluationId + '"]').click(function () {
+                const form = $('form#report-form[data-modal-id="' + evaluationId + '"]'); // Get the form with the same evaluation id
+                form.submit(); // Submit the form
+            });
         });
     </script>
 
