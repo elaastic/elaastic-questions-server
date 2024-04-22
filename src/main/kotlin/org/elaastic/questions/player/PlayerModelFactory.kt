@@ -42,6 +42,8 @@ object PlayerModelFactory {
         nbRegisteredUsers: Int,
         attendees: List<LearnerAssignment>,
         openedPane: String,
+        previousAssignment: Long?,
+        nextAssignment: Long?,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
         sequenceStatistics: SequenceStatistics,
@@ -58,6 +60,8 @@ object PlayerModelFactory {
                 attendees = attendees,
                 assignment = assignment,
                 openedPane = openedPane,
+                previousAssignment = previousAssignment,
+                nextAssignment = nextAssignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
                 teacher = true
@@ -96,6 +100,8 @@ object PlayerModelFactory {
                 nbRegisteredUser = nbRegisteredUsers,
                 attendees = arrayListOf(),  // Empty list because useless for student to see attendees list.
                 openedPane = openedPane,
+                previousAssignment = null,
+                nextAssignment = null,
                 assignment = assignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
