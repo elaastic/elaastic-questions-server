@@ -35,21 +35,39 @@
   </div>
 
   <div class="ui header attached block assignment-navigator-actions">
-    <button class="ui button" style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
-                                     padding: 10px;">
+    <div>
+      <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${model.assignmentOverviewModel.previousAssignment}?currentPane=attendees|"
+         th:if="${model.assignmentOverviewModel.previousAssignment != null}">
 
-      <i class="angle left icon" style="margin: 0;"></i>
-      <p style="margin: 0;">
-        previous_assignment</p>
-    </button>
+        <button class="ui button"
+                style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
+                     padding: 10px;">
 
-    <button class="ui button" style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
-                                     padding: 10px;">
+          <i class="angle left icon" style="margin: 0;"></i>
 
-      <p style="margin: 0;">
-        next_assignment</p>
-      <i class="angle right icon" style="margin: 0;"></i>
-    </button>
+          <p style="margin: 0;"
+             th:text="#{attendees.navigator.previous}">
+            previous_assignment</p>
+        </button>
+      </a>
+    </div>
+
+    <div>
+      <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${model.assignmentOverviewModel.nextAssignment}?currentPane=attendees|"
+         th:if="${model.assignmentOverviewModel.nextAssignment != null}">
+
+        <button class="ui button"
+                style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
+                     padding: 10px;">
+
+          <p style="margin: 0;"
+             th:text="#{attendees.navigator.next}">
+            next_assignment</p>
+
+          <i class="angle right icon" style="margin: 0;"></i>
+        </button>
+      </a>
+    </div>
   </div>
 
   <style>
@@ -82,7 +100,7 @@
             onclick="window.location.reload()">
 
       <i class="icon refresh"></i>
-      <span>
+      <span th:text="#{attendees.refresh}">
         refresh_button</span>
     </button>
   </div>
@@ -90,7 +108,7 @@
   <div class="ui segment attached"
        th:if="${#lists.isEmpty(model.attendees)}"
        th:text="#{attendees.empty}">
-    This assignment is empty.</div>
+    empty_assignment_error</div>
 
   <div th:each="attendee, i : ${model.attendees}"
        class="ui clearing attached segment grid attendee-item"
@@ -121,18 +139,18 @@
         <div style="color: #B03060;">   <!-- LABEL: REPORTS COUNT -->
           <i class="icon flag outline"></i>
           <span>
-          0</span>
+            0</span>
         </div>
 
         <div style="color: #535353;">   <!-- LABEL: IN COURSE... -->
           <i class="icon pencil alternate"></i>
-          <span>
-          in_course_label</span>
+          <span th:text="#{attendee.in_course}">
+            in_course_label</span>
         </div>
 
         <!--<div style="color: #259C31;">   <!- - LABEL: FINISHED -- >
-          <i class="icon pencil alternate"></i>
-          <span>
+          <i class="icon check alternate"></i>
+          <span th:text="#{attendee.finished}">
             finished_label</span>
         </div>-->
       </div>
