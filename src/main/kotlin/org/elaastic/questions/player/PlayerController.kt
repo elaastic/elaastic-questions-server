@@ -650,4 +650,25 @@ class PlayerController(
         val confidenceDegree: ConfidenceDegree?,
         val explanation: String?
     )
+
+    @PostMapping("submit-utility-grade/draxo")
+    fun submitDRAXOEvaluationUtilityGrade(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam(required = true) evaluationId: Long,
+        @RequestParam(required = true) utilityGrade: UtilityGrade
+    ) {
+        //TODO
+    }
+
+    @PostMapping("report-draxo-evaluation")
+    fun reportDRAXOEvaluation(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam(required = true) evaluationId: Long,
+        @RequestParam(value = "reason", required = true) reasons : List<String>,
+        @RequestParam(value = "other-reason-comment", required = false) otherReasonComment : String
+    ) {
+        //TODO
+    }
 }
