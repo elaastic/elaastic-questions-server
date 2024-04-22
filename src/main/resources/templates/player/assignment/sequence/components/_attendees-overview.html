@@ -136,19 +136,36 @@
       <div class="attendee-insights column"
            style="display: flex; justify-content: flex-end; column-gap: 15px; align-items: center;">
 
-        <div style="color: #B03060;">   <!-- LABEL: REPORTS COUNT -->
+        <div style="color: #B03060;"
+             th:attr="data-tooltip=#{attendee.user_reports}"
+             data-tooltip="User reports"
+             data-position="top center"
+             data-inverted="">   <!-- LABEL: REPORTS COUNT -->
+
           <i class="icon flag outline"></i>
+
           <span>
             0</span>
         </div>
 
-        <div style="color: #535353;">   <!-- LABEL: IN COURSE... -->
+        <div style="color: #535353;"
+             th:attr="data-tooltip=#{attendee.in_course.tooltip}"
+             data-tooltip="In course..."
+             data-position="top center"
+             data-inverted="">   <!-- LABEL: IN COURSE... -->
+
           <i class="icon pencil alternate"></i>
+
           <span th:text="#{attendee.in_course}">
             in_course_label</span>
         </div>
 
-        <!--<div style="color: #259C31;">   <!- - LABEL: FINISHED -- >
+        <!--<div style="color: #259C31;"
+             th:attr="data-tooltip=#{attendee.finished.tooltip}"
+             data-tooltip="Finished..."
+             data-position="top center"
+             data-inverted="">   <!- - LABEL: FINISHED -- >
+
           <i class="icon check alternate"></i>
           <span th:text="#{attendee.finished}">
             finished_label</span>
