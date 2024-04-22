@@ -64,7 +64,6 @@ import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluati
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
 import org.springframework.beans.factory.annotation.Autowired
