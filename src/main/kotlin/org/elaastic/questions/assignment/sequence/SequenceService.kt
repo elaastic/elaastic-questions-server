@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
@@ -78,6 +79,11 @@ class SequenceService(
             sequence
         } ?: throw EntityNotFoundException("There is no sequence for id \"$id\"")
     }
+
+    fun getIfSameAssignment(id: Long, assignment: Assignment): Sequence
+        = sequenceRepository.findSequenceByIdAndAssignment(id, assignment)
+            ?: throw EntityNotFoundException(
+                "There is no sequence for id \"$id\" with assignment id \"${assignment.id}\"")
 
     fun findByUuid(uuid: UUID, fetchInteractions: Boolean = false): Sequence {
         return sequenceRepository.findByUuid(uuid)?.let { sequence ->
