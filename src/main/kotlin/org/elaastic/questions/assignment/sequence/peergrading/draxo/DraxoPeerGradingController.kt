@@ -18,6 +18,7 @@
 package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
 import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
@@ -51,9 +52,9 @@ class DraxoPeerGradingController(
         val assignment = response.interaction.sequence.assignment
 
         // Check authorizations
-        if(
+        if (
             assignment?.owner != user &&
-                    (assignment == null || !assignmentService.userIsRegisteredInAssignment(user, assignment))
+            (assignment == null || !assignmentService.userIsRegisteredInAssignment(user, assignment))
         ) {
             throw AccessDeniedException("You are not authorized to access to those feedbacks")
         }
@@ -67,9 +68,13 @@ class DraxoPeerGradingController(
                 DraxoEvaluationModel(index, draxoPeerGrading, user == assignment.owner)
             }
         )
-        if(hideName == true) {
+        if (hideName == true) {
             model.addAttribute("hideName", true)
         }
+
+        // An user can moderate the evaluation if he is the owner of the assignment (teacher) or the owner of the sequence (learner)
+        model["canModerate"] = responseService.canModerate(user, response)
+        model["canModerate"] = true // TODO Remove STUB
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
     }

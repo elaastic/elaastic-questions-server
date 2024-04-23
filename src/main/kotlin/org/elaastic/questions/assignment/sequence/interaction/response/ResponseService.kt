@@ -382,7 +382,16 @@ class ResponseService(
         return response
     }
 
+    /**
+     * Return true if the user can moderate the feedback of the response
+     * An user can moderate the feedback if :
+     * - he is the owner of the assignment
+     * - he is the owner of the sequence
+     * @param user the user who want to moderate the feedback
+     * @param response the response to moderate
+     */
     fun canModerate(user: User, response: Response): Boolean {
-        TODO("Not yet implemented")
+        throw NotImplementedError("Not yet implemented")
+//        return false //TODO Implement this
     }
 }

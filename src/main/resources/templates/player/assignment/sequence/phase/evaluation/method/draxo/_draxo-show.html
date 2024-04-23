@@ -17,7 +17,7 @@
   -->
 <!-- This fragment is used to display the evaluation of a Draxo method -->
 <!-- To find the CSS file folow the path : static/css/draxo-show.css -->
-<div th:fragment="draxoShow(draxoEvaluationModel, hideName)"
+<div th:fragment="draxoShow(draxoEvaluationModel, hideName, canModerate)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -79,7 +79,7 @@
         </div>
 
         <!--/* Reaction for the feedback */-->
-        <div class="review-border">
+        <div class="review-border" th:if="${canModerate}">
             <th:block
                     th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
             </th:block>
