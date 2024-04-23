@@ -29,7 +29,9 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.IntegrationTestingService
@@ -60,6 +62,9 @@ internal class ResponseServiceIntegrationTest(
     @Autowired val entityManager: EntityManager,
     @Autowired val subjectService: SubjectService
 ) {
+
+    @Autowired
+    private lateinit var peerGradingService: PeerGradingService
 
     @Test
     fun buildResponseBasedOnTeacherNullExpectedExplanationForASequenceOpenEndedBlended() {
@@ -672,55 +677,13 @@ internal class ResponseServiceIntegrationTest(
     }
 
     @Test
-    fun `a teacher canModerate all the feedback in the assignement he own`() {
-        tGiven("Given a sequence own by a student with feedback from other students") {
-            val student = integrationTestingService.getTestStudent()
-            val teacher = integrationTestingService.getTestTeacher()
-            val assignment = integrationTestingService.getAnyAssignment()
-            val subject = integrationTestingService.getAnyTestSubject()
-            subject.owner = teacher
-
-            val stmt1 = statementService.save(
-                Statement(
-                    owner = teacher,
-                    title = "q1",
-                    content = "question 1",
-                    expectedExplanation = "Some stuff",
-                    questionType = QuestionType.ExclusiveChoice,
-                    subject = subject
-                )
-            )
-            val sequence1 = assignmentService.addSequence(
-                assignment = assignment,
-                statement = stmt1
-            ).let {
-                sequenceService.initializeInteractionsForSequence(
-                    it,
-                    true,
-                    3,
-                    ExecutionContext.Blended
-                ).let { sequence ->
-                    sequence.executionContext = ExecutionContext.Blended
-                    sequenceRepository.save(sequence)
-                }
-            }
-            sequence1.owner = student
-
-        }
-        tThen("Then the teacher can moderate all the feedback") {
-            val student = integrationTestingService.getTestStudent()
-            val teacher = integrationTestingService.getTestTeacher()
-            val sequence = sequenceRepository.findAll().first { it.owner == student }
-
-            sequenceService.peerGradingService.findAllEvaluation(student, sequence).forEach {
-                assertTrue(responseService.canModerate(teacher, it.response))
-            }
-        }
+    fun `a teacher can hide all the feedback in the assignement he own`() {
+        //TODO
     }
 
     @Test
-    fun `a student can only moderate the feedback for his sequence`() {
-        tGiven("Given a sequence own by the student with feedback from other students") {
+    fun `a student can only moderate the feedback for his anwser`() {
+        tGiven("Given an anwser given by a student with feedback from other students") {
             val student = integrationTestingService.getTestStudent()
             val teacher = integrationTestingService.getTestTeacher()
             val assignment = integrationTestingService.getAnyAssignment()
@@ -733,7 +696,7 @@ internal class ResponseServiceIntegrationTest(
                     title = "q1",
                     content = "question 1",
                     expectedExplanation = "Some stuff",
-                    questionType = QuestionType.ExclusiveChoice,
+                    questionType = QuestionType.OpenEnded,
                     subject = subject
                 )
             )
@@ -751,12 +714,26 @@ internal class ResponseServiceIntegrationTest(
                     sequenceRepository.save(sequence)
                 }
             }
-            sequence1.owner = student
+
+            val responseSubmissionData = sequence1.interactions.values.first().id?.let {
+                PlayerController.ResponseSubmissionData(
+                    interactionId = it,
+                    attempt = 1,
+                    choiceList = null,
+                    confidenceDegree = ConfidenceDegree.CONFIDENT,
+                    explanation = "Some student explanation",
+                )
+            }
+
+            responseService.find(student, sequence1)?.let {
+                println(peerGradingService.findAllDraxo(it))
+            }
 
         }
         tThen("Then the student can moderate the feedback") {
             val student = integrationTestingService.getTestStudent()
-            val sequence = sequenceRepository.findAll().first { it.owner == student }
+            val teacher = integrationTestingService.getTestTeacher()
+            val sequence = sequenceRepository.findAll().first { it.owner == teacher }
             val anotherStudent = integrationTestingService.getNLearners(1).first()
 
             sequenceService.peerGradingService.findAllEvaluation(student, sequence).forEach {
