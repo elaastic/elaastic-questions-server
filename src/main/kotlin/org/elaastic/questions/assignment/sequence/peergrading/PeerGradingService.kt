@@ -2,6 +2,7 @@ package org.elaastic.questions.assignment.sequence.peergrading
 
 import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
@@ -33,7 +34,7 @@ class PeerGradingService(
         }
 
         val peerGrade = peerGradingRepository.findByGraderAndResponse(grader, response)
-                ?: LikertPeerGrading(grader = grader, response = response, grade = grade)
+            ?: LikertPeerGrading(grader = grader, response = response, grade = grade)
 
         require(peerGrade is LikertPeerGrading) {
             "It already exist a peer grading for this response & this grader but it is not a LIKERT evaluation"
@@ -46,10 +47,12 @@ class PeerGradingService(
         return savedPeerGrade
     }
 
-    fun createOrUpdateDraxo(grader: User,
-                            response: Response,
-                            evaluation: DraxoEvaluation,
-                            lastSequencePeerGrading: Boolean): DraxoPeerGrading {
+    fun createOrUpdateDraxo(
+        grader: User,
+        response: Response,
+        evaluation: DraxoEvaluation,
+        lastSequencePeerGrading: Boolean
+    ): DraxoPeerGrading {
         require(isGraderRegisteredOnAssignment(grader, response)) {
             "You must be registered on the assignment to provide evaluations"
         }
@@ -79,7 +82,8 @@ class PeerGradingService(
         )
 
     fun userHasPerformedEvaluation(user: User, sequence: Sequence) =
-            entityManager.createQuery("""
+        entityManager.createQuery(
+            """
                 SELECT COUNT(*) 
                 FROM PeerGrading pg 
                 WHERE pg.grader = :grader 
@@ -88,13 +92,14 @@ class PeerGradingService(
                         WHERE resp.interaction = :interaction
                     )
             """.trimIndent()
-            )
-                    .setParameter("grader", user)
-                    .setParameter("interaction", sequence.getResponseSubmissionInteraction())
-                    .singleResult as Long > 0
+        )
+            .setParameter("grader", user)
+            .setParameter("interaction", sequence.getResponseSubmissionInteraction())
+            .singleResult as Long > 0
 
     fun findAllEvaluation(user: User, sequence: Sequence): List<PeerGrading> =
-        entityManager.createQuery("""
+        entityManager.createQuery(
+            """
             SELECT pg
             FROM PeerGrading  pg
             WHERE pg.grader = :grader
@@ -110,19 +115,26 @@ class PeerGradingService(
 
 
     fun countEvaluations(sequence: Sequence) =
-            countEvaluations(sequence.getResponseSubmissionInteraction())
+        countEvaluations(sequence.getResponseSubmissionInteraction())
 
     fun countEvaluations(interaction: Interaction) =
-            (entityManager.createQuery("""
+        (entityManager.createQuery(
+            """
                 SELECT COUNT(DISTINCT pg.grader) 
                 FROM PeerGrading pg
                 WHERE pg.response IN (FROM  Response resp where resp.interaction = :interaction) AND pg.lastSequencePeerGrading IS TRUE 
-            """.trimIndent())
-                    .setParameter("interaction", interaction)
-                    .singleResult as Long).toInt()
+            """.trimIndent()
+        )
+            .setParameter("interaction", interaction)
+            .singleResult as Long).toInt()
 
     fun findAll(sequence: Sequence): List<PeerGrading> =
-            peerGradingRepository.findAllByResponseIn(responseRepository.findAllByInteractionAndAttempt(sequence.getResponseSubmissionInteraction(), 1))
+        peerGradingRepository.findAllByResponseIn(
+            responseRepository.findAllByInteractionAndAttempt(
+                sequence.getResponseSubmissionInteraction(),
+                1
+            )
+        )
 
     /**
      * Mark peer grading as hidden by teacher.
@@ -163,5 +175,24 @@ class PeerGradingService(
             "Only the learner who own the response can report a peer grading"
         }
         reportCandidateService.updateReport(peerGrading, listOf, comment, peerGradingRepository)
+    }
+
+    fun findDraxoById(id: Long): DraxoPeerGrading =
+        peerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
+            ?: error("No Draxo peer grading found with id $id")
+
+    /**
+     * Update the utility grade of a peer grading.
+     *
+     * @param learner the learner who own the response.
+     * @param peerGrading the peer grading to update.
+     * @param utilityGrade the utility grade.
+     * @throws IllegalArgumentException if the learner is not the owner of the response.
+     */
+    fun updateUtilityGrade(learner: User, peerGrading: PeerGrading, utilityGrade: UtilityGrade) {
+        require(learner == peerGrading.response.learner) {
+            "Only the learner who own the response can update the utility grade of a peer grading"
+        }
+        reportCandidateService.updateGrade(peerGrading, utilityGrade, peerGradingRepository)
     }
 }
