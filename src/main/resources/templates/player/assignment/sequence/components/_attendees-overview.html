@@ -124,11 +124,12 @@
       <i class="icon"
          th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'lock' : 'dropdown'}|"></i>
 
-      Phase 1
+      <span th:text="#{attendees.phase(__${'1'}__)}"></span>
 
       <span style="font-size: 12px;"
+            th:text="#{attendees.phase.not_started}"
             th:if="${stepsModel.responseSubmissionState.name() == 'DISABLED'}">
-        (Pas débutée)</span>
+        not_started_label</span>
 
       <span style="font-size: 12px;"
             th:text="|(0)|"
@@ -220,11 +221,12 @@
       <i class="icon"
          th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'lock' : 'dropdown'}|"></i>
 
-      Phase 2
+      <span th:text="#{attendees.phase(__${'2'}__)}"></span>
 
       <span style="font-size: 12px;"
+            th:text="#{attendees.phase.not_started}"
             th:if="${stepsModel.evaluationState.name() == 'DISABLED'}">
-        (Pas débutée)</span>
+        not_started_label</span>
 
       <span style="font-size: 12px;"
             th:text="|(0)|"
@@ -237,6 +239,7 @@
                            && stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'active' : ''}">
 
       <th:block th:if="${stepsModel.evaluationState.name() != 'DISABLED'}">
+        <!-- TODO: second phase attendees list!! -->
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae commodi dolores, ducimus esse et harum id
         inventore maiores molestiae nobis odio quae quas quia reiciendis soluta veniam voluptates! Ad, nesciunt.
       </th:block>
