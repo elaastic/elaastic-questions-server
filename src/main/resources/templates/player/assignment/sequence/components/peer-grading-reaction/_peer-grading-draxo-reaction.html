@@ -20,7 +20,7 @@
      th:fragment="peerGradingEvaluationCommand(draxoEvaluationModel)">
 
     <form class="ui form"
-          th:action="@{/player/submit-utility-grade/draxo}"
+          th:action="@{/peer-grading/draxo/submit-utility-grade}"
           method="post">
         <input type="hidden" name="evaluationId" th:value="${draxoEvaluationModel.draxoPeerGradingId}">
         <div class="ui grid stackable" style="align-items: end;">

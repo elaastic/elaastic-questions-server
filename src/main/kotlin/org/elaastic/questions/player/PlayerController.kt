@@ -67,7 +67,7 @@ class PlayerController(
     @Autowired val featureManager: FeatureManager,
     @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
-    @Autowired val eventLogService: EventLogService
+    @Autowired val eventLogService: EventLogService,
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
@@ -98,7 +98,8 @@ class PlayerController(
         }
 
         return assignmentService.findByGlobalId(
-            UUID.fromString(globalId)) ?: throw EntityNotFoundException(
+            UUID.fromString(globalId)
+        ) ?: throw EntityNotFoundException(
             messageBuilder.message("assignment.globalId.does.not.exist")
         )
     }
@@ -582,7 +583,7 @@ class PlayerController(
         val sequence = sequenceService.get(id, true)
 
         val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
-        if(response != null) {
+        if (response != null) {
             val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
             chatGptEvaluationService.createEvaluation(response, locale.language, chatGptEvaluation)
         }
@@ -602,8 +603,10 @@ class PlayerController(
 
         val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
-        model.addAttribute("chatGptEvaluationModel",
-            ChatGptEvaluationModelFactory.build(chatGptEvaluation, sequence))
+        model.addAttribute(
+            "chatGptEvaluationModel",
+            ChatGptEvaluationModelFactory.build(chatGptEvaluation, sequence)
+        )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
     }
 
@@ -630,8 +633,8 @@ class PlayerController(
         authentication: Authentication,
         model: Model,
         @RequestParam(required = true) evaluationId: Long,
-        @RequestParam(value = "reason", required = true) reasons : List<String>,
-        @RequestParam(value = "other-reason-comment", required = false) otherReasonComment : String,
+        @RequestParam(value = "reason", required = true) reasons: List<String>,
+        @RequestParam(value = "other-reason-comment", required = false) otherReasonComment: String,
         @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
@@ -651,24 +654,4 @@ class PlayerController(
         val explanation: String?
     )
 
-    @PostMapping("submit-utility-grade/draxo")
-    fun submitDRAXOEvaluationUtilityGrade(
-        authentication: Authentication,
-        model: Model,
-        @RequestParam(required = true) evaluationId: Long,
-        @RequestParam(required = true) utilityGrade: UtilityGrade
-    ) {
-        //TODO
-    }
-
-    @PostMapping("report-draxo-evaluation")
-    fun reportDRAXOEvaluation(
-        authentication: Authentication,
-        model: Model,
-        @RequestParam(required = true) evaluationId: Long,
-        @RequestParam(value = "reason", required = true) reasons : List<String>,
-        @RequestParam(value = "other-reason-comment", required = false) otherReasonComment : String
-    ) {
-        //TODO
-    }
 }

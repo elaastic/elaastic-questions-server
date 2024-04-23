@@ -28,7 +28,7 @@
     </div>
 
     <div class="content">
-        <form th:id="report-form" th:action="@{/player/report-draxo-evaluation}" method="post"
+        <form th:id="report-form" th:action="@{/peer-grading/draxo/report-draxo-evaluation}" method="post"
               th:attr="data-modal-id=${evaluationId}">
             <div class="ui form">
                 <input type="hidden" name="evaluationId" th:value="${evaluationId}">

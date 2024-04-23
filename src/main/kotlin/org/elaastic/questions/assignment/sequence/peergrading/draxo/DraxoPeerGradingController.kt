@@ -27,10 +27,8 @@ import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.ui.set
+import org.springframework.web.bind.annotation.*
 
 @Controller
 @RequestMapping("/peer-grading/draxo")
@@ -74,5 +72,42 @@ class DraxoPeerGradingController(
         }
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
+    }
+
+
+    @PostMapping("submit-utility-grade")
+    fun submitDRAXOEvaluationUtilityGrade(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam(required = true) evaluationId: Long,
+        @RequestParam(required = true) utilityGrade: UtilityGrade
+    ): String {
+        val user: User = authentication.principal as User
+        val evaluation: DraxoPeerGrading = peerGradingService.findDraxoById(evaluationId)
+
+        peerGradingService.updateUtilityGrade(user, evaluation, utilityGrade)
+
+        val sequenceId: Long = evaluation.response.interaction.sequence.id!!
+        val assignement = evaluation.response.interaction.sequence.assignment!!.id
+        return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
+    }
+
+    @PostMapping("report-draxo-evaluation")
+    fun reportDRAXOEvaluation(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam(required = true) evaluationId: Long,
+        @RequestParam(value = "reason", required = true) reasons: List<String>,
+        @RequestParam(value = "other-reason-comment", required = false) otherReasonComment: String
+    ): String {
+        val user: User = authentication.principal as User
+        val evaluation: DraxoPeerGrading = peerGradingService.findDraxoById(evaluationId)
+        val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
+
+        peerGradingService.updateReport(user, evaluation, reasons, reasonComment)
+
+        val sequenceId: Long = evaluation.response.interaction.sequence.id!!
+        val assignement = evaluation.response.interaction.sequence.assignment!!.id
+        return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
     }
 }
