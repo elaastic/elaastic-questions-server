@@ -224,7 +224,7 @@
       <span th:text="#{attendees.phase(__${'2'}__)}"></span>
 
       <span style="font-size: 12px;"
-            th:text="#{attendees.phase.not_started}"
+            th:text="|(#{attendees.phase.not_started})|"
             th:if="${stepsModel.evaluationState.name() == 'DISABLED'}">
         not_started_label</span>
 
