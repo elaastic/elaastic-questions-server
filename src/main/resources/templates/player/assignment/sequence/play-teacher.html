@@ -134,8 +134,7 @@
 
     <div class="ui divider"></div>
 
-    <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
-
+    <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${playerModel.assignmentOverviewModel}, aside, ${playerModel.stepsModel})"></div>
   </div>
 </aside>
 
