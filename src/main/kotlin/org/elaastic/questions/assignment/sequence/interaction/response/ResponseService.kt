@@ -381,4 +381,8 @@ class ResponseService(
         }
         return response
     }
+
+    fun canModerate(user: User, response: Response): Boolean {
+        TODO("Not yet implemented")
+    }
 }
