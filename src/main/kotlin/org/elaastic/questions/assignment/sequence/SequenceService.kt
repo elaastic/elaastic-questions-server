@@ -80,10 +80,10 @@ class SequenceService(
         } ?: throw EntityNotFoundException("There is no sequence for id \"$id\"")
     }
 
-    fun getIfSameAssignment(id: Long, assignment: Assignment): Sequence
-        = sequenceRepository.findSequenceByIdAndAssignment(id, assignment)
+    fun findSequenceByRankAndAssignment(rank: Int, assignment: Assignment): Sequence
+        = sequenceRepository.findSequenceByRankAndAssignment(rank, assignment)
             ?: throw EntityNotFoundException(
-                "There is no sequence for id \"$id\" with assignment id \"${assignment.id}\"")
+                "There is no sequence for id \"$rank\" with assignment id \"${assignment.rank}\"")
 
     fun findByUuid(uuid: UUID, fetchInteractions: Boolean = false): Sequence {
         return sequenceRepository.findByUuid(uuid)?.let { sequence ->
