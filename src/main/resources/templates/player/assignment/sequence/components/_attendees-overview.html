@@ -80,8 +80,8 @@
 
 </div>
 
+<div th:fragment="attendeesOverview(model, context, stepsModel)"
 
-<div th:fragment="attendeesOverview(model, context)"
      th:remove="tag"
      th:if="${model.teacher}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
@@ -110,83 +110,152 @@
        th:text="#{attendees.empty}">
     empty_assignment_error</div>
 
-  <div th:each="attendee, i : ${model.attendees}"
-       class="ui clearing attached segment grid attendee-item"
-       th:id="|${context}-${attendee.id}|"
-       style="margin: 0;">
+  <div class="ui styled accordion fluid attached"
+       th:unless="${#lists.isEmpty(model.attendees)}">
 
-    <div class="row two column">
-      <div class="attendee-information column"
-           style="display: flex; column-gap: 10px; align-items: center;">
+    <!--
+     PHASE 1
+     -->
+    <div class="title"
+         th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'accordion-disabled' : ''}
+                          ${stepsModel.responseSubmissionState.name() != 'DISABLED'
+                            && stepsModel.evaluationState.name() == 'DISABLED' ? 'active' : ''}|">
 
-        <div class="attendee-picture"
-             style="border-radius: 999px; background-color: #e0e0e0;
+      <i class="icon"
+         th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'lock' : 'dropdown'}|"></i>
+
+      Phase 1
+
+      <span style="font-size: 12px;"
+            th:if="${stepsModel.responseSubmissionState.name() == 'DISABLED'}">
+        (Pas débutée)</span>
+
+      <span style="font-size: 12px;"
+            th:text="|(0)|"
+            th:if="${stepsModel.responseSubmissionState.name() != 'DISABLED'}">
+        (0)</span>
+    </div>
+
+    <div class="content"
+         th:classappend="${stepsModel.responseSubmissionState.name() != 'DISABLED'
+                           && stepsModel.evaluationState.name() == 'DISABLED' ? 'active' : ''}">
+
+      <th:block th:if="${stepsModel.responseSubmissionState.name() != 'DISABLED'}">
+        <div th:each="attendee, i : ${model.attendees}"
+           class="ui clearing attached segment grid attendee-item"
+           th:id="|${context}-${attendee.id}|"
+           style="margin: 0;">
+
+        <div class="row two column">
+          <div class="attendee-information column"
+               style="display: flex; column-gap: 10px; align-items: center;">
+
+            <div class="attendee-picture"
+                 style="border-radius: 999px; background-color: #e0e0e0;
                   display: flex; justify-content: center; align-items: center; column-gap: 10px;
                   flex: none; aspect-ratio: 1; padding: 5px;">
 
-          <i class="icon user outline large" style="margin: 0;"></i>
-        </div>
+              <i class="icon user outline large" style="margin: 0;"></i>
+            </div>
 
-        <div class="attendee-name ui header"
-             style="margin: 0;"
-             th:text="${attendee.learner.getFullname()}">
-          attendee_name</div>
-      </div>
+            <div class="attendee-name ui header"
+                 style="margin: 0;"
+                 th:text="${attendee.learner.getFullname()}">
+              attendee_name</div>
+          </div>
 
-      <div class="attendee-insights column"
-           style="display: flex; justify-content: flex-end; column-gap: 15px; align-items: center;">
+          <div class="attendee-insights column"
+               style="display: flex; justify-content: flex-end; column-gap: 15px; align-items: center;">
 
-        <div style="color: #B03060;"
-             th:attr="data-tooltip=#{attendee.user_reports}"
-             data-tooltip="User reports"
-             data-position="top center"
-             data-inverted="">   <!-- LABEL: REPORTS COUNT -->
+            <div style="color: #B03060;"
+                 th:attr="data-tooltip=#{attendee.user_reports}"
+                 data-tooltip="User reports"
+                 data-position="top center"
+                 data-inverted="">   <!-- LABEL: REPORTS COUNT -->
 
-          <i class="icon flag outline"></i>
+              <i class="icon flag outline"></i>
 
-          <span>
+              <span>
             0</span>
-        </div>
+            </div>
 
-        <div style="color: #535353;"
-             th:attr="data-tooltip=#{attendee.in_course.tooltip}"
-             data-tooltip="In course..."
-             data-position="top center"
-             data-inverted="">   <!-- LABEL: IN COURSE... -->
+            <div style="color: #535353;"
+                 th:attr="data-tooltip=#{attendee.in_course.tooltip}"
+                 data-tooltip="In course..."
+                 data-position="top center"
+                 data-inverted="">   <!-- LABEL: IN COURSE... -->
 
-          <i class="icon pencil alternate"></i>
+              <i class="icon pencil alternate"></i>
 
-          <span th:text="#{attendee.in_course}">
+              <span th:text="#{attendee.in_course}">
             in_course_label</span>
+            </div>
+
+            <!--<div style="color: #259C31;"
+                 th:attr="data-tooltip=#{attendee.finished.tooltip}"
+                 data-tooltip="Finished..."
+                 data-position="top center"
+                 data-inverted="">   <!- - LABEL: FINISHED -- >
+
+              <i class="icon check alternate"></i>
+              <span th:text="#{attendee.finished}">
+                finished_label</span>
+            </div>-->
+          </div>
         </div>
 
-        <!--<div style="color: #259C31;"
-             th:attr="data-tooltip=#{attendee.finished.tooltip}"
-             data-tooltip="Finished..."
-             data-position="top center"
-             data-inverted="">   <!- - LABEL: FINISHED -- >
-
-          <i class="icon check alternate"></i>
-          <span th:text="#{attendee.finished}">
-            finished_label</span>
-        </div>-->
       </div>
+      </th:block>
     </div>
 
+
+    <!--
+     PHASE 2
+     -->
+    <div class="title"
+         th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'accordion-disabled' : ''}
+                          ${stepsModel.evaluationState.name() != 'DISABLED'
+                            && stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'active' : ''}|">
+
+      <i class="icon"
+         th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'lock' : 'dropdown'}|"></i>
+
+      Phase 2
+
+      <span style="font-size: 12px;"
+            th:if="${stepsModel.evaluationState.name() == 'DISABLED'}">
+        (Pas débutée)</span>
+
+      <span style="font-size: 12px;"
+            th:text="|(0)|"
+            th:if="${stepsModel.evaluationState.name() != 'DISABLED'}">
+        (0)</span>
+    </div>
+
+    <div class="content"
+         th:classappend="${stepsModel.evaluationState.name() != 'DISABLED'
+                           && stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'active' : ''}">
+
+      <th:block th:if="${stepsModel.evaluationState.name() != 'DISABLED'}">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae commodi dolores, ducimus esse et harum id
+        inventore maiores molestiae nobis odio quae quas quia reiciendis soluta veniam voluptates! Ad, nesciunt.
+      </th:block>
+    </div>
   </div>
 
   <script th:if="${context == 'aside' && model.selectedSequenceId != null}" th:inline="javascript">
-    (function () {
+    (() => {
       var container = $('#layout-aside')
       var target = $('#' + [[${context}]] + '-[[${model.selectedSequenceId}]]')
 
       if (!elaastic.util.isVisible(target, container, 50)) {
         elaastic.util.ensureIsVisible(target, container)
       }
-    })()
 
+      $(".ui.accordion")
+        .accordion();
+    })();
   </script>
-
 
   <style>
       .ui.selected.segment {
@@ -201,6 +270,14 @@
       .sequence-content {
         max-height: 500px;
         overflow: hidden;
+      }
+
+      .ui.accordion > .title.accordion-disabled {
+        pointer-events: none;
+        opacity: .8;
+      }
+      .ui.accordion > .title.accordion-disabled:hover {
+        cursor: not-allowed !important;
       }
 
       /* Attendees lit item CSS */
