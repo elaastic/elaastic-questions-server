@@ -58,7 +58,7 @@ internal class PeerGradingServiceTest(
             }
         }.tThen("the peerGrading is reported") {
             assertNotNull(peerGrading.reportReasons)
-            assertEquals(ReportReason.INCOHERENCE, peerGrading.reportReasons?.first())
+            assertTrue(peerGrading.reportReasons!!.contains(ReportReason.INCOHERENCE.name))
         }
     }
 
@@ -99,7 +99,6 @@ internal class PeerGradingServiceTest(
             }
         }.tThen("The peerGrading is not reported") {
             assertNull(peerGrading.reportReasons)
-            assertTrue(peerGrading.reportReasons!!.contains(ReportReason.INCOHERENCE.name))
         }
     }
 
@@ -127,11 +126,11 @@ internal class PeerGradingServiceTest(
             reportReason
         }.tThen("We should get an exception") { reportReason ->
             val emptyComment = ""
-            assertThrows(IllegalStateException::class.java) {
+            assertThrows(IllegalArgumentException::class.java) {
                 peerGradingService.updateReport(reporter, peerGrading, reportReason, emptyComment)
             }
             val nullComment = null
-            assertThrows(IllegalStateException::class.java) {
+            assertThrows(IllegalArgumentException::class.java) {
                 peerGradingService.updateReport(reporter, peerGrading, reportReason, nullComment)
             }
         }.tThen("The peerGrading is not reported") {

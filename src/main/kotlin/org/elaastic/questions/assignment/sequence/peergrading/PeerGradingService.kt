@@ -1,6 +1,7 @@
 package org.elaastic.questions.assignment.sequence.peergrading
 
 import org.elaastic.questions.assignment.LearnerAssignmentService
+import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
@@ -165,18 +166,35 @@ class PeerGradingService(
     /**
      * Update the report of a peer grading.
      *
-     * @param learner the learner who own the response.
+     * @param reporter the learner who own the response.
      * @param peerGrading the peer grading to update.
-     * @param listOf the list of report.
-     * @param comment the comment of the report.
+     * @param reportReasons the list of report.
+     * @param reportComment the comment of the report.
      */
-    fun updateReport(learner: User, peerGrading: PeerGrading, listOf: List<String>, comment: String? = null) {
-        require(learner == peerGrading.response.learner) {
-            "Only the learner who own the response can report a peer grading"
+    fun updateReport(
+        reporter: User,
+        peerGrading: PeerGrading,
+        reportReasons: List<String>,
+        reportComment: String? = null
+    ) {
+        if (reporter != peerGrading.response.learner) {
+            throw IllegalAccessException("Only the learner who own the response can report a peer grading")
         }
-        reportCandidateService.updateReport(peerGrading, listOf, comment, peerGradingRepository)
+        if (peerGrading is DraxoPeerGrading && peerGrading.getDraxoEvaluation().getExplanation() == null) {
+            throw IllegalStateException("You can't report something that doesn't exist. The evaluation doesn't have any comment")
+        }
+        if (reportReasons.contains(ReportReason.OTHER.name) && reportComment.isNullOrBlank()) {
+            throw IllegalArgumentException("You must provide a comment when you report a peer grading for the reason OTHER")
+        }
+        reportCandidateService.updateReport(peerGrading, reportReasons, reportComment, peerGradingRepository)
     }
 
+    /**
+     * Find a Draxo peer grading by its id.
+     * @param id the id of the peer grading.
+     * @return the Draxo peer grading.
+     * @throws IllegalArgumentException if no Draxo peer grading is found with the given id.
+     */
     fun findDraxoById(id: Long): DraxoPeerGrading =
         peerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
             ?: error("No Draxo peer grading found with id $id")
@@ -185,13 +203,13 @@ class PeerGradingService(
      * Update the utility grade of a peer grading.
      *
      * @param learner the learner who own the response.
-     * @param peerGrading the peer grading to update.
+     * @param peerGrading the draxo peer grading to update.
      * @param utilityGrade the utility grade.
      * @throws IllegalArgumentException if the learner is not the owner of the response.
      */
     fun updateUtilityGrade(learner: User, peerGrading: PeerGrading, utilityGrade: UtilityGrade) {
-        require(learner == peerGrading.response.learner) {
-            "Only the learner who own the response can update the utility grade of a peer grading"
+        if (learner != peerGrading.response.learner) {
+            throw IllegalAccessException("Only the learner who own the response can update the utility grade of a peer grading")
         }
         reportCandidateService.updateGrade(peerGrading, utilityGrade, peerGradingRepository)
     }
