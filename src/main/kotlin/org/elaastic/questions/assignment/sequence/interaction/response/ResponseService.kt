@@ -29,6 +29,7 @@ import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -385,13 +386,36 @@ class ResponseService(
     /**
      * Return true if the user can moderate the feedback of the response
      * An user can moderate the feedback if :
-     * - he is the owner of the assignment
      * - he is the owner of the sequence
      * @param user the user who want to moderate the feedback
      * @param response the response to moderate
      */
     fun canModerate(user: User, response: Response): Boolean {
-        throw NotImplementedError("Not yet implemented")
-//        return false //TODO Implement this
+        return false //TODO Implement this
+    }
+
+    /**
+     * Return true if the user can hide the peer grading
+     * An user can hide the peer grading if :
+     * - he is the owner of the sequence
+     * @param user the user who want to hide the peer grading
+     * @param peerGrading the peer grading to hide
+     * @return true if the user can hide the peer grading
+     */
+    fun canHidePeerGrading(teacher: User, peerGrading: PeerGrading): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    /**
+     * Hide a peer grading
+     * if the user can't hide the peer grading, an exception is thrown
+     * @param teacher the teacher who hide the peer grading
+     * @param peerGrading the peer grading to hide
+     */
+    fun hidePeerGrading(teacher: User, peerGrading: PeerGrading) {
+        if (!canHidePeerGrading(teacher, peerGrading)) {
+            throw IllegalAccessException("You can't hide this peer grading")
+        }
+        TODO("Not yet implemented")
     }
 }

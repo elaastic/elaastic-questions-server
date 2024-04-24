@@ -31,7 +31,6 @@ import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.UserService
-import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.IntegrationTestingService
@@ -677,71 +676,87 @@ internal class ResponseServiceIntegrationTest(
     }
 
     @Test
-    fun `a teacher can hide all the feedback in the assignement he own`() {
-        //TODO
+    fun `a teacher can hide all the peerGrading in the assignement he own`() {
+        val teacher = integrationTestingService.getTestTeacher()
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        val assignement = response.interaction.sequence.assignment!!
+
+        tGiven("An assignement own by the teacher and a peerGrading of the response") {
+            assignement.owner = teacher
+            LikertPeerGrading(
+                grade = BigDecimal(2),
+                annotation = "Annotation",
+                grader = grader,
+                response = response
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tThen("The teacher can hide the feedback") { peerGrading ->
+            assertTrue(responseService.canHidePeerGrading(teacher, peerGrading), "The teacher can hide the feedback")
+            peerGrading
+        }.tWhen("the teacher hide the peerGrading") { peerGrading ->
+            responseService.hidePeerGrading(teacher, peerGrading)
+            peerGrading
+        }.tThen("the peerGrading is hidden") { peerGrading ->
+            assertTrue(peerGrading.hiddenByTeacher, "The feedback is hidden")
+        }
+    }
+
+    @Test
+    fun `a student can't hide an peerGrading despite owning the response`() {
+        val student = integrationTestingService.getTestStudent()
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+
+        tGiven("An assignement own by the teacher and a peerGrading of the response") {
+            response.learner = student
+            LikertPeerGrading(
+                grade = BigDecimal(2),
+                annotation = "Annotation",
+                grader = grader,
+                response = response
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tThen("The student can't hide the feedback") { peerGrading ->
+            assertFalse(responseService.canHidePeerGrading(student, peerGrading), "The student can't hide the feedback")
+            peerGrading
+        }.tWhen("the student try hidding the peerGrading") { peerGrading ->
+            peerGrading
+        }.tThen("an excetion is thrown despite owning the response") { peerGrading ->
+            assertThrows(
+                IllegalAccessException::class.java
+            ) { responseService.hidePeerGrading(student, peerGrading) }
+            assertEquals(student, peerGrading.response.learner, "The student own the response")
+        }
     }
 
     @Test
     fun `a student can only moderate the feedback for his anwser`() {
-        tGiven("Given an anwser given by a student with feedback from other students") {
-            val student = integrationTestingService.getTestStudent()
-            val teacher = integrationTestingService.getTestTeacher()
-            val assignment = integrationTestingService.getAnyAssignment()
-            val subject = integrationTestingService.getAnyTestSubject()
-            subject.owner = teacher
+        val student = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
 
-            val stmt1 = statementService.save(
-                Statement(
-                    owner = teacher,
-                    title = "q1",
-                    content = "question 1",
-                    expectedExplanation = "Some stuff",
-                    questionType = QuestionType.OpenEnded,
-                    subject = subject
-                )
-            )
-            val sequence1 = assignmentService.addSequence(
-                assignment = assignment,
-                statement = stmt1
-            ).let {
-                sequenceService.initializeInteractionsForSequence(
-                    it,
-                    true,
-                    3,
-                    ExecutionContext.Blended
-                ).let { sequence ->
-                    sequence.executionContext = ExecutionContext.Blended
-                    sequenceRepository.save(sequence)
-                }
-            }
+        tGiven("Given an anwser given by a student") {
+            response.learner = student
 
-            val responseSubmissionData = sequence1.interactions.values.first().id?.let {
-                PlayerController.ResponseSubmissionData(
-                    interactionId = it,
-                    attempt = 1,
-                    choiceList = null,
-                    confidenceDegree = ConfidenceDegree.CONFIDENT,
-                    explanation = "Some student explanation",
-                )
-            }
+        }.tThen("Then the student can moderate the feedback of the answer") {
+            assertTrue(responseService.canModerate(student, response), "A student can moderate his own response")
 
-            responseService.find(student, sequence1)?.let {
-                println(peerGradingService.findAllDraxo(it))
-            }
-
-        }
-        tThen("Then the student can moderate the feedback") {
-            val student = integrationTestingService.getTestStudent()
-            val teacher = integrationTestingService.getTestTeacher()
-            val sequence = sequenceRepository.findAll().first { it.owner == teacher }
+        }.tThen("Another studnet can't moderate the answer") {
             val anotherStudent = integrationTestingService.getNLearners(1).first()
-
-            sequenceService.peerGradingService.findAllEvaluation(student, sequence).forEach {
-                assertTrue(responseService.canModerate(student, it.response))
-                assertFalse(responseService.canModerate(anotherStudent, it.response))
-            }
+            assertFalse(
+                responseService.canModerate(anotherStudent, response),
+                "Another student can't moderate the response"
+            )
+            assertNotEquals(student, anotherStudent, "The two students must be different")
         }
     }
 
 }
-
