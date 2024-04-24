@@ -391,7 +391,7 @@ class ResponseService(
      * @param response the response to moderate
      */
     fun canModerate(user: User, response: Response): Boolean {
-        return false //TODO Implement this
+        return response.learner == user
     }
 
     /**
