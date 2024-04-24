@@ -83,9 +83,19 @@ internal class SequenceServiceIntegrationTest(
     }
 
     @Test
-    fun `find sequence by rank and assignment - valid`() {  // FIXME
+    fun `find sequence by rank and assignment - valid`() {
         val assignment: Assignment = integrationTestingService.getTestAssignment()
         val sequence = assignment.sequences[0]
+        val rank: Int = sequence.rank
+
+        assertThat(sequenceService.findSequenceByRankAndAssignment(rank, assignment),
+                   equalTo(sequence))
+    }
+
+    @Test
+    fun `find sequence by rank and assignment - with some with same rank`() {  // TODO
+        val assignment: Assignment = integrationTestingService.getTestAssignment()
+        val sequence = assignment.sequences[1]
         val rank: Int = sequence.rank
 
         assertThat(sequenceService.findSequenceByRankAndAssignment(rank, assignment),
