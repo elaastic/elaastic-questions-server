@@ -239,18 +239,20 @@ class PlayerController(
     ): String {
 
         val assignment = sequence.assignment!!
-        var previousAssignment: Long? = null
-        var nextAssignment: Long? = null
+        val previousSequence: Sequence? = sequenceService.findPreviousSequence(sequence)
+        val nextSequence: Sequence? = sequenceService.findNextSequence(sequence)
+        var previousSequenceId: Long? = null
+        var nextSequenceId: Long? = null
         val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
 
-        try {
-            previousAssignment = sequenceService.findSequenceByRankAndAssignment(sequence.rank - 1, assignment).id
-        } catch (_: EntityNotFoundException) { }
+        if (previousSequence !== null) {
+            previousSequenceId = previousSequence.id
+        }
 
-        try {
-            nextAssignment = sequenceService.findSequenceByRankAndAssignment(sequence.rank + 1, assignment).id
-        } catch (_: EntityNotFoundException) { }
+        if (nextSequence !== null) {
+            nextSequenceId = nextSequence.id
+        }
 
         model.addAttribute(
             "playerModel",
@@ -261,8 +263,8 @@ class PlayerController(
                 nbRegisteredUsers = nbRegisteredUsers,
                 attendees = registeredUsers,
                 openedPane = openedPane,
-                previousAssignment = previousAssignment,
-                nextAssignment = nextAssignment,
+                previousAssignment = previousSequenceId,
+                nextAssignment = nextSequenceId,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                 messageBuilder = messageBuilder,
                 sequenceStatistics = sequenceService.getStatistics(sequence),
