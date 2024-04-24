@@ -726,7 +726,7 @@ internal class ResponseServiceIntegrationTest(
                     it
                 }
         }.tThen("The student can't hide the feedback") { peerGrading ->
-            assertFalse(responseService.canHidePeerGrading(student, peerGrading), "The student can't hide the feedback")
+            assertFalse(responseService.canHidePeerGrading(student, peerGrading), "The student can't hide a peergrading")
             peerGrading
         }.tWhen("the student try hidding the peerGrading") { peerGrading ->
             peerGrading
