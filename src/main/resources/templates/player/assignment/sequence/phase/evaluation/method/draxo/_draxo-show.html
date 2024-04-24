@@ -17,7 +17,7 @@
   -->
 <!-- This fragment is used to display the evaluation of a Draxo method -->
 <!-- To find the CSS file folow the path : static/css/draxo-show.css -->
-<div th:fragment="draxoShow(draxoEvaluationModel, hideName, canModerate)"
+<div th:fragment="draxoShow(draxoEvaluationModel, hideName, canModeratePeerGrading, canHidePeerGrading)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -31,6 +31,11 @@
             <div class="score">
                 <span th:text="#{draxo.score} + ' :'">Score</span>
                 <span class="ui label" th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
+            </div>
+            <div class="hide-peer-grading" th:if="${canHidePeerGrading}">
+                <a class="ui icon button" th:action="@{/assignment/sequence/peer-grading/hide/{id}(id=${draxoEvaluationModel.draxoPeerGradingId})}">
+                    <i class="eye icon"></i>
+                </a>
             </div>
         </div>
         <div class="review-DRAXO review-border">
@@ -77,9 +82,7 @@
             </th:block>
 
         </div>
-
-        <!--/* Reaction for the feedback */-->
-        <div class="review-border" th:if="${canModerate}">
+        <div class="review-border" th:if="${canModeratePeerGrading}"><!--/* Reaction for the feedback */-->
             <th:block
                     th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
             </th:block>

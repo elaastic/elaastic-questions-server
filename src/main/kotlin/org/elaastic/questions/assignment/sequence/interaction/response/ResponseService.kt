@@ -397,12 +397,23 @@ class ResponseService(
     /**
      * Return true if the user can hide the peer grading
      * An user can hide the peer grading if he is the owner of the sequence
-     * @param user the user who want to hide the peer grading
+     * @param teacher the user who want to hide the peer grading
      * @param peerGrading the peer grading to hide
      * @return true if the user can hide the peer grading
      */
     fun canHidePeerGrading(teacher: User, peerGrading: PeerGrading): Boolean {
-        return peerGrading.response.interaction.sequence.assignment!!.owner == teacher
+        return canHidePeerGrading(teacher, peerGrading.response)
+    }
+
+    /**
+     * Return true if the user can hide the peer grading of a response
+     * An user can hide the peer grading if he is the owner of the sequence
+     * @param teacher the user who want to hide the peer grading
+     * @param response the response where the peer grading to hide is
+     * @return true if the user can hide the peer grading
+     */
+    fun canHidePeerGrading(teacher: User, response: Response): Boolean {
+        return response.interaction.sequence.assignment!!.owner == teacher
     }
 
     /**
