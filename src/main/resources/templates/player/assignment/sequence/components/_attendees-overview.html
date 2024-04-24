@@ -127,7 +127,7 @@
       <span th:text="#{attendees.phase(__${'1'}__)}"></span>
 
       <span style="font-size: 12px;"
-            th:text="#{attendees.phase.not_started}"
+            th:text="|(#{attendees.phase.not_started})|"
             th:if="${stepsModel.responseSubmissionState.name() == 'DISABLED'}">
         not_started_label</span>
 
