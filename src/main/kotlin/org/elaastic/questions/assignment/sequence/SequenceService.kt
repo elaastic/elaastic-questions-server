@@ -64,7 +64,7 @@ class SequenceService(
 
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
         get(id, fetchInteractions).let {
-            if (it.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
+            if (it.owner != user) throw AccessDeniedException("You are not authorized to access to this sequence")
             it
         }
 
@@ -84,6 +84,12 @@ class SequenceService(
         = sequenceRepository.findSequenceByRankAndAssignment(rank, assignment)
             ?: throw EntityNotFoundException(
                 "There is no sequence for id \"$rank\" with assignment id \"${assignment.rank}\"")
+
+    fun findPreviousSequence(sequence: Sequence): Sequence?
+        = sequenceRepository.findPreviousSequence(sequence.rank, sequence.assignment!!)
+
+    fun findNextSequence(sequence: Sequence): Sequence?
+        = sequenceRepository.findNextSequence(sequence.rank, sequence.assignment!!)
 
     fun findByUuid(uuid: UUID, fetchInteractions: Boolean = false): Sequence {
         return sequenceRepository.findByUuid(uuid)?.let { sequence ->
