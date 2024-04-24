@@ -149,8 +149,8 @@ internal class PlayerControllerTest(
         whenever(sequenceService.get(sequence.id!!, fetchInteractions = true)).thenReturn(sequence)
         whenever(learnerSequenceService.getLearnerSequence(user, sequence)).thenReturn(learnerSequence)
 
-        mockkObject(PlayerModelFactory)
-        every { PlayerModelFactory.buildForLearner(any(), any(), any(), any(), any(), any()) } returns
+        mockkObject(PlayerModelFactory)                                             // Dernier any() ajouté
+        every { PlayerModelFactory.buildForLearner(any(), any(), any(), any(), any(), any(), any()) } returns
                 mockkClass(LearnerPlayerModel::class, relaxed = true)
 
         mockMvc.perform(
