@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.test.IntegrationTestingService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -79,5 +80,15 @@ internal class SequenceServiceIntegrationTest(
         assertThrows<EntityNotFoundException> {
             sequenceService.get(user, 12345678)
         }
+    }
+
+    @Test
+    fun `find sequence by rank and assignment - valid`() {  // FIXME
+        val assignment: Assignment = integrationTestingService.getTestAssignment()
+        val sequence = assignment.sequences[0]
+        val rank: Int = sequence.rank
+
+        assertThat(sequenceService.findSequenceByRankAndAssignment(rank, assignment),
+                   equalTo(sequence))
     }
 }
