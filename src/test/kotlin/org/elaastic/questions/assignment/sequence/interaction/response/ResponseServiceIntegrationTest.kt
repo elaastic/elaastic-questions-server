@@ -757,6 +757,7 @@ internal class ResponseServiceIntegrationTest(
             )
             assertNotEquals(student, anotherStudent, "The two students must be different")
         }
+
     }
 
 }
