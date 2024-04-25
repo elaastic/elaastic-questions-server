@@ -31,6 +31,7 @@ data class DraxoEvaluationModel(
     val userCanDisplayStudentsIdentity: Boolean = false,
     val draxoPeerGradingId : Long? = null,
     val utilityGrade: UtilityGrade? = null,
+    val hiddenByTeacher: Boolean = false,
 ) {
     constructor(
         graderIndex: Int,
@@ -43,6 +44,7 @@ data class DraxoEvaluationModel(
         draxoPeerGrading.getDraxoEvaluation(),
         userCanDisplayStudentsIdentity,
         draxoPeerGrading.id,
-        draxoPeerGrading.utilityGrade
+        draxoPeerGrading.utilityGrade,
+        draxoPeerGrading.hiddenByTeacher
     )
 }

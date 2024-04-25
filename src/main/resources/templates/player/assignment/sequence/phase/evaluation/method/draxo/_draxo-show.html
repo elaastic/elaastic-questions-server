@@ -21,24 +21,34 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
+    <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}"
+         th:classappend="${draxoEvaluationModel.hiddenByTeacher} ? 'hidden' : ''">
         <div class="review-header review-border">
             <div class="reviewer">
                 <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
                 <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
                       th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
             </div>
-            <div class="score">
+            <div class="score" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
                 <span th:text="#{draxo.score} + ' :'">Score</span>
                 <span class="ui label" th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
             </div>
             <div class="hide-peer-grading" th:if="${canHidePeerGrading}">
-                <a class="ui icon button" th:action="@{/assignment/sequence/peer-grading/hide/{id}(id=${draxoEvaluationModel.draxoPeerGradingId})}">
+                <a class="ui icon button"
+                   th:href="@{/peer-grading/draxo/hide/{id}(id=${draxoEvaluationModel.draxoPeerGradingId})}"
+                   th:if="${!draxoEvaluationModel.hiddenByTeacher}"
+                >
                     <i class="eye icon"></i>
+                </a>
+                <a class="ui icon button hidden"
+                   th:href="@{/peer-grading/draxo/unhide/{id}(id=${draxoEvaluationModel.draxoPeerGradingId})}"
+                   th:if="${draxoEvaluationModel.hiddenByTeacher}"
+                >
+                    <i class="hide icon"></i>
                 </a>
             </div>
         </div>
-        <div class="review-DRAXO review-border">
+        <div class="review-DRAXO review-border" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
             <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
             <div class="DRAXO-grid">
                 <th:block
@@ -80,12 +90,14 @@
                     </div>
                 </div>
             </th:block>
-
         </div>
-        <div class="review-border" th:if="${canModeratePeerGrading}"><!--/* Reaction for the feedback */-->
+        <div class="review-border" th:if="${canModeratePeerGrading && !draxoEvaluationModel.hiddenByTeacher}"><!--/* Reaction for the feedback */-->
             <th:block
                     th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
             </th:block>
+        </div>
+        <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
+            <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
         </div>
     </div>
 

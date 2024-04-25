@@ -11,6 +11,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 .review-border {
@@ -26,6 +27,19 @@
 .review-border:last-child {
     border-radius: 0 0 10px 10px;
     border-bottom-width: 1px;
+}
+
+.review.hidden {
+    background-color: #E6E6E6;
+}
+
+.ui.icon.button.hidden {
+    background-color: #BFBFBF;
+}
+
+.message-hidden {
+    display: flex;
+    justify-content: center;
 }
 
 /*////////////////*/

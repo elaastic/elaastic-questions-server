@@ -80,7 +80,7 @@ class DraxoPeerGradingController(
     }
 
 
-    @PostMapping("submit-utility-grade")
+    @PostMapping("/submit-utility-grade")
     fun submitDRAXOEvaluationUtilityGrade(
         authentication: Authentication,
         model: Model,
@@ -97,7 +97,7 @@ class DraxoPeerGradingController(
         return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
     }
 
-    @PostMapping("report-draxo-evaluation")
+    @PostMapping("/report-draxo-evaluation")
     fun reportDRAXOEvaluation(
         authentication: Authentication,
         model: Model,
@@ -110,6 +110,26 @@ class DraxoPeerGradingController(
         val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
 
         peerGradingService.updateReport(user, evaluation, reasons, reasonComment)
+
+        val sequenceId: Long = evaluation.response.interaction.sequence.id!!
+        val assignement = evaluation.response.interaction.sequence.assignment!!.id
+        return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
+    }
+
+    @GetMapping("/hide/{id}")
+    fun hide(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(id)
+
+        if (!responseService.canHidePeerGrading(user, evaluation.response)) {
+            throw AccessDeniedException("You are not authorized to hide this feedback")
+        }
+
+        peerGradingService.markAsHidden(user, evaluation)
 
         val sequenceId: Long = evaluation.response.interaction.sequence.id!!
         val assignement = evaluation.response.interaction.sequence.assignment!!.id
