@@ -19,10 +19,23 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.directory.User
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 
 interface InteractionRepository : JpaRepository<Interaction, Long> {
 
     fun findAllBySequence(sequence: Sequence): List<Interaction>
+
+    @Query("SELECT DISTINCT r " +
+           "FROM Interaction i " +
+           "INNER JOIN Response r " +
+           "ON i = r.interaction " +
+           "WHERE i.owner = :owner " +
+           "AND i.interactionType = :interactionType")
+    fun findResponseByOwnerAndType(owner: User,
+                                   interactionType: InteractionType): Response?
 }
