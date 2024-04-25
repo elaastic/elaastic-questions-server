@@ -76,6 +76,7 @@ public class ReportCandidateService {
         reportCandidate: ReportCandidate,
         repository: ReportCandidateRepository,
     ) {
-        TODO("Not yet implemented")
+        reportCandidate.hiddenByTeacher = false
+        repository.save(reportCandidate)
     }
 }
