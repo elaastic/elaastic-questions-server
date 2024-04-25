@@ -24,6 +24,8 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluat
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
+import org.elaastic.questions.directory.Role
+import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.test.IntegrationTestingService
@@ -33,6 +35,7 @@ import org.elaastic.questions.test.directive.tWhen
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.math.BigDecimal
@@ -49,6 +52,9 @@ internal class PeerGradingServiceTest(
     @Autowired val entityManager: EntityManager,
     @Autowired val subjectService: SubjectService
 ) {
+
+    @Autowired
+    private lateinit var roleService: RoleService
 
     @Test
     fun `a student can report a peerGrading`() {
@@ -187,7 +193,6 @@ internal class PeerGradingServiceTest(
         }
     }
 
-
     @Test
     fun `a student can give to a peerGrading a UtilityGrade`() {
         val response = integrationTestingService.getAnyResponse()
@@ -248,6 +253,81 @@ internal class PeerGradingServiceTest(
             assertThrows(IllegalAccessException::class.java) {
                 peerGradingService.updateUtilityGrade(reporterWhoDontOwnTheResponse, peerGrading, utilityGrade)
             }
+        }
+    }
+
+    @Test
+    fun `a teacher can hide a peerGrading`() {
+        val response = integrationTestingService.getAnyResponse()
+        val grader = integrationTestingService.getAnyUser()
+        val teacher = integrationTestingService.getTestTeacher()
+        response.interaction.sequence.owner = teacher
+
+        lateinit var peerGrading: PeerGrading;
+        tGiven("A peer grading") {
+            peerGrading = LikertPeerGrading(
+                grade = BigDecimal(2),
+                annotation = "Reportable content",
+                grader = grader,
+                response = response
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tWhen("We hide it") {
+            assertDoesNotThrow({
+                peerGradingService.markAsHidden(teacher, peerGrading)
+            }, "A teacher can hide a peerGrading")
+        }.tThen("the peerGrading is hidden") {
+            assertTrue(peerGrading.hiddenByTeacher)
+        }.tWhen("a student (or a teacher that doesn't own the sequence ) try hidding a peerGrading") {}
+            .tThen("an exception is thrown") {
+                assertThrows<IllegalAccessException> {
+                    peerGradingService.markAsHidden(grader, peerGrading)
+                }
+                val anotherTeacher = integrationTestingService.getAnyUser()
+                anotherTeacher.addRole(roleService.roleTeacher())
+                assertNotEquals(teacher, anotherTeacher)
+                assertThrows<IllegalAccessException> {
+                    peerGradingService.markAsHidden(anotherTeacher, peerGrading)
+                }
+            }
+    }
+
+    @Test
+    fun `a teacher unhide a peerGrading`() {
+        val response = integrationTestingService.getAnyResponse()
+        val grader = integrationTestingService.getAnyUser()
+        val teacher = integrationTestingService.getTestTeacher()
+        response.interaction.sequence.owner = teacher
+        lateinit var peerGrading: PeerGrading;
+        tGiven("A peer grading") {
+            peerGrading = LikertPeerGrading(
+                grade = BigDecimal(2),
+                annotation = "Reportable content",
+                grader = grader,
+                response = response
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tWhen("A teacher try unhiding a peerGrading that is not hidden") {}.tThen("Nothing is thrown") {
+            assertDoesNotThrow({
+                peerGradingService.markAsShow(teacher, peerGrading)
+            }, "A teacher can unhide a peerGrading that is not hidden")
+        }.tWhen("We hide it") {
+            peerGradingService.markAsHidden(teacher, peerGrading)
+            assertTrue(peerGrading.hiddenByTeacher)
+        }.tWhen("We unhide it") {
+            assertDoesNotThrow({
+                peerGradingService.markAsShow(teacher, peerGrading)
+            }, "A teacher can unhide a peerGrading")
+        }.tThen("the peerGrading is unhidden") {
+            assertFalse(peerGrading.hiddenByTeacher)
         }
     }
 }

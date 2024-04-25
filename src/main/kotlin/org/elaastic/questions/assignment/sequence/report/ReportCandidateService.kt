@@ -13,8 +13,9 @@ public class ReportCandidateService {
     /**
      * Hide a ModerationCandidate.
      */
-    fun markAsHidden(reportCandidate: ReportCandidate,
-                     repository: ReportCandidateRepository,
+    fun markAsHidden(
+        reportCandidate: ReportCandidate,
+        repository: ReportCandidateRepository,
     ) {
         reportCandidate.hiddenByTeacher = true
         repository.save(reportCandidate)
@@ -23,8 +24,9 @@ public class ReportCandidateService {
     /**
      * Remove a ModerationCandidate.
      */
-    fun markAsRemoved(reportCandidate: ReportCandidate,
-                      repository: ReportCandidateRepository
+    fun markAsRemoved(
+        reportCandidate: ReportCandidate,
+        repository: ReportCandidateRepository
     ) {
         reportCandidate.removedByTeacher = true
         repository.save(reportCandidate)
@@ -38,10 +40,11 @@ public class ReportCandidateService {
      * @param reportComment the comment for the report
      * @param repository the repository to save the candidate
      */
-    fun updateReport(reportCandidate: ReportCandidate,
-                     reportReasons: List<String>,
-                     reportComment : String? = null,
-                     repository: ReportCandidateRepository
+    fun updateReport(
+        reportCandidate: ReportCandidate,
+        reportReasons: List<String>,
+        reportComment: String? = null,
+        repository: ReportCandidateRepository
     ) {
         val objectMapper = ObjectMapper()
         val jsonString = objectMapper.writeValueAsString(reportReasons)
@@ -57,11 +60,22 @@ public class ReportCandidateService {
      * @param grade the grade
      * @param repository the repository to save the candidate
      */
-    fun updateGrade(utilityGradeCandidate: ReportCandidate,
-                    grade: UtilityGrade,
-                    repository: ReportCandidateRepository
+    fun updateGrade(
+        utilityGradeCandidate: ReportCandidate,
+        grade: UtilityGrade,
+        repository: ReportCandidateRepository
     ) {
         utilityGradeCandidate.utilityGrade = grade
         repository.save(utilityGradeCandidate)
+    }
+
+    /**
+     * Unhide a ModerationCandidate.
+     */
+    fun markAsShown(
+        reportCandidate: ReportCandidate,
+        repository: ReportCandidateRepository,
+    ) {
+        TODO("Not yet implemented")
     }
 }

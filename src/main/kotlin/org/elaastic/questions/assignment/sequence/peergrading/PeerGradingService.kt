@@ -213,4 +213,11 @@ class PeerGradingService(
         }
         reportCandidateService.updateGrade(peerGrading, utilityGrade, peerGradingRepository)
     }
+
+    /**
+     * Show a peer grading that was hidden by the teacher.
+     */
+    fun markAsShow(teacher: User, peerGrading: PeerGrading) {
+        TODO("not implemented")
+    }
 }
