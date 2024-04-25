@@ -218,8 +218,8 @@ class PeerGradingService(
      * Show a peer grading that was hidden by the teacher.
      */
     fun markAsShow(teacher: User, peerGrading: PeerGrading) {
-        require(teacher == peerGrading.response.interaction.sequence.owner) {
-            "Only the teacher who own the sequence can show a peer grading"
+        if (teacher != peerGrading.response.interaction.sequence.owner) {
+            throw IllegalAccessException("Only the teacher who own the sequence can show a peer grading")
         }
         reportCandidateService.markAsShown(peerGrading, peerGradingRepository)
     }

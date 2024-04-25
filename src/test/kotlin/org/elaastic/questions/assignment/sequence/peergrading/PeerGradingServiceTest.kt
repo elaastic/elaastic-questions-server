@@ -330,4 +330,87 @@ internal class PeerGradingServiceTest(
             assertFalse(peerGrading.hiddenByTeacher)
         }
     }
+
+    @Test
+    fun `a student (or a student who doesn't own the sequence) can't unhide a peerGrading`() {
+        val response = integrationTestingService.getAnyResponse()
+        val grader = integrationTestingService.getAnyUser()
+        val teacher = integrationTestingService.getTestTeacher()
+        response.interaction.sequence.owner = teacher
+        lateinit var peerGrading: PeerGrading;
+        tGiven("A peer grading") {
+            peerGrading = LikertPeerGrading(
+                grade = BigDecimal(2),
+                annotation = "Reportable content",
+                grader = grader,
+                response = response
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tWhen("We hide it") {
+            peerGradingService.markAsHidden(teacher, peerGrading)
+            assertTrue(peerGrading.hiddenByTeacher)
+        }.tWhen("A student try unhiding a peerGrading") {}.tThen("an exception is thrown") {
+            assertNotEquals(teacher, grader)
+            assertThrows<IllegalAccessException> {
+                peerGradingService.markAsShow(grader, peerGrading)
+            }
+            val anotherStudent = integrationTestingService.getNLearners(1).first()
+            anotherStudent.addRole(roleService.roleStudent())
+            assertNotEquals(grader, anotherStudent)
+            assertNotEquals(teacher, anotherStudent)
+            assertThrows<IllegalAccessException> {
+                peerGradingService.markAsShow(anotherStudent, peerGrading)
+            }
+        }.tWhen("a teacher that doesn't own the sequence try unhiding a peerGrading") {}
+            .tThen("an exception is thrown") {
+                val anotherTeacher = integrationTestingService.getAnyUser()
+                anotherTeacher.addRole(roleService.roleTeacher())
+                assertNotEquals(teacher, anotherTeacher)
+                assertThrows<IllegalAccessException> {
+                    peerGradingService.markAsShow(anotherTeacher, peerGrading)
+                }
+            }
+    }
+
+    @Test
+    fun `test of getDraxoPeerGrading`() {
+        val response = integrationTestingService.getAnyResponse()
+        val grader = integrationTestingService.getAnyUser()
+        val teacher = integrationTestingService.getTestTeacher()
+        response.interaction.sequence.owner = teacher
+        lateinit var peerGrading: DraxoPeerGrading;
+        tGiven("A draxo peer grading") {
+            peerGrading = DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.YES)
+                    .addEvaluation(Criteria.O, OptionId.NO),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tWhen("We get the draxo peer grading") {
+            val draxoPeerGrading = peerGrading.id?.let { it1 -> peerGradingService.getDraxoPeerGrading(it1) }
+            draxoPeerGrading
+        }.tThen("the draxo peer grading is returned") { draxoPeerGrading ->
+            assertNotNull(draxoPeerGrading)
+            assertEquals(peerGrading.id, draxoPeerGrading!!.id)
+        }.tWhen("we get with an inexisting id") {}.tThen("we get an exception") {
+            assertThrows<Exception> {
+                peerGradingService.getDraxoPeerGrading(-1)
+            }
+
+        }
+    }
 }
