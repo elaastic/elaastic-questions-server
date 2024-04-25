@@ -19,11 +19,14 @@
 package org.elaastic.questions.player.components.assignmentOverview
 
 import org.elaastic.questions.assignment.LearnerAssignment
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 
 data class AssignmentOverviewModel(
         val teacher: Boolean,
         val nbRegisteredUser: Int,
         val attendees: List<LearnerAssignment>,
+        val attendeesResponses: MutableMap<LearnerAssignment, Response?>,
         val openedPane: String,
         val previousAssignment: Long?,
         val nextAssignment: Long?,

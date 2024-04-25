@@ -22,6 +22,7 @@ import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
@@ -41,6 +42,7 @@ object PlayerModelFactory {
         serverBaseUrl: String,
         nbRegisteredUsers: Int,
         attendees: List<LearnerAssignment>,
+        attendeesResponses: MutableMap<LearnerAssignment, Response?>,
         openedPane: String,
         previousAssignment: Long?,
         nextAssignment: Long?,
@@ -58,6 +60,7 @@ object PlayerModelFactory {
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
                 attendees = attendees,
+                attendeesResponses = attendeesResponses,
                 assignment = assignment,
                 openedPane = openedPane,
                 previousAssignment = previousAssignment,
@@ -99,6 +102,7 @@ object PlayerModelFactory {
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
                 attendees = arrayListOf(),  // Empty list because useless for student to see attendees list.
+                attendeesResponses = mutableMapOf(),
                 openedPane = openedPane,
                 previousAssignment = null,
                 nextAssignment = null,

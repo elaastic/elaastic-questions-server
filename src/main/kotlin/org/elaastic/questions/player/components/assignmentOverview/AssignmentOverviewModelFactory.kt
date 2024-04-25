@@ -25,6 +25,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 
 object AssignmentOverviewModelFactory {
@@ -40,6 +41,7 @@ object AssignmentOverviewModelFactory {
         assignment: Assignment,
         nbRegisteredUser: Int,
         attendees: List<LearnerAssignment>,
+        attendeesResponses: MutableMap<LearnerAssignment, Response?>,
         openedPane: String,
         previousAssignment: Long?,
         nextAssignment: Long?,
@@ -49,6 +51,7 @@ object AssignmentOverviewModelFactory {
         teacher = teacher,
         nbRegisteredUser = nbRegisteredUser,
         attendees = attendees,
+        attendeesResponses = attendeesResponses,
         openedPane = openedPane,
         previousAssignment = previousAssignment,
         nextAssignment = nextAssignment,
