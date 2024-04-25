@@ -88,7 +88,7 @@ class DraxoPeerGradingController(
         @RequestParam(required = true) utilityGrade: UtilityGrade
     ): String {
         val user: User = authentication.principal as User
-        val evaluation: DraxoPeerGrading = peerGradingService.findDraxoById(evaluationId)
+        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
 
         peerGradingService.updateUtilityGrade(user, evaluation, utilityGrade)
 
@@ -106,7 +106,7 @@ class DraxoPeerGradingController(
         @RequestParam(value = "other-reason-comment", required = false) otherReasonComment: String
     ): String {
         val user: User = authentication.principal as User
-        val evaluation: DraxoPeerGrading = peerGradingService.findDraxoById(evaluationId)
+        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
         val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
 
         peerGradingService.updateReport(user, evaluation, reasons, reasonComment)

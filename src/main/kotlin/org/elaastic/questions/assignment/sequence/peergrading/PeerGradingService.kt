@@ -195,7 +195,7 @@ class PeerGradingService(
      * @return the Draxo peer grading.
      * @throws IllegalArgumentException if no Draxo peer grading is found with the given id.
      */
-    fun findDraxoById(id: Long): DraxoPeerGrading =
+    fun getDraxoPeerGrading(id: Long): DraxoPeerGrading =
         peerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
             ?: error("No Draxo peer grading found with id $id")
 
