@@ -52,12 +52,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="field" th:id="other-text-field" th:attr="data-modal-id=${evaluationId}" style="display: none">
+                <div class="required field" th:id="other-text-field" th:attr="data-modal-id=${evaluationId}"
+                     style="display: none">
                     <label for="other-reason-comment"
                            th:text="#{player.sequence.chatGptEvaluation.reportModal.reportDetails}"></label>
                     <textarea name="other-reason-comment"
                               th:placeholder="#{player.sequence.chatGptEvaluation.reportModal.reportDetails.placeholder}"
-                              rows="2" id="other-reason-comment"></textarea>
+                              rows="2" id="other-reason-comment" th:attr="data-modal-id=${evaluationId}"></textarea>
                 </div>
             </div>
         </form>
@@ -88,6 +89,28 @@
             $("#other-text-field").hide(); // Hide every text field for the "other reason"
             $('#submit-button').addClass('disabled'); // Disable every submit button
 
+            /**
+             * Update the state of the submit button
+             * He can be enabled or disabled.
+             * The submit button is enabled if any of the checkboxes is checked (except the "other" checkbox)
+             * or the "other" checkbox is checked and the text field is not empty
+             * @param evaluationId The ID of the evaluation
+             */
+            function updateSubmitButtonState(evaluationId) {
+                const otherReasonCheckbox = $('input[value="OTHER"]');
+                // Same thing for the submit button, we enable (or disable) only if the `evaluationId` is matched
+                //If any of the checkboxes is checked (except the "other" checkbox) or the "other" checkbox is checked and the text field is not empty
+                if (($('input[name="reason"]:checked').length > 0 && !otherReasonCheckbox.is(":checked"))
+                    || (otherReasonCheckbox.is(":checked") && $('#other-reason-comment[data-modal-id="' + evaluationId + '"]').val())) {
+
+                    //Then enable the submit button
+                    $('#submit-button[data-modal-id="' + evaluationId + '"]').removeClass('disabled');
+                } else {
+                    //Otherwise, disable the submit button
+                    $('#submit-button[data-modal-id="' + evaluationId + '"]').addClass('disabled');
+                }
+            }
+
             $("input[name='reason']").change(function () { // When a checkbox is checked
                 let evaluationId = $(this).attr('data-modal-id'); // Then get the `evaluationId` from the checkbox
                 if ($("input[value='OTHER']").is(":checked")) { // And show ( or hide ) the text field for the "other reason" when the evaluationId is matched
@@ -96,12 +119,11 @@
                     $('#other-text-field[data-modal-id="' + evaluationId + '"]').stop().slideUp();
                 }
 
-                // Same thing for the submit button, we enable (or disable) only if the `evaluationId` is matched
-                if ($('input[name="reason"]:checked').length > 0) {
-                    $('#submit-button[data-modal-id="' + evaluationId + '"]').removeClass('disabled');
-                } else {
-                    $('#submit-button[data-modal-id="' + evaluationId + '"]').addClass('disabled');
-                }
+                updateSubmitButtonState(evaluationId);
+            });
+
+            $('#other-reason-comment[data-modal-id="' + evaluationId + '"]').on('input', function () {
+                updateSubmitButtonState(evaluationId);
             });
 
             $('#submit-button[data-modal-id="' + evaluationId + '"]').click(function () {
