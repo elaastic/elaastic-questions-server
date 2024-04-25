@@ -37,12 +37,19 @@
                 <a class="ui icon button"
                    th:href="@{/peer-grading/draxo/hide/{id}(id=${draxoEvaluationModel.draxoPeerGradingId})}"
                    th:if="${!draxoEvaluationModel.hiddenByTeacher}"
+                   th:attr="data-tooltip=#{draxo.action.hideEvaluation}"
+                   data-tooltip="Hide this evaluation"
+                   data-position="top center"
                 >
+                    <!-- TODO dynamique text in tooltip -->
                     <i class="eye icon"></i>
                 </a>
                 <a class="ui icon button hidden"
                    th:href="@{/peer-grading/draxo/unhide/{id}(id=${draxoEvaluationModel.draxoPeerGradingId})}"
                    th:if="${draxoEvaluationModel.hiddenByTeacher}"
+                   th:attr="data-tooltip=#{draxo.action.showEvaluation}"
+                   data-tooltip="Show this evaluation"
+                   data-position="top center"
                 >
                     <i class="hide icon"></i>
                 </a>
