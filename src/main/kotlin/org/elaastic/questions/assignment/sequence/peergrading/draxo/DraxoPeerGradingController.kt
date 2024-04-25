@@ -135,4 +135,24 @@ class DraxoPeerGradingController(
         val assignement = evaluation.response.interaction.sequence.assignment!!.id
         return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
     }
+
+    @GetMapping("/unhide/{id}")
+    fun unhide(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(id)
+
+        if (!responseService.canHidePeerGrading(user, evaluation.response)) {
+            throw AccessDeniedException("You are not authorized to unhide this feedback")
+        }
+
+        peerGradingService.markAsShow(user, evaluation)
+
+        val sequenceId: Long = evaluation.response.interaction.sequence.id!!
+        val assignement = evaluation.response.interaction.sequence.assignment!!.id
+        return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
+    }
 }
