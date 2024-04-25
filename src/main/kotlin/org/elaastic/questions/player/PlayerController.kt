@@ -26,6 +26,7 @@ import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.controller.ControllerUtil
@@ -245,6 +246,7 @@ class PlayerController(
         var nextSequenceId: Long? = null
         val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
+        val attendeesResponses: MutableMap<LearnerAssignment, Response?> = mutableMapOf()
 
         if (previousSequence !== null) {
             previousSequenceId = previousSequence.id
@@ -252,6 +254,11 @@ class PlayerController(
 
         if (nextSequence !== null) {
             nextSequenceId = nextSequence.id
+        }
+
+        for (attendee: LearnerAssignment in registeredUsers) {
+            /*attendeesResponses[attendee] = interactionService
+                .findResponseByLearnerAssignment(attendee)*/
         }
 
         model.addAttribute(
@@ -262,6 +269,7 @@ class PlayerController(
                 serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
                 nbRegisteredUsers = nbRegisteredUsers,
                 attendees = registeredUsers,
+                attendeesResponses = attendeesResponses,
                 openedPane = openedPane,
                 previousAssignment = previousSequenceId,
                 nextAssignment = nextSequenceId,
