@@ -18,11 +18,13 @@
 
 package org.elaastic.questions.assignment.sequence.interaction
 
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.ia.ResponseRecommendationService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
@@ -59,6 +61,10 @@ class InteractionService(
 
     fun findById(id: Long): Interaction =
             interactionRepository.findById(id).get()
+
+    fun findResponseByLearnerAssignment(learnerAssignment: LearnerAssignment): Response?
+        = interactionRepository.findResponseByOwnerAndType(learnerAssignment.learner,
+                                                           InteractionType.ResponseSubmission)
 
     fun stop(user: User, interactionId: Long) =
             stop(user, interactionRepository.getReferenceById(interactionId))
