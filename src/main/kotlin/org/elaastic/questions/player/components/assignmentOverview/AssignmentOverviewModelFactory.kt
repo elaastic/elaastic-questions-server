@@ -41,7 +41,7 @@ object AssignmentOverviewModelFactory {
         assignment: Assignment,
         nbRegisteredUser: Int,
         attendees: List<LearnerAssignment>,
-        attendeesResponses: MutableMap<LearnerAssignment, Response?>,
+        attendeesResponses: MutableMap<Long, MutableList<Response>>,
         openedPane: String,
         previousAssignment: Long?,
         nextAssignment: Long?,

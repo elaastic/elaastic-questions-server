@@ -26,7 +26,7 @@ data class AssignmentOverviewModel(
         val teacher: Boolean,
         val nbRegisteredUser: Int,
         val attendees: List<LearnerAssignment>,
-        val attendeesResponses: MutableMap<LearnerAssignment, Response?>,
+        val attendeesResponses: MutableMap<Long, MutableList<Response>>,
         val openedPane: String,
         val previousAssignment: Long?,
         val nextAssignment: Long?,

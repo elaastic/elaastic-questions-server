@@ -42,7 +42,7 @@ object PlayerModelFactory {
         serverBaseUrl: String,
         nbRegisteredUsers: Int,
         attendees: List<LearnerAssignment>,
-        attendeesResponses: MutableMap<LearnerAssignment, Response?>,
+        attendeesResponses: MutableMap<Long, MutableList<Response>>,
         openedPane: String,
         previousAssignment: Long?,
         nextAssignment: Long?,
