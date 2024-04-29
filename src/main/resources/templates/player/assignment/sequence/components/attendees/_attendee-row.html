@@ -1,0 +1,115 @@
+<!--
+  ~
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<div class="ui clearing attached segment grid attendee-item"
+     th:fragment="attendee(attendee, responses)"
+     th:id="|${context}-${attendee.id}|"
+     style="margin: 0; padding-bottom: 10px;">
+
+  <div class="row two column">
+    <div class="attendee-information column"
+         style="display: flex; column-gap: 10px; align-items: center;">
+
+      <div class="attendee-picture"
+           style="border-radius: 999px; background-color: #e0e0e0;
+                  display: flex; justify-content: center; align-items: center; column-gap: 10px;
+                  flex: none; aspect-ratio: 1; padding: 5px;">
+
+        <i class="icon user outline large" style="margin: 0;"></i>
+      </div>
+
+      <div class="attendee-name ui header"
+           style="margin: 0;"
+           th:text="${attendee.learner.getFullname()}">
+        attendee_name</div>
+    </div>
+
+    <div class="attendee-insights column"
+         style="display: flex; justify-content: flex-end; column-gap: 15px; align-items: center;">
+
+      <div style="color: #B03060;"
+           th:attr="data-tooltip=#{attendee.user_reports}"
+           data-tooltip="User reports"
+           data-position="top center"
+           data-inverted="">   <!-- LABEL: REPORTS COUNT -->
+
+        <i class="icon flag outline"></i>
+
+        <span>
+                0</span>
+      </div>
+
+      <div style="color: #535353;"
+           th:attr="data-tooltip=#{attendee.in_course.tooltip}"
+           data-tooltip="In course..."
+           data-position="top center"
+           data-inverted="">   <!-- LABEL: IN COURSE... -->
+
+        <i class="icon pencil alternate"></i>
+
+        <span th:text="#{attendee.in_course}">
+                in_course_label</span>
+      </div>
+
+      <!--<div style="color: #259C31;"
+           th:attr="data-tooltip=#{attendee.finished.tooltip}"
+           data-tooltip="Finished..."
+           data-position="top center"
+           data-inverted="">   <!- - LABEL: FINISHED -- >
+
+        <i class="icon check alternate"></i>
+        <span th:text="#{attendee.finished}">
+          finished_label</span>
+      </div>-->
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="title">
+      <i class="dropdown icon"></i>
+
+      <span th:text="#{attendee.details}">
+        activity_details</span>
+    </div>
+
+    <div class="content">
+      <div class="dropdown">
+        <div class="title">
+          <i class="dropdown icon"></i>
+
+          <span th:text="#{attendees.phase(__${'1'}__)}">
+            Phase 1</span>
+        </div>
+
+        <div class="content">
+          <h4 class="ui header"
+              th:text="#{attendee.details.statement_answer}">
+                statement_answer</h4>
+
+          <div class="ui info message"
+               th:if="${#lists.size(responses) > 0}"
+               th:utext="${responses[0].explanation}">
+                 given_answer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
