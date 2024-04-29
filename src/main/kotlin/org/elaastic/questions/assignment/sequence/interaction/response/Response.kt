@@ -102,6 +102,10 @@ class Response(
     var fake: Boolean = false,
 
     var evaluationCount: Int = 0,
+
+    /**
+     * Number of all evaluations made by Draxo
+     */
     var draxoEvaluationCount: Int = 0,
 
     /**
@@ -132,6 +136,12 @@ class Response(
     @LastModifiedDate
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
+
+    /**
+     * Number of evaluations made by Draxo that are hidden to the learner
+     */
+    @Column(name = "draxo_evaluation_hidden_count")
+    var draxoEvaluationHiddenCount: Int = 0
 
     /**
      * Allow treating this response as an update of an existing response

@@ -697,12 +697,14 @@ internal class ResponseServiceIntegrationTest(
                 }
         }.tThen("The teacher can hide the feedback") { peerGrading ->
             assertTrue(responseService.canHidePeerGrading(teacher, peerGrading), "The teacher can hide the feedback")
+            assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must be 0")
             peerGrading
         }.tWhen("the teacher hide the peerGrading") { peerGrading ->
             responseService.hidePeerGrading(teacher, peerGrading)
             peerGrading
         }.tThen("the peerGrading is hidden") { peerGrading ->
             assertTrue(peerGrading.hiddenByTeacher, "The feedback is hidden")
+            assertEquals(1, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must be 1")
         }
     }
 
@@ -735,6 +737,7 @@ internal class ResponseServiceIntegrationTest(
                 IllegalAccessException::class.java
             ) { responseService.hidePeerGrading(student, peerGrading) }
             assertEquals(student, peerGrading.response.learner, "The student own the response")
+            assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must not have changed")
         }
     }
 
