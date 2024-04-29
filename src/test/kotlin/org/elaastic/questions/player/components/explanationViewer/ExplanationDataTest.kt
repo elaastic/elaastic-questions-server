@@ -64,45 +64,44 @@ class ExplanationDataTest(
 
     @Test
     fun `test de la fonction getNbEvaluation`() {
-        val student: User = integrationTestingService.getTestStudent()
         val grader: User = integrationTestingService.getNLearners(1).first()
-        val teacher: User = integrationTestingService.getTestTeacher()
         var response = integrationTestingService.getAnyResponse()
-        response.learner = student
-        response.interaction.sequence.assignment!!.owner = teacher
-        lateinit var peerGrading: PeerGrading
+        val teacher: User = response.statement.owner
 
         assertEquals(0, response.evaluationCount)
         assertEquals(0, response.draxoEvaluationCount)
         assertEquals(0, response.draxoEvaluationHiddenCount)
 
         tGiven("A peerGrading of the response given by another student") {
-            peerGrading = DraxoPeerGrading(
+            DraxoPeerGrading(
                 grader = grader,
                 response = response,
                 draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO),
                 lastSequencePeerGrading = false
-            ).tWhen {
-                peerGradingRepository.saveAndFlush(it)
-                it
+            ).tWhen("the peer grading is saved and varaibles are updated") { peerGrading ->
+                peerGradingRepository.save(peerGrading)
+                response = responseService.updateMeanGradeAndEvaluationCount(response)
+                peerGrading
+            }.tThen("variables are set as expected") { peerGrading ->
+                assertEquals(1, peerGradingService.findAllDraxo(response).size)
+                assertEquals(2, response.evaluationCount)
+                assertEquals(1, response.draxoEvaluationCount)
+                assertEquals(0, response.draxoEvaluationHiddenCount)
+                peerGrading
+            }.tThen("The number of evaluations should be 2 for the student and the teacher") { peerGrading ->
+                response = responseService.responseRepository.findById(response.id!!).get()
+                val explanationData = ExplanationData(response)
+                assertEquals(2, explanationData.getNbEvaluation(false))
+                assertEquals(2, explanationData.getNbEvaluation(true))
+                peerGrading
+            }.tWhen("The peerGrading is hidden by the teacher") { peerGrading ->
+                peerGradingService.markAsHidden(teacher, peerGrading)
+            }.tThen("The number of evaluations should be 1 for the student and 2 for the teacher") {
+                response = responseService.responseRepository.findById(response.id!!).get()
+                val explanationData = ExplanationData(response)
+                assertEquals(1, explanationData.getNbEvaluation(false))
+                assertEquals(2, explanationData.getNbEvaluation(true))
             }
-            response = responseService.updateMeanGradeAndEvaluationCount(response)
-            assertEquals(1, peerGradingService.findAllDraxo(response).size)
-            assertEquals(1, response.evaluationCount)
-            assertEquals(1, response.draxoEvaluationCount)
-            assertEquals(0, response.draxoEvaluationHiddenCount)
-        }.tThen("The number of evaluations should be 1 for the student and the teacher") {
-            response = responseService.responseRepository.findById(response.id!!).get()
-            val explanationData = ExplanationData(response)
-            assertEquals(1, explanationData.getNbEvaluation(false))
-            assertEquals(1, explanationData.getNbEvaluation(true))
-        }.tWhen("The peerGrading is hidden by the teacher") {
-            peerGradingService.markAsHidden(teacher, peerGrading)
-        }.tThen("The number of evaluations should be 0 for the student and 1 for the teacher") {
-            response = responseService.responseRepository.findById(response.id!!).get()
-            val explanationData = ExplanationData(response)
-            assertEquals(0, explanationData.getNbEvaluation(false))
-            assertEquals(1, explanationData.getNbEvaluation(true))
         }
     }
 
