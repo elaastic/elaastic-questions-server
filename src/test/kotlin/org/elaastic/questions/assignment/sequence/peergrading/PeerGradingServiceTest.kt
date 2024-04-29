@@ -261,7 +261,7 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val grader = integrationTestingService.getAnyUser()
         val teacher = integrationTestingService.getTestTeacher()
-        response.interaction.sequence.owner = teacher
+        response.interaction.sequence.assignment!!.owner = teacher
 
         lateinit var peerGrading: PeerGrading;
         tGiven("A peer grading") {
@@ -301,7 +301,7 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val grader = integrationTestingService.getAnyUser()
         val teacher = integrationTestingService.getTestTeacher()
-        response.interaction.sequence.owner = teacher
+        response.interaction.sequence.assignment!!.owner = teacher
         lateinit var peerGrading: PeerGrading;
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
@@ -336,7 +336,7 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val grader = integrationTestingService.getAnyUser()
         val teacher = integrationTestingService.getTestTeacher()
-        response.interaction.sequence.owner = teacher
+        response.interaction.sequence.assignment!!.owner = teacher
         lateinit var peerGrading: PeerGrading;
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
@@ -381,7 +381,7 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val grader = integrationTestingService.getAnyUser()
         val teacher = integrationTestingService.getTestTeacher()
-        response.interaction.sequence.owner = teacher
+        response.interaction.sequence.assignment!!.owner = teacher
         lateinit var peerGrading: DraxoPeerGrading;
         tGiven("A draxo peer grading") {
             peerGrading = DraxoPeerGrading(

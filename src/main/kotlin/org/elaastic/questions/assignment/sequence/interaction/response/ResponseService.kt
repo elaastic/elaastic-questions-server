@@ -386,7 +386,7 @@ class ResponseService(
 
     /**
      * Return true if the user can hide the peer grading of a response
-     * An user can hide the peer grading if he is the owner of the sequence
+     * An user can hide the peer grading if he is the owner of the assigment
      * @param teacher the user who want to hide the peer grading
      * @param response the response where the peer grading to hide is
      * @return true if the user can hide the peer grading

@@ -139,12 +139,12 @@ class PeerGradingService(
 
     /**
      * Mark peer grading as hidden by teacher.
-     *
+     * if the user can't hide the peer grading, an exception is thrown
      * @param teacher the teacher who hide the peer grading.
      * @param peerGrading the peer grading to hide
      */
     fun markAsHidden(teacher: User, peerGrading: PeerGrading) {
-        if (teacher != peerGrading.response.interaction.sequence.owner) {
+        if (canHidePeerGrading(teacher, peerGrading).not()) {
             throw IllegalAccessException("Only the teacher who own the sequence can hide a peer grading")
         }
         reportCandidateService.markAsHidden(peerGrading, peerGradingRepository)
@@ -218,7 +218,7 @@ class PeerGradingService(
      * Show a peer grading that was hidden by the teacher.
      */
     fun markAsShow(teacher: User, peerGrading: PeerGrading) {
-        if (teacher != peerGrading.response.interaction.sequence.owner) {
+        if (canHidePeerGrading(teacher, peerGrading).not()) {
             throw IllegalAccessException("Only the teacher who own the sequence can show a peer grading")
         }
         reportCandidateService.markAsShown(peerGrading, peerGradingRepository)
@@ -226,27 +226,12 @@ class PeerGradingService(
 
     /**
      * Return true if the user can hide the peer grading
-     * An user can hide the peer grading if he is the owner of the sequence
+     * An user can hide the peer grading if he is the owner of the assigment
      * @param teacher the user who want to hide the peer grading
      * @param peerGrading the peer grading to hide
      * @return true if the user can hide the peer grading
      */
     fun canHidePeerGrading(teacher: User, peerGrading: PeerGrading): Boolean {
         return responseService.canHidePeerGrading(teacher, peerGrading.response)
-    }
-
-
-    /**
-     * Hide a peer grading
-     * if the user can't hide the peer grading, an exception is thrown
-     * @param teacher the teacher who hide the peer grading
-     * @param peerGrading the peer grading to hide
-     */
-    fun hidePeerGrading(teacher: User, peerGrading: PeerGrading) {
-        if (!canHidePeerGrading(teacher, peerGrading)) {
-            throw IllegalAccessException("You can't hide this peer grading")
-        }
-        peerGrading.hiddenByTeacher = true
-        peerGrading.response.draxoEvaluationHiddenCount++
     }
 }
