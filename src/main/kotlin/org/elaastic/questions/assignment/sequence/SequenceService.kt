@@ -41,6 +41,7 @@ import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -89,10 +90,14 @@ class SequenceService(
                 "There is no sequence for id \"$rank\" with assignment id \"${assignment.rank}\"")
 
     fun findPreviousSequence(sequence: Sequence): Sequence?
-        = sequenceRepository.findPreviousSequence(sequence.rank, sequence.assignment!!)
+        = sequenceRepository.findPreviousSequence(sequence.rank,
+                                                  sequence.assignment!!,
+                                                  PageRequest.of(0, 1)).firstOrNull()
 
     fun findNextSequence(sequence: Sequence): Sequence?
-        = sequenceRepository.findNextSequence(sequence.rank, sequence.assignment!!)
+        = sequenceRepository.findNextSequence(sequence.rank,
+                                              sequence.assignment!!,
+                                              PageRequest.of(0, 1)).firstOrNull()
 
     fun findByUuid(uuid: UUID, fetchInteractions: Boolean = false): Sequence {
         return sequenceRepository.findByUuid(uuid)?.let { sequence ->
