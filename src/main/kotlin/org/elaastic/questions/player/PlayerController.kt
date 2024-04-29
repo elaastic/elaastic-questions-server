@@ -246,7 +246,8 @@ class PlayerController(
         var nextSequenceId: Long? = null
         val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
-        val attendeesResponses: MutableMap<LearnerAssignment, Response?> = mutableMapOf()
+        val responses: List<Response> = interactionService.findAllResponsesBySequence(sequence)
+        val attendeesResponses: MutableMap<Long, MutableList<Response>> = mutableMapOf()
 
         if (previousSequence !== null) {
             previousSequenceId = previousSequence.id
