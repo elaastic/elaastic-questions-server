@@ -385,27 +385,6 @@ class ResponseService(
     }
 
     /**
-     * Return true if the user can moderate the feedback of the response
-     * An user can moderate the feedback if he is the owner of the sequence
-     * @param user the user who want to moderate the feedback
-     * @param response the response to moderate
-     */
-    fun canModerate(user: User, response: Response): Boolean {
-        return response.learner == user
-    }
-
-    /**
-     * Return true if the user can hide the peer grading
-     * An user can hide the peer grading if he is the owner of the sequence
-     * @param teacher the user who want to hide the peer grading
-     * @param peerGrading the peer grading to hide
-     * @return true if the user can hide the peer grading
-     */
-    fun canHidePeerGrading(teacher: User, peerGrading: PeerGrading): Boolean {
-        return canHidePeerGrading(teacher, peerGrading.response)
-    }
-
-    /**
      * Return true if the user can hide the peer grading of a response
      * An user can hide the peer grading if he is the owner of the sequence
      * @param teacher the user who want to hide the peer grading
@@ -416,16 +395,14 @@ class ResponseService(
         return response.interaction.sequence.assignment!!.owner == teacher
     }
 
+
     /**
-     * Hide a peer grading
-     * if the user can't hide the peer grading, an exception is thrown
-     * @param teacher the teacher who hide the peer grading
-     * @param peerGrading the peer grading to hide
+     * Return true if the user can moderate the feedback of the response
+     * An user can moderate the feedback if he is the owner of the sequence
+     * @param user the user who want to moderate the feedback
+     * @param response the response to moderate
      */
-    fun hidePeerGrading(teacher: User, peerGrading: PeerGrading) {
-        if (!canHidePeerGrading(teacher, peerGrading)) {
-            throw IllegalAccessException("You can't hide this peer grading")
-        }
-        peerGrading.hiddenByTeacher = true
+    fun canModerate(user: User, response: Response): Boolean {
+        return response.learner == user
     }
 }

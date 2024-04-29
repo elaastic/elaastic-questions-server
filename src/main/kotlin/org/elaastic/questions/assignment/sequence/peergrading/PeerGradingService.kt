@@ -223,4 +223,30 @@ class PeerGradingService(
         }
         reportCandidateService.markAsShown(peerGrading, peerGradingRepository)
     }
+
+    /**
+     * Return true if the user can hide the peer grading
+     * An user can hide the peer grading if he is the owner of the sequence
+     * @param teacher the user who want to hide the peer grading
+     * @param peerGrading the peer grading to hide
+     * @return true if the user can hide the peer grading
+     */
+    fun canHidePeerGrading(teacher: User, peerGrading: PeerGrading): Boolean {
+        return responseService.canHidePeerGrading(teacher, peerGrading.response)
+    }
+
+
+    /**
+     * Hide a peer grading
+     * if the user can't hide the peer grading, an exception is thrown
+     * @param teacher the teacher who hide the peer grading
+     * @param peerGrading the peer grading to hide
+     */
+    fun hidePeerGrading(teacher: User, peerGrading: PeerGrading) {
+        if (!canHidePeerGrading(teacher, peerGrading)) {
+            throw IllegalAccessException("You can't hide this peer grading")
+        }
+        peerGrading.hiddenByTeacher = true
+        peerGrading.response.draxoEvaluationHiddenCount++
+    }
 }
