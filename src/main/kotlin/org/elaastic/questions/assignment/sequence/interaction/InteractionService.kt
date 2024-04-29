@@ -62,9 +62,15 @@ class InteractionService(
     fun findById(id: Long): Interaction =
             interactionRepository.findById(id).get()
 
-    fun findResponseByLearnerAssignment(learnerAssignment: LearnerAssignment): Response?
-        = interactionRepository.findResponseByOwnerAndType(learnerAssignment.learner,
+    fun findResponseByLearnerAssignment(learnerAssignment: LearnerAssignment,
+                                        sequence: Sequence): Response?
+        = interactionRepository.findResponseByOwnerAndSequenceAndType(learnerAssignment.learner,
+                                                           sequence,
                                                            InteractionType.ResponseSubmission)
+
+    fun findAllResponsesBySequence(sequence: Sequence): List<Response>
+        = interactionRepository.findAllResponsesBySequenceAndType(sequence,
+                                                                  InteractionType.ResponseSubmission)
 
     fun stop(user: User, interactionId: Long) =
             stop(user, interactionRepository.getReferenceById(interactionId))
