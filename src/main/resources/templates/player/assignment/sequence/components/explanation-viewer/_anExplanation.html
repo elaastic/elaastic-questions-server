@@ -20,9 +20,18 @@
      th:if="${!explanation.content.isBlank() and (!explanation.hiddenByTeacher or isTeacher or isOwner)}"
      class="ui message explanation"
      th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
-     th:styleappend="${explanation.nbEvaluations > 0 || explanation.fromTeacher || (isOwner && explanation.hiddenByTeacher) ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
+     th:styleappend="${explanation.getNbEvaluation(isTeacher) > 0 || explanation.fromTeacher || (isOwner && explanation.hiddenByTeacher) ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-    <div th:if="${explanation.nbEvaluations > 0}" class="ui top left attached label"
+    <div th:if="${isTeacher}">
+        <h1>Teacher</h1>
+        <p th:text="${'Teacher :' + explanation.getNbEvaluation(isTeacher)}"></p>
+        <p th:text="${'Student :' + explanation.nbDraxoEvaluationsHidden}"></p>
+    </div>
+    <div th:if="${!isTeacher}">
+        <h1>Student</h1>
+        <p th:text="${explanation.getNbEvaluation(isTeacher)}"></p>
+    </div>
+    <div th:if="${explanation.getNbEvaluation(isTeacher) > 0}" class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
 
         <i th:if="${explanation.fromTeacher}" class="graduation cap icon" style="margin-right: 0.4em;"></i>
@@ -31,15 +40,15 @@
 
         <th:block th:if="${explanation.meanGrade != null}"><span th:text="${explanation.meanGrade}"></span>/5</th:block>
 
-        <span class="detail" th:if="${explanation.nbEvaluations <= 1}"
-              th:text="${explanation.nbEvaluations}+' '+#{common.evaluation}"></span>
-        <span class="detail" th:if="${explanation.nbEvaluations > 1}"
-              th:text="${explanation.nbEvaluations}+' '+#{common.evaluations}"></span>
+        <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) <= 1}"
+              th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.evaluation}"></span>
+        <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) > 1}"
+              th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.evaluations}"></span>
 
-        <span class="detail" th:if="${explanation.nbDraxoEvaluations > 0}">
+        <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) > 0}">
         (<a class="detail-link" href="#"
             th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'"
-            th:text="${(explanation.nbEvaluations > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
+            th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
         </span>
         <span th:if="${explanation.hiddenByTeacher}">
             <i class="exclamation triangle icon" style="margin: 0 0.4em;"></i>
@@ -88,7 +97,7 @@
         </div>
     </div >
 
-    <div th:if="${explanation.nbEvaluations == 0 && explanation.fromTeacher}" class="ui top left attached label green">
+    <div th:if="${explanation.getNbEvaluation(isTeacher) == 0 && explanation.fromTeacher}" class="ui top left attached label green">
         <i class="graduation cap icon" style="margin-right: 0.4em;"></i>
         <span th:text="#{player.sequence.explanation.teacher.label}"></span>
     </div>

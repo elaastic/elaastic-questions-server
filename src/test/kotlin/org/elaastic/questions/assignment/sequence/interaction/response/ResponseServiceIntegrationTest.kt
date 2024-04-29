@@ -59,11 +59,9 @@ internal class ResponseServiceIntegrationTest(
     @Autowired val userService: UserService,
     @Autowired val peerGradingRepository: PeerGradingRepository,
     @Autowired val entityManager: EntityManager,
-    @Autowired val subjectService: SubjectService
+    @Autowired val subjectService: SubjectService,
+    @Autowired val peerGradingService: PeerGradingService,
 ) {
-
-    @Autowired
-    private lateinit var peerGradingService: PeerGradingService
 
     @Test
     fun buildResponseBasedOnTeacherNullExpectedExplanationForASequenceOpenEndedBlended() {
@@ -729,7 +727,10 @@ internal class ResponseServiceIntegrationTest(
                     it
                 }
         }.tThen("The student can't hide the feedback") { peerGrading ->
-            assertFalse(peerGradingService.canHidePeerGrading(student, peerGrading), "The student can't hide a peergrading")
+            assertFalse(
+                peerGradingService.canHidePeerGrading(student, peerGrading),
+                "The student can't hide a peergrading"
+            )
             peerGrading
         }.tWhen("the student try hidding the peerGrading") { peerGrading ->
             peerGrading

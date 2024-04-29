@@ -59,7 +59,10 @@ class DraxoPeerGradingController(
             throw AccessDeniedException("You are not authorized to access to those feedbacks")
         }
 
-        val draxoPeerGradingList = peerGradingService.findAllDraxo(response)
+        var draxoPeerGradingList = peerGradingService.findAllDraxo(response)
+
+        // The student can't see the hidden feedbacks
+        if (user.isLearner()) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
 
         model.addAttribute("user", user)
         model.addAttribute(
