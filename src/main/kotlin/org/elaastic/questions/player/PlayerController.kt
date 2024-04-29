@@ -258,8 +258,11 @@ class PlayerController(
         }
 
         for (attendee: LearnerAssignment in registeredUsers) {
-            /*attendeesResponses[attendee] = interactionService
-                .findResponseByLearnerAssignment(attendee)*/
+            attendeesResponses[attendee.learner.id!!] = mutableListOf()
+        }
+
+        for (response: Response in responses) {
+            attendeesResponses[response.learner.id]?.add(response)
         }
 
         model.addAttribute(
