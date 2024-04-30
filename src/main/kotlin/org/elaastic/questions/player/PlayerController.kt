@@ -25,6 +25,7 @@ import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
@@ -36,6 +37,8 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.*
 import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
+import org.elaastic.questions.player.components.steps.StepsModel
+import org.elaastic.questions.player.components.steps.StepsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
@@ -248,14 +251,31 @@ class PlayerController(
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
         val responses: List<Response> = interactionService.findAllResponsesBySequence(sequence)
         val attendeesResponses: MutableMap<Long, MutableList<Response>> = mutableMapOf()
+        val sequenceModel: StepsModel = StepsModelFactory.buildForTeacher(sequence)
 
-        if (previousSequence !== null) {
-            previousSequenceId = previousSequence.id
+        val responsePhaseAttendees: List<LearnerAssignment> = registeredUsers.filter {
+            responses.count { response ->
+                response.learner == it.learner
+                    && response.interaction.interactionType == InteractionType.ResponseSubmission
+            } == 0
+            || responses.count { response ->
+                response.learner == it.learner
+                    && response.interaction.interactionType == InteractionType.ResponseSubmission
+            } == 1
+                && sequenceModel.responseSubmissionState.name != "DISABLED"
         }
 
-        if (nextSequence !== null) {
-            nextSequenceId = nextSequence.id
+        val evaluationPhaseAttendees: List<LearnerAssignment> = registeredUsers.filter {
+            responses.count { response ->
+                response.learner == it.learner
+                    && response.interaction.interactionType == InteractionType.ResponseSubmission
+            } >= 1
+                && sequenceModel.evaluationState.name != "DISABLED"
         }
+
+        previousSequenceId = previousSequence?.id
+
+        nextSequenceId = nextSequence?.id
 
         for (attendee: LearnerAssignment in registeredUsers) {
             attendeesResponses[attendee.learner.id!!] = mutableListOf()
@@ -274,6 +294,8 @@ class PlayerController(
                 nbRegisteredUsers = nbRegisteredUsers,
                 attendees = registeredUsers,
                 attendeesResponses = attendeesResponses,
+                responsePhaseAttendees = responsePhaseAttendees,
+                evaluationPhaseAttendees = evaluationPhaseAttendees,
                 openedPane = openedPane,
                 previousAssignment = previousSequenceId,
                 nextAssignment = nextSequenceId,
