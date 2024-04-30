@@ -309,8 +309,7 @@ internal class PeerGradingServiceTest(
                 lastSequencePeerGrading = false
             )
                 .tWhen {
-                    peerGradingRepository.saveAndFlush(it)
-                    entityManager.clear()
+                    peerGradingRepository.save(it)
                     it
                 }
         }.tWhen("A teacher try unhiding a peerGrading that is not hidden") {}.tThen("Nothing is thrown") {

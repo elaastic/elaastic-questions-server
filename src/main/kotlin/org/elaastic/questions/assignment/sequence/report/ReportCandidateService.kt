@@ -23,11 +23,13 @@ import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.springframework.stereotype.Service;
+import javax.transaction.Transactional
 
 /**
  * Service for moderation management
  */
 @Service
+@Transactional
 public class ReportCandidateService {
 
     /**

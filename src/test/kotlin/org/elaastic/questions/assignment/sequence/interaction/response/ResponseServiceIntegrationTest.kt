@@ -787,8 +787,7 @@ internal class ResponseServiceIntegrationTest(
                 lastSequencePeerGrading = false
             )
                 .tWhen {
-                    peerGradingRepository.saveAndFlush(it)
-                    entityManager.clear()
+                    peerGradingRepository.save(it)
                     it
                 }
         }.tWhen("the teacher hide the peerGrading") { peerGrading ->
