@@ -24,7 +24,6 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluat
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.questions.directory.Role
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
@@ -300,15 +299,14 @@ internal class PeerGradingServiceTest(
     fun `a teacher unhide a peerGrading`() {
         val response = integrationTestingService.getAnyResponse()
         val grader = integrationTestingService.getAnyUser()
-        val teacher = integrationTestingService.getTestTeacher()
-        response.interaction.sequence.assignment!!.owner = teacher
+        val teacher = response.interaction.sequence.assignment!!.owner
         lateinit var peerGrading: PeerGrading;
         tGiven("A peer grading") {
-            peerGrading = LikertPeerGrading(
-                grade = BigDecimal(2),
-                annotation = "Reportable content",
+            peerGrading = DraxoPeerGrading(
                 grader = grader,
-                response = response
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO),
+                lastSequencePeerGrading = false
             )
                 .tWhen {
                     peerGradingRepository.saveAndFlush(it)

@@ -766,14 +766,11 @@ internal class ResponseServiceIntegrationTest(
 
     @Test
     fun `a teacher can unhide an hidden draxoPeerGrading`() {
-        val teacher = integrationTestingService.getTestTeacher()
         val grader = integrationTestingService.getTestStudent()
         val response = integrationTestingService.getAnyResponse()
-        val assignement = response.interaction.sequence.assignment!!
-        response.interaction.sequence.owner = teacher
+        val teacher = response.interaction.sequence.owner
 
         tGiven("An assignement own by the teacher and a peerGrading of the response") {
-            assignement.owner = teacher
             LikertPeerGrading(
                 grade = BigDecimal(2),
                 annotation = "Annotation",
