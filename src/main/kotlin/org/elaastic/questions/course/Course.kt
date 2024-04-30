@@ -22,7 +22,20 @@ import javax.validation.constraints.NotNull
         ]
 )
 @EntityListeners(AuditingEntityListener::class)
-
+/**
+ * A course is a collection of subjects.
+ *
+ * For example :
+ * a course can be `Français 5e` and have subjects like
+ *  - `Le champ lexical`
+ *  - `Les compléments d'objets`
+ *  - `Accords du participe passé`
+ *  - ...
+ *
+ *  A course in owned by a user, and have a title.
+ *
+ *  From here you can access the list of subjects.
+ */
 class Course (
 
         @field:NotNull
