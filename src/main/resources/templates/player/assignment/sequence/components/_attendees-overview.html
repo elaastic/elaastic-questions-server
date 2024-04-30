@@ -142,8 +142,8 @@
                            && stepsModel.evaluationState.name() == 'DISABLED' ? 'active' : ''}">
 
       <th:block th:if="${stepsModel.responseSubmissionState.name() != 'DISABLED'}">
-        <th:block th:each="attendee, i : ${model.attendees}">
-          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]})"></div>
+        <th:block th:each="attendee, i : ${model.responsePhaseAttendees}">
+          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]}, 1)"></div>
         </th:block>
       </th:block>
     </div>
@@ -178,9 +178,9 @@
                            && stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'active' : ''}">
 
       <th:block th:if="${stepsModel.evaluationState.name() != 'DISABLED'}">
-        <!-- TODO: second phase attendees list!! -->
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae commodi dolores, ducimus esse et harum id
-        inventore maiores molestiae nobis odio quae quas quia reiciendis soluta veniam voluptates! Ad, nesciunt.
+        <th:block th:each="attendee, i : ${model.evaluationPhaseAttendees}">
+          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]}, 1)"></div>
+        </th:block>
       </th:block>
     </div>
   </div>
