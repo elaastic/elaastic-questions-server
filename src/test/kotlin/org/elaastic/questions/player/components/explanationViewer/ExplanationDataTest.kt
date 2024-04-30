@@ -18,11 +18,9 @@
 
 package org.elaastic.questions.player.components.explanationViewer
 
-import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -33,7 +31,6 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.Optio
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
@@ -44,7 +41,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.math.BigDecimal
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
@@ -57,10 +53,10 @@ class ExplanationDataTest(
     @Autowired val entityManager: EntityManager,
     @Autowired val subjectService: SubjectService,
     @Autowired val peerGradingService: PeerGradingService,
+    @Autowired var responseService: ResponseService,
+    @Autowired var responseRepository: ResponseRepository,
 ) {
 
-    @Autowired
-    private lateinit var responseService: ResponseService
 
     @Test
     fun `test de la fonction getNbEvaluation`() {
@@ -68,7 +64,9 @@ class ExplanationDataTest(
         var response = integrationTestingService.getAnyResponse()
         val teacher: User = response.statement.owner
 
-        assertEquals(0, response.evaluationCount)
+        response = responseService.updateMeanGradeAndEvaluationCount(response)
+
+        assertEquals(1, response.evaluationCount) //The response come from the integrationTestingService with 1 likert evaluation
         assertEquals(0, response.draxoEvaluationCount)
         assertEquals(0, response.draxoEvaluationHiddenCount)
 
@@ -103,6 +101,7 @@ class ExplanationDataTest(
                 assertEquals(2, explanationData.getNbEvaluation(true))
             }
         }
+
     }
 
     @Ignore

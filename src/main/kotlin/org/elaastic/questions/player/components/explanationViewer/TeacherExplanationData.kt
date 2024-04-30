@@ -15,6 +15,7 @@ class TeacherExplanationData(
     score: BigDecimal? = null,
     correct: Boolean? = (score?.compareTo(BigDecimal(100)) == 0),
     choiceList: LearnerChoice? = null,
+    nbDraxoEvaluationsHidden: Int = 0,
 ) : ExplanationData(
     responseId,
     content,
@@ -25,7 +26,8 @@ class TeacherExplanationData(
     confidenceDegree,
     score,
     correct,
-    choiceList
+    choiceList,
+    nbDraxoEvaluationsHidden = nbDraxoEvaluationsHidden,
 ) {
     constructor(explanationData: ExplanationData) : this(
         responseId = explanationData.responseId,
@@ -38,6 +40,7 @@ class TeacherExplanationData(
         correct = explanationData.correct,
         score = explanationData.score,
         choiceList = explanationData.choiceList,
+        nbDraxoEvaluationsHidden = explanationData.nbDraxoEvaluationsHidden,
     )
 
     override val fromTeacher = true

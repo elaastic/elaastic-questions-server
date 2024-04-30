@@ -42,7 +42,7 @@ open class ExplanationData(
     constructor(response: Response) : this(
         responseId = response.id!!,
         content = response.explanation,
-        author = response.learner.firstName + " " + response.learner.lastName + " (@" + response.learner.username + ")",
+        author = response.learner.getDisplayName(),
         nbEvaluations = response.evaluationCount,
         nbDraxoEvaluations = response.draxoEvaluationCount,
         meanGrade = response.meanGrade,

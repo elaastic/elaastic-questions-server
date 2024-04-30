@@ -148,6 +148,7 @@ class PeerGradingService(
             throw IllegalAccessException("Only the teacher who own the sequence can hide a peer grading")
         }
         reportCandidateService.markAsHidden(peerGrading, peerGradingRepository)
+        responseService.updateMeanGradeAndEvaluationCount(peerGrading.response)
     }
 
     /**
@@ -222,6 +223,7 @@ class PeerGradingService(
             throw IllegalAccessException("Only the teacher who own the sequence can show a peer grading")
         }
         reportCandidateService.markAsShown(peerGrading, peerGradingRepository)
+        responseService.updateMeanGradeAndEvaluationCount(peerGrading.response)
     }
 
     /**
