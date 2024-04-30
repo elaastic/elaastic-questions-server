@@ -19,7 +19,7 @@
   -->
 
 <div class="ui clearing attached segment grid attendee-item"
-     th:fragment="attendee(attendee, responses)"
+     th:fragment="attendee(attendee, responses, currentPhase)"
      th:id="|${context}-${attendee.id}|"
      style="margin: 0; padding-bottom: 10px;">
 
@@ -57,6 +57,7 @@
       </div>
 
       <div style="color: #535353;"
+           th:if="${currentPhase == 1 && #lists.size(responses) == 0}"
            th:attr="data-tooltip=#{attendee.in_course.tooltip}"
            data-tooltip="In course..."
            data-position="top center"
@@ -65,19 +66,21 @@
         <i class="icon pencil alternate"></i>
 
         <span th:text="#{attendee.in_course}">
-                in_course_label</span>
+          in_course_label</span>
       </div>
 
-      <!--<div style="color: #259C31;"
+      <div style="color: #259C31;"
+           th:unless="${currentPhase == 1 && #lists.size(responses) == 0}"
            th:attr="data-tooltip=#{attendee.finished.tooltip}"
            data-tooltip="Finished..."
            data-position="top center"
-           data-inverted="">   <!- - LABEL: FINISHED -- >
+           data-inverted="">  <!-- LABEL: FINISHED -->
 
         <i class="icon check alternate"></i>
+
         <span th:text="#{attendee.finished}">
           finished_label</span>
-      </div>-->
+      </div>
     </div>
   </div>
 
@@ -104,9 +107,14 @@
                 statement_answer</h4>
 
           <div class="ui info message"
-               th:if="${#lists.size(responses) > 0}"
-               th:utext="${responses[0].explanation}">
-                 given_answer</div>
+               th:each="response, i: ${responses}">
+
+            <span style="font-weight: bold;"
+                  th:text="|Essai n${'°' + (i.index + 1) + ' :'}|">
+              answer_number</span>
+
+            <span th:utext="${response.explanation}"></span>
+          </div>
         </div>
       </div>
     </div>
