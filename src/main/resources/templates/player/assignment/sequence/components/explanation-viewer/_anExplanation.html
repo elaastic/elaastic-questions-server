@@ -22,15 +22,6 @@
      th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
      th:styleappend="${explanation.getNbEvaluation(isTeacher) > 0 || explanation.fromTeacher || (isOwner && explanation.hiddenByTeacher) ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-    <div th:if="${isTeacher}">
-        <h1>Teacher</h1>
-        <p th:text="${'Teacher :' + explanation.getNbEvaluation(isTeacher)}"></p>
-        <p th:text="${'Student :' + explanation.nbDraxoEvaluationsHidden}"></p>
-    </div>
-    <div th:if="${!isTeacher}">
-        <h1>Student</h1>
-        <p th:text="${explanation.getNbEvaluation(isTeacher)}"></p>
-    </div>
     <div th:if="${explanation.getNbEvaluation(isTeacher) > 0}" class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
 
