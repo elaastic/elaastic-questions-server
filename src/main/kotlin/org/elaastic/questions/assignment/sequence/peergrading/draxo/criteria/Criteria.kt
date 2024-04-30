@@ -7,6 +7,14 @@ import java.math.BigDecimal
 
 enum class Criteria(val scale: Map<Id, OptionSpecification>) {
 
+    /**
+     * unDerstandable
+     *
+     * The possible option are:
+     * - NO
+     * - PARTIALLY
+     * - YES
+     */
     D(
         mapOf(
             Id.NO to OptionSpecification(Type.NEGATIVE),
@@ -14,6 +22,16 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
             Id.YES to OptionSpecification(Type.POSITIVE),
         )
     ),
+
+    /**
+     * Relevant
+     *
+     * The possible option are:
+     * - NO
+     * - PARTIALLY
+     * - YES
+     * - DONT_KNOW
+     */
     R(
         mapOf(
             Id.NO to OptionSpecification(Type.NEGATIVE, BigDecimal(1)),
@@ -22,6 +40,16 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
             Id.DONT_KNOW to OptionSpecification(Type.UNKNOWN)
         )
     ),
+
+    /**
+     * Agreed
+     *
+     * The possible option are:
+     * - NO
+     * - PARTIALLY
+     * - YES
+     * - NO_OPINION
+     */
     A(
         mapOf(
             Id.NO to OptionSpecification(Type.NEGATIVE),
@@ -30,6 +58,15 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
             Id.NO_OPINION to OptionSpecification(Type.UNKNOWN),
         )
     ),
+
+    /**
+     * Exhaustive
+     *
+     * The possible option are:
+     * - NO
+     * - YES
+     * - DONT_KNOW
+     */
     X(
         mapOf(
             Id.NO to OptionSpecification(Type.NEGATIVE),
@@ -37,6 +74,15 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
             Id.DONT_KNOW to OptionSpecification(Type.UNKNOWN),
         )
     ),
+
+    /**
+     * Optimal
+     *
+     * The possible option are:
+     * - YES
+     * - NO
+     * - DONT_KNOW
+     */
     O(
         mapOf(
             Id.YES to OptionSpecification(Type.NEGATIVE),

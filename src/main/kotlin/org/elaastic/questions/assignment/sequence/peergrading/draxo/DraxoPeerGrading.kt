@@ -30,6 +30,24 @@ import javax.validation.ConstraintValidatorContext
 import javax.validation.Payload
 import kotlin.reflect.KClass
 
+/**
+ * DraxoPeerGrading is a PeerGrading of type DRAXO.
+ *
+ * A DraxoPeerGrading is given by a grader to a response.
+ *
+ * A DraxoPeerGrading is composed of 5 criteria:
+ * - D: unDerstandable
+ * - R: Relevant
+ * - A: Agreed
+ * - X: Exhaustive
+ * - O: Optimal
+ *
+ * Check the online [documentation](https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO)
+ * for more information about DRAXO grading
+ *
+ * @see PeerGrading
+ * @see Response
+ */
 @Entity
 @DiscriminatorValue("DRAXO")
 @ValidateDraxoPeerGrading
@@ -37,26 +55,49 @@ class DraxoPeerGrading(
     grader: User,
     response: Response,
 
+    /**
+     * unDerstandable criteria
+     * @see Criteria.D
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "criteria_D")
     var criteriaD: OptionId? = null,
 
+    /**
+     * Relevant criteria
+     * @see Criteria.R
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "criteria_R")
     var criteriaR: OptionId? = null,
 
+    /**
+     * Agreed criteria
+     * @see Criteria.A
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "criteria_A")
     var criteriaA: OptionId? = null,
 
+    /**
+     * Exhaustive criteria
+     * @see Criteria.X
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "criteria_X")
     var criteriaX: OptionId? = null,
 
+    /**
+     * Optimal criteria
+     * @see Criteria.O
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "criteria_O")
     var criteriaO: OptionId? = null,
 
+    /**
+     * Depending on the selected criteria, a comment may be provided
+     */
     annotation: String? = null,
 
     lastSequencePeerGrading: Boolean
