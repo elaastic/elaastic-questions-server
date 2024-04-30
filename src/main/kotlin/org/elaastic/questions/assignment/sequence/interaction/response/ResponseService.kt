@@ -29,7 +29,6 @@ import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.springframework.beans.factory.annotation.Autowired
