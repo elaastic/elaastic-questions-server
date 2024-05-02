@@ -96,7 +96,7 @@ class DraxoPeerGrading(
     var criteriaO: OptionId? = null,
 
     /**
-     * Depending on the selected criteria, a comment may be provided
+     * Depending on the selected OptionId, a comment may be provided
      */
     annotation: String? = null,
 
