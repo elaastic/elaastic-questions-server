@@ -18,8 +18,37 @@
 
 package org.elaastic.questions.assignment.sequence.interaction
 
+/**
+ * InteractionType is an enum class that represents the type of
+ * interaction.
+ *
+ * @property ResponseSubmission The first phase, where the user submits
+ *     their response to the statement.
+ * @property Evaluation The second phase, where the user's response is
+ *     evaluated by their peers.
+ * @property Read The third phase, where the user can the result of the two
+ *     previous phases.
+ */
 enum class InteractionType {
+    /**
+     * The first phase, where the user submits their response to the statement.
+     *
+     * @see org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+     */
     ResponseSubmission,
+
+    /**
+     * The second phase, where the user's response is evaluated by their peers.
+     *
+     * @see org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
+     */
     Evaluation,
+
+    /**
+     * The third phase, where the user can the result of the two previous
+     * phases.
+     *
+     * @see org.elaastic.questions.assignment.sequence.interaction.specification.ReadSpecification
+     */
     Read
 }

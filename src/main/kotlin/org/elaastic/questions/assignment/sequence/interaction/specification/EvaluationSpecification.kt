@@ -21,7 +21,12 @@ package org.elaastic.questions.assignment.sequence.interaction.specification
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import javax.validation.constraints.Max
 
-
+/**
+ * EvaluationSpecification is a class that represents the specification of an evaluation interaction.
+ * It contains the number of responses that the user has to evaluate.
+ *
+ * @property responseToEvaluateCount The number of responses that the user has to evaluate.
+ */
 data class EvaluationSpecification(
 
         @field:Max(5)

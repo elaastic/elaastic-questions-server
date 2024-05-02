@@ -34,27 +34,36 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
-
+/**
+ * Interaction is a class that represents an interaction in a sequence.
+ *
+ * An interaction is a step in a sequence that can be a read, a response submission or an evaluation.
+ *
+ * @see InteractionType
+ * @see Sequence
+ */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 class Interaction(
-        @field:Enumerated(EnumType.STRING)
-        var interactionType: InteractionType,
+    @field:Enumerated(EnumType.STRING)
+    var interactionType: InteractionType,
 
-        @Column(name="`rank`")
-        var rank: Int,
+    @Column(name = "`rank`")
+    var rank: Int,
 
-        @field:Convert(converter = InteractionSpecificationConverter::class)
-        var specification: InteractionSpecification? = null,
+    @field:Convert(converter = InteractionSpecificationConverter::class)
+    var specification: InteractionSpecification? = null,
 
-        @field:ManyToOne
-        var owner: User,
+    @field:ManyToOne
+    var owner: User,
 
-        @field:OneToOne
-        var sequence: Sequence,
 
-        @field:Enumerated(EnumType.STRING)
-        var state: State = State.beforeStart
+    @field:OneToOne
+    var sequence: Sequence,
+
+    /** The current state of the interaction. */
+    @field:Enumerated(EnumType.STRING)
+    var state: State = State.beforeStart
 ) : AbstractJpaPersistable<Long>() {
 
     @Version
@@ -74,14 +83,15 @@ class Interaction(
 
     @Transient
     fun getStateForTeacher(user: User) =
-            when (sequence.executionContext) {
-                ExecutionContext.Distance -> State.afterStop
-                ExecutionContext.Blended ->
-                    if (interactionType == InteractionType.Read)
-                        state
-                    else State.afterStop
-                ExecutionContext.FaceToFace -> state
-            }
+        when (sequence.executionContext) {
+            ExecutionContext.Distance -> State.afterStop
+            ExecutionContext.Blended ->
+                if (interactionType == InteractionType.Read)
+                    state
+                else State.afterStop
+
+            ExecutionContext.FaceToFace -> state
+        }
 
     @Convert(converter = ResponseDistributionConverter::class)
     var results: ResponsesDistribution? = null
@@ -91,7 +101,7 @@ class Interaction(
 
     @Transient
     fun hasAnyResult(): Boolean =
-            results?.hasAnyResult() ?: false
+        results?.hasAnyResult() ?: false
 
     @Transient
     fun isRead() = interactionType == InteractionType.Read
