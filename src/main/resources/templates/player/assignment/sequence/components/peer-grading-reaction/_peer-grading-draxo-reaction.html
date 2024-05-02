@@ -35,6 +35,7 @@
                 <div class="ui menu stackable fluid pagination">
                     <a th:each="utilityGrade : ${T(org.elaastic.questions.assignment.sequence.UtilityGrade).values()}"
                        class="item utilityGrade"
+                       th:classappend="${draxoEvaluationModel.isUtilityGradeSelected(utilityGrade)} ? 'active' : ''"
                        th:attr="utilityGradeName=${utilityGrade.name()},
                                 data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
                        th:text="#{|player.sequence.chatGptEvaluation.utilityGrade.${utilityGrade.name()}|}">

@@ -47,4 +47,11 @@ data class DraxoEvaluationModel(
         draxoPeerGrading.utilityGrade,
         draxoPeerGrading.hiddenByTeacher
     )
+
+    /**
+     * Check if the given utility grade is the one selected
+     * @param utilityGrade the utility grade to check
+     * @return true if the given utility grade is selected, false otherwise
+     */
+    fun isUtilityGradeSelected(utilityGrade: UtilityGrade) = this.utilityGrade == utilityGrade
 }
