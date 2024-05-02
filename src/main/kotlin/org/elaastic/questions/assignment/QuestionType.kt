@@ -18,9 +18,32 @@
 
 package org.elaastic.questions.assignment
 
-
+/**
+ * Different types of questions.
+ *
+ * @property ExclusiveChoice A question with only one correct answer.
+ * @property MultipleChoice A question with multiple correct answers.
+ * @property OpenEnded A question with an open answer.
+ */
 enum class QuestionType {
+    /**
+     * A question with only one correct answer.
+     *
+     * There i only one correct answer among the alternatives.
+     */
     ExclusiveChoice,
+
+    /**
+     * A question with multiple correct answers.
+     *
+     * There are multiple correct answers among the alternatives.
+     */
     MultipleChoice,
+
+    /**
+     * A question with an open answer.
+     *
+     * The answer is open and can be anything.
+     */
     OpenEnded
 }

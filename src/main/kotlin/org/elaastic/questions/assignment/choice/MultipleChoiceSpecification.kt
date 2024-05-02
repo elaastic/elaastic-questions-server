@@ -23,10 +23,29 @@ import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotEmpty
 
+/**
+ * This class is used to store the specification of a multiple choice interaction.
+ *
+ * @see org.elaastic.questions.assignment.choice.ChoiceSpecification
+ */
 data class MultipleChoiceSpecification(
-        @field:Max(10) override var nbCandidateItem: Int,
-        @field:NotEmpty var expectedChoiceList: List<ChoiceItem> = listOf(),
-        var explanationChoiceList: List<TeacherExplanation> = listOf()
+
+    /**
+     * The number of candidate items
+     */
+    @field:Max(10) override var nbCandidateItem: Int,
+
+    /**
+     * The expected choice list
+     * @see org.elaastic.questions.assignment.choice.ChoiceItem
+     */
+    @field:NotEmpty var expectedChoiceList: List<ChoiceItem> = listOf(),
+
+    /**
+     * The explanation choice list
+     * @see org.elaastic.questions.assignment.sequence.TeacherExplanation
+     */
+    var explanationChoiceList: List<TeacherExplanation> = listOf()
 ) : ChoiceSpecification {
 
     override fun getChoiceType(): ChoiceType {
@@ -35,10 +54,10 @@ data class MultipleChoiceSpecification(
 
     override fun toLegacy(): org.elaastic.questions.assignment.choice.legacy.ChoiceSpecification {
         return org.elaastic.questions.assignment.choice.legacy.ChoiceSpecification(
-                choiceInteractionType = getChoiceType().name,
-                itemCount = nbCandidateItem,
-                expectedChoiceList = expectedChoiceList,
-                explanationChoiceList = explanationChoiceList
+            choiceInteractionType = getChoiceType().name,
+            itemCount = nbCandidateItem,
+            expectedChoiceList = expectedChoiceList,
+            explanationChoiceList = explanationChoiceList
         )
 
     }

@@ -23,7 +23,11 @@ import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 
-
+/**
+ * This class is used to store the specification of a choice interaction.
+ *
+ * @see org.elaastic.questions.assignment.choice.ChoiceSpecification
+ */
 data class ChoiceSpecification(
         var choiceInteractionType: String,
         @field:Max(10) var itemCount: Int,
