@@ -20,7 +20,6 @@ package org.elaastic.questions.assignment.sequence.report;
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elaastic.questions.assignment.sequence.UtilityGrade
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional
 
@@ -40,7 +39,6 @@ public class ReportCandidateService {
     ) {
         reportCandidate.hiddenByTeacher = true
         repository.save(reportCandidate)
-        if (reportCandidate is DraxoPeerGrading) reportCandidate.response.draxoEvaluationHiddenCount++
     }
 
     /**
@@ -100,6 +98,5 @@ public class ReportCandidateService {
     ) {
         reportCandidate.hiddenByTeacher = false
         repository.save(reportCandidate)
-        if (reportCandidate is DraxoPeerGrading) reportCandidate.response.draxoEvaluationHiddenCount--
     }
 }
