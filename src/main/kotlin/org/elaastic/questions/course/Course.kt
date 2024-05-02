@@ -11,17 +11,6 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-
-@Entity
-@NamedEntityGraph(
-        name = "Course_subjects",
-        attributeNodes = [
-            NamedAttributeNode(
-                    value = "subjects"
-            )
-        ]
-)
-@EntityListeners(AuditingEntityListener::class)
 /**
  * A course is a collection of subjects.
  *
@@ -36,6 +25,16 @@ import javax.validation.constraints.NotNull
  *
  *  From here you can access the list of subjects.
  */
+@Entity
+@NamedEntityGraph(
+        name = "Course_subjects",
+        attributeNodes = [
+            NamedAttributeNode(
+                    value = "subjects"
+            )
+        ]
+)
+@EntityListeners(AuditingEntityListener::class)
 class Course (
 
         @field:NotNull
