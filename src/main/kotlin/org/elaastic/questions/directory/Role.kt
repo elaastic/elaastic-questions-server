@@ -41,10 +41,10 @@ class Role(
 
     /**
      * All possible roles in the application
-     * You can be :
-     * - a student
-     * - a teacher
-     * - an admin
+     *
+     * @property STUDENT student role
+     * @property TEACHER teacher role
+     * @property ADMIN admin role
      */
     enum class RoleId(val roleName: String) {
         STUDENT("STUDENT_ROLE"),
