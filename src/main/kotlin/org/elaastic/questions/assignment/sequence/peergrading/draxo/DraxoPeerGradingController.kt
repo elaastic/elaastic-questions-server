@@ -24,12 +24,15 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.draxo.DraxoEvaluationModel
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
+import java.util.Locale
 
 @Controller
 @RequestMapping("/peer-grading/draxo")
@@ -37,6 +40,7 @@ class DraxoPeerGradingController(
     @Autowired val responseService: ResponseService,
     @Autowired val assignmentService: AssignmentService,
     @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val messageSource: MessageSource
 ) {
 
     @GetMapping("/{responseId}")
@@ -83,22 +87,51 @@ class DraxoPeerGradingController(
     }
 
 
+    /**
+     * Handle the submission of a DRAXO evaluation utility grade through
+     * asynchronous request
+     *
+     * @param authentication the current user authentication
+     * @param model the model
+     * @param evaluationId the id of the evaluation to update
+     * @param utilityGrade the utility grade to set
+     * @return [ResponseSubmitUtilityGrade] the response of the submission in
+     *     JSON format
+     * @see ResponseSubmitUtilityGrade
+     */
+    @ResponseBody
     @PostMapping("/submit-utility-grade")
     fun submitDRAXOEvaluationUtilityGrade(
         authentication: Authentication,
         model: Model,
         @RequestParam(required = true) evaluationId: Long,
         @RequestParam(required = true) utilityGrade: UtilityGrade
-    ): String {
+    ): ResponseSubmitUtilityGrade {
         val user: User = authentication.principal as User
         val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
+        val locale: Locale = LocaleContextHolder.getLocale()
 
-        peerGradingService.updateUtilityGrade(user, evaluation, utilityGrade)
+        val responseSubmitUtilityGrade = kotlin.run {
+            try {
+                peerGradingService.updateUtilityGrade(user, evaluation, utilityGrade)
 
-        val sequenceId: Long = evaluation.response.interaction.sequence.id!!
-        val assignement = evaluation.response.interaction.sequence.assignment!!.id
-        return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
+                ResponseSubmitUtilityGrade(
+                    success = true,
+                    header = messageSource.getMessage("draxo.submitUtilityGrade.success.header", null, locale),
+                    content = messageSource.getMessage("draxo.submitUtilityGrade.success.content", null, locale)
+                )
+            } catch (e: Exception) {
+                ResponseSubmitUtilityGrade(
+                    success = false,
+                    header = messageSource.getMessage("draxo.submitUtilityGrade.error.header", null, locale),
+                    content = messageSource.getMessage("draxo.submitUtilityGrade.error.content", null, locale)
+                )
+            }
+        }
+
+        return responseSubmitUtilityGrade
     }
+
 
     @PostMapping("/report-draxo-evaluation")
     fun reportDRAXOEvaluation(
@@ -158,4 +191,16 @@ class DraxoPeerGradingController(
         val assignement = evaluation.response.interaction.sequence.assignment!!.id
         return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
     }
+
+    /**
+     * Response for the submission of a DRAXO evaluation utility grade through
+     * asynchronous request
+     *
+     * @param success true if the submission was successful, false otherwise
+     * @param header the header of the response (Meant to be used in a
+     *     semantic-ui message)
+     * @param content the content of the response (Meant to be used in a
+     *     semantic-ui message)
+     */
+    data class ResponseSubmitUtilityGrade(val success: Boolean, val header: String, val content: String)
 }
