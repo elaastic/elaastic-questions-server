@@ -87,7 +87,6 @@
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
   <!-- TODO: verify if th:if is teacher works successfully!! -->
 
-
   <div class="ui top attached block header" style="display: flex; align-items: center">
     <i class="users alternate outline icon" style="flex: none;"></i>
 
@@ -134,7 +133,7 @@
         not_started_label</span>
 
       <span style="font-size: 12px;"
-            th:text="|(0)|"
+            th:text="|(${#lists.size(model.responsePhaseAttendees)})|"
             th:if="${stepsModel.responseSubmissionState.name() != 'DISABLED'}">
         (0)</span>
     </div>
@@ -170,7 +169,7 @@
         not_started_label</span>
 
       <span style="font-size: 12px;"
-            th:text="|(0)|"
+            th:text="|(${#lists.size(model.evaluationPhaseAttendees)})|"
             th:if="${stepsModel.evaluationState.name() != 'DISABLED'}">
         (0)</span>
     </div>
