@@ -653,5 +653,4 @@ class PlayerController(
         val confidenceDegree: ConfidenceDegree?,
         val explanation: String?
     )
-
 }

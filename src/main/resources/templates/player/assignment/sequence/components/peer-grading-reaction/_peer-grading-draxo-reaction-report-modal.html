@@ -81,7 +81,7 @@
     </div>
 
     <script th:inline="javascript">
-        $(document).ready(function () {
+        $(function () {
             /*<![CDATA[*/
             const evaluationId = [[${evaluationId}]];
             /*]]> */
@@ -98,8 +98,9 @@
              */
             function updateSubmitButtonState(evaluationId) {
                 const otherReasonCheckbox = $('input[value="OTHER"]');
-                // Same thing for the submit button, we enable (or disable) only if the `evaluationId` is matched
-                //If any of the checkboxes is checked (except the "other" checkbox) or the "other" checkbox is checked and the text field is not empty
+                // Same thing for the submit button, we enable (or disable) only if the `evaluationId` is matched.
+                // If any of the checkboxes are checked (except the "other" checkbox)
+                // or the "other" checkbox is checked and the text field is not empty
                 if (($('input[name="reason"]:checked').length > 0 && !otherReasonCheckbox.is(":checked"))
                     || (otherReasonCheckbox.is(":checked") && $('#other-reason-comment[data-modal-id="' + evaluationId + '"]').val())) {
 
@@ -126,9 +127,20 @@
                 updateSubmitButtonState(evaluationId);
             });
 
-            $('#submit-button[data-modal-id="' + evaluationId + '"]').click(function () {
+            $('#submit-button[data-modal-id="' + evaluationId + '"]').click(function (e) {
                 const form = $('form#report-form[data-modal-id="' + evaluationId + '"]'); // Get the form with the same evaluation id
-                form.submit(); // Submit the form
+
+                const url = form.attr('action'); // Get the URL of the form
+                const data = form.serialize(); // Serialize the form data
+
+                $.post(url, data, function (response) { // Send the data to the server
+                    console.log(response); // Log the response
+                    if (response.success) {
+                        console.log("success")
+                    } else {
+                        console.log("error")
+                    }
+                });
             });
         });
     </script>

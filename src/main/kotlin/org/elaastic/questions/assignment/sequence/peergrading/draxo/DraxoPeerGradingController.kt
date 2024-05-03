@@ -95,9 +95,9 @@ class DraxoPeerGradingController(
      * @param model the model
      * @param evaluationId the id of the evaluation to update
      * @param utilityGrade the utility grade to set
-     * @return [ResponseSubmitUtilityGrade] the response of the submission in
+     * @return [ResponseSubmissionAsynchronous] the response of the submission in
      *     JSON format
-     * @see ResponseSubmitUtilityGrade
+     * @see ResponseSubmissionAsynchronous
      */
     @ResponseBody
     @PostMapping("/submit-utility-grade")
@@ -106,22 +106,22 @@ class DraxoPeerGradingController(
         model: Model,
         @RequestParam(required = true) evaluationId: Long,
         @RequestParam(required = true) utilityGrade: UtilityGrade
-    ): ResponseSubmitUtilityGrade {
+    ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
         val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
         val locale: Locale = LocaleContextHolder.getLocale()
 
-        val responseSubmitUtilityGrade = kotlin.run {
+        val responseSubmissionAsynchronous = kotlin.run {
             try {
                 peerGradingService.updateUtilityGrade(user, evaluation, utilityGrade)
 
-                ResponseSubmitUtilityGrade(
+                ResponseSubmissionAsynchronous(
                     success = true,
                     header = messageSource.getMessage("draxo.submitUtilityGrade.success.header", null, locale),
                     content = messageSource.getMessage("draxo.submitUtilityGrade.success.content", null, locale)
                 )
             } catch (e: Exception) {
-                ResponseSubmitUtilityGrade(
+                ResponseSubmissionAsynchronous(
                     success = false,
                     header = messageSource.getMessage("draxo.submitUtilityGrade.error.header", null, locale),
                     content = messageSource.getMessage("draxo.submitUtilityGrade.error.content", null, locale)
@@ -129,10 +129,22 @@ class DraxoPeerGradingController(
             }
         }
 
-        return responseSubmitUtilityGrade
+        return responseSubmissionAsynchronous
     }
 
 
+    /**
+     * Handle the submission of a DRAXO evaluation report through asynchronous
+     * request
+     *
+     * @param authentication the current user authentication
+     * @param model the model
+     * @param evaluationId the id of the evaluation to update
+     * @param reasons the reasons to report the evaluation
+     * @param otherReasonComment the comment of the other reason
+     * @return [ResponseSubmissionAsynchronous] the response of the submission in JSON format
+     */
+    @ResponseBody
     @PostMapping("/report-draxo-evaluation")
     fun reportDRAXOEvaluation(
         authentication: Authentication,
@@ -140,16 +152,31 @@ class DraxoPeerGradingController(
         @RequestParam(required = true) evaluationId: Long,
         @RequestParam(value = "reason", required = true) reasons: List<String>,
         @RequestParam(value = "other-reason-comment", required = false) otherReasonComment: String
-    ): String {
+    ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
         val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
         val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
+        val locale: Locale = LocaleContextHolder.getLocale()
 
-        peerGradingService.updateReport(user, evaluation, reasons, reasonComment)
+        val responseSubmissionAsynchronous = kotlin.run {
+            try {
+                peerGradingService.updateReport(user, evaluation, reasons, reasonComment)
 
-        val sequenceId: Long = evaluation.response.interaction.sequence.id!!
-        val assignement = evaluation.response.interaction.sequence.assignment!!.id
-        return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
+                ResponseSubmissionAsynchronous(
+                    success = true,
+                    header = messageSource.getMessage("draxo.reportEvaluation.success.header", null, locale),
+                    content = messageSource.getMessage("draxo.reportEvaluation.success.content", null, locale)
+                )
+            } catch (e: Exception) {
+                ResponseSubmissionAsynchronous(
+                    success = false,
+                    header = messageSource.getMessage("draxo.reportEvaluation.error.header", null, locale),
+                    content = messageSource.getMessage("draxo.reportEvaluation.error.content", null, locale)
+                )
+            }
+        }
+
+        return responseSubmissionAsynchronous
     }
 
     @GetMapping("/hide/{id}")
@@ -193,8 +220,7 @@ class DraxoPeerGradingController(
     }
 
     /**
-     * Response for the submission of a DRAXO evaluation utility grade through
-     * asynchronous request
+     * Response for submission through asynchronous request
      *
      * @param success true if the submission was successful, false otherwise
      * @param header the header of the response (Meant to be used in a
@@ -202,5 +228,5 @@ class DraxoPeerGradingController(
      * @param content the content of the response (Meant to be used in a
      *     semantic-ui message)
      */
-    data class ResponseSubmitUtilityGrade(val success: Boolean, val header: String, val content: String)
+    data class ResponseSubmissionAsynchronous(val success: Boolean, val header: String, val content: String)
 }
