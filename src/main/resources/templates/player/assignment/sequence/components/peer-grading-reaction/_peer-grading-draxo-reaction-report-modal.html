@@ -17,7 +17,7 @@
   -->
 <!-- Pop up modal to report an evaluation from a peer -->
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     th:fragment="reportModal(reportContent, evaluationId)"
+     th:fragment="reportModal(reportContent, evaluationId, responseId)"
      class="ui small modal"
      th:id="|reportModal_${evaluationId}|">
 
@@ -84,6 +84,7 @@
         $(function () {
             /*<![CDATA[*/
             const evaluationId = [[${evaluationId}]];
+            const responseId = [[${responseId}]]
             /*]]> */
 
             $("#other-text-field").hide(); // Hide every text field for the "other reason"
@@ -128,6 +129,7 @@
             });
 
             $('#submit-button[data-modal-id="' + evaluationId + '"]').click(function (e) {
+                e.preventDefault(); // Prevent the default behavior of the submit button
                 const form = $('form#report-form[data-modal-id="' + evaluationId + '"]'); // Get the form with the same evaluation id
 
                 const url = form.attr('action'); // Get the URL of the form
@@ -137,8 +139,22 @@
                     console.log(response); // Log the response
                     if (response.success) {
                         console.log("success")
+                        $('#reportModal_' + evaluationId).modal('hide'); // Hide the modal
+                        // We update the container through the link of the detail
+                        const explanationContainer = $('.explanation[data-response-id="' + responseId + '"]:visible')
+                        for (const explanationContainerElement of explanationContainer) {
+                            console.log(explanationContainerElement)
+                            console.log($(explanationContainerElement).children('.reviews-container').html())
+
+                            // If the explanation container has reviews, we click on the detail link, to reload it
+                            if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
+                                $(explanationContainerElement).find('.detail-link').click();
+                            }
+                        }
                     } else {
                         console.log("error")
+                        // Update the modal with the error message
+                        $('#reportModal_' + evaluationId).find('.header').text(response.header);
                     }
                 });
             });

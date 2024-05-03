@@ -22,7 +22,7 @@
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}"
-         th:classappend="${draxoEvaluationModel.hiddenByTeacher} ? 'hidden' : ''">
+         th:classappend="${draxoEvaluationModel.hiddenByTeacher || (draxoEvaluationModel.isReported() && canModeratePeerGrading)} ? 'hidden' : ''">
         <div class="review-header review-border">
             <div class="reviewer">
                 <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
@@ -55,7 +55,7 @@
                 </a>
             </div>
         </div>
-        <div class="review-DRAXO review-border" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
+        <div class="review-DRAXO review-border" th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && canModeratePeerGrading)}">
             <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
             <div class="DRAXO-grid">
                 <th:block
@@ -98,13 +98,16 @@
                 </div>
             </th:block>
         </div>
-        <div class="review-border" th:if="${canModeratePeerGrading && !draxoEvaluationModel.hiddenByTeacher}"><!--/* Reaction for the feedback */-->
+        <div class="review-border" th:if="${canModeratePeerGrading && !draxoEvaluationModel.hiddenByTeacher && !draxoEvaluationModel.isReported()}"><!--/* Reaction for the feedback */-->
             <th:block
                     th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
             </th:block>
         </div>
         <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
             <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
+        </div>
+        <div class="review-border message-hidden" th:if="${!draxoEvaluationModel.hiddenByTeacher && (draxoEvaluationModel.isReported() && canModeratePeerGrading)}">
+            <div th:text="#{draxo.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
         </div>
     </div>
 

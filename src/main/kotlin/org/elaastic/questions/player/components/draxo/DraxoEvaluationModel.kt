@@ -29,9 +29,11 @@ data class DraxoEvaluationModel(
     val score: BigDecimal?,
     val draxoEvaluation: DraxoEvaluation,
     val userCanDisplayStudentsIdentity: Boolean = false,
-    val draxoPeerGradingId : Long? = null,
+    val draxoPeerGradingId: Long? = null,
     val utilityGrade: UtilityGrade? = null,
     val hiddenByTeacher: Boolean = false,
+    val responseId: Long? = null,
+    private val draxoPeerGrading: DraxoPeerGrading? = null
 ) {
     constructor(
         graderIndex: Int,
@@ -45,13 +47,22 @@ data class DraxoEvaluationModel(
         userCanDisplayStudentsIdentity,
         draxoPeerGrading.id,
         draxoPeerGrading.utilityGrade,
-        draxoPeerGrading.hiddenByTeacher
+        draxoPeerGrading.hiddenByTeacher,
+        draxoPeerGrading.response.id,
+        draxoPeerGrading
     )
 
     /**
      * Check if the given utility grade is the one selected
+     *
      * @param utilityGrade the utility grade to check
      * @return true if the given utility grade is selected, false otherwise
      */
     fun isUtilityGradeSelected(utilityGrade: UtilityGrade) = this.utilityGrade == utilityGrade
+
+    /**
+     * Check if the student has reported this peer grading
+     * @return true if the student has reported this peer grading, false otherwise
+     */
+    fun isReported() = draxoPeerGrading?.reportReasons.isNullOrBlank().not()
 }

@@ -70,7 +70,7 @@
         </div>
     </form>
 
-    <div th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction-report-modal.html :: reportModal(${draxoEvaluationModel.draxoEvaluation.getExplanation()},${draxoEvaluationModel.draxoPeerGradingId})"></div>
+    <div th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction-report-modal.html :: reportModal(${draxoEvaluationModel.draxoEvaluation.getExplanation()},${draxoEvaluationModel.draxoPeerGradingId}, ${draxoEvaluationModel.responseId})"></div>
 
 
     <script th:inline="javascript">
