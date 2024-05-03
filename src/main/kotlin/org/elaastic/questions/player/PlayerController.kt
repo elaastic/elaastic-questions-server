@@ -245,44 +245,38 @@ class PlayerController(
         val assignment = sequence.assignment!!
         val previousSequence: Sequence? = sequenceService.findPreviousSequence(sequence)
         val nextSequence: Sequence? = sequenceService.findNextSequence(sequence)
-        var previousSequenceId: Long? = null
-        var nextSequenceId: Long? = null
+        val previousSequenceId: Long? = previousSequence?.id
+        val nextSequenceId: Long? = nextSequence?.id
         val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
-        val responses: List<Response> = interactionService.findAllResponsesBySequence(sequence)
-        val attendeesResponses: MutableMap<Long, MutableList<Response>> = mutableMapOf()
-        val sequenceModel: StepsModel = StepsModelFactory.buildForTeacher(sequence)
+        val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
+        val attendeesResponses: Map<Long, List<Response>> = responses.groupBy { it.learner.id!! }
+
+        // TODO: [OPTI] learners steps models list to avoid dbl retrieving??
 
         val responsePhaseAttendees: List<LearnerAssignment> = registeredUsers.filter {
-            responses.count { response ->
-                response.learner == it.learner
-                    && response.interaction.interactionType == InteractionType.ResponseSubmission
-            } == 0
-            || responses.count { response ->
-                response.learner == it.learner
-                    && response.interaction.interactionType == InteractionType.ResponseSubmission
-            } == 1
-                && sequenceModel.responseSubmissionState.name != "DISABLED"
+            val learnerStepsModel: StepsModel
+                = StepsModelFactory.buildForLearner(sequence, sequence.activeInteraction)
+
+            val submittedResponsesByLearner: Int = attendeesResponses[it.learner.id]?.count { response ->
+                response.interaction.interactionType == InteractionType.ResponseSubmission
+            } ?: 0
+
+            submittedResponsesByLearner == 0
+            || (submittedResponsesByLearner == 1
+                && learnerStepsModel.evaluationState == StepsModel.PhaseState.DISABLED)   //  ==> phase 1
         }
 
         val evaluationPhaseAttendees: List<LearnerAssignment> = registeredUsers.filter {
-            responses.count { response ->
-                response.learner == it.learner
-                    && response.interaction.interactionType == InteractionType.ResponseSubmission
-            } >= 1
-                && sequenceModel.evaluationState.name != "DISABLED"
-        }
+            val learnerStepsModel: StepsModel
+                = StepsModelFactory.buildForLearner(sequence, sequence.activeInteraction)
 
-        previousSequenceId = previousSequence?.id
+            val submittedResponseByLearner: Int = attendeesResponses[it.learner.id]?.count { response ->
+                response.interaction.interactionType == InteractionType.ResponseSubmission
+            } ?: 0
 
-        nextSequenceId = nextSequence?.id
-
-        for (attendee: LearnerAssignment in registeredUsers) {
-            attendeesResponses[attendee.learner.id!!] = mutableListOf()
-        }
-
-        for (response: Response in responses) {
-            attendeesResponses[response.learner.id]?.add(response)
+            submittedResponseByLearner >= 1
+                && learnerStepsModel.evaluationState != StepsModel.PhaseState.DISABLED    //  ==> phase 2
         }
 
         model.addAttribute(
