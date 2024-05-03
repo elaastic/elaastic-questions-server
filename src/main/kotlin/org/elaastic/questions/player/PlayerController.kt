@@ -349,7 +349,6 @@ class PlayerController(
         return assignmentService.getNbRegisteredUsers(id)
     }
 
-
     @GetMapping("/sequence/{id}/start")
     fun startSequence(
         authentication: Authentication,
