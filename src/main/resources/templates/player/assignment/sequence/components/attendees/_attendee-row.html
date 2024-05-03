@@ -52,12 +52,12 @@
 
         <i class="icon flag outline"></i>
 
-        <span>
-                0</span>
+        <span>  <!-- TODO: reports count label!! -->
+          0</span>
       </div>
 
       <div style="color: #535353;"
-           th:if="${currentPhase == 1 && #lists.size(responses) == 0}"
+           th:if="${currentPhase == 1 && responses == null || #lists.size(responses) == 0}"
            th:attr="data-tooltip=#{attendee.in_course.tooltip}"
            data-tooltip="In course..."
            data-position="top center"
@@ -70,7 +70,7 @@
       </div>
 
       <div style="color: #259C31;"
-           th:unless="${currentPhase == 1 && #lists.size(responses) == 0}"
+           th:unless="${currentPhase == 1 && responses == null || #lists.size(responses) == 0}"
            th:attr="data-tooltip=#{attendee.finished.tooltip}"
            data-tooltip="Finished..."
            data-position="top center"
@@ -102,16 +102,18 @@
         </div>
 
         <div class="content">
-          <h4 class="ui header"
-              th:text="#{attendee.details.statement_answer}">
-                statement_answer</h4>
+          <div class="ui warning message"
+               th:text="#{attendee.details.none_answer(${attendee.learner.getFullname()})}"
+               th:if="${responses == null || #lists.size(responses) == 0}">
+            none_given_answer
+          </div>
 
           <div class="ui info message"
                th:each="response, i: ${responses}">
 
             <span style="font-weight: bold;"
-                  th:text="|Essai n${'°' + (i.index + 1) + ' :'}|">
-              answer_number</span>
+                  th:text="#{attendee.details.answer_label}">
+              given_answer_text</span>
 
             <span th:utext="${response.explanation}"></span>
           </div>
