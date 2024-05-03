@@ -68,7 +68,7 @@ class InteractionService(
                                                            sequence,
                                                            InteractionType.ResponseSubmission)
 
-    fun findAllResponsesBySequence(sequence: Sequence): List<Response>
+    fun findAllResponsesBySequenceOrderById(sequence: Sequence): List<Response>
         = interactionRepository.findAllResponsesBySequenceAndType(sequence,
                                                                   InteractionType.ResponseSubmission)
 
