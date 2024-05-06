@@ -138,21 +138,16 @@
                 $.post(url, data, function (response) { // Send the data to the server
                     console.log(response); // Log the response
                     if (response.success) {
-                        console.log("success")
                         $('#reportModal_' + evaluationId).modal('hide'); // Hide the modal
                         // We update the container through the link of the detail
                         const explanationContainer = $('.explanation[data-response-id="' + responseId + '"]:visible')
                         for (const explanationContainerElement of explanationContainer) {
-                            console.log(explanationContainerElement)
-                            console.log($(explanationContainerElement).children('.reviews-container').html())
-
                             // If the explanation container has reviews, we click on the detail link, to reload it
                             if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
                                 $(explanationContainerElement).find('.detail-link').click();
                             }
                         }
                     } else {
-                        console.log("error")
                         // Update the modal with the error message
                         $('#reportModal_' + evaluationId).find('.header').text(response.header);
                     }
