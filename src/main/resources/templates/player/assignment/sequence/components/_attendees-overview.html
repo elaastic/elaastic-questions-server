@@ -143,6 +143,12 @@
                            && stepsModel.evaluationState.name() == 'DISABLED' ? 'active' : ''}">
 
       <th:block th:if="${stepsModel.responseSubmissionState.name() != 'DISABLED'}">
+        <div class="ui message warning"
+             th:text="#{attendees.phase.none_attendee}"
+             th:if="${#lists.size(model.responsePhaseAttendees) == 0}">
+          none_attendee_in_phase
+        </div>
+
         <th:block th:each="attendee, i : ${model.responsePhaseAttendees}">
           <div th:replace="player/assignment/sequence/components/attendees/_attendee-row :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]}, 1)"></div>
         </th:block>
@@ -179,6 +185,11 @@
                            && stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'active' : ''}">
 
       <th:block th:if="${stepsModel.evaluationState.name() != 'DISABLED'}">
+        <div class="ui message warning"
+             th:if="${#lists.size(model.evaluationPhaseAttendees) == 0}">
+          none_attendee_in_phase
+        </div>
+
         <th:block th:each="attendee, i : ${model.evaluationPhaseAttendees}">
           <div th:replace="player/assignment/sequence/components/attendees/_attendee-row :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]}, 1)"></div>
         </th:block>
