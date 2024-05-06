@@ -261,24 +261,67 @@ class DraxoEvaluationModelTest(
                     .addEvaluation(Criteria.R, OptionId.YES)
                     .addEvaluation(Criteria.A, OptionId.YES)
                     .addEvaluation(Criteria.X, OptionId.YES)
-                    .addEvaluation(Criteria.O, OptionId.NO),
+                    .addEvaluation(Criteria.O, OptionId.NO), // All criteria are green
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should be able to be reacted") { draxoPeerGrading ->
             val draxoEvaluationModel = DraxoEvaluationModel(
-                graderName = "graderName",
-                graderNum = 1,
-                score = null,
-                draxoEvaluation = draxoPeerGrading.getDraxoEvaluation(),
-                userCanDisplayStudentsIdentity = false,
-                draxoPeerGradingId = null,
-                utilityGrade = null,
-                hiddenByTeacher = false,
-                responseId = null,
-                draxoPeerGrading = draxoPeerGrading
+                1,
+                draxoPeerGrading,
+                false
             )
             assertFalse(draxoEvaluationModel.isReported())
             assertFalse(draxoEvaluationModel.hiddenByTeacher)
+            assertTrue(draxoEvaluationModel.canBeReacted())
+        }
+    }
+
+    @Test
+    fun `canBeReacted should return true if the first criteria is NO`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a peer grading that can be reacted") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.NO,"explanation"),
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the peer grading should be able to be reacted") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                1,
+                draxoPeerGrading,
+                false
+            )
+            assertFalse(draxoEvaluationModel.isReported())
+            assertFalse(draxoEvaluationModel.hiddenByTeacher)
+            assertEquals(OptionId.NO, draxoEvaluationModel.draxoEvaluation[Criteria.D])
+            assertTrue(draxoEvaluationModel.canBeReacted())
+        }
+    }
+
+    @Test
+    fun `canBeReacted should return false if the first criteria is DONT_KNOW`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a peer grading that can be reacted") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.NO,"explanation"),
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the peer grading should be able to be reacted") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                1,
+                draxoPeerGrading,
+                false
+            )
+            assertFalse(draxoEvaluationModel.isReported())
+            assertFalse(draxoEvaluationModel.hiddenByTeacher)
+            assertEquals(OptionId.NO, draxoEvaluationModel.draxoEvaluation[Criteria.D])
             assertTrue(draxoEvaluationModel.canBeReacted())
         }
     }
