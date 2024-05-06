@@ -33,7 +33,9 @@ import javax.validation.constraints.*
 import kotlin.collections.HashSet
 import kotlin.jvm.Transient
 
-
+/**
+ * User entity
+ */
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
 @ValidateHasEmailOrHasOwnerOrHasExternalSource
@@ -42,6 +44,12 @@ class User(
     @field:NotBlank var firstName: String,
     @field:NotBlank var lastName: String,
 
+    /**
+     * The username.
+     *
+     * Can only contain letters, numbers, underscores and dashes.
+     * It Must be between 1 and 31 characters long.
+     */
     @field:NotBlank
     @field:Column(unique = true, length = 32)
     @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,31}$")
@@ -54,6 +62,10 @@ class User(
     @field:Email
     var email: String? = null,
 
+    /**
+     * The source of the user
+     * @see UserSource
+     */
     @field:Enumerated(EnumType.STRING)
     private var source: UserSource = UserSource.ELAASTIC,
 
@@ -135,18 +147,34 @@ class User(
         return this
     }
 
+    /**
+     * @see Settings
+     */
     @OneToOne(mappedBy = "user")
     var settings: Settings? = null
 
+    /**
+     * @see OnboardingState
+     */
     @OneToOne(mappedBy = "user")
     var onboardingState: OnboardingState? = null
 
+    /**
+     * @see UnsubscribeKey
+     */
     @OneToOne(mappedBy = "user")
     var unsubscribeKey: UnsubscribeKey? = null
 
+    /**
+     * @see ActivationKey
+     */
     @OneToOne(mappedBy = "user")
     var activationKey: ActivationKey? = null
 
+    /**
+     * A set of all assignments where the user is a learner
+     * @see LearnerAssignment
+     */
     @OneToMany(mappedBy = "learner")
     var registrations: MutableSet<LearnerAssignment> = mutableSetOf()
 
