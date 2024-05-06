@@ -680,13 +680,12 @@ internal class ResponseServiceIntegrationTest(
 
     @Test
     fun `a teacher can hide all the peerGrading in the assignement he own`() {
-        val teacher = integrationTestingService.getTestTeacher()
         val grader = integrationTestingService.getTestStudent()
         val response = integrationTestingService.getAnyResponse()
         val assignement = response.interaction.sequence.assignment!!
+        val teacher = response.interaction.sequence.owner
 
         tGiven("An assignement own by the teacher and a peerGrading of the response") {
-            assignement.owner = teacher
             DraxoPeerGrading(
                 grader = grader,
                 response = response,
@@ -761,12 +760,12 @@ internal class ResponseServiceIntegrationTest(
             response.learner = student
 
         }.tThen("Then the student can moderate the feedback of the answer") {
-            assertTrue(responseService.canModerate(student, response), "A student can moderate his own response")
+            assertTrue(responseService.canReactOnFeedbackOfResponse(student, response), "A student can moderate his own response")
 
         }.tThen("Another studnet can't moderate the answer") {
             val anotherStudent = integrationTestingService.getNLearners(1).first()
             assertFalse(
-                responseService.canModerate(anotherStudent, response),
+                responseService.canReactOnFeedbackOfResponse(anotherStudent, response),
                 "Another student can't moderate the response"
             )
             assertNotEquals(student, anotherStudent, "The two students must be different")

@@ -80,7 +80,7 @@ class DraxoPeerGradingController(
         }
 
         // A user can moderate the evaluation if he is the owner of the response
-        model["canModeratePeerGrading"] = responseService.canModerate(user, response)
+        model["canModeratePeerGrading"] = responseService.canReactOnFeedbackOfResponse(user, response)
         model["canHidePeerGrading"] = responseService.canHidePeerGrading(user, response)
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"

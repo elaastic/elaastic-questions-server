@@ -401,7 +401,7 @@ class ResponseService(
      * @param user the user who want to moderate the feedback
      * @param response the response to moderate
      */
-    fun canModerate(user: User, response: Response): Boolean {
+    fun canReactOnFeedbackOfResponse(user: User, response: Response): Boolean {
         return response.learner == user
     }
 }
