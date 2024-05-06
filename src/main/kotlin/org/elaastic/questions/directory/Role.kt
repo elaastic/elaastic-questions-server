@@ -31,17 +31,30 @@ import javax.persistence.*
 @Entity
 @Cacheable("roles")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+/**
+ * Role entity
+ */
 class Role(
         @field:Column(name = "authority")
         var name: String
 ) : AbstractJpaPersistable<Long>(), Serializable, GrantedAuthority {
 
+    /**
+     * All possible roles in the application
+     *
+     * @property STUDENT student role
+     * @property TEACHER teacher role
+     * @property ADMIN admin role
+     */
     enum class RoleId(val roleName: String) {
         STUDENT("STUDENT_ROLE"),
         TEACHER("TEACHER_ROLE"),
         ADMIN("ADMIN_ROLE"),
     }
 
+    /**
+     * @return the name of the role
+     */
     override fun getAuthority(): String {
         return name
     }

@@ -32,40 +32,68 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-
+/**
+ * Statement is a class that represents a statement in a subject.
+ *
+ * A statement is a question, that can be open-ended, multiple choice or exclusive choice.
+ *
+ * A statement can have a subject.
+ *
+ * @see Subject
+ * @see QuestionType
+ */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 // TODO (+) We should define a interface so that a sequence can implement statement operations by delegation
 class Statement(
-        @field:NotNull
-        @field:ManyToOne(fetch = FetchType.LAZY)
-        var owner: User,
+    @field:NotNull
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    var owner: User,
 
-        @field:NotBlank
-        var title: String = "",
+    @field:NotBlank
+    var title: String = "",
 
-        @field:NotBlank
-        var content: String = "",
+    @field:NotBlank
+    var content: String = "",
 
-        @field:NotNull
-        @Enumerated(EnumType.STRING)
-        var questionType: QuestionType,
+    /**
+     * The type of the question.
+     *
+     * @see QuestionType
+     */
+    @field:NotNull
+    @Enumerated(EnumType.STRING)
+    var questionType: QuestionType,
 
-        @Convert(converter = ChoiceSpecificationConverter::class)
-        @field:Column(name = "choice_specification")
-        var choiceSpecification: ChoiceSpecification? = null,
+    /**
+     * The specification of the choice. Only used if the question type is
+     * MultipleChoice or ExclusiveChoice.
+     *
+     * @see ChoiceSpecification
+     * @see MultipleChoiceSpecification
+     * @see ExclusiveChoiceSpecification
+     */
+    @Convert(converter = ChoiceSpecificationConverter::class)
+    @field:Column(name = "choice_specification")
+    var choiceSpecification: ChoiceSpecification? = null,
 
-        @field:ManyToOne(fetch = FetchType.LAZY)
-        var parentStatement: Statement? = null,
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    var parentStatement: Statement? = null,
 
-        @field:Column(name = "expected_explanation")
-        var expectedExplanation: String? = null,
+    /** The expected explanation of the statement. */
+    @field:Column(name = "expected_explanation")
+    var expectedExplanation: String? = null,
 
-        @field:ManyToOne( fetch = FetchType.LAZY)
-        var subject: Subject? = null,
+    /**
+     * The subject of the statement.
+     *
+     * @see Subject
+     */
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    var subject: Subject? = null,
 
-        @Column(name="`rank`")
-        var rank: Int = 0
+    @Column(name = "`rank`")
+    var rank: Int = 0
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
@@ -84,6 +112,11 @@ class Statement(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
+    /**
+     * The attachment of the statement.
+     *
+     * @see Attachment
+     */
     @OneToOne(mappedBy = "statement")
     var attachment: Attachment? = null
 
@@ -102,6 +135,10 @@ class Statement(
         return questionType == QuestionType.ExclusiveChoice
     }
 
+    /**
+     * @return True if the statement is a choice question (multiple or
+     *     exclusive), false otherwise.
+     */
     @Transient
     fun hasChoices() = isMultipleChoice() || isExclusiveChoice()
 
@@ -109,21 +146,52 @@ class Statement(
         return rank.compareTo(other.rank)
     }
 
+    /**
+     * Update the statement's title with the given title
+     *
+     * @param value The new title of the statement.
+     * @return The updated statement.
+     */
     fun title(value: String): Statement {
         this.title = value
         return this
     }
 
+    /**
+     * Update the statement's content with the given content
+     *
+     * @param value The new content of the statement.
+     * @return The updated statement.
+     */
     fun content(value: String): Statement {
         this.content = value
         return this
     }
 
+    /**
+     * Update the statement's expected explanation with the given explanation
+     *
+     * @param value The new expected explanation of the statement.
+     * @return The updated statement.
+     */
     fun expectedExplanation(value: String?): Statement {
         this.expectedExplanation = value
         return this
     }
 
+    /**
+     * Update the statement's values with the values of the other statement.
+     *
+     * The other statement must have the same owner as this statement.
+     *
+     * If the id of the other statement is different from this statement, the
+     * parent statement is updated.
+     *
+     * @param otherStatement The statement to update from.
+     * @return The updated statement.
+     * @throws OptimisticLockException If the version of the other statement is
+     *     different from this statement.
+     */
     fun updateFrom(otherStatement: Statement): Statement {
         require(owner == otherStatement.owner)
         if (id != otherStatement.id) {
@@ -141,26 +209,46 @@ class Statement(
     }
 
     companion object {
+        /**
+         * Create a default statement with the given user.
+         *
+         * The statement is an exclusive choice question with two candidate items,
+         * and the first one is the expected choice.
+         *
+         * @param user The futur owner of the statement.
+         * @return The created statement.
+         */
         fun createDefaultStatement(user: User): Statement {
             return Statement(
-                    owner = user,
-                    questionType = QuestionType.ExclusiveChoice,
-                    choiceSpecification = ExclusiveChoiceSpecification(
-                            nbCandidateItem = 2,
-                            expectedChoice = ChoiceItem(1, 1f)
-                    )
+                owner = user,
+                questionType = QuestionType.ExclusiveChoice,
+                choiceSpecification = ExclusiveChoiceSpecification(
+                    nbCandidateItem = 2,
+                    expectedChoice = ChoiceItem(1, 1f)
+                )
             )
         }
+
+        /**
+         * Create an example statement with the given user.
+         *
+         * The statement is an exclusive choice question with two candidate items,
+         * and the first one is the expected choice. The title is "Title" and the
+         * content is "Blabla...".
+         *
+         * @param user The futur owner of the statement.
+         * @return The created statement.
+         */
         fun createExampleStatement(user: User): Statement {
             return Statement(
-                    owner = user,
-                    questionType = QuestionType.ExclusiveChoice,
-                    choiceSpecification = ExclusiveChoiceSpecification(
-                            nbCandidateItem = 2,
-                            expectedChoice = ChoiceItem(1, 1f)
-                    ),
-                    content = "Blabla...",
-                    title = "Title"
+                owner = user,
+                questionType = QuestionType.ExclusiveChoice,
+                choiceSpecification = ExclusiveChoiceSpecification(
+                    nbCandidateItem = 2,
+                    expectedChoice = ChoiceItem(1, 1f)
+                ),
+                content = "Blabla...",
+                title = "Title"
             )
         }
     }

@@ -37,6 +37,16 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 
+/**
+ * The sequence entity manages the step of submission, evaluation and read
+ * of a statement.
+ *
+ * A sequence uses a statement and is contained in an assignment.
+ *
+ * @see Statement
+ * @see Assignment
+ * @see Interaction
+ */
 @Entity
 @NamedEntityGraph(
     name = "Sequence.statement",
@@ -57,15 +67,30 @@ class Sequence(
     @field:ManyToOne(fetch = FetchType.EAGER)
     var assignment: Assignment? = null,
 
-    @Column(name="`rank`")
+    @Column(name = "`rank`")
     var rank: Int = 0,
 
+    /**
+     * Flag that indicates if phase 2 is skipped. Sometime, depending on the
+     * student-first submission, phase 2 can be skipped.
+     */
     @Column(name = "phase_2_skipped")
     var phase2Skipped: Boolean = false,
 
+
+    /**
+     * The execution context of the sequence.
+     *
+     * @see ExecutionContext
+     */
     @field:Enumerated(EnumType.STRING)
     var executionContext: ExecutionContext = ExecutionContext.FaceToFace,
 
+    /**
+     * The evaluation phase configuration.
+     *
+     * @see EvaluationPhaseConfig
+     */
     @field:Enumerated(EnumType.STRING)
     var evaluationPhaseConfig: EvaluationPhaseConfig = EvaluationPhaseConfig.ALL_AT_ONCE,
 
@@ -77,6 +102,13 @@ class Sequence(
 
     var resultsArePublished: Boolean = false,
 
+    /**
+     * Flag that indicates if the ChatGPT evaluation is enabled. If true,
+     * ChatGPT will submit an evaluation for each student response.
+     *
+     * @see
+     *     org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluation
+     */
     var chatGptEvaluationEnabled: Boolean = false
 
 
@@ -131,6 +163,10 @@ class Sequence(
             }
         }
 
+    /**
+     * @return the evaluation specification of the sequence.
+     * @see EvaluationSpecification
+     */
     @Transient
     fun getEvaluationSpecification(): EvaluationSpecification =
         getEvaluationInteraction().specification.let { specification ->
@@ -141,11 +177,19 @@ class Sequence(
             }
         }
 
+    /**
+     * @return the evaluation interaction of the sequence.
+     * @see Interaction
+     */
     @Transient
     fun getEvaluationInteraction() =
         interactions[InteractionType.Evaluation]
             ?: throw IllegalStateException("The evaluation interaction is not initialized")
 
+    /**
+     * @return the read interaction of the sequence.
+     * @see Interaction
+     */
     @Transient
     fun getReadInteraction() =
         interactions[InteractionType.Read]
@@ -193,6 +237,11 @@ class Sequence(
                         interactions[InteractionType.Evaluation]?.state == State.afterStop
                 )
 
+    /**
+     * Select the active interaction of the sequence.
+     *
+     * @param interactionType the type of the interaction to select.
+     */
     fun selectActiveInteraction(interactionType: InteractionType) {
         interactions[interactionType]?.let {
             activeInteraction = it
@@ -230,6 +279,13 @@ class Sequence(
 
 }
 
+/**
+ * The different states of a phase.
+ *
+ * @property beforeStart The phase is not started yet.
+ * @property show The phase is in progress.
+ * @property afterStop The phase is stopped.
+ */
 enum class State {
     beforeStart,
     show,

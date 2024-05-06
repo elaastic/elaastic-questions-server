@@ -20,7 +20,14 @@ package org.elaastic.questions.assignment.choice
 
 import javax.validation.constraints.Max
 
-
+/**
+ * ChoiceItem is a class that represents an item in a choice question.
+ *
+ * @property index The index of the item in the list of items.
+ * @property score The score of the item.
+ * @see MultipleChoiceSpecification
+ * @see ExclusiveChoiceSpecification
+ */
 data class ChoiceItem(
         var index: Int,
         @field:Max(100) var score: Float

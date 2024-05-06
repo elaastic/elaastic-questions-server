@@ -6,6 +6,13 @@ import java.math.BigDecimal
 import javax.persistence.DiscriminatorValue
 import javax.persistence.Entity
 
+/**
+ * LikertPeerGrading is a PeerGrading with a Likert scale.
+ *
+ * See [Wikipedia](https://en.wikipedia.org/wiki/Likert_scale) for more information about this scale.
+ *
+ * @see PeerGrading
+ */
 @Entity
 @DiscriminatorValue("LIKERT")
 class LikertPeerGrading(

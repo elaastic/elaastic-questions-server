@@ -17,9 +17,28 @@
  */
 package org.elaastic.questions.assignment.sequence
 
+/**
+ * ConfidenceDegree is an enum class that represents the degree of
+ * confidence that a student has in their response.
+ *
+ * @property NOT_CONFIDENT_AT_ALL The student is not confident at all in
+ *     their response.
+ * @property NOT_REALLY_CONFIDENT The student is not really confident in
+ *     their response.
+ * @property CONFIDENT The student is confident in their response.
+ * @property TOTALLY_CONFIDENT The student is totally confident in their
+ *     response.
+ */
 enum class ConfidenceDegree {
-        NOT_CONFIDENT_AT_ALL,
-        NOT_REALLY_CONFIDENT,
-        CONFIDENT,
-        TOTALLY_CONFIDENT
+    /** The student is not confident at all in their response. */
+    NOT_CONFIDENT_AT_ALL,
+
+    /** The student is not really confident in their response. */
+    NOT_REALLY_CONFIDENT,
+
+    /** The student is confident in their response. */
+    CONFIDENT,
+
+    /** The student is totally confident in their response. */
+    TOTALLY_CONFIDENT
 }

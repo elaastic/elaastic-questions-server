@@ -1,5 +1,10 @@
 package org.elaastic.questions.assignment.sequence.peergrading.draxo.option
 
+/**
+ * OptionId is an enumeration of the possible values for a DraxoPeerGrading criteria.
+ *
+ * @see org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+ */
 enum class OptionId(val codeI18n: String) {
     YES("common.yes"),
     NO("common.no"),

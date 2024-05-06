@@ -18,7 +18,12 @@
 
 package org.elaastic.questions.assignment.choice
 
-
+/**
+ * Enum class representing the type of choice
+ *
+ * @property EXCLUSIVE Represents an exclusive choice, where only one option can be selected.
+ * @property MULTIPLE Represents a multiple choice, where multiple options can be selected.
+ */
 enum class ChoiceType {
     EXCLUSIVE,
     MULTIPLE

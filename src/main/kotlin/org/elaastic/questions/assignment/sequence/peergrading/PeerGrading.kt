@@ -31,6 +31,24 @@ import java.util.*
 import javax.persistence.*
 
 
+/**
+ * Peer grading entity.
+ *
+ * This entity is used to store the peer grading of a response.
+ * It contains the grade given by the grader, the annotation and the grader.
+ *
+ * The type of the peer grading is stored in the `type` column.
+ * The type can be one of the following:
+ * - LIKERT
+ * - DRAXO
+ *
+ * A peer grading can be moderate by a teacher.
+ * And the learner of the response can give a utility grade to the peer grading.
+ * It's why this entity implements the [ReportCandidate] interface.
+ *
+ * @see LikertPeerGrading
+ * @see org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "`type`", length = 12)
@@ -49,7 +67,7 @@ class PeerGrading(
     var grade: BigDecimal?,
     var annotation: String? = null,
 
-    // Indicates that this grading is the last one for this grader & this sequence (useful for DRAXO strategy)
+    /** Indicates that this grading is the last one for this grader & this sequence (useful for DRAXO strategy) */
     var lastSequencePeerGrading: Boolean = true,
 
     // Moderation attributes
@@ -58,7 +76,7 @@ class PeerGrading(
     override var reportReasons: String? = null,
     override var reportComment: String? = null,
     override var utilityGrade: UtilityGrade? = null,
-    ) : AbstractJpaPersistable<Long>(), ReportCandidate {
+) : AbstractJpaPersistable<Long>(), ReportCandidate {
 
     @Version
     var version: Long? = null

@@ -7,6 +7,15 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
+/**
+ * A prompt for a chatGpt evaluation
+ *
+ * @param startDate the date when the prompt is created
+ * @param active whether the prompt is active
+ * @param content the content of the prompt
+ * @param language the language of the prompt
+ * @property endDate the date when the prompt is deactivated
+ */
 @Entity
 class ChatGptPrompt (
 

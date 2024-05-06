@@ -11,7 +11,20 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-
+/**
+ * A course is a collection of subjects.
+ *
+ * For example :
+ * a course can be `Français 5e` and have subjects like
+ *  - `Le champ lexical`
+ *  - `Les compléments d'objets`
+ *  - `Accords du participe passé`
+ *  - ...
+ *
+ *  A course in owned by a user, and have a title.
+ *
+ *  From here you can access the list of subjects.
+ */
 @Entity
 @NamedEntityGraph(
         name = "Course_subjects",
@@ -22,7 +35,6 @@ import javax.validation.constraints.NotNull
         ]
 )
 @EntityListeners(AuditingEntityListener::class)
-
 class Course (
 
         @field:NotNull

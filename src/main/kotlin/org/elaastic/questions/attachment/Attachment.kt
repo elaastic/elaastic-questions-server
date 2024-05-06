@@ -29,20 +29,32 @@ import javax.validation.constraints.NotNull
 import kotlin.math.roundToInt
 
 
+/**
+ * Entity class for an attachment file
+ *
+ * An attachment is a file that can be attached to a statement
+ *
+ * @param name the name of the attachment
+ * @param originalFileName the original name of the file
+ * @param size the size of the file
+ * @param mimeType the mime type of the file
+ * @param toDelete a boolean to know if the file has to be deleted
+ * @see MimeType for the possible type of attachment
+ */
 @Entity(name = "attachement")
 class Attachment(
-        @field:NotBlank var name: String,
+    @field:NotBlank var name: String,
 
-        @field:Size(min = 1)
-        @Column(name = "original_name")
-        var originalFileName: String? = null,
+    @field:Size(min = 1)
+    @Column(name = "original_name")
+    var originalFileName: String? = null,
 
-        var size: Long? = null,
+    var size: Long? = null,
 
-        @Column(name = "type_mime")
-        var mimeType: MimeType? = null,
+    @Column(name = "type_mime")
+    var mimeType: MimeType? = null,
 
-        var toDelete: Boolean = false
+    var toDelete: Boolean = false
 ) : AbstractJpaPersistable<Long>() {
 
     @Version
@@ -52,7 +64,8 @@ class Attachment(
     @Column(columnDefinition = "BINARY(16)")
     var uuid: UUID = UUID.randomUUID()
 
-    @NotNull @NotBlank
+    @NotNull
+    @NotBlank
     var path: String? = null
 
     @Embedded
@@ -74,35 +87,49 @@ class Attachment(
         return "Attachment(path='$path', name='$name', id=$$id, version=$version, originalName=$originalFileName, size=$size, mimeType=$mimeType, dimension=$dimension, toDelete=$toDelete)"
     }
 
-    fun getDimensionForDisplay(widthMax: Int, heightMax:Int): Dimension {
+    fun getDimensionForDisplay(widthMax: Int, heightMax: Int): Dimension {
         return Companion.getDimensionForDisplay(dimension, widthMax, heightMax)
     }
 
     companion object {
-        fun getDimensionForDisplay(dimension: Dimension?, widthMax: Int, heightMax:Int): Dimension {
+        fun getDimensionForDisplay(dimension: Dimension?, widthMax: Int, heightMax: Int): Dimension {
             return if (dimension != null) {
                 var l = dimension.width
                 var h = dimension.height
-                val ratio = listOf(l / widthMax.toDouble() , h / heightMax.toDouble()).maxOrNull()!!
+                val ratio = listOf(l / widthMax.toDouble(), h / heightMax.toDouble()).maxOrNull()!!
 
                 if (ratio > 1) {
                     l = (l / ratio).roundToInt()
                     h = (h / ratio).roundToInt()
                 }
                 Dimension(l, h)
-            } else Dimension(widthMax,heightMax)
+            } else Dimension(widthMax, heightMax)
         }
     }
 
 }
 
 
+/**
+ * Class for the mime type of attachment
+ * @param label the label of the mime type
+ */
 class MimeType(val label: String = "application/octet-stream") {
 
+    /**
+     * Check if the mime type corresponds to a displayable image
+     *
+     * @see MimeTypesOfDisplayableImage
+     * @return true if the mime type corresponds to a displayable image
+     */
     fun correspondsToDisplayableImage(): Boolean {
         return label in MimeTypesOfDisplayableImage.values().map { it.label }
     }
 
+    /**
+     * Check if the mime type corresponds to a displayable text
+     * @return true if the mime type corresponds to a displayable text
+     */
     fun correspondsToDisplayableText(): Boolean {
         return label.startsWith("text/")
     }
@@ -122,6 +149,12 @@ class MimeType(val label: String = "application/octet-stream") {
 
 }
 
+/**
+ * Enum class for the mime types of displayable images
+ *
+ * An image can be a `gif`, `jpeg` or `png`
+ * @param label the label of the mime type
+ */
 enum class MimeTypesOfDisplayableImage(val label: String) {
     gif("image/gif"),
     jpeg("image/jpeg"),
@@ -134,8 +167,8 @@ enum class MimeTypesOfDisplayableImage(val label: String) {
 
 @Embeddable
 class Dimension(
-        @field:Column(name = "dimension_width") val width: Int,
-        @field:Column(name = "dimension_height") val height: Int
+    @field:Column(name = "dimension_width") val width: Int,
+    @field:Column(name = "dimension_height") val height: Int
 ) : Comparable<Dimension> {
 
     override fun compareTo(other: Dimension): Int {
@@ -149,7 +182,6 @@ class Dimension(
 
         return -1
     }
-
 
 
     override fun equals(other: Any?): Boolean {
@@ -171,8 +203,6 @@ class Dimension(
     override fun toString(): String {
         return "Dimension(width=$width, height=$height)"
     }
-
-
 
 
 }

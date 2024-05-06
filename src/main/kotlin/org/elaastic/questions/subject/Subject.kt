@@ -33,6 +33,14 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
 
+/**
+ * A subject is a container for statements and assignments.
+ * It is owned by a user and can be part of a course.
+ *
+ * @see Course
+ * @see Statement
+ * @see Assignment
+ */
 @Entity
 @NamedEntityGraph(
         name = "Subject.statements_assignments",
@@ -74,12 +82,24 @@ class Subject (
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
+    /**
+     * The list of assignments in the subject.
+     *
+     * The assignments are ordered by last updated date.
+     * @see Assignment
+     */
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "subject",
             targetEntity = Assignment::class)
     @OrderBy("lastUpdated DESC")
     var assignments: MutableSet<Assignment> = mutableSetOf()
 
+    /**
+     * The list of statements in the subject.
+     *
+     * The statements are ordered by rank.
+     * @see Statement
+     */
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "subject",
             targetEntity = Statement::class)
@@ -92,6 +112,13 @@ class Subject (
     var globalId: UUID = UUID.randomUUID()
 
 
+    /**
+     * Update the subject with the values of another subject.
+     *
+     * @param otherSubject the subject to copy the values from
+     * @throws IllegalArgumentException if the id of the other subject is different from this subject
+     * @throws OptimisticLockException if the version of the other subject is different from this subject
+     */
     fun updateFrom(otherSubject: Subject) {
         require(id == otherSubject.id)
         if (this.version != otherSubject.version) {
@@ -102,6 +129,13 @@ class Subject (
         this.course = otherSubject.course
     }
 
+    /**
+     * Add a statement to the subject.
+     *
+     * @param statement the statement to add
+     * @return the added statement
+     * @throws IllegalArgumentException if the owner of the statement is different from the owner of the subject
+     */
     fun addStatement(statement: Statement): Statement {
         require(statement.owner == owner) {
             "The owner of the statement cannot be different from the owner of subject"
@@ -114,6 +148,13 @@ class Subject (
         return statement
     }
 
+    /**
+     * Add an assignment to the subject.
+     *
+     * @param assignment the assignment to add
+     * @return the added assignment
+     * @throws IllegalArgumentException if the owner of the assignment is different from the owner of the subject
+     */
     fun addAssignment(assignment: Assignment): Assignment {
         require(assignment.owner == owner) {
             "The owner of the assignment cannot be different from the owner of subject"

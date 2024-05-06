@@ -22,10 +22,29 @@ import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 
+/**
+ * This class is used to store the specification of an exclusive choice statement.
+ *
+ * @see org.elaastic.questions.assignment.choice.ChoiceSpecification
+ */
 data class ExclusiveChoiceSpecification(
-        @field:Max(10) override var nbCandidateItem: Int,
-        var expectedChoice: ChoiceItem,
-        var explanationChoiceList: List<TeacherExplanation> = listOf()
+
+    /**
+     * The number of candidate items
+     */
+    @field:Max(10) override var nbCandidateItem: Int,
+
+    /**
+     * The expected choice
+     * @see org.elaastic.questions.assignment.choice.ChoiceItem
+     */
+    var expectedChoice: ChoiceItem,
+
+    /**
+     * The explanation choice list
+     * @see org.elaastic.questions.assignment.sequence.TeacherExplanation
+     */
+    var explanationChoiceList: List<TeacherExplanation> = listOf()
 ) : ChoiceSpecification {
 
     override fun getChoiceType(): ChoiceType {
@@ -34,10 +53,10 @@ data class ExclusiveChoiceSpecification(
 
     override fun toLegacy(): org.elaastic.questions.assignment.choice.legacy.ChoiceSpecification {
         return org.elaastic.questions.assignment.choice.legacy.ChoiceSpecification(
-                choiceInteractionType = getChoiceType().name,
-                itemCount = nbCandidateItem,
-                expectedChoiceList = listOf(expectedChoice),
-                explanationChoiceList = explanationChoiceList
+            choiceInteractionType = getChoiceType().name,
+            itemCount = nbCandidateItem,
+            expectedChoiceList = listOf(expectedChoice),
+            explanationChoiceList = explanationChoiceList
         )
     }
 }
