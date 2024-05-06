@@ -101,10 +101,12 @@ class ResponseService(
             limit = sequence.getEvaluationSpecification().responseToEvaluateCount
         )
 
-    fun findNextResponseToGrade(sequence: Sequence,
-                                user: User,
-                                attempt: AttemptNum,
-                                excludedIds: List<Long>) =
+    fun findNextResponseToGrade(
+        sequence: Sequence,
+        user: User,
+        attempt: AttemptNum,
+        excludedIds: List<Long>
+    ) =
         if (sequence.executionIsFaceToFace()) {
             val recommendedResponses = responseRepository.findByInteractionAndAttemptAndLearner(
                 sequence.getResponseSubmissionInteraction(),
@@ -116,8 +118,7 @@ class ResponseService(
                 )?.let { responseRepository.getAllByIdIn(it) }
             } ?: listOf()
             recommendedResponses.firstOrNull { it.id !in excludedIds }
-        }
-        else recommendationService.findAllResponsesOrderedByEvaluationCount(
+        } else recommendationService.findAllResponsesOrderedByEvaluationCount(
             evaluator = user,
             interaction = sequence.getResponseSubmissionInteraction(),
             attemptNum = attempt,
@@ -179,7 +180,7 @@ class ResponseService(
 
         response.meanGrade = res[0]?.let { BigDecimal(it as Double).setScale(2, RoundingMode.HALF_UP) }
         response.evaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
-        response.draxoEvaluationCount  = res[2]?.let { (it as Long).toInt() } ?: 0
+        response.draxoEvaluationCount = res[2]?.let { (it as Long).toInt() } ?: 0
 
         return responseRepository.save(response)
     }
@@ -311,7 +312,7 @@ class ResponseService(
      * @param response the response to hide
      * @return the response
      */
-    fun hideResponse(user: User, response: Response) : Response {
+    fun hideResponse(user: User, response: Response): Response {
         // Only a teacher can hide a response
         require(user.isTeacher()) {
             "Only a teacher can hide a response"
@@ -333,7 +334,7 @@ class ResponseService(
      * @param response the previously hidden response to show again
      * @return the response
      */
-    fun unhideResponse(user: User, response: Response) : Response {
+    fun unhideResponse(user: User, response: Response): Response {
         // Only a teacher can unhide a response
         require(user.isTeacher()) {
             "Only a teacher can unhide a response"
@@ -351,7 +352,7 @@ class ResponseService(
      * @param response the response to add as recommended
      * @return the response
      */
-    fun addRecommendedByTeacher(user: User, response: Response) : Response {
+    fun addRecommendedByTeacher(user: User, response: Response): Response {
         // Only a teacher can add a response as favourite
         require(user.isTeacher()) {
             "Only a teacher can unhide a response"
@@ -369,7 +370,7 @@ class ResponseService(
      * @param response the previously recommended response
      * @return the response
      */
-    fun removeRecommendedByTeacher(user: User, response: Response) : Response {
+    fun removeRecommendedByTeacher(user: User, response: Response): Response {
         // Only a teacher can remove a response as favourite
         require(user.isTeacher()) {
             "Only a teacher can unhide a response"
@@ -380,5 +381,27 @@ class ResponseService(
             return responseRepository.save(response)
         }
         return response
+    }
+
+    /**
+     * Return true if the user can hide the peer grading of a response
+     * An user can hide the peer grading if he is the owner of the assigment
+     * @param teacher the user who want to hide the peer grading
+     * @param response the response where the peer grading to hide is
+     * @return true if the user can hide the peer grading
+     */
+    fun canHidePeerGrading(teacher: User, response: Response): Boolean {
+        return response.interaction.sequence.assignment!!.owner == teacher
+    }
+
+
+    /**
+     * Return true if the user can moderate the feedback of the response
+     * An user can moderate the feedback if he is the owner of the sequence
+     * @param user the user who want to moderate the feedback
+     * @param response the response to moderate
+     */
+    fun canReactOnFeedbackOfResponse(user: User, response: Response): Boolean {
+        return response.learner == user
     }
 }

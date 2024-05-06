@@ -29,7 +29,11 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.directory.User
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.StatementService
@@ -39,7 +43,7 @@ import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -52,6 +56,7 @@ import javax.transaction.Transactional
 internal class ResponseServiceIntegrationTest(
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val responseService: ResponseService,
+    @Autowired val responseRepository: ResponseRepository,
     @Autowired val sequenceRepository: SequenceRepository,
     @Autowired val sequenceService: SequenceService,
     @Autowired val assignmentService: AssignmentService,
@@ -59,7 +64,8 @@ internal class ResponseServiceIntegrationTest(
     @Autowired val userService: UserService,
     @Autowired val peerGradingRepository: PeerGradingRepository,
     @Autowired val entityManager: EntityManager,
-    @Autowired val subjectService: SubjectService
+    @Autowired val subjectService: SubjectService,
+    @Autowired val peerGradingService: PeerGradingService,
 ) {
 
     @Test
@@ -661,7 +667,7 @@ internal class ResponseServiceIntegrationTest(
                 }
             }
         }.tWhen("we build a response based on expected explanations") { sequence ->
-           responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
+            responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
                 sequence = sequence,
                 teacher = sequence.owner,
             )
@@ -672,5 +678,133 @@ internal class ResponseServiceIntegrationTest(
         }
     }
 
-}
+    @Test
+    fun `a teacher can hide all the peerGrading in the assignement he own`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        val assignement = response.interaction.sequence.assignment!!
+        val teacher = response.interaction.sequence.owner
 
+        tGiven("An assignement own by the teacher and a peerGrading of the response") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tThen("The teacher can hide the feedback") { peerGrading ->
+            assertEquals(teacher, assignement.owner)
+            assertTrue(peerGradingService.canHidePeerGrading(teacher, peerGrading), "The teacher can hide the feedback")
+            assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must be 0")
+            peerGrading
+        }.tWhen("the teacher hide the peerGrading") { peerGrading ->
+            peerGradingService.markAsHidden(teacher, peerGrading)
+            peerGrading
+        }.tThen("the peerGrading is hidden") { peerGrading ->
+            assertTrue(peerGrading.hiddenByTeacher, "The feedback is hidden")
+            assertEquals(
+                1,
+                responseRepository.findById(response.id!!).get().draxoEvaluationHiddenCount,
+                "The hidden count must be 1"
+            )
+        }
+    }
+
+    @Test
+    fun `a student can't hide an peerGrading despite owning the response`() {
+        val student = integrationTestingService.getTestStudent()
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+
+        tGiven("An assignement own by the teacher and a peerGrading of the response") {
+            response.learner = student
+            LikertPeerGrading(
+                grade = BigDecimal(2),
+                annotation = "Annotation",
+                grader = grader,
+                response = response
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tThen("The student can't hide the feedback") { peerGrading ->
+            assertFalse(
+                peerGradingService.canHidePeerGrading(student, peerGrading),
+                "The student can't hide a peergrading"
+            )
+            peerGrading
+        }.tWhen("the student try hidding the peerGrading") { peerGrading ->
+            peerGrading
+        }.tThen("an excetion is thrown despite owning the response") { peerGrading ->
+            assertThrows(
+                IllegalAccessException::class.java
+            ) { peerGradingService.markAsHidden(student, peerGrading) }
+            assertEquals(student, peerGrading.response.learner, "The student own the response")
+            assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must not have changed")
+        }
+    }
+
+    @Test
+    fun `a student can only moderate the feedback for his anwser`() {
+        val student = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+
+        tGiven("Given an anwser given by a student") {
+            response.learner = student
+
+        }.tThen("Then the student can moderate the feedback of the answer") {
+            assertTrue(responseService.canReactOnFeedbackOfResponse(student, response), "A student can moderate his own response")
+
+        }.tThen("Another studnet can't moderate the answer") {
+            val anotherStudent = integrationTestingService.getNLearners(1).first()
+            assertFalse(
+                responseService.canReactOnFeedbackOfResponse(anotherStudent, response),
+                "Another student can't moderate the response"
+            )
+            assertNotEquals(student, anotherStudent, "The two students must be different")
+        }
+    }
+
+    @Test
+    fun `a teacher can unhide an hidden draxoPeerGrading`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        val teacher = response.interaction.sequence.owner
+
+        tGiven("An assignement own by the teacher and a peerGrading of the response") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.save(it)
+                    it
+                }
+        }.tWhen("the teacher hide the peerGrading") { peerGrading ->
+            peerGradingService.markAsHidden(teacher, peerGrading)
+            peerGrading
+        }.tThen("the peerGrading is hidden") { peerGrading ->
+            assertTrue(peerGrading.hiddenByTeacher, "The feedback is hidden")
+            assertInstanceOf(DraxoPeerGrading::class.java, peerGrading, "The peerGrading is a DraxoPeerGrading")
+            assertEquals(1, response.draxoEvaluationHiddenCount, "The hidden count must be 1")
+            peerGrading
+        }.tWhen("the teacher unhide the peerGrading") { peerGrading ->
+            peerGradingService.markAsShow(teacher, peerGrading)
+            peerGrading
+        }.tThen("the peerGrading is unhidden") { peerGrading ->
+            assertFalse(peerGrading.hiddenByTeacher, "The feedback is unhidden")
+            assertInstanceOf(DraxoPeerGrading::class.java, peerGrading, "The peerGrading is a DraxoPeerGrading")
+            assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must be 0")
+        }
+    }
+
+}

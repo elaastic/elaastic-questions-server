@@ -37,11 +37,12 @@ open class ExplanationData(
     val choiceList: LearnerChoice? = null,
     val hiddenByTeacher: Boolean = false,
     val recommendedByTeacher: Boolean = false,
+    val nbDraxoEvaluationsHidden: Int = 0,
 ) {
     constructor(response: Response) : this(
         responseId = response.id!!,
         content = response.explanation,
-        author = response.learner.firstName + " " + response.learner.lastName + " (@" + response.learner.username + ")",
+        author = response.learner.getDisplayName(),
         nbEvaluations = response.evaluationCount,
         nbDraxoEvaluations = response.draxoEvaluationCount,
         meanGrade = response.meanGrade,
@@ -51,6 +52,7 @@ open class ExplanationData(
         choiceList = response.learnerChoice,
         hiddenByTeacher = response.hiddenByTeacher,
         recommendedByTeacher = response.recommendedByTeacher,
+        nbDraxoEvaluationsHidden = response.draxoEvaluationHiddenCount,
     )
 
     val meanGrade = meanGrade
@@ -58,4 +60,24 @@ open class ExplanationData(
         ?.stripTrailingZeros()
 
     open val fromTeacher = false
+
+    /**
+     * Number of evaluation visible to the user
+     * A student can only see the evaluations if they are not hidden by the teacher
+     * @param isTeacher true if the user is a teacher false otherwise
+     * @return the number of evaluations
+     */
+    fun getNbEvaluation(isTeacher: Boolean): Int {
+        return if (isTeacher) nbEvaluations else nbEvaluations - nbDraxoEvaluationsHidden
+    }
+
+    /**
+     * Number of Draxo evaluation visible to the user
+     * A student can only see the Draxo evaluations if they are not hidden by the teacher
+     * @param isTeacher true if the user is a teacher false otherwise
+     * @return the number of Draxo evaluations
+     */
+    fun getNbDraxoEvaluation(isTeacher: Boolean): Int {
+        return if (isTeacher) nbDraxoEvaluations else nbDraxoEvaluations - nbDraxoEvaluationsHidden
+    }
 }

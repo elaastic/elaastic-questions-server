@@ -1,25 +1,29 @@
+/*
+ * Elaastic - formative assessment system
+ * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package org.elaastic.questions.player.components.explanationViewer
 
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import java.math.BigDecimal
 
 object ExplanationDataFactory {
 
     fun create(response: Response): ExplanationData {
-        val explanationData = ExplanationData(
-            responseId = response.id!!,
-            content = response.explanation,
-            author = response.learner.getDisplayName(),
-            nbEvaluations = response.evaluationCount,
-            nbDraxoEvaluations = response.draxoEvaluationCount,
-            meanGrade = response.meanGrade,
-            confidenceDegree = response.confidenceDegree,
-            correct = response.score?.compareTo(BigDecimal(100)) == 0,
-            score = response.score,
-            choiceList = response.learnerChoice,
-            hiddenByTeacher = response.hiddenByTeacher,
-            recommendedByTeacher = response.recommendedByTeacher,
-        )
+        val explanationData = ExplanationData(response)
 
 
         return if(response.learner == response.statement.owner) {

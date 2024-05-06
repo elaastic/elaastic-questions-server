@@ -72,6 +72,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -2711,8 +2712,9 @@ class TestingPlayerController(
                 graderName = "Joe",
                 graderNum = 1,
                 score = DraxoGrading.computeGrade(draxoEvaluation),
-                draxoEvaluation
-            )
+                draxoEvaluation,
+
+                )
         )
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/test-draxo-show"
@@ -2804,10 +2806,11 @@ class TestingPlayerController(
                     (i + 1),
                     DraxoGrading.computeGrade(draxoEvaluation),
                     draxoEvaluation,
+                    canReactOnPeerGrading = true,
+                    canHidePeerGrading = true
                 )
             }
         )
-
         return "player/assignment/sequence/phase/evaluation/method/draxo/test-draxo-show-list"
     }
 

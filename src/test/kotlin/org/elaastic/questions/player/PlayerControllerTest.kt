@@ -56,17 +56,15 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.togglz.core.manager.FeatureManager
-import java.util.*
-import javax.persistence.*
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(PlayerController::class)
 @ContextConfiguration(classes = [TestSecurityConfig::class])
 @WithUserDetails("teacher")
 internal class PlayerControllerTest(
-        @Autowired val mockMvc:MockMvc,
-        @Autowired val integrationTestingService: IntegrationTestingService,
-        @Autowired val userDetailsService: UserDetailsService
+    @Autowired val mockMvc: MockMvc,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val userDetailsService: UserDetailsService
 ) {
     @MockBean
     lateinit var assignmentService: AssignmentService
