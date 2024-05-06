@@ -155,7 +155,6 @@ class DraxoEvaluationModelTest(
                 responseId = null,
                 draxoPeerGrading = draxoPeerGrading
             )
-            draxoEvaluationModel.canBeReacted()
             assertFalse(draxoEvaluationModel.canBeReacted())
         }
     }
@@ -246,6 +245,41 @@ class DraxoEvaluationModelTest(
         }.tThen("the peer grading should not be able to be reacted") {
             assertTrue(it.isReported())
             assertFalse(it.canBeReacted())
+        }
+    }
+
+    @Test
+    fun `canBeReacted should return true if all criteria are green`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a peer grading that can be reacted") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.YES)
+                    .addEvaluation(Criteria.O, OptionId.NO),
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the peer grading should be able to be reacted") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                graderName = "graderName",
+                graderNum = 1,
+                score = null,
+                draxoEvaluation = draxoPeerGrading.getDraxoEvaluation(),
+                userCanDisplayStudentsIdentity = false,
+                draxoPeerGradingId = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                responseId = null,
+                draxoPeerGrading = draxoPeerGrading
+            )
+            assertFalse(draxoEvaluationModel.isReported())
+            assertFalse(draxoEvaluationModel.hiddenByTeacher)
+            assertTrue(draxoEvaluationModel.canBeReacted())
         }
     }
 

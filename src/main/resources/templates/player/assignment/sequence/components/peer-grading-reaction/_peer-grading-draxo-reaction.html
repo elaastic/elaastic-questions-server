@@ -20,6 +20,7 @@
      th:fragment="peerGradingEvaluationCommand(draxoEvaluationModel)">
 
     <form class="ui form"
+
           th:action="@{/peer-grading/draxo/submit-utility-grade}"
           method="post"
           th:id="'peerGradingEvaluationForm_' + ${draxoEvaluationModel.draxoPeerGradingId}"
@@ -110,7 +111,7 @@
                         submitMessage.addClass("positive")
                     } else {
                         submitMessage.addClass("negative")
-                        submitMessage.children('.header').css("color"," #9f3a38")
+                        submitMessage.children('.header').css("color", " #9f3a38")
                     }
                     //Update the submit message with the content of the response
                     submitMessage.children('.header').text(response.header)

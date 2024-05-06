@@ -99,10 +99,9 @@
             </th:block>
         </div>
         <div class="review-border"
-             th:if="${canModeratePeerGrading && !draxoEvaluationModel.hiddenByTeacher && !draxoEvaluationModel.isReported()}">
+             th:if="${canModeratePeerGrading && draxoEvaluationModel.canBeReacted()}">
             <!--/* Reaction for the feedback */-->
-            <th:block
-                    th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
+            <th:block th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
             </th:block>
         </div>
         <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
@@ -114,7 +113,8 @@
             <div th:text="#{draxo.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
         </div>
     </div>
-    <div class="ui message negative" th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}" id="feedbackMessage"
+    <div class="ui message negative" th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
+         id="feedbackMessage"
          style="display: none;"
     >
         <div class="header">Header of the message</div>
@@ -150,7 +150,7 @@
                         }
                     }
                 } else {
-                    feedbackMessage.children('.header').css("color"," #9f3a38")
+                    feedbackMessage.children('.header').css("color", " #9f3a38")
                     feedbackMessage.children('.header').text(data.header);
                     feedbackMessage.children('.content').text(data.content);
 
