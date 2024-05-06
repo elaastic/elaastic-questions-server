@@ -35,12 +35,16 @@ data class DraxoEvaluationModel(
     val utilityGrade: UtilityGrade? = null,
     val hiddenByTeacher: Boolean = false,
     val responseId: Long? = null,
+    val canReactOnPeerGrading: Boolean = false,
+    val canHidePeerGrading: Boolean = false,
     private val draxoPeerGrading: DraxoPeerGrading? = null
 ) {
     constructor(
         graderIndex: Int,
         draxoPeerGrading: DraxoPeerGrading,
-        userCanDisplayStudentsIdentity: Boolean = false
+        userCanDisplayStudentsIdentity: Boolean = false,
+        canReactOnPeerGrading: Boolean = false,
+        canHidePeerGrading: Boolean = false,
     ) : this(
         draxoPeerGrading.grader.getDisplayName(),
         graderIndex + 1,
@@ -51,7 +55,9 @@ data class DraxoEvaluationModel(
         draxoPeerGrading.utilityGrade,
         draxoPeerGrading.hiddenByTeacher,
         draxoPeerGrading.response.id,
-        draxoPeerGrading
+        canReactOnPeerGrading = canReactOnPeerGrading,
+        canHidePeerGrading = canHidePeerGrading,
+        draxoPeerGrading = draxoPeerGrading
     )
 
     /**
@@ -64,7 +70,9 @@ data class DraxoEvaluationModel(
 
     /**
      * Check if the student has reported this peer grading
-     * @return true if the student has reported this peer grading, false otherwise
+     *
+     * @return true if the student has reported this peer grading, false
+     *     otherwise
      */
     fun isReported() = draxoPeerGrading?.reportReasons.isNullOrBlank().not()
 
@@ -75,7 +83,9 @@ data class DraxoEvaluationModel(
      * - it is not hidden by the teacher
      * - it is not reported
      * - the selected option different from DONT_KNOW and NO_OPINION
-     * @return true if the student can react to this peer grading, false otherwise
+     *
+     * @return true if the student can react to this peer grading, false
+     *     otherwise
      */
     fun canBeReacted(): Boolean {
         // We want to check if the last-evaluated critéria is not `DONT_KNOW` or `NO_OPINION`

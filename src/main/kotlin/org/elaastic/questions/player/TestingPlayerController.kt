@@ -2806,12 +2806,11 @@ class TestingPlayerController(
                     (i + 1),
                     DraxoGrading.computeGrade(draxoEvaluation),
                     draxoEvaluation,
-
-                    )
+                    canReactOnPeerGrading = true,
+                    canHidePeerGrading = true
+                )
             }
         )
-        model["canModeratePeerGrading"] = true
-
         return "player/assignment/sequence/phase/evaluation/method/draxo/test-draxo-show-list"
     }
 

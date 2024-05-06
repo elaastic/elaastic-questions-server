@@ -72,16 +72,18 @@ class DraxoPeerGradingController(
         model.addAttribute(
             "evaluationModelList",
             draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
-                DraxoEvaluationModel(index, draxoPeerGrading, user == assignment.owner)
+                DraxoEvaluationModel(
+                    index,
+                    draxoPeerGrading,
+                    user == assignment.owner,
+                    responseService.canReactOnFeedbackOfResponse(user, response),
+                    responseService.canHidePeerGrading(user, response)
+                )
             }
         )
         if (hideName == true) {
             model.addAttribute("hideName", true)
         }
-
-        // A user can moderate the evaluation if he is the owner of the response
-        model["canModeratePeerGrading"] = responseService.canReactOnFeedbackOfResponse(user, response)
-        model["canHidePeerGrading"] = responseService.canHidePeerGrading(user, response)
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
     }
