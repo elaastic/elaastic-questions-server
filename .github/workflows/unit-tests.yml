@@ -30,7 +30,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Run Elaastic DB test 
-        run: docker-compose down && docker-compose up -d  elaastic-questions-db-test-8
+        run: docker-compose up -d  elaastic-questions-db-test-8
 
       - name: Build with Gradle
         run: ./gradlew build

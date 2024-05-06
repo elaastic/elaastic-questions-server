@@ -7,7 +7,7 @@ version: '3'
 
 services:
   mysql:
-    image: mysql:8
+    image: mysql:8.3
     environment:
       - MYSQL_USER=elaastic
       - MYSQL_DATABASE=elaastic-questions
