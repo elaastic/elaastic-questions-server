@@ -35,27 +35,27 @@
             </div>
             <div class="hide-peer-grading" th:if="${canHidePeerGrading}">
                 <a class="ui icon button"
-                   th:href="@{/peer-grading/draxo/hide/{id}(id=${draxoEvaluationModel.draxoPeerGradingId})}"
                    th:if="${!draxoEvaluationModel.hiddenByTeacher}"
                    th:attr="data-tooltip=#{draxo.action.hideEvaluation}"
                    data-tooltip="Hide this evaluation"
                    data-position="top center"
+                   th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId})|"
                 >
-                    <!-- TODO dynamique text in tooltip -->
                     <i class="eye icon"></i>
                 </a>
                 <a class="ui icon button hidden"
-                   th:href="@{/peer-grading/draxo/unhide/{id}(id=${draxoEvaluationModel.draxoPeerGradingId})}"
                    th:if="${draxoEvaluationModel.hiddenByTeacher}"
                    th:attr="data-tooltip=#{draxo.action.showEvaluation}"
                    data-tooltip="Show this evaluation"
                    data-position="top center"
+                   th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId}, false)|"
                 >
                     <i class="hide icon"></i>
                 </a>
             </div>
         </div>
-        <div class="review-DRAXO review-border" th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && canModeratePeerGrading)}">
+        <div class="review-DRAXO review-border"
+             th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && canModeratePeerGrading)}">
             <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
             <div class="DRAXO-grid">
                 <th:block
@@ -91,14 +91,16 @@
                     <div class="comment" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
                         <h4 th:text="#{draxo.feedback.label}">Feedback:</h4>
                         <div class="ui label" th:text="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
-                            I am a relevant and constructive comment, in order to explain why the answer provided above
+                            I am a relevant and constructive comment, to explain why the answer provided above
                             is not decipherable.
                         </div>
                     </div>
                 </div>
             </th:block>
         </div>
-        <div class="review-border" th:if="${canModeratePeerGrading && !draxoEvaluationModel.hiddenByTeacher && !draxoEvaluationModel.isReported()}"><!--/* Reaction for the feedback */-->
+        <div class="review-border"
+             th:if="${canModeratePeerGrading && !draxoEvaluationModel.hiddenByTeacher && !draxoEvaluationModel.isReported()}">
+            <!--/* Reaction for the feedback */-->
             <th:block
                     th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
             </th:block>
@@ -106,9 +108,59 @@
         <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
             <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
         </div>
-        <div class="review-border message-hidden" th:if="${!draxoEvaluationModel.hiddenByTeacher && (draxoEvaluationModel.isReported() && canModeratePeerGrading)}">
+        <div class="review-border message-hidden"
+             th:if="${!draxoEvaluationModel.hiddenByTeacher && (draxoEvaluationModel.isReported() && canModeratePeerGrading)}"
+        >
             <div th:text="#{draxo.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
         </div>
     </div>
+    <div class="ui message negative" th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}" id="feedbackMessage"
+         style="display: none;"
+    >
+        <div class="header">Header of the message</div>
+        <p class="content">Content of the message</p>
+    </div>
+
+    <script th:inline="javascript">
+
+        /**
+         * Update the peer grading visibility through asynchronous request
+         * @param peerGradingID the ID of the peer grading to hide
+         * @param markAsHidden if true, the peer grading will be marked as hidden else it will be marked as unhidden
+         */
+        function updateVisibilityOfPeerGrading(peerGradingID, markAsHidden = true) {
+            /*<![CDATA[*/
+            const responseId = [[${draxoEvaluationModel.responseId}]]
+            /*]]> */
+            console.log("hidePeerGrading");
+            console.log(peerGradingID);
+            const feedbackMessage = $('#feedbackMessage[data-evaluation-id="' + peerGradingID + '"]');
+            let url = "/peer-grading/draxo/";
+            url += markAsHidden ? "hide/" : "unhide/";
+            url += peerGradingID;
+
+            $.get(url, function (data) {
+                if (data.success) {
+                    // We update the container through the link of the detail
+                    const explanationContainer = $('.explanation[data-response-id="' + responseId + '"]:visible')
+                    for (const explanationContainerElement of explanationContainer) {
+                        // If the explanation container has reviews, we click on the detail link, to reload it
+                        if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
+                            $(explanationContainerElement).find('.detail-link').click();
+                        }
+                    }
+                } else {
+                    feedbackMessage.children('.header').css("color"," #9f3a38")
+                    feedbackMessage.children('.header').text(data.header);
+                    feedbackMessage.children('.content').text(data.content);
+
+                    feedbackMessage.slideDown()
+                    setTimeout(function () {
+                        feedbackMessage.slideUp()
+                    }, 5000)
+                }
+            });
+        }
+    </script>
 
 </div>

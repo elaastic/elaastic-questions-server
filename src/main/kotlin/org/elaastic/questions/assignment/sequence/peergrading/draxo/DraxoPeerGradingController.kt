@@ -95,8 +95,8 @@ class DraxoPeerGradingController(
      * @param model the model
      * @param evaluationId the id of the evaluation to update
      * @param utilityGrade the utility grade to set
-     * @return [ResponseSubmissionAsynchronous] the response of the submission in
-     *     JSON format
+     * @return [ResponseSubmissionAsynchronous] the response of the submission
+     *     in JSON format
      * @see ResponseSubmissionAsynchronous
      */
     @ResponseBody
@@ -142,7 +142,8 @@ class DraxoPeerGradingController(
      * @param evaluationId the id of the evaluation to update
      * @param reasons the reasons to report the evaluation
      * @param otherReasonComment the comment of the other reason
-     * @return [ResponseSubmissionAsynchronous] the response of the submission in JSON format
+     * @return [ResponseSubmissionAsynchronous] the response of the submission
+     *     in JSON format
      */
     @ResponseBody
     @PostMapping("/report-draxo-evaluation")
@@ -179,44 +180,111 @@ class DraxoPeerGradingController(
         return responseSubmissionAsynchronous
     }
 
+    /**
+     * Handle the submission of a hiding request for a DRAXO evaluation through
+     * asynchronous request
+     *
+     * @param authentication the current user authentication
+     * @param model the model
+     * @param id the id of the evaluation to hide
+     * @return [ResponseSubmissionAsynchronous] the response of the submission
+     *     in JSON format
+     * @see ResponseSubmissionAsynchronous
+     */
+    @ResponseBody
     @GetMapping("/hide/{id}")
     fun hide(
         authentication: Authentication,
         model: Model,
         @PathVariable id: Long
-    ): String {
+    ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
         val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(id)
+        val locale: Locale = LocaleContextHolder.getLocale()
 
-        if (!responseService.canHidePeerGrading(user, evaluation.response)) {
-            throw AccessDeniedException("You are not authorized to hide this feedback")
+        val responseSubmissionAsynchronous = kotlin.run {
+            try {
+                if (!responseService.canHidePeerGrading(user, evaluation.response)) {
+                    throw AccessDeniedException("You are not authorized to hide this feedback")
+                }
+
+                peerGradingService.markAsHidden(user, evaluation)
+
+                ResponseSubmissionAsynchronous(
+                    success = true,
+                    header = messageSource.getMessage("draxo.hideEvaluation.success.header", null, locale),
+                    content = messageSource.getMessage("draxo.hideEvaluation.success.content", null, locale)
+                )
+            } catch (e: AccessDeniedException) {
+                ResponseSubmissionAsynchronous(
+                    success = false,
+                    header = messageSource.getMessage("draxo.accesDenied.header", null, locale),
+                    content = messageSource.getMessage("draxo.hideEvaluation.accesDenied.content", null, locale)
+                )
+            } catch (e: Exception) {
+                ResponseSubmissionAsynchronous(
+                    success = false,
+                    header = messageSource.getMessage("draxo.hideEvaluation.error.header", null, locale),
+                    content = messageSource.getMessage("draxo.hideEvaluation.error.content", null, locale)
+                )
+            }
         }
 
-        peerGradingService.markAsHidden(user, evaluation)
-
-        val sequenceId: Long = evaluation.response.interaction.sequence.id!!
-        val assignement = evaluation.response.interaction.sequence.assignment!!.id
-        return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
+        return responseSubmissionAsynchronous
     }
 
+    /**
+     * Handle the submission of an unhiding request for a DRAXO evaluation
+     * through asynchronous request
+     *
+     * @param authentication the current user authentication
+     * @param model the model
+     * @param id the id of the evaluation to unhide
+     * @return [ResponseSubmissionAsynchronous] the response of the submission
+     *     in JSON format
+     * @see ResponseSubmissionAsynchronous
+     */
+    @ResponseBody
     @GetMapping("/unhide/{id}")
     fun unhide(
         authentication: Authentication,
         model: Model,
         @PathVariable id: Long
-    ): String {
+    ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
         val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(id)
+        val locale: Locale = LocaleContextHolder.getLocale()
 
-        if (!responseService.canHidePeerGrading(user, evaluation.response)) {
-            throw AccessDeniedException("You are not authorized to unhide this feedback")
+        val responseSubmissionAsynchronous = kotlin.run {
+            try {
+
+                if (!responseService.canHidePeerGrading(user, evaluation.response)) {
+                    throw AccessDeniedException("You are not authorized to unhide this feedback")
+                }
+
+                peerGradingService.markAsShow(user, evaluation)
+
+                ResponseSubmissionAsynchronous(
+                    success = true,
+                    header = messageSource.getMessage("draxo.unhideEvaluation.success.header", null, locale),
+                    content = messageSource.getMessage("draxo.unhideEvaluation.success.content", null, locale)
+                )
+            } catch (e: AccessDeniedException) {
+                ResponseSubmissionAsynchronous(
+                    success = false,
+                    header = messageSource.getMessage("draxo.accesDenied.header", null, locale),
+                    content = messageSource.getMessage("draxo.unhideEvaluation.accesDenied.content", null, locale)
+                )
+            } catch (e: Exception) {
+                ResponseSubmissionAsynchronous(
+                    success = false,
+                    header = messageSource.getMessage("draxo.unhideEvaluation.error.header", null, locale),
+                    content = messageSource.getMessage("draxo.unhideEvaluation.error.content", null, locale)
+                )
+            }
         }
 
-        peerGradingService.markAsShow(user, evaluation)
-
-        val sequenceId: Long = evaluation.response.interaction.sequence.id!!
-        val assignement = evaluation.response.interaction.sequence.assignment!!.id
-        return "redirect:/player/assignment/${assignement}/play/sequence/${sequenceId}"
+        return responseSubmissionAsynchronous
     }
 
     /**
