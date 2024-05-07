@@ -23,6 +23,7 @@
 
     <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}"
          th:classappend="${draxoEvaluationModel.hiddenByTeacher || (draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)} ? 'hidden' : ''">
+        <!--/* PeerGrading header */-->
         <div class="review-header review-border">
             <div class="reviewer">
                 <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
@@ -54,6 +55,14 @@
                 </a>
             </div>
         </div>
+        <!--/* Hidden message when the teacher hides it */-->
+        <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
+            <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
+            <div class="ui button primary basic">
+                Voir le contenu masqu&eacute;
+            </div>
+        </div>
+        <!--/* Grid Draxo */-->
         <div class="review-DRAXO review-border"
              th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}">
             <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
@@ -98,21 +107,21 @@
                 </div>
             </th:block>
         </div>
+        <!--/* Reaction for the feedback */-->
         <div class="review-border"
              th:if="${draxoEvaluationModel.canReactOnPeerGrading && draxoEvaluationModel.canBeReacted()}">
-            <!--/* Reaction for the feedback */-->
-            <th:block th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
+            <th:block
+                    th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
             </th:block>
         </div>
-        <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
-            <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
-        </div>
+        <!--/* Hidden message when the student reports it */-->
         <div class="review-border message-hidden"
              th:if="${!draxoEvaluationModel.hiddenByTeacher && (draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}"
         >
             <div th:text="#{draxo.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
         </div>
     </div>
+    <!--/* Graphical feedback when the teacher hide a peergrading */-->
     <div class="ui message negative" th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
          id="feedbackMessage"
          style="display: none;"
