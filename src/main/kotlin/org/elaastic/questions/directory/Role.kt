@@ -28,12 +28,12 @@ import javax.persistence.*
 
 
 
-@Entity
-@Cacheable("roles")
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 /**
  * Role entity
  */
+@Entity
+@Cacheable("roles")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 class Role(
         @field:Column(name = "authority")
         var name: String

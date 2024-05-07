@@ -35,59 +35,76 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
 
-
+/**
+ * An assignment is a set of sequences that are meant to be answered by a
+ * group of students. It is owned by a user and can be shared with other
+ * users.
+ *
+ * @see Sequence
+ */
 @Entity
 @NamedEntityGraph(
-        name = "Assignment.sequences",
-        attributeNodes = [
-            NamedAttributeNode(
-                    value = "sequences",
-                    subgraph = "Sequence.statement"
-            )
-        ],
-        subgraphs = [
-            NamedSubgraph(
-                    name = "Sequence.statement",
-                    attributeNodes = [NamedAttributeNode("statement")]
-            )
-        ]
+    name = "Assignment.sequences",
+    attributeNodes = [
+        NamedAttributeNode(
+            value = "sequences",
+            subgraph = "Sequence.statement"
+        )
+    ],
+    subgraphs = [
+        NamedSubgraph(
+            name = "Sequence.statement",
+            attributeNodes = [NamedAttributeNode("statement")]
+        )
+    ]
 )
 @EntityListeners(AuditingEntityListener::class)
 class Assignment(
-        @field:NotBlank
-        var title: String,
+    @field:NotBlank
+    var title: String,
 
-        @field:NotNull
-        @field:ManyToOne(fetch = FetchType.LAZY)
-        var owner: User,
+    @field:NotNull
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    var owner: User,
 
-        @field:NotNull
-        @Column(name="`uuid`", columnDefinition = "BINARY(16)")
-        var globalId: UUID = UUID.randomUUID(),
+    @field:NotNull
+    @Column(name = "`uuid`", columnDefinition = "BINARY(16)")
+    var globalId: UUID = UUID.randomUUID(),
 
-        @field:ManyToOne( fetch = FetchType.EAGER)
-        var subject: Subject? = null,
+    /**
+     * The subject of the assignment.
+     *
+     * @see Subject
+     */
+    @field:ManyToOne(fetch = FetchType.EAGER)
+    var subject: Subject? = null,
 
-        @field:NotNull
-        @Column(name="`rank`")
-        var rank: Int = 0,
+    @field:NotNull
+    @Column(name = "`rank`")
+    var rank: Int = 0,
 
-        @field:NotNull
-        var audience: String = "",
+    @field:NotNull
+    var audience: String = "",
 
-        var description: String? = null,
+    var description: String? = null,
 
-        @Column(name = "scholar_year")
-        @field:NotNull
-        var scholarYear: String? = null,
+    @Column(name = "scholar_year")
+    @field:NotNull
+    var scholarYear: String? = null,
 
-        @Column(name = "accept_anonymous_users")
-        @field:NotNull
-        var acceptAnonymousUsers: Boolean = false,
+    @Column(name = "accept_anonymous_users")
+    @field:NotNull
+    var acceptAnonymousUsers: Boolean = false,
 
-        @Column(name = "revision_mode")
-        @Enumerated(EnumType.STRING)
-        var revisionMode: RevisionMode = RevisionMode.NotAtAll
+    /**
+     * The revision mode of the assignment.
+     *
+     * This revision mode is for the **Konsolidation** app.
+     * @see RevisionMode
+     */
+    @Column(name = "revision_mode")
+    @Enumerated(EnumType.STRING)
+    var revisionMode: RevisionMode = RevisionMode.NotAtAll
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
@@ -100,7 +117,7 @@ class Assignment(
 
     // initializer block
     init {
-        if (scholarYear.isNullOrBlank() ){
+        if (scholarYear.isNullOrBlank()) {
             var localDate: LocalDate = dateCreated.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
             var month = localDate.month.value
             var year = localDate.year
@@ -112,9 +129,11 @@ class Assignment(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "assignment",
-            targetEntity = Sequence::class)
+    @OneToMany(
+        fetch = FetchType.LAZY,
+        mappedBy = "assignment",
+        targetEntity = Sequence::class
+    )
     @OrderBy("rank ASC")
     @SortNatural
     var sequences: MutableList<Sequence> = ArrayList()
@@ -137,6 +156,13 @@ class Assignment(
         this.revisionMode = otherAssignment.revisionMode
     }
 
+    /**
+     * Adds a sequence to the assignment.
+     *
+     * The sequence must have the same owner as the assignment.
+     * @param sequence The sequence to add.
+     * @return The added sequence.
+     */
     fun addSequence(sequence: Sequence): Sequence {
         require(sequence.owner == owner) {
             "The owner of the assignment cannot be different from the owner of sequence"

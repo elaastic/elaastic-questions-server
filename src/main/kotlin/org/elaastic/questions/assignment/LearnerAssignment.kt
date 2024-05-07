@@ -28,6 +28,10 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 
+/**
+ * This class represents the association between a learner and an assignment.
+ * It is used to store the assignments that a learner can do.
+ */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 class LearnerAssignment(

@@ -29,19 +29,34 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
 
+/**
+ * Fake Explanation of a statement The teacher can create multiple fake
+ * explanations for a statement The student can't make the difference
+ * between a fake explanation and a real explanation
+ *
+ * @see Statement
+ */
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 class FakeExplanation(
-        var correspondingItem: Int?=null,
 
-        @field:NotBlank
-        var content: String,
+    /**
+     * If the statement is a multiple choice question (or exclusive choice question),
+     * the corresponding item is the index of an answer (correct or not) in the list of choices
+     */
+    var correspondingItem: Int? = null,
 
-        @field:ManyToOne
-        var author: User,
+    /**
+     * The fake explanation given by the teacher
+     */
+    @field:NotBlank
+    var content: String,
 
-        @field:ManyToOne
-        var statement: Statement
+    @field:ManyToOne
+    var author: User,
+
+    @field:ManyToOne
+    var statement: Statement
 ) : AbstractJpaPersistable<Long>() {
 
     @Version

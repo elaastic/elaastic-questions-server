@@ -25,10 +25,16 @@ import javax.persistence.Version
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
+/**
+ * Store the settings of a user.
+ *
+ * @see User
+ */
 @Entity
 class Settings(
-        @field:NotNull @field:OneToOne var user: User,
-        @field:NotBlank var language: String
+    @field:NotNull @field:OneToOne var user: User,
+    /** The language of the user. */
+    @field:NotBlank var language: String
 ) : AbstractJpaPersistable<Long>() {
     @Version
     var version: Long? = null
