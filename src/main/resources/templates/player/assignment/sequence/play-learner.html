@@ -86,21 +86,23 @@
     <div th:replace="|${components}/steps/_steps.html| :: steps(${playerModel.stepsModel}, ~{})"></div>
 
     <div
-      th:replace="|${components}/sequence-info/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
+      th:replace="|${components}/sequence-info/_sequenceInfo.html|
+                   :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
+
     <div
-      th:replace="|${components}/statement/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
+      th:replace="|${components}/statement/_statement.html|
+                   :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
 
     <th:block th:each="phase : ${playerModel.phaseList}">
       <th:block th:if="${phase.isVisible()}">
         <div
-          th:replace="|${phase.getPlayerTemplate().fileName}| :: ${phase.getPlayerTemplate().fragmentName}(${phase.viewModel})"></div>
+          th:replace="|${phase.getPlayerTemplate().fileName}|
+                       :: ${phase.getPlayerTemplate().fragmentName}(${phase.viewModel})"></div>
       </th:block>
     </th:block>
-
-
   </div>
-
-  <th:block th:replace="|${components}/_auto-reload.html| :: auto-reload(${playerModel.sequence.id})"></th:block>
+  <th:block th:replace="|${components}/_auto-reload.html|
+                         :: auto-reload(${playerModel.sequence.id})"></th:block>
 
 </section>
 </body>
