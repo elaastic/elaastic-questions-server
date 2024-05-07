@@ -108,15 +108,24 @@
             none_given_answer
           </div>
 
-          <div class="ui info message"
-               th:each="response, i: ${responses}">
+          <th:block th:if="${#lists.size(responses) > 0}">
+            <!-- CHOICES
+            <div th:replace="|player/assignment/sequence/components/my-results/_student-results-choice.html|
+                            :: studentResultsChoice(${studentResultsModel},
+                            ${responses[0].learnerChoice},
+                            ${responses[0].score})">
+             END CHOICES -->
 
-            <span style="font-weight: bold;"
-                  th:text="#{attendee.details.answer_label}">
-              given_answer_text</span>
+            <!-- EXPLANATION -->
+            <div class="ui info message">
+              <p style="font-weight: bold;"
+                 th:text="#{attendee.details.answer_label}">
+                given_answer_text</p>
 
-            <span th:utext="${response.explanation}"></span>
-          </div>
+              <span th:utext="${responses[0].explanation}"></span>
+            </div>
+            <!-- END EXPLANATION -->
+          </th:block>
         </div>
       </div>
     </div>
