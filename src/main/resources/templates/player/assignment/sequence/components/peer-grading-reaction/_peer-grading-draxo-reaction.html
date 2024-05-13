@@ -58,7 +58,7 @@
         </div>
         <div id="submit-button-utility-grade"
              th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}">
-            <input type="submit" value="Soumettre" class="ui primary button">
+            <input type="submit" value="Soumettre" class="ui primary button" th:value="#{common.submit}">
         </div>
         <div class="ui message" th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
              id="submit-message">
