@@ -1,0 +1,65 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!-- This fragment is used to display the content of a draxo evaluation -->
+<div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     th:fragment="draxoPeerGradingContent(draxoEvaluationModel)"
+     class="review-DRAXO review-border"
+     th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}">
+
+    <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
+    <div class="DRAXO-grid">
+        <th:block
+                th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
+                th:with="optionType = ${criteria.getOptionType(draxoEvaluationModel.draxoEvaluation.get(criteria))}">
+
+            <div class="custom-step"
+                 th:classappend="${optionType?.getCSSClass()}">
+
+                <div class="custom-step-content">
+                    <span class="capital-letter" th:text="${criteria}">R</span>
+                    <span th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">...</span>
+
+                    <i class="green check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
+                    <i class="red x icon" th:if="${optionType?.name == 'NEGATIVE'}"></i>
+                    <i class="question icon" th:if="${optionType?.name == 'UNKNOWN'}"></i>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+    <th:block th:with="rejectedCriteria = ${draxoEvaluationModel.draxoEvaluation.getRejectedCriteria()}">
+        <div class="comment-area" th:if="${rejectedCriteria}">
+            <div class="comment-header">
+                <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'">
+                    The answer is readable :</h4>
+                <div class="ui label"
+                     th:text="#{${draxoEvaluationModel.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
+                    No
+                </div>
+            </div>
+            <div class="separator" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}"></div>
+            <div class="comment" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
+                <h4 th:text="#{draxo.feedback.label}">Feedback:</h4>
+                <div class="ui label" th:text="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
+                    I am a relevant and constructive comment, to explain why the answer provided above
+                    is not decipherable.
+                </div>
+            </div>
+        </div>
+    </th:block>
+</div>

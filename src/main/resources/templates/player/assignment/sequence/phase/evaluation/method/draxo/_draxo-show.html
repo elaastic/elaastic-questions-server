@@ -58,55 +58,13 @@
         <!--/* Hidden message when the teacher hides it */-->
         <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
             <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
-            <div class="ui button primary basic">
-                Voir le contenu masqu&eacute;
+            <div class="ui button black basic" style="text-transform: none; font-weight: initial">
+                <span id="show">Voir le contenu masqu&eacute;</span>
+                <span id="hide" style="display: none;">Cacher le contenu masqu&eacute;</span>
             </div>
         </div>
         <!--/* Grid Draxo */-->
-        <div class="review-DRAXO review-border"
-             th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}">
-            <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
-            <div class="DRAXO-grid">
-                <th:block
-                        th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
-                        th:with="optionType = ${criteria.getOptionType(draxoEvaluationModel.draxoEvaluation.get(criteria))}">
-
-                    <div class="custom-step"
-                         th:classappend="${optionType?.getCSSClass()}">
-
-                        <div class="custom-step-content">
-                            <span class="capital-letter" th:text="${criteria}">R</span>
-                            <span th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">...</span>
-
-                            <i class="green check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
-                            <i class="red x icon" th:if="${optionType?.name == 'NEGATIVE'}"></i>
-                            <i class="question icon" th:if="${optionType?.name == 'UNKNOWN'}"></i>
-                        </div>
-                    </div>
-                </th:block>
-            </div>
-
-            <th:block th:with="rejectedCriteria = ${draxoEvaluationModel.draxoEvaluation.getRejectedCriteria()}">
-                <div class="comment-area" th:if="${rejectedCriteria}">
-                    <div class="comment-header">
-                        <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'">
-                            The answer is readable :</h4>
-                        <div class="ui label"
-                             th:text="#{${draxoEvaluationModel.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
-                            No
-                        </div>
-                    </div>
-                    <div class="separator" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}"></div>
-                    <div class="comment" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
-                        <h4 th:text="#{draxo.feedback.label}">Feedback:</h4>
-                        <div class="ui label" th:text="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
-                            I am a relevant and constructive comment, to explain why the answer provided above
-                            is not decipherable.
-                        </div>
-                    </div>
-                </div>
-            </th:block>
-        </div>
+        <th:block th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-content.html :: draxoPeerGradingContent(${draxoEvaluationModel})"></th:block>
         <!--/* Reaction for the feedback */-->
         <div class="review-border"
              th:if="${draxoEvaluationModel.canReactOnPeerGrading && draxoEvaluationModel.canBeReacted()}">
