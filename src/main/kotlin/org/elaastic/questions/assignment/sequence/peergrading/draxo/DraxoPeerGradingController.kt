@@ -289,29 +289,6 @@ class DraxoPeerGradingController(
         return responseSubmissionAsynchronous
     }
 
-    @ResponseBody
-    @PostMapping("/content/{id}")
-    fun getContent(
-        authentication: Authentication,
-        model: Model,
-        @PathVariable id: Long
-    ): String {
-        val user: User = authentication.principal as User
-        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(id)
-
-        val draxoEvaluationModel = DraxoEvaluationModel(
-            0,
-            evaluation,
-            user == evaluation.response.interaction.sequence.assignment!!.owner,
-            responseService.canReactOnFeedbackOfResponse(user, evaluation.response),
-            responseService.canHidePeerGrading(user, evaluation.response)
-        )
-
-        model["draxoEvaluationModel"] = draxoEvaluationModel
-
-        return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-content::draxoPeerGradingContent"
-    }
-
     /**
      * Response for submission through asynchronous request
      *
