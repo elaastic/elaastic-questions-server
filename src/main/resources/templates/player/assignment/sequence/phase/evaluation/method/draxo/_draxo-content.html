@@ -34,8 +34,8 @@
                     <span class="capital-letter" th:text="${criteria}">R</span>
                     <span th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">...</span>
 
-                    <i class="green check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
-                    <i class="red x icon" th:if="${optionType?.name == 'NEGATIVE'}"></i>
+                    <i class="check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
+                    <i class="x icon" th:if="${optionType?.name == 'NEGATIVE'}"></i>
                     <i class="question icon" th:if="${optionType?.name == 'UNKNOWN'}"></i>
                 </div>
             </div>

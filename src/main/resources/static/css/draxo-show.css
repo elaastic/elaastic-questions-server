@@ -43,7 +43,7 @@
 
 :root {
     --border-color: #7A7A7A;
-    --default-color: #BDBDBD;
+    --default-color: #757575;
     --default-bg-color: #F2F2F2;
 }
 
@@ -116,13 +116,13 @@
 .custom-step.positive {
     background-color: #99DBBB;
     border: 1px solid var(--border-color);
-    color: #016936;
+    color: #01562d;
 }
 
 .custom-step.negative {
     background-color: #FCB5D0;
     border: 1px solid var(--border-color);
-    color: #B03060;
+    color: #802345;
 }
 
 .custom-step.unknown {
