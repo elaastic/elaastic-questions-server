@@ -35,7 +35,9 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.*
-import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.player.components.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.player.components.dashboard.DashboardModel
+import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.elaastic.questions.player.components.steps.StepsModelFactory
@@ -242,42 +244,23 @@ class PlayerController(
         httpServletRequest: HttpServletRequest,
     ): String {
 
-        val assignment = sequence.assignment!!
+        val assignment: Assignment = sequence.assignment!!
         val previousSequence: Sequence? = sequenceService.findPreviousSequence(sequence)
         val nextSequence: Sequence? = sequenceService.findNextSequence(sequence)
-        val previousSequenceId: Long? = previousSequence?.id
-        val nextSequenceId: Long? = nextSequence?.id
-        val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
+        val nbRegisteredUsers = registeredUsers.size
         val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
-        val attendeesResponses: Map<Long, List<Response>> = responses.groupBy { it.learner.id!! }
 
-        // TODO: [OPTI] learners steps models list to avoid dbl retrieving??
+        val dashboardModel: DashboardModel =
+            DashboardModelFactory.build(sequence,
+                                        previousSequence,
+                                        nextSequence,
+                                        registeredUsers,
+                                        responses,
+                                        openedPane)
 
-        val responsePhaseAttendees: List<LearnerAssignment> = registeredUsers.filter {
-            val learnerStepsModel: StepsModel
-                = StepsModelFactory.buildForLearner(sequence, sequence.activeInteraction)
-
-            val submittedResponsesByLearner: Int = attendeesResponses[it.learner.id]?.count { response ->
-                response.interaction.interactionType == InteractionType.ResponseSubmission
-            } ?: 0
-
-            submittedResponsesByLearner == 0
-            || (submittedResponsesByLearner == 1
-                && learnerStepsModel.evaluationState == StepsModel.PhaseState.DISABLED)   //  ==> phase 1
-        }
-
-        val evaluationPhaseAttendees: List<LearnerAssignment> = registeredUsers.filter {
-            val learnerStepsModel: StepsModel
-                = StepsModelFactory.buildForLearner(sequence, sequence.activeInteraction)
-
-            val submittedResponseByLearner: Int = attendeesResponses[it.learner.id]?.count { response ->
-                response.interaction.interactionType == InteractionType.ResponseSubmission
-            } ?: 0
-
-            submittedResponseByLearner >= 1
-                && learnerStepsModel.evaluationState != StepsModel.PhaseState.DISABLED    //  ==> phase 2
-        }
+        model.addAttribute("dashboardModel",
+                           dashboardModel)
 
         model.addAttribute(
             "playerModel",
@@ -286,13 +269,6 @@ class PlayerController(
                 sequence = sequence,
                 serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
                 nbRegisteredUsers = nbRegisteredUsers,
-                attendees = registeredUsers,
-                attendeesResponses = attendeesResponses,
-                responsePhaseAttendees = responsePhaseAttendees,
-                evaluationPhaseAttendees = evaluationPhaseAttendees,
-                openedPane = openedPane,
-                previousAssignment = previousSequenceId,
-                nextAssignment = nextSequenceId,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                 messageBuilder = messageBuilder,
                 sequenceStatistics = sequenceService.getStatistics(sequence),
