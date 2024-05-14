@@ -48,6 +48,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
@@ -760,7 +761,10 @@ internal class ResponseServiceIntegrationTest(
             response.learner = student
 
         }.tThen("Then the student can moderate the feedback of the answer") {
-            assertTrue(responseService.canReactOnFeedbackOfResponse(student, response), "A student can moderate his own response")
+            assertTrue(
+                responseService.canReactOnFeedbackOfResponse(student, response),
+                "A student can moderate his own response"
+            )
 
         }.tThen("Another studnet can't moderate the answer") {
             val anotherStudent = integrationTestingService.getNLearners(1).first()
@@ -807,4 +811,63 @@ internal class ResponseServiceIntegrationTest(
         }
     }
 
+    @Test
+    fun `the mean grade is compute only with the visible peergrading`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = Response(
+            integrationTestingService.getNLearners(1).first(),
+            integrationTestingService.getAnyInteraction(),
+            1,
+            null,
+            null,
+            null,
+            null,
+            null,
+            false,
+            0,
+            0,
+            integrationTestingService.getAnyStatement(),
+            hiddenByTeacher = false,
+            recommendedByTeacher = false
+        )
+        responseRepository.save(response)
+        val teacher = response.interaction.sequence.owner
+        val two = BigDecimal(2).setScale(2, RoundingMode.HALF_UP)
+
+        responseService.updateMeanGradeAndEvaluationCount(response)
+        assertEquals(0, response.evaluationCount, "The response doesn't have any peergrading")
+        assertEquals(BigDecimal(0), response.meanGrade?:BigDecimal(0), "The mean grade is 0")
+
+        tGiven("An assignement own by the teacher and a peerGrading of the response") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(
+                        Criteria.R,
+                        OptionId.YES
+                    ), // The score of the criteria `R` with the option `YES` is 2
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.save(it)
+                    it
+                }
+        }.tThen("The compute mean grade is 2") { peerGrading ->
+            responseService.updateMeanGradeAndEvaluationCount(response)
+            assertEquals(two, response.meanGrade, "The mean grade is 2")
+            peerGrading
+        }.tWhen("the teacher hide the peerGrading") { peerGrading ->
+            peerGradingService.markAsHidden(teacher, peerGrading)
+            peerGrading
+        }.tThen("The compute mean grade is 0") { peerGrading ->
+            assertEquals(BigDecimal(0), response.meanGrade, "The mean grade is 0")
+            peerGrading
+        }.tWhen("the teacher unhide the peerGrading") { peerGrading ->
+            peerGradingService.markAsShow(teacher, peerGrading)
+        }.tThen("The compute mean grade is 2") {
+            assertEquals(two, response.meanGrade, "The mean grade is 2")
+        }
+    }
 }
