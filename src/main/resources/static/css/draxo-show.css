@@ -24,21 +24,6 @@
     border-top-width: 0;
 }
 
-.review.hidden {
-    background-color: #E6E6E6;
-}
-
-.ui.icon.button.hidden {
-    background-color: #BFBFBF;
-}
-
-.message-hidden {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 20px;
-}
-
 /*////////////////*/
 
 :root {
@@ -185,6 +170,10 @@
     align-items: center;
 }
 
+.draxo-content {
+    border-top: 1px solid var(--border-color);
+}
+
 /*////////////////*/
 
 .separator {
@@ -226,4 +215,26 @@
     .separator {
         display: none;
     }
+}
+
+/*////////////////*/
+
+.review.hidden {
+    background-color: #E6E6E6;
+}
+
+.ui.icon.button.hidden {
+    background-color: #BFBFBF;
+}
+
+.message-hidden {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 20px;
+}
+
+.review.hidden .ui.label {
+    color: black;
+    background-color: #BFBFBF;
 }
