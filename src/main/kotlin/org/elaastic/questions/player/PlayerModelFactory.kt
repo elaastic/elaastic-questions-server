@@ -27,6 +27,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.elaastic.questions.player.components.command.CommandModelFactory
+import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo
@@ -41,13 +42,6 @@ object PlayerModelFactory {
         sequence: Sequence,
         serverBaseUrl: String,
         nbRegisteredUsers: Int,
-        attendees: List<LearnerAssignment>,
-        attendeesResponses: Map<Long, List<Response>>,
-        responsePhaseAttendees: List<LearnerAssignment>,
-        evaluationPhaseAttendees: List<LearnerAssignment>,
-        openedPane: String,
-        previousAssignment: Long?,
-        nextAssignment: Long?,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
         sequenceStatistics: SequenceStatistics,
@@ -61,17 +55,10 @@ object PlayerModelFactory {
             sequence = sequence,
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
-                attendees = attendees,
-                attendeesResponses = attendeesResponses,
-                responsePhaseAttendees = responsePhaseAttendees,
-                evaluationPhaseAttendees = evaluationPhaseAttendees,
                 assignment = assignment,
-                openedPane = openedPane,
-                previousAssignment = previousAssignment,
-                nextAssignment = nextAssignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
-                teacher = true
+                teacher = true,
             ),
             stepsModel = StepsModelFactory.buildForTeacher(sequence),
             sequenceStatistics = sequenceStatistics,
@@ -105,17 +92,10 @@ object PlayerModelFactory {
             sequence = sequence,
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
-                attendees = arrayListOf(),  // Empty list because useless for student to see attendees list.
-                attendeesResponses = mutableMapOf(),
-                responsePhaseAttendees = arrayListOf(),
-                evaluationPhaseAttendees = arrayListOf(),
-                openedPane = openedPane,
-                previousAssignment = null,
-                nextAssignment = null,
                 assignment = assignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
-                teacher = false
+                teacher = false,
             ),
             stepsModel = StepsModelFactory.buildForLearner(sequence, activeInteraction),
             sequenceInfoModel = SequenceInfoResolver.resolve(false, sequence, messageBuilder),

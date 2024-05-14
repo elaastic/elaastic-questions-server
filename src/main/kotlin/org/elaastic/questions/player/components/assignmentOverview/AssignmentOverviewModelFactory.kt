@@ -26,6 +26,7 @@ import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 
 object AssignmentOverviewModelFactory {
@@ -40,25 +41,11 @@ object AssignmentOverviewModelFactory {
         teacher: Boolean,
         assignment: Assignment,
         nbRegisteredUser: Int,
-        attendees: List<LearnerAssignment>,
-        attendeesResponses: Map<Long, List<Response>>,
-        responsePhaseAttendees: List<LearnerAssignment>,
-        evaluationPhaseAttendees: List<LearnerAssignment>,
-        openedPane: String,
-        previousAssignment: Long?,
-        nextAssignment: Long?,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         selectedSequenceId: Long? = null
     ): AssignmentOverviewModel = AssignmentOverviewModel(
         teacher = teacher,
         nbRegisteredUser = nbRegisteredUser,
-        attendees = attendees,
-        attendeesResponses = attendeesResponses,
-        responsePhaseAttendees = responsePhaseAttendees,
-        evaluationPhaseAttendees = evaluationPhaseAttendees,
-        openedPane = openedPane,
-        previousAssignment = previousAssignment,
-        nextAssignment = nextAssignment,
         assignmentTitle = assignment.title,
         courseTitle = if (teacher) assignment.subject?.course?.title else null,
         courseId = if (teacher) assignment.subject?.course?.id else null,

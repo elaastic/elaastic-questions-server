@@ -21,17 +21,11 @@ package org.elaastic.questions.player.components.assignmentOverview
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.player.components.dashboard.DashboardModel
 
 data class AssignmentOverviewModel(
         val teacher: Boolean,
         val nbRegisteredUser: Int,
-        val attendees: List<LearnerAssignment>,
-        val attendeesResponses: Map<Long, List<Response>>,
-        val responsePhaseAttendees: List<LearnerAssignment>,
-        val evaluationPhaseAttendees: List<LearnerAssignment>,
-        val openedPane: String,
-        val previousAssignment: Long?,
-        val nextAssignment: Long?,
         val assignmentTitle: String,
         val courseTitle: String?,
         val courseId: Long?,
