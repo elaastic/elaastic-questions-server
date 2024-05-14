@@ -5,15 +5,27 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.Optio
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionType as Type
 import java.math.BigDecimal
 
+/**
+ * The criteria of the Draxo evaluation
+ *
+ * @property D the criteria unDerstandable
+ * @property R the criteria Relevant
+ * @property A the criteria Agreed
+ * @property X the criteria Exhaustive
+ * @property O the criteria Optimal
+ */
 enum class Criteria(val scale: Map<Id, OptionSpecification>) {
 
     /**
      * unDerstandable
      *
-     * The possible option are:
-     * - NO
-     * - PARTIALLY
-     * - YES
+     * See the possible option :
+     *
+     * | Option | Type | Value |
+     * |--------|----------|-------|
+     * | NO | NEGATIVE | 0 |
+     * | PARTIALLY | NEGATIVE | 0 |
+     * | YES | POSITIVE | 0 |
      */
     D(
         mapOf(
@@ -26,11 +38,14 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
     /**
      * Relevant
      *
-     * The possible option are:
-     * - NO
-     * - PARTIALLY
-     * - YES
-     * - DONT_KNOW
+     * See the possible option :
+     *
+     * | Option | Type | Value |
+     * |--------|----------|-------|
+     * | NO | NEGATIVE | 1 |
+     * | PARTIALLY | NEGATIVE | 1.5 |
+     * | YES | POSITIVE | 2 |
+     * | DONT_KNOW | UNKNOWN | 0 |
      */
     R(
         mapOf(
@@ -44,11 +59,14 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
     /**
      * Agreed
      *
-     * The possible option are:
-     * - NO
-     * - PARTIALLY
-     * - YES
-     * - NO_OPINION
+     * See the possible option :
+     *
+     * | Option | Type | Value |
+     * |--------|----------|-------|
+     * | NO | NEGATIVE | 0 |
+     * | PARTIALLY | NEGATIVE | 1 |
+     * | YES | POSITIVE | 2 |
+     * | NO_OPINION | UNKNOWN | 0 |
      */
     A(
         mapOf(
@@ -62,10 +80,13 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
     /**
      * Exhaustive
      *
-     * The possible option are:
-     * - NO
-     * - YES
-     * - DONT_KNOW
+     * See the possible option :
+     *
+     * | Option | Type | Value |
+     * |--------|----------|-------|
+     * | NO | NEGATIVE | 0 |
+     * | YES | POSITIVE | 0.5 |
+     * | DONT_KNOW | UNKNOWN | 0 |
      */
     X(
         mapOf(
@@ -78,10 +99,13 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
     /**
      * Optimal
      *
-     * The possible option are:
-     * - YES
-     * - NO
-     * - DONT_KNOW
+     * See the possible option :
+     *
+     * | Option | Type | Value |
+     * |--------|----------|-------|
+     * | YES | NEGATIVE | 0 |
+     * | NO | POSITIVE | 0.5 |
+     * | DONT_KNOW | UNKNOWN | 0 |
      */
     O(
         mapOf(
@@ -115,6 +139,12 @@ enum class Criteria(val scale: Map<Id, OptionSpecification>) {
     fun getOptionType(optionId: Id?) =
         if(optionId == null) null else scale.getValue(optionId).type
 
+    /**
+     * Get the value of the option if the option is null, return 0.
+     * @param optionId the id of the option
+     * @return the value of the option
+     * @see OptionSpecification.value
+     */
     fun value(optionId: Id?) =
         if (optionId == null)
             BigDecimal(0)
