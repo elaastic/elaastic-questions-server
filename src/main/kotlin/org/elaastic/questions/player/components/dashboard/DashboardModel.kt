@@ -21,10 +21,17 @@
 package org.elaastic.questions.player.components.dashboard
 
 import org.elaastic.questions.assignment.LearnerAssignment
+import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 
-object DashboardModel {
-    var attendees: List<LearnerAssignment> = arrayListOf()
-        private set
-
-    var attendeesResponses:
-}
+class DashboardModel (
+    var sequence: Sequence,
+    var attendees: List<LearnerAssignment>,
+    var attendeesCount: Int,
+    var attendeesResponses: Map<Long, List<Response>>,
+    var responsePhaseAttendees: List<LearnerAssignment>,
+    var evaluationPhaseAttendees: List<LearnerAssignment>,
+    var openedPane: String,
+    var previousSequence: Long?,
+    var nextSequence: Long?
+)
