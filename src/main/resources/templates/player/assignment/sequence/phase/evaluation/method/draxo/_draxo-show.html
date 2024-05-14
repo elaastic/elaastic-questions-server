@@ -101,49 +101,49 @@
     </div>
 
     <script th:inline="javascript">
+        /**
+         * Update the peer grading visibility through asynchronous request
+         * @param peerGradingID the ID of the peer grading to hide
+         * @param markAsHidden if true, the peer grading will be marked as hidden else it will be marked as unhidden
+         */
+        function updateVisibilityOfPeerGrading(peerGradingID, markAsHidden = true) {
+            const feedbackMessage = $('#feedbackMessage[data-evaluation-id="' + peerGradingID + '"]');
+            /*<![CDATA[*/
+            const responseId = [[${draxoEvaluationModel.responseId}]]
+            /*]]> */
+            let url = "/peer-grading/draxo/";
+            url += markAsHidden ? "hide/" : "unhide/";
+            url += peerGradingID;
 
+            $.get(url, function (data) {
+                if (data.success) {
+                    // We update the container through the link of the detail
+                    const explanationContainer = $('.explanation[data-response-id="' + responseId + '"]:visible')
+                    for (const explanationContainerElement of explanationContainer) {
+                        // If the explanation container has reviews, we click on the detail link, to reload it
+                        if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
+                            $(explanationContainerElement).find('.detail-link').click();
+                        }
+                    }
+                } else {
+                    feedbackMessage.children('.header').css("color", " #9f3a38")
+                    feedbackMessage.children('.header').text(data.header);
+                    feedbackMessage.children('.content').text(data.content);
+
+                    feedbackMessage.slideDown()
+                    setTimeout(function () {
+                        feedbackMessage.slideUp()
+                    }, 5000)
+                }
+            });
+        }
 
         $(function () {
 
             /*<![CDATA[*/
-            const responseId = [[${draxoEvaluationModel.responseId}]]
             const peerGradingID = [[${draxoEvaluationModel.draxoPeerGradingId}]]
-
             /*]]> */
 
-            /**
-             * Update the peer grading visibility through asynchronous request
-             * @param peerGradingID the ID of the peer grading to hide
-             * @param markAsHidden if true, the peer grading will be marked as hidden else it will be marked as unhidden
-             */
-            function updateVisibilityOfPeerGrading(peerGradingID, markAsHidden = true) {
-                const feedbackMessage = $('#feedbackMessage[data-evaluation-id="' + peerGradingID + '"]');
-                let url = "/peer-grading/draxo/";
-                url += markAsHidden ? "hide/" : "unhide/";
-                url += peerGradingID;
-
-                $.get(url, function (data) {
-                    if (data.success) {
-                        // We update the container through the link of the detail
-                        const explanationContainer = $('.explanation[data-response-id="' + responseId + '"]:visible')
-                        for (const explanationContainerElement of explanationContainer) {
-                            // If the explanation container has reviews, we click on the detail link, to reload it
-                            if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
-                                $(explanationContainerElement).find('.detail-link').click();
-                            }
-                        }
-                    } else {
-                        feedbackMessage.children('.header').css("color", " #9f3a38")
-                        feedbackMessage.children('.header').text(data.header);
-                        feedbackMessage.children('.content').text(data.content);
-
-                        feedbackMessage.slideDown()
-                        setTimeout(function () {
-                            feedbackMessage.slideUp()
-                        }, 5000)
-                    }
-                });
-            }
 
             // Display the hidden content when the teacher wants to see it
             const area = $('#draxoContent[evaluation-id="' + peerGradingID + '"]');
