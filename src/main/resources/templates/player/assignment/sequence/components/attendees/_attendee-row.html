@@ -58,10 +58,10 @@
 
       <div style="color: #535353;"
            th:if="${currentPhase == 1 && responses == null || #lists.size(responses) == 0}"
-           th:attr="data-tooltip=#{attendee.in_course.tooltip}"
+           th:attr="data-tooltip=#{attendee.in_course.tooltip(${attendee.learner.getFullname()})}"
            data-tooltip="In course..."
            data-position="top center"
-           data-inverted="">   <!-- LABEL: IN COURSE... -->
+           data-inverted="">   <!-- LABEL: IN COURSE -->
 
         <i class="icon pencil alternate"></i>
 
@@ -71,7 +71,7 @@
 
       <div style="color: #259C31;"
            th:unless="${currentPhase == 1 && responses == null || #lists.size(responses) == 0}"
-           th:attr="data-tooltip=#{attendee.finished.tooltip}"
+           th:attr="data-tooltip=#{attendee.finished.tooltip(${attendee.learner.getFullname()})}"
            data-tooltip="Finished..."
            data-position="top center"
            data-inverted="">  <!-- LABEL: FINISHED -->
