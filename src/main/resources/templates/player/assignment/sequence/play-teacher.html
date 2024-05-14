@@ -130,11 +130,14 @@
   <div id="attendees_container"
        style="display: none;">
 
-    <div th:replace="|${components}/_attendees-overview.html| :: assignmentNavigator(${playerModel}, aside)"></div>
+    <div th:replace="|${components}/_attendees-overview.html| :: assignmentNavigator(${playerModel}, aside, ${dashboardModel})"></div>
 
     <div class="ui divider"></div>
 
+    <!--
     <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${playerModel.assignmentOverviewModel}, aside, ${playerModel.stepsModel})"></div>
+    -->
+    <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${dashboardModel}, aside, ${playerModel.stepsModel})"></div>
   </div>
 </aside>
 

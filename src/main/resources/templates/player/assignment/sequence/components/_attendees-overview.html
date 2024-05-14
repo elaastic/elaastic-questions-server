@@ -16,10 +16,10 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<!--   TODO: only dashboardModel !!    -->
 
-<div th:fragment="assignmentNavigator(model, context)"
+<div th:fragment="assignmentNavigator(model, context, dashboardModel)"
      th:remove="tag"
-     th:if="${model.assignmentOverviewModel.teacher}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <!-- TODO: verify if th:if is teacher works successfully!! -->
 
@@ -36,8 +36,8 @@
 
   <div class="ui header attached block assignment-navigator-actions">
     <div>
-      <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${model.assignmentOverviewModel.previousAssignment}?currentPane=attendees|"
-         th:if="${model.assignmentOverviewModel.previousAssignment != null}">
+      <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${dashboardModel.previousSequence}?currentPane=attendees|"
+         th:if="${dashboardModel.previousSequence != null}">
 
         <button class="ui button"
                 style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
@@ -53,8 +53,8 @@
     </div>
 
     <div>
-      <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${model.assignmentOverviewModel.nextAssignment}?currentPane=attendees|"
-         th:if="${model.assignmentOverviewModel.nextAssignment != null}">
+      <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${dashboardModel.nextSequence}?currentPane=attendees|"
+         th:if="${dashboardModel.nextSequence != null}">
 
         <button class="ui button"
                 style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
@@ -83,7 +83,6 @@
 <div th:fragment="attendeesOverview(model, context, stepsModel)"
 
      th:remove="tag"
-     th:if="${model.teacher}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
   <!-- TODO: verify if th:if is teacher works successfully!! -->
 
@@ -92,7 +91,7 @@
 
     <h3 class="content"
         style="flex: 1; margin: 0;"
-        th:text="#{attendees.sectionTitle(${model.nbRegisteredUser})}"></h3>
+        th:text="#{attendees.sectionTitle(${#lists.size(model.attendees)})}"></h3>
 
     <button class="ui button"
             style="height: 30px; flex: none; padding: 10px;"
@@ -110,6 +109,7 @@
     empty_assignment_error</div>
 
   <div class="ui styled accordion fluid attached"
+       style="border-radius: 0;"
        th:unless="${#lists.isEmpty(model.attendees)}">
 
 
@@ -150,7 +150,8 @@
         </div>
 
         <th:block th:each="attendee, i : ${model.responsePhaseAttendees}">
-          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]}, 1)"></div>
+          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row
+                           :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]}, 1)"></div>
         </th:block>
       </th:block>
     </div>
@@ -191,16 +192,17 @@
         </div>
 
         <th:block th:each="attendee, i : ${model.evaluationPhaseAttendees}">
-          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]}, 1)"></div>
+          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row
+                           :: attendee(${attendee}, ${model.attendeesResponses[attendee.learner.id]}, 1)"></div>
         </th:block>
       </th:block>
     </div>
   </div>
 
-  <script th:if="${context == 'aside' && model.selectedSequenceId != null}" th:inline="javascript">
+  <script th:if="${context == 'aside' && model.sequence.getId() != null}" th:inline="javascript">
     (() => {
       var container = $('#layout-aside')
-      var target = $('#' + [[${context}]] + '-[[${model.selectedSequenceId}]]')
+      var target = $('#' + [[${context}]] + '-[[${model.sequence.getId()}]]')
 
       if (!elaastic.util.isVisible(target, container, 50)) {
         elaastic.util.ensureIsVisible(target, container)
