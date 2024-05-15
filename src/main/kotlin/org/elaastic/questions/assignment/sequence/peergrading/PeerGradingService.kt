@@ -117,7 +117,14 @@ class PeerGradingService(
             .setParameter("interaction", sequence.getResponseSubmissionInteraction())
             .singleResult as Long > 0
 
-    fun findAllEvaluation(user: User, sequence: Sequence): List<PeerGrading> =
+    /**
+     * Find all the evaluations made by a user on a sequence.
+     *
+     * @param grader the user who performed the evaluations.
+     * @param sequence the sequence.
+     * @return the list of evaluations.
+     */
+    fun findAllEvaluation(grader: User, sequence: Sequence): List<PeerGrading> =
         entityManager.createQuery(
             """
             SELECT pg
@@ -129,10 +136,9 @@ class PeerGradingService(
                 )
         """.trimIndent()
         )
-            .setParameter("grader", user)
+            .setParameter("grader", grader)
             .setParameter("interaction", sequence.getResponseSubmissionInteraction())
             .resultList as List<PeerGrading>
-
 
     fun countEvaluations(sequence: Sequence) =
         countEvaluations(sequence.getResponseSubmissionInteraction())

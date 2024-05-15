@@ -38,42 +38,49 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class InteractionService(
-        @Autowired val interactionRepository: InteractionRepository,
-        @Autowired val sequenceRepository: SequenceRepository,
-        @Autowired val eventLogService: EventLogService,
-        @Autowired val resultsService: ResultsService,
-        @Autowired val responseRepository: ResponseRepository,
-        @Autowired val responseRecommendationService: ResponseRecommendationService
+    @Autowired val interactionRepository: InteractionRepository,
+    @Autowired val sequenceRepository: SequenceRepository,
+    @Autowired val eventLogService: EventLogService,
+    @Autowired val resultsService: ResultsService,
+    @Autowired val responseRepository: ResponseRepository,
+    @Autowired val responseRecommendationService: ResponseRecommendationService
 ) {
 
-    fun create(sequence: Sequence,
-               interactionSpecification: InteractionSpecification,
-               rank: Int,
-               state: State = State.beforeStart): Interaction =
-            Interaction(
-                    interactionType = interactionSpecification.getType(),
-                    rank = rank,
-                    specification = interactionSpecification,
-                    owner = sequence.owner,
-                    sequence = sequence,
-                    state = state
-            ).let(interactionRepository::save)
+    fun create(
+        sequence: Sequence,
+        interactionSpecification: InteractionSpecification,
+        rank: Int,
+        state: State = State.beforeStart
+    ): Interaction =
+        Interaction(
+            interactionType = interactionSpecification.getType(),
+            rank = rank,
+            specification = interactionSpecification,
+            owner = sequence.owner,
+            sequence = sequence,
+            state = state
+        ).let(interactionRepository::save)
 
     fun findById(id: Long): Interaction =
-            interactionRepository.findById(id).get()
+        interactionRepository.findById(id).get()
 
-    fun findResponseByLearnerAssignment(learnerAssignment: LearnerAssignment,
-                                        sequence: Sequence): Response?
-        = interactionRepository.findResponseByOwnerAndSequenceAndType(learnerAssignment.learner,
-                                                           sequence,
-                                                           InteractionType.ResponseSubmission)
+    fun findResponseByLearnerAssignment(
+        learnerAssignment: LearnerAssignment,
+        sequence: Sequence
+    ): Response? = interactionRepository.findResponseByOwnerAndSequenceAndType(
+        learnerAssignment.learner,
+        sequence,
+        InteractionType.ResponseSubmission
+    )
 
-    fun findAllResponsesBySequenceOrderById(sequence: Sequence): List<Response>
-        = interactionRepository.findAllResponsesBySequenceAndType(sequence,
-                                                                  InteractionType.ResponseSubmission)
+    fun findAllResponsesBySequenceOrderById(sequence: Sequence): List<Response> =
+        interactionRepository.findAllResponsesBySequenceAndType(
+            sequence,
+            InteractionType.ResponseSubmission
+        )
 
     fun stop(user: User, interactionId: Long) =
-            stop(user, interactionRepository.getReferenceById(interactionId))
+        stop(user, interactionRepository.getReferenceById(interactionId))
 
     fun stop(user: User, interaction: Interaction): Interaction {
         require(user == interaction.owner) {
@@ -91,21 +98,21 @@ class InteractionService(
             is ResponseSubmissionSpecification -> specification.let {
                 if (interaction.sequence.statement.hasChoices()) {
                     resultsService.updateResponsesDistribution(
-                            user,
-                            interaction.sequence
+                        user,
+                        interaction.sequence
                     )
                 }
                 if (it.studentsProvideExplanation) {
                     responseRepository.findAllByInteractionAndAttempt(
-                            interaction,
-                            1
+                        interaction,
+                        1
                     ).let { responses ->
                         interaction.explanationRecommendationMapping =
-                                responseRecommendationService.computeRecommendations(
-                                        responses,
-                                        (interaction.sequence.getEvaluationInteraction().specification as EvaluationSpecification)
-                                                .responseToEvaluateCount
-                                )
+                            responseRecommendationService.computeRecommendations(
+                                responses,
+                                (interaction.sequence.getEvaluationInteraction().specification as EvaluationSpecification)
+                                    .responseToEvaluateCount
+                            )
                     }
                 }
             }
@@ -120,10 +127,10 @@ class InteractionService(
     }
 
     fun start(user: User, interactionId: Long): Interaction =
-            start(user, interactionRepository.getReferenceById(interactionId))
+        start(user, interactionRepository.getReferenceById(interactionId))
 
     fun restart(user: User, interactionId: Long): Interaction =
-            restart(user, interactionRepository.getReferenceById(interactionId))
+        restart(user, interactionRepository.getReferenceById(interactionId))
 
     fun start(user: User, interaction: Interaction): Interaction {
         require(user == interaction.owner) {
@@ -160,13 +167,13 @@ class InteractionService(
     }
 
     fun startNext(user: User, interaction: Interaction): Interaction =
-        start(user, interaction.sequence.getInteractionAt(interaction.rank+1))
+        start(user, interaction.sequence.getInteractionAt(interaction.rank + 1))
 
     fun skipNext(user: User, interaction: Interaction): Interaction {
         val sequence = interaction.sequence
         sequence.phase2Skipped = true
         sequenceRepository.save(sequence)
         eventLogService.skipPhase(sequence, 2)
-        return start(user, interaction.sequence.getInteractionAt(interaction.rank+2))
+        return start(user, interaction.sequence.getInteractionAt(interaction.rank + 2))
     }
 }
