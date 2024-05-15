@@ -836,7 +836,7 @@ internal class ResponseServiceIntegrationTest(
 
         responseService.updateMeanGradeAndEvaluationCount(response)
         assertEquals(0, response.evaluationCount, "The response doesn't have any peergrading")
-        assertEquals(BigDecimal(0), response.meanGrade?:BigDecimal(0), "The mean grade is 0")
+        assertNull(response.meanGrade, "The mean grade is null")
 
         tGiven("An assignement own by the teacher and a peerGrading of the response") {
             DraxoPeerGrading(
@@ -862,7 +862,7 @@ internal class ResponseServiceIntegrationTest(
             peerGradingService.markAsHidden(teacher, peerGrading)
             peerGrading
         }.tThen("The compute mean grade is 0") { peerGrading ->
-            assertEquals(BigDecimal(0), response.meanGrade, "The mean grade is 0")
+            assertNull(response.meanGrade, "The mean grade is null")
             peerGrading
         }.tWhen("the teacher unhide the peerGrading") { peerGrading ->
             peerGradingService.markAsShow(teacher, peerGrading)
