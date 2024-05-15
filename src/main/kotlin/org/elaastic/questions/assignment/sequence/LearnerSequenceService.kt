@@ -20,7 +20,9 @@ package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -76,8 +78,19 @@ class LearnerSequenceService(
             } else it
         }
 
-    /** Count the number of reports made by the user for the given sequence */
+    /**
+     * Count the number of reports made by the user for the given sequence
+     *
+     * If an error occurred when we retrieve all the peerGrading, then the
+     * count is 0
+     */
     fun countReportMade(user: User, sequence: Sequence): Int {
-        return peerGradingService.findAllEvaluation(user, sequence).count { it.reportReasons.isNullOrBlank() }
+        var peerGrading = emptyList<DraxoPeerGrading>().toMutableList()
+        try {
+            peerGrading.addAll(peerGradingService.findAllEvaluationMadeForLearner(user, sequence))
+            peerGrading.addAll(peerGradingService.findAllEvaluationMadeForLearner(user, sequence, 2))
+        } catch (_: IllegalStateException) {
+        }
+        return peerGrading.count { !it.reportReasons.isNullOrBlank() }
     }
 }

@@ -268,4 +268,28 @@ class PeerGradingService(
     fun canHidePeerGrading(teacher: User, peerGrading: PeerGrading): Boolean {
         return responseService.canHidePeerGrading(teacher, peerGrading.response)
     }
+
+    /**
+     * Return all the evaluation another user made to the learner response of
+     * the sequence
+     *
+     * @param user the user
+     * @param sequence the sequence
+     * @param attempt the attempt
+     * @return the list of evaluation
+     */
+    fun findAllEvaluationMadeForLearner(user: User, sequence: Sequence, attempt: Int = 1): List<DraxoPeerGrading> {
+        val peerGrading = emptyList<DraxoPeerGrading>()
+        val peerGradingFind = responseRepository.findByInteractionAndAttemptAndLearner(
+            sequence.getResponseSubmissionInteraction(),
+            attempt,
+            user
+        )?.let {
+            peerGradingRepository.findAllByResponseAndType(
+                it,
+                PeerGradingType.DRAXO
+            )
+        }
+        return peerGradingFind ?: peerGrading
+    }
 }
