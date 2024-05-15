@@ -126,6 +126,42 @@ internal class PeerGradingServiceTest(
     }
 
     @Test
+    fun `report a Draxo peerGrading with an explanation`() {
+        val response = integrationTestingService.getAnyResponse()
+        val grader = integrationTestingService.getAnyUser()
+        val reporter = integrationTestingService.getTestStudent()
+        response.learner = reporter
+        lateinit var peerGrading: DraxoPeerGrading;
+        val comment = "This is a comment to explain the reason of the report"
+
+        tGiven("A draxo peer grading") {
+            peerGrading = DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.NO, "Reportable content"),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tWhen("We report it") {
+            val reportReason: List<String> = listOf(ReportReason.INCOHERENCE.name)
+            assertDoesNotThrow {
+                peerGradingService.updateReport(reporter, peerGrading, reportReason, comment)
+            }
+            reportReason
+        }.tThen("the peerGrading is reported") { reportReason ->
+            assertNotNull(peerGrading.reportReasons)
+            assertEquals(comment, peerGrading.reportComment)
+            assertTrue(peerGrading.reportReasons!!.contains(reportReason.first()))
+        }
+    }
+
+    @Test
     fun `a report with the reason 'OTHER' and without comment should not be possible`() {
         val response = integrationTestingService.getAnyResponse()
         val reporter = integrationTestingService.getTestStudent()
