@@ -184,7 +184,7 @@ class ResponseService(
         val meangrade = entityManager.createQuery("select avg(pg.grade) from PeerGrading pg where pg.response = :response and pg.hiddenByTeacher = false")
             .setParameter("response", response)
             .singleResult as Double?
-        response.meanGrade = meangrade?.let { BigDecimal(it as Double).setScale(2, RoundingMode.HALF_UP) }
+        response.meanGrade = meangrade?.let { BigDecimal(it).setScale(2, RoundingMode.HALF_UP) }
 
         return responseRepository.save(response)
     }
