@@ -37,7 +37,7 @@ import javax.validation.constraints.NotNull
 /**
  * Interaction is a class that represents an interaction in a sequence.
  *
- * An interaction is a step in a sequence that can be a read, a response submission or an evaluation.
+ * An interaction is a step in a sequence that can be read, a response submission or an evaluation.
  *
  * @see InteractionType
  * @see Sequence
