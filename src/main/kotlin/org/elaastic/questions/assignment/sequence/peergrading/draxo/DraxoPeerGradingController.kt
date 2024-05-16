@@ -33,6 +33,7 @@ import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
 import java.util.Locale
 
@@ -80,7 +81,6 @@ class DraxoPeerGradingController(
         // The student can't see the hidden feedbacks
         if (user.isLearner()) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
 
-        model.addAttribute("user", user)
         val draxoEvaluationModels = draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
             DraxoEvaluationModel(
                 index,
@@ -105,10 +105,9 @@ class DraxoPeerGradingController(
             hideName ?: false,
             canSeeChatGPTEvaluation = user == assignment.owner // Only the teacher can see the chatGPT evaluation
         )
-        model.addAttribute(
-            "evaluationModel",
-            evaluationModel
-        )
+
+        model["user"] = user
+        model["evaluationModel"] = evaluationModel
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
     }
