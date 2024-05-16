@@ -22,7 +22,7 @@ import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.player.components.draxo.DraxoEvaluationModel
+import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder

@@ -35,7 +35,7 @@ import org.elaastic.questions.assignment.sequence.interaction.specification.Resp
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.features.ElaasticFeatures
-import org.elaastic.questions.player.components.chatGptEvaluation.ChatGptEvaluationModel
+import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModel
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.explanationViewer.*
@@ -59,7 +59,7 @@ import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearn
 import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
-import org.elaastic.questions.player.components.draxo.DraxoEvaluationModel
+import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
@@ -72,7 +72,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
