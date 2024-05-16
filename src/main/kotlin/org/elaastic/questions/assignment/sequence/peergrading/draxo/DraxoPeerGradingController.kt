@@ -19,9 +19,12 @@ package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.player.components.evaluation.EvaluationModel
+import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
@@ -30,7 +33,6 @@ import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
 import java.util.Locale
 
@@ -40,9 +42,19 @@ class DraxoPeerGradingController(
     @Autowired val responseService: ResponseService,
     @Autowired val assignmentService: AssignmentService,
     @Autowired val peerGradingService: PeerGradingService,
-    @Autowired val messageSource: MessageSource
+    @Autowired val messageSource: MessageSource,
+    @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
 ) {
 
+    /**
+     * Get all the DRAXO evaluations of a response
+     *
+     * @param authentication the current user authentication
+     * @param model the model
+     * @param responseId the id of the response
+     * @param hideName if the name of the grader should be hidden
+     * @return the view of the list of DRAXO evaluations
+     */
     @GetMapping("/{responseId}")
     fun getAll(
         authentication: Authentication,
@@ -69,21 +81,26 @@ class DraxoPeerGradingController(
         if (user.isLearner()) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
 
         model.addAttribute("user", user)
-        model.addAttribute(
-            "evaluationModelList",
-            draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
-                DraxoEvaluationModel(
-                    index,
-                    draxoPeerGrading,
-                    user == assignment.owner,
-                    responseService.canReactOnFeedbackOfResponse(user, response),
-                    responseService.canHidePeerGrading(user, response)
-                )
-            }
-        )
-        if (hideName == true) {
-            model.addAttribute("hideName", true)
+        val draxoEvaluationModels = draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
+            DraxoEvaluationModel(
+                index,
+                draxoPeerGrading,
+                user == assignment.owner,
+                responseService.canReactOnFeedbackOfResponse(user, response),
+                responseService.canHidePeerGrading(user, response)
+            )
         }
+        val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
+        val evaluationModel = EvaluationModel(
+            draxoEvaluationModels,
+            ChatGptEvaluationModelFactory.build(chatGptEvaluation, response.interaction.sequence),
+            hideName ?: false,
+            canSeeChatGPTEvaluation = user == assignment.owner // Only the teacher can see the chatGPT evaluation
+        )
+        model.addAttribute(
+            "evaluationModel",
+            evaluationModel
+        )
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
     }
