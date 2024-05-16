@@ -3,6 +3,12 @@ package org.elaastic.questions.assignment.sequence.peergrading.draxo.option
 /**
  * OptionId is an enumeration of the possible values for a DraxoPeerGrading criteria.
  *
+ * @property YES
+ * @property NO
+ * @property PARTIALLY
+ * @property DONT_KNOW
+ * @property NO_OPINION
+ *
  * @see org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
  */
 enum class OptionId(val codeI18n: String) {

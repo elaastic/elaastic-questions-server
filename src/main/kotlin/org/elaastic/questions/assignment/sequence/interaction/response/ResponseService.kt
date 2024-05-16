@@ -174,13 +174,17 @@ class ResponseService(
     fun updateMeanGradeAndEvaluationCount(response: Response): Response {
         // TODO Update the stats in one single query
         val res =
-            entityManager.createQuery("select avg(pg.grade) as meanGrade, count(pg.id) as evaluationCount, sum(CASE WHEN pg.type = 'DRAXO' THEN 1 ELSE 0 END) from PeerGrading pg where pg.response = :response")
+            entityManager.createQuery("select count(pg.id) as evaluationCount, sum(CASE WHEN pg.type = 'DRAXO' THEN 1 ELSE 0 END) from PeerGrading pg where pg.response = :response")
                 .setParameter("response", response)
                 .singleResult as Array<Any?>
 
-        response.meanGrade = res[0]?.let { BigDecimal(it as Double).setScale(2, RoundingMode.HALF_UP) }
-        response.evaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
-        response.draxoEvaluationCount = res[2]?.let { (it as Long).toInt() } ?: 0
+        response.evaluationCount = res[0]?.let { (it as Long).toInt() } ?: 0
+        response.draxoEvaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
+
+        val meangrade = entityManager.createQuery("select avg(pg.grade) from PeerGrading pg where pg.response = :response and pg.hiddenByTeacher = false")
+            .setParameter("response", response)
+            .singleResult as Double?
+        response.meanGrade = meangrade?.let { BigDecimal(it).setScale(2, RoundingMode.HALF_UP) }
 
         return responseRepository.save(response)
     }

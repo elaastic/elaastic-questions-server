@@ -23,16 +23,20 @@
 
     <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}"
          th:classappend="${draxoEvaluationModel.hiddenByTeacher || (draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)} ? 'hidden' : ''">
+        <!--/* PeerGrading header */-->
         <div class="review-header review-border">
+            <!--/* Reviewer */-->
             <div class="reviewer">
                 <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
                 <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
                       th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
             </div>
+            <!--/* Score */-->
             <div class="score" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
                 <span th:text="#{draxo.score} + ' :'">Score</span>
                 <span class="ui label" th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
             </div>
+            <!--/* Action de masquage */-->
             <div class="hide-peer-grading" th:if="${draxoEvaluationModel.canHidePeerGrading}">
                 <a class="ui icon button"
                    th:if="${!draxoEvaluationModel.hiddenByTeacher}"
@@ -54,65 +58,50 @@
                 </a>
             </div>
         </div>
-        <div class="review-DRAXO review-border"
-             th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}">
-            <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
-            <div class="DRAXO-grid">
-                <th:block
-                        th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
-                        th:with="optionType = ${criteria.getOptionType(draxoEvaluationModel.draxoEvaluation.get(criteria))}">
-
-                    <div class="custom-step"
-                         th:classappend="${optionType?.getCSSClass()}">
-
-                        <div class="custom-step-content">
-                            <span class="capital-letter" th:text="${criteria}">R</span>
-                            <span th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">...</span>
-
-                            <i class="green check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
-                            <i class="red x icon" th:if="${optionType?.name == 'NEGATIVE'}"></i>
-                            <i class="question icon" th:if="${optionType?.name == 'UNKNOWN'}"></i>
-                        </div>
-                    </div>
-                </th:block>
-            </div>
-
-            <th:block th:with="rejectedCriteria = ${draxoEvaluationModel.draxoEvaluation.getRejectedCriteria()}">
-                <div class="comment-area" th:if="${rejectedCriteria}">
-                    <div class="comment-header">
-                        <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'">
-                            The answer is readable :</h4>
-                        <div class="ui label"
-                             th:text="#{${draxoEvaluationModel.draxoEvaluation.get(rejectedCriteria).codeI18n}}">
-                            No
-                        </div>
-                    </div>
-                    <div class="separator" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}"></div>
-                    <div class="comment" th:if="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
-                        <h4 th:text="#{draxo.feedback.label}">Feedback:</h4>
-                        <div class="ui label" th:text="${draxoEvaluationModel.draxoEvaluation.getExplanation()}">
-                            I am a relevant and constructive comment, to explain why the answer provided above
-                            is not decipherable.
-                        </div>
-                    </div>
-                </div>
-            </th:block>
-        </div>
-        <div class="review-border"
-             th:if="${draxoEvaluationModel.canReactOnPeerGrading && draxoEvaluationModel.canBeReacted()}">
-            <!--/* Reaction for the feedback */-->
-            <th:block th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
-            </th:block>
-        </div>
+        <!--/*
+        Hidden message when the teacher hides it.
+        It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it.
+        */-->
         <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
             <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
+            <div id="toggleContentDisplay" class="ui button black basic"
+                 style="text-transform: none; font-weight: initial"
+                 th:attr="evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}">
+                <span id="show">Voir le contenu masqu&eacute;</span>
+                <span id="hide" style="display: none;">Cacher le contenu masqu&eacute;</span>
+            </div>
         </div>
+        <!--/* Grid Draxo */-->
+        <div th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}"
+             class="draxo-content">
+            <th:block
+                    th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-content.html :: draxoPeerGradingContent(${draxoEvaluationModel})"></th:block>
+        </div>
+        <!--/*
+        Area to put the DRAXO grid if the teacher wants to see the moderate content.
+        It is visible only if the evaluation is hidden
+        */-->
+        <div class="draxo-content" th:id="draxoContent"
+             th:attr="evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
+             th:if="${draxoEvaluationModel.hiddenByTeacher}">
+            <th:block
+                    th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-content.html :: draxoPeerGradingContent(${draxoEvaluationModel})"></th:block>
+        </div>
+        <!--/* Reaction for the DraxoPeerGrading */-->
+        <div class="review-border"
+             th:if="${draxoEvaluationModel.canReactOnPeerGrading && draxoEvaluationModel.canBeReacted()}">
+            <th:block
+                    th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
+            </th:block>
+        </div>
+        <!--/* Feedback message when the student reports the DraxoPeerGrading */-->
         <div class="review-border message-hidden"
              th:if="${!draxoEvaluationModel.hiddenByTeacher && (draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}"
         >
             <div th:text="#{draxo.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
         </div>
     </div>
+    <!--/* Feedback message when the teacher hides a peergrading */-->
     <div class="ui message negative" th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
          id="feedbackMessage"
          style="display: none;"
@@ -122,19 +111,16 @@
     </div>
 
     <script th:inline="javascript">
-
         /**
          * Update the peer grading visibility through asynchronous request
          * @param peerGradingID the ID of the peer grading to hide
          * @param markAsHidden if true, the peer grading will be marked as hidden else it will be marked as unhidden
          */
         function updateVisibilityOfPeerGrading(peerGradingID, markAsHidden = true) {
+            const feedbackMessage = $('#feedbackMessage[data-evaluation-id="' + peerGradingID + '"]');
             /*<![CDATA[*/
             const responseId = [[${draxoEvaluationModel.responseId}]]
             /*]]> */
-            console.log("hidePeerGrading");
-            console.log(peerGradingID);
-            const feedbackMessage = $('#feedbackMessage[data-evaluation-id="' + peerGradingID + '"]');
             let url = "/peer-grading/draxo/";
             url += markAsHidden ? "hide/" : "unhide/";
             url += peerGradingID;
@@ -161,6 +147,35 @@
                 }
             });
         }
+
+        $(function () {
+
+            /*<![CDATA[*/
+            const peerGradingID = [[${draxoEvaluationModel.draxoPeerGradingId}]]
+            /*]]> */
+
+
+            // Display the hidden content when the teacher wants to see it
+            const area = $('#draxoContent[evaluation-id="' + peerGradingID + '"]');
+            area.hide();
+            const toggleContentBtn = $('#toggleContentDisplay[evaluation-id="' + peerGradingID + '"]');
+            const showBtn = toggleContentBtn.children('#show');
+            const hideBtn = toggleContentBtn.children('#hide');
+
+            toggleContentBtn.click(function () {
+                if (showBtn.is(':visible')) {
+                    console.log("show")
+                    area.slideDown();
+                    showBtn.hide();
+                    hideBtn.show();
+                } else {
+                    console.log("hide")
+                    area.slideUp();
+                    showBtn.show();
+                    hideBtn.hide();
+                }
+            });
+        });
     </script>
 
 </div>

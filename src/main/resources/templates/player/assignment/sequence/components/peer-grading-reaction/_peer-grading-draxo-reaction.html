@@ -58,7 +58,7 @@
         </div>
         <div id="submit-button-utility-grade"
              th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}">
-            <input type="submit" value="Soumettre" class="ui primary button" th:value="#{common.submit}">
+            <button type="submit" value="Soumettre" class="ui primary button" th:text="#{common.submit}"></button>
         </div>
         <div class="ui message" th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
              id="submit-message">
@@ -105,6 +105,8 @@
                 const url = form.attr('action')
                 const data = form.serialize()
 
+                $('#submit-button-utility-grade[data-evaluation-id="' + evaluationId + '"]').children('button').addClass("loading")
+
                 $.post(url, data, function (response) {
                     if (response.success) {
                         $('#submit-button-utility-grade[data-evaluation-id="' + evaluationId + '"]').slideUp()
@@ -113,6 +115,7 @@
                         submitMessage.addClass("negative")
                         submitMessage.children('.header').css("color", " #9f3a38")
                     }
+                    $('#submit-button-utility-grade[data-evaluation-id="' + evaluationId + '"]').children('button').removeClass("loading")
                     //Update the submit message with the content of the response
                     submitMessage.children('.header').text(response.header)
                     submitMessage.children('.content').text(response.content)
