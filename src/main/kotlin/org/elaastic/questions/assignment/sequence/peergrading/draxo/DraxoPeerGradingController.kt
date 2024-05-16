@@ -90,10 +90,18 @@ class DraxoPeerGradingController(
                 responseService.canHidePeerGrading(user, response)
             )
         }
-        val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
+        // If the ChatGPT evaluation is enabled, we add it to the model
+        val chatGptEvaluationModel =
+            if (response.interaction.sequence.chatGptEvaluationEnabled) {
+                ChatGptEvaluationModelFactory.build(
+                    chatGptEvaluationService.findEvaluationByResponse(response),
+                    response.interaction.sequence
+                )
+            } else null
+
         val evaluationModel = EvaluationModel(
             draxoEvaluationModels,
-            ChatGptEvaluationModelFactory.build(chatGptEvaluation, response.interaction.sequence),
+            chatGptEvaluationModel,
             hideName ?: false,
             canSeeChatGPTEvaluation = user == assignment.owner // Only the teacher can see the chatGPT evaluation
         )
