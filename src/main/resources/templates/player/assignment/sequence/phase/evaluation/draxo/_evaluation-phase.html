@@ -36,6 +36,7 @@
               class="ui form"
               method="post">
             <input type="hidden" name="interactionId" th:value="${model.interactionId}"/>
+            <input type="hidden" name="lastResponseToGrade" th:value="${model.lastResponseToGrade}">
             <th:block th:if="${model.nextResponseToGrade}">
                 <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.draxo.intro}">
                     Here is presented an alternative response. Please indicate how much you agree with this answer.

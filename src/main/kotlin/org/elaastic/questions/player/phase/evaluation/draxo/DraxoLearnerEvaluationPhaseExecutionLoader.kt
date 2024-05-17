@@ -40,11 +40,14 @@ class DraxoLearnerEvaluationPhaseExecutionLoader(
                 )?.let { ResponseData(it) }
             } else null
 
+        val isLastResponseToGrade = nextResponseToGrade == null ||
+                responseIdAlreadyGradedList.size == responseToEvaluateCount - 1
+
         return DraxoLearnerEvaluationPhaseExecution(
             userHasCompletedPhase2 = nextResponseToGrade == null,
             secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
             nextResponseToGrade = nextResponseToGrade,
-            lastResponseToGrade = responseIdAlreadyGradedList.size == responseToEvaluateCount - 1,
+            lastResponseToGrade = isLastResponseToGrade,
             sequence = learnerPhase.learnerSequence.sequence,
             userActiveInteraction = learnerPhase.learnerSequence.activeInteraction,
             lastAttemptResponse = responseService.find(learner, sequence, 2) ?: responseService.find(
