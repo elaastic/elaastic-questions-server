@@ -22,8 +22,26 @@
 
     <!--/* ChatGPT evaluation of the response */-->
     <th:block togglz:active="'CHATGPT_EVALUATION'"
+              th:with="chatGptEvaluationModel=${evaluationModel.chatGptEvaluationModel}"
               th:if="${evaluationModel.chatGptEvaluationModel != null && evaluationModel.canSeeChatGPTEvaluation}">
-        <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer.html :: chatGptEvaluation(${evaluationModel.chatGptEvaluationModel})"></div>
+
+        <div class="ui accordion segment">
+            <div class="ui title header" style="padding: 10px 0 8px 5px; display: flex; align-items: center;">
+                <i class="dropdown icon"></i>
+                <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
+
+                <i class="ban icon small" th:if="${chatGptEvaluationModel.status != 'DONE'}"></i>
+                <i class="check circle outline icon small" th:if="${chatGptEvaluationModel.status == 'DONE'}"></i>
+            </div>
+
+            <div class="ui basic padded large text segment content" style="padding-top: 0">
+                <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-content.html :: chatGptEvaluationContent(${chatGptEvaluationModel})"></div>
+
+                <div th:if="${chatGptEvaluationModel.status != 'DONE'}">
+                    Pas d'&eacute;valuation g&eacute;n&eacute;r&eacute;e
+                </div>
+            </div>
+        </div>
     </th:block>
 
     <!--/* Link to the online documentation of the DRAXO evaluation */-->
