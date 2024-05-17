@@ -20,17 +20,20 @@
      xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
+    <!--/* ChatGPT evaluation of the response */-->
     <th:block togglz:active="'CHATGPT_EVALUATION'"
               th:if="${evaluationModel.chatGptEvaluationModel != null && evaluationModel.canSeeChatGPTEvaluation}">
         <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer.html :: chatGptEvaluation(${evaluationModel.chatGptEvaluationModel})"></div>
     </th:block>
 
+    <!--/* Link to the online documentation of the DRAXO evaluation */-->
     <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url')}">
-                <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}" target="_blank">
-                    <i class="question circle outline ui icon"></i> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
-                </a>
-            </span>
+        <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}" target="_blank">
+            <i class="question circle outline ui icon"></i> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
+        </a>
+    </span>
 
+    <!--/* All the DRAXO evaluations for the response */-->
     <!-- Link to the css file for the custom DRAXO grid -->
     <link rel="stylesheet" type="text/css" th:href="@{'/css/draxo-show.css'}"/>
     <th:block th:each="model : ${evaluationModel.draxoEvaluationModels}">
