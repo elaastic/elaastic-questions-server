@@ -1,0 +1,482 @@
+{"0": {
+    "doc": "create_moodle_activity.access_elaastic",
+    "title": "7.5. Access Elaastic",
+    "content": "Click on the activity to get to the page of management of your Elaastic subject. If it’s the first time you log in to Elaastic, you will be shown a page regarding the terms and conditions. Read the document. Afterwards, click on “I read and I agree with the terms of use” in order to use the platform. You are now on the page to edit the subject you just created. ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/access_elaastic#75-access-elaastic",
+    "relUrl": "/create_moodle_activity/access_elaastic#75-access-elaastic"
+  },"1": {
+    "doc": "create_moodle_activity.access_elaastic",
+    "title": "create_moodle_activity.access_elaastic",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/access_elaastic",
+    "relUrl": "/create_moodle_activity/access_elaastic"
+  },"2": {
+    "doc": "create_moodle_activity.access_moodle",
+    "title": "7.1. Go to Moodle from the ENT",
+    "content": "Once you logged in to the ENT MonBureauNumérique (mbn.fr), click on the “Moodle” on the menu. Note : This tutorial uses Moodle 3.9. The visual interface might differ slightly depending on the version you’re using. However, the instructions remain the same. ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/access_moodle#71-go-to-moodle-from-the-ent",
+    "relUrl": "/create_moodle_activity/access_moodle#71-go-to-moodle-from-the-ent"
+  },"3": {
+    "doc": "create_moodle_activity.access_moodle",
+    "title": "create_moodle_activity.access_moodle",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/access_moodle",
+    "relUrl": "/create_moodle_activity/access_moodle"
+  },"4": {
+    "doc": "create_moodle_activity.activate_edition_mode",
+    "title": "7.3. Activate edition mode",
+    "content": "In order to edit you course, click on “Activate the edition mode”. ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/activate_edition_mode#73-activate-edition-mode",
+    "relUrl": "/create_moodle_activity/activate_edition_mode#73-activate-edition-mode"
+  },"5": {
+    "doc": "create_moodle_activity.activate_edition_mode",
+    "title": "create_moodle_activity.activate_edition_mode",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/activate_edition_mode",
+    "relUrl": "/create_moodle_activity/activate_edition_mode"
+  },"6": {
+    "doc": "create_moodle_activity.add_activity",
+    "title": "7.4. Add an activity",
+    "content": "From any section, click on “Add an activity or a resource”. In this example, we add our activity in a section called “Section 1”. Click on Elaastic in the list of all the possible activity types. Type the name of your activity. In this example, it will be called “Capital”. Click on “Save and go back to the course” to validate the creation of the subject. The activity is now displayed in the list of the activities of the section. When you create an Elaastic activity on Moodle as described above, an empty subject with a single assignment is automatically created within Elaastic. When learners click on the link to the activity, they are redirected to the page of the Elaastic assignment. As a teacher, on the first click, you’ll become the owner of the subject and will be redirected to the page to edit your subject. ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/add_activity#74-add-an-activity",
+    "relUrl": "/create_moodle_activity/add_activity#74-add-an-activity"
+  },"7": {
+    "doc": "create_moodle_activity.add_activity",
+    "title": "create_moodle_activity.add_activity",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/add_activity",
+    "relUrl": "/create_moodle_activity/add_activity"
+  },"8": {
+    "doc": "resources_creation.assignment_creation",
+    "title": "3.4. Assignment creation",
+    "content": "To create an assignment, you must be located on the page to manage your subject. Go to the tab named “Assignment”. Click on the green button “Add an assignment”. | Name your assignment (mandatory). | Name your audience which is an overview of the learners that will answer your questions. | Define the scholar year. | Add a description. | If you wish, anonymous users can participate in the assignment through guest accounts. | If the feature is enabled for your account, you can create revisions. Here you can set the revision access mode to define when the sequences will be made available to students for revision. | “Not at all” does not authorize the use of the assignment for revisions; it is the equivalent of an ordinary assignment. | “Only after supervised work” only authorizes a sequence to be transmitted to Konsolidation once you have performed the following action . | “Publish results” in a “face-to-face” context | “End sequence” in “blended” and “distant” contexts | . | “Immediately” transmits all sequences to Konsolidation as soon as the assignment is created | . | . Once you’re done, click on the green button “Create”. Afterwards, you are automatically redirected on the assignment tab of your subject management page. The assignment you created is now displayed. The revision tag reminds you of the settings you’ve made if you’ve authorized revisions, and doesn’t appear if you’ve chosen the “Not at all” option. While playing a sequence, the revision tag will appear in the assignment overview on the left side of the screen. Each sequence will display the tag if it is available for revision. The assignement here is in “Only after supervised work” mode. | The tag is displayed, which means the results are published, and the sequence is available for revision. | The tag is not displayed, this mean the sequence is not available for revision. | . ",
+    "url": "/elaastic-questions-server/en/resources_creation/assignment_creation#34-assignment-creation",
+    "relUrl": "/resources_creation/assignment_creation#34-assignment-creation"
+  },"9": {
+    "doc": "resources_creation.assignment_creation",
+    "title": "resources_creation.assignment_creation",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/resources_creation/assignment_creation",
+    "relUrl": "/resources_creation/assignment_creation"
+  },"10": {
+    "doc": "key_concepts.assignments",
+    "title": "2.4. Assignments",
+    "content": "An assignment is the instance of a subject for a designated audience (a class or a group of learners). To run a subject, the teacher must create an assignment. In the example below, the teacher has created 3 assignments in order to be able to use her “Equations” subject with 3 different audiences (e.g. 3 different classes). The teacher will be able to keep track of the different results he or she has obtained with the different audiences. ",
+    "url": "/elaastic-questions-server/en/key_concepts/assignments#24-assignments",
+    "relUrl": "/key_concepts/assignments#24-assignments"
+  },"11": {
+    "doc": "key_concepts.assignments",
+    "title": "key_concepts.assignments",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/key_concepts/assignments",
+    "relUrl": "/key_concepts/assignments"
+  },"12": {
+    "doc": "share_subject.copy_shared_question",
+    "title": "5.4. Copy a shared question",
+    "content": "We’ve seen in chapter 5.3. how to copy a shared subject. However, you can also copy a question of a subject only. To do so, the method is the same than when you work on you own resources. Click on the copy icon on the right of the question you wish to copy. A popup appears and asks you to select the subject where you want to copy the question. Choose then confirm. A confirmation message appears to inform you that question has been successfully copied. If you go the list of the questions of the subject where you copied the question, the latter appears. You can know edit it as you wish. ",
+    "url": "/elaastic-questions-server/en/share_subject/copy_shared_question#54-copy-a-shared-question",
+    "relUrl": "/share_subject/copy_shared_question#54-copy-a-shared-question"
+  },"13": {
+    "doc": "share_subject.copy_shared_question",
+    "title": "share_subject.copy_shared_question",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/share_subject/copy_shared_question",
+    "relUrl": "/share_subject/copy_shared_question"
+  },"14": {
+    "doc": "share_subject.copy_shared_subject",
+    "title": "5.3. Copy a shared subject",
+    "content": "The shared subjects can be read-only accessed. If you wish to edit one of them and use for yourself, you must work on a copy that will be created in your resources. Click on the arrow icon on the left menu or on the button labelled “I” Les sujets partagés ne sont accessibles qu’en lecture seule. Si vous souhaitez modifier l’un d’entre eux et l’utiliser pour vous même. Il vous faut travailler sur une copie qui sera placée dans vos ressources. Cliquez sur l’icône de flèche sur le menu de gauche ou sur le bouton “Import this subject into My Subjects”. A popup appears to ask for you confirmation. A confirmation message appears and inform you that the importation was successful. If you go to the list of your subjects, the copy appears. We notice that course associated to your subject has also been copied. You can know edit the subject or create an assignment ot use it. ",
+    "url": "/elaastic-questions-server/en/share_subject/copy_shared_subject#53-copy-a-shared-subject",
+    "relUrl": "/share_subject/copy_shared_subject#53-copy-a-shared-subject"
+  },"15": {
+    "doc": "share_subject.copy_shared_subject",
+    "title": "share_subject.copy_shared_subject",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/share_subject/copy_shared_subject",
+    "relUrl": "/share_subject/copy_shared_subject"
+  },"16": {
+    "doc": "resources_creation.course_creation",
+    "title": "3.1. Course creation",
+    "content": "To create a course, you need to go to the course management page. It can be accessed by clicking on the folder icon on the left menu. It is also the home page. Once you are on the page to manage your course, click on the green button “Course create”. Name your course and click on “Create”. When this is done, you are automatically redirected on the page to edit the course you just created. Since you’ve juste created your course, it doesn’t contain any subject yet. To see how to create a subject, go to chapter 3.2. of this tutorial. ",
+    "url": "/elaastic-questions-server/en/resources_creation/course_creation#31-course-creation",
+    "relUrl": "/resources_creation/course_creation#31-course-creation"
+  },"17": {
+    "doc": "resources_creation.course_creation",
+    "title": "resources_creation.course_creation",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/resources_creation/course_creation",
+    "relUrl": "/resources_creation/course_creation"
+  },"18": {
+    "doc": "key_concepts.courses",
+    "title": "2.1. Courses",
+    "content": "A course allows resources such as subjects to be grouped together by topic. When a teacher has authenticated to the elaastic platform, the page presented is the page listing the courses created by the teacher. ",
+    "url": "/elaastic-questions-server/en/key_concepts/courses#21-courses",
+    "relUrl": "/key_concepts/courses#21-courses"
+  },"19": {
+    "doc": "key_concepts.courses",
+    "title": "key_concepts.courses",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/key_concepts/courses",
+    "relUrl": "/key_concepts/courses"
+  },"20": {
+    "doc": "create_moodle_activity.create_moodle_activity",
+    "title": "7. Create an Elaastic activity from Moodle",
+    "content": "You can create an Elaastic assignment directly from Moodle. This chapter will show you how this can be done. ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/#7-create-an-elaastic-activity-from-moodle",
+    "relUrl": "/create_moodle_activity/#7-create-an-elaastic-activity-from-moodle"
+  },"21": {
+    "doc": "create_moodle_activity.create_moodle_activity",
+    "title": "create_moodle_activity.create_moodle_activity",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/",
+    "relUrl": "/create_moodle_activity/"
+  },"22": {
+    "doc": "create_moodle_activity_from_existing_assignment.create_moodle_activity_from_existing_assignment",
+    "title": "8. Use an existing assignment on Elaastic from Moodle",
+    "content": "In chapter 7., we’ve seen of to create an Elaastic activity from Moodle which created an empty subject and matching assignment on the fly. This chapter shows how to create an Elaastic activity from Moodle that will be linked to an already existing assignment. ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity_from_existing_assignment/#8-use-an-existing-assignment-on-elaastic-from-moodle",
+    "relUrl": "/create_moodle_activity_from_existing_assignment/#8-use-an-existing-assignment-on-elaastic-from-moodle"
+  },"23": {
+    "doc": "create_moodle_activity_from_existing_assignment.create_moodle_activity_from_existing_assignment",
+    "title": "create_moodle_activity_from_existing_assignment.create_moodle_activity_from_existing_assignment",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity_from_existing_assignment/",
+    "relUrl": "/create_moodle_activity_from_existing_assignment/"
+  },"24": {
+    "doc": "key_concepts.DRAXO",
+    "title": "2.6. DRAXO",
+    "content": "DRAXO is an assessment grid for evaluating answers given to comprehension questions. These responses generally present explanations, justifications, or arguments. DRAXO was developed as part of research conducted at IRIT on technological systems supporting formative assessment. DRAXO’s goal is to improve the production of textual feedback. DRAXO can be used during the second phase of an Elaastic sequence to guide learners in their peer assessment activity. 2.6.1. The DRAXO criteria . The grid is structured around several criteria identified by the letters D, R, A, X, and O. Here is a detailed description of each criterion: . Criterion “D” (unDerstandable) . | Prompt proposed to the evaluator: I understand what the answer says. | Response options: No, Partially, Yes. | Continuation of the assessment: . | If the chosen option is Yes, the evaluator is invited to assess according to the next criterion (R). | If the response option is No or Partially, the evaluator is asked to provide textual feedback. | Textual feedback requested from the evaluator: What do you not understand about the answer? | . | End of the assessment: . | If textual feedback is provided, the assessment is considered completed. | . | . Criterion “R” (Relevant) . | Prompt proposed to the evaluator: I think that the answer corresponds to the asked question. | Response options: No, Partially, Yes, I don’t know. | Continuation of the assessment: . | If the chosen option is Yes, the evaluator is invited to assess according to the next criterion (A). | If the response option is No or Partially, the evaluator is asked to provide textual feedback. | Feedback requested from the evaluator: Why do you think the answer does not correspond to the asked question? | . | End of the assessment: . | If textual feedback is provided, the assessment is considered completed. | If the option I don’t know is chosen, the assessment is interrupted without a request for textual feedback. In this case, it is considered that the evaluator is not in a position to assess the answer. | . | . Criterion “A” (Agreed) . | Prompt proposed to the evaluator: I agree with the proposed answer. | Response options: No, Partially, Yes, I do not pronounce myself. | Continuation of the assessment: . | If the chosen option is Yes, the evaluator is invited to assess according to the next criterion (X). | If the response option is No or Partially, the evaluator is asked to provide textual feedback. | Feedback requested from the evaluator: In what way do you disagree with the proposed answer? | . | End of the assessment: . | If textual feedback is provided, the assessment is considered completed. | If the option I do not pronounce myself is chosen, the assessment is interrupted without a request for textual feedback. In this case, it is considered that the evaluator is not in a position to assess the answer. | . | . Criterion “X” (Exhaustive) . | Prompt proposed to the evaluator: I think that the answer is complete. | Response options: No, Yes, I don’t know. | Continuation of the assessment: . | If the chosen option is Yes, the evaluator is invited to assess according to the next criterion (O). | If the response option is No, the evaluator is asked to provide textual feedback. | Feedback requested from the evaluator: What would you need to add for the answer to be complete? | . | End of the assessment: . | If textual feedback is provided, the assessment is considered completed. | If the option I don’t know is chosen, the assessment ends without a request for textual feedback. | . | . Criterion “O” (Optimal) . | Prompt proposed to the evaluator: I think that the answer can be improved. | Response options: No, Yes, I don’t know. | Continuation of the assessment: . | If the response option is Yes, the evaluator is asked to provide textual feedback. | Feedback requested: How can you help the author improve their answer? | . | End of the assessment: . | If textual feedback is provided, the assessment is considered completed. | If the options No or I don’t know are chosen, the assessment ends without a request for textual feedback. | . | . 2.6.2 Scoring of an answer . The score, if it can be calculated, ranges from 1 to 5. Based on the “Answers the question” feature (Criterion R): . | Answer “No”: score = 1 | Answer “Partially”: score = 1.5 | . Based on the degree of agreement (Criterion A): . | Answer “No”: score = 2 | Answer “Partially”: score = 3 | Answer “Yes”: score = 4 | . Bonus if the answer is complete (Criterion X): . | Answer “Yes”: score = 4.5 | . Bonus if the answer is optimal (Criterion O): . | Answer “Yes”: score = 5 | . The score is not calculated in the following cases: . | Only criterion D is evaluated. | Criterion R is evaluated as “I don’t know”. | Criterion A is evaluated as “I do not pronounce myself”. | . ",
+    "url": "/elaastic-questions-server/en/key_concepts/DRAXO#26-draxo",
+    "relUrl": "/key_concepts/DRAXO#26-draxo"
+  },"25": {
+    "doc": "key_concepts.DRAXO",
+    "title": "key_concepts.DRAXO",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/key_concepts/DRAXO",
+    "relUrl": "/key_concepts/DRAXO"
+  },"26": {
+    "doc": "share_subject.get_share_link",
+    "title": "5.1. Get the link to share",
+    "content": "To obtain the link to share your subject, go to the page to manage your subject and click on the arrow icon on the left menu. A popup appears and shows you the link to share you subject. Copy this link and give it to teachers you want to share your subject with. ",
+    "url": "/elaastic-questions-server/en/share_subject/get_share_link#51-get-the-link-to-share",
+    "relUrl": "/share_subject/get_share_link#51-get-the-link-to-share"
+  },"27": {
+    "doc": "share_subject.get_share_link",
+    "title": "share_subject.get_share_link",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/share_subject/get_share_link",
+    "relUrl": "/share_subject/get_share_link"
+  },"28": {
+    "doc": "create_moodle_activity_from_existing_assignment.get_lti_parameter",
+    "title": "8.1. Get LTI parameter",
+    "content": "From the player perspective of an assignment, click on the icon that show a hat on the left menu. A popup appears, copy the text in your clipboard. This parameter will be used when a Moodle activity is created (see chapter 8.2.). ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity_from_existing_assignment/get_lti_parameter#81-get-lti-parameter",
+    "relUrl": "/create_moodle_activity_from_existing_assignment/get_lti_parameter#81-get-lti-parameter"
+  },"29": {
+    "doc": "create_moodle_activity_from_existing_assignment.get_lti_parameter",
+    "title": "create_moodle_activity_from_existing_assignment.get_lti_parameter",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity_from_existing_assignment/get_lti_parameter",
+    "relUrl": "/create_moodle_activity_from_existing_assignment/get_lti_parameter"
+  },"30": {
+    "doc": "play_assignment.hide_responses",
+    "title": "4.6. Hide responses",
+    "content": "It is now possible for a teacher to hide learners’ answers. Right from phase 1, when the results are visible to the teacher, it is possible to hide an inappropriate learner response. To do this, simply click on the eye in the top right-hand corner of a learner’s text response. This makes it possible to hide offensive comments, or to limit confusion by hiding erroneous explanations that could be associated with correct answers, for example. Once an answer has been hidden, it no longer appears in the list of recommended answers or in the list of explanations seen by learners in the results. It always appears in the “All explanations” window. The hidden content is not visible, to avoid an unfortunate display in the event of screen sharing among learners. The “Show explanation” button cancels the action of hiding the answer and makes it visible to all again. The learner whose answer is hidden is informed by a change in the colored background of his explanation on the screen where he sees his answer. The explanation is also marked with the message “Content moderated by the teacher”. ",
+    "url": "/elaastic-questions-server/en/play_assignment/hide_responses/#46-hide-responses",
+    "relUrl": "/play_assignment/hide_responses/#46-hide-responses"
+  },"31": {
+    "doc": "play_assignment.hide_responses",
+    "title": "play_assignment.hide_responses",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/hide_responses/",
+    "relUrl": "/play_assignment/hide_responses/"
+  },"32": {
+    "doc": "key_concepts.key_concepts",
+    "title": "2. Key concepts",
+    "content": "Five key concepts are important to understand the way Elaastic works. ",
+    "url": "/elaastic-questions-server/en/key_concepts/#2-key-concepts",
+    "relUrl": "/key_concepts/#2-key-concepts"
+  },"33": {
+    "doc": "key_concepts.key_concepts",
+    "title": "key_concepts.key_concepts",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/key_concepts/",
+    "relUrl": "/key_concepts/"
+  },"34": {
+    "doc": "requirements.learners",
+    "title": "6.2. For learners",
+    "content": "Learners can participate in an elaastic assignment without having an account on the platform. They then participate in the activity completely anonymously. Learners can create an account on the platform using the registration form. When a learner participates in an assignment by being authenticated, then the teacher in charge of the assignment has the nominative information about the learner. In the case of using Elaastic via an online course platform such as Moodle, when a learner starts an elaastic assignment for the first time, then an account is created in elaastic automatically with information from that learner’s Moodle account. In this configuration, the teacher can access to the nominative information about the participants of an assignment. ",
+    "url": "/elaastic-questions-server/en/requirements/for_learners#62-for-learners",
+    "relUrl": "/requirements/for_learners#62-for-learners"
+  },"35": {
+    "doc": "requirements.learners",
+    "title": "requirements.learners",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/requirements/for_learners",
+    "relUrl": "/requirements/for_learners"
+  },"36": {
+    "doc": "play_assignment.phase_1",
+    "title": "4.2. Phase 1",
+    "content": "During phase 1, each learner must answer the question that you asked by… . | …selecting the correct answer(s) | …providing a written explanation (if you chose this option during the sequence configuration) | …providing her confidence degree ranging from “Not confident at all” to “Totally confident” | . As a teacher, you can view all the answers anytime by refreshing the page. When all you learners answered the question, click on “End phase 1”. If you chose “Hybrid” or “Distance” as you execution contect, phase 2 will automatically follow for each learner without any need for you to intervene. You can then re-open phase 1 or start phase 2. Once you started phase 2, you can’t back to phase 1 anymore. To see how phase 2 is driven, go to chapter 4.3. ",
+    "url": "/elaastic-questions-server/en/play_assignment/phase_1/#42-phase-1",
+    "relUrl": "/play_assignment/phase_1/#42-phase-1"
+  },"37": {
+    "doc": "play_assignment.phase_1",
+    "title": "play_assignment.phase_1",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/phase_1/",
+    "relUrl": "/play_assignment/phase_1/"
+  },"38": {
+    "doc": "play_assignment.phase_2",
+    "title": "4.3. Phase 2",
+    "content": "During phase 2, each learner must evaluate one or more answers provided by his peers (in addition to the fake explanations you may have created when you created your question). To do so, they must… . | …rate each explanation they are shown on a scale from 1 (Strongly disgree) to 5 (Strongly agree). | …choose again the correct answer(s) (provided the question is open ended). | …provide her new confidence degree ranging from “Not confident at all” to “Totally confident” | . As a teacher, you can view all the answers and evaluations anytime by refreshing the page. When all your learners finished their evaluation phase, click on “Stop phase 2”. If you chose “Distance” as you execution contect, phase 3 will automatically follow for each learner without any need for you to intervene. You can then re-start or play phase 3 by clicking on “Publish results”. Once this is done, you can’t go back to phase 2. To see how phase 3 is driven, go to chapter 4.4. ",
+    "url": "/elaastic-questions-server/en/play_assignment/phase_2/#43-phase-2",
+    "relUrl": "/play_assignment/phase_2/#43-phase-2"
+  },"39": {
+    "doc": "play_assignment.phase_2",
+    "title": "play_assignment.phase_2",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/phase_2/",
+    "relUrl": "/play_assignment/phase_2/"
+  },"40": {
+    "doc": "play_assignment.phase_3",
+    "title": "4.4. Phase 3",
+    "content": "During phase 3, you and the learners will discuss about learners’ performance during phase 1 and 2. The results appear on learners’ screen but for them, the answers are anonymous. As a teacher, the results you see on your screen aren’t anonymous. But if you wish to share your screen with learners, you can click on “Hide the name of the students”. Once this is done, click on “Stop the sequence”. ",
+    "url": "/elaastic-questions-server/en/play_assignment/phase_3/#44-phase-3",
+    "relUrl": "/play_assignment/phase_3/#44-phase-3"
+  },"41": {
+    "doc": "play_assignment.phase_3",
+    "title": "play_assignment.phase_3",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/phase_3/",
+    "relUrl": "/play_assignment/phase_3/"
+  },"42": {
+    "doc": "play_assignment.play_assignment",
+    "title": "4. Play an assignment",
+    "content": "Playing an assignment allows you to ask all the questions of your subject to an audience. ",
+    "url": "/elaastic-questions-server/en/play_assignment/#4-play-an-assignment",
+    "relUrl": "/play_assignment/#4-play-an-assignment"
+  },"43": {
+    "doc": "play_assignment.play_assignment",
+    "title": "play_assignment.play_assignment",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/",
+    "relUrl": "/play_assignment/"
+  },"44": {
+    "doc": "play_assignment.player_perspective_summary",
+    "title": "4.8. Player perspective summary",
+    "content": "This chapter details the “Player” perspective as well as the way it works. You are on the page to play an assignment. From here, you can drive your sequence. | Summary of your subject. | Summary of the selected question. | Timeline to show the evolution of you sequence. | Section to drive the sequence. | Diagramm of the results (for choice questions). Each choice (shown on the x-axis) has two columns. The left on is for the first vote whereas the right on is for the second vote. | Written explanations of a few learners. | Number of learners who subscribed to your assignment. | Number of learners who provided an answer for phase 1. | Number of learners who finished the evaluation phase. | Number of learners who provded an answer for phase 2. | Button to show all learners explanation as well as their mean grade given by peers. | . By clicking on “Show all explanations”, a popup appears. It contains all the explanations of learners as well as the fake explanations you created. If it’s a choice question, these explanation a grouped by selected choice. For each answer, you can view the following informations: . | Content of the explanation. | Mean grade given. | Number of learners who provided a grade. | . ",
+    "url": "/elaastic-questions-server/en/play_assignment/player_perspective_summary/#48-player-perspective-summary",
+    "relUrl": "/play_assignment/player_perspective_summary/#48-player-perspective-summary"
+  },"45": {
+    "doc": "play_assignment.player_perspective_summary",
+    "title": "play_assignment.player_perspective_summary",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/player_perspective_summary/",
+    "relUrl": "/play_assignment/player_perspective_summary/"
+  },"46": {
+    "doc": "resources_creation.question_creation",
+    "title": "3.3. Question creation",
+    "content": "To create a question, you must be located on the management page of your subject. Click on “Add a question”. Fill the form to create a question. | Name your question (mandatory). | Add an attachement. | Type the statement (mandatory). If you’re creating a choice question, you must include the possible answers in the statement. Type them in the form of a numbered list. | Choose the type of question. | If you’re creating a choice question, you must decide whether it’s a multiple or exclusive choice question. | Define the number of items which is the number of possible choices. | Define the correct answer(s). | By displaying this section, you can define explanations that will blend with those written by learners during the confrontation phase. | . If it’s a choice question, by default, the expected explanation will be associated with the choices that you defined as the correct one. You can also define fake explanations for any choice. Once you’re done, click on the green button “Create and return to the subject”. You are automatically redirected on the page to edit you subject. The question you created is now displayed on the question tab of the subject management page . ",
+    "url": "/elaastic-questions-server/en/resources_creation/statement_creation#33-question-creation",
+    "relUrl": "/resources_creation/statement_creation#33-question-creation"
+  },"47": {
+    "doc": "resources_creation.question_creation",
+    "title": "resources_creation.question_creation",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/resources_creation/statement_creation",
+    "relUrl": "/resources_creation/statement_creation"
+  },"48": {
+    "doc": "key_concepts.questions",
+    "title": "2.3. Questions",
+    "content": "A subject consists of questions. The questions can be of different types: multiple choice, exclusive choice or open-ended questions. ",
+    "url": "/elaastic-questions-server/en/key_concepts/questions#23-questions",
+    "relUrl": "/key_concepts/questions#23-questions"
+  },"49": {
+    "doc": "key_concepts.questions",
+    "title": "key_concepts.questions",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/key_concepts/questions",
+    "relUrl": "/key_concepts/questions"
+  },"50": {
+    "doc": "play_assignment.recommended_responses",
+    "title": "4.7. Add as best responses",
+    "content": "You can add or remove “best” responses for a sequence. This button only appears if the response is correct. To do this, click on the star-shaped “Add to best responses” or “Remove from best responses” button next to the response. Once added as a best response, it will be explicitly marked with a “solid star”. When you add responses as “best”, they appear first in the list of responses. All responses listed as “best” will be displayed on the main page, even if their number is greater than 3. ",
+    "url": "/elaastic-questions-server/en/play_assignment/recommended_responses/#47-add-as-best-responses",
+    "relUrl": "/play_assignment/recommended_responses/#47-add-as-best-responses"
+  },"51": {
+    "doc": "play_assignment.recommended_responses",
+    "title": "play_assignment.recommended_responses",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/recommended_responses/",
+    "relUrl": "/play_assignment/recommended_responses/"
+  },"52": {
+    "doc": "requirements.requirements",
+    "title": "6. Access requirements",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/requirements/#6-access-requirements",
+    "relUrl": "/requirements/#6-access-requirements"
+  },"53": {
+    "doc": "requirements.requirements",
+    "title": "requirements.requirements",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/requirements/",
+    "relUrl": "/requirements/"
+  },"54": {
+    "doc": "resources_creation.resources_creation",
+    "title": "2. Resources creation",
+    "content": "To ask questions to an audience, you need to create and manage your resources. ",
+    "url": "/elaastic-questions-server/en/resources_creation/#2-resources-creation",
+    "relUrl": "/resources_creation/#2-resources-creation"
+  },"55": {
+    "doc": "resources_creation.resources_creation",
+    "title": "resources_creation.resources_creation",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/resources_creation/",
+    "relUrl": "/resources_creation/"
+  },"56": {
+    "doc": "create_moodle_activity.select_course",
+    "title": "7.2. Select the course",
+    "content": "Your Moodle dashboard appeard in a new tab. Click on the course where you want to create your activity. In this example, the chosen course is called “Geography”. You can also create a new course where you will add your activity. Note : Here, “Course” refers to the course as defined by Moodle. It must not be mistaken with the key concept “Course” detailed in chapter 2.1. ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/select_course#72-select-the-course",
+    "relUrl": "/create_moodle_activity/select_course#72-select-the-course"
+  },"57": {
+    "doc": "create_moodle_activity.select_course",
+    "title": "create_moodle_activity.select_course",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity/select_course",
+    "relUrl": "/create_moodle_activity/select_course"
+  },"58": {
+    "doc": "key_concepts.sequences",
+    "title": "2.5. Sequences",
+    "content": "A sequence is the progression of the learning activities done by learners regarding a question of an assignment. It is composed of 3 steps as described by the timeline below. When you play an assignment, learners will have to complete all the activites so that the sequence can end. ",
+    "url": "/elaastic-questions-server/en/key_concepts/sequence#25-sequences",
+    "relUrl": "/key_concepts/sequence#25-sequences"
+  },"59": {
+    "doc": "key_concepts.sequences",
+    "title": "key_concepts.sequences",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/key_concepts/sequence",
+    "relUrl": "/key_concepts/sequence"
+  },"60": {
+    "doc": "share_subject.share_subject",
+    "title": "5. Share a subject",
+    "content": "As a teacher, you can share you resources (subjects and questions) with other teachers. This can be done thanks to a link that you must give them. ",
+    "url": "/elaastic-questions-server/en/share_subject/#5-share-a-subject",
+    "relUrl": "/share_subject/#5-share-a-subject"
+  },"61": {
+    "doc": "share_subject.share_subject",
+    "title": "share_subject.share_subject",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/share_subject/",
+    "relUrl": "/share_subject/"
+  },"62": {
+    "doc": "play_assignment.start_sequence",
+    "title": "4.1. Play a sequence",
+    "content": "To start a sequence, you must play an assignment. To do so, click on the white arrow. You are then redirected to the perspective called “Player”. It allows you to drive a sequence. For a detailed description of all the components of this perspective, go to chapter 4.5. Click on the question for which you wish to play a sequence. Then, click on “Start sequence”. A popup appears, from here, you can configure the sequence before you start it. | Choose the execution context. It will determine how the phases will link up for learners. Une brief description of each of them appears below. | Choose whether learners must provide a written explanation or not. | Choose the number of explanations that each learner will see and be asked to grade during phase 2 of the sequence. | Choose the peer review method for the second phase. | Confirm. | . Phase 1 has started ! To know how to drive the phases of a sequence, go to chapter 4.2., 4.3. and 4.4. ",
+    "url": "/elaastic-questions-server/en/play_assignment/start_sequence/#41-play-a-sequence",
+    "relUrl": "/play_assignment/start_sequence/#41-play-a-sequence"
+  },"63": {
+    "doc": "play_assignment.start_sequence",
+    "title": "play_assignment.start_sequence",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/start_sequence/",
+    "relUrl": "/play_assignment/start_sequence/"
+  },"64": {
+    "doc": "resources_creation.subject_creation",
+    "title": "3.2. Subject creation",
+    "content": "To create a subject, you muste be located on the page to manage your subjects. To go there, click on the book icon on the left menu. You can also create a subject from the page to edit one of your courses. From any of these two pages, click on the green button “Create a subject” . Name the subject and choose the course you want it to be associated with. THen, click on create. Once this is done, you are automatically redirected on the page to manage the subject you just created. Since you’ve juste created your subject, it doesn’t contain any question yet. To create a question, go to chapter 3.3. of this tutorial. Once you subject contains questions, you can organise them with the buttons on the right. | Edit the question. | Copy the question. | Move the question up on the list. | Move the question down on the list. | Delete the question. | . Furthermore, your subject doesn’t contain any assignments. To create an assignment, go to chapter 3.4. of this tutorial. When your subject contains at least one assignment, you’ll find details of the assignments on this summary, and can take various actions to manage it and retrieve links. | Play the assignment. | Edit the assignment. | Delete the assignment. | Get the link to give to students to register to the assignment. | Get the link to use for Moodle / LTI integration. | . ",
+    "url": "/elaastic-questions-server/en/resources_creation/subject_creation#32-subject-creation",
+    "relUrl": "/resources_creation/subject_creation#32-subject-creation"
+  },"65": {
+    "doc": "resources_creation.subject_creation",
+    "title": "resources_creation.subject_creation",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/resources_creation/subject_creation",
+    "relUrl": "/resources_creation/subject_creation"
+  },"66": {
+    "doc": "key_concepts.subjects",
+    "title": "2.2. Subjects",
+    "content": "A subject is composed of a title and a list of questions. In the example below, the teacher has created 2 subjects in her/his course titled “Course example”. ",
+    "url": "/elaastic-questions-server/en/key_concepts/subjects#22-subjects",
+    "relUrl": "/key_concepts/subjects#22-subjects"
+  },"67": {
+    "doc": "key_concepts.subjects",
+    "title": "key_concepts.subjects",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/key_concepts/subjects",
+    "relUrl": "/key_concepts/subjects"
+  },"68": {
+    "doc": "play_assignment.subscribe",
+    "title": "4.2. Assign learners to an assignment",
+    "content": "To allow learners to participate to your assignment, they must subscribe to it. To do so, they must have a link that you will provide them. To get this link, click on the wifi icon on the left menu. A popup appears a shows you a link that you must provide to learners. By clicking on this link, learners will be redirected to the page to participate to the assignment and perform the various activites. Note : If you use Moodle, learners can subscribe to the assignment by clicking on the matching Moodle activity whose creation is explained in chapter 7. and 8. ",
+    "url": "/elaastic-questions-server/en/play_assignment/subscribe_learners/#42-assign-learners-to-an-assignment",
+    "relUrl": "/play_assignment/subscribe_learners/#42-assign-learners-to-an-assignment"
+  },"69": {
+    "doc": "play_assignment.subscribe",
+    "title": "play_assignment.subscribe",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/play_assignment/subscribe_learners/",
+    "relUrl": "/play_assignment/subscribe_learners/"
+  },"70": {
+    "doc": "key_concepts.summary",
+    "title": "2.7. Summary",
+    "content": "A subject is composed of questions. Subjects can be associated with a course. A course is just a way of grouping subjects into topics. An assignment is the instance of a subject for a given audience (a class or group of learners). Learners always respond to the questions of a subject by signing up for the assignment that concerns them. When an assignment is played, a sequence can be played for each sequence of this assignment. ",
+    "url": "/elaastic-questions-server/en/key_concepts/summary#27-summary",
+    "relUrl": "/key_concepts/summary#27-summary"
+  },"71": {
+    "doc": "key_concepts.summary",
+    "title": "key_concepts.summary",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/key_concepts/summary",
+    "relUrl": "/key_concepts/summary"
+  },"72": {
+    "doc": "requirements.teachers",
+    "title": "6.1. For teachers",
+    "content": "Teachers must have an account on the platform in order to use it. An account for a teacher can be created in two different ways: . | By completing the registration form. | By automatic account creation when an elaastic assignment is created for the first time from an online course platform such as Moodle. | . ",
+    "url": "/elaastic-questions-server/en/requirements/for_teachers#61-for-teachers",
+    "relUrl": "/requirements/for_teachers#61-for-teachers"
+  },"73": {
+    "doc": "requirements.teachers",
+    "title": "requirements.teachers",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/requirements/for_teachers",
+    "relUrl": "/requirements/for_teachers"
+  },"74": {
+    "doc": "create_moodle_activity_from_existing_assignment.use_lti_parameter",
+    "title": "8.2. Use LTI parameter",
+    "content": "From Moodle, create an Elaastic activity as seen in chapter 7. On the activity creation form, click on “Show more”. In the foloowing form, notice the field called “Personnalised parameters”. In this field, paste the text that you copied thanks to the method described in chapter 8.1. Click on “Save and go back to the course” . Finally, click on the activity to laucnh you assignment; . ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity_from_existing_assignment/use_lti_parameter#82-use-lti-parameter",
+    "relUrl": "/create_moodle_activity_from_existing_assignment/use_lti_parameter#82-use-lti-parameter"
+  },"75": {
+    "doc": "create_moodle_activity_from_existing_assignment.use_lti_parameter",
+    "title": "create_moodle_activity_from_existing_assignment.use_lti_parameter",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/create_moodle_activity_from_existing_assignment/use_lti_parameter",
+    "relUrl": "/create_moodle_activity_from_existing_assignment/use_lti_parameter"
+  },"76": {
+    "doc": "share_subject.view_shared_subject",
+    "title": "5.2. View a shared subject",
+    "content": "To view a shared subject, you can simply go to the link you’ve been given thourgh the method described in chapter 5.1. Once you went to the link, the subject appears and is read-only. You can see all the subjects that have been shaed with you by clicking on the black book icon. ",
+    "url": "/elaastic-questions-server/en/share_subject/view_shared_subject#52-view-a-shared-subject",
+    "relUrl": "/share_subject/view_shared_subject#52-view-a-shared-subject"
+  },"77": {
+    "doc": "share_subject.view_shared_subject",
+    "title": "share_subject.view_shared_subject",
+    "content": " ",
+    "url": "/elaastic-questions-server/en/share_subject/view_shared_subject",
+    "relUrl": "/share_subject/view_shared_subject"
+  },"78": {
+    "doc": "introduction.introduction",
+    "title": "1. Introduction",
+    "content": "This document is a tutorial on how to use the Elaastic platform. Elaastic is an online application that facilitates the implementation of formative assessment sequences during a face-to-face or distance learning course. An Elaastic sequence traditionally proceeds as follows: . | The teacher asks the students a question. | Each student responds to the question by providing a written justification and their confidence in the answer. | Students participate in a confrontation of point of views. | Students answer the question a second time, possibly modifying their initial answer. | A discussion between the teacher and the pupils concludes the sequence. | . ",
+    "url": "/elaastic-questions-server/en/overview/#1-introduction",
+    "relUrl": "/overview/#1-introduction"
+  },"79": {
+    "doc": "introduction.introduction",
+    "title": "introduction.introduction",
+    "content": "fr en . ",
+    "url": "/elaastic-questions-server/en/overview/",
+    "relUrl": "/overview/"
+  }
+}
