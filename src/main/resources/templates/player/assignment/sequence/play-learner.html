@@ -47,13 +47,13 @@
 
 <aside class="ob-start-sequence-2" id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
   <div th:if="${playerModel.assignmentOverviewModel.isRevisionMode}">
-    <div class="ui icon message">
+    <div class="blue ui icon message">
       <i class="lightbulb icon"></i>
       <i class="close icon"></i>
       <div class="content">
         <div class="header" th:text="#{assignment.overview.revisionAvailability}"></div>
           <a href="https://konsolidation.irit.fr" target="_blank">
-            <button class="ui compact right icon button green mt-1" style="margin-top: 1em">
+            <button class="ui compact right icon button blue mt-1" style="margin-top: 1em">
               <i class="right arrow icon"></i>
               <span th:text="#{assignment.practice}"></span>
             </button>
