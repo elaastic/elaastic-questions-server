@@ -46,6 +46,21 @@
 </div>
 
 <aside class="ob-start-sequence-2" id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
+  <div th:if="${playerModel.assignmentOverviewModel.isRevisionMode}">
+    <div class="ui icon message">
+      <i class="lightbulb icon"></i>
+      <i class="close icon"></i>
+      <div class="content">
+        <div class="header" th:text="#{assignment.overview.revisionAvailability}"></div>
+          <a href="https://konsolidation.irit.fr" target="_blank">
+            <button class="ui compact right icon button green mt-1" style="margin-top: 1em">
+              <i class="right arrow icon"></i>
+              <span th:text="#{assignment.practice}"></span>
+            </button>
+          </a>
+      </div>
+    </div>
+  </div>
   <div
     th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 </aside>
@@ -75,7 +90,7 @@
 
 
   </div>
-  
+
   <th:block th:replace="|${components}/_auto-reload.html| :: auto-reload(${playerModel.sequence.id})"></th:block>
 
 </section>
