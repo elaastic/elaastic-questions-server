@@ -51,7 +51,7 @@
       <i class="close icon"></i>
       <div class="content">
         <div class="header" th:text="#{assignment.study.availability}"></div>
-          <a href="https://konsolidation.irit.fr" target="_blank">
+          <a th:href="${@environment.getProperty('konsolidation.url')}" target="_blank">
             <button class="ui compact right icon button blue mt-1" style="margin-top: 1em">
               <i class="right arrow icon"></i>
               <span th:text="#{assignment.study.konsolidation}"></span>
