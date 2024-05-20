@@ -70,7 +70,7 @@ object AssignmentOverviewModelFactory {
             )
         },
         selectedSequenceId = selectedSequenceId,
-
+        isRevisionMode = assignment.revisionMode != RevisionMode.NotAtAll
     )
 
     private fun resolveIcons(

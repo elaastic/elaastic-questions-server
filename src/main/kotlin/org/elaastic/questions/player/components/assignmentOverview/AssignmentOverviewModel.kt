@@ -30,7 +30,8 @@ data class AssignmentOverviewModel(
         val assignmentId: Long,
         val sequences: List<SequenceInfo>,
         val selectedSequenceId: Long? = null,
-        val hideStatementContent: Boolean = false
+        val hideStatementContent: Boolean = false,
+        val isRevisionMode: Boolean = false
 ) {
 
     data class SequenceInfo(
