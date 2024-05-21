@@ -64,6 +64,7 @@ import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluati
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
+import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
 import org.springframework.beans.factory.annotation.Autowired
@@ -2800,13 +2801,20 @@ class TestingPlayerController(
         model.addAttribute(
             "evaluationModelList",
             draxoEvaluationList.mapIndexed() { i, draxoEvaluation ->
-                DraxoEvaluationModel(
-                    (i + 1).toString(),
-                    (i + 1),
-                    DraxoGrading.computeGrade(draxoEvaluation),
-                    draxoEvaluation,
-                    canReactOnPeerGrading = true,
-                    canHidePeerGrading = true
+                EvaluationModel(
+                    listOf(
+                        DraxoEvaluationModel(
+                            (i + 1).toString(),
+                            (i + 1),
+                            DraxoGrading.computeGrade(draxoEvaluation),
+                            draxoEvaluation,
+                            canReactOnPeerGrading = true,
+                            canHidePeerGrading = true
+                        )
+                    ),
+                    null,
+                    false,
+                    true
                 )
             }
         )
