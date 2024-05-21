@@ -1,3 +1,7 @@
+:root {
+    --border-color: #7A7A7A;
+}
+
 .review {
     background-color: white;
     border-radius: 10px;
