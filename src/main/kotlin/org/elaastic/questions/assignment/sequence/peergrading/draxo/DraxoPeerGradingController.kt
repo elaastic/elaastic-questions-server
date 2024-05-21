@@ -103,7 +103,8 @@ class DraxoPeerGradingController(
             draxoEvaluationModels,
             chatGptEvaluationModel,
             hideName ?: false,
-            canSeeChatGPTEvaluation = user == assignment.owner // Only the teacher can see the chatGPT evaluation
+            canSeeChatGPTEvaluation = user == assignment.owner || user == response.learner, // Only the teacher and the learner of the question can see the chatGPT evaluation
+            isTeacher = user == assignment.owner
         )
 
         model["user"] = user

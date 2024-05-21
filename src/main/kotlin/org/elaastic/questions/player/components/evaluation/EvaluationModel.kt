@@ -44,9 +44,15 @@ data class EvaluationModel(
     val hideName: Boolean = false,
     val canSeeChatGPTEvaluation: Boolean = false,
 ) {
-    init {
-        chatGptEvaluationModel?.let {
-            it.viewedByTeacher = canSeeChatGPTEvaluation
+    constructor(
+        draxoEvaluationModels: List<DraxoEvaluationModel>?,
+        chatGptEvaluationModel: ChatGptEvaluationModel?,
+        hideName: Boolean = false,
+        canSeeChatGPTEvaluation: Boolean = false,
+        isTeacher: Boolean = false
+    ) : this(draxoEvaluationModels, chatGptEvaluationModel, hideName, canSeeChatGPTEvaluation) {
+        this.chatGptEvaluationModel?.let {
+            it.viewedByTeacher = isTeacher
         }
     }
 }

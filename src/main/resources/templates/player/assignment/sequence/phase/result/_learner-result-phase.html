@@ -44,11 +44,7 @@
 
     <th:block th:if="${learnerResultPhaseViewModel.resultsArePublished}">
         <div th:replace="player/assignment/sequence/components/results/_results :: results(${learnerResultPhaseViewModel.sequenceResultsModel}, false)"></div>
-        <th:block togglz:active="'CHATGPT_EVALUATION'"
-                  th:if="${learnerResultPhaseViewModel.myChatGptEvaluationModel != null}">
-            <link rel="stylesheet" type="text/css" th:href="@{'/css/evaluation.css'}"/>
-            <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer.html :: chatGptEvaluation(${learnerResultPhaseViewModel.myChatGptEvaluationModel})"></div>
-        </th:block>
+        
         <div th:if="${learnerResultPhaseViewModel.myResultsModel}"
              th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults('my-results', ${learnerResultPhaseViewModel.myResultsModel})">
         </div>
