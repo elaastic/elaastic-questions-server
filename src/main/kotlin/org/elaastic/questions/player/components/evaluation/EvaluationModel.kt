@@ -24,15 +24,21 @@ import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluation
 /**
  * Evaluation model.
  *
- * This model is used to store the evaluation of a player's response.
- * It contains all the draxo peer grading under a list of [DraxoEvaluationModel] and the [ChatGptEvaluationModel] of an player's response
- * It'd use with the [DraxoPeerGradingController][org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingController].
- * @param draxoEvaluationModels List of [DraxoEvaluationModel] of the player's response
- * @param chatGptEvaluationModel [ChatGptEvaluationModel] of the player's response
+ * This model is used to store the evaluation of a player's response. It
+ * contains all the draxo peer grading under a list of
+ * [DraxoEvaluationModel] and the [ChatGptEvaluationModel] of an player's
+ * response It'd use with the
+ * [DraxoPeerGradingController][org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingController].
+ *
+ * @param draxoEvaluationModels List of [DraxoEvaluationModel] of the
+ *     player's response
+ * @param chatGptEvaluationModel [ChatGptEvaluationModel] of the player's
+ *     response
  * @param hideName Boolean to hide the name of the player's response
- * @param canSeeChatGPTEvaluation Boolean to see the [ChatGptEvaluationModel] of the player's response
+ * @param canSeeChatGPTEvaluation Boolean to see the
+ *     [ChatGptEvaluationModel] of the player's response
  */
-data class EvaluationModel (
+data class EvaluationModel(
     val draxoEvaluationModels: List<DraxoEvaluationModel>?,
     val chatGptEvaluationModel: ChatGptEvaluationModel?,
     val hideName: Boolean = false,
