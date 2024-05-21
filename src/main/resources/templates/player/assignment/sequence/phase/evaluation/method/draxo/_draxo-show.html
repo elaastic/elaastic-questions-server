@@ -23,45 +23,51 @@
 
     <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}"
          th:classappend="${draxoEvaluationModel.hiddenByTeacher || (draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)} ? 'hidden' : ''">
+
         <!--/* PeerGrading header */-->
-        <div class="review-header review-border">
-            <!--/* Reviewer */-->
-            <div class="reviewer">
+        <div class="review-header review-border" style="padding: 0 10px 0 0">
+            <div class="reviewer-icon human">
                 <i class="user icon"></i>
-                <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
-                <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
-                      th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
             </div>
-            <!--/* Score */-->
-            <div class="score" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
-                <span th:text="#{draxo.score} + ' :'">Score</span>
-                <div class="ui label">
-                    <span th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
-                    <span th:if="${draxoEvaluationModel.score != null}">/5</span>
+            <div class="info-header">
+                <!--/* Reviewer */-->
+                <div class="reviewer">
+                    <span th:text="#{draxo.reviewer} + ' :'">Reviewer :</span>
+                    <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
+                          th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
+                </div>
+                <!--/* Score */-->
+                <div class="score" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
+                    <span th:text="#{draxo.score} + ' :'">Score</span>
+                    <div class="ui label">
+                        <span th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
+                        <span th:if="${draxoEvaluationModel.score != null}">/5</span>
+                    </div>
+                </div>
+                <!--/* Action de masquage */-->
+                <div class="hide-peer-grading" th:if="${draxoEvaluationModel.canHidePeerGrading}">
+                    <a class="ui icon button"
+                       th:if="${!draxoEvaluationModel.hiddenByTeacher}"
+                       th:attr="data-tooltip=#{draxo.action.hideEvaluation}"
+                       data-tooltip="Hide this evaluation"
+                       data-position="top center"
+                       th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId})|"
+                    >
+                        <i class="eye icon"></i>
+                    </a>
+                    <a class="ui icon button hidden"
+                       th:if="${draxoEvaluationModel.hiddenByTeacher}"
+                       th:attr="data-tooltip=#{draxo.action.showEvaluation}"
+                       data-tooltip="Show this evaluation"
+                       data-position="top center"
+                       th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId}, false)|"
+                    >
+                        <i class="hide icon"></i>
+                    </a>
                 </div>
             </div>
-            <!--/* Action de masquage */-->
-            <div class="hide-peer-grading" th:if="${draxoEvaluationModel.canHidePeerGrading}">
-                <a class="ui icon button"
-                   th:if="${!draxoEvaluationModel.hiddenByTeacher}"
-                   th:attr="data-tooltip=#{draxo.action.hideEvaluation}"
-                   data-tooltip="Hide this evaluation"
-                   data-position="top center"
-                   th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId})|"
-                >
-                    <i class="eye icon"></i>
-                </a>
-                <a class="ui icon button hidden"
-                   th:if="${draxoEvaluationModel.hiddenByTeacher}"
-                   th:attr="data-tooltip=#{draxo.action.showEvaluation}"
-                   data-tooltip="Show this evaluation"
-                   data-position="top center"
-                   th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId}, false)|"
-                >
-                    <i class="hide icon"></i>
-                </a>
-            </div>
         </div>
+
         <!--/*
         Hidden message when the teacher hides it.
         It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it.
@@ -75,12 +81,14 @@
                 <span id="hide" style="display: none;">Cacher le contenu masqu&eacute;</span>
             </div>
         </div>
+
         <!--/* Grid Draxo */-->
         <div th:if="${!draxoEvaluationModel.hiddenByTeacher && !(draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}"
              class="draxo-content">
             <th:block
                     th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-content.html :: draxoPeerGradingContent(${draxoEvaluationModel})"></th:block>
         </div>
+
         <!--/*
         Area to put the DRAXO grid if the teacher wants to see the moderate content.
         It is visible only if the evaluation is hidden

@@ -20,18 +20,22 @@
      th:fragment="chatGptEvaluation(chatGptEvaluationModel)"
      class="review" id="chat-gpt-evaluation-accordion" style="padding-bottom: 0">
 
-    <div class="review-header review-border">
-        <div class="reviewer">
+    <div class="review-header review-border" style="padding: 0 10px 0 0">
+        <div class="reviewer-icon robot">
             <i class="laptop icon"></i>
-            <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
         </div>
-        <div class="score" th:if="${chatGptEvaluationModel.status == 'DONE'}">
-            <span th:text=" #{draxo.score} + ' :'">Score :</span>
-            <div class="ui label"
-                 th:if="${chatGptEvaluationModel.grade}"
-                 th:text="${chatGptEvaluationModel.grade} + '/5'"
-                 data-inverted="" th:data-tooltip="#{player.sequence.chatGptEvaluation.grade.tooltip}"
-                 data-position="top right">-/5
+        <div class="info-header">
+            <div class="reviewer">
+                <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
+            </div>
+            <div class="score" th:if="${chatGptEvaluationModel.status == 'DONE'}">
+                <span th:text=" #{draxo.score} + ' :'">Score :</span>
+                <div class="ui label"
+                     th:if="${chatGptEvaluationModel.grade}"
+                     th:text="${chatGptEvaluationModel.grade} + '/5'"
+                     data-inverted="" th:data-tooltip="#{player.sequence.chatGptEvaluation.grade.tooltip}"
+                     data-position="top right">-/5
+                </div>
             </div>
         </div>
     </div>

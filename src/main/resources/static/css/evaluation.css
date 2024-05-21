@@ -1,5 +1,8 @@
 :root {
     --border-color: #7A7A7A;
+
+    --robot-color: #95A5A6;
+    --human-color: #00859F;
 }
 
 .review {
@@ -15,7 +18,6 @@
 .review-header {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
 }
 
@@ -26,6 +28,31 @@
 
 .review-border:first-child {
     border-top-width: 0;
+}
+
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 5px 0;
+}
+
+.reviewer-icon {
+    padding: 10px 10px 10px 14px;
+    border-top-left-radius: 9px; /* 10px - 1px || The 10px came from .review*/
+    margin-right: 10px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+}
+
+.reviewer-icon.robot {
+    background-color: var(--robot-color);
+}
+
+.reviewer-icon.human {
+    background-color: var(--human-color);
 }
 
 /*////////////////*/
