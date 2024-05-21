@@ -53,7 +53,7 @@
 
     <!--/* All the DRAXO evaluations for the response */-->
     <!-- Link to the css file for the custom DRAXO grid -->
-    <link rel="stylesheet" type="text/css" th:href="@{'/css/draxo-show.css'}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{'/css/evaluation.css'}"/>
     <th:block th:each="model : ${evaluationModel.draxoEvaluationModels}">
         <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model},${evaluationModel.hideName})"></div>
     </th:block>
