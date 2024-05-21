@@ -1,0 +1,134 @@
+
+:root {
+    --border-color: #7A7A7A;
+    --default-color: #757575;
+    --default-bg-color: #F2F2F2;
+}
+
+.DRAXO-grid {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.custom-step {
+    font-size: 1em;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex: 1 0 auto;
+    flex-wrap: wrap;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0;
+    padding: 1em 0 1em 0;
+    height: 3.5em;
+
+    /* Par défaut un segment est désactivé*/
+    background-color: var(--default-bg-color);
+    border: 1px solid #D9D9D9;
+    color: var(--default-color);
+}
+
+.custom-step::after {
+    position: absolute;
+    z-index: 2;
+    content: '';
+    top: 50.5%;
+    right: -0.7px;
+    background-color: inherit;
+    width: 2.5em;
+    height: 2.5em;
+
+    /* On ne garde que les bordure haute et droite */
+    border-width: 0 1px 1px 0;
+    border-style: solid;
+    border-color: inherit;
+    border-radius: 1px;
+
+    transform: translateY(-50%) translateX(50%) rotate(-45deg);
+}
+
+.custom-step:last-child::after {
+    display: none;
+}
+
+.custom-step:first-child {
+    border-radius: .28571429rem 0 0 .28571429rem;
+}
+
+.custom-step:last-child {
+    border-radius: 0 .28571429rem .28571429rem 0;
+}
+
+.custom-step:not(:first-child) {
+    border-left-width: 0 !important;
+}
+
+.custom-step:not(:last-child) {
+    border-right-width: 0 !important;
+}
+
+.custom-step.positive {
+    background-color: #99DBBB;
+    border: 1px solid var(--border-color);
+    color: #01562d;
+}
+
+.custom-step.negative {
+    background-color: #FCB5D0;
+    border: 1px solid var(--border-color);
+    color: #802345;
+}
+
+.custom-step.unknown {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    color: black;
+}
+
+.custom-step.negative, .custom-step.unknown {
+    font-weight: bold;
+}
+
+.custom-step .icon {
+    height: 100%;
+    font-size: 1.5em;
+}
+
+.custom-step > .custom-step-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    z-index: 3;
+
+    font-size: 1rem;
+}
+
+.custom-step:not(:first-child) > .custom-step-content {
+    margin-left: 1.1em;
+}
+
+.capital-letter {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .custom-step > .custom-step-content > :not(.icon, .capital-letter) {
+        display: none;
+    }
+
+    .capital-letter {
+        display: block;
+    }
+
+    .custom-step::after {
+        display: none;
+    }
+}
