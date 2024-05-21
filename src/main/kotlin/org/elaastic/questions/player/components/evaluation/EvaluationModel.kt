@@ -38,4 +38,9 @@ data class EvaluationModel (
     val hideName: Boolean = false,
     val canSeeChatGPTEvaluation: Boolean = false,
 ) {
+    init {
+        chatGptEvaluationModel?.let {
+            it.viewedByTeacher = canSeeChatGPTEvaluation
+        }
+    }
 }

@@ -13,5 +13,6 @@ data class ChatGptEvaluationModel(
     val sequenceId: Long,
     val utilityGrade: UtilityGrade? = null,
     val utilityGradeValues: Array<UtilityGrade> = UtilityGrade.values(),
-    val reportValues: Array<ReportReason> = ReportReason.values()
+    val reportValues: Array<ReportReason> = ReportReason.values(),
+    var viewedByTeacher: Boolean = false,
 )
