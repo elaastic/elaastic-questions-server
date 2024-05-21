@@ -19,30 +19,7 @@
      th:remove="tag"
      xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-
-    <!--/* ChatGPT evaluation of the response */-->
-    <th:block togglz:active="'CHATGPT_EVALUATION'"
-              th:with="chatGptEvaluationModel=${evaluationModel.chatGptEvaluationModel}"
-              th:if="${evaluationModel.chatGptEvaluationModel != null && evaluationModel.canSeeChatGPTEvaluation}">
-
-        <div class="ui accordion segment">
-            <div class="ui title header" style="padding: 10px 0 8px 5px; display: flex; align-items: center;">
-                <i class="dropdown icon"></i>
-                <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
-
-                <i class="ban icon small" th:if="${chatGptEvaluationModel.status != 'DONE'}"></i>
-                <i class="check circle outline icon small" th:if="${chatGptEvaluationModel.status == 'DONE'}"></i>
-            </div>
-
-            <div class="ui basic padded large text segment content" style="padding-top: 0">
-                <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-content.html :: chatGptEvaluationContent(${chatGptEvaluationModel})"></div>
-
-                <div th:if="${chatGptEvaluationModel.status != 'DONE'}">
-                    Pas d'&eacute;valuation g&eacute;n&eacute;r&eacute;e
-                </div>
-            </div>
-        </div>
-    </th:block>
+    <link rel="stylesheet" type="text/css" th:href="@{'/css/evaluation.css'}"/>
 
     <!--/* Link to the online documentation of the DRAXO evaluation */-->
     <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url')}">
@@ -54,9 +31,16 @@
     <!--/* All the DRAXO evaluations for the response */-->
     <!-- Link to the css file for the custom DRAXO grid -->
     <link rel="stylesheet" th:href="@{'/css/draxo/draxo-grid.css'}">
-    <link rel="stylesheet" type="text/css" th:href="@{'/css/evaluation.css'}"/>
     <th:block th:each="model : ${evaluationModel.draxoEvaluationModels}">
         <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model},${evaluationModel.hideName})"></div>
     </th:block>
 
+    <!--/* ChatGPT evaluation of the response. Its only visible to a teacher */-->
+    <th:block togglz:active="'CHATGPT_EVALUATION'"
+              th:with="chatGptEvaluationModel=${evaluationModel.chatGptEvaluationModel}"
+              th:if="${evaluationModel.chatGptEvaluationModel != null && evaluationModel.canSeeChatGPTEvaluation}">
+
+        <link rel="stylesheet" type="text/css" th:href="@{'/css/evaluation.css'}"/>
+        <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
+    </th:block>
 </div>

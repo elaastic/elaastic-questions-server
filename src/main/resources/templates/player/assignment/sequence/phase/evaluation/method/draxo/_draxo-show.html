@@ -27,6 +27,7 @@
         <div class="review-header review-border">
             <!--/* Reviewer */-->
             <div class="reviewer">
+                <i class="user icon"></i>
                 <span th:text="#{draxo.reviewer} + ' :'">Reviewer</span>
                 <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
                       th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
@@ -34,7 +35,10 @@
             <!--/* Score */-->
             <div class="score" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
                 <span th:text="#{draxo.score} + ' :'">Score</span>
-                <span class="ui label" th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
+                <div class="ui label">
+                    <span th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
+                    <span th:if="${draxoEvaluationModel.score != null}">/5</span>
+                </div>
             </div>
             <!--/* Action de masquage */-->
             <div class="hide-peer-grading" th:if="${draxoEvaluationModel.canHidePeerGrading}">

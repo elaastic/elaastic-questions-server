@@ -17,18 +17,8 @@
   -->
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      th:fragment="chatGptEvaluationContent(chatGptEvaluationModel)">
-    <table class="ui celled table" style="background-color: #fafafb" th:if="${chatGptEvaluationModel.status == 'DONE'}">
-        <tbody>
-        <tr>
-            <td th:if="${chatGptEvaluationModel.grade}"
-                th:text="${chatGptEvaluationModel.grade} + '/5'"
-                style="background-color: #f5f5f6"
-                data-inverted="" th:data-tooltip="#{player.sequence.chatGptEvaluation.grade.tooltip}"
-                data-position="top left">-/5
-            </td>
-            <td th:text="${chatGptEvaluationModel.annotation}" style="background-color: #fafafb"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="" style="background-color: #fafafb" th:if="${chatGptEvaluationModel.status == 'DONE'}">
+            <div th:text="${chatGptEvaluationModel.annotation}" style="background-color: #fafafb"></div>
+    </div>
 
 </div>
