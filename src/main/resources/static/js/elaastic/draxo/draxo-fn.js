@@ -31,47 +31,49 @@ var elaastic = elaastic || {};
 
         loadReviews(event, responseId) {
             event.preventDefault()
-            console.log('loadReviews')
 
             let elmBtnLoadReviews = event.target
             let target = findElmReviewsContainer(
                 findElmExplanationContainer(elmBtnLoadReviews)
             )
 
-            // Redefine the click event to toggle the reviews
-            elmBtnLoadReviews.removeEventListener('click', event => elaastic.draxo.loadReviews(event, responseId))
-            $(elmBtnLoadReviews).removeAttr('onclick')
-            $(elmBtnLoadReviews).on('click', function (event) {
-                event.preventDefault()
-                $(target).toggle()
-            });
-
-
-            $(target).html(buildHtmlLoader())
-
-            let data = {}
-            if (new URLSearchParams(location.search).get('hideName')) {
-                data.hideName = true
-            }
-
-            $.ajax({
-                url: baseUrl + '/' + responseId,
-                method: 'GET',
-                data,
-                success: function (data) {
-                    const targetElm = $(target)
-                    const availableWidth = targetElm.width()
-
-                    targetElm.html(data)
-                    if (availableWidth < 900) {
-                        $('.ui.mini.steps').addClass('vertical')
-                    }
-                },
-                error: function (error) {
-                    let errorMessage = error.responseJSON ? error.responseJSON.error : error.responseText
-                    $(target).html(buildHtmlError(errorMessage))
+            if ($(target).html().length > 0) {
+                // The reviews are already loaded
+                if ($(target).is(':visible')) {
+                    // The reviews are visible
+                    $(target).slideUp();
+                } else {
+                    // The reviews are hidden
+                    $(target).slideDown();
                 }
-            })
+            } else {
+                // The reviews are not loaded
+                $(target).html(buildHtmlLoader())
+
+                let data = {}
+                if (new URLSearchParams(location.search).get('hideName')) {
+                    data.hideName = true
+                }
+
+                $.ajax({
+                    url: baseUrl + '/' + responseId,
+                    method: 'GET',
+                    data,
+                    success: function (data) {
+                        const targetElm = $(target)
+                        const availableWidth = targetElm.width()
+
+                        targetElm.html(data)
+                        if (availableWidth < 900) {
+                            $('.ui.mini.steps').addClass('vertical')
+                        }
+                    },
+                    error: function (error) {
+                        let errorMessage = error.responseJSON ? error.responseJSON.error : error.responseText
+                        $(target).html(buildHtmlError(errorMessage))
+                    }
+                })
+            }
         }
     }
 
