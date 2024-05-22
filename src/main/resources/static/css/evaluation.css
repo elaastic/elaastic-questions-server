@@ -1,8 +1,8 @@
 :root {
     --border-color: #7A7A7A;
 
-    --robot-color: #95A5A6;
-    --human-color: #00859F;
+    --robot-color: #95A5A67D;
+    --human-color: #00859F7D;
 }
 
 .review {
