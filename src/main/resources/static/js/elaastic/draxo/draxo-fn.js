@@ -22,65 +22,66 @@
 var elaastic = elaastic || {};
 
 (function () {
-  let baseUrl = ''
+    let baseUrl = ''
 
-  elaastic.draxo = {
-    initialize (url) {
-      baseUrl = url
-    },
-
-    loadReviews (event, responseId) {
-      event.preventDefault()
-
-      let elmBtnLoadReviews = event.target
-      let target = findElmReviewsContainer(
-        findElmExplanationContainer(elmBtnLoadReviews)
-      )
-
-      $(target).html(buildHtmlLoader())
-
-      let data = {}
-      if (new URLSearchParams(location.search).get('hideName')) {
-        data.hideName = true
-      }
-
-      $.ajax({
-        url: baseUrl + '/' + responseId,
-        method: 'GET',
-        data,
-        success: function (data) {
-          const targetElm = $(target)
-          const availableWidth = targetElm.width()
-
-          targetElm.html(data)
-          if (availableWidth < 900) {
-            $('.ui.mini.steps').addClass('vertical')
-          }
+    elaastic.draxo = {
+        initialize(url) {
+            baseUrl = url
         },
-        error: function (error) {
-          let errorMessage = error.responseJSON ? error.responseJSON.error : error.responseText
-          $(target).html(buildHtmlError(errorMessage))
+
+        loadReviews(event, responseId) {
+            event.preventDefault()
+            console.log('loadReviews')
+
+            let elmBtnLoadReviews = event.target
+            let target = findElmReviewsContainer(
+                findElmExplanationContainer(elmBtnLoadReviews)
+            )
+
+            $(target).html(buildHtmlLoader())
+
+            let data = {}
+            if (new URLSearchParams(location.search).get('hideName')) {
+                data.hideName = true
+            }
+
+            $.ajax({
+                url: baseUrl + '/' + responseId,
+                method: 'GET',
+                data,
+                success: function (data) {
+                    const targetElm = $(target)
+                    const availableWidth = targetElm.width()
+
+                    targetElm.html(data)
+                    if (availableWidth < 900) {
+                        $('.ui.mini.steps').addClass('vertical')
+                    }
+                },
+                error: function (error) {
+                    let errorMessage = error.responseJSON ? error.responseJSON.error : error.responseText
+                    $(target).html(buildHtmlError(errorMessage))
+                }
+            })
         }
-      })
     }
-  }
 
-  function findElmExplanationContainer (elmBtnLoadReviews) {
-    return elmBtnLoadReviews.closest('.explanation')
-  }
+    function findElmExplanationContainer(elmBtnLoadReviews) {
+        return elmBtnLoadReviews.closest('.explanation')
+    }
 
-  function findElmReviewsContainer (elmExplanationContainer) {
-    return elmExplanationContainer.querySelector('.reviews-container')
-  }
+    function findElmReviewsContainer(elmExplanationContainer) {
+        return elmExplanationContainer.querySelector('.reviews-container')
+    }
 
-  function buildHtmlLoader () {
-    return '<div class="ui active centered inline loader"></div>'
-  }
+    function buildHtmlLoader() {
+        return '<div class="ui active centered inline loader"></div>'
+    }
 
-  function buildHtmlError (errorMessage) {
-    return '<div class="ui negative message">\n' +
-      '  <p>' + errorMessage +
-      '</p></div>'
-  }
+    function buildHtmlError(errorMessage) {
+        return '<div class="ui negative message">\n' +
+            '  <p>' + errorMessage +
+            '</p></div>'
+    }
 })()
 
