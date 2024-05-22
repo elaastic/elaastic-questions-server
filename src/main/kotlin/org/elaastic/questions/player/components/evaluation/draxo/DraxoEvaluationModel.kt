@@ -96,4 +96,16 @@ data class DraxoEvaluationModel(
         val optionIdSelected: OptionId? = this.draxoEvaluation[currentCriteria]
         return !this.hiddenByTeacher && !this.isReported() && (optionIdSelected != OptionId.DONT_KNOW && optionIdSelected != OptionId.NO_OPINION)
     }
+
+    /**
+     * @return the score in a printable format
+     */
+    fun prettyScore(): String {
+        val integerPart = score?.toInt()
+        if (integerPart?.let { BigDecimal(it).compareTo(score) } == 0) { // if the score is an integer
+            return integerPart.toString()
+        } else { // if the score is a decimal
+            return score?.toString() ?: "-"
+        }
+    }
 }

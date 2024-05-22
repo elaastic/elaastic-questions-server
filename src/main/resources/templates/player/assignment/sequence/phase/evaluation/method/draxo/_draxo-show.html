@@ -40,7 +40,7 @@
                 <div class="score" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
                     <span th:text="#{draxo.score} + ' :'">Score</span>
                     <div class="ui label">
-                        <span th:text="${draxoEvaluationModel.score ?: '-'}">2.5</span>
+                        <span th:text="${draxoEvaluationModel.prettyScore()}">2.5</span>
                         <span th:if="${draxoEvaluationModel.score != null}">/5</span>
                     </div>
                 </div>
