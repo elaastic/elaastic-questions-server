@@ -327,5 +327,81 @@ class DraxoEvaluationModelTest(
         }
     }
 
+    @Test
+    fun `prettyScore with a score of 0 should return -`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a score of 0") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(
+                    Criteria.D,
+                    OptionId.NO,
+                    "explanation"
+                ), // The score is null
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the score should be 0") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                1,
+                draxoPeerGrading,
+                false
+            )
+            assertNull(draxoEvaluationModel.score)
+            assertEquals("-", draxoEvaluationModel.prettyScore())
+        }
+    }
+
+    @Test
+    fun `prettyScore with a score of 1 should return 1`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a score of 1") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.NO, "explanation"), // The score is 1
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the score should be 1") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                1,
+                draxoPeerGrading,
+                false
+            )
+            assertEquals(BigDecimal(1), draxoEvaluationModel.score)
+            assertEquals("1", draxoEvaluationModel.prettyScore())
+        }
+    }
+
+    @Test
+    fun `prettyScore with a score of 5,0 should return 5`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a score of 1") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.YES)
+                    .addEvaluation(Criteria.O, OptionId.NO),
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the score should be 1") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                1,
+                draxoPeerGrading,
+                false
+            )
+            assertEquals("5", draxoEvaluationModel.prettyScore())
+        }
+    }
+
 
 }
