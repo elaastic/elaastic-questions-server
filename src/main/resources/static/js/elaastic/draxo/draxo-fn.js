@@ -38,6 +38,15 @@ var elaastic = elaastic || {};
                 findElmExplanationContainer(elmBtnLoadReviews)
             )
 
+            // Redefine the click event to toggle the reviews
+            elmBtnLoadReviews.removeEventListener('click', event => elaastic.draxo.loadReviews(event, responseId))
+            $(elmBtnLoadReviews).removeAttr('onclick')
+            $(elmBtnLoadReviews).on('click', function (event) {
+                event.preventDefault()
+                $(target).toggle()
+            });
+
+
             $(target).html(buildHtmlLoader())
 
             let data = {}
