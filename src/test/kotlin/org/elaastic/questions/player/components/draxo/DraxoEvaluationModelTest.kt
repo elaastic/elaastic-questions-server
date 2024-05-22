@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
 import javax.persistence.EntityManager
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -140,7 +141,10 @@ class DraxoEvaluationModelTest(
                 response = response,
                 draxoEvaluation = DraxoEvaluation()
                     .addEvaluation(Criteria.D, OptionId.YES)
-                    .addEvaluation(Criteria.R, OptionId.DONT_KNOW), // You can't react to a peer grading with a DONT_KNOW OptionId selected
+                    .addEvaluation(
+                        Criteria.R,
+                        OptionId.DONT_KNOW
+                    ), // You can't react to a peer grading with a DONT_KNOW OptionId selected
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should not be able to be reacted") { draxoPeerGrading ->
@@ -171,7 +175,10 @@ class DraxoEvaluationModelTest(
                 draxoEvaluation = DraxoEvaluation()
                     .addEvaluation(Criteria.D, OptionId.YES)
                     .addEvaluation(Criteria.R, OptionId.YES)
-                    .addEvaluation(Criteria.A, OptionId.NO_OPINION), // You can't react to a peer grading with a NO_OPINION OptionId selected
+                    .addEvaluation(
+                        Criteria.A,
+                        OptionId.NO_OPINION
+                    ), // You can't react to a peer grading with a NO_OPINION OptionId selected
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should not be able to be reacted") { draxoPeerGrading ->
@@ -230,7 +237,8 @@ class DraxoEvaluationModelTest(
                 draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
                 lastSequencePeerGrading = false,
             )
-            draxoPeerGrading.reportReasons = "reportReasons" // The student has reported this peer grading, so a student can't react to it
+            draxoPeerGrading.reportReasons =
+                "reportReasons" // The student has reported this peer grading, so a student can't react to it
             DraxoEvaluationModel(
                 graderName = "graderName",
                 graderNum = 1,
@@ -286,7 +294,7 @@ class DraxoEvaluationModelTest(
                 grader = grader,
                 response = response,
                 draxoEvaluation = DraxoEvaluation()
-                    .addEvaluation(Criteria.D, OptionId.NO,"explanation"),
+                    .addEvaluation(Criteria.D, OptionId.NO, "explanation"),
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should be able to be reacted") { draxoPeerGrading ->
@@ -311,7 +319,7 @@ class DraxoEvaluationModelTest(
                 grader = grader,
                 response = response,
                 draxoEvaluation = DraxoEvaluation()
-                    .addEvaluation(Criteria.D, OptionId.NO,"explanation"),
+                    .addEvaluation(Criteria.D, OptionId.NO, "explanation"),
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should be able to be reacted") { draxoPeerGrading ->
