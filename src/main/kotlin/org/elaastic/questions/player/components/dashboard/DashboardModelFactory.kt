@@ -27,10 +27,25 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.elaastic.questions.player.components.steps.StepsModelFactory
+import org.elaastic.questions.test.interpreter.command.Phase
 import org.springframework.stereotype.Service
 
 @Service
 object DashboardModelFactory {
+
+    private fun isResponsePhaseActive(learnerStepsModel: StepsModel): Boolean
+        = learnerStepsModel.responseSubmissionState == StepsModel.PhaseState.ACTIVE
+
+    private fun isEvaluationPhaseActive(learnerStepsModel: StepsModel): Boolean
+        = learnerStepsModel.evaluationState == StepsModel.PhaseState.ACTIVE
+
+    private fun isResponsePhasePlayed(learnerStepsModel: StepsModel): Boolean
+        = this.isResponsePhaseActive(learnerStepsModel)
+        || learnerStepsModel.responseSubmissionState == StepsModel.PhaseState.COMPLETED
+
+    private fun isEvaluationPhasePlayed(learnerStepsModel: StepsModel): Boolean
+        = this.isEvaluationPhaseActive(learnerStepsModel)
+        || learnerStepsModel.evaluationState == StepsModel.PhaseState.COMPLETED
 
     fun build(sequence: Sequence,
               previousSequence: Sequence?,
@@ -39,42 +54,76 @@ object DashboardModelFactory {
               responses: List<Response>,
               openedPane: String): DashboardModel {
 
-        val attendeesResponses: Map<Long, List<Response>> = responses.groupBy { it.learner.id!! }
+        val attendeesResponses: Map<Long, Pair<Response?, Response?>> = responses
+            .groupBy { it.learner.id!! }
+            .mapValues {
+                val firstAttemptResponse = it.value.find { response ->
+                    response.attempt == 1
+                    && response.interaction.interactionType === InteractionType.ResponseSubmission
+                }
 
-        val responsePhaseAttendees: List<LearnerAssignment> = attendees.filter {
-            val learnerStepsModel: StepsModel
-                = StepsModelFactory.buildForLearner(sequence, sequence.activeInteraction)
+                val secondAttemptResponse = it.value.find { response ->
+                    response.attempt == 2
+                    && response.interaction.interactionType === InteractionType.ResponseSubmission
+                }
 
-            val submittedResponsesByLearner: Int = attendeesResponses[it.learner.id]?.count { response ->
-                response.interaction.interactionType == InteractionType.ResponseSubmission
-            } ?: 0
+                Pair(firstAttemptResponse, secondAttemptResponse)
+            }
 
-            submittedResponsesByLearner == 0
-                || (submittedResponsesByLearner == 1
-                && learnerStepsModel.evaluationState == StepsModel.PhaseState.DISABLED)   //  ==> phase 1
-        }
+        val learnerStepsModel: StepsModel
+            = StepsModelFactory.buildForLearner(sequence, sequence.activeInteraction)
 
-        val evaluationPhaseAttendees: List<LearnerAssignment> = attendees.filter {
-            val learnerStepsModel: StepsModel
-                = StepsModelFactory.buildForLearner(sequence, sequence.activeInteraction)
+        val responsePhaseAttendees: Pair<List<LearnerAssignment>, List<LearnerAssignment>>
+            = attendees
+                .filter {
+                    val submittedResponsesByLearner: Pair<Response?, Response?>?
+                        = attendeesResponses[it.learner.id]
 
-            val submittedResponseByLearner: Int = attendeesResponses[it.learner.id]?.count { response ->
-                response.interaction.interactionType == InteractionType.ResponseSubmission
-            } ?: 0
+                    submittedResponsesByLearner?.first === null
+                    || !this.isEvaluationPhasePlayed(learnerStepsModel)   //  ==> phase 1
+                }
+                .partition {
+                    // FIRST LIST = IN COURSE
+                    // SECOND LIST = FINISHED
+                    attendeesResponses[it.learner.id]?.first === null
+                }
 
-            submittedResponseByLearner >= 1
-                && learnerStepsModel.evaluationState != StepsModel.PhaseState.DISABLED    //  ==> phase 2
-        }
+        val responsePhaseAttendeesCount: Int
+            = responsePhaseAttendees.first.size + responsePhaseAttendees.second.size
+
+        val evaluationPhaseAttendees: Pair<List<LearnerAssignment>, List<LearnerAssignment>>
+            = attendees
+                .filter {
+                    val submittedResponseByLearner: Pair<Response?, Response?>?
+                        = attendeesResponses[it.learner.id]
+
+                    submittedResponseByLearner?.first !== null
+                    && this.isEvaluationPhasePlayed(learnerStepsModel)    //  ==> phase 2
+                }
+                .partition {
+                    // FIRST LIST = IN COURSE
+                    // SECOND LIST = FINISHED
+                    attendeesResponses[it.learner.id]?.first !== null
+                }
+
+        val evaluationPhaseAttendeesCount: Int
+            = evaluationPhaseAttendees.first.size + evaluationPhaseAttendees.second.size
 
         return DashboardModel(sequence,
                               attendees,
                               attendees.size,
                               attendeesResponses,
                               responsePhaseAttendees,
+                              responsePhaseAttendeesCount,
                               evaluationPhaseAttendees,
+                              evaluationPhaseAttendeesCount,
                               openedPane,
                               previousSequence?.id,
-                              nextSequence?.id)
+                              nextSequence?.id,
+                              this.isResponsePhasePlayed(learnerStepsModel),
+                              this.isEvaluationPhasePlayed(learnerStepsModel),
+                              this.isResponsePhaseActive(learnerStepsModel),
+                              this.isEvaluationPhaseActive(learnerStepsModel))
     }
 
 }

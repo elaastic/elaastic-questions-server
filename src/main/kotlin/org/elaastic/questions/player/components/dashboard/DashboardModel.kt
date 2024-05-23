@@ -23,15 +23,22 @@ package org.elaastic.questions.player.components.dashboard
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.test.interpreter.command.Phase
 
 class DashboardModel (
     var sequence: Sequence,
     var attendees: List<LearnerAssignment>,
     var attendeesCount: Int,
-    var attendeesResponses: Map<Long, List<Response>>,
-    var responsePhaseAttendees: List<LearnerAssignment>,
-    var evaluationPhaseAttendees: List<LearnerAssignment>,
+    var attendeesResponses: Map<Long, Pair<Response?, Response?>>,
+    var responsePhaseAttendees: Pair<List<LearnerAssignment>, List<LearnerAssignment>>,
+    var responsePhaseAttendeesCount: Int,
+    var evaluationPhaseAttendees: Pair<List<LearnerAssignment>, List<LearnerAssignment>>,
+    var evaluationPhaseAttendeesCount: Int,
     var openedPane: String,
     var previousSequence: Long?,
-    var nextSequence: Long?
+    var nextSequence: Long?,
+    var isResponsePhasePlayed: Boolean,
+    var isEvaluationPhasePlayed: Boolean,
+    var isResponsePhaseActive: Boolean,
+    var isEvaluationPhaseActive: Boolean,
 )
