@@ -14,6 +14,7 @@ object ChatGptEvaluationModelFactory {
         grade = evaluation?.grade?.stripTrailingZeros(),
         status = evaluation?.status,
         sequenceId = sequence.id!!,
-        utilityGrade = evaluation?.utilityGrade
+        utilityGrade = evaluation?.utilityGrade,
+        gradingID = evaluation?.id,
     )
 }
