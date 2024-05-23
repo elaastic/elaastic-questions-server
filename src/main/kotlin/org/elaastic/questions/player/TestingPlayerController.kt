@@ -2841,6 +2841,7 @@ class TestingPlayerController(
                         BigDecimal(3),
                         ChatGptEvaluationStatus.DONE.name,
                         0,
+                        canHideGrading = true
                     )
                 ),
                 chatGptEvaluationSituations(
@@ -2851,6 +2852,7 @@ class TestingPlayerController(
                         null,
                         ChatGptEvaluationStatus.DONE.name,
                         0,
+                        canHideGrading = true
                     )
                 ),
                 chatGptEvaluationSituations(
@@ -2861,6 +2863,7 @@ class TestingPlayerController(
                         null,
                         null,
                         0,
+                        canHideGrading = true
                     )
                 ),
                 chatGptEvaluationSituations(
@@ -2871,6 +2874,7 @@ class TestingPlayerController(
                         null,
                         ChatGptEvaluationStatus.PENDING.name,
                         0,
+                        canHideGrading = true
                     )
                 ),
                 chatGptEvaluationSituations(
@@ -2881,6 +2885,7 @@ class TestingPlayerController(
                         null,
                         ChatGptEvaluationStatus.ERROR.name,
                         0,
+                        canHideGrading = true
                     )
                 )
             )

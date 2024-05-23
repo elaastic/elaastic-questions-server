@@ -29,7 +29,8 @@
             <div class="reviewer">
                 <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
             </div>
-            <div class="score" th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.grade != null}">
+            <div class="score"
+                 th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.grade != null}">
                 <span th:text=" #{evaluation.score} + ' :'">Score :</span>
                 <div class="ui label"
                      th:text="${chatGptEvaluationModel.grade} + '/5'"
@@ -37,7 +38,8 @@
                      data-position="top right">-/5
                 </div>
             </div>
-            <div class="actions" th:if="${chatGptEvaluationModel.canHideGrading}"> <!--/* Add the conditions of f*/-->
+            <div class="actions"
+                 th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.canHideGrading}">
                 <!--/* Hide evaluation action */-->
                 <div class="hide-peer-grading" th:if="${chatGptEvaluationModel.canHideGrading}">
                     <a class="ui icon button"
@@ -46,18 +48,15 @@
                        data-tooltip="Hide this evaluation"
                        data-position="top center"
                        th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID})|"
-                    >
-                        <i class="eye icon"></i>
-                    </a>
+                    ><i class="eye icon"></i></a>
+
                     <a class="ui icon button hidden"
                        th:if="${chatGptEvaluationModel.hiddenByTeacher}"
                        th:attr="data-tooltip=#{evaluation.action.showEvaluation}"
                        data-tooltip="Show this evaluation"
                        data-position="top center"
                        th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID}, false)|"
-                    >
-                        <i class="hide icon"></i>
-                    </a>
+                    ><i class="hide icon"></i></a>
                 </div>
             </div>
         </div>
