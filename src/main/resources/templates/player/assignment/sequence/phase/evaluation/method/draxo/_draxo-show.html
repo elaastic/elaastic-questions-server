@@ -77,8 +77,8 @@
             <div id="toggleContentDisplay" class="ui button black basic"
                  style="text-transform: none; font-weight: initial"
                  th:attr="evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}">
-                <span id="show">Voir le contenu masqu&eacute;</span>
-                <span id="hide" style="display: none;">Cacher le contenu masqu&eacute;</span>
+                <span id="show" th:text="#{evaluation.action.showEvaluationContent}">Show hidden content</span>
+                <span id="hide" th:text="#{evaluation.action.hideEvaluationContent}" style="display: none;">Mask hidden content</span>
             </div>
         </div>
 
