@@ -32,13 +32,13 @@
             <div class="info-header">
                 <!--/* Reviewer */-->
                 <div class="reviewer">
-                    <span th:text="#{draxo.reviewer} + ' :'">Reviewer :</span>
+                    <span th:text="#{evaluation.reviewer} + ' :'">Reviewer :</span>
                     <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
                           th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
                 </div>
                 <!--/* Score */-->
                 <div class="score" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
-                    <span th:text="#{draxo.score} + ' :'">Score</span>
+                    <span th:text="#{evaluation.score} + ' :'">Score</span>
                     <div class="ui label">
                         <span th:text="${draxoEvaluationModel.prettyScore()}">2.5</span>
                         <span th:if="${draxoEvaluationModel.score != null}">/5</span>
@@ -48,7 +48,7 @@
                 <div class="hide-peer-grading" th:if="${draxoEvaluationModel.canHidePeerGrading}">
                     <a class="ui icon button"
                        th:if="${!draxoEvaluationModel.hiddenByTeacher}"
-                       th:attr="data-tooltip=#{draxo.action.hideEvaluation}"
+                       th:attr="data-tooltip=#{evaluation.action.hideEvaluation}"
                        data-tooltip="Hide this evaluation"
                        data-position="top center"
                        th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId})|"
@@ -57,7 +57,7 @@
                     </a>
                     <a class="ui icon button hidden"
                        th:if="${draxoEvaluationModel.hiddenByTeacher}"
-                       th:attr="data-tooltip=#{draxo.action.showEvaluation}"
+                       th:attr="data-tooltip=#{evaluation.action.showEvaluation}"
                        data-tooltip="Show this evaluation"
                        data-position="top center"
                        th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId}, false)|"
@@ -73,7 +73,7 @@
         It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it.
         */-->
         <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
-            <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
+            <div th:text="#{evaluation.hiddenByTeacher}">Hidden by the teacher</div>
             <div id="toggleContentDisplay" class="ui button black basic"
                  style="text-transform: none; font-weight: initial"
                  th:attr="evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}">
@@ -110,7 +110,7 @@
         <div class="review-border message-hidden"
              th:if="${!draxoEvaluationModel.hiddenByTeacher && (draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}"
         >
-            <div th:text="#{draxo.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
+            <div th:text="#{evaluation.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
         </div>
     </div>
     <!--/* Feedback message when the teacher hides a peergrading */-->

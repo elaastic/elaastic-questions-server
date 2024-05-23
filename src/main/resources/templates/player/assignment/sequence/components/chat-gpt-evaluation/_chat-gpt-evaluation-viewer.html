@@ -29,7 +29,7 @@
                 <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
             </div>
             <div class="score" th:if="${chatGptEvaluationModel.status == 'DONE'}">
-                <span th:text=" #{draxo.score} + ' :'">Score :</span>
+                <span th:text=" #{evaluation.score} + ' :'">Score :</span>
                 <div class="ui label"
                      th:if="${chatGptEvaluationModel.grade}"
                      th:text="${chatGptEvaluationModel.grade} + '/5'"
