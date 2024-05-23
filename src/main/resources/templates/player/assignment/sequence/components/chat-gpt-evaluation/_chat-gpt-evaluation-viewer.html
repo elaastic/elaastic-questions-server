@@ -20,6 +20,7 @@
      th:fragment="chatGptEvaluation(chatGptEvaluationModel)"
      class="review" id="chat-gpt-evaluation-accordion" style="padding-bottom: 0">
 
+    <!--/* Header */-->
     <div class="review-header review-border" style="padding: 0 10px 0 0">
         <div class="reviewer-icon robot">
             <i class="laptop icon"></i>
@@ -37,9 +38,33 @@
                      data-position="top right">-/5
                 </div>
             </div>
+            <div class="actions">
+                <!--/* Hide evaluation action */-->
+                <div class="hide-peer-grading" th:if="${chatGptEvaluationModel.canHideGrading}">
+                    <a class="ui icon button"
+                       th:if="${!chatGptEvaluationModel.hiddenByTeacher}"
+                       th:attr="data-tooltip=#{evaluation.action.hideEvaluation}"
+                       data-tooltip="Hide this evaluation"
+                       data-position="top center"
+                       th:onclick="|updateVisibilityOfPeerGrading(${chatGptEvaluationModel.gradingID})|"
+                    >
+                        <i class="eye icon"></i>
+                    </a>
+                    <a class="ui icon button hidden"
+                       th:if="${chatGptEvaluationModel.hiddenByTeacher}"
+                       th:attr="data-tooltip=#{evaluation.action.showEvaluation}"
+                       data-tooltip="Show this evaluation"
+                       data-position="top center"
+                       th:onclick="|updateVisibilityOfPeerGrading(${chatGptEvaluationModel.gradingID}, false)|"
+                    >
+                        <i class="hide icon"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!--/* Content */-->
     <div class="review-border">
         <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
     </div>

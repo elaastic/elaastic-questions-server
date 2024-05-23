@@ -21,6 +21,7 @@ data class ChatGptEvaluationModel(
     override var reportReasons: String? = null,
     override var reportComment: String? = null,
     val gradingID: Long? = null,
+    val canHideGrading: Boolean = false,
 ): ReportCandidate {
 
     override fun equals(other: Any?): Boolean {
