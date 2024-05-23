@@ -3,6 +3,7 @@ package org.elaastic.questions.player.components.evaluation.chatGptEvaluation
 import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationStatus
+import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 import java.math.BigDecimal
 
 data class ChatGptEvaluationModel(
@@ -11,11 +12,15 @@ data class ChatGptEvaluationModel(
     val grade: BigDecimal? = null,
     val status: String? = ChatGptEvaluationStatus.UNKNOWN.name,
     val sequenceId: Long,
-    val utilityGrade: UtilityGrade? = null,
     val utilityGradeValues: Array<UtilityGrade> = UtilityGrade.values(),
     val reportValues: Array<ReportReason> = ReportReason.values(),
     var viewedByTeacher: Boolean = false,
-)
+    override var utilityGrade: UtilityGrade? = null,
+    override var hiddenByTeacher: Boolean = false,
+    override var removedByTeacher: Boolean = false,
+    override var reportReasons: String? = null,
+    override var reportComment: String? = null,
+): ReportCandidate {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

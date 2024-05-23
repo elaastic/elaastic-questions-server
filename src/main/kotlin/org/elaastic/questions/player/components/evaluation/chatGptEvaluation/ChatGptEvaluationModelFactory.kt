@@ -9,11 +9,11 @@ object ChatGptEvaluationModelFactory {
         evaluation: ChatGptEvaluation?,
         sequence: Sequence
     ) : ChatGptEvaluationModel = ChatGptEvaluationModel(
-        evaluation?.id,
-        evaluation?.annotation,
-        evaluation?.grade?.stripTrailingZeros(),
-        evaluation?.status,
-        sequence.id!!,
-        evaluation?.utilityGrade
+        evaluationId = evaluation?.id,
+        annotation = evaluation?.annotation,
+        grade = evaluation?.grade?.stripTrailingZeros(),
+        status = evaluation?.status,
+        sequenceId = sequence.id!!,
+        utilityGrade = evaluation?.utilityGrade
     )
 }

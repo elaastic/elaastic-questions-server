@@ -410,6 +410,4 @@ class DraxoEvaluationModelTest(
             assertEquals("5", draxoEvaluationModel.prettyScore())
         }
     }
-
-
 }
