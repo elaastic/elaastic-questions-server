@@ -46,7 +46,7 @@
                        th:attr="data-tooltip=#{evaluation.action.hideEvaluation}"
                        data-tooltip="Hide this evaluation"
                        data-position="top center"
-                       th:onclick="|updateVisibilityOfPeerGrading(${chatGptEvaluationModel.gradingID})|"
+                       th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID})|"
                     >
                         <i class="eye icon"></i>
                     </a>
@@ -55,7 +55,7 @@
                        th:attr="data-tooltip=#{evaluation.action.showEvaluation}"
                        data-tooltip="Show this evaluation"
                        data-position="top center"
-                       th:onclick="|updateVisibilityOfPeerGrading(${chatGptEvaluationModel.gradingID}, false)|"
+                       th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID}, false)|"
                     >
                         <i class="hide icon"></i>
                     </a>
