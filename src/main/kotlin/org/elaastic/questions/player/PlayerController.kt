@@ -250,6 +250,7 @@ class PlayerController(
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
         val nbRegisteredUsers = registeredUsers.size
         val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
+        val attendeesSequences: MutableMap<Long, ILearnerSequence> = mutableMapOf()
 
         val dashboardModel: DashboardModel =
             DashboardModelFactory.build(sequence,
@@ -258,6 +259,15 @@ class PlayerController(
                                         registeredUsers,
                                         responses,
                                         openedPane)
+
+        var learnerSequence: ILearnerSequence
+
+        for (attendee in registeredUsers) {
+            learnerSequence = learnerSequenceService.getLearnerSequence(attendee.learner, sequence)
+            learnerPhaseService.loadPhaseList(learnerSequence)
+
+            attendeesSequences.put(attendee.learner.id!!, learnerSequence)
+        }
 
         model.addAttribute("dashboardModel",
                            dashboardModel)
