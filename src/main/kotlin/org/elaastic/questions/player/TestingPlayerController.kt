@@ -2847,7 +2847,7 @@ class TestingPlayerController(
                 ChatGptEvaluationSituations(
                     description = "Annotation with grade Hidden",
                     model = ChatGptEvaluationModel(
-                        0,
+                        10,
                         "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
                         BigDecimal(3),
                         ChatGptEvaluationStatus.DONE.name,
