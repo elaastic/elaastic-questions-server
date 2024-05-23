@@ -2959,4 +2959,11 @@ class TestingPlayerController(
         val chatGptEvaluationModel: ChatGptEvaluationModel,
         val learnerResultsModel: LearnerResultsModel
     )
+
+    @GetMapping("/dashboard/attendees-table")
+    fun testDashboardAttendeesTable(authentication: Authentication,
+                                    model: Model): String {
+
+        return "player/assignment/sequence/components/dashboard/attendees-table"
+    }
 }
