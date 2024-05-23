@@ -15,24 +15,10 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
+<div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     th:fragment="chatGptEvaluationContent(chatGptEvaluationModel)">
+    <div class="" style="background-color: #fafafb" th:if="${chatGptEvaluationModel.status == 'DONE'}">
+            <div th:text="${chatGptEvaluationModel.annotation}" style="background-color: #fafafb"></div>
+    </div>
 
-<!DOCTYPE html>
-<html lang="en"
-      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body},extraHeader=~{::head/script})"
-      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Test Show a list of DRAXO Evaluations</title>
-    <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
-</head>
-<body>
-<section>
-    <h2>Show a list of DRAXO evaluations</h2>
-
-    <th:block th:each="model : ${evaluationModelList}">
-        <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList(${model})"></div>
-    </th:block>
-</section>
-</body>
-</html>
+</div>

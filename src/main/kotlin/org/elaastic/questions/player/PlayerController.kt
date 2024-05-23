@@ -32,7 +32,7 @@ import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.*
-import org.elaastic.questions.player.components.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig

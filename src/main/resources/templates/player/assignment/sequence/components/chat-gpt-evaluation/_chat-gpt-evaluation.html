@@ -22,25 +22,17 @@
     <th:block th:switch="${chatGptEvaluationModel.status}">
 
         <th:block th:case="'DONE'">
-            <table class="ui celled table" style="background-color: #fafafb">
-                <tbody>
-                    <tr>
-                        <td th:if="${chatGptEvaluationModel.grade}"
-                            th:text="${chatGptEvaluationModel.grade} + '/5'"
-                            style="background-color: #f5f5f6"
-                            data-inverted="" th:data-tooltip="#{player.sequence.chatGptEvaluation.grade.tooltip}"
-                            data-position="top left">-/5</td>
-                        <td th:text="${chatGptEvaluationModel.annotation}" style="background-color: #fafafb"></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-content.html :: chatGptEvaluationContent(${chatGptEvaluationModel})"></div>
         </th:block>
 
         <th:block th:case="'ERROR'">
             <div class="ui message error">
                 <span th:text="#{player.sequence.chatGptEvaluation.error}"></span>
             </div>
-            <a class="ui button" th:href="@{/player/sequence/{id}/regenerate-chat-gpt-evaluation(id=${chatGptEvaluationModel.sequenceId})}" th:text="#{player.sequence.chatGptEvaluation.generate.button}"></a>
+            <a class="ui button"
+               th:if="${!chatGptEvaluationModel.viewedByTeacher}"
+               th:href="@{/player/sequence/{id}/regenerate-chat-gpt-evaluation(id=${chatGptEvaluationModel.sequenceId})}"
+               th:text="#{player.sequence.chatGptEvaluation.generate.button}"></a>
         </th:block>
 
         <th:block th:case="'PENDING'">
@@ -58,7 +50,10 @@
             <div class="ui message warning">
                 <span th:text="#{player.sequence.chatGptEvaluation.notFound}"></span>
             </div>
-            <a class="ui button" th:href="@{/player/sequence/{id}/regenerate-chat-gpt-evaluation(id=${chatGptEvaluationModel.sequenceId})}" th:text="#{player.sequence.chatGptEvaluation.generate.button}"></a>
+            <a class="ui button"
+               th:if="${!chatGptEvaluationModel.viewedByTeacher}"
+               th:href="@{/player/sequence/{id}/regenerate-chat-gpt-evaluation(id=${chatGptEvaluationModel.sequenceId})}"
+               th:text="#{player.sequence.chatGptEvaluation.generate.button}"></a>
         </th:block>
 
     </th:block>

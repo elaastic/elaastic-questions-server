@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.elaastic.questions.player.components.draxo
+package org.elaastic.questions.player.components.evaluation.draxo
 
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
@@ -95,5 +95,17 @@ data class DraxoEvaluationModel(
         val currentCriteria: Criteria = this.draxoEvaluation.currentCriteria ?: Criteria.O
         val optionIdSelected: OptionId? = this.draxoEvaluation[currentCriteria]
         return !this.hiddenByTeacher && !this.isReported() && (optionIdSelected != OptionId.DONT_KNOW && optionIdSelected != OptionId.NO_OPINION)
+    }
+
+    /**
+     * @return the score in a printable format
+     */
+    fun prettyScore(): String {
+        val integerPart = score?.toInt()
+        return if (integerPart?.let { BigDecimal(it).compareTo(score) } == 0) { // if the score is an integer
+            integerPart.toString()
+        } else { // if the score is a decimal
+             score?.toString() ?: "-"
+        }
     }
 }

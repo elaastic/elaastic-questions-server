@@ -15,20 +15,32 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-<div th:fragment="draxoShowList(evaluationModelList, hideName)"
+<div th:fragment="draxoShowList(evaluationModel)"
      th:remove="tag"
+     xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <link rel="stylesheet" type="text/css" th:href="@{'/css/evaluation.css'}"/>
 
+    <!--/* Link to the online documentation of the DRAXO evaluation */-->
     <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url')}">
-                <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}" target="_blank">
-                    <i class="question circle outline ui icon"></i> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
-                </a>
-            </span>
+        <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}" target="_blank">
+            <i class="question circle outline ui icon"></i> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
+        </a>
+    </span>
 
+    <!--/* All the DRAXO evaluations for the response */-->
     <!-- Link to the css file for the custom DRAXO grid -->
-    <link rel="stylesheet" type="text/css" th:href="@{'/css/draxo-show.css'}"/>
-    <th:block th:each="model : ${evaluationModelList}">
-        <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model},${hideName})"></div>
+    <link rel="stylesheet" th:href="@{'/css/draxo/draxo-grid.css'}">
+    <th:block th:each="model : ${evaluationModel.draxoEvaluationModels}">
+        <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show::draxoShow(${model},${evaluationModel.hideName})"></div>
     </th:block>
 
+    <!--/* ChatGPT evaluation of the response. Its only visible to a teacher */-->
+    <th:block togglz:active="'CHATGPT_EVALUATION'"
+              th:with="chatGptEvaluationModel=${evaluationModel.chatGptEvaluationModel}"
+              th:if="${evaluationModel.chatGptEvaluationModel != null && evaluationModel.canSeeChatGPTEvaluation}">
+
+        <link rel="stylesheet" type="text/css" th:href="@{'/css/evaluation.css'}"/>
+        <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
+    </th:block>
 </div>

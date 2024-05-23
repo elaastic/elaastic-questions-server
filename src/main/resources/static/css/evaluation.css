@@ -1,0 +1,135 @@
+:root {
+    --border-color: #7A7A7A;
+
+    --robot-color: #95A5A67D;
+    --human-color: #00859F7D;
+}
+
+.review {
+    background-color: white;
+    border-radius: 10px;
+    color: black;
+    display: inline-block !important;
+    margin-bottom: 1em;
+    width: 100%;
+    border: 1px solid var(--border-color);
+}
+
+.review-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.review-border {
+    border-top: 1px solid var(--border-color);
+    padding: 10px 20px;
+}
+
+.review-border:first-child {
+    border-top-width: 0;
+}
+
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 5px 0;
+}
+
+.reviewer-icon {
+    padding: 10px 10px 10px 14px;
+    border-top-left-radius: 9px; /* 10px - 1px || The 10px came from .review*/
+    margin-right: 10px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+}
+
+.reviewer-icon.robot {
+    background-color: var(--robot-color);
+}
+
+.reviewer-icon.human {
+    background-color: var(--human-color);
+}
+
+/*////////////////*/
+
+.review-DRAXO {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.draxo-content {
+    border-top: 1px solid var(--border-color);
+}
+
+/*////////////////*/
+
+.separator {
+    border: 1px solid var(--border-color);
+    height: inherit;
+    align-self: stretch;
+    margin: 0 3%;
+}
+
+.comment-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+
+    margin-top: 14px;
+    width: 100%;
+}
+
+.comment-header {
+    flex: 1
+}
+
+.comment {
+    flex: 2
+}
+
+.commentaire-text {
+    font-size: 1em !important;
+}
+
+@media (max-width: 768px) {
+
+    .comment-area {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+
+    .separator {
+        display: none;
+    }
+}
+
+/*////////////////*/
+
+.review.hidden {
+    background-color: #E6E6E6;
+}
+
+.ui.icon.button.hidden {
+    background-color: #BFBFBF;
+}
+
+.message-hidden {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 20px;
+}
+
+.review.hidden .ui.label {
+    color: black;
+    background-color: #BFBFBF;
+}

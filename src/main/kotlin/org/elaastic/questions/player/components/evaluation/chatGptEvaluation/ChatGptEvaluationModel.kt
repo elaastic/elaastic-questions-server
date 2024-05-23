@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.chatGptEvaluation
+package org.elaastic.questions.player.components.evaluation.chatGptEvaluation
 
 import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.UtilityGrade
@@ -13,5 +13,6 @@ data class ChatGptEvaluationModel(
     val sequenceId: Long,
     val utilityGrade: UtilityGrade? = null,
     val utilityGradeValues: Array<UtilityGrade> = UtilityGrade.values(),
-    val reportValues: Array<ReportReason> = ReportReason.values()
+    val reportValues: Array<ReportReason> = ReportReason.values(),
+    var viewedByTeacher: Boolean = false,
 )

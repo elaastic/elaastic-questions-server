@@ -13,6 +13,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGra
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.IntegrationTestingService
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
 import javax.persistence.EntityManager
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -139,7 +141,10 @@ class DraxoEvaluationModelTest(
                 response = response,
                 draxoEvaluation = DraxoEvaluation()
                     .addEvaluation(Criteria.D, OptionId.YES)
-                    .addEvaluation(Criteria.R, OptionId.DONT_KNOW), // You can't react to a peer grading with a DONT_KNOW OptionId selected
+                    .addEvaluation(
+                        Criteria.R,
+                        OptionId.DONT_KNOW
+                    ), // You can't react to a peer grading with a DONT_KNOW OptionId selected
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should not be able to be reacted") { draxoPeerGrading ->
@@ -170,7 +175,10 @@ class DraxoEvaluationModelTest(
                 draxoEvaluation = DraxoEvaluation()
                     .addEvaluation(Criteria.D, OptionId.YES)
                     .addEvaluation(Criteria.R, OptionId.YES)
-                    .addEvaluation(Criteria.A, OptionId.NO_OPINION), // You can't react to a peer grading with a NO_OPINION OptionId selected
+                    .addEvaluation(
+                        Criteria.A,
+                        OptionId.NO_OPINION
+                    ), // You can't react to a peer grading with a NO_OPINION OptionId selected
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should not be able to be reacted") { draxoPeerGrading ->
@@ -229,7 +237,8 @@ class DraxoEvaluationModelTest(
                 draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
                 lastSequencePeerGrading = false,
             )
-            draxoPeerGrading.reportReasons = "reportReasons" // The student has reported this peer grading, so a student can't react to it
+            draxoPeerGrading.reportReasons =
+                "reportReasons" // The student has reported this peer grading, so a student can't react to it
             DraxoEvaluationModel(
                 graderName = "graderName",
                 graderNum = 1,
@@ -285,7 +294,7 @@ class DraxoEvaluationModelTest(
                 grader = grader,
                 response = response,
                 draxoEvaluation = DraxoEvaluation()
-                    .addEvaluation(Criteria.D, OptionId.NO,"explanation"),
+                    .addEvaluation(Criteria.D, OptionId.NO, "explanation"),
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should be able to be reacted") { draxoPeerGrading ->
@@ -310,7 +319,7 @@ class DraxoEvaluationModelTest(
                 grader = grader,
                 response = response,
                 draxoEvaluation = DraxoEvaluation()
-                    .addEvaluation(Criteria.D, OptionId.NO,"explanation"),
+                    .addEvaluation(Criteria.D, OptionId.NO, "explanation"),
                 lastSequencePeerGrading = false
             )
         }.tThen("the peer grading should be able to be reacted") { draxoPeerGrading ->
@@ -323,6 +332,82 @@ class DraxoEvaluationModelTest(
             assertFalse(draxoEvaluationModel.hiddenByTeacher)
             assertEquals(OptionId.NO, draxoEvaluationModel.draxoEvaluation[Criteria.D])
             assertTrue(draxoEvaluationModel.canBeReacted())
+        }
+    }
+
+    @Test
+    fun `prettyScore with a score of 0 should return -`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a score of 0") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(
+                    Criteria.D,
+                    OptionId.NO,
+                    "explanation"
+                ), // The score is null
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the score should be 0") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                1,
+                draxoPeerGrading,
+                false
+            )
+            assertNull(draxoEvaluationModel.score)
+            assertEquals("-", draxoEvaluationModel.prettyScore())
+        }
+    }
+
+    @Test
+    fun `prettyScore with a score of 1 should return 1`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a score of 1") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.NO, "explanation"), // The score is 1
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the score should be 1") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                1,
+                draxoPeerGrading,
+                false
+            )
+            assertEquals(BigDecimal(1), draxoEvaluationModel.score)
+            assertEquals("1", draxoEvaluationModel.prettyScore())
+        }
+    }
+
+    @Test
+    fun `prettyScore with a score of 5,0 should return 5`() {
+        val grader = integrationTestingService.getTestStudent()
+        val response = integrationTestingService.getAnyResponse()
+        tGiven("a DraxoEvaluationModel with a score of 1") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.YES)
+                    .addEvaluation(Criteria.A, OptionId.YES)
+                    .addEvaluation(Criteria.X, OptionId.YES)
+                    .addEvaluation(Criteria.O, OptionId.NO),
+                lastSequencePeerGrading = false
+            )
+        }.tThen("the score should be 1") { draxoPeerGrading ->
+            val draxoEvaluationModel = DraxoEvaluationModel(
+                1,
+                draxoPeerGrading,
+                false
+            )
+            assertEquals("5", draxoEvaluationModel.prettyScore())
         }
     }
 

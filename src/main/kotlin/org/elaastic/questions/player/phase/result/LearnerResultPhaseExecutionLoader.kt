@@ -5,7 +5,7 @@ import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
 import org.elaastic.questions.controller.MessageBuilder
-import org.elaastic.questions.player.components.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhaseExecution
 import org.elaastic.questions.player.phase.LearnerPhaseExecutionLoader

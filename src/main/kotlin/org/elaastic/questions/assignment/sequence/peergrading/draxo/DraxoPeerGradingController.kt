@@ -19,10 +19,13 @@ package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.player.components.draxo.DraxoEvaluationModel
+import org.elaastic.questions.player.components.evaluation.EvaluationModel
+import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
@@ -40,9 +43,19 @@ class DraxoPeerGradingController(
     @Autowired val responseService: ResponseService,
     @Autowired val assignmentService: AssignmentService,
     @Autowired val peerGradingService: PeerGradingService,
-    @Autowired val messageSource: MessageSource
+    @Autowired val messageSource: MessageSource,
+    @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
 ) {
 
+    /**
+     * Get all the DRAXO evaluations of a response
+     *
+     * @param authentication the current user authentication
+     * @param model the model
+     * @param responseId the id of the response
+     * @param hideName if the name of the grader should be hidden
+     * @return the view of the list of DRAXO evaluations
+     */
     @GetMapping("/{responseId}")
     fun getAll(
         authentication: Authentication,
@@ -68,22 +81,34 @@ class DraxoPeerGradingController(
         // The student can't see the hidden feedbacks
         if (user.isLearner()) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
 
-        model.addAttribute("user", user)
-        model.addAttribute(
-            "evaluationModelList",
-            draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
-                DraxoEvaluationModel(
-                    index,
-                    draxoPeerGrading,
-                    user == assignment.owner,
-                    responseService.canReactOnFeedbackOfResponse(user, response),
-                    responseService.canHidePeerGrading(user, response)
-                )
-            }
-        )
-        if (hideName == true) {
-            model.addAttribute("hideName", true)
+        val draxoEvaluationModels = draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
+            DraxoEvaluationModel(
+                index,
+                draxoPeerGrading,
+                user == assignment.owner,
+                responseService.canReactOnFeedbackOfResponse(user, response),
+                responseService.canHidePeerGrading(user, response)
+            )
         }
+
+        val chatGptEvaluationModel = if (response.interaction.sequence.chatGptEvaluationEnabled) {
+            // If the ChatGPT evaluation is enabled, we add it to the model
+            ChatGptEvaluationModelFactory.build(
+                chatGptEvaluationService.findEvaluationByResponse(response),
+                response.interaction.sequence
+            )
+        } else null
+
+        val evaluationModel = EvaluationModel(
+            draxoEvaluationModels,
+            chatGptEvaluationModel,
+            hideName ?: false,
+            canSeeChatGPTEvaluation = user == assignment.owner || user == response.learner, // Only the teacher and the learner of the question can see the chatGPT evaluation
+            isTeacher = user == assignment.owner
+        )
+
+        model["user"] = user
+        model["evaluationModel"] = evaluationModel
 
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
     }
