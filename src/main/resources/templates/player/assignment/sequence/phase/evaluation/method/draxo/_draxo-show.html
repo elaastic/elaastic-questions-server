@@ -144,6 +144,7 @@
                     for (const explanationContainerElement of explanationContainer) {
                         // If the explanation container has reviews, we click on the detail link, to reload it
                         if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
+                            $(explanationContainerElement).children('.reviews-container').html("");
                             $(explanationContainerElement).find('.detail-link').click();
                         }
                     }
