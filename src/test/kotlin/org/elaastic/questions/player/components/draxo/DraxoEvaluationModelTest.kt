@@ -1,13 +1,6 @@
 package org.elaastic.questions.player.components.draxo
 
-import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.UtilityGrade
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
@@ -15,7 +8,6 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.Optio
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
@@ -30,17 +22,9 @@ import javax.persistence.EntityManager
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class DraxoEvaluationModelTest(
     @Autowired val integrationTestingService: IntegrationTestingService,
-    @Autowired val responseService: ResponseService,
-    @Autowired val responseRepository: ResponseRepository,
-    @Autowired val sequenceRepository: SequenceRepository,
-    @Autowired val sequenceService: SequenceService,
-    @Autowired val assignmentService: AssignmentService,
-    @Autowired val statementService: StatementService,
     @Autowired val userService: UserService,
-    @Autowired val peerGradingRepository: PeerGradingRepository,
     @Autowired val entityManager: EntityManager,
     @Autowired val subjectService: SubjectService,
-    @Autowired val peerGradingService: PeerGradingService,
 ) {
 
     @Test
