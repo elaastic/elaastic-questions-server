@@ -6,21 +6,22 @@ import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptPrompt.ChatGptPromptService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class ChatGptEvaluationService (
+class ChatGptEvaluationService(
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val chatGptApiClient: ChatGptApiClient,
     @Autowired val chatGptPromptService: ChatGptPromptService,
-    @Autowired val reportCandidateService: ReportCandidateService
+    @Autowired val reportCandidateService: ReportCandidateService,
+    private val responseService: ResponseService
 ) {
 
 
@@ -132,13 +133,13 @@ class ChatGptEvaluationService (
     /**
      * Check if a chatGPT evaluation can be hidden.
      *
-     *
+     * A user can hide a chatGPT evaluation if the user is the teacher of the sequence and if the evaluation is done.
      *
      * @param chatGptEvaluation the chatGPT evaluation to check.
      * @param user the user who wants to hide the evaluation.
      * @return true if the chatGPT evaluation can be hidden, false otherwise.
      */
     fun canHideEvaluation(chatGptEvaluation: ChatGptEvaluation, user: User): Boolean {
-        return false //STUB
+        return responseService.canHidePeerGrading(user, chatGptEvaluation.response) && chatGptEvaluation.status == ChatGptEvaluationStatus.DONE.name
     }
 }
