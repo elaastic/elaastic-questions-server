@@ -8,9 +8,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @Controller
@@ -20,6 +18,7 @@ class ChatGptEvaluationController(
     @Autowired val messageSource: MessageSource,
 ) {
 
+    @ResponseBody
     @GetMapping("/hide/{gradingId}")
     fun hideChatGptEvaluation(
         authentication: Authentication,
