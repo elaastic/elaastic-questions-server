@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.Throws
 
 @Service
 class ChatGptEvaluationService(
@@ -141,5 +142,20 @@ class ChatGptEvaluationService(
      */
     fun canHideEvaluation(chatGptEvaluation: ChatGptEvaluation, user: User): Boolean {
         return responseService.canHidePeerGrading(user, chatGptEvaluation.response) && chatGptEvaluation.status == ChatGptEvaluationStatus.DONE.name
+    }
+
+    /**
+     * Hide a chatGPT evaluation.
+     *
+     * An user must have the permission to hide the evaluation.
+     * If the user doesn't have the permission, an exception is thrown.
+     *
+     * @param chatGptEvaluation the chatGPT evaluation to hide.
+     * @param user the user who wants to hide the evaluation.
+     * @throws IllegalAccessException if the user doesn't have the permission to hide the evaluation.
+     */
+    @Throws(IllegalAccessException::class)
+    fun markAsHidden(chatGptEvaluation: ChatGptEvaluation, user: User) {
+        TODO("Not yet implemented")
     }
 }
