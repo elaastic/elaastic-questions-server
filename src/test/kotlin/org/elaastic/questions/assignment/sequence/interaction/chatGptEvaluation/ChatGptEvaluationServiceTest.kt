@@ -25,8 +25,8 @@ class ChatGptEvaluationServiceTest (
     @Test
     fun `canHideGrading should return true if the user is the teacher of the sequence`() {
         // Given
-        val teacher: User = integrationTestingService.getTestTeacher()
         val response = integrationTestingService.getAnyResponse()
+        val teacher: User = response.interaction.owner
 
         tGiven("A chatGPT evaluation") {
             ChatGptEvaluation(
@@ -53,8 +53,8 @@ class ChatGptEvaluationServiceTest (
     @Test
     fun `canHideGrading should return false when the evaluation isn't DONE`() {
         // Given
-        val teacher: User = integrationTestingService.getTestTeacher()
         val response = integrationTestingService.getAnyResponse()
+        val teacher: User = response.interaction.owner
 
         tGiven("A chatGPT evaluation") {
             ChatGptEvaluation(
