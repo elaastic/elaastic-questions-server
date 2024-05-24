@@ -124,9 +124,13 @@
             const hideBtn = toggleContentBtn.children('#hide');
 
             toggleContentBtn.click(function () {
-                area.toggle();
                 showBtn.toggle();
                 hideBtn.toggle();
+                if (area.is(':visible')) {
+                    area.slideUp();
+                } else {
+                    area.slideDown();
+                }
             });
 
         });
