@@ -20,6 +20,8 @@ package org.elaastic.questions.player
 
 import ConfidenceDistributionChartModel
 import EvaluationDistributionChartModel
+import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
@@ -2964,6 +2966,17 @@ class TestingPlayerController(
     fun testDashboardAttendeesTable(authentication: Authentication,
                                     model: Model): String {
 
-        return "player/assignment/sequence/components/dashboard/attendees-table"
+        val user: User = authentication.principal as User
+        val assignment: Assignment = Assignment()
+        val attendee: LearnerAssignment = LearnerAssignment()
+
+        model.addAttribute(
+            "attendees",
+            listOf(
+
+            )
+        )
+
+        return "player/assignment/sequence/components/dashboard/test-attendees-table"
     }
 }
