@@ -6,6 +6,7 @@ import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptPrompt.ChatGptPromptService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
+import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.scheduling.annotation.Async
@@ -126,5 +127,18 @@ class ChatGptEvaluationService (
     fun markEvaluationAsPending(chatGptEvaluation: ChatGptEvaluation) : ChatGptEvaluation {
         chatGptEvaluation.status = ChatGptEvaluationStatus.PENDING.name
         return chatGptEvaluationRepository.saveAndFlush(chatGptEvaluation)
+    }
+
+    /**
+     * Check if a chatGPT evaluation can be hidden.
+     *
+     *
+     *
+     * @param chatGptEvaluation the chatGPT evaluation to check.
+     * @param user the user who wants to hide the evaluation.
+     * @return true if the chatGPT evaluation can be hidden, false otherwise.
+     */
+    fun canHideEvaluation(chatGptEvaluation: ChatGptEvaluation, user: User): Boolean {
+        return false //STUB
     }
 }
