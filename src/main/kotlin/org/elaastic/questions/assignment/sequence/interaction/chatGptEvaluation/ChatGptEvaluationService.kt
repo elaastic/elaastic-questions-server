@@ -8,6 +8,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -156,6 +157,7 @@ class ChatGptEvaluationService(
      */
     @Throws(IllegalAccessException::class)
     fun markAsHidden(chatGptEvaluation: ChatGptEvaluation, user: User) {
-        TODO("Not yet implemented")
+        requireAccess(canHideEvaluation(chatGptEvaluation, user)) {"You don't have the permission to hide this evaluation"}
+        reportCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
     }
 }
