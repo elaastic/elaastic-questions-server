@@ -184,7 +184,7 @@ class DraxoPeerGradingController(
     ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
         val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
-        val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
+        val reasonComment = otherReasonComment.ifEmpty { null }
         val locale: Locale = LocaleContextHolder.getLocale()
 
         val responseSubmissionAsynchronous = kotlin.run {
