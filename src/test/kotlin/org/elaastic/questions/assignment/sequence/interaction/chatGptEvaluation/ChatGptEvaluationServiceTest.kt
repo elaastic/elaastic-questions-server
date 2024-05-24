@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation
 
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
@@ -17,14 +18,17 @@ import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ChatGptEvaluationServiceTest (
+class ChatGptEvaluationServiceTest(
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val userService: UserService,
     @Autowired val entityManager: EntityManager,
     @Autowired val subjectService: SubjectService,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired var chatGptEvaluationRepository: ChatGptEvaluationRepository,
+    @Autowired var responseRepository: ResponseRepository,
 ) {
+
+
 
     @BeforeEach
     @Transactional
@@ -94,6 +98,40 @@ class ChatGptEvaluationServiceTest (
     }
 
     @Test
+    fun `canHideGrading should return false when the user isn't the teacher of the sequence`() {
+        // Given
+        val response = integrationTestingService.getAnyResponse()
+        val teacher: User = response.interaction.owner
+        response.learner = integrationTestingService.getTestStudent()
+        responseRepository.save(response)
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            )
+        }.tThen("The user isn't the teacher of the sequence") {
+            val anotherUser = integrationTestingService.getTestStudent()
+            assertNotEquals(teacher, anotherUser)
+            assertFalse(chatGptEvaluationService.canHideEvaluation(it, anotherUser))
+            it
+        }.tThen("the learner of the response isn't the teacher of the sequence") {
+            assertNotEquals(teacher, response.learner)
+            assertFalse(chatGptEvaluationService.canHideEvaluation(it, response.learner))
+            it
+        }.tThen("canHideGrading should return true with the teacher") {
+            assertTrue(chatGptEvaluationService.canHideEvaluation(it, teacher))
+        }
+    }
+
+    @Test
     fun `a teacher can hide a chatGPT evaluation in a sequence he own`() {
         // Given
         val response = integrationTestingService.getAnyResponse()
@@ -129,6 +167,8 @@ class ChatGptEvaluationServiceTest (
     fun `a student despit owning the response can't hide a chatGPT evaluation`() {
         // Given
         val response = integrationTestingService.getAnyResponse()
+        response.learner = integrationTestingService.getTestStudent()
+        responseRepository.save(response)
         val student: User = response.learner
 
         tGiven("A chatGPT evaluation") {
@@ -147,6 +187,7 @@ class ChatGptEvaluationServiceTest (
                 it
             }
         }.tWhen("The student try to hide the evaluation") {
+            assertFalse(chatGptEvaluationService.canHideEvaluation(it, student))
             assertThrows(IllegalAccessException::class.java) {
                 chatGptEvaluationService.markAsHidden(it, student)
             }
