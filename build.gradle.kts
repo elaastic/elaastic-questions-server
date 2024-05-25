@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "org.elaastic.questions"
-version = "6.2.3"
+version = "6.2.4"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
