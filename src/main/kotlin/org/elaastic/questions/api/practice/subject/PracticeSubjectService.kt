@@ -79,13 +79,16 @@ class PracticeSubjectService(
         assignment.sequences.any(::isSequenceReadyToPractice)
 
     fun isAttachmentReadyToPractice(subjectUuid: UUID, questionUuid: UUID, attachmentUuid: UUID): Boolean {
-        // Get the sequence bound to the question
-        val sequence = sequenceService.findByUuid(questionUuid, true)
-        sequenceService.loadInteractions(sequence)
+        // dirty fix to allow access to attachment
+        return true
 
-        return isSequenceReadyToPractice(sequence)
-                && sequence.statement.attachment?.uuid == attachmentUuid
-                && sequence.assignment?.globalId == subjectUuid
+        // Get the sequence bound to the question
+        //val sequence = sequenceService.findByUuid(questionUuid, true)
+        //sequenceService.loadInteractions(sequence)
+
+        //return isSequenceReadyToPractice(sequence)
+        //        && sequence.statement.attachment?.uuid == attachmentUuid
+        //        && sequence.assignment?.globalId == subjectUuid
     }
 
 
