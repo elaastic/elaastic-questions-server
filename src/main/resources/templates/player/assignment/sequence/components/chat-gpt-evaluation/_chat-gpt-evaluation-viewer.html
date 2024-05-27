@@ -132,6 +132,8 @@
                         for (const explanationContainerElement of explanationContainer) {
                             // If the explanation container has reviews, we click on the detail link, to reload it
                             if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
+                                // The logic for updating have been changed in this commit : 486c01f070fbaf8ead2211a7d36c792e83df372d.
+                                // For updating the container it's need to be empty to retrieve the information from the server.
                                 $(explanationContainerElement).children('.reviews-container').html("");
                                 $(explanationContainerElement).find('.detail-link').click();
                             }
