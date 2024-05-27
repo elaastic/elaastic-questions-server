@@ -8,7 +8,6 @@ import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,8 +26,6 @@ class ChatGptEvaluationServiceTest(
     @Autowired var chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired var responseRepository: ResponseRepository,
 ) {
-
-
 
     @BeforeEach
     @Transactional
@@ -55,12 +52,12 @@ class ChatGptEvaluationServiceTest(
                 removedByTeacher = false,
             )
         }.tThen("canHideGrading should return true") {
-            assertTrue(chatGptEvaluationService.canHideEvaluation(it, teacher))
+            assertTrue(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, teacher))
             it
         }.tThen("canHideGrading should return false") {
             val anotherUser = integrationTestingService.getTestStudent()
             assertNotEquals(teacher, anotherUser)
-            assertFalse(chatGptEvaluationService.canHideEvaluation(it, anotherUser))
+            assertFalse(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, anotherUser))
         }
     }
 
@@ -86,14 +83,14 @@ class ChatGptEvaluationServiceTest(
             assertNotEquals(ChatGptEvaluationStatus.DONE.name, it.status)
             it
         }.tThen("canHideGrading should return false") {
-            assertFalse(chatGptEvaluationService.canHideEvaluation(it, teacher))
+            assertFalse(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, teacher))
             it
         }.tWhen("The status is DONE") {
             it.status = ChatGptEvaluationStatus.DONE.name
             assertEquals(ChatGptEvaluationStatus.DONE.name, it.status)
             it
         }.tThen("canHideGrading should return true") {
-            assertTrue(chatGptEvaluationService.canHideEvaluation(it, teacher))
+            assertTrue(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, teacher))
         }
     }
 
@@ -120,14 +117,14 @@ class ChatGptEvaluationServiceTest(
         }.tThen("The user isn't the teacher of the sequence") {
             val anotherUser = integrationTestingService.getTestStudent()
             assertNotEquals(teacher, anotherUser)
-            assertFalse(chatGptEvaluationService.canHideEvaluation(it, anotherUser))
+            assertFalse(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, anotherUser))
             it
         }.tThen("the learner of the response isn't the teacher of the sequence") {
             assertNotEquals(teacher, response.learner)
-            assertFalse(chatGptEvaluationService.canHideEvaluation(it, response.learner))
+            assertFalse(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, response.learner))
             it
         }.tThen("canHideGrading should return true with the teacher") {
-            assertTrue(chatGptEvaluationService.canHideEvaluation(it, teacher))
+            assertTrue(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, teacher))
         }
     }
 
@@ -187,7 +184,7 @@ class ChatGptEvaluationServiceTest(
                 it
             }
         }.tWhen("The student try to hide the evaluation") {
-            assertFalse(chatGptEvaluationService.canHideEvaluation(it, student))
+            assertFalse(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, student))
             assertThrows(IllegalAccessException::class.java) {
                 chatGptEvaluationService.markAsHidden(it, student)
             }

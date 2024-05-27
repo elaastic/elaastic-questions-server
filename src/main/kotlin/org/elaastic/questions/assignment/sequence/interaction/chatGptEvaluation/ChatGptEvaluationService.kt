@@ -133,15 +133,15 @@ class ChatGptEvaluationService(
     }
 
     /**
-     * Check if a chatGPT evaluation can be hidden.
+     * Check if the visibility of a chatGPT evaluation can be changed by the given user
      *
      * A user can hide a chatGPT evaluation if the user is the teacher of the sequence and if the evaluation is done.
      *
      * @param chatGptEvaluation the chatGPT evaluation to check.
-     * @param user the user who wants to hide the evaluation.
-     * @return true if the chatGPT evaluation can be hidden, false otherwise.
+     * @param user the user who wants to update the visibility of the evaluation.
+     * @return true if the visibility of the chatGPT evaluation can be changed, false otherwise.
      */
-    fun canHideEvaluation(chatGptEvaluation: ChatGptEvaluation, user: User): Boolean {
+    fun canUpdateVisibilityEvaluation(chatGptEvaluation: ChatGptEvaluation, user: User): Boolean {
         return responseService.canHidePeerGrading(user, chatGptEvaluation.response) && chatGptEvaluation.status == ChatGptEvaluationStatus.DONE.name
     }
 
@@ -157,7 +157,7 @@ class ChatGptEvaluationService(
      */
     @Throws(IllegalAccessException::class)
     fun markAsHidden(chatGptEvaluation: ChatGptEvaluation, user: User) {
-        requireAccess(canHideEvaluation(chatGptEvaluation, user)) {"You don't have the permission to hide this evaluation"}
+        requireAccess(canUpdateVisibilityEvaluation(chatGptEvaluation, user)) {"You don't have the permission to hide this evaluation"}
         reportCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
     }
 }
