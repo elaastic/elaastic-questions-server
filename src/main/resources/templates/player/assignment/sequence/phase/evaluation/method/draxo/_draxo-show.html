@@ -32,13 +32,13 @@
             <div class="info-header">
                 <!--/* Reviewer */-->
                 <div class="reviewer">
-                    <span th:text="#{draxo.reviewer} + ' :'">Reviewer :</span>
+                    <span th:text="#{evaluation.reviewer} + ' :'">Reviewer :</span>
                     <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
                           th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
                 </div>
                 <!--/* Score */-->
                 <div class="score" th:if="${!draxoEvaluationModel.hiddenByTeacher}">
-                    <span th:text="#{draxo.score} + ' :'">Score</span>
+                    <span th:text="#{evaluation.score} + ' :'">Score</span>
                     <div class="ui label">
                         <span th:text="${draxoEvaluationModel.prettyScore()}">2.5</span>
                         <span th:if="${draxoEvaluationModel.score != null}">/5</span>
@@ -48,7 +48,7 @@
                 <div class="hide-peer-grading" th:if="${draxoEvaluationModel.canHidePeerGrading}">
                     <a class="ui icon button"
                        th:if="${!draxoEvaluationModel.hiddenByTeacher}"
-                       th:attr="data-tooltip=#{draxo.action.hideEvaluation}"
+                       th:attr="data-tooltip=#{evaluation.action.hideEvaluation}"
                        data-tooltip="Hide this evaluation"
                        data-position="top center"
                        th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId})|"
@@ -57,7 +57,7 @@
                     </a>
                     <a class="ui icon button hidden"
                        th:if="${draxoEvaluationModel.hiddenByTeacher}"
-                       th:attr="data-tooltip=#{draxo.action.showEvaluation}"
+                       th:attr="data-tooltip=#{evaluation.action.showEvaluation}"
                        data-tooltip="Show this evaluation"
                        data-position="top center"
                        th:onclick="|updateVisibilityOfPeerGrading(${draxoEvaluationModel.draxoPeerGradingId}, false)|"
@@ -73,12 +73,12 @@
         It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it.
         */-->
         <div class="review-border message-hidden" th:if="${draxoEvaluationModel.hiddenByTeacher}">
-            <div th:text="#{draxo.hiddenByTeacher}">Hidden by the teacher</div>
+            <div th:text="#{evaluation.hiddenByTeacher}">Hidden by the teacher</div>
             <div id="toggleContentDisplay" class="ui button black basic"
                  style="text-transform: none; font-weight: initial"
                  th:attr="evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}">
-                <span id="show">Voir le contenu masqu&eacute;</span>
-                <span id="hide" style="display: none;">Cacher le contenu masqu&eacute;</span>
+                <span id="show" th:text="#{evaluation.action.showEvaluationContent}">Show hidden content</span>
+                <span id="hide" th:text="#{evaluation.action.hideEvaluationContent}" style="display: none;">Mask hidden content</span>
             </div>
         </div>
 
@@ -110,16 +110,15 @@
         <div class="review-border message-hidden"
              th:if="${!draxoEvaluationModel.hiddenByTeacher && (draxoEvaluationModel.isReported() && draxoEvaluationModel.canReactOnPeerGrading)}"
         >
-            <div th:text="#{draxo.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
+            <div th:text="#{evaluation.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
         </div>
     </div>
     <!--/* Feedback message when the teacher hides a peergrading */-->
     <div class="ui message negative" th:attr="data-evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
-         id="feedbackMessage"
-         style="display: none;"
-    >
-        <div class="header">Header of the message</div>
-        <p class="content">Content of the message</p>
+         id="feedbackMessage" style="display: none;">
+        <i class="close icon"></i>
+        <div class="header" style="color: #912d2b;">Header of the message</div>
+        <p id="content">Content of the message</p>
     </div>
 
     <script th:inline="javascript">
@@ -137,35 +136,35 @@
             url += markAsHidden ? "hide/" : "unhide/";
             url += peerGradingID;
 
-            $.get(url, function (data) {
-                if (data.success) {
-                    // We update the container through the link of the detail
-                    const explanationContainer = $('.explanation[data-response-id="' + responseId + '"]:visible')
-                    for (const explanationContainerElement of explanationContainer) {
-                        // If the explanation container has reviews, we click on the detail link, to reload it
-                        if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
-                            $(explanationContainerElement).find('.detail-link').click();
+            $.get(url)
+                .done(function (data) {
+                    if (data.success) {
+                        // We update the container through the link of the detail
+                        const explanationContainer = $('.explanation[data-response-id="' + responseId + '"]:visible')
+                        for (const explanationContainerElement of explanationContainer) {
+                            // If the explanation container has reviews, we click on the detail link, to reload it
+                            if ($(explanationContainerElement).children('.reviews-container').html() !== "") {
+                                // The logic for updating have been changed in this commit : 486c01f070fbaf8ead2211a7d36c792e83df372d.
+                                // For updating the container it's need to be empty to retrieve the information from the server.
+                                $(explanationContainerElement).children('.reviews-container').html("");
+                                $(explanationContainerElement).find('.detail-link').click();
+                            }
                         }
+                    } else {
+                        feedbackMessage.children('.header').html(data.header)
+                        feedbackMessage.children('#content').html(data.content)
+                        feedbackMessage.slideDown();
                     }
-                } else {
-                    feedbackMessage.children('.header').css("color", " #9f3a38")
-                    feedbackMessage.children('.header').text(data.header);
-                    feedbackMessage.children('.content').text(data.content);
-
-                    feedbackMessage.slideDown()
-                    setTimeout(function () {
-                        feedbackMessage.slideUp()
-                    }, 5000)
-                }
-            });
+                })
+                .fail(function () {
+                    feedbackMessage.children('.header').html("An error occurred")
+                    feedbackMessage.children('#content').html("Please try again later.")
+                    feedbackMessage.slideDown();
+                });
         }
 
         $(function () {
-
-            /*<![CDATA[*/
             const peerGradingID = [[${draxoEvaluationModel.draxoPeerGradingId}]]
-            /*]]> */
-
 
             // Display the hidden content when the teacher wants to see it
             const area = $('#draxoContent[evaluation-id="' + peerGradingID + '"]');
@@ -186,6 +185,10 @@
                     showBtn.show();
                     hideBtn.hide();
                 }
+            });
+
+            $('.message .close').on('click', function () {
+                $(this).closest('.message').slideUp();
             });
         });
     </script>

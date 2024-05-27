@@ -2833,54 +2833,71 @@ class TestingPlayerController(
         model.addAttribute(
             "chatGptEvaluationSituations",
             listOf(
-                chatGptEvaluationSituations(
+                ChatGptEvaluationSituations(
                     description = "Annotation with grade",
                     model = ChatGptEvaluationModel(
                         0,
                         "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
                         BigDecimal(3),
                         ChatGptEvaluationStatus.DONE.name,
-                        0
+                        0,
+                        canHideGrading = true
                     )
                 ),
-                chatGptEvaluationSituations(
+                ChatGptEvaluationSituations(
+                    description = "Annotation with grade Hidden",
+                    model = ChatGptEvaluationModel(
+                        10,
+                        "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
+                        BigDecimal(3),
+                        ChatGptEvaluationStatus.DONE.name,
+                        0,
+                        hiddenByTeacher = true,
+                        canHideGrading = true
+                    )
+                ),
+                ChatGptEvaluationSituations(
                     description = "Only annotation",
                     model = ChatGptEvaluationModel(
                         1,
                         "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
                         null,
                         ChatGptEvaluationStatus.DONE.name,
-                        0
+                        0,
+                        canHideGrading = true
                     )
                 ),
-                chatGptEvaluationSituations(
+                ChatGptEvaluationSituations(
                     description = "Not Found",
                     model = ChatGptEvaluationModel(
                         2,
                         null,
                         null,
                         null,
-                        0
+                        0,
+                        canHideGrading = true
                     )
                 ),
-                chatGptEvaluationSituations(
+                ChatGptEvaluationSituations(
                     description = "In progress",
                     model = ChatGptEvaluationModel(
                         3,
                         null,
                         null,
                         ChatGptEvaluationStatus.PENDING.name,
-                        0
+                        0,
+                        canHideGrading = true
                     )
                 ),
-                chatGptEvaluationSituations(
+                ChatGptEvaluationSituations(
                     description = "Error",
                     model = ChatGptEvaluationModel(
                         4,
                         null,
                         null,
                         ChatGptEvaluationStatus.ERROR.name,
-                        0
+                        0,
+                        canHideGrading = true
                     )
                 )
             )
@@ -2889,7 +2906,7 @@ class TestingPlayerController(
         return "player/assignment/sequence/components/chat-gpt-evaluation/test-chat-gpt-evaluation-viewer"
     }
 
-    data class chatGptEvaluationSituations(
+    data class ChatGptEvaluationSituations(
         val description: String,
         val model: ChatGptEvaluationModel
     )
@@ -2913,7 +2930,7 @@ class TestingPlayerController(
                         "La réponse semble manquer de précision et de soutien factuel. Il est essentiel de fournir des arguments solides et étayés par des preuves tangibles afin de renforcer ta position. De plus, certaines de tes affirmations sont en contradiction avec les connaissances actuelles sur le sujet, ce qui peut entraîner une confusion pour les autres participants. Je t'encourage à approfondir tes recherches et à consulter des sources fiables pour obtenir des informations précises et actualisées.",
                         BigDecimal(3),
                         ChatGptEvaluationStatus.DONE.name,
-                        0
+                        0,
                     ),
                     learnerResultsModel = LearnerExclusiveChoiceResults(
                         explanationFirstTry = ExplanationData(responseId = Random.nextLong(), content = "I was wrong"),

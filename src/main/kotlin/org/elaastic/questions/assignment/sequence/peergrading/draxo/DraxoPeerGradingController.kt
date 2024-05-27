@@ -79,7 +79,7 @@ class DraxoPeerGradingController(
         var draxoPeerGradingList = peerGradingService.findAllDraxo(response)
 
         // The student can't see the hidden feedbacks
-        if (user.isLearner()) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
+        if (user != assignment.owner) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
 
         val draxoEvaluationModels = draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
             DraxoEvaluationModel(
@@ -90,14 +90,19 @@ class DraxoPeerGradingController(
                 responseService.canHidePeerGrading(user, response)
             )
         }
-
-        val chatGptEvaluationModel = if (response.interaction.sequence.chatGptEvaluationEnabled) {
-            // If the ChatGPT evaluation is enabled, we add it to the model
-            ChatGptEvaluationModelFactory.build(
-                chatGptEvaluationService.findEvaluationByResponse(response),
-                response.interaction.sequence
-            )
-        } else null
+        val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
+        val chatGptEvaluationModel =
+            // If it isn't the teacher, we check if the chatGPT evaluation is hidden by the teacher.
+            // eq. If it's a student, we check if the chatGPT evaluation is hidden by the teacher. If it's hidden, we give a null value to the model.
+            if (response.interaction.sequence.chatGptEvaluationEnabled && !(user != assignment.owner && chatGptEvaluation?.hiddenByTeacher == true)) {
+                // If the ChatGPT evaluation is enabled, we add it to the model
+                ChatGptEvaluationModelFactory.build(
+                    evaluation = chatGptEvaluation,
+                    sequence = response.interaction.sequence,
+                    canHideGrading = responseService.canHidePeerGrading(user, response),
+                    responseId = response.id
+                )
+            } else null
 
         val evaluationModel = EvaluationModel(
             draxoEvaluationModels,
@@ -144,14 +149,14 @@ class DraxoPeerGradingController(
 
                 ResponseSubmissionAsynchronous(
                     success = true,
-                    header = messageSource.getMessage("draxo.submitUtilityGrade.success.header", null, locale),
-                    content = messageSource.getMessage("draxo.submitUtilityGrade.success.content", null, locale)
+                    header = messageSource.getMessage("evaluation.submitUtilityGrade.success.header", null, locale),
+                    content = messageSource.getMessage("evaluation.submitUtilityGrade.success.content", null, locale)
                 )
             } catch (e: Exception) {
                 ResponseSubmissionAsynchronous(
                     success = false,
-                    header = messageSource.getMessage("draxo.submitUtilityGrade.error.header", null, locale),
-                    content = messageSource.getMessage("draxo.submitUtilityGrade.error.content", null, locale)
+                    header = messageSource.getMessage("evaluation.submitUtilityGrade.error.header", null, locale),
+                    content = messageSource.getMessage("evaluation.submitUtilityGrade.error.content", null, locale)
                 )
             }
         }
@@ -183,7 +188,7 @@ class DraxoPeerGradingController(
     ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
         val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
-        val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
+        val reasonComment = otherReasonComment.ifEmpty { null }
         val locale: Locale = LocaleContextHolder.getLocale()
 
         val responseSubmissionAsynchronous = kotlin.run {
@@ -192,14 +197,14 @@ class DraxoPeerGradingController(
 
                 ResponseSubmissionAsynchronous(
                     success = true,
-                    header = messageSource.getMessage("draxo.reportEvaluation.success.header", null, locale),
-                    content = messageSource.getMessage("draxo.reportEvaluation.success.content", null, locale)
+                    header = messageSource.getMessage("evaluation.reportEvaluation.success.header", null, locale),
+                    content = messageSource.getMessage("evaluation.reportEvaluation.success.content", null, locale)
                 )
             } catch (e: Exception) {
                 ResponseSubmissionAsynchronous(
                     success = false,
-                    header = messageSource.getMessage("draxo.reportEvaluation.error.header", null, locale),
-                    content = messageSource.getMessage("draxo.reportEvaluation.error.content", null, locale)
+                    header = messageSource.getMessage("evaluation.reportEvaluation.error.header", null, locale),
+                    content = messageSource.getMessage("evaluation.reportEvaluation.error.content", null, locale)
                 )
             }
         }
@@ -239,20 +244,20 @@ class DraxoPeerGradingController(
 
                 ResponseSubmissionAsynchronous(
                     success = true,
-                    header = messageSource.getMessage("draxo.hideEvaluation.success.header", null, locale),
-                    content = messageSource.getMessage("draxo.hideEvaluation.success.content", null, locale)
+                    header = messageSource.getMessage("evaluation.hideEvaluation.success.header", null, locale),
+                    content = messageSource.getMessage("evaluation.hideEvaluation.success.content", null, locale)
                 )
             } catch (e: AccessDeniedException) {
                 ResponseSubmissionAsynchronous(
                     success = false,
-                    header = messageSource.getMessage("draxo.accesDenied.header", null, locale),
-                    content = messageSource.getMessage("draxo.hideEvaluation.accesDenied.content", null, locale)
+                    header = messageSource.getMessage("evaluation.accesDenied.header", null, locale),
+                    content = messageSource.getMessage("evaluation.hideEvaluation.accesDenied.content", null, locale)
                 )
             } catch (e: Exception) {
                 ResponseSubmissionAsynchronous(
                     success = false,
-                    header = messageSource.getMessage("draxo.hideEvaluation.error.header", null, locale),
-                    content = messageSource.getMessage("draxo.hideEvaluation.error.content", null, locale)
+                    header = messageSource.getMessage("evaluation.hideEvaluation.error.header", null, locale),
+                    content = messageSource.getMessage("evaluation.hideEvaluation.error.content", null, locale)
                 )
             }
         }
@@ -293,20 +298,20 @@ class DraxoPeerGradingController(
 
                 ResponseSubmissionAsynchronous(
                     success = true,
-                    header = messageSource.getMessage("draxo.unhideEvaluation.success.header", null, locale),
-                    content = messageSource.getMessage("draxo.unhideEvaluation.success.content", null, locale)
+                    header = messageSource.getMessage("evaluation.unhideEvaluation.success.header", null, locale),
+                    content = messageSource.getMessage("evaluation.unhideEvaluation.success.content", null, locale)
                 )
             } catch (e: AccessDeniedException) {
                 ResponseSubmissionAsynchronous(
                     success = false,
-                    header = messageSource.getMessage("draxo.accesDenied.header", null, locale),
-                    content = messageSource.getMessage("draxo.unhideEvaluation.accesDenied.content", null, locale)
+                    header = messageSource.getMessage("evaluation.accesDenied.header", null, locale),
+                    content = messageSource.getMessage("evaluation.unhideEvaluation.accesDenied.content", null, locale)
                 )
             } catch (e: Exception) {
                 ResponseSubmissionAsynchronous(
                     success = false,
-                    header = messageSource.getMessage("draxo.unhideEvaluation.error.header", null, locale),
-                    content = messageSource.getMessage("draxo.unhideEvaluation.error.content", null, locale)
+                    header = messageSource.getMessage("evaluation.unhideEvaluation.error.header", null, locale),
+                    content = messageSource.getMessage("evaluation.unhideEvaluation.error.content", null, locale)
                 )
             }
         }

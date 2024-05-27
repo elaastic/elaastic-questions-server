@@ -16,11 +16,11 @@ import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-internal class ChatGptEvaluationRepositoryIntegrationTest (
-    @Autowired val chatGptEvaluationRepository : ChatGptEvaluationRepository,
-    @Autowired val integrationTestingService : IntegrationTestingService,
-    @Autowired val entityManager : EntityManager
-){
+internal class ChatGptEvaluationRepositoryIntegrationTest(
+    @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val entityManager: EntityManager
+) {
 
     @Test
     fun `save a valid ChatGPT evaluation`() {

@@ -126,8 +126,8 @@ class PlayerController(
     }
 
     /**
-     * Register action for authenticated users (this URL is
-     * not accessible to anonymous users)
+     * Register action for authenticated users (this URL is not accessible to
+     * anonymous users)
      */
     @GetMapping("/authenticated-register")
     fun authenticatedOnlyRegister(
@@ -144,8 +144,10 @@ class PlayerController(
      * Start an anonymous session for a student :
      * - the user is only identified by a nickname
      * - a user entity will be created (with isAnonymous flag)
-     * - the user won't be able to log anymore for this user ; it may just uses the service during the session lifetime
-     * - the session start by registering the on the assignment identified by globalId
+     * - the user won't be able to log anymore for this user ; it may just uses
+     *   the service during the session lifetime
+     * - the session start by registering the on the assignment identified by
+     *   globalId
      */
     @GetMapping("/start-anonymous-session")
     @Transactional
@@ -605,7 +607,7 @@ class PlayerController(
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         model.addAttribute(
             "chatGptEvaluationModel",
-            ChatGptEvaluationModelFactory.build(chatGptEvaluation, sequence)
+            ChatGptEvaluationModelFactory.build(chatGptEvaluation, sequence, responseId = response?.id)
         )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
     }

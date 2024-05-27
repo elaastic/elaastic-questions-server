@@ -25,7 +25,9 @@
           method="post">
         <input type="hidden" name="evaluationId" th:value="${chatGptEvaluationModel.evaluationId}">
         <div class="ui grid stackable" style="align-items: end;">
-            <div class="field twelve wide column" id="utilitySelectionApp" style="flex-grow: 4;">
+            <div class="field twelve wide column utilitySelectionApp"
+                 th:id="'utilitySelectionApp-' + ${chatGptEvaluationModel.evaluationId}"
+                 style="flex-grow: 4;">
                 <label th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label}"></label>
                 <input type="hidden"
                        name="utilityGrade"
@@ -44,11 +46,13 @@
                             class="item"
                             style="color: #b03060; width: 100%;"
                             th:onclick="|$('#reportModal_${chatGptEvaluationModel.sequenceId}').modal('show');|">
-                        <i class="exclamation triangle icon"></i><span th:text="#{player.sequence.chatGptEvaluation.reportButton}"></span></a>
+                        <i class="exclamation triangle icon"></i><span
+                            th:text="#{player.sequence.chatGptEvaluation.reportButton}"></span></a>
                 </div>
             </div>
         </div>
-        <div id="submit-button-utility-grade" style="display: none">
+        <div id="submit-button-utility-grade" style="display: none"
+             th:attr="evaluationId=${chatGptEvaluationModel.evaluationId}">
             <input type="submit" value="Soumettre" class="ui primary button">
         </div>
     </form>
@@ -58,29 +62,31 @@
 
     <script th:inline="javascript">
         new Vue({
-            el: '#utilitySelectionApp',
+            el: '#utilitySelectionApp-' + [[${chatGptEvaluationModel.evaluationId}]],
             data: {
                 selectedUtilityGrade: [[${chatGptEvaluationModel.utilityGrade?.name()}]]
             },
             methods: {
                 setSelectedUtilityGrade: function (clickedUtilityGrade) {
                     this.selectedUtilityGrade = clickedUtilityGrade
-                    $("#submit-button-utility-grade").slideDown();
+                    $('#submit-button-utility-grade[evaluationId="' + [[${chatGptEvaluationModel.evaluationId}]] + '"]').slideDown();
                 }
             }
         })
     </script>
 
     <style>
-        .item{
+        .item {
             justify-content: center;
         }
-        #utilitySelectionApp .item {
+
+        .utilitySelectionApp .item {
             width: 25%;
         }
-        #utilitySelectionApp .active.item {
-            background-color: #dff0ff;
-            color: #0e6eb8;
+
+        .utilitySelectionApp .active.item {
+            background-color: #dff0ff !important;
+            color: #0e6eb8 !important;
         }
     </style>
 

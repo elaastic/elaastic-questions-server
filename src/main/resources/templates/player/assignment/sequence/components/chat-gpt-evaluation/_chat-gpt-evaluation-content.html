@@ -17,8 +17,8 @@
   -->
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      th:fragment="chatGptEvaluationContent(chatGptEvaluationModel)">
-    <div class="" style="background-color: #fafafb" th:if="${chatGptEvaluationModel.status == 'DONE'}">
-            <div th:text="${chatGptEvaluationModel.annotation}" style="background-color: #fafafb"></div>
+    <div th:if="${chatGptEvaluationModel.status == 'DONE'}">
+            <div class="ui label large" th:text="${chatGptEvaluationModel.annotation}"></div>
     </div>
 
 </div>

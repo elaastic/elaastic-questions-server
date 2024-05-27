@@ -6,20 +6,24 @@ import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptPrompt.ChatGptPromptService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
+import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.directory.User
+import org.elaastic.questions.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import kotlin.jvm.Throws
 
 @Service
-class ChatGptEvaluationService (
+class ChatGptEvaluationService(
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val chatGptApiClient: ChatGptApiClient,
     @Autowired val chatGptPromptService: ChatGptPromptService,
-    @Autowired val reportCandidateService: ReportCandidateService
+    @Autowired val reportCandidateService: ReportCandidateService,
+    private val responseService: ResponseService
 ) {
 
 
@@ -126,5 +130,50 @@ class ChatGptEvaluationService (
     fun markEvaluationAsPending(chatGptEvaluation: ChatGptEvaluation) : ChatGptEvaluation {
         chatGptEvaluation.status = ChatGptEvaluationStatus.PENDING.name
         return chatGptEvaluationRepository.saveAndFlush(chatGptEvaluation)
+    }
+
+    /**
+     * Check if the visibility of a chatGPT evaluation can be changed by the given user
+     *
+     * A user can hide a chatGPT evaluation if the user is the teacher of the sequence and if the evaluation is done.
+     *
+     * @param chatGptEvaluation the chatGPT evaluation to check.
+     * @param user the user who wants to update the visibility of the evaluation.
+     * @return true if the visibility of the chatGPT evaluation can be changed, false otherwise.
+     */
+    fun canUpdateVisibilityEvaluation(chatGptEvaluation: ChatGptEvaluation, user: User): Boolean {
+        return responseService.canHidePeerGrading(user, chatGptEvaluation.response) && chatGptEvaluation.status == ChatGptEvaluationStatus.DONE.name
+    }
+
+    /**
+     * Hide a chatGPT evaluation.
+     *
+     * An user must have the permission to hide the evaluation.
+     * If the user doesn't have the permission, an exception is thrown.
+     *
+     * @param chatGptEvaluation the chatGPT evaluation to hide.
+     * @param user the user who wants to hide the evaluation.
+     * @throws IllegalAccessException if the user doesn't have the permission to hide the evaluation.
+     */
+    @Throws(IllegalAccessException::class)
+    fun markAsHidden(chatGptEvaluation: ChatGptEvaluation, user: User) {
+        requireAccess(canUpdateVisibilityEvaluation(chatGptEvaluation, user)) {"You don't have the permission to hide this evaluation"}
+        reportCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
+    }
+
+    /**
+     * Unhide a chatGPT evaluation.
+     *
+     * An user must have the permission to unhide the evaluation.
+     * If the user doesn't have the permission, an exception is thrown.
+     *
+     * @param chatGptEvaluation the chatGPT evaluation to unhide
+     * @param user the user who wants to unhide the evaluation.
+     * @throws IllegalAccessException if the user doesn't have the permission to unhide the evaluation.
+     */
+    @Throws(IllegalAccessException::class)
+    fun markAsShown(chatGPTEvaluation: ChatGptEvaluation, user: User) {
+        requireAccess(canUpdateVisibilityEvaluation(chatGPTEvaluation, user)) {"You don't have the permission to unhide this evaluation"}
+        reportCandidateService.markAsShown(chatGPTEvaluation, chatGptEvaluationRepository)
     }
 }

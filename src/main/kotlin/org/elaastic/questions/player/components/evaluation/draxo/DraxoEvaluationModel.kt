@@ -101,11 +101,6 @@ data class DraxoEvaluationModel(
      * @return the score in a printable format
      */
     fun prettyScore(): String {
-        val integerPart = score?.toInt()
-        return if (integerPart?.let { BigDecimal(it).compareTo(score) } == 0) { // if the score is an integer
-            integerPart.toString()
-        } else { // if the score is a decimal
-             score?.toString() ?: "-"
-        }
+        return (score?.stripTrailingZeros() ?: "-").toString()
     }
 }

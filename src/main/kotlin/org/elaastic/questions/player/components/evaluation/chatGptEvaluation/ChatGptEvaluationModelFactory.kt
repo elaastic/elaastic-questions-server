@@ -7,13 +7,19 @@ object ChatGptEvaluationModelFactory {
 
     fun build(
         evaluation: ChatGptEvaluation?,
-        sequence: Sequence
+        sequence: Sequence,
+        canHideGrading: Boolean = false,
+        responseId: Long? = null
     ) : ChatGptEvaluationModel = ChatGptEvaluationModel(
-        evaluation?.id,
-        evaluation?.annotation,
-        evaluation?.grade?.stripTrailingZeros(),
-        evaluation?.status,
-        sequence.id!!,
-        evaluation?.utilityGrade
+        evaluationId = evaluation?.id,
+        annotation = evaluation?.annotation,
+        grade = evaluation?.grade?.stripTrailingZeros(),
+        status = evaluation?.status,
+        sequenceId = sequence.id!!,
+        utilityGrade = evaluation?.utilityGrade,
+        gradingID = evaluation?.id,
+        hiddenByTeacher = evaluation?.hiddenByTeacher ?: false,
+        canHideGrading = canHideGrading,
+        responseId = responseId,
     )
 }
