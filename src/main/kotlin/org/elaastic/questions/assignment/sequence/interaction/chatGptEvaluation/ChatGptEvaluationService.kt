@@ -160,4 +160,20 @@ class ChatGptEvaluationService(
         requireAccess(canUpdateVisibilityEvaluation(chatGptEvaluation, user)) {"You don't have the permission to hide this evaluation"}
         reportCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
     }
+
+    /**
+     * Unhide a chatGPT evaluation.
+     *
+     * An user must have the permission to unhide the evaluation.
+     * If the user doesn't have the permission, an exception is thrown.
+     *
+     * @param chatGptEvaluation the chatGPT evaluation to unhide
+     * @param user the user who wants to unhide the evaluation.
+     * @throws IllegalAccessException if the user doesn't have the permission to unhide the evaluation.
+     */
+    @Throws(IllegalAccessException::class)
+    fun markAsShown(chatGPTEvaluation: ChatGptEvaluation, user: User) {
+        requireAccess(canUpdateVisibilityEvaluation(chatGPTEvaluation, user)) {"You don't have the permission to unhide this evaluation"}
+        reportCandidateService.markAsShown(chatGPTEvaluation, chatGptEvaluationRepository)
+    }
 }
