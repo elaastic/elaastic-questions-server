@@ -194,4 +194,106 @@ class ChatGptEvaluationServiceTest(
             it
         }
     }
+
+    @Test
+    fun `a teacher can unhide a chatGPT evaluation in a sequence he own`() {
+        // Given
+        val response = integrationTestingService.getAnyResponse()
+        val teacher: User = response.interaction.owner
+
+        tGiven("A chatGPT hidden evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = true,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("The teacher unhide the evaluation") {
+            assertTrue(it.hiddenByTeacher)
+            assertDoesNotThrow {
+                chatGptEvaluationService.markAsShown(it, teacher)
+            }
+            it
+        }.tThen("The evaluation is unhidden") {
+            assertFalse(it.hiddenByTeacher)
+            it
+        }
+    }
+
+    @Test
+    fun `a student despit owning the response can't unhide a chatGPT evaluation`() {
+        // Given
+        val response = integrationTestingService.getAnyResponse()
+        response.learner = integrationTestingService.getTestStudent()
+        responseRepository.save(response)
+        val student: User = response.learner
+
+        tGiven("A chatGPT hidden evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = true,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("The student try to unhide the evaluation") {
+            assertTrue(it.hiddenByTeacher)
+            assertFalse(chatGptEvaluationService.canUpdateVisibilityEvaluation(it, student))
+            assertThrows(IllegalAccessException::class.java) {
+                chatGptEvaluationService.markAsShown(it, student)
+            }
+            it
+        }.tThen("The evaluation is not unhidden") {
+            assertTrue(it.hiddenByTeacher)
+            it
+        }
+    }
+
+    @Test
+    fun `nothing happend when we try to unhide an evalution that is visible`() {
+        // Given
+        val response = integrationTestingService.getAnyResponse()
+        val teacher: User = response.interaction.owner
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("The teacher try to unhide the evaluation") {
+            assertFalse(it.hiddenByTeacher)
+            assertDoesNotThrow {
+                chatGptEvaluationService.markAsShown(it, teacher)
+            }
+            it
+        }.tThen("The evaluation is not unhidden") {
+            assertFalse(it.hiddenByTeacher)
+            it
+        }
+    }
 }
