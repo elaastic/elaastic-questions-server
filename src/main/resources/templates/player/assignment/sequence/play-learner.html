@@ -36,9 +36,7 @@
     }
   </script>
 </head>
-
 <body>
-
 <div id="pageSpecificMenu">
   <script>
     var elaastic = elaastic || {}
@@ -46,16 +44,17 @@
 </div>
 
 <aside class="ob-start-sequence-2" id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
-  <div
-    th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
+  <div th:replace="|${components}/revision-info/_revision-info.html| :: revisionInfo(${playerModel.assignmentOverviewModel}, content)"></div>
+  <div th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 </aside>
 
 <div id="modal-aside" th:with="components=${'player/assignment/sequence/components'}">
-  <div
-    th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, modal-aside)"></div>
+  <div th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, modal-aside)"></div>
 </div>
 
 <section th:with="components=${'player/assignment/sequence/components'}">
+  <div th:replace="|${components}/revision-info/_revision-info-mobile.html| :: revisionInfo(${playerModel.assignmentOverviewModel}, content)"></div>
+
   <div th:if="${playerModel.sequence}"
        th:id="|sequence_${playerModel.sequence.id}|">
 
@@ -75,7 +74,7 @@
 
 
   </div>
-  
+
   <th:block th:replace="|${components}/_auto-reload.html| :: auto-reload(${playerModel.sequence.id})"></th:block>
 
 </section>
