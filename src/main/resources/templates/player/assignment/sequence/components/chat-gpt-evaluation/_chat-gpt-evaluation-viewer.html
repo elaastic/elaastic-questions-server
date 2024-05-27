@@ -17,85 +17,96 @@
   -->
 
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     th:fragment="chatGptEvaluation(chatGptEvaluationModel)"
-     class="review" id="chat-gpt-evaluation-accordion" style="padding-bottom: 0"
-     th:classappend="${chatGptEvaluationModel.hiddenByTeacher} ? 'hidden' : ''">
+     th:fragment="chatGptEvaluation(chatGptEvaluationModel)">
 
-    <!--/* Header */-->
-    <div class="review-header review-border" style="padding: 0 10px 0 0">
-        <div class="reviewer-icon robot">
-            <i class="laptop icon"></i>
-        </div>
-        <div class="info-header">
-            <div class="reviewer">
-                <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
+    <div class="review" id="chat-gpt-evaluation-accordion" style="padding-bottom: 0"
+         th:classappend="${chatGptEvaluationModel.hiddenByTeacher} ? 'hidden' : ''">
+
+        <!--/* Header */-->
+        <div class="review-header review-border" style="padding: 0 10px 0 0">
+            <div class="reviewer-icon robot">
+                <i class="laptop icon"></i>
             </div>
-            <div class="score"
-                 th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.grade != null && !chatGptEvaluationModel.hiddenByTeacher}">
-                <span th:text=" #{evaluation.score} + ' :'">Score :</span>
-                <div class="ui label"
-                     th:text="${chatGptEvaluationModel.grade} + '/5'"
-                     data-inverted="" th:data-tooltip="#{player.sequence.chatGptEvaluation.grade.tooltip}"
-                     data-position="top right">-/5
+            <div class="info-header">
+                <div class="reviewer">
+                    <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
+                </div>
+                <div class="score"
+                     th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.grade != null && !chatGptEvaluationModel.hiddenByTeacher}">
+                    <span th:text=" #{evaluation.score} + ' :'">Score :</span>
+                    <div class="ui label"
+                         th:text="${chatGptEvaluationModel.grade} + '/5'"
+                         data-inverted="" th:data-tooltip="#{player.sequence.chatGptEvaluation.grade.tooltip}"
+                         data-position="top right">-/5
+                    </div>
+                </div>
+                <div class="actions"
+                     th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.canHideGrading}">
+                    <!--/* Hide evaluation action */-->
+                    <div class="hide-peer-grading" th:if="${chatGptEvaluationModel.canHideGrading}">
+                        <a class="ui icon button"
+                           th:if="${!chatGptEvaluationModel.hiddenByTeacher}"
+                           th:attr="data-tooltip=#{evaluation.action.hideEvaluation}"
+                           data-tooltip="Hide this evaluation"
+                           data-position="top center"
+                           th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID})|"
+                        ><i class="eye icon"></i></a>
+
+                        <a class="ui icon button hidden"
+                           th:if="${chatGptEvaluationModel.hiddenByTeacher}"
+                           th:attr="data-tooltip=#{evaluation.action.showEvaluation}"
+                           data-tooltip="Show this evaluation"
+                           data-position="top center"
+                           th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID}, false)|"
+                        ><i class="hide icon"></i></a>
+                    </div>
                 </div>
             </div>
-            <div class="actions"
-                 th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.canHideGrading}">
-                <!--/* Hide evaluation action */-->
-                <div class="hide-peer-grading" th:if="${chatGptEvaluationModel.canHideGrading}">
-                    <a class="ui icon button"
-                       th:if="${!chatGptEvaluationModel.hiddenByTeacher}"
-                       th:attr="data-tooltip=#{evaluation.action.hideEvaluation}"
-                       data-tooltip="Hide this evaluation"
-                       data-position="top center"
-                       th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID})|"
-                    ><i class="eye icon"></i></a>
+        </div>
 
-                    <a class="ui icon button hidden"
-                       th:if="${chatGptEvaluationModel.hiddenByTeacher}"
-                       th:attr="data-tooltip=#{evaluation.action.showEvaluation}"
-                       data-tooltip="Show this evaluation"
-                       data-position="top center"
-                       th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID}, false)|"
-                    ><i class="hide icon"></i></a>
-                </div>
+        <!--/*
+        Hidden message when the teacher hides it.
+        It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it.
+        */-->
+        <div class="review-border message-hidden" th:if="${chatGptEvaluationModel.hiddenByTeacher}">
+            <div th:text="#{evaluation.hiddenByTeacher}">Hidden by the teacher</div>
+            <div id="toggleContentDisplay" class="ui button black basic"
+                 style="text-transform: none; font-weight: initial"
+                 th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}">
+
+                <span id="show" th:text="#{evaluation.action.showEvaluationContent}">Show hidden content</span>
+                <span id="hide" th:text="#{evaluation.action.hideEvaluationContent}"
+                      style="display: none;">Mask hidden content</span>
             </div>
         </div>
-    </div>
 
-    <!--/*
-    Hidden message when the teacher hides it.
-    It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it.
-    */-->
-    <div class="review-border message-hidden" th:if="${chatGptEvaluationModel.hiddenByTeacher}">
-        <div th:text="#{evaluation.hiddenByTeacher}">Hidden by the teacher</div>
-        <div id="toggleContentDisplay" class="ui button black basic"
-             style="text-transform: none; font-weight: initial"
-             th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}">
-
-            <span id="show" th:text="#{evaluation.action.showEvaluationContent}">Show hidden content</span>
-            <span id="hide" th:text="#{evaluation.action.hideEvaluationContent}"
-                  style="display: none;">Mask hidden content</span>
+        <!--/* Content */-->
+        <div class="review-border" th:if="${!chatGptEvaluationModel.hiddenByTeacher}">
+            <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
         </div>
+
+        <!--/* Container for the Content when the evaluation is hidden */-->
+        <div class="review-border" th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}" th:id="content"
+             th:if="${chatGptEvaluationModel.hiddenByTeacher}">
+            <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
+        </div>
+
+        <!--/* If the evaluation is generated and it's not the teacher viewed the evaluation Then dispay the command */-->
+        <div class="review-border"
+             th:if="${chatGptEvaluationModel.status == 'DONE' && !chatGptEvaluationModel.viewedByTeacher && !chatGptEvaluationModel.hiddenByTeacher}">
+            <th:block>
+                <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-student-command.html :: chatGptEvaluationCommand(${chatGptEvaluationModel})"></div>
+            </th:block>
+        </div>
+
     </div>
 
-    <!--/* Content */-->
-    <div class="review-border" th:if="${!chatGptEvaluationModel.hiddenByTeacher}">
-        <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
-    </div>
-
-    <!--/* Container for the Content when the evaluation is hidden */-->
-    <div class="review-border" th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}" th:id="content"
-         th:if="${chatGptEvaluationModel.hiddenByTeacher}">
-        <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
-    </div>
-
-    <!--/* If the evaluation is generated and it's not the teacher viewed the evaluation Then dispay the command */-->
-    <div class="review-border"
-         th:if="${chatGptEvaluationModel.status == 'DONE' && !chatGptEvaluationModel.viewedByTeacher && !chatGptEvaluationModel.hiddenByTeacher}">
-        <th:block>
-            <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-student-command.html :: chatGptEvaluationCommand(${chatGptEvaluationModel})"></div>
-        </th:block>
+    <!--/* Feedback message when the teacher hides a peergrading */-->
+    <div class="ui message negative" th:attr="data-evaluation-id=${chatGptEvaluationModel.gradingID}"
+         id="feedbackMessage" style="display: none;">
+        <i class="close icon"></i>
+        <div class="header" style="color: #912d2b;">Header of the message</div>
+        <p id="content">Content of the message</p>
     </div>
 
     <script th:inline="javascript">
@@ -142,6 +153,10 @@
                         console.error("An error occurred while updating the visibility of the evaluation.")
                         console.error(data)
                         //TODO Put message in an error message
+                        const feedbackMessage = $('#feedbackMessage[data-evaluation-id="' + gradingId + '"]');
+                        feedbackMessage.children('.header').html(data.header)
+                        feedbackMessage.children('#content').html(data.content)
+                        feedbackMessage.slideDown();
                     }
                 })
                 .fail(function () {
@@ -172,6 +187,9 @@
                 }
             });
 
+            $('.message .close').on('click', function () {
+                $(this).closest('.message').slideUp();
+            });
         });
     </script>
 
