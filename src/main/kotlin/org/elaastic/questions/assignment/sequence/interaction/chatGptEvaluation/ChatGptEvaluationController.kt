@@ -52,6 +52,41 @@ class ChatGptEvaluationController(
                 content = messageSource.getMessage("evaluation.hideEvaluation.error.content", null, locale)
             )
         }
+    }
 
+    @ResponseBody
+    @GetMapping("/unhide/{gradingId}")
+    fun unhideChatGptEvaluation(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable gradingId: Long,
+    ): ResponseSubmissionAsynchronous {
+        val user = authentication.principal as User
+        val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(gradingId)
+
+        val locale: Locale = LocaleContextHolder.getLocale()
+
+        return if (chatGptEvaluation != null) {
+            try {
+                chatGptEvaluationService.markAsShown(chatGptEvaluation, user)
+                ResponseSubmissionAsynchronous(
+                    success = true,
+                    header = messageSource.getMessage("evaluation.unhideEvaluation.success.header", null, locale),
+                    content = messageSource.getMessage("evaluation.unhideEvaluation.success.content", null, locale)
+                )
+            } catch (e: IllegalAccessException) {
+                ResponseSubmissionAsynchronous(
+                    success = false,
+                    header = messageSource.getMessage("evaluation.accesDenied.header", null, locale),
+                    content = messageSource.getMessage("evaluation.unhideEvaluation.accesDenied.content", null, locale)
+                )
+            }
+        } else {
+            ResponseSubmissionAsynchronous(
+                success = false,
+                header = messageSource.getMessage("evaluation.unhideEvaluation.error.header", null, locale),
+                content = messageSource.getMessage("evaluation.unhideEvaluation.error.content", null, locale)
+            )
+        }
     }
 }
