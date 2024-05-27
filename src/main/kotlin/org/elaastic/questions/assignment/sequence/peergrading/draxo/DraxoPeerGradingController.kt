@@ -79,7 +79,7 @@ class DraxoPeerGradingController(
         var draxoPeerGradingList = peerGradingService.findAllDraxo(response)
 
         // The student can't see the hidden feedbacks
-        if (user.isLearner()) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
+        if (user != assignment.owner) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
 
         val draxoEvaluationModels = draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
             DraxoEvaluationModel(
@@ -90,16 +90,19 @@ class DraxoPeerGradingController(
                 responseService.canHidePeerGrading(user, response)
             )
         }
-
-        val chatGptEvaluationModel = if (response.interaction.sequence.chatGptEvaluationEnabled) {
-            // If the ChatGPT evaluation is enabled, we add it to the model
-            ChatGptEvaluationModelFactory.build(
-                evaluation = chatGptEvaluationService.findEvaluationByResponse(response),
-                sequence = response.interaction.sequence,
-                canHideGrading = responseService.canHidePeerGrading(user, response),
-                responseId = response.id
-            )
-        } else null
+        val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
+        val chatGptEvaluationModel =
+            // If it isn't the teacher, we check if the chatGPT evaluation is hidden by the teacher.
+            // eq. If it's a student, we check if the chatGPT evaluation is hidden by the teacher. If it's hidden, we give a null value to the model.
+            if (response.interaction.sequence.chatGptEvaluationEnabled && !(user != assignment.owner && chatGptEvaluation?.hiddenByTeacher == true)) {
+                // If the ChatGPT evaluation is enabled, we add it to the model
+                ChatGptEvaluationModelFactory.build(
+                    evaluation = chatGptEvaluation,
+                    sequence = response.interaction.sequence,
+                    canHideGrading = responseService.canHidePeerGrading(user, response),
+                    responseId = response.id
+                )
+            } else null
 
         val evaluationModel = EvaluationModel(
             draxoEvaluationModels,
