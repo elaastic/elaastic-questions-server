@@ -128,6 +128,7 @@
          */
         function updateVisibilityOfGrading(gradingId, markAsHidden = true) {
             const responseId = [[${chatGptEvaluationModel.responseId}]];
+            const feedbackMessage = $('#feedbackMessage[data-evaluation-id="' + gradingId + '"]');
 
             let url = "/chatGptEvaluation/";
             url += markAsHidden ? "hide/" : "unhide/";
@@ -135,9 +136,7 @@
 
             $.get(url)
                 .done(function (data) {
-                    console.log(data)
                     if (data.success) {
-                        console.log("Succés")
                         // We update the container through the link of the detail
                         const explanationContainer = $('.explanation[data-response-id="' + responseId + '"]:visible')
                         for (const explanationContainerElement of explanationContainer) {
@@ -150,17 +149,15 @@
                             }
                         }
                     } else {
-                        console.error("An error occurred while updating the visibility of the evaluation.")
-                        console.error(data)
-                        //TODO Put message in an error message
-                        const feedbackMessage = $('#feedbackMessage[data-evaluation-id="' + gradingId + '"]');
                         feedbackMessage.children('.header').html(data.header)
                         feedbackMessage.children('#content').html(data.content)
                         feedbackMessage.slideDown();
                     }
                 })
                 .fail(function () {
-                    console.log("An error occurred while updating the visibility of the evaluation.");
+                    feedbackMessage.children('.header').html("An error occurred")
+                    feedbackMessage.children('#content').html("Please try again later.")
+                    feedbackMessage.slideDown();
                 });
         }
 
