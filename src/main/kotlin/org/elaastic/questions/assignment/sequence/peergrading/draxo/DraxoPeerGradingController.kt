@@ -97,6 +97,7 @@ class DraxoPeerGradingController(
                 evaluation = chatGptEvaluationService.findEvaluationByResponse(response),
                 sequence = response.interaction.sequence,
                 canHideGrading = responseService.canHidePeerGrading(user, response),
+                responseId = response.id
             )
         } else null
 

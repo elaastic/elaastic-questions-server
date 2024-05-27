@@ -9,6 +9,7 @@ object ChatGptEvaluationModelFactory {
         evaluation: ChatGptEvaluation?,
         sequence: Sequence,
         canHideGrading: Boolean = false,
+        responseId: Long? = null
     ) : ChatGptEvaluationModel = ChatGptEvaluationModel(
         evaluationId = evaluation?.id,
         annotation = evaluation?.annotation,
@@ -19,6 +20,6 @@ object ChatGptEvaluationModelFactory {
         gradingID = evaluation?.id,
         hiddenByTeacher = evaluation?.hiddenByTeacher ?: false,
         canHideGrading = canHideGrading,
-        responseId = evaluation?.response?.id!!,
+        responseId = responseId,
     )
 }
