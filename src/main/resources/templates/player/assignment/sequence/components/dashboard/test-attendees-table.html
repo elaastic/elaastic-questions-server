@@ -29,8 +29,13 @@
 <section>
     <h2>Attendees table</h2>
 
-    <div th:replace="player/assignment/sequence/components/dashboard/_attendees-table.html
-                     :: attendeesTable(${attendees})"></div>
+    <th:block th:each="situation: ${situationList}">
+        <h1 th:text="${situation.description}"></h1>
+        <div th:replace="player/assignment/sequence/components/dashboard/_attendees-table.html
+                     :: attendeesTable(${situation.learnersMonitoringModel})"></div>
+    </th:block>
+
+
 </section>
 </body>
 </html>
