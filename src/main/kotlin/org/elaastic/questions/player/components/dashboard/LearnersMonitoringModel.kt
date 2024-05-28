@@ -32,32 +32,37 @@ class LearnerMonitoringModel(
     val learnerId: Long,
     val learnerName: String,
     val learnerStateOnPhase1: LearnerStateOnPhase,
-    val learnerStateOnPhase2: LearnerStateOnPhase,
-    val learnerStateOnPhase3: LearnerStateOnPhase,
+    val learnerStateOnPhase2: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+    val learnerStateOnPhase3: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
     val learnersMonitoringModel: LearnersMonitoringModel) {
 
     /**
      * Return the StateCell from a given phase
      * @property phase
      */
-    fun getStateCell(phase: LearnerPhaseType): StateCell
-        = when (this.getLearnerPhaseStateByType(phase)) {
+    fun getStateCell(phase: LearnerPhaseType): StateCell {
+        val phaseState: PhaseState = this.getPhaseStateByType(phase)
+
+        return when (this.getLearnerPhaseStateByType(phase)) {
             LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED -> {
-                if (this.getPhaseStateByType(phase) == PhaseState.IN_PROGRESS) {
+                if (phaseState == PhaseState.IN_PROGRESS) {
+                    StateCell.IN_PROGRESS
+                } else if (phaseState == PhaseState.NOT_STARTED) {
+                    StateCell.LOCKED
+                } else {
+                    StateCell.NOT_TERMINATED
+                }
+            }
+            LearnerStateOnPhase.ACTIVITY_TERMINATED -> StateCell.TERMINATED
+            LearnerStateOnPhase.WAITING -> {
+                if (phaseState == PhaseState.IN_PROGRESS) {
                     StateCell.IN_PROGRESS
                 } else {
-                    StateCell.NOT_TERMINATED
+                    StateCell.LOCKED
                 }
             }
-            LearnerStateOnPhase.ACTIVITY_TERMINATED -> {
-                if (this.getPhaseStateByType(phase) == PhaseState.COMPLETED) {
-                    StateCell.TERMINATED
-                } else {
-                    StateCell.NOT_TERMINATED
-                }
-            }
-            LearnerStateOnPhase.WAITING -> StateCell.LOCKED
         }
+    }
 
     /**
      * Return the LearnerStateOnPhase from the type of the phase
