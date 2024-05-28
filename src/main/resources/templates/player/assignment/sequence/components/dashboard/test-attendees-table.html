@@ -29,12 +29,8 @@
 <section>
     <h2>Attendees table</h2>
 
-    <th:block th:each="situation,i : ${explanationDetailsSituations}">
-        <h3 th:text="${situation.description}"></h3>
-
-        <div th:replace="player/assignment/sequence/components/dashboard/_attendees-table.html
-                         :: attendeesTable()"></div>
-    </th:block>
+    <div th:replace="player/assignment/sequence/components/dashboard/_attendees-table.html
+                     :: attendeesTable(${attendees})"></div>
 </section>
 </body>
 </html>

@@ -66,6 +66,10 @@ import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluati
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
+import org.elaastic.questions.player.components.dashboard.LearnerMonitoringModel
+import org.elaastic.questions.player.components.dashboard.LearnerStateOnPhase
+import org.elaastic.questions.player.components.dashboard.LearnersMonitoringModel
+import org.elaastic.questions.player.components.dashboard.PhaseState
 import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
@@ -2963,19 +2967,40 @@ class TestingPlayerController(
     )
 
     @GetMapping("/dashboard/attendees-table")
-    fun testDashboardAttendeesTable(authentication: Authentication,
-                                    model: Model): String {
+    fun testDashboardAttendeesTable(
+        authentication: Authentication,
+        model: Model
+    ): String {
 
         val user: User = authentication.principal as User
-        val assignment: Assignment = Assignment()
-        val attendee: LearnerAssignment = LearnerAssignment()
 
-        model.addAttribute(
-            "attendees",
-            listOf(
-
-            )
+        var learnersMonitoringModel: LearnersMonitoringModel
+            = LearnersMonitoringModel(PhaseState.IN_PROGRESS,
+                                      PhaseState.NOT_STARTED,
+                                      PhaseState.NOT_STARTED,
+                                      mutableListOf())
+        val learners = mutableListOf(
+            LearnerMonitoringModel(
+                1,
+                "Jean DUPONT",
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.WAITING,
+                LearnerStateOnPhase.WAITING,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                3,
+                "Jean DUPONT",
+                LearnerStateOnPhase.WAITING,
+                LearnerStateOnPhase.WAITING,
+                LearnerStateOnPhase.WAITING,
+                learnersMonitoringModel
+            ),
         )
+        learners.forEach { learnersMonitoringModel.learners.add(it) }
+
+        model.addAttribute("user", user)
+        model.addAttribute("attendees", learnersMonitoringModel)
 
         return "player/assignment/sequence/components/dashboard/test-attendees-table"
     }
