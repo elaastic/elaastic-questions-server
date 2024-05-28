@@ -18,8 +18,30 @@
   ~
   -->
 
-<th:block th:fragment="attendeesTable()">
+<th:block th:fragment="attendeesTable(attendees)">
 
-    <!-- TODO -->
+    <table class="ui celled definition table">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="center aligned">first_phase_label</th>
+                <th class="center aligned">second_phase_label</th>
+                <th class="center aligned">third_phase_label</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="attendee: ${attendees.learners}">
+                <!--/* Name of the learner */-->
+                <td><div th:text="${attendee.learnerName}"></div></td>
+
+                <!--/* States of the learner */-->
+                <th:block th:each="phase: ${T(org.elaastic.questions.player.phase.LearnerPhaseType).values()}">
+                    <th:block th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${attendee.getStateCell(phase).name})">
+                    </th:block>
+                </th:block>
+            </tr>
+        </tbody>
+    </table>
 
 </th:block>
