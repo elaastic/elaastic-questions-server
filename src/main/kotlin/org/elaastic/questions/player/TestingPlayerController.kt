@@ -20,8 +20,6 @@ package org.elaastic.questions.player
 
 import ConfidenceDistributionChartModel
 import EvaluationDistributionChartModel
-import org.elaastic.questions.assignment.Assignment
-import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
@@ -79,6 +77,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -2966,6 +2965,14 @@ class TestingPlayerController(
         val learnerResultsModel: LearnerResultsModel
     )
 
+    /**
+     * Represente a situation for an table
+     */
+    data class TableAttendeesSituation(
+        val description: String,
+        val learnersMonitoringModel: LearnersMonitoringModel,
+    )
+
     @GetMapping("/dashboard/attendees-table")
     fun testDashboardAttendeesTable(
         authentication: Authentication,
@@ -2974,34 +2981,210 @@ class TestingPlayerController(
 
         val user: User = authentication.principal as User
 
-        var learnersMonitoringModel: LearnersMonitoringModel
-            = LearnersMonitoringModel(PhaseState.IN_PROGRESS,
-                                      PhaseState.NOT_STARTED,
-                                      PhaseState.NOT_STARTED,
-                                      mutableListOf())
+        val situationList = listOf(
+            TableAttendeesSituation(
+                "Phase 1 in progress with two students and one have finished",
+                learnersMonitoringModel1()
+            ),
+            TableAttendeesSituation(
+                "Nothing is started",
+                learnersMonitoringModel2()
+            ),
+            TableAttendeesSituation(
+                "Remote sequence",
+                learnersMonitoringModel3()
+            ),
+            TableAttendeesSituation(
+                "Phase 1 stopped and phase 2 in progress with two students with one student who hasn't submitted his " +
+                "response",
+                learnersMonitoringModel4()
+            ),
+            TableAttendeesSituation(
+                "Result phase started",
+                learnersMonitoringModel5()
+            ),
+        )
+
+        model.addAttribute("user", user)
+        model["situationList"] = situationList
+
+        return "player/assignment/sequence/components/dashboard/test-attendees-table"
+    }
+
+    private fun learnersMonitoringModel1(): LearnersMonitoringModel {
+        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+            PhaseState.IN_PROGRESS,
+            PhaseState.NOT_STARTED,
+            PhaseState.NOT_STARTED,
+            mutableListOf()
+        )
         val learners = mutableListOf(
             LearnerMonitoringModel(
                 1,
-                "Jean DUPONT",
+                "I've submitted my answer",
                 LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                LearnerStateOnPhase.WAITING,
-                LearnerStateOnPhase.WAITING,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                1,
+                "John Doe",
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
                 learnersMonitoringModel
             ),
             LearnerMonitoringModel(
                 3,
-                "Jean DUPONT",
-                LearnerStateOnPhase.WAITING,
-                LearnerStateOnPhase.WAITING,
-                LearnerStateOnPhase.WAITING,
+                "I didn't answer yet",
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
                 learnersMonitoringModel
             ),
         )
         learners.forEach { learnersMonitoringModel.learners.add(it) }
+        return learnersMonitoringModel
+    }
 
-        model.addAttribute("user", user)
-        model.addAttribute("attendees", learnersMonitoringModel)
+    private fun learnersMonitoringModel2(): LearnersMonitoringModel {
+        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+            PhaseState.NOT_STARTED,
+            PhaseState.NOT_STARTED,
+            PhaseState.NOT_STARTED,
+            mutableListOf()
+        )
+        val learners = mutableListOf(
+            LearnerMonitoringModel(
+                1,
+                "The sequence is not started",
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+        )
+        learners.forEach { learnersMonitoringModel.learners.add(it) }
+        return learnersMonitoringModel
+    }
 
-        return "player/assignment/sequence/components/dashboard/test-attendees-table"
+    private fun learnersMonitoringModel3(): LearnersMonitoringModel {
+        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+            PhaseState.IN_PROGRESS,
+            PhaseState.IN_PROGRESS,
+            PhaseState.IN_PROGRESS,
+            mutableListOf()
+        )
+        val learners = mutableListOf(
+            LearnerMonitoringModel(
+                1,
+                "I didn't start",
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                2,
+                "I've submitted my response",
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                3,
+                "I've submitted my response and my evaluation",
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                4,
+                "I've finished this sequence",
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                learnersMonitoringModel
+            ),
+        )
+        learners.forEach { learnersMonitoringModel.learners.add(it) }
+        return learnersMonitoringModel
+    }
+
+    private fun learnersMonitoringModel4(): LearnersMonitoringModel {
+        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+            PhaseState.STOPPED,
+            PhaseState.IN_PROGRESS,
+            PhaseState.NOT_STARTED,
+            mutableListOf()
+        )
+        val learners = mutableListOf(
+            LearnerMonitoringModel(
+                1,
+                "I've submitted my answer",
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                2,
+                "I've not submitted my answer",
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+        )
+        learners.forEach { learnersMonitoringModel.learners.add(it) }
+        return learnersMonitoringModel
+    }
+
+    private fun learnersMonitoringModel5(): LearnersMonitoringModel {
+        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+            PhaseState.STOPPED,
+            PhaseState.STOPPED,
+            PhaseState.IN_PROGRESS,
+            mutableListOf()
+        )
+        val learners = mutableListOf(
+            LearnerMonitoringModel(
+                1,
+                "Alice",
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                2,
+                "Bob",
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                3,
+                "Jean",
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+            LearnerMonitoringModel(
+                4,
+                "Pierre",
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                learnersMonitoringModel
+            ),
+        )
+        learners.forEach { learnersMonitoringModel.learners.add(it) }
+        return learnersMonitoringModel
     }
 }
