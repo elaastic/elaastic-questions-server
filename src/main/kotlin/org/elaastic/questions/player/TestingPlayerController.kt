@@ -68,7 +68,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.Optio
 import org.elaastic.questions.player.components.dashboard.LearnerMonitoringModel
 import org.elaastic.questions.player.components.dashboard.LearnerStateOnPhase
 import org.elaastic.questions.player.components.dashboard.LearnersMonitoringModel
-import org.elaastic.questions.player.components.dashboard.PhaseState
+import org.elaastic.questions.player.components.dashboard.DashboardPhaseState
 import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
@@ -3015,9 +3015,9 @@ class TestingPlayerController(
     private fun learnersMonitoringModel1(): LearnersMonitoringModel {
         val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
             ExecutionContext.FaceToFace,
-            PhaseState.IN_PROGRESS,
-            PhaseState.NOT_STARTED,
-            PhaseState.NOT_STARTED,
+            DashboardPhaseState.IN_PROGRESS,
+            DashboardPhaseState.NOT_STARTED,
+            DashboardPhaseState.NOT_STARTED,
             mutableListOf()
         )
         val learners = mutableListOf(
@@ -3053,9 +3053,9 @@ class TestingPlayerController(
     private fun learnersMonitoringModel2(): LearnersMonitoringModel {
         val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
             ExecutionContext.FaceToFace,
-            PhaseState.NOT_STARTED,
-            PhaseState.NOT_STARTED,
-            PhaseState.NOT_STARTED,
+            DashboardPhaseState.NOT_STARTED,
+            DashboardPhaseState.NOT_STARTED,
+            DashboardPhaseState.NOT_STARTED,
             mutableListOf()
         )
         val learners = mutableListOf(
@@ -3075,9 +3075,9 @@ class TestingPlayerController(
     private fun learnersMonitoringModel3(): LearnersMonitoringModel {
         val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
             ExecutionContext.Distance,
-            PhaseState.IN_PROGRESS,
-            PhaseState.IN_PROGRESS,
-            PhaseState.IN_PROGRESS,
+            DashboardPhaseState.IN_PROGRESS,
+            DashboardPhaseState.IN_PROGRESS,
+            DashboardPhaseState.IN_PROGRESS,
             mutableListOf()
         )
         val learners = mutableListOf(
@@ -3131,9 +3131,9 @@ class TestingPlayerController(
     private fun learnersMonitoringModel4(): LearnersMonitoringModel {
         val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
             ExecutionContext.FaceToFace,
-            PhaseState.STOPPED,
-            PhaseState.IN_PROGRESS,
-            PhaseState.NOT_STARTED,
+            DashboardPhaseState.STOPPED,
+            DashboardPhaseState.IN_PROGRESS,
+            DashboardPhaseState.NOT_STARTED,
             mutableListOf()
         )
         val learners = mutableListOf(
@@ -3188,9 +3188,9 @@ class TestingPlayerController(
     private fun learnersMonitoringModel5(): LearnersMonitoringModel {
         val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
             ExecutionContext.FaceToFace,
-            PhaseState.STOPPED,
-            PhaseState.STOPPED,
-            PhaseState.IN_PROGRESS,
+            DashboardPhaseState.STOPPED,
+            DashboardPhaseState.STOPPED,
+            DashboardPhaseState.IN_PROGRESS,
             mutableListOf())
 
         val learners = mutableListOf(
