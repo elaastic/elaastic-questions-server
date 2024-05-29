@@ -1,21 +1,87 @@
 package org.elaastic.questions.player.components.dashboard;
 
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.player.phase.LearnerPhaseType
 
 /**
  * Model for the learners monitoring dashboard.
  *
+ * @property executionContext Sequence execution context type
  * @property phase1State the state of phase 1
  * @property phase2State the state of phase 2
  * @property phase3State the state of phase 3
  * @property learners the learners' states on each phase
  */
 class LearnersMonitoringModel(
+    val executionContext: ExecutionContext,
     val phase1State: PhaseState,
     val phase2State: PhaseState,
     val phase3State: PhaseState,
     val learners: MutableList<LearnerMonitoringModel>
-)
+) {
+    /**
+     *
+     */
+    fun setLearners(newLearnersList: MutableList<LearnerMonitoringModel>) {
+        learners.clear()
+
+        val newLearnersListSorted: MutableList<LearnerMonitoringModel>
+            = when (this.executionContext) {
+                ExecutionContext.FaceToFace -> this.sortWithFaceToFaceBehavior(newLearnersList)
+                else                        -> this.sortWithBlendedOrRemoteBehavior(newLearnersList)
+            }
+
+        learners.addAll(newLearnersListSorted)
+    }
+
+    /**
+     * Sort the learner when the sequence is in FaceToFace execution context
+     *
+     * If the Phase 1 is active then we want the learner still writing their answer in the top.
+     *
+     * If the Phase 2 is active then we want the learner still evaluating at first and more first the learner who didn't answer the question.
+     *
+     * If the Phase 3 is active then we want the learner who didn't answer and evaluate at first.
+     */
+    private fun sortWithFaceToFaceBehavior(
+        newLearnersList: MutableList<LearnerMonitoringModel>
+    ): MutableList<LearnerMonitoringModel> {
+
+        newLearnersList.sortBy { it.learnerName }
+
+        if (this.phase1State == PhaseState.IN_PROGRESS) {
+            newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) }
+        }
+
+        if (this.phase2State == PhaseState.IN_PROGRESS) {
+            newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) }
+            newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.NOT_TERMINATED) }
+        }
+
+        if (this.phase3State == PhaseState.IN_PROGRESS) {
+            newLearnersList.sortByDescending { it.getStateCell(LearnerPhaseType.RESPONSE) == LearnerMonitoringModel.StateCell.NOT_TERMINATED }
+            newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.NOT_TERMINATED) }
+        }
+
+        return newLearnersList
+    }
+
+    /**
+     * Sort the learners when the sequence has Blended or Remote execution context.
+     *
+     * Sort the learners alphabetically and by their "In Progress..." states count.
+     */
+    private fun sortWithBlendedOrRemoteBehavior(
+        newLearnersList: MutableList<LearnerMonitoringModel>
+    ): MutableList<LearnerMonitoringModel> {
+        // Sorted By name alphabetically
+        newLearnersList.sortBy { it.learnerName }
+        // Sort by number of state in progress descending
+        newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) }
+
+        return newLearnersList
+    }
+}
 
 /**
  * Model for a learner's state on each phase.
@@ -88,6 +154,17 @@ class LearnerMonitoringModel(
             LearnerPhaseType.EVALUATION -> this.learnersMonitoringModel.phase2State
             LearnerPhaseType.RESULT     -> this.learnersMonitoringModel.phase3State
         }
+    }
+
+    /**
+     * Return the number of state that is IN_PROGRESS
+     */
+    fun getLevelByStateCell(stateCell: StateCell): Int {
+        val states: List<StateCell> = listOf(this.getStateCell(LearnerPhaseType.RESPONSE),
+                                             this.getStateCell(LearnerPhaseType.EVALUATION),
+                                             this.getStateCell(LearnerPhaseType.RESULT))
+
+        return states.count { it == stateCell }
     }
 
     enum class StateCell {
