@@ -26,19 +26,9 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.test.interpreter.command.Phase
 
 class DashboardModel (
-    var sequence: Sequence,
-    var attendees: List<LearnerAssignment>,
-    var attendeesCount: Int,
-    var attendeesResponses: Map<Long, Pair<Response?, Response?>>,
-    var responsePhaseAttendees: Pair<List<LearnerAssignment>, List<LearnerAssignment>>,
-    var responsePhaseAttendeesCount: Int,
-    var evaluationPhaseAttendees: Pair<List<LearnerAssignment>, List<LearnerAssignment>>,
-    var evaluationPhaseAttendeesCount: Int,
-    var openedPane: String,
-    var previousSequence: Long?,
-    var nextSequence: Long?,
-    var isResponsePhasePlayed: Boolean,
-    var isEvaluationPhasePlayed: Boolean,
-    var isResponsePhaseActive: Boolean,
-    var isEvaluationPhaseActive: Boolean,
+    val sequence: Sequence,
+    val openedPane: String,
+    val previousSequence: Long?,
+    val nextSequence: Long?,
+    val learnersMonitoringModel: LearnersMonitoringModel,
 )
