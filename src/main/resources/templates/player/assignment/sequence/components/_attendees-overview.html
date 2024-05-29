@@ -103,8 +103,9 @@
     </button>
   </div>
 
+  <!--/* Error message if there are no learners */-->
   <div class="ui segment attached"
-       th:if="${#lists.isEmpty(model.attendees)}">
+       th:if="${#lists.isEmpty(model.learnersMonitoringModel.learners)}">
 
     <div class="ui message warning"
          th:text="#{attendees.empty}">
@@ -114,198 +115,7 @@
   <div class="ui attached fluid"
        style="border-radius: 0;">
 
-    <table class="ui celled definition table">
-      <thead>
-      <tr>
-        <th></th>
-        <th>first_phase_label</th>
-        <th>second_phase_label</th>
-        <th>third_phase_label</th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <tr>
-        <td>
-          John Doe
-        </td>
-
-        <td>
-          x
-        </td>
-
-        <td>
-          x
-        </td>
-
-        <td>
-          x
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="ui styled accordion fluid attached"
-       th:if="false"
-       style="border-radius: 0;"
-       th:unless="${#lists.isEmpty(model.attendees)}">
-
-
-
-    <!--
-     PHASE 1
-     -->
-    <div class="title"
-         th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'accordion-disabled' : ''}
-                          ${stepsModel.responseSubmissionState.name() != 'DISABLED'
-                            && stepsModel.evaluationState.name() == 'DISABLED' ? 'active' : ''}|">
-
-      <i class="icon"
-         th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'lock' : 'dropdown'}|"></i>
-
-      <span th:text="#{attendees.phase(__${'1'}__)}"></span>
-
-      <span style="font-size: 12px;"
-            th:text="|(#{attendees.phase.not_started})|"
-            th:if="${stepsModel.responseSubmissionState.name() == 'DISABLED'}">
-        not_started_label</span>
-
-      <span style="font-size: 12px;"
-            th:text="|(${model.responsePhaseAttendeesCount})|"
-            th:if="${stepsModel.responseSubmissionState.name() != 'DISABLED'}">
-        (0)</span>
-    </div>
-
-    <div class="content"
-         th:classappend="${stepsModel.responseSubmissionState.name() != 'DISABLED'
-                           && stepsModel.evaluationState.name() == 'DISABLED' ? 'active' : ''}">
-
-      <th:block th:if="${stepsModel.responseSubmissionState.name() != 'DISABLED'}">
-        <div class="ui message warning"
-             th:text="#{attendees.phase.none_attendee}"
-             th:if="${model.responsePhaseAttendeesCount == 0}">
-          none_attendee_in_phase
-        </div>
-
-        <!--
-        <th:block th:each="attendee, i: ${model.responsePhaseAttendees.first}">
-          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row
-                           :: attendee(${attendee},
-                                       ${model.attendeesResponses[attendee.learner.id]},
-                                       1,
-                                       ${model.isResponsePhasePlayed},
-                                       ${model.isEvaluationPhasePlayed},
-                                       ${model.isResponsePhaseActive},
-                                       ${model.isEvaluationPhaseActive})"></div>
-        </th:block>
-
-        <th:block th:each="attendee, i: ${model.responsePhaseAttendees.second}">
-          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row
-                           :: attendee(${attendee},
-                                       ${model.attendeesResponses[attendee.learner.id]},
-                                       1,
-                                       ${model.isResponsePhasePlayed},
-                                       ${model.isEvaluationPhasePlayed},
-                                       ${model.isResponsePhaseActive},
-                                       ${model.isEvaluationPhaseActive})"></div>
-        </th:block>
-         -->
-      </th:block>
-    </div>
-
-
-    <!--
-     PHASE 2
-     -->
-    <div class="title"
-         th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'accordion-disabled' : ''}
-                          ${stepsModel.evaluationState.name() != 'DISABLED'
-                            && stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'active' : ''}|">
-
-      <i class="icon"
-         th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'lock' : 'dropdown'}|"></i>
-
-      <span th:text="#{attendees.phase(__${'2'}__)}"></span>
-
-      <span style="font-size: 12px;"
-            th:text="|(#{attendees.phase.not_started})|"
-            th:if="${stepsModel.evaluationState.name() == 'DISABLED'}">
-        not_started_label</span>
-
-      <span style="font-size: 12px;"
-            th:text="|(${model.evaluationPhaseAttendeesCount})|"
-            th:if="${stepsModel.evaluationState.name() != 'DISABLED'}">
-        (0)</span>
-    </div>
-
-    <div class="content"
-         th:classappend="${stepsModel.evaluationState.name() != 'DISABLED'
-                           && stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'active' : ''}">
-
-      <th:block th:if="${stepsModel.evaluationState.name() != 'DISABLED'}">
-        <div class="ui message warning"
-             th:text="#{attendees.phase.none_attendee}"
-             th:if="${model.evaluationPhaseAttendeesCount == 0}">
-          none_attendee_in_phase
-        </div>
-
-        <table class="ui celled definition table">
-          <thead>
-          <tr>
-            <th>attendee_label</th>
-            <th>first_phase_label</th>
-            <th>second_phase_label</th>
-            <th>third_phase_label</th>
-          </tr>
-          </thead>
-
-          <tbody>
-          <tr>
-            <td>
-              John Doe
-            </td>
-
-            <td>
-              x
-            </td>
-
-            <td>
-              x
-            </td>
-
-            <td>
-              x
-            </td>
-          </tr>
-          </tbody>
-        </table>
-
-        <!--
-        <th:block th:each="attendee, i: ${model.evaluationPhaseAttendees.first}">
-          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row
-                           :: attendee(${attendee},
-                                       ${model.attendeesResponses[attendee.learner.id]},
-                                       1,
-                                       ${model.isResponsePhasePlayed},
-                                       ${model.isEvaluationPhasePlayed},
-                                       ${model.isResponsePhaseActive},
-                                       ${model.isEvaluationPhaseActive})"></div>
-        </th:block>
-
-        <th:block th:each="attendee, i: ${model.evaluationPhaseAttendees.second}">
-          <div th:replace="player/assignment/sequence/components/attendees/_attendee-row
-                           :: attendee(${attendee},
-                                       ${model.attendeesResponses[attendee.learner.id]},
-                                       1,
-                                       ${model.isResponsePhasePlayed},
-                                       ${model.isEvaluationPhasePlayed},
-                                       ${model.isResponsePhaseActive},
-                                       ${model.isEvaluationPhaseActive})"></div>
-        </th:block>
-         -->
-      </th:block>
-    </div>
+    <!-- TODO: include ATTENDEES_TABLE component!! -->
   </div>
 
   <script th:if="${context == 'aside' && model.sequence.getId() != null}" th:inline="javascript">
@@ -316,9 +126,6 @@
       if (!elaastic.util.isVisible(target, container, 50)) {
         elaastic.util.ensureIsVisible(target, container)
       }
-
-      $(".ui.accordion")
-        .accordion();
     })();
   </script>
 
