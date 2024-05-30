@@ -20,110 +20,127 @@
 
 package org.elaastic.questions.player.components.dashboard
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.elaastic.questions.player.components.steps.StepsModelFactory
-import org.elaastic.questions.test.interpreter.command.Phase
 import org.springframework.stereotype.Service
 
 @Service
 object DashboardModelFactory {
-
-    private fun isResponsePhaseActive(learnerStepsModel: StepsModel): Boolean
-        = learnerStepsModel.responseSubmissionState == StepsModel.PhaseState.ACTIVE
-
-    private fun isEvaluationPhaseActive(learnerStepsModel: StepsModel): Boolean
-        = learnerStepsModel.evaluationState == StepsModel.PhaseState.ACTIVE
-
-    private fun isResponsePhasePlayed(learnerStepsModel: StepsModel): Boolean
-        = this.isResponsePhaseActive(learnerStepsModel)
-        || learnerStepsModel.responseSubmissionState == StepsModel.PhaseState.COMPLETED
-
-    private fun isEvaluationPhasePlayed(learnerStepsModel: StepsModel): Boolean
-        = this.isEvaluationPhaseActive(learnerStepsModel)
-        || learnerStepsModel.evaluationState == StepsModel.PhaseState.COMPLETED
 
     fun build(sequence: Sequence,
               previousSequence: Sequence?,
               nextSequence: Sequence?,
               attendees: List<LearnerAssignment>,
               responses: List<Response>,
-              openedPane: String): DashboardModel {
-
-        val attendeesResponses: Map<Long, Pair<Response?, Response?>> = responses
-            .groupBy { it.learner.id!! }
-            .mapValues {
-                val firstAttemptResponse = it.value.find { response ->
-                    response.attempt == 1
-                    && response.interaction.interactionType === InteractionType.ResponseSubmission
-                }
-
-                val secondAttemptResponse = it.value.find { response ->
-                    response.attempt == 2
-                    && response.interaction.interactionType === InteractionType.ResponseSubmission
-                }
-
-                Pair(firstAttemptResponse, secondAttemptResponse)
-            }
+              openedPane: String,
+              evaluationCountByUser: Map<LearnerAssignment, Int>
+    ): DashboardModel {
 
         val learnerStepsModel: StepsModel
-            = StepsModelFactory.buildForLearner(sequence, sequence.activeInteraction)
+            = StepsModelFactory.buildForTeacher(sequence)
 
-        val responsePhaseAttendees: Pair<List<LearnerAssignment>, List<LearnerAssignment>>
-            = attendees
-                .filter {
-                    val submittedResponsesByLearner: Pair<Response?, Response?>?
-                        = attendeesResponses[it.learner.id]
+        val learnersMonitoringModel: LearnersMonitoringModel
+            = LearnersMonitoringModel(sequence.executionContext,
+                                      convertPhaseState(learnerStepsModel.responseSubmissionState),
+                                      convertPhaseState(learnerStepsModel.evaluationState),
+                                      convertPhaseState(learnerStepsModel.readState))
 
-                    submittedResponsesByLearner?.first === null
-                    || !this.isEvaluationPhasePlayed(learnerStepsModel)   //  ==> phase 1
-                }
-                .partition {
-                    // FIRST LIST = IN COURSE
-                    // SECOND LIST = FINISHED
-                    attendeesResponses[it.learner.id]?.first === null
-                }
+        val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
 
-        val responsePhaseAttendeesCount: Int
-            = responsePhaseAttendees.first.size + responsePhaseAttendees.second.size
+        /*
+        for (attendee: LearnerAssignment in attendees) {
+            learners.add(LearnerMonitoringModel(attendee.id,
+                                                attendee.learner.getFullname(),
+                                                ))
+        }
+        */
 
-        val evaluationPhaseAttendees: Pair<List<LearnerAssignment>, List<LearnerAssignment>>
-            = attendees
-                .filter {
-                    val submittedResponseByLearner: Pair<Response?, Response?>?
-                        = attendeesResponses[it.learner.id]
-
-                    submittedResponseByLearner?.first !== null
-                    && this.isEvaluationPhasePlayed(learnerStepsModel)    //  ==> phase 2
-                }
-                .partition {
-                    // FIRST LIST = IN COURSE
-                    // SECOND LIST = FINISHED
-                    attendeesResponses[it.learner.id]?.first !== null
-                }
-
-        val evaluationPhaseAttendeesCount: Int
-            = evaluationPhaseAttendees.first.size + evaluationPhaseAttendees.second.size
+        //  TODO:      learnersMonitoringModel.setLearners()
 
         return DashboardModel(sequence,
-                              attendees,
-                              attendees.size,
-                              attendeesResponses,
-                              responsePhaseAttendees,
-                              responsePhaseAttendeesCount,
-                              evaluationPhaseAttendees,
-                              evaluationPhaseAttendeesCount,
                               openedPane,
                               previousSequence?.id,
                               nextSequence?.id,
-                              this.isResponsePhasePlayed(learnerStepsModel),
-                              this.isEvaluationPhasePlayed(learnerStepsModel),
-                              this.isResponsePhaseActive(learnerStepsModel),
-                              this.isEvaluationPhaseActive(learnerStepsModel))
+                              learnersMonitoringModel)
+    }
+
+    private fun getAttendeeStateOnResponsePhase(
+        attendee: LearnerAssignment,
+        attendeeResponses: List<Response>,
+        responsePhaseState: DashboardPhaseState
+    ): LearnerStateOnPhase {
+
+        val hasResponseForPhase: Boolean = attendeeResponses.count {
+            it.attempt == 1 && it.interaction.interactionType == InteractionType.ResponseSubmission
+        } == 1
+
+        return if (responsePhaseState == DashboardPhaseState.NOT_STARTED) {
+            LearnerStateOnPhase.WAITING
+        } else if (!hasResponseForPhase) {
+            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+        } else {
+            LearnerStateOnPhase.ACTIVITY_TERMINATED
+        }
+    }
+
+    /**
+     * @return the LearnerStateOnPhase base on the argument
+     */
+    private fun getAttendeeStateOnEvaluationPhase(
+        attendee: LearnerAssignment,
+        sequence: Sequence,
+        evaluationPhaseState: DashboardPhaseState,
+        evaluationCountByUser: Map<LearnerAssignment, Int>
+    ): LearnerStateOnPhase {
+
+        val nbEvaluationMade = evaluationCountByUser[attendee]
+
+        val hasMadeAllEvaluationForPhase: Boolean = sequence.activeInteraction?.interactionType == InteractionType.Evaluation
+            && sequence.getEvaluationSpecification().responseToEvaluateCount == nbEvaluationMade
+
+        return if (evaluationPhaseState == DashboardPhaseState.NOT_STARTED) {
+            LearnerStateOnPhase.WAITING
+        } else if (hasMadeAllEvaluationForPhase) {
+            LearnerStateOnPhase.ACTIVITY_TERMINATED
+        } else {
+            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+        }
+    }
+
+    private fun getAttendeeStateOnReadPhase(
+        sequence: Sequence,
+        readPhaseState: DashboardPhaseState,
+        attendee: LearnerAssignment,
+        evaluationPhaseState: DashboardPhaseState,
+        evaluationCountByUser: Map<LearnerAssignment, Int>
+    ): LearnerStateOnPhase {
+
+        return if ((sequence.executionIsFaceToFace() || sequence.executionIsBlended())) {
+            if (readPhaseState == DashboardPhaseState.IN_PROGRESS) {
+                LearnerStateOnPhase.WAITING
+            } else {
+                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+            }
+        } else if (getAttendeeStateOnEvaluationPhase(attendee, sequence, evaluationPhaseState, evaluationCountByUser) == LearnerStateOnPhase.ACTIVITY_TERMINATED) {
+            LearnerStateOnPhase.WAITING
+        } else {
+            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+        }
+    }
+
+    /**
+     * Since The StepsModel use different state phase than the LearnersMonitoringModel we need to convert it
+     */
+    private fun convertPhaseState(state: StepsModel.PhaseState): DashboardPhaseState {
+        return when(state) {
+            StepsModel.PhaseState.DISABLED  -> DashboardPhaseState.NOT_STARTED
+            StepsModel.PhaseState.ACTIVE    -> DashboardPhaseState.IN_PROGRESS
+            StepsModel.PhaseState.COMPLETED -> DashboardPhaseState.COMPLETED
+        }
     }
 
 }
