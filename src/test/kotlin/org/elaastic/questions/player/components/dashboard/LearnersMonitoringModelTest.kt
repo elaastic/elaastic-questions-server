@@ -452,32 +452,32 @@ class LearnersMonitoringModelTest(
                     4,
                     "Bob",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "David",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 1 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Charlie",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 1 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -520,7 +520,7 @@ class LearnersMonitoringModelTest(
                     "Bob",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
@@ -528,7 +528,7 @@ class LearnersMonitoringModelTest(
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
@@ -536,7 +536,7 @@ class LearnersMonitoringModelTest(
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
@@ -544,7 +544,7 @@ class LearnersMonitoringModelTest(
                     "David",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
@@ -552,7 +552,7 @@ class LearnersMonitoringModelTest(
                     "David",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
@@ -560,7 +560,7 @@ class LearnersMonitoringModelTest(
                     "Charlie",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.WAITING,
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -599,5 +599,5 @@ class LearnersMonitoringModelTest(
         }
     }
 
-    
+
 }
