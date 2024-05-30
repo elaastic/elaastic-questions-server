@@ -29,6 +29,7 @@ import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
@@ -72,6 +73,7 @@ class PlayerController(
     @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val eventLogService: EventLogService,
+    @Autowired val peerGradingService: PeerGradingService,
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
@@ -249,13 +251,21 @@ class PlayerController(
         val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
         val attendeesSequences: MutableMap<Long, ILearnerSequence> = mutableMapOf()
 
+        // Associate eache learner with the number of evaluation he made
+        val evaluationCountByUser = registeredUsers.associateWith {
+            peerGradingService.findAllEvaluation(it.learner, sequence).count()
+        }
+
+
         val dashboardModel: DashboardModel =
             DashboardModelFactory.build(sequence,
                                         previousSequence,
                                         nextSequence,
                                         registeredUsers,
                                         responses,
-                                        openedPane)
+                                        openedPane,
+                                        evaluationCountByUser,
+                                        )
 
         var learnerSequence: ILearnerSequence
 
