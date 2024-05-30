@@ -31,23 +31,24 @@ import org.springframework.stereotype.Service
 @Service
 object DashboardModelFactory {
 
-    fun build(sequence: Sequence,
-              previousSequence: Sequence?,
-              nextSequence: Sequence?,
-              attendees: List<LearnerAssignment>,
-              responses: List<Response>,
-              openedPane: String,
-              evaluationCountByUser: Map<LearnerAssignment, Int>
+    fun build(
+        sequence: Sequence,
+        previousSequence: Sequence?,
+        nextSequence: Sequence?,
+        attendees: List<LearnerAssignment>,
+        responses: List<Response>,
+        openedPane: String,
+        evaluationCountByUser: Map<LearnerAssignment, Int>
     ): DashboardModel {
 
-        val learnerStepsModel: StepsModel
-            = StepsModelFactory.buildForTeacher(sequence)
+        val learnerStepsModel: StepsModel = StepsModelFactory.buildForTeacher(sequence)
 
-        val learnersMonitoringModel: LearnersMonitoringModel
-            = LearnersMonitoringModel(sequence.executionContext,
-                                      convertPhaseState(learnerStepsModel.responseSubmissionState),
-                                      convertPhaseState(learnerStepsModel.evaluationState),
-                                      convertPhaseState(learnerStepsModel.readState))
+        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+            sequence.executionContext,
+            convertPhaseState(learnerStepsModel.responseSubmissionState),
+            convertPhaseState(learnerStepsModel.evaluationState),
+            convertPhaseState(learnerStepsModel.readState)
+        )
 
         val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
 
@@ -61,11 +62,13 @@ object DashboardModelFactory {
 
         //  TODO:      learnersMonitoringModel.setLearners()
 
-        return DashboardModel(sequence,
-                              openedPane,
-                              previousSequence?.id,
-                              nextSequence?.id,
-                              learnersMonitoringModel)
+        return DashboardModel(
+            sequence,
+            openedPane,
+            previousSequence?.id,
+            nextSequence?.id,
+            learnersMonitoringModel
+        )
     }
 
     private fun getAttendeeStateOnResponsePhase(
@@ -87,9 +90,7 @@ object DashboardModelFactory {
         }
     }
 
-    /**
-     * @return the LearnerStateOnPhase base on the argument
-     */
+    /** @return the LearnerStateOnPhase base on the argument */
     private fun getAttendeeStateOnEvaluationPhase(
         attendee: LearnerAssignment,
         sequence: Sequence,
@@ -99,8 +100,9 @@ object DashboardModelFactory {
 
         val nbEvaluationMade = evaluationCountByUser[attendee]
 
-        val hasMadeAllEvaluationForPhase: Boolean = sequence.activeInteraction?.interactionType == InteractionType.Evaluation
-            && sequence.getEvaluationSpecification().responseToEvaluateCount == nbEvaluationMade
+        val hasMadeAllEvaluationForPhase: Boolean =
+            sequence.activeInteraction?.interactionType == InteractionType.Evaluation
+                    && sequence.getEvaluationSpecification().responseToEvaluateCount == nbEvaluationMade
 
         return if (evaluationPhaseState == DashboardPhaseState.NOT_STARTED) {
             LearnerStateOnPhase.WAITING
@@ -125,7 +127,13 @@ object DashboardModelFactory {
             } else {
                 LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
             }
-        } else if (getAttendeeStateOnEvaluationPhase(attendee, sequence, evaluationPhaseState, evaluationCountByUser) == LearnerStateOnPhase.ACTIVITY_TERMINATED) {
+        } else if (getAttendeeStateOnEvaluationPhase(
+                attendee,
+                sequence,
+                evaluationPhaseState,
+                evaluationCountByUser
+            ) == LearnerStateOnPhase.ACTIVITY_TERMINATED
+        ) {
             LearnerStateOnPhase.WAITING
         } else {
             LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
@@ -133,12 +141,13 @@ object DashboardModelFactory {
     }
 
     /**
-     * Since The StepsModel use different state phase than the LearnersMonitoringModel we need to convert it
+     * Since The StepsModel use different state phase than the
+     * LearnersMonitoringModel we need to convert it
      */
     private fun convertPhaseState(state: StepsModel.PhaseState): DashboardPhaseState {
-        return when(state) {
-            StepsModel.PhaseState.DISABLED  -> DashboardPhaseState.NOT_STARTED
-            StepsModel.PhaseState.ACTIVE    -> DashboardPhaseState.IN_PROGRESS
+        return when (state) {
+            StepsModel.PhaseState.DISABLED -> DashboardPhaseState.NOT_STARTED
+            StepsModel.PhaseState.ACTIVE -> DashboardPhaseState.IN_PROGRESS
             StepsModel.PhaseState.COMPLETED -> DashboardPhaseState.COMPLETED
         }
     }

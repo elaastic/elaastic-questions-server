@@ -19,17 +19,14 @@ class LearnersMonitoringModel(
     val phase3State: DashboardPhaseState,
     val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
 ) {
-    /**
-     *
-     */
+    /**  */
     fun setLearners(newLearnersList: MutableList<LearnerMonitoringModel>) {
         learners.clear()
 
-        val newLearnersListSorted: MutableList<LearnerMonitoringModel>
-            = when (this.executionContext) {
-                ExecutionContext.FaceToFace -> this.sortWithFaceToFaceBehavior(newLearnersList)
-                else                        -> this.sortWithBlendedOrRemoteBehavior(newLearnersList)
-            }
+        val newLearnersListSorted: MutableList<LearnerMonitoringModel> = when (this.executionContext) {
+            ExecutionContext.FaceToFace -> this.sortWithFaceToFaceBehavior(newLearnersList)
+            else -> this.sortWithBlendedOrRemoteBehavior(newLearnersList)
+        }
 
         learners.addAll(newLearnersListSorted)
     }
@@ -37,11 +34,14 @@ class LearnersMonitoringModel(
     /**
      * Sort the learner when the sequence is in FaceToFace execution context
      *
-     * If the Phase 1 is active then we want the learner still writing their answer in the top.
+     * If the Phase 1 is active, then we want the learner still writing their
+     * answer at the top.
      *
-     * If the Phase 2 is active then we want the learner still evaluating at first and more first the learner who didn't answer the question.
+     * If the Phase 2 is active, then we want the learner still evaluating at
+     * first and more than the learner who didn't answer the question.
      *
-     * If the Phase 3 is active then we want the learner who didn't answer and evaluate at first.
+     * If the Phase 3 is active, then we want the learner who didn't answer and
+     * evaluate at first.
      */
     private fun sortWithFaceToFaceBehavior(
         newLearnersList: MutableList<LearnerMonitoringModel>
@@ -67,9 +67,11 @@ class LearnersMonitoringModel(
     }
 
     /**
-     * Sort the learners when the sequence has Blended or Remote execution context.
+     * Sort the learners when the sequence has Blended or Remote execution
+     * context.
      *
-     * Sort the learners alphabetically and by their "In Progress..." states count.
+     * Sort the learners alphabetically and by their "In Progress..." states
+     * count.
      */
     private fun sortWithBlendedOrRemoteBehavior(
         newLearnersList: MutableList<LearnerMonitoringModel>
@@ -100,10 +102,12 @@ class LearnerMonitoringModel(
     val learnerStateOnPhase1: LearnerStateOnPhase,
     val learnerStateOnPhase2: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
     val learnerStateOnPhase3: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-    val learnersMonitoringModel: LearnersMonitoringModel) {
+    val learnersMonitoringModel: LearnersMonitoringModel
+) {
 
     /**
      * Return the StateCell from a given phase
+     *
      * @property phase
      */
     fun getStateCell(phase: LearnerPhaseType): StateCell {
@@ -119,6 +123,7 @@ class LearnerMonitoringModel(
                     StateCell.NOT_TERMINATED
                 }
             }
+
             LearnerStateOnPhase.ACTIVITY_TERMINATED -> StateCell.TERMINATED
             LearnerStateOnPhase.WAITING -> {
                 if (phaseState == DashboardPhaseState.IN_PROGRESS) {
@@ -132,37 +137,39 @@ class LearnerMonitoringModel(
 
     /**
      * Return the LearnerStateOnPhase from the type of the phase
+     *
      * @property phase The type of the phase
      * @see LearnerPhaseType
      */
     private fun getLearnerPhaseStateByType(phase: LearnerPhaseType): LearnerStateOnPhase {
         return when (phase) {
-            LearnerPhaseType.RESPONSE   -> this.learnerStateOnPhase1
+            LearnerPhaseType.RESPONSE -> this.learnerStateOnPhase1
             LearnerPhaseType.EVALUATION -> this.learnerStateOnPhase2
-            LearnerPhaseType.RESULT     -> this.learnerStateOnPhase3
+            LearnerPhaseType.RESULT -> this.learnerStateOnPhase3
         }
     }
 
     /**
      * Return the PhaseState from the type of the phase
+     *
      * @property phase The type of the phase
      * @see LearnerPhaseType
      */
     private fun getPhaseStateByType(phase: LearnerPhaseType): DashboardPhaseState {
         return when (phase) {
-            LearnerPhaseType.RESPONSE   -> this.learnersMonitoringModel.phase1State
+            LearnerPhaseType.RESPONSE -> this.learnersMonitoringModel.phase1State
             LearnerPhaseType.EVALUATION -> this.learnersMonitoringModel.phase2State
-            LearnerPhaseType.RESULT     -> this.learnersMonitoringModel.phase3State
+            LearnerPhaseType.RESULT -> this.learnersMonitoringModel.phase3State
         }
     }
 
-    /**
-     * Return the number of state that is IN_PROGRESS
-     */
+    /** Return the number of state that is IN_PROGRESS */
     fun getLevelByStateCell(stateCell: StateCell): Int {
-        val states: List<StateCell> = listOf(this.getStateCell(LearnerPhaseType.RESPONSE),
-                                             this.getStateCell(LearnerPhaseType.EVALUATION),
-                                             this.getStateCell(LearnerPhaseType.RESULT))
+        val states: List<StateCell> = listOf(
+            this.getStateCell(LearnerPhaseType.RESPONSE),
+            this.getStateCell(LearnerPhaseType.EVALUATION),
+            this.getStateCell(LearnerPhaseType.RESULT)
+        )
 
         return states.count { it == stateCell }
     }
@@ -187,16 +194,16 @@ enum class DashboardPhaseState {
     /**
      * The phase has not started
      *
-     * Applicable to all phases.
-     * During phase 3 (evaluation), the phase is not started when the results are not displayed yet
+     * Applicable to all phases. During phase 3 (evaluation), the phase is not
+     * started when the results are not displayed yet
      */
     NOT_STARTED,
 
     /**
      * The phase is in progress
      *
-     * Applicable to all phases.
-     * During phase 3 (evaluation), the phase is in progress when the results are being displayed
+     * Applicable to all phases. During phase 3 (evaluation), the phase is in
+     * progress when the results are being displayed
      */
     IN_PROGRESS,
 
@@ -218,23 +225,18 @@ enum class DashboardPhaseState {
 /**
  * Enum defining states of a learner on a phase
  *
- * @property ACTIVITY_NOT_TERMINATED the learner has not terminated the activity
+ * @property ACTIVITY_NOT_TERMINATED the learner has not terminated the
+ *     activity
  * @property ACTIVITY_TERMINATED the learner has terminated the activity
  * @property WAITING the learner is waiting for the next phase
  */
 enum class LearnerStateOnPhase {
-    /**
-     * The learner has not terminated the activity.
-     */
+    /** The learner has not terminated the activity. */
     ACTIVITY_NOT_TERMINATED,
 
-    /**
-     * The learner has terminated the activity.
-     */
+    /** The learner has terminated the activity. */
     ACTIVITY_TERMINATED,
 
-    /**
-     * The learner is waiting for the next phase.
-     */
+    /** The learner is waiting for the next phase. */
     WAITING
 }
