@@ -20,10 +20,7 @@
 
 package org.elaastic.questions.player.components.dashboard
 
-import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.test.interpreter.command.Phase
 
 class DashboardModel(
     val sequence: Sequence,

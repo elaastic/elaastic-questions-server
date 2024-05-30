@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.dashboard;
+package org.elaastic.questions.player.components.dashboard
 
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.player.phase.LearnerPhaseType
@@ -19,7 +19,17 @@ class LearnersMonitoringModel(
     val phase3State: DashboardPhaseState,
     val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
 ) {
-    /**  */
+    /**
+     * With the given list of learners, set the list of learners in the model.
+     *
+     * Replace the current list of learners with the new list.
+     * Before setting the new list, sort the learners according to the execution context and the current phase.
+     *
+     * @param newLearnersList the new list of learners
+     * @see ExecutionContext
+     * @see sortWithFaceToFaceBehavior
+     * @see sortWithBlendedOrRemoteBehavior
+     */
     fun setLearners(newLearnersList: MutableList<LearnerMonitoringModel>) {
         learners.clear()
 
@@ -78,7 +88,7 @@ class LearnersMonitoringModel(
     ): MutableList<LearnerMonitoringModel> {
         // Sorted By name alphabetically
         newLearnersList.sortBy { it.learnerName }
-        // Sort by number of state in progress descending
+        // Sort by number of states in progress descending
         newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) }
 
         return newLearnersList
@@ -106,9 +116,13 @@ class LearnerMonitoringModel(
 ) {
 
     /**
-     * Return the StateCell from a given phase
+     * Return the StateCell from a given phase type and the learner's state
      *
-     * @property phase
+     * @property phase the type of the phase
+     * @return the StateCell of the phase
+     * @see StateCell
+     * @see LearnerPhaseType
+     * @see LearnerStateOnPhase
      */
     fun getStateCell(phase: LearnerPhaseType): StateCell {
         val phaseState: DashboardPhaseState = this.getPhaseStateByType(phase)
@@ -163,7 +177,11 @@ class LearnerMonitoringModel(
         }
     }
 
-    /** Return the number of state that is IN_PROGRESS */
+    /**
+     * @property stateCell the state of the cell we want to count
+     * @return the number of states that is given
+     * @see StateCell
+     */
     fun getLevelByStateCell(stateCell: StateCell): Int {
         val states: List<StateCell> = listOf(
             this.getStateCell(LearnerPhaseType.RESPONSE),
@@ -174,6 +192,14 @@ class LearnerMonitoringModel(
         return states.count { it == stateCell }
     }
 
+    /**
+     * Enum defining states of a cell for a learner
+     *
+     * @property LOCKED the learner can't access the phase
+     * @property IN_PROGRESS the learner is currently working on the phase
+     * @property NOT_TERMINATED the learner has not terminated the phase
+     * @property TERMINATED the learner has terminated the phase
+     */
     enum class StateCell {
         LOCKED,
         IN_PROGRESS,

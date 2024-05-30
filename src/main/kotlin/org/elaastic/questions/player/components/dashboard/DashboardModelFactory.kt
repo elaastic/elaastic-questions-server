@@ -24,10 +24,16 @@ import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.elaastic.questions.player.components.steps.StepsModelFactory
 import org.springframework.stereotype.Service
 
+/**
+ * Factory to build the [DashboardModel].
+ *
+ * @see DashboardModel
+ */
 @Service
 object DashboardModelFactory {
 
@@ -71,6 +77,15 @@ object DashboardModelFactory {
         )
     }
 
+    /**
+     * Get the LearnerStateOnPhase of the attendee on the Response phase.
+     *
+     * @param attendee the attendee
+     * @param attendeeResponses the list of responses of the attendee
+     * @param responsePhaseState the state of the response phase
+     * @return the state of the attendee on the response phase
+     * @see LearnerStateOnPhase
+     */
     private fun getAttendeeStateOnResponsePhase(
         attendee: LearnerAssignment,
         attendeeResponses: List<Response>,
@@ -90,7 +105,19 @@ object DashboardModelFactory {
         }
     }
 
-    /** @return the LearnerStateOnPhase base on the argument */
+    /**
+     * Get the LearnerStateOnPhase of the attendee on the Evaluation phase.
+     *
+     * A learner has finished the phase if he has evaluated exactly the number
+     * of responses required.
+     *
+     * @param attendee the attendee
+     * @param sequence the sequence
+     * @param evaluationPhaseState the state of the evaluation phase
+     * @param evaluationCountByUser the number of evaluations made by each user
+     * @return the LearnerStateOnPhase base on the argument
+     * @see EvaluationSpecification
+     */
     private fun getAttendeeStateOnEvaluationPhase(
         attendee: LearnerAssignment,
         sequence: Sequence,
@@ -98,6 +125,7 @@ object DashboardModelFactory {
         evaluationCountByUser: Map<LearnerAssignment, Int>
     ): LearnerStateOnPhase {
 
+        // To not use any Service in a Factory, we need to pass the evaluationCountByUser as an argument
         val nbEvaluationMade = evaluationCountByUser[attendee]
 
         val hasMadeAllEvaluationForPhase: Boolean =
@@ -113,6 +141,29 @@ object DashboardModelFactory {
         }
     }
 
+    /**
+     * Get the LearnerStateOnPhase of the attendee on the Read phase. (eq. the
+     * result phase)
+     *
+     * By default, the learner has not terminated the activity
+     *
+     * If the sequence is *Face-to-Face or blended and the read phase is in
+     * progress, the learner is waiting.
+     *
+     * If the sequence is *Distance*, we need to check if the learner has
+     * terminated the previous activity, the Evaluation phase. For that we
+     * need to get the argument for the [getAttendeeStateOnEvaluationPhase]
+     * function.
+     *
+     * @param sequence the sequence
+     * @param readPhaseState the state of the read phase
+     * @param attendee the attendee
+     * @param evaluationPhaseState the state of the evaluation phase
+     * @param evaluationCountByUser the number of evaluations made by each user
+     * @return the state of the attendee on the read phase
+     * @see LearnerStateOnPhase
+     * @see getAttendeeStateOnEvaluationPhase
+     */
     private fun getAttendeeStateOnReadPhase(
         sequence: Sequence,
         readPhaseState: DashboardPhaseState,
@@ -141,8 +192,13 @@ object DashboardModelFactory {
     }
 
     /**
-     * Since The StepsModel use different state phase than the
-     * LearnersMonitoringModel we need to convert it
+     * Since The [StepsModel] use different state phase than the
+     * [LearnersMonitoringModel], we need to convert the state.
+     *
+     * @param state the StepsModel.PhaseState to convert
+     * @return the converted state in DashboardPhaseState
+     * @see [StepsModel.PhaseState]
+     * @see DashboardPhaseState
      */
     private fun convertPhaseState(state: StepsModel.PhaseState): DashboardPhaseState {
         return when (state) {
