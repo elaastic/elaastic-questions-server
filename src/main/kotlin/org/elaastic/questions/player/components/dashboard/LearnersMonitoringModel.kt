@@ -66,6 +66,7 @@ class LearnersMonitoringModel(
         if (this.phase2State == DashboardPhaseState.IN_PROGRESS) {
             newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) }
             newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.NOT_TERMINATED) }
+            newLearnersList.sortByDescending { it.getStateCell(LearnerPhaseType.EVALUATION) == LearnerMonitoringModel.StateCell.IN_PROGRESS }
         }
 
         if (this.phase3State == DashboardPhaseState.IN_PROGRESS) {
