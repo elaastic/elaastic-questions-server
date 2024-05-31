@@ -89,7 +89,7 @@
             </th:block>
 
 
-            <th:block th:if="${model.secondAttemptAllowed && model.nextResponseToGrade != null}">
+            <th:block th:if="${model.secondAttemptAllowed}">
                 <div
                         th:replace="player/assignment/sequence/phase/evaluation/_change-answer-form::changeAnswerForm(${model.secondAttemptAlreadySubmitted}, ${model.responseFormModel}, ${model.lastResponseToGrade})"></div>
 
@@ -100,6 +100,8 @@
                     }
                 </script>
             </th:block>
+
+
             <th:block th:if="${!model.secondAttemptAllowed}">
                 <script>
                     function onEvaluationDone() {
