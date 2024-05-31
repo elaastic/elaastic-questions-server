@@ -591,5 +591,98 @@ class LearnersMonitoringModelTest(
         }
     }
 
+    @Test
+    fun `In a Face to Face and Phase 3 active, setLearners should sort the learners by the number of NOT_TERMINATED state descending then NOT_TERMINATED in phase 1 and then alphabitacly`() {
+        val learnersMonitoringModel = LearnersMonitoringModel(
+            ExecutionContext.FaceToFace,
+            DashboardPhaseState.STOPPED,
+            DashboardPhaseState.STOPPED,
+            DashboardPhaseState.IN_PROGRESS,
+            mutableListOf()
+        )
+        tGiven("A list of LearnerMonitoringModel") {
+            val learners: MutableList<LearnerMonitoringModel> = mutableListOf(
+                LearnerMonitoringModel(
+                    6,
+                    "Bob",
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    learnersMonitoringModel = learnersMonitoringModel
+                ),
+                LearnerMonitoringModel(
+                    5,
+                    "Alice",
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    learnersMonitoringModel = learnersMonitoringModel
+                ),
+                LearnerMonitoringModel(
+                    4,
+                    "David",
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    learnersMonitoringModel = learnersMonitoringModel
+                ),
+                LearnerMonitoringModel(
+                    3,
+                    "Bob",
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
+                    learnersMonitoringModel = learnersMonitoringModel
+                ),
+                LearnerMonitoringModel(
+                    2,
+                    "Alice",
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
+                    learnersMonitoringModel = learnersMonitoringModel
+                ),
+                LearnerMonitoringModel(
+                    1,
+                    "David",
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    learnersMonitoringModel = learnersMonitoringModel
+                ),
+                LearnerMonitoringModel(
+                    0,
+                    "Albert",
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    learnersMonitoringModel = learnersMonitoringModel
+                ),
+            )
+            learners
+        }.tWhen("I set the learners") {
+            learnersMonitoringModel.setLearners(it)
+        }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
+            val learnersIdSorted = learnersMonitoringModel.learners.map {
+                it.learnerId
+            }
+            // The list of learners has been created in such a way that the ids are in ascending order
+            // starting from 1 when sorting.
+            val longList: List<Long> = listOf(0, 1, 2, 3, 4, 5, 6)
+            assertEquals(longList, learnersIdSorted)
 
+            // Late mean that they didn't finish the first phase and still in progress in the second phase
+            val firstLearnerWhoAreLate = learnersMonitoringModel.learners.find {
+                it.learnerStateOnPhase1 == LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+                        && it.learnerStateOnPhase2 == LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+            }
+            assertEquals(
+                "Albert",
+                firstLearnerWhoAreLate?.learnerName,
+                "Between two learners who are late, the one with the smallest name should be first"
+            )
+
+            val learnerWhoHaveJustFinishOnePhase = learnersMonitoringModel.learners.find {
+                it.getLevelByStateCell(LearnerMonitoringModel.StateCell.NOT_TERMINATED) == 1
+            }
+            assertEquals(
+                "Alice",
+                learnerWhoHaveJustFinishOnePhase?.learnerName,
+                "Between two learners who have just finished one phase, the one with the smallest name should be first"
+            )
+        }
+    }
 }
