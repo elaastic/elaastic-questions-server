@@ -395,30 +395,22 @@ class LearnersMonitoringModelTest(
                 LearnerMonitoringModel(
                     1,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 1 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 2 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    learnersMonitoringModel = learnersMonitoringModel
-                ),
-                LearnerMonitoringModel(
-                    1,
-                    "Alice",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 3 IN_PROGRESS
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    // IN_PROGRESS
                     learnersMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -430,7 +422,7 @@ class LearnersMonitoringModelTest(
                 it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS)
             }
             assertEquals(
-                listOf(3, 2, 1, 0),
+                listOf(2, 1, 0),
                 learnersSorted,
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
             )
