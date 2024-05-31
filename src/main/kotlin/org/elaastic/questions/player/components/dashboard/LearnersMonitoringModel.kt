@@ -19,11 +19,42 @@ class LearnersMonitoringModel(
     val phase3State: DashboardPhaseState,
     val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
 ) {
+
+    init {
+        // Check coherence of the model
+        when (executionContext) {
+            ExecutionContext.Distance -> {
+                require(phase1State == phase2State) { "In Distant mode phase 1 and 2 have the same state" }
+                if (phase3State == DashboardPhaseState.IN_PROGRESS) {
+                    //    All the phase can be in the same state,
+                    // OR the first two phases are stopped while the third is in progress
+                    require(phase2State == phase3State || phase2State == DashboardPhaseState.STOPPED)
+                }
+                if (phase1State == DashboardPhaseState.IN_PROGRESS) require(phase3State == DashboardPhaseState.IN_PROGRESS) { "In Distant mode phase 3 must be in progress when phase 1 is started" }
+            }
+
+            ExecutionContext.Blended -> {
+                require(phase1State == phase2State) { "In Blended mode phase 1 and 2 have the same state" }
+                if (phase1State == DashboardPhaseState.IN_PROGRESS) require(phase3State == DashboardPhaseState.NOT_STARTED) { "In Blended mode phase 3 must be not started when phase 1 is started" }
+            }
+
+            ExecutionContext.FaceToFace -> {
+                if (phase1State == DashboardPhaseState.IN_PROGRESS) require(phase2State == DashboardPhaseState.NOT_STARTED) { "In FaceToFace mode phase 2 must be not started when phase 1 is started" }
+
+                if (phase2State == DashboardPhaseState.IN_PROGRESS) require(phase3State == DashboardPhaseState.NOT_STARTED) { "In FaceToFace mode phase 3 must be not started when phase 2 is started" }
+                if (phase2State == DashboardPhaseState.IN_PROGRESS) require(phase1State == DashboardPhaseState.STOPPED) { "In FaceToFace mode phase 1 must be completed when phase 2 is started" }
+
+                if (phase3State == DashboardPhaseState.IN_PROGRESS) require(phase1State == DashboardPhaseState.STOPPED && phase2State == DashboardPhaseState.STOPPED) { "In FaceToFace mode phase 1 and 2 must be completed when phase 3 is started" }
+            }
+        }
+    }
+
     /**
      * With the given list of learners, set the list of learners in the model.
      *
-     * Replace the current list of learners with the new list.
-     * Before setting the new list, sort the learners according to the execution context and the current phase.
+     * Replace the current list of learners with the new list. Before setting
+     * the new list, sort the learners according to the execution context and
+     * the current phase.
      *
      * @param newLearnersList the new list of learners
      * @see ExecutionContext
@@ -119,8 +150,8 @@ class LearnerMonitoringModel(
     /**
      * Return the StateCell from a given phase type and the learner's state
      *
-     * @property phase the type of the phase
      * @return the StateCell of the phase
+     * @property phase the type of the phase
      * @see StateCell
      * @see LearnerPhaseType
      * @see LearnerStateOnPhase
@@ -179,8 +210,8 @@ class LearnerMonitoringModel(
     }
 
     /**
-     * @property stateCell the state of the cell we want to count
      * @return the number of states that is given
+     * @property stateCell the state of the cell we want to count
      * @see StateCell
      */
     fun getLevelByStateCell(stateCell: StateCell): Int {
