@@ -58,15 +58,20 @@ object DashboardModelFactory {
 
         val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
 
-        /*
-        for (attendee: LearnerAssignment in attendees) {
-            learners.add(LearnerMonitoringModel(attendee.id,
-                                                attendee.learner.getFullname(),
-                                                ))
+        attendees.forEach {
+            learners.add(
+                LearnerMonitoringModel(
+                    it.id!!,
+                    it.learner.getFullname(),
+                    getAttendeeStateOnResponsePhase(responses, learnersMonitoringModel.phase1State),
+                    getAttendeeStateOnEvaluationPhase(it, sequence, learnersMonitoringModel.phase2State, evaluationCountByUser),
+                    getAttendeeStateOnReadPhase(sequence, learnersMonitoringModel.phase3State, it, learnersMonitoringModel.phase2State, evaluationCountByUser),
+                    learnersMonitoringModel
+                )
+            )
         }
-        */
 
-        //  TODO:      learnersMonitoringModel.setLearners()
+        learnersMonitoringModel.setLearners(learners)
 
         return DashboardModel(
             sequence,
@@ -87,7 +92,6 @@ object DashboardModelFactory {
      * @see LearnerStateOnPhase
      */
     private fun getAttendeeStateOnResponsePhase(
-        attendee: LearnerAssignment,
         attendeeResponses: List<Response>,
         responsePhaseState: DashboardPhaseState
     ): LearnerStateOnPhase {
