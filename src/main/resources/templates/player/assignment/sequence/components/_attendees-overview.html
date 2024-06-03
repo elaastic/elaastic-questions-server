@@ -24,59 +24,59 @@
     <!-- TODO: verify if th:if is teacher works successfully!! -->
 
 
-  <h3 class="ui top attached block header">
-    <i class="question circle outline icon"></i>
+    <h3 class="ui top attached block header">
+        <i class="question circle outline icon"></i>
 
-    <div class="content" th:text="${model.statement.getTitle()}"></div>
-  </h3>
+        <div class="content" th:text="${model.statement.getTitle()}"></div>
+    </h3>
 
-  <div class="ui segment attached sequence-content"
-       th:utext="${model.statement.getContent()}">
-  </div>
-
-  <div class="ui header attached block assignment-navigator-actions">
-    <div>
-      <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${dashboardModel.previousSequence}?currentPane=attendees|"
-         th:if="${dashboardModel.previousSequence != null}">
-
-        <button class="ui button"
-                style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
-                     padding: 10px;">
-
-          <i class="angle left icon" style="margin: 0;"></i>
-
-          <p style="margin: 0;"
-             th:text="#{attendees.navigator.previous}">
-            previous_assignment</p>
-        </button>
-      </a>
+    <div class="ui segment attached sequence-content"
+         th:utext="${model.statement.getContent()}">
     </div>
 
-    <div>
-      <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${dashboardModel.nextSequence}?currentPane=attendees|"
-         th:if="${dashboardModel.nextSequence != null}">
+    <div class="ui header attached block assignment-navigator-actions">
+        <div>
+            <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${dashboardModel.previousSequence}?currentPane=attendees|"
+               th:if="${dashboardModel.previousSequence != null}">
 
-        <button class="ui button"
-                style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
+                <button class="ui button"
+                        style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
                      padding: 10px;">
 
-          <p style="margin: 0;"
-             th:text="#{attendees.navigator.next}">
-            next_assignment</p>
+                    <i class="angle left icon" style="margin: 0;"></i>
 
-          <i class="angle right icon" style="margin: 0;"></i>
-        </button>
-      </a>
+                    <p style="margin: 0;"
+                       th:text="#{attendees.navigator.previous}">
+                        previous_assignment</p>
+                </button>
+            </a>
+        </div>
+
+        <div>
+            <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${dashboardModel.nextSequence}?currentPane=attendees|"
+               th:if="${dashboardModel.nextSequence != null}">
+
+                <button class="ui button"
+                        style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
+                     padding: 10px;">
+
+                    <p style="margin: 0;"
+                       th:text="#{attendees.navigator.next}">
+                        next_assignment</p>
+
+                    <i class="angle right icon" style="margin: 0;"></i>
+                </button>
+            </a>
+        </div>
     </div>
-  </div>
 
-  <style>
-    .assignment-navigator-actions {
-      display: flex;
-      justify-content: space-between;
-      column-gap: 10px;
-    }
-  </style>
+    <style>
+        .assignment-navigator-actions {
+            display: flex;
+            justify-content: space-between;
+            column-gap: 10px;
+        }
+    </style>
 
 </div>
 
@@ -84,80 +84,83 @@
 
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-  <!-- TODO: verify if th:if is teacher works successfully!! -->
+    <!-- TODO: verify if th:if is teacher works successfully!! -->
 
-  <div class="ui top attached block header" style="display: flex; align-items: center">
-    <i class="users alternate outline icon" style="flex: none;"></i>
+    <div class="ui top attached block header" style="display: flex; align-items: center">
+        <i class="users alternate outline icon" style="flex: none;"></i>
 
-    <h3 class="content"
-        style="flex: 1; margin: 0;"
+        <h3 class="content"
+            style="flex: 1; margin: 0;"
         th:text="#{attendees.sectionTitle(${#lists.size(model.attendees)})}"></h3>
 
-    <button class="ui button"
-            style="height: 30px; flex: none; padding: 10px;"
-            onclick="window.location.reload()">
+        <button class="ui button"
+                style="height: 30px; flex: none; padding: 10px;"
+                onclick="window.location.reload()">
 
-      <i class="icon refresh"></i>
-      <span th:text="#{attendees.refresh}">
+            <i class="icon refresh"></i>
+            <span th:text="#{attendees.refresh}">
         refresh_button</span>
-    </button>
-  </div>
+        </button>
+    </div>
 
-  <!--/* Error message if there are no learners */-->
-  <div class="ui segment attached"
+    <!--/* Error message if there are no learners */-->
+    <div class="ui segment attached"
        th:if="${#lists.isEmpty(model.learnersMonitoringModel.learners)}">
 
-    <div class="ui message warning"
-         th:text="#{attendees.empty}">
-      empty_assignment_error</div>
-  </div>
+        <div class="ui message warning"
+             th:text="#{attendees.empty}">
+            empty_assignment_error
+        </div>
+    </div>
 
-  <div class="ui attached fluid"
-       style="border-radius: 0;">
+    <div class="ui attached fluid"
+         style="border-radius: 0;">
 
-    <!-- TODO: include ATTENDEES_TABLE component!! -->
+        <!-- TODO: include ATTENDEES_TABLE component!! -->
   </div>
+    </div>
 
   <script th:if="${context == 'aside' && model.sequence.getId() != null}" th:inline="javascript">
-    (() => {
-      var container = $('#layout-aside')
+        (() => {
+            var container = $('#layout-aside')
       var target = $('#' + [[${context}]] + '-[[${model.sequence.getId()}]]')
 
-      if (!elaastic.util.isVisible(target, container, 50)) {
-        elaastic.util.ensureIsVisible(target, container)
-      }
-    })();
-  </script>
+            if (!elaastic.util.isVisible(target, container, 50)) {
+                elaastic.util.ensureIsVisible(target, container)
+            }
+        })();
+    </script>
 
-  <style>
-      .ui.selected.segment {
-          background-color: #fffaf3;
-          color: #573a08;
-      }
-
-      .ui.selected.segment .elaastic-phase.icon {
-          display: none !important;
-      }
-
-      .sequence-content {
-        max-height: 500px;
-        overflow: hidden;
-      }
-
-      .ui.accordion > .title.accordion-disabled {
-        pointer-events: none;
-        opacity: .8;
-      }
-      .ui.accordion > .title.accordion-disabled:hover {
-        cursor: not-allowed !important;
-      }
-
-      /* Attendees lit item CSS */
-      @media only screen and (min-width: 1200px) {
-        .attendee-item {
-          padding-left: 10px !important;
-          padding-right: 10px !important;
+    <style>
+        .ui.selected.segment {
+            background-color: #fffaf3;
+            color: #573a08;
         }
-      }
-  </style>
+
+        .ui.selected.segment .elaastic-phase.icon {
+            display: none !important;
+        }
+
+        .sequence-content {
+            max-height: 500px;
+            overflow: hidden;
+        }
+
+        .ui.accordion > .title.accordion-disabled {
+            pointer-events: none;
+            opacity: .8;
+        }
+
+        .ui.accordion > .title.accordion-disabled:hover {
+            cursor: not-allowed !important;
+        }
+
+        /* Attendees lit item CSS */
+        @media only screen and (min-width: 1200px) {
+            .attendee-item {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+        }
+    </style>
 </div>

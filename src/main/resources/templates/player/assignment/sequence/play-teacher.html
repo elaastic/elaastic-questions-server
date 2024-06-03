@@ -22,152 +22,153 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
       xmlns="http://www.w3.org/1999/html">
-<!--/*@thymesVar id="playerModel" type="org.elaastic.questions.player.PlayerModel"*/-->
-<head>
-  <title th:text="|elaastic: ${playerModel.assignment.title}|"></title>
-  <script type="text/javascript" th:src="@{/js/vega.js}"></script>
-  <script type="text/javascript" th:src="@{/js/vega-lite.js}"></script>
-  <script type="text/javascript" th:src="@{/js/vega-embed.js}"></script>
-  <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
-  <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
-  <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
-  <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
-  <script type="text/javascript" th:src="@{/js/elaastic/auto-reload.js}"></script>
-  <script th:inline="javascript">
-    saveAction = function(sequenceId, action, object){
-      if(sequenceId != null){
-        fetch([[${@environment.getProperty('elaastic.questions.url')}]] + 'action/' + sequenceId + '/saveAction/' + action + '/' + object)
-      }
-    }
-  </script>
-</head>
+    <!--/*@thymesVar id="playerModel" type="org.elaastic.questions.player.PlayerModel"*/-->
+    <head>
+        <title th:text="|elaastic: ${playerModel.assignment.title}|"></title>
+        <script type="text/javascript" th:src="@{/js/vega.js}"></script>
+        <script type="text/javascript" th:src="@{/js/vega-lite.js}"></script>
+        <script type="text/javascript" th:src="@{/js/vega-embed.js}"></script>
+        <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
+        <script type="text/javascript" th:src="@{/js/vega-min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/underscore-min.js}"></script>
+        <script type="text/javascript" th:src="@{/js/graph/result-graph.js}"></script>
+        <script type="text/javascript" th:src="@{/js/elaastic/auto-reload.js}"></script>
+        <script th:inline="javascript">
+            saveAction = function (sequenceId, action, object) {
+                if (sequenceId != null) {
+                    fetch([[${@environment.getProperty('elaastic.questions.url')}]] + 'action/' + sequenceId + '/saveAction/' + action + '/' + object)
+                }
+            }
+        </script>
+    </head>
 
-<body>
+    <body>
 
-<div id="data"
-     style="display: none;"
-     th:data-opened-aside-pane="${playerModel.openedPane}"></div>
+    <div id="data"
+         style="display: none;"
+         th:data-opened-aside-pane="${playerModel.openedPane}"></div>
 
-<div id="pageSpecificMenu">
-  <a class="item"
-     th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='questions')}"
-     th:attr="data-tooltip=#{subject.action.show.label}"
-     data-position="right center"
-     data-inverted="">
-    <i class="yellow edit icon"></i>
-  </a>
+    <div id="pageSpecificMenu">
+        <a class="item"
+           th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='questions')}"
+           th:attr="data-tooltip=#{subject.action.show.label}"
+           data-position="right center"
+           data-inverted="">
+            <i class="yellow edit icon"></i>
+        </a>
 
-  <a class="item"
-     th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='assignments')}"
-     th:attr="data-tooltip=#{subject.assignment.change.action}"
-     data-position="right center"
-     data-inverted="">
-    <i class="yellow file alternate outline icon"></i>
-  </a>
+        <a class="item"
+           th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='assignments')}"
+           th:attr="data-tooltip=#{subject.assignment.change.action}"
+           data-position="right center"
+           data-inverted="">
+            <i class="yellow file alternate outline icon"></i>
+        </a>
 
-  <div class="item"
-       onclick="elaastic.showLearnerAccessModal()"
-       th:attr="data-tooltip=#{assignment.learnerAccess.oneLine}"
-       data-tooltip="Link for learners"
-       data-position="right center"
-       data-inverted="">
-    <i class="yellow feed icon"></i>
-  </div>
-  <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${playerModel.assignment}, ${playerModel.serverBaseUrl})"></div>
+        <div class="item"
+             onclick="elaastic.showLearnerAccessModal()"
+             th:attr="data-tooltip=#{assignment.learnerAccess.oneLine}"
+             data-tooltip="Link for learners"
+             data-position="right center"
+             data-inverted="">
+            <i class="yellow feed icon"></i>
+        </div>
+        <div th:replace="assignment/_modal_learner_access.html :: modalLearnerAccess(${playerModel.assignment}, ${playerModel.serverBaseUrl})"></div>
 
-  <div class="item"
-       onclick="elaastic.showLtiParameterModal()"
-       th:attr="data-tooltip=#{assignment.ltiparameter.oneLine}"
-       data-tooltip="LTI Parameter"
-       data-position="right center"
-       data-inverted="">
-    <i class="yellow graduation icon"></i>
-  </div>
-  <div th:replace="assignment/_modal_lti_parameter.html :: modalLtiParameter(${playerModel.assignment})"></div>
+        <div class="item"
+             onclick="elaastic.showLtiParameterModal()"
+             th:attr="data-tooltip=#{assignment.ltiparameter.oneLine}"
+             data-tooltip="LTI Parameter"
+             data-position="right center"
+             data-inverted="">
+            <i class="yellow graduation icon"></i>
+        </div>
+        <div th:replace="assignment/_modal_lti_parameter.html :: modalLtiParameter(${playerModel.assignment})"></div>
 
-</div>
+    </div>
 
-<aside class="ob-start-sequence-2" id="layout-aside" th:with="components=${'player/assignment/sequence/components'}">
-  <header id="aside_header" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-    <div class="ui buttons">
-      <button id="show_assignments_button"
-              class="ui button"
-              style="margin: 0;"
-              onclick="tableOfContent.showAssignments()">
+    <aside class="ob-start-sequence-2" id="layout-aside"
+           th:with="components=${'player/assignment/sequence/components'}">
+        <header id="aside_header" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <div class="ui buttons">
+                <button id="show_assignments_button"
+                        class="ui button"
+                        style="margin: 0;"
+                        onclick="tableOfContent.showAssignments()">
 
-        <i class="icon list ul"></i>
-        <span th:text="#{dashboard.navigation.assignments}">
+                    <i class="icon list ul"></i>
+                    <span th:text="#{dashboard.navigation.assignments}">
           assignments_list</span>
-      </button>
+                </button>
 
-      <button id="show_attendees_button"
-              class="ui button"
-              style="margin: 0;"
-              onclick="tableOfContent.showAttendees()">
+                <button id="show_attendees_button"
+                        class="ui button"
+                        style="margin: 0;"
+                        onclick="tableOfContent.showAttendees()">
 
-        <i class="icon users alternate outline"></i>
+                    <i class="icon users alternate outline"></i>
 
-        <span th:text="#{dashboard.navigation.attendees(${playerModel.assignmentOverviewModel.getNbRegisteredUser()})}">
+                    <span th:text="#{dashboard.navigation.attendees(${playerModel.assignmentOverviewModel.getNbRegisteredUser()})}">
           attendees_label</span>
-      </button>
+                </button>
+            </div>
+
+            <button id="close_pane_button"
+                    class="ui button"
+                    style="aspect-ratio: 1; padding: 1.1em; margin: 0;"
+                    onclick="tableOfContent.hideAside()">
+
+                <i class="icon angle double left" style="margin: 0;"></i>
+            </button>
+        </header>
+
+        <div id="assignments_container"
+             style="display: none;">
+
+            <div th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
+        </div>
+
+        <div id="attendees_container"
+             style="display: none;">
+
+            <div th:replace="|${components}/_attendees-overview.html| :: assignmentNavigator(${playerModel}, aside, ${dashboardModel})"></div>
+
+            <div class="ui divider"></div>
+
+            <!--
+            <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${playerModel.assignmentOverviewModel}, aside, ${playerModel.stepsModel})"></div>
+            -->
+            <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${dashboardModel}, aside, ${playerModel.stepsModel})"></div>
+        </div>
+    </aside>
+
+    <div id="modal-aside" th:with="components=${'player/assignment/sequence/components'}">
+        <div
+                th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, modal-aside)"></div>
     </div>
 
-    <button id="close_pane_button"
-            class="ui button"
-            style="aspect-ratio: 1; padding: 1.1em; margin: 0;"
-            onclick="tableOfContent.hideAside()">
+    <section th:with="components=${'player/assignment/sequence/components'}">
+        <div th:if="${playerModel.sequence}"
+             th:id="|sequence_${playerModel.sequence.id}|">
+            <div
+                    th:replace="|${components}/steps/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
+            <div th:replace="|${components}/command/_command.html| :: command(${playerModel.commandModel})"></div>
+            <div
+                    th:replace="|${components}/sequence-info/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
+            <div th:if="${playerModel.showResults and playerModel.resultsModel.recommendationModel != null}"
+                 th:insert="|${components}/_recommendation.html| :: recommendation(${playerModel.resultsModel},${playerModel.sequence.id})"></div>
+            <div
+                    th:replace="|${components}/statement/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
 
-      <i class="icon angle double left" style="margin: 0;"></i>
-    </button>
-  </header>
+            <div th:if="${playerModel.showResults}" th:remove="tag">
+                <div th:replace="|${components}/results/_results.html| :: results(${playerModel.resultsModel}, true)"></div>
+            </div>
 
-  <div id="assignments_container"
-       style="display: none;">
-
-    <div th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
-  </div>
-
-  <div id="attendees_container"
-       style="display: none;">
-
-    <div th:replace="|${components}/_attendees-overview.html| :: assignmentNavigator(${playerModel}, aside, ${dashboardModel})"></div>
-
-    <div class="ui divider"></div>
-
-    <!--
-    <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${playerModel.assignmentOverviewModel}, aside, ${playerModel.stepsModel})"></div>
-    -->
-    <div th:replace="|${components}/_attendees-overview.html| :: attendeesOverview(${dashboardModel}, aside, ${playerModel.stepsModel})"></div>
-  </div>
-</aside>
-
-<div id="modal-aside" th:with="components=${'player/assignment/sequence/components'}">
-  <div
-    th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, modal-aside)"></div>
-</div>
-
-<section th:with="components=${'player/assignment/sequence/components'}">
-  <div th:if="${playerModel.sequence}"
-       th:id="|sequence_${playerModel.sequence.id}|">
-    <div
-      th:replace="|${components}/steps/_steps.html| :: steps(${playerModel.stepsModel}, ${playerModel.sequenceStatistics})"></div>
-    <div th:replace="|${components}/command/_command.html| :: command(${playerModel.commandModel})"></div>
-    <div
-      th:replace="|${components}/sequence-info/_sequenceInfo.html| :: sequenceInfo(${playerModel.sequenceInfoModel},${playerModel.sequence.id})"></div>
-    <div th:if="${playerModel.showResults and playerModel.resultsModel.recommendationModel != null}"
-         th:insert="|${components}/_recommendation.html| :: recommendation(${playerModel.resultsModel},${playerModel.sequence.id})"></div>
-    <div
-      th:replace="|${components}/statement/_statement.html| :: statement(${playerModel.statementPanelModel},${playerModel.statement})"></div>
-
-    <div th:if="${playerModel.showResults}" th:remove="tag">
-      <div th:replace="|${components}/results/_results.html| :: results(${playerModel.resultsModel}, true)"></div>
-    </div>
-
-    <div togglz:active="'FUNCTIONAL_TESTING'" th:remove="tag">
-      <div
-        th:replace="|${components}/functional-testing/functional-test.html| :: functionalTesting(${playerModel.assignment.id},${playerModel.sequence.id})"></div>
-    </div>
-  </div>
-</section>
-</body>
+            <div togglz:active="'FUNCTIONAL_TESTING'" th:remove="tag">
+                <div
+                        th:replace="|${components}/functional-testing/functional-test.html| :: functionalTesting(${playerModel.assignment.id},${playerModel.sequence.id})"></div>
+            </div>
+        </div>
+    </section>
+    </body>
 </html>
