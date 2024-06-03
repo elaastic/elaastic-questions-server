@@ -252,7 +252,7 @@ class PlayerController(
         val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
         val attendeesSequences: MutableMap<Long, ILearnerSequence> = mutableMapOf()
 
-        // Associate eache learner with the number of evaluation he made
+        // Associate each learner with the number of evaluations he made
         val evaluationCountByUser = registeredUsers.associateWith {
             peerGradingService.findAllEvaluation(it.learner, sequence).count()
         }
