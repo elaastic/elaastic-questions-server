@@ -22,12 +22,11 @@
 
     <table class="ui celled definition table">
         <thead>
-            <tr>
-                <th></th>
-                <th class="center aligned">first_phase_label</th>
-                <th class="center aligned">second_phase_label</th>
-                <th class="center aligned">third_phase_label</th>
-            </tr>
+        <tr>
+            <th></th>
+            <th class="center aligned" th:text="#{attendee.phase(${1})}">first_phase_label</th>
+            <th class="center aligned" th:text="#{attendee.phase(${2})}">second_phase_label</th>
+        </tr>
         </thead>
 
         <tbody>
