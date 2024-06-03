@@ -31,16 +31,21 @@
         </thead>
 
         <tbody>
-            <tr th:each="learner: ${learnersMonitoringModel.learners}">
-                <!--/* Name of the learner */-->
-                <td><div th:text="${learner.learnerName}"></div></td>
+        <tr th:each="learner: ${learnersMonitoringModel.learners}">
+            <!--/* Name of the learner */-->
+            <td>
+                <div th:text="${learner.learnerName}"></div>
+            </td>
 
-                <!--/* States of the learner */-->
-                <th:block th:each="phase: ${T(org.elaastic.questions.player.phase.LearnerPhaseType).values()}">
-                    <th:block th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCell(phase).name})">
-                    </th:block>
-                </th:block>
-            </tr>
+            <!--/* States of the learner */-->
+<!--            ${T(org.elaastic.questions.player.phase.LearnerPhaseType).values()}-->
+            <th:block
+                    th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInResponsePhase().name})">
+            </th:block>
+            <th:block
+                    th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInEvaluationPhase().name})">
+            </th:block>
+        </tr>
         </tbody>
     </table>
 

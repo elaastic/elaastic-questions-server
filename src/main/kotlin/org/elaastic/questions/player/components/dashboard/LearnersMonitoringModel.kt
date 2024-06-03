@@ -161,12 +161,16 @@ class LearnerMonitoringModel(
 
         return when (this.getLearnerPhaseStateByType(phase)) {
             LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED -> {
-                if (phaseState == DashboardPhaseState.IN_PROGRESS) {
-                    StateCell.IN_PROGRESS
-                } else if (phaseState == DashboardPhaseState.NOT_STARTED) {
-                    StateCell.LOCKED
-                } else {
-                    StateCell.NOT_TERMINATED
+                when (phaseState) {
+                    DashboardPhaseState.IN_PROGRESS -> {
+                        StateCell.IN_PROGRESS
+                    }
+                    DashboardPhaseState.NOT_STARTED -> {
+                        StateCell.LOCKED
+                    }
+                    else -> {
+                        StateCell.NOT_TERMINATED
+                    }
                 }
             }
 
@@ -179,6 +183,14 @@ class LearnerMonitoringModel(
                 }
             }
         }
+    }
+
+    fun getStateCellInResponsePhase(): StateCell {
+        return getStateCell(LearnerPhaseType.RESPONSE)
+    }
+
+    fun getStateCellInEvaluationPhase(): StateCell {
+        return getStateCell(LearnerPhaseType.EVALUATION)
     }
 
     /**
