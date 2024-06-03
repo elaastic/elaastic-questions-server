@@ -63,9 +63,20 @@ object DashboardModelFactory {
                 LearnerMonitoringModel(
                     it.id!!,
                     it.learner.getFullname(),
-                    getAttendeeStateOnResponsePhase(responses, learnersMonitoringModel.phase1State),
-                    getAttendeeStateOnEvaluationPhase(it, sequence, learnersMonitoringModel.phase2State, evaluationCountByUser),
-                    getAttendeeStateOnReadPhase(sequence, learnersMonitoringModel.phase3State, it, learnersMonitoringModel.phase2State, evaluationCountByUser),
+                    getAttendeeStateOnResponsePhase(it, responses, learnersMonitoringModel.phase1State),
+                    getAttendeeStateOnEvaluationPhase(
+                        it,
+                        sequence,
+                        learnersMonitoringModel.phase2State,
+                        evaluationCountByUser
+                    ),
+                    getAttendeeStateOnReadPhase(
+                        sequence,
+                        learnersMonitoringModel.phase3State,
+                        it,
+                        learnersMonitoringModel.phase2State,
+                        evaluationCountByUser
+                    ),
                     learnersMonitoringModel
                 )
             )
@@ -92,20 +103,23 @@ object DashboardModelFactory {
      * @see LearnerStateOnPhase
      */
     private fun getAttendeeStateOnResponsePhase(
+        attendee: LearnerAssignment,
         attendeeResponses: List<Response>,
         responsePhaseState: DashboardPhaseState
     ): LearnerStateOnPhase {
 
         val hasResponseForPhase: Boolean = attendeeResponses.count {
-            it.attempt == 1 && it.interaction.interactionType == InteractionType.ResponseSubmission
+            it.attempt == 1
+                    && it.interaction.interactionType == InteractionType.ResponseSubmission
+                    && it.learner == attendee.learner
         } == 1
 
         return if (responsePhaseState == DashboardPhaseState.NOT_STARTED) {
             LearnerStateOnPhase.WAITING
-        } else if (!hasResponseForPhase) {
-            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
-        } else {
+        } else if (hasResponseForPhase) {
             LearnerStateOnPhase.ACTIVITY_TERMINATED
+        } else {
+            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
         }
     }
 
@@ -208,7 +222,7 @@ object DashboardModelFactory {
         return when (state) {
             StepsModel.PhaseState.DISABLED -> DashboardPhaseState.NOT_STARTED
             StepsModel.PhaseState.ACTIVE -> DashboardPhaseState.IN_PROGRESS
-            StepsModel.PhaseState.COMPLETED -> DashboardPhaseState.COMPLETED
+            StepsModel.PhaseState.COMPLETED -> DashboardPhaseState.STOPPED
         }
     }
 
