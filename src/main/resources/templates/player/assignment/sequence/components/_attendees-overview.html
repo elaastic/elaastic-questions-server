@@ -80,7 +80,7 @@
 
 </div>
 
-<div th:fragment="attendeesOverview(model, context, stepsModel)"
+<div th:fragment="attendeesOverview(dashboardModel, context, stepsModel)"
 
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
@@ -91,7 +91,7 @@
 
         <h3 class="content"
             style="flex: 1; margin: 0;"
-        th:text="#{attendees.sectionTitle(${#lists.size(model.attendees)})}"></h3>
+            th:text="#{attendees.sectionTitle(${#lists.size(dashboardModel.learnersMonitoringModel.learners)})}"></h3>
 
         <button class="ui button"
                 style="height: 30px; flex: none; padding: 10px;"
@@ -105,7 +105,7 @@
 
     <!--/* Error message if there are no learners */-->
     <div class="ui segment attached"
-       th:if="${#lists.isEmpty(model.learnersMonitoringModel.learners)}">
+         th:if="${#lists.isEmpty(dashboardModel.learnersMonitoringModel.learners)}">
 
         <div class="ui message warning"
              th:text="#{attendees.empty}">
@@ -117,13 +117,14 @@
          style="border-radius: 0;">
 
         <!-- TODO: include ATTENDEES_TABLE component!! -->
-  </div>
+        <th:block th:replace="player/assignment/sequence/components/dashboard/_attendees-table:: attendeesTable(${dashboardModel.learnersMonitoringModel})">
+        </th:block>
     </div>
 
-  <script th:if="${context == 'aside' && model.sequence.getId() != null}" th:inline="javascript">
+    <script th:if="${context == 'aside' && dashboardModel.sequence.id != null}" th:inline="javascript">
         (() => {
             var container = $('#layout-aside')
-      var target = $('#' + [[${context}]] + '-[[${model.sequence.getId()}]]')
+            var target = $('#' + [[${context}]] + '-[[${dashboardModel.sequence.id}]]')
 
             if (!elaastic.util.isVisible(target, container, 50)) {
                 elaastic.util.ensureIsVisible(target, container)
