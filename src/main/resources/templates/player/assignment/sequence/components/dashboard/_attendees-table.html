@@ -18,7 +18,7 @@
   ~
   -->
 
-<th:block th:fragment="attendeesTable(attendees)">
+<th:block th:fragment="attendeesTable(learnersMonitoringModel)">
 
     <table class="ui celled definition table">
         <thead>
@@ -31,13 +31,13 @@
         </thead>
 
         <tbody>
-            <tr th:each="attendee: ${attendees.learners}">
+            <tr th:each="learner: ${learnersMonitoringModel.learners}">
                 <!--/* Name of the learner */-->
-                <td><div th:text="${attendee.learnerName}"></div></td>
+                <td><div th:text="${learner.learnerName}"></div></td>
 
                 <!--/* States of the learner */-->
                 <th:block th:each="phase: ${T(org.elaastic.questions.player.phase.LearnerPhaseType).values()}">
-                    <th:block th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${attendee.getStateCell(phase).name})">
+                    <th:block th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCell(phase).name})">
                     </th:block>
                 </th:block>
             </tr>
