@@ -221,17 +221,21 @@ class PlayerController(
             val teacher = user == sequence.owner
 
             return if (teacher)
-                playAssignmentForTeacher(user,
-                                         model,
-                                         sequence,
-                                         openedPane ?: "assignments",
-                                         httpServletRequest)
+                playAssignmentForTeacher(
+                    user,
+                    model,
+                    sequence,
+                    openedPane ?: "assignments",
+                    httpServletRequest
+                )
             else
-                playAssignmentForLearner(user,
-                                         model,
-                                         sequence,
-                                         openedPane ?: "assignments",
-                                         httpServletRequest)
+                playAssignmentForLearner(
+                    user,
+                    model,
+                    sequence,
+                    openedPane ?: "assignments",
+                    httpServletRequest
+                )
         }
 
     }
@@ -259,14 +263,15 @@ class PlayerController(
 
 
         val dashboardModel: DashboardModel =
-            DashboardModelFactory.build(sequence,
-                                        previousSequence,
-                                        nextSequence,
-                                        registeredUsers,
-                                        responses,
-                                        openedPane,
-                                        evaluationCountByUser,
-                                        )
+            DashboardModelFactory.build(
+                sequence,
+                previousSequence,
+                nextSequence,
+                registeredUsers,
+                responses,
+                openedPane,
+                evaluationCountByUser,
+            )
 
         var learnerSequence: ILearnerSequence
 
