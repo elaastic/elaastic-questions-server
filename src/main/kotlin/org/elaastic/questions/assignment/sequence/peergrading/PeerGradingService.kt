@@ -30,6 +30,7 @@ import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -157,8 +158,9 @@ class PeerGradingService(
 
     /**
      * Mark peer grading as hidden by teacher.
-     * if the user can't hide the peer grading, an exception is thrown
-     * @param teacher the teacher who hide the peer grading.
+     * If the user can't hide the peer grading, an exception is thrown
+     *
+     * @param teacher the teacher who hides the peer grading.
      * @param peerGrading the peer grading to hide
      */
     fun markAsHidden(teacher: User, peerGrading: PeerGrading) {
@@ -173,7 +175,7 @@ class PeerGradingService(
     /**
      * Mark peer grading as removed by teacher.
      *
-     * @param teacher the teacher who remove the peer grading.
+     * @param teacher the teacher who removes the peer grading.
      * @param peerGrading the peer grading to remove.
      */
     fun markAsRemoved(teacher: User, peerGrading: PeerGrading) {
@@ -186,7 +188,7 @@ class PeerGradingService(
     /**
      * Update the report of a peer grading.
      *
-     * @param reporter the learner who own the response.
+     * @param reporter the learner who owns the response.
      * @param peerGrading the peer grading to update.
      * @param reportReasons the list of report.
      * @param reportComment the comment of the report.
@@ -197,23 +199,26 @@ class PeerGradingService(
         reportReasons: List<String>,
         reportComment: String? = null
     ) {
-        if (reporter != peerGrading.response.learner) {
-            throw IllegalAccessException("Only the learner who own the response can report a peer grading")
+        requireAccess(reporter == peerGrading.response.learner) {
+            "Only the learner who own the response can report a peer grading"
         }
-        if (peerGrading is DraxoPeerGrading && peerGrading.getDraxoEvaluation().getExplanation() == null) {
-            throw IllegalStateException("You can't report something that doesn't exist. The evaluation doesn't have any comment")
+        check(!(peerGrading is DraxoPeerGrading && peerGrading.getDraxoEvaluation().getExplanation() == null)) {
+            "You can't report something that doesn't exist. The evaluation doesn't have any comment"
         }
-        if (reportReasons.contains(ReportReason.OTHER.name) && reportComment.isNullOrBlank()) {
-            throw IllegalArgumentException("You must provide a comment when you report a peer grading for the reason OTHER")
+        require(!(reportReasons.contains(ReportReason.OTHER.name) && reportComment.isNullOrBlank())) {
+            "You must provide a comment when you report a peer grading for the reason OTHER"
         }
+
         reportCandidateService.updateReport(peerGrading, reportReasons, reportComment, peerGradingRepository)
     }
 
     /**
      * Find a Draxo peer grading by its id.
+     *
      * @param id the id of the peer grading.
      * @return the Draxo peer grading.
-     * @throws IllegalArgumentException if no Draxo peer grading is found with the given id.
+     * @throws IllegalArgumentException if no Draxo peer grading is found with
+     *     the given id.
      */
     fun getDraxoPeerGrading(id: Long): DraxoPeerGrading =
         peerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
@@ -225,30 +230,31 @@ class PeerGradingService(
      * @param learner the learner who own the response.
      * @param peerGrading the draxo peer grading to update.
      * @param utilityGrade the utility grade.
-     * @throws IllegalArgumentException if the learner is not the owner of the response.
+     * @throws IllegalArgumentException if the learner is not the owner of the
+     *     response.
      */
     fun updateUtilityGrade(learner: User, peerGrading: PeerGrading, utilityGrade: UtilityGrade) {
-        if (learner != peerGrading.response.learner) {
-            throw IllegalAccessException("Only the learner who own the response can update the utility grade of a peer grading")
+        requireAccess(learner == peerGrading.response.learner) {
+            "Only the learner who own the response can update the utility grade of a peer grading"
         }
         reportCandidateService.updateGrade(peerGrading, utilityGrade, peerGradingRepository)
     }
 
-    /**
-     * Show a peer grading that was hidden by the teacher.
-     */
+    /** Show a peer grading that was hidden by the teacher. */
     fun markAsShow(teacher: User, peerGrading: PeerGrading) {
-        if (canHidePeerGrading(teacher, peerGrading).not()) {
-            throw IllegalAccessException("Only the teacher who own the sequence can show a peer grading")
+        requireAccess(canHidePeerGrading(teacher, peerGrading)) {
+            "Only the teacher who own the sequence can show a peer grading"
         }
+
         reportCandidateService.markAsShown(peerGrading, peerGradingRepository)
         peerGrading.response.draxoEvaluationHiddenCount--
         responseService.updateMeanGradeAndEvaluationCount(peerGrading.response)
     }
 
     /**
-     * Return true if the user can hide the peer grading
-     * An user can hide the peer grading if he is the owner of the assigment
+     * Return true if the user can hide the peer grading An user can hide the
+     * peer grading if he is the owner of the assigment
+     *
      * @param teacher the user who want to hide the peer grading
      * @param peerGrading the peer grading to hide
      * @return true if the user can hide the peer grading
