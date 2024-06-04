@@ -91,7 +91,7 @@
 
         <h3 class="content"
             style="flex: 1; margin: 0;"
-            th:text="#{attendees.sectionTitle(${#lists.size(dashboardModel.learnersMonitoringModel.learners)})}"></h3>
+            th:text="#{attendees.sectionTitle(${#lists.size(dashboardModel.sequenceMonitoringModel.learners)})}"></h3>
 
         <button class="ui button"
                 style="height: 30px; flex: none; padding: 10px;"
@@ -105,7 +105,7 @@
 
     <!--/* Error message if there are no learners */-->
     <div class="ui segment attached"
-         th:if="${#lists.isEmpty(dashboardModel.learnersMonitoringModel.learners)}">
+         th:if="${#lists.isEmpty(dashboardModel.sequenceMonitoringModel.learners)}">
 
         <div class="ui message warning"
              th:text="#{attendees.empty}">
@@ -115,10 +115,10 @@
 
     <div class="ui attached fluid"
          style="border-radius: 0;"
-         th:if="${!#lists.isEmpty(dashboardModel.learnersMonitoringModel.learners)}">
+         th:if="${!#lists.isEmpty(dashboardModel.sequenceMonitoringModel.learners)}">
 
         <!-- TODO: include ATTENDEES_TABLE component!! -->
-        <th:block th:replace="player/assignment/sequence/components/dashboard/_attendees-table:: attendeesTable(${dashboardModel.learnersMonitoringModel})">
+        <th:block th:replace="player/assignment/sequence/components/dashboard/_attendees-table:: attendeesTable(${dashboardModel.sequenceMonitoringModel})">
         </th:block>
     </div>
 

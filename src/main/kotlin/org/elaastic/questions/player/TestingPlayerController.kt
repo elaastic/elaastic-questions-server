@@ -67,7 +67,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Cri
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.player.components.dashboard.LearnerMonitoringModel
 import org.elaastic.questions.player.components.dashboard.LearnerStateOnPhase
-import org.elaastic.questions.player.components.dashboard.LearnersMonitoringModel
+import org.elaastic.questions.player.components.dashboard.SequenceMonitoringModel
 import org.elaastic.questions.player.components.dashboard.DashboardPhaseState
 import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
@@ -2971,7 +2971,7 @@ class TestingPlayerController(
      */
     data class TableAttendeesSituation(
         val description: String,
-        val learnersMonitoringModel: LearnersMonitoringModel,
+        val learnersMonitoringModel: SequenceMonitoringModel,
     )
 
     @GetMapping("/dashboard/attendees-table")
@@ -3012,8 +3012,8 @@ class TestingPlayerController(
         return "player/assignment/sequence/components/dashboard/test-attendees-table"
     }
 
-    private fun learnersMonitoringModel1(): LearnersMonitoringModel {
-        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+    private fun learnersMonitoringModel1(): SequenceMonitoringModel {
+        val learnersMonitoringModel: SequenceMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.NOT_STARTED,
@@ -3050,8 +3050,8 @@ class TestingPlayerController(
         return learnersMonitoringModel
     }
 
-    private fun learnersMonitoringModel2(): LearnersMonitoringModel {
-        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+    private fun learnersMonitoringModel2(): SequenceMonitoringModel {
+        val learnersMonitoringModel: SequenceMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.NOT_STARTED,
             DashboardPhaseState.NOT_STARTED,
@@ -3072,8 +3072,8 @@ class TestingPlayerController(
         return learnersMonitoringModel
     }
 
-    private fun learnersMonitoringModel3(): LearnersMonitoringModel {
-        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+    private fun learnersMonitoringModel3(): SequenceMonitoringModel {
+        val learnersMonitoringModel: SequenceMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.Distance,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.IN_PROGRESS,
@@ -3128,8 +3128,8 @@ class TestingPlayerController(
         return learnersMonitoringModel
     }
 
-    private fun learnersMonitoringModel4(): LearnersMonitoringModel {
-        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+    private fun learnersMonitoringModel4(): SequenceMonitoringModel {
+        val learnersMonitoringModel: SequenceMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.STOPPED,
             DashboardPhaseState.IN_PROGRESS,
@@ -3141,42 +3141,42 @@ class TestingPlayerController(
                 1,
                 "I've submitted my answer",
                 LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                learnersMonitoringModel = learnersMonitoringModel
+                sequenceMonitoringModel = learnersMonitoringModel
             ),
             LearnerMonitoringModel(
                 2,
                 "B - I've not submitted my answer",
                 LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
                 LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                learnersMonitoringModel = learnersMonitoringModel
+                sequenceMonitoringModel = learnersMonitoringModel
             ),
             LearnerMonitoringModel(
                 5,
                 "A - I've not submitted my answer",
                 LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
                 LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                learnersMonitoringModel = learnersMonitoringModel
+                sequenceMonitoringModel = learnersMonitoringModel
             ),
             LearnerMonitoringModel(
                 3,
                 "I've finished both",
                 LearnerStateOnPhase.ACTIVITY_TERMINATED,
                 LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                learnersMonitoringModel = learnersMonitoringModel
+                sequenceMonitoringModel = learnersMonitoringModel
             ),
             LearnerMonitoringModel(
                 4,
                 "B - I've didn't submit but i've evaluate",
                 LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
                 LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                learnersMonitoringModel = learnersMonitoringModel
+                sequenceMonitoringModel = learnersMonitoringModel
             ),
             LearnerMonitoringModel(
                 6,
                 "A - I've didn't submit but i've evaluate",
                 LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
                 LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                learnersMonitoringModel = learnersMonitoringModel
+                sequenceMonitoringModel = learnersMonitoringModel
             ),
         )
 
@@ -3185,8 +3185,8 @@ class TestingPlayerController(
         return learnersMonitoringModel
     }
 
-    private fun learnersMonitoringModel5(): LearnersMonitoringModel {
-        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+    private fun learnersMonitoringModel5(): SequenceMonitoringModel {
+        val learnersMonitoringModel: SequenceMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.STOPPED,
             DashboardPhaseState.STOPPED,

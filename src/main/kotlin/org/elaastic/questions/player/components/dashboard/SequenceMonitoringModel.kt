@@ -12,7 +12,7 @@ import org.elaastic.questions.player.phase.LearnerPhaseType
  * @property phase3State the state of phase 3
  * @property learners the learners' states on each phase
  */
-class LearnersMonitoringModel(
+class SequenceMonitoringModel(
     val executionContext: ExecutionContext,
     val phase1State: DashboardPhaseState,
     val phase2State: DashboardPhaseState,
@@ -144,7 +144,7 @@ class LearnerMonitoringModel(
     val learnerStateOnPhase1: LearnerStateOnPhase,
     val learnerStateOnPhase2: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
     val learnerStateOnPhase3: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-    val learnersMonitoringModel: LearnersMonitoringModel
+    val sequenceMonitoringModel: SequenceMonitoringModel
 ) {
 
     /**
@@ -215,9 +215,9 @@ class LearnerMonitoringModel(
      */
     private fun getPhaseStateByType(phase: LearnerPhaseType): DashboardPhaseState {
         return when (phase) {
-            LearnerPhaseType.RESPONSE -> this.learnersMonitoringModel.phase1State
-            LearnerPhaseType.EVALUATION -> this.learnersMonitoringModel.phase2State
-            LearnerPhaseType.RESULT -> this.learnersMonitoringModel.phase3State
+            LearnerPhaseType.RESPONSE -> this.sequenceMonitoringModel.phase1State
+            LearnerPhaseType.EVALUATION -> this.sequenceMonitoringModel.phase2State
+            LearnerPhaseType.RESULT -> this.sequenceMonitoringModel.phase3State
         }
     }
 

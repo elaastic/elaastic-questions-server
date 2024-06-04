@@ -25,7 +25,7 @@ class LearnersMonitoringModelTest(
     fun `In a Face to Face sequence a LearnersMonitoringModel can only have on phase in IN_PROGRESS state`() {
         tGiven("A wrong LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.FaceToFace,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.IN_PROGRESS,
@@ -44,7 +44,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A wrong LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.FaceToFace,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.IN_PROGRESS,
@@ -63,7 +63,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.FaceToFace,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.NOT_STARTED,
@@ -78,7 +78,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.FaceToFace,
                     DashboardPhaseState.NOT_STARTED,
                     DashboardPhaseState.NOT_STARTED,
@@ -99,7 +99,7 @@ class LearnersMonitoringModelTest(
     fun `In a Blended sequence a LearnersMonitoringModel can only have two phase in IN_PROGRESS state`() {
         tGiven("A wrong LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Blended,
                     DashboardPhaseState.IN_PROGRESS, // Only one phase in IN_PROGRESS /!\. It's wrong
                     DashboardPhaseState.NOT_STARTED,
@@ -117,7 +117,7 @@ class LearnersMonitoringModelTest(
         }
         tGiven("A wrong LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Blended,
                     DashboardPhaseState.NOT_STARTED,
                     DashboardPhaseState.IN_PROGRESS, // Only one phase in IN_PROGRESS /!\. It's wrong
@@ -136,7 +136,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A wrong LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Blended,
                     DashboardPhaseState.IN_PROGRESS, // All three phases in IN_PROGRESS /!\. It's wrong
                     DashboardPhaseState.IN_PROGRESS,
@@ -155,7 +155,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Blended,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.IN_PROGRESS,
@@ -170,7 +170,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Blended,
                     DashboardPhaseState.STOPPED,
                     DashboardPhaseState.STOPPED,
@@ -185,7 +185,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Blended,
                     DashboardPhaseState.NOT_STARTED,
                     DashboardPhaseState.NOT_STARTED,
@@ -203,7 +203,7 @@ class LearnersMonitoringModelTest(
     fun `In a Distance sequence a LearnersMonitoringModel all phase can be in IN_PROGRESS state`() {
         tGiven("A wrong LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Distance,
                     DashboardPhaseState.IN_PROGRESS, // Only two phases in IN_PROGRESS /!\. It's wrong
                     DashboardPhaseState.IN_PROGRESS, //
@@ -222,7 +222,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A wrong LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Distance,
                     DashboardPhaseState.IN_PROGRESS, // Only one phases in IN_PROGRESS /!\. It's wrong
                     DashboardPhaseState.NOT_STARTED,
@@ -241,7 +241,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Distance,
                     DashboardPhaseState.NOT_STARTED,
                     DashboardPhaseState.NOT_STARTED,
@@ -259,7 +259,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Distance,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.IN_PROGRESS,
@@ -274,7 +274,7 @@ class LearnersMonitoringModelTest(
 
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
-                LearnersMonitoringModel(
+                SequenceMonitoringModel(
                     ExecutionContext.Distance,
                     DashboardPhaseState.STOPPED,
                     DashboardPhaseState.STOPPED,
@@ -294,7 +294,7 @@ class LearnersMonitoringModelTest(
 
     @Test
     fun `setLearners should sort the learners (with the same state) according to their name`() {
-        val learnersMonitoringModel = LearnersMonitoringModel(
+        val learnersMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.NOT_STARTED,
@@ -312,7 +312,7 @@ class LearnersMonitoringModelTest(
                         1,
                         it,
                         LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                        learnersMonitoringModel = learnersMonitoringModel
+                        sequenceMonitoringModel = learnersMonitoringModel
                     )
                 )
             }
@@ -328,7 +328,7 @@ class LearnersMonitoringModelTest(
 
     @Test
     fun `In a remote sequence the setLearners should sort them by the number of IN_PROGRESS state descending`() {
-        val learnersMonitoringModel = LearnersMonitoringModel(
+        val learnersMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.Distance,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.IN_PROGRESS,
@@ -343,7 +343,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
@@ -351,20 +351,20 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 1 IN_PROGRESS
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 2 IN_PROGRESS
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 3 IN_PROGRESS
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
             learners
@@ -383,7 +383,7 @@ class LearnersMonitoringModelTest(
 
     @Test
     fun `In a blended sequence the setLearners should sort them by the number of IN_PROGRESS state descending`() {
-        val learnersMonitoringModel = LearnersMonitoringModel(
+        val learnersMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.Blended,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.IN_PROGRESS,
@@ -397,21 +397,21 @@ class LearnersMonitoringModelTest(
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     // IN_PROGRESS
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
             learners
@@ -431,7 +431,7 @@ class LearnersMonitoringModelTest(
 
     @Test
     fun `In a Face to Face sequence and Phase 1 active, setLearners should sort the learners by the number of IN_PROGRESS state descending then alphabitacly`() {
-        val learnersMonitoringModel = LearnersMonitoringModel(
+        val learnersMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.NOT_STARTED,
@@ -446,7 +446,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
                     LearnerStateOnPhase.WAITING,
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
@@ -454,7 +454,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
                     LearnerStateOnPhase.WAITING,
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
@@ -462,7 +462,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 1 IN_PROGRESS
                     LearnerStateOnPhase.WAITING,
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
@@ -470,7 +470,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 1 IN_PROGRESS
                     LearnerStateOnPhase.WAITING,
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
             learners
@@ -498,7 +498,7 @@ class LearnersMonitoringModelTest(
 
     @Test
     fun `In a Face to Face and Phase 2 active, setLearners should sort the learners by the number of IN_PROGRESS state descending then NOT_TERMINATED  and then alphabitacly`() {
-        val learnersMonitoringModel = LearnersMonitoringModel(
+        val learnersMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.STOPPED,
             DashboardPhaseState.IN_PROGRESS,
@@ -513,7 +513,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     5,
@@ -521,7 +521,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
@@ -529,7 +529,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
@@ -537,7 +537,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
@@ -545,7 +545,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
@@ -553,7 +553,7 @@ class LearnersMonitoringModelTest(
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     LearnerStateOnPhase.WAITING,
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
             learners
@@ -593,7 +593,7 @@ class LearnersMonitoringModelTest(
 
     @Test
     fun `In a Face to Face and Phase 3 active, setLearners should sort the learners by the number of NOT_TERMINATED state descending then NOT_TERMINATED in phase 1 and then alphabitacly`() {
-        val learnersMonitoringModel = LearnersMonitoringModel(
+        val learnersMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.STOPPED,
             DashboardPhaseState.STOPPED,
@@ -607,49 +607,49 @@ class LearnersMonitoringModelTest(
                     "Bob",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     5,
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
                     "David",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Bob",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "David",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     0,
                     "Albert",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    learnersMonitoringModel = learnersMonitoringModel
+                    sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
             learners

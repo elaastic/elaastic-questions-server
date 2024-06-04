@@ -27,5 +27,5 @@ class DashboardModel(
     val openedPane: String,
     val previousSequence: Long?,
     val nextSequence: Long?,
-    val learnersMonitoringModel: LearnersMonitoringModel,
+    val sequenceMonitoringModel: SequenceMonitoringModel,
 )

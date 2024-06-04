@@ -49,7 +49,7 @@ object DashboardModelFactory {
 
         val learnerStepsModel: StepsModel = StepsModelFactory.buildForTeacher(sequence)
 
-        val learnersMonitoringModel: LearnersMonitoringModel = LearnersMonitoringModel(
+        val sequenceMonitoringModel: SequenceMonitoringModel = SequenceMonitoringModel(
             sequence.executionContext,
             convertPhaseState(learnerStepsModel.responseSubmissionState),
             convertPhaseState(learnerStepsModel.evaluationState),
@@ -63,33 +63,33 @@ object DashboardModelFactory {
                 LearnerMonitoringModel(
                     it.id!!,
                     it.learner.getFullname(),
-                    getAttendeeStateOnResponsePhase(it, responses, learnersMonitoringModel.phase1State),
+                    getAttendeeStateOnResponsePhase(it, responses, sequenceMonitoringModel.phase1State),
                     getAttendeeStateOnEvaluationPhase(
                         it,
                         sequence,
-                        learnersMonitoringModel.phase2State,
+                        sequenceMonitoringModel.phase2State,
                         evaluationCountByUser
                     ),
                     getAttendeeStateOnReadPhase(
                         sequence,
-                        learnersMonitoringModel.phase3State,
+                        sequenceMonitoringModel.phase3State,
                         it,
-                        learnersMonitoringModel.phase2State,
+                        sequenceMonitoringModel.phase2State,
                         evaluationCountByUser
                     ),
-                    learnersMonitoringModel
+                    sequenceMonitoringModel
                 )
             )
         }
 
-        learnersMonitoringModel.setLearners(learners)
+        sequenceMonitoringModel.setLearners(learners)
 
         return DashboardModel(
             sequence,
             openedPane,
             previousSequence?.id,
             nextSequence?.id,
-            learnersMonitoringModel
+            sequenceMonitoringModel
         )
     }
 
@@ -211,7 +211,7 @@ object DashboardModelFactory {
 
     /**
      * Since The [StepsModel] use different state phase than the
-     * [LearnersMonitoringModel], we need to convert the state.
+     * [SequenceMonitoringModel], we need to convert the state.
      *
      * @param state the StepsModel.PhaseState to convert
      * @return the converted state in DashboardPhaseState
