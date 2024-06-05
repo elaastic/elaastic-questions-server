@@ -114,6 +114,8 @@ class SequenceMonitoringModel(
      *
      * Sort the learners alphabetically and by their "In Progress..." states
      * count.
+     *
+     * @param newLearnersList the list of learners to sort
      */
     private fun sortWithBlendedOrRemoteBehavior(
         newLearnersList: MutableList<LearnerMonitoringModel>
@@ -150,8 +152,8 @@ class LearnerMonitoringModel(
     /**
      * Return the StateCell from a given phase type and the learner's state
      *
+     * @param phase the type of the phase
      * @return the StateCell of the phase
-     * @property phase the type of the phase
      * @see StateCell
      * @see LearnerPhaseType
      * @see LearnerStateOnPhase
@@ -165,9 +167,11 @@ class LearnerMonitoringModel(
                     DashboardPhaseState.IN_PROGRESS -> {
                         StateCell.IN_PROGRESS
                     }
+
                     DashboardPhaseState.NOT_STARTED -> {
                         StateCell.LOCKED
                     }
+
                     else -> {
                         StateCell.NOT_TERMINATED
                     }
@@ -185,10 +189,26 @@ class LearnerMonitoringModel(
         }
     }
 
+    /**
+     * Return the StateCell of the learner in the response phase
+     *
+     * Function used in the thymeleaf template
+     *
+     * @return the StateCell of the learner in the response phase
+     * @see StateCell
+     */
     fun getStateCellInResponsePhase(): StateCell {
         return getStateCell(LearnerPhaseType.RESPONSE)
     }
 
+    /**
+     * Return the StateCell of the learner in the evaluation phase
+     *
+     * Function used in the thymeleaf template
+     *
+     * @return the StateCell of the learner in the evaluation phase
+     * @see StateCell
+     */
     fun getStateCellInEvaluationPhase(): StateCell {
         return getStateCell(LearnerPhaseType.EVALUATION)
     }
@@ -196,7 +216,7 @@ class LearnerMonitoringModel(
     /**
      * Return the LearnerStateOnPhase from the type of the phase
      *
-     * @property phase The type of the phase
+     * @param phase The type of the phase
      * @see LearnerPhaseType
      */
     private fun getLearnerPhaseStateByType(phase: LearnerPhaseType): LearnerStateOnPhase {
@@ -210,7 +230,7 @@ class LearnerMonitoringModel(
     /**
      * Return the PhaseState from the type of the phase
      *
-     * @property phase The type of the phase
+     * @param phase The type of the phase
      * @see LearnerPhaseType
      */
     private fun getPhaseStateByType(phase: LearnerPhaseType): DashboardPhaseState {
@@ -222,8 +242,8 @@ class LearnerMonitoringModel(
     }
 
     /**
+     * @param stateCell the state of the cell we want to count
      * @return the number of states that is given
-     * @property stateCell the state of the cell we want to count
      * @see StateCell
      */
     fun getLevelByStateCell(stateCell: StateCell): Int {
