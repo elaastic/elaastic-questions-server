@@ -1,5 +1,6 @@
 package org.elaastic.questions.security
 
+import org.elaastic.questions.directory.cas.SupportedCasProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.hamcrest.MatcherAssert.*
@@ -48,6 +49,9 @@ internal class CasSecurityConfigurerIntegrationTest(
             assertThat(casInfoList[0].casKey, equalTo("ENT_1"))
             assertThat(casInfoList[0].label, equalTo("ENT_1"))
             assertThat(casInfoList[0].logoSrc, equalTo("/images/cas/ecollege.haute-garonne.long.png"))
+            assertThat(casInfoList[0].casProvider, equalTo(SupportedCasProvider.Kosmos.name))
+            assertThat(casInfoList[1].casProvider, equalTo(SupportedCasProvider.Edifice.name))
+
 
         }
     }

@@ -19,37 +19,21 @@ class CasUserDetailService(
         return casUserRepository.findByCasKeyAndCasUserId(casKey, username)?.user?.also { it.casKey = casKey }
     }
 
-    private fun parseStringAttribute(principal: AttributePrincipal, attributeName: String): String =
-        principal.attributes[attributeName].let { value ->
-            when(value) {
-                is String -> value
-                null -> throw IllegalArgumentException("The attribute '$attributeName' is mandatory")
-                else -> throw IllegalArgumentException("The attribute '$attributeName' is expected of type 'String' ; provided ${value::class.java}")
-            }
-        }
 
-    private fun parseOptionalStringAttribute(principal: AttributePrincipal, attributeName: String): String? =
-        principal.attributes[attributeName].let { value ->
-            if(value is String?)
-                value
-            else throw IllegalArgumentException("The attribute '$attributeName' is expected of type 'String?' ; provided ${value!!::class.java}")
+    private fun getCasAttributeParser(casProvider: String): CasAttributeParser {
+        when(casProvider) {
+            SupportedCasProvider.Kosmos.name -> return CasKosmosAttributeParser()
+            else -> throw IllegalArgumentException("The CAS provider '$casProvider' is not supported")
         }
-
-    private fun parseRoleId(principal: AttributePrincipal): Role.RoleId =
-        parseStringAttribute(principal, "profil").let { profile ->
-            when(profile) {
-                "Professeur" -> return Role.RoleId.TEACHER
-                "Eleve" -> return Role.RoleId.STUDENT
-                else -> throw IllegalArgumentException("The profile '$profile' is not supported")
-            }
-        }
+    }
 
     @Transactional
-    fun registerNewCasUser(casKey: String, principal: AttributePrincipal): UserDetails {
-        val firstName = parseStringAttribute(principal, "prenom")
-        val lastName = parseStringAttribute(principal, "nom")
-        val email = parseOptionalStringAttribute(principal, "mail")
-        val roleId = parseRoleId(principal)
+    fun registerNewCasUser(casKey: String, casProvider: String, principal: AttributePrincipal): UserDetails {
+        val casAttributeParser = getCasAttributeParser(casProvider)
+        val firstName = casAttributeParser.parseFirstName(principal)
+        val lastName = casAttributeParser.parseLastName(principal)
+        val email = casAttributeParser.parseEmail(principal)
+        val roleId = casAttributeParser.parseRoleId(principal)
 
         val user = User(
             firstName = firstName,

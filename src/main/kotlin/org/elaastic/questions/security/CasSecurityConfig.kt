@@ -135,17 +135,17 @@ class CasSecurityConfig {
         override fun postProcessBeanDefinitionRegistry(registry: BeanDefinitionRegistry) {
 
             // Iterate on the list of configured CAS in application.properties
-            casInfoList.forEach { registerCasBeans(registry, it.casKey) }
+            casInfoList.forEach { registerCasBeans(registry, it.casKey, it.casProvider) }
         }
 
         /**
          * Register all the beans needed for a CAS server
          */
-        private fun registerCasBeans(registry: BeanDefinitionRegistry, casKey: String) {
+        private fun registerCasBeans(registry: BeanDefinitionRegistry, casKey: String, casProvider: String) {
 
             registerCasAuthenticationFilter(registry, casKey)
             registerServiceProperties(registry, casKey)
-            registerCasAuthenticationProvider(registry, casKey)
+            registerCasAuthenticationProvider(registry, casKey, casProvider)
             registerTicketValidator(registry, casKey)
             registerCasAuthenticationEntryPoint(registry, casKey)
         }
@@ -175,10 +175,11 @@ class CasSecurityConfig {
                 }
         }
 
-        private fun registerCasAuthenticationProvider(registry: BeanDefinitionRegistry, casKey: String) {
+        private fun registerCasAuthenticationProvider(registry: BeanDefinitionRegistry, casKey: String, casProvider: String) {
             BeanDefinitionBuilder.genericBeanDefinition(ElaasticCasAuthenticationProvider::class.java).setLazyInit(true)
                 .let { builder ->
                     builder.addConstructorArgValue(casKey)
+                    builder.addConstructorArgValue(casProvider)
                     builder.addConstructorArgReference("casUserDetailService")
                     builder.addConstructorArgReference("$SERVICE_PROPERTIES_BEAN_PREFIX${casKey}")
                     builder.addConstructorArgReference("$TICKET_VALIDATOR_BEAN_PREFIX${casKey}")
@@ -213,6 +214,7 @@ class CasSecurityConfig {
                     label = readCasProperty("label", casKey, environment),
                     logoSrc = readCasProperty("logo", casKey, environment),
                     serverUrl = readCasProperty("server.url", casKey, environment),
+                    casProvider = readCasProperty("provider", casKey, environment),
                 )
             } ?: listOf()
 
