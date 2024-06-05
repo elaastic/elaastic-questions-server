@@ -65,7 +65,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val reporter = integrationTestingService.getTestStudent()
         response.learner = reporter
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -94,11 +94,11 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val reporter = integrationTestingService.getTestStudent()
         response.learner = reporter
-        lateinit var peerGrading: DraxoPeerGrading;
+        lateinit var peerGrading: DraxoPeerGrading
         tGiven("A draxo peerGrading without a content to report") {
             val grader = integrationTestingService.getAnyUser()
-            // A peerGrading where there are no content to report, is a peerGrading where there are no comment
-            // We can achieve the zero comment peerGrading by giving all the criteria a positive option
+            // A peerGrading where there is no content to report, is a peerGrading where there is no comment
+            // We can achieve the zero-comment peerGrading by giving all the criteria a positive option
             peerGrading = DraxoPeerGrading(
                 grader = grader,
                 response = response,
@@ -135,7 +135,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val reporter = integrationTestingService.getTestStudent()
         response.learner = reporter
-        lateinit var peerGrading: DraxoPeerGrading;
+        lateinit var peerGrading: DraxoPeerGrading
         val comment = "This is a comment to explain the reason of the report"
 
         tGiven("A draxo peer grading") {
@@ -170,7 +170,7 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val reporter = integrationTestingService.getTestStudent()
         response.learner = reporter
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             val grader = integrationTestingService.getAnyUser()
             peerGrading = LikertPeerGrading(
@@ -208,7 +208,7 @@ internal class PeerGradingServiceTest(
         val reporter = integrationTestingService.getTestStudent()
         val comment = "This is a comment to explain the reason of the report"
         response.learner = reporter
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -238,7 +238,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val learner = integrationTestingService.getTestStudent()
         response.learner = learner
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -267,7 +267,7 @@ internal class PeerGradingServiceTest(
         val learner = integrationTestingService.getTestStudent()
         val reporterWhoDontOwnTheResponse = integrationTestingService.getNLearners(1).first()
         response.learner = learner
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -302,7 +302,7 @@ internal class PeerGradingServiceTest(
         val teacher = integrationTestingService.getTestTeacher()
         response.interaction.sequence.assignment!!.owner = teacher
 
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -340,7 +340,7 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val grader = integrationTestingService.getAnyUser()
         val teacher = response.interaction.sequence.assignment!!.owner
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = DraxoPeerGrading(
                 grader = grader,
@@ -374,7 +374,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val teacher = integrationTestingService.getTestTeacher()
         response.interaction.sequence.assignment!!.owner = teacher
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -419,7 +419,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val teacher = integrationTestingService.getTestTeacher()
         response.interaction.sequence.assignment!!.owner = teacher
-        lateinit var peerGrading: DraxoPeerGrading;
+        lateinit var peerGrading: DraxoPeerGrading
         tGiven("A draxo peer grading") {
             peerGrading = DraxoPeerGrading(
                 grader = grader,
