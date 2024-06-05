@@ -18,6 +18,9 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
+import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
@@ -27,10 +30,12 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.Optio
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
+import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.questions.test.interpreter.command.Phase
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -49,11 +54,10 @@ internal class PeerGradingServiceTest(
     @Autowired val userService: UserService,
     @Autowired val peerGradingRepository: PeerGradingRepository,
     @Autowired val entityManager: EntityManager,
-    @Autowired val subjectService: SubjectService
+    @Autowired val subjectService: SubjectService,
+    @Autowired val functionalTestingService: FunctionalTestingService,
+    @Autowired val roleService: RoleService,
 ) {
-
-    @Autowired
-    private lateinit var roleService: RoleService
 
     @Test
     fun `a student can report a peerGrading`() {
@@ -443,7 +447,50 @@ internal class PeerGradingServiceTest(
             assertThrows<Exception> {
                 peerGradingService.getDraxoPeerGrading(-1)
             }
+        }
+    }
 
+    @Test
+    fun `test of findAllEvaluation`() {
+        // Given
+        val learners = integrationTestingService.getNLearners(2)
+        val grader = learners[0]
+        val learner = learners[1]
+        val teacher = integrationTestingService.getTestTeacher()
+        val subject = functionalTestingService.createSubject(teacher)
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace) // Phase 1 (Start)
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "response"
+        )
+        functionalTestingService.nextPhase(sequence) // Phase 2 (Evaluation)
+        assertEquals(0, peerGradingService.findAllEvaluation(grader, response.interaction.sequence).count())
+
+        tGiven("A peerGrading given by the grader") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.save(it)
+                    it
+                }
+        }.tWhen("We get all the evaluations for the response") {
+            val evaluations = peerGradingService.findAllEvaluation(grader, response.interaction.sequence)
+            evaluations
+        }.tThen("the peerGrading is returned") { evaluations ->
+            assertEquals(1, evaluations.count())
+            assertEquals(grader, evaluations.first().grader)
+            assertEquals(response, evaluations.first().response)
         }
     }
 }
