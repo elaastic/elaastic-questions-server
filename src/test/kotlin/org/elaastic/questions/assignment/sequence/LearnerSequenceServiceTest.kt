@@ -69,6 +69,7 @@ internal class LearnerSequenceServiceTest(
         functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
         val assignement = functionalTestingService.createAssignment(subject)
         val sequence = assignement.sequences.first()
+        assertEquals(0, learnerSequenceService.countReportMade(reporter, sequence), "The report count should be 0 as the sequence has not started yet")
         functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace) // Phase 1 (Start)
         val response = functionalTestingService.submitResponse(
             Phase.PHASE_1,
