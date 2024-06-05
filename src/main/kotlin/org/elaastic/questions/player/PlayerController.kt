@@ -25,7 +25,6 @@ import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
-import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
@@ -40,8 +39,6 @@ import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.Cha
 import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
-import org.elaastic.questions.player.components.steps.StepsModel
-import org.elaastic.questions.player.components.steps.StepsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
@@ -700,7 +697,7 @@ class PlayerController(
         val sequence = sequenceService.get(id, true)
 
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
-        val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
+        val reasonComment = otherReasonComment.ifEmpty { null }
         chatGptEvaluationService.reportEvaluation(chatGptEvaluation!!, reasons, reasonComment)
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }

@@ -17,17 +17,14 @@
  */
 package org.elaastic.questions.player
 
-import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.elaastic.questions.player.components.command.CommandModelFactory
-import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo

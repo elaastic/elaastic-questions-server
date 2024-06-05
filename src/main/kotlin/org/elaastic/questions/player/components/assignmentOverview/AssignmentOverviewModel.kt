@@ -18,10 +18,6 @@
 
 package org.elaastic.questions.player.components.assignmentOverview
 
-import org.elaastic.questions.assignment.LearnerAssignment
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.player.components.dashboard.DashboardModel
 
 data class AssignmentOverviewModel(
         val teacher: Boolean,

@@ -19,15 +19,11 @@
 package org.elaastic.questions.player.components.assignmentOverview
 
 import org.elaastic.questions.assignment.Assignment
-import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.RevisionMode
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.player.components.dashboard.DashboardModel
-import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 
 object AssignmentOverviewModelFactory {
 
