@@ -5,4 +5,5 @@ data class CasInfo(
     val label: String,
     val logoSrc: String,
     val serverUrl: String,
+    val casProvider: String,
 )

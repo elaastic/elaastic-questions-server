@@ -8,6 +8,7 @@ import java.util.logging.Logger
 class CasAuthenticationUserDetailService(
     private val casUserDetailService: CasUserDetailService,
     private val casKey: String,
+    private val casProvider: String,
 ) : AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
 
     val logger: Logger = Logger.getLogger(CasAuthenticationUserDetailService::class.java.name)
@@ -19,6 +20,6 @@ class CasAuthenticationUserDetailService(
 
         val username: String = token.name
         return casUserDetailService.loadUserByUsername(casKey, username) ?:
-        casUserDetailService.registerNewCasUser(casKey, token.assertion.principal)
+        casUserDetailService.registerNewCasUser(casKey, casProvider, token.assertion.principal)
     }
 }
