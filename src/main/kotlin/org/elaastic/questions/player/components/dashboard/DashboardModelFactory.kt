@@ -147,8 +147,11 @@ object DashboardModelFactory {
         val nbEvaluationMade = evaluationCountByUser[attendee]
 
         val hasMadeAllEvaluationForPhase: Boolean =
-            sequence.activeInteraction?.interactionType == InteractionType.Evaluation
-                    && sequence.getEvaluationSpecification().responseToEvaluateCount == nbEvaluationMade
+            try {
+                sequence.getEvaluationSpecification().responseToEvaluateCount == nbEvaluationMade
+            } catch (e: IllegalStateException) {
+                false /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function */
+            }
 
         return if (evaluationPhaseState == DashboardPhaseState.NOT_STARTED) {
             LearnerStateOnPhase.WAITING

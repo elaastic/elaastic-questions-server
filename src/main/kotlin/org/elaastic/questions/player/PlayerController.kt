@@ -261,7 +261,7 @@ class PlayerController(
 
         // Associate each learner with the number of evaluations he made
         val evaluationCountByUser = registeredUsers.associateWith {
-            peerGradingService.findAllEvaluation(it.learner, sequence).count()
+            peerGradingService.countEvaluationsMadeByUser(it.learner, sequence)
         }
 
 

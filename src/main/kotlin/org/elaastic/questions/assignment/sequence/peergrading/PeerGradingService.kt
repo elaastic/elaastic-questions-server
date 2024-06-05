@@ -140,6 +140,22 @@ class PeerGradingService(
             .setParameter("interaction", sequence.getResponseSubmissionInteraction())
             .resultList as List<PeerGrading>
 
+    /**
+     * Count the number of evaluations made by a user on a sequence.
+     * If the user has not made any evaluation, 0 is returned.
+     *
+     * @param grader the user who performed the evaluations.
+     * @param sequence the sequence.
+     * @return the number of evaluations.
+     */
+    fun countEvaluationsMadeByUser(grader: User, sequence: Sequence): Int {
+        return try {
+            findAllEvaluation(grader, sequence).count()
+        } catch (e: IllegalStateException) {
+            0
+        }
+    }
+
     fun countEvaluations(sequence: Sequence) =
         countEvaluations(sequence.getResponseSubmissionInteraction())
 

@@ -451,7 +451,7 @@ internal class PeerGradingServiceTest(
     }
 
     @Test
-    fun `test of findAllEvaluation`() {
+    fun `test of countEvaluationsMadeByUser`() {
         // Given
         val learners = integrationTestingService.getNLearners(2)
         val grader = learners[0]
@@ -471,7 +471,7 @@ internal class PeerGradingServiceTest(
             "response"
         )
         functionalTestingService.nextPhase(sequence) // Phase 2 (Evaluation)
-        assertEquals(0, peerGradingService.findAllEvaluation(grader, response.interaction.sequence).count())
+        assertEquals(0, peerGradingService.countEvaluationsMadeByUser(grader, response.interaction.sequence))
 
         tGiven("A peerGrading given by the grader") {
             DraxoPeerGrading(
@@ -488,6 +488,7 @@ internal class PeerGradingServiceTest(
             val evaluations = peerGradingService.findAllEvaluation(grader, response.interaction.sequence)
             evaluations
         }.tThen("the peerGrading is returned") { evaluations ->
+            assertEquals(1, peerGradingService.countEvaluationsMadeByUser(grader, response.interaction.sequence))
             assertEquals(1, evaluations.count())
             assertEquals(grader, evaluations.first().grader)
             assertEquals(response, evaluations.first().response)
