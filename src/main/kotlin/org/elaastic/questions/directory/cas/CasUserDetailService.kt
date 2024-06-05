@@ -20,12 +20,12 @@ class CasUserDetailService(
     }
 
 
-    private fun getCasAttributeParser(casProvider: String): CasAttributeParser {
+    private fun getCasAttributeParser(casProvider: String): CasAttributeParser =
         when(casProvider) {
-            SupportedCasProvider.Kosmos.name -> return CasKosmosAttributeParser()
+            SupportedCasProvider.Kosmos.name -> CasAttributeParserForKosmos()
+            SupportedCasProvider.Edifice.name -> CasAttributeParserForEdifice()
             else -> throw IllegalArgumentException("The CAS provider '$casProvider' is not supported")
         }
-    }
 
     @Transactional
     fun registerNewCasUser(casKey: String, casProvider: String, principal: AttributePrincipal): UserDetails {
