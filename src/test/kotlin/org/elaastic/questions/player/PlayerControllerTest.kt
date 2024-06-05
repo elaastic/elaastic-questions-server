@@ -30,6 +30,7 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.directory.AnonymousUserService
 import org.elaastic.questions.directory.User
@@ -41,7 +42,7 @@ import org.elaastic.questions.subject.*
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
-import org.junit.After
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -64,7 +65,7 @@ import org.togglz.core.manager.FeatureManager
 internal class PlayerControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val integrationTestingService: IntegrationTestingService,
-    @Autowired val userDetailsService: UserDetailsService
+    @Autowired val userDetailsService: UserDetailsService,
 ) {
     @MockBean
     lateinit var assignmentService: AssignmentService
@@ -104,6 +105,9 @@ internal class PlayerControllerTest(
 
     @MockBean
     lateinit var eventLogService: EventLogService
+
+    @MockBean
+    lateinit var peerGradingService: PeerGradingService
 
     @MockBean
     lateinit var beanIntegrationTestingService: IntegrationTestingService
@@ -163,7 +167,7 @@ internal class PlayerControllerTest(
 
     }
 
-    @After
+    @AfterEach
     fun afterTests() {
         unmockkAll()
     }
