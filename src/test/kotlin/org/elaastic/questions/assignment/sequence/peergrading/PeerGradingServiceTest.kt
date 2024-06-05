@@ -461,6 +461,7 @@ internal class PeerGradingServiceTest(
         functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
         val assignement = functionalTestingService.createAssignment(subject)
         val sequence = assignement.sequences.first()
+        assertEquals(0, peerGradingService.countEvaluationsMadeByUser(grader, sequence))
         functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace) // Phase 1 (Start)
         val response = functionalTestingService.submitResponse(
             Phase.PHASE_1,
