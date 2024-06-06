@@ -8,28 +8,41 @@ import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.empty
+import org.hamcrest.Matchers.`is`
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.EnabledIf
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@EnabledIf(value = "#{@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))}", loadContext = true)
 internal class ChatGptEvaluationRepositoryIntegrationTest(
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val entityManager: EntityManager
 ) {
 
+    @BeforeEach
+    fun setup() {
+        chatGptEvaluationRepository.deleteAll()
+        // Precondition
+        assertThat(chatGptEvaluationRepository.findAll(), `is`(empty()))
+    }
+
     @Test
     fun `save a valid ChatGPT evaluation`() {
+
         ChatGptEvaluation(
             response = integrationTestingService.getAnyResponse()
         )
             .tWhen {
-                chatGptEvaluationRepository.saveAndFlush(it)
-                entityManager.refresh(it)
+                chatGptEvaluationRepository.save(it)
                 it
             }
             .tThen {
