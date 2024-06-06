@@ -7,7 +7,7 @@ import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.hamcrest.MatcherAssert.*
 import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -25,6 +25,13 @@ internal class ChatGptEvaluationServiceIntegrationTest(
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
 ) {
 
+    @BeforeEach
+    @Transactional
+    fun setup() {
+        chatGptEvaluationRepository.deleteAll()
+        // Precondition
+        assertThat(chatGptEvaluationRepository.findAll(), `is`(empty()))
+    }
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -33,8 +40,6 @@ internal class ChatGptEvaluationServiceIntegrationTest(
         val response = integrationTestingService.getAnyResponse()
         response.explanation = "explanation test"
 
-        // Precondition
-        assertThat(chatGptEvaluationRepository.findAll(), `is`(empty()))
 
         tWhen {
             chatGptEvaluationService.createEvaluation(response, "fr")
@@ -56,9 +61,5 @@ internal class ChatGptEvaluationServiceIntegrationTest(
         }
     }
 
-    @AfterEach
-    @Transactional
-    fun cleanup() {
-        chatGptEvaluationRepository.deleteAll()
-    }
+
 }
