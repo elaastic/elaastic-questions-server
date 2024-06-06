@@ -67,11 +67,12 @@
                 </th:block>
             </div>
 
-            <div th:if="${!studentResultsModel.hasAnsweredPhase2() and !studentResultsModel.hasAnsweredPhase1()}"
-                 style="margin-top: 2.5em;">
-                <div class="ui message">
+            <div th:if="${!studentResultsModel.hasAnsweredPhase2() and !studentResultsModel.hasAnsweredPhase1()}">
+                <div class="ui message warning">
                     <div class="header" th:text="#{player.sequence.studentResults.noAnswer}">No answer</div>
-                    <div class="content" th:text="#{player.sequence.studentResults.noAnswer.description}">No answer description</div>
+                    <div class="content" th:text="#{player.sequence.studentResults.noAnswer.description}">No answer
+                        description
+                    </div>
                 </div>
             </div>
         </div>
