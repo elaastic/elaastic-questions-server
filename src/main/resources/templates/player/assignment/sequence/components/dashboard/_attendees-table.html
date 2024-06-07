@@ -50,13 +50,18 @@
         </tr>
         </tbody>
     </table>
+    <!--/* Detail modal for each learner */-->
+    <th:block th:each="learner: ${sequenceMonitoringModel.learners}">
+        <div th:replace="player/assignment/sequence/components/dashboard/_detail-modal.html :: detailModal(${learner})"></div>
+    </th:block>
+
     <script th:inline="javascript">
         $(function () {
             $('[id="see-detail"]').click(function () {
                 let learnerId = $(this).attr('learner-id');
                 console.log(learnerId)
+                $('#detailModal_' + learnerId).modal('show');
             });
         })
     </script>
-
 </th:block>
