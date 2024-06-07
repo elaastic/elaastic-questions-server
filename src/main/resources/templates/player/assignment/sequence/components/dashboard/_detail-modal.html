@@ -21,15 +21,56 @@
      class="ui small modal"
      th:id="|detailModal_${learnerMonitoringModel.learnerId}|">
 
-    <div class="header">
-        <div th:text="${learnerMonitoringModel.learnerName}"></div>
-    </div>
+    <i class="close icon"></i>
 
+    <div class="header">
+        <div th:text="#{attendee.details}"></div>
+    </div>
     <div class="content">
+        <div class="ui message info">
+            <div class="header" th:text="${learnerMonitoringModel.learnerName}"></div>
+            <div class="content">
+                <table class="ui celled table">
+                    <thead>
+                    <tr>
+                        <th class="center aligned" th:text="#{attendee.phase(${1})}">first_phase_label</th>
+                        <th class="center aligned" th:text="#{attendee.phase(${2})}">second_phase_label</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <!--/* States of the learner */-->
+                        <th:block
+                                th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learnerMonitoringModel.getStateCellInResponsePhase().name})">
+                        </th:block>
+                        <th:block
+                                th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learnerMonitoringModel.getStateCellInEvaluationPhase().name})">
+                        </th:block>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="ui segment">
+            <div class="header">
+                Result goes here
+            </div>
+        </div>
 
     </div>
     <script th:inline="javascript">
+        $(function () {
+            const learnerId = [[${learnerMonitoringModel.learnerId}]]
 
+            $('#detailModal_' + learnerId).modal({
+                onShow: function () {
+                    console.log("Modal for learner with ID: " + learnerId)
+                    //Fetch method for the results of the learner goes here
+                }
+            });
+        });
     </script>
 
 </div>
