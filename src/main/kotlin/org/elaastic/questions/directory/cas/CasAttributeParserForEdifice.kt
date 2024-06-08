@@ -7,6 +7,7 @@ import org.jasig.cas.client.authentication.AttributePrincipal
  * Parser for CAS attributes from Edifice.
  */
 class CasAttributeParserForEdifice : CasAttributeParser {
+
     override fun parseFirstName(principal: AttributePrincipal): String {
         return parseStringAttribute(principal, "firstName")
     }
@@ -22,10 +23,16 @@ class CasAttributeParserForEdifice : CasAttributeParser {
     override fun parseRoleId(principal: AttributePrincipal): Role.RoleId =
         parseStringAttribute(principal, "profile").let { profile ->
             when (profile) {
-                "Teacher" -> return Role.RoleId.TEACHER
-                "Student" -> return Role.RoleId.STUDENT
+                TEACHER, OTHER_KIND_OF_TEACHER -> return Role.RoleId.TEACHER
+                STUDENT -> return Role.RoleId.STUDENT
                 else -> throw IllegalArgumentException("The profile '$profile' is not supported")
             }
         }
+
+    companion object {
+        private const val TEACHER = "Teacher"
+        private const val STUDENT = "Student"
+        private const val OTHER_KIND_OF_TEACHER = "Personnel"
+    }
 
 }
