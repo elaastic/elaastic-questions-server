@@ -22,10 +22,14 @@ class CasAttributeParserForKosmos : CasAttributeParser {
     override fun parseRoleId(principal: AttributePrincipal): Role.RoleId =
         parseStringAttribute(principal, "profil").let { profile ->
             when (profile) {
-                "Professeur" -> return Role.RoleId.TEACHER
-                "Eleve" -> return Role.RoleId.STUDENT
+                TEACHER -> return Role.RoleId.TEACHER
+                STUDENT -> return Role.RoleId.STUDENT
                 else -> throw IllegalArgumentException("The profile '$profile' is not supported")
             }
         }
 
+    companion object {
+        private const val TEACHER = "Professeur"
+        private const val STUDENT = "Eleve"
+    }
 }

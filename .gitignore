@@ -126,3 +126,5 @@ emailconfig.properties
 /paper.pdf
 .DS_Store
 /config
+cas-certificate.cer
+thekeystore
