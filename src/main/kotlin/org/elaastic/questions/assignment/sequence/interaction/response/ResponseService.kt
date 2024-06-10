@@ -198,10 +198,14 @@ class ResponseService(
         response.evaluationCount = res[0]?.let { (it as Long).toInt() } ?: 0
         response.draxoEvaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
 
-        val meangrade =
-            entityManager.createQuery("select avg(pg.grade) from PeerGrading pg where pg.response = :response and pg.hiddenByTeacher = false")
-                .setParameter("response", response)
-                .singleResult as Double?
+
+        val meangrade = entityManager.createQuery(
+            "SELECT AVG(pg.grade) " +
+                    "FROM PeerGrading pg " +
+                    "WHERE pg.response = :response AND pg.hiddenByTeacher = false"
+        )
+            .setParameter("response", response)
+            .singleResult as Double?
         response.meanGrade = meangrade?.let { BigDecimal(it).setScale(2, RoundingMode.HALF_UP) }
 
         return responseRepository.save(response)
