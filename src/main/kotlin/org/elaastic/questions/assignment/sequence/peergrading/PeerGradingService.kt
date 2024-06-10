@@ -354,7 +354,7 @@ class PeerGradingService(
     }
 
     /**
-     * Return all the evaluation another user made to the learner response of
+     * Return all the DRAXO evaluation another user made to the learner response of
      * the sequence
      *
      * @param user the user
@@ -362,16 +362,23 @@ class PeerGradingService(
      * @param attempt the attempt
      * @return the list of evaluation
      */
-    fun findAllEvaluationMadeForLearner(user: User, sequence: Sequence, attempt: Int = 1): List<DraxoPeerGrading> {
-        return responseRepository.findByInteractionAndAttemptAndLearner(
-            sequence.getResponseSubmissionInteraction(),
-            attempt,
-            user
-        )?.let {
-            peerGradingRepository.findAllByResponseAndType(
-                it,
-                PeerGradingType.DRAXO
+    fun findAllEvaluationMadeForLearner(user: User, sequence: Sequence, attempt: Int = 1): List<PeerGrading> {
+        val query = entityManager.createQuery(
+            """
+            SELECT pg
+            FROM PeerGrading pg
+            WHERE pg.response IN (
+                FROM Response resp
+                WHERE resp.interaction = :interaction 
+                      AND resp.attempt = :attempt 
+                      AND resp.learner = :learner
             )
-        } ?: emptyList<DraxoPeerGrading>()
+        """.trimIndent(), PeerGrading::class.java
+        )
+            .setParameter("interaction", sequence.getResponseSubmissionInteraction())
+            .setParameter("learner", user)
+            .setParameter("attempt", attempt)
+
+        return query.resultList
     }
 }

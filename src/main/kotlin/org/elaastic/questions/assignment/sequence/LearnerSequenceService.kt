@@ -20,8 +20,8 @@ package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -84,7 +84,7 @@ class LearnerSequenceService(
      * count is 0
      */
     fun countReportMade(user: User, sequence: Sequence): Int {
-        val peerGrading = emptyList<DraxoPeerGrading>().toMutableList()
+        val peerGrading = emptyList<PeerGrading>().toMutableList()
         return try {
             peerGrading.addAll(peerGradingService.findAllEvaluationMadeForLearner(user, sequence))
             peerGrading.addAll(peerGradingService.findAllEvaluationMadeForLearner(user, sequence, 2))
