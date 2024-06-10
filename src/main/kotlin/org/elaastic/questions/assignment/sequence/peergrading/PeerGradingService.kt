@@ -142,6 +142,7 @@ class PeerGradingService(
 
     /**
      * Count the number of evaluations made by a user on a sequence.
+     *
      * If the user has not made any evaluation, 0 is returned.
      *
      * @param grader the user who performed the evaluations.
@@ -150,8 +151,23 @@ class PeerGradingService(
      */
     fun countEvaluationsMadeByUser(grader: User, sequence: Sequence): Int {
         return try {
-            findAllEvaluation(grader, sequence).count()
+            entityManager.createQuery(
+                """
+            SELECT count(*)
+            FROM PeerGrading  pg
+            WHERE pg.grader = :grader
+                AND pg.response IN (
+                    FROM Response resp
+                    WHERE resp.interaction = :interaction
+                )
+        """.trimIndent(), Int::class.java
+            )
+                .setParameter("grader", grader)
+                .setParameter("interaction", sequence.getResponseSubmissionInteraction())
+                .singleResult as Int
         } catch (e: IllegalStateException) {
+            /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function
+               If the sequence isn't initialized, that means the user has not made any evaluation */
             0
         }
     }
@@ -179,8 +195,8 @@ class PeerGradingService(
         )
 
     /**
-     * Mark peer grading as hidden by teacher.
-     * If the user can't hide the peer grading, an exception is thrown
+     * Mark peer grading as hidden by teacher. If the user can't hide the peer
+     * grading, an exception is thrown
      *
      * @param teacher the teacher who hides the peer grading.
      * @param peerGrading the peer grading to hide
