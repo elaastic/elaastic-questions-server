@@ -42,6 +42,13 @@
             th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'"
             th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
         </span>
+
+        <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0}">
+        (<a class="detail-link" href="#"
+            th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'"
+            th:text="#{evaluation.see.chatGPT.review}">see ChatGPT review</a> )
+        </span>
+
         <span th:if="${explanation.hiddenByTeacher}">
             <i class="exclamation triangle icon" style="margin: 0 0.4em;"></i>
             <span th:text="#{player.sequence.explanation.hiddenExplanation}"></span>
