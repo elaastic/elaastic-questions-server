@@ -53,18 +53,4 @@ interface ResponseRepository : JpaRepository<Response, Long> {
                                                    attempt: AttemptNum): Int
 
     fun countByStatement(statement: Statement): Int
-
-    @Query("SELECT DISTINCT r " +
-           "FROM Interaction i " +
-           "INNER JOIN Response r " +
-           "ON i = r.interaction " +
-           "WHERE i.owner = :owner " +
-           "AND i.sequence = :sequence " +
-           "AND i.interactionType = :interactionType " +
-           "AND r.attempt = :attempt")
-    fun findResponseByOwnerAndSequenceAndAttemptAndInteractionType(
-        owner: User,
-        sequence: Sequence,
-        attempt: Int,
-        interactionType: InteractionType = InteractionType.ResponseSubmission): Response?
 }
