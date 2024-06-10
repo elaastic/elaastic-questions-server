@@ -149,7 +149,7 @@ class PeerGradingService(
      * @param sequence the sequence.
      * @return the number of evaluations.
      */
-    fun countEvaluationsMadeByUser(grader: User, sequence: Sequence): Int {
+    fun countEvaluationsMadeByUser(grader: User, sequence: Sequence): Long {
         return try {
             entityManager.createQuery(
                 """
@@ -164,7 +164,7 @@ class PeerGradingService(
             )
                 .setParameter("grader", grader)
                 .setParameter("interaction", sequence.getResponseSubmissionInteraction())
-                .singleResult as Int
+                .singleResult as Long
         } catch (e: IllegalStateException) {
             /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function
                If the sequence isn't initialized, that means the user has not made any evaluation */

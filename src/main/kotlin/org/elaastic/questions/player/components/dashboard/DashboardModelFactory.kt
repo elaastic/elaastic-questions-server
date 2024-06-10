@@ -44,7 +44,7 @@ object DashboardModelFactory {
         attendees: List<LearnerAssignment>,
         responses: List<Response>,
         openedPane: String,
-        evaluationCountByUser: Map<LearnerAssignment, Int>
+        evaluationCountByUser: Map<LearnerAssignment, Long>
     ): DashboardModel {
 
         val learnerStepsModel: StepsModel = StepsModelFactory.buildForTeacher(sequence)
@@ -140,7 +140,7 @@ object DashboardModelFactory {
         attendee: LearnerAssignment,
         sequence: Sequence,
         evaluationPhaseState: DashboardPhaseState,
-        evaluationCountByUser: Map<LearnerAssignment, Int>
+        evaluationCountByUser: Map<LearnerAssignment, Long>
     ): LearnerStateOnPhase {
 
         // To not use any Service in a Factory, we need to pass the evaluationCountByUser as an argument
@@ -148,7 +148,7 @@ object DashboardModelFactory {
 
         val hasMadeAllEvaluationForPhase: Boolean =
             try {
-                sequence.getEvaluationSpecification().responseToEvaluateCount == nbEvaluationMade
+                sequence.getEvaluationSpecification().responseToEvaluateCount.toLong() == nbEvaluationMade
             } catch (e: IllegalStateException) {
                 false /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function */
             }
@@ -190,7 +190,7 @@ object DashboardModelFactory {
         readPhaseState: DashboardPhaseState,
         attendee: LearnerAssignment,
         evaluationPhaseState: DashboardPhaseState,
-        evaluationCountByUser: Map<LearnerAssignment, Int>
+        evaluationCountByUser: Map<LearnerAssignment, Long>
     ): LearnerStateOnPhase {
 
         return if ((sequence.executionIsFaceToFace() || sequence.executionIsBlended())) {
