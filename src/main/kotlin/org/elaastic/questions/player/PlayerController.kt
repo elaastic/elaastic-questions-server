@@ -257,9 +257,7 @@ class PlayerController(
         val attendeesSequences: MutableMap<Long, ILearnerSequence> = mutableMapOf()
 
         // Associate each learner with the number of evaluations he made
-        val evaluationCountByUser = registeredUsers.associateWith {
-            peerGradingService.countEvaluationsMadeByUser(it.learner, sequence)
-        }
+        val evaluationCountByUser = peerGradingService.countEvaluationMadeByUsers(registeredUsers, sequence)
 
 
         val dashboardModel: DashboardModel =

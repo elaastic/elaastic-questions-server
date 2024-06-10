@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.Sequence
@@ -32,9 +33,11 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import javax.persistence.EntityManager
+import javax.persistence.Tuple
 import javax.transaction.Transactional
 
 @Service
@@ -165,10 +168,59 @@ class PeerGradingService(
                 .setParameter("grader", grader)
                 .setParameter("interaction", sequence.getResponseSubmissionInteraction())
                 .singleResult as Long
-        } catch (e: IllegalStateException) {
+        } catch (_: IllegalStateException) {
             /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function
                If the sequence isn't initialized, that means the user has not made any evaluation */
             0
+        }
+    }
+
+    /**
+     * Count the number of evaluations made by a list of users on a sequence.
+     *
+     * If a user has not made any evaluation, 0 is returned.
+     * If the sequence is not initialized, 0 is returned for all users.
+     *
+     * To avoid N+1 Select, we didn't use the method [countEvaluationsMadeByUser].
+     *
+     * @param users the list of users who performed the evaluations.
+     * @param sequence the sequence.
+     */
+    @EntityGraph("PeerGrading.with_grader_and_response", type = EntityGraph.EntityGraphType.LOAD)
+    fun countEvaluationMadeByUsers(users: List<LearnerAssignment>, sequence: Sequence): Map<LearnerAssignment, Long> {
+        val graderWithEvaluationCount: MutableMap<LearnerAssignment, Long> =
+            emptyMap<LearnerAssignment, Long>().toMutableMap()
+
+        return try {
+            val queryResult = entityManager.createQuery(
+                """
+            SELECT pg.grader, count(pg)
+            FROM PeerGrading pg
+            WHERE pg.response IN (
+                FROM Response resp
+                WHERE resp.interaction = :interaction
+            )
+            GROUP BY pg.grader
+        """.trimIndent()
+            )
+                .setParameter("interaction", sequence.getResponseSubmissionInteraction())
+                .resultList as List<Array<Any?>>
+
+            // For each given student, we associate it with the number of evaluations he made
+            // If the student isn't found in the query result, we associate it with 0
+            for (learner in users) {
+                val tupleResult = queryResult.find { it[0] == learner.learner }
+                graderWithEvaluationCount += if (tupleResult == null) {
+                    learner to 0
+                } else {
+                    learner to tupleResult[1] as Long
+                }
+            }
+            graderWithEvaluationCount
+        } catch (_: IllegalStateException) {
+            /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function
+               If the sequence isn't initialized, that means the users haven't made any evaluation */
+            users.associateWith { 0 } // No evaluation made by any user
         }
     }
 
@@ -311,8 +363,7 @@ class PeerGradingService(
      * @return the list of evaluation
      */
     fun findAllEvaluationMadeForLearner(user: User, sequence: Sequence, attempt: Int = 1): List<DraxoPeerGrading> {
-        val peerGrading = emptyList<DraxoPeerGrading>()
-        val peerGradingFind = responseRepository.findByInteractionAndAttemptAndLearner(
+        return responseRepository.findByInteractionAndAttemptAndLearner(
             sequence.getResponseSubmissionInteraction(),
             attempt,
             user
@@ -321,7 +372,6 @@ class PeerGradingService(
                 it,
                 PeerGradingType.DRAXO
             )
-        }
-        return peerGradingFind ?: peerGrading
+        } ?: emptyList<DraxoPeerGrading>()
     }
 }
