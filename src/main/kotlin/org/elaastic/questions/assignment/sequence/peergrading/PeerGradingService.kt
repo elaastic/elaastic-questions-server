@@ -160,7 +160,7 @@ class PeerGradingService(
                     FROM Response resp
                     WHERE resp.interaction = :interaction
                 )
-        """.trimIndent(), Int::class.java
+        """.trimIndent()
             )
                 .setParameter("grader", grader)
                 .setParameter("interaction", sequence.getResponseSubmissionInteraction())
