@@ -265,7 +265,7 @@ class PeerGradingService(
     /**
      * Update the utility grade of a peer grading.
      *
-     * @param learner the learner who own the response.
+     * @param learner the learner who owns the response.
      * @param peerGrading the draxo peer grading to update.
      * @param utilityGrade the utility grade.
      * @throws IllegalArgumentException if the learner is not the owner of the
@@ -293,7 +293,7 @@ class PeerGradingService(
      * Return true if the user can hide the peer grading An user can hide the
      * peer grading if he is the owner of the assigment
      *
-     * @param teacher the user who want to hide the peer grading
+     * @param teacher the user who wants to hide the peer grading
      * @param peerGrading the peer grading to hide
      * @return true if the user can hide the peer grading
      */
