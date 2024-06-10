@@ -137,7 +137,7 @@ class PeerGradingService(
                     FROM Response resp
                     WHERE resp.interaction = :interaction
                 )
-        """.trimIndent()
+        """.trimIndent(), PeerGrading::class.java
         )
             .setParameter("grader", grader)
             .setParameter("interaction", sequence.getResponseSubmissionInteraction())
@@ -201,10 +201,10 @@ class PeerGradingService(
                 WHERE resp.interaction = :interaction
             )
             GROUP BY pg.grader
-        """.trimIndent()
+        """.trimIndent(), Tuple::class.java
             )
                 .setParameter("interaction", sequence.getResponseSubmissionInteraction())
-                .resultList as List<Array<Any?>>
+                .resultList as List<Tuple>
 
             // For each given student, we associate it with the number of evaluations he made
             // If the student isn't found in the query result, we associate it with 0
