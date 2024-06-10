@@ -22,11 +22,12 @@
 var elaastic = elaastic || {};
 
 (function () {
-    let baseUrl = ''
+    let draxoBaseUrl = ''
+    let chatGPTBaseUrl = ''
 
     elaastic.draxo = {
         initialize(url) {
-            baseUrl = url
+            draxoBaseUrl = url
         },
 
         loadReviews(event, responseId) {
@@ -56,7 +57,57 @@ var elaastic = elaastic || {};
                 }
 
                 $.ajax({
-                    url: baseUrl + '/' + responseId,
+                    url: draxoBaseUrl + '/' + responseId,
+                    method: 'GET',
+                    data,
+                    success: function (data) {
+                        const targetElm = $(target)
+                        const availableWidth = targetElm.width()
+
+                        targetElm.html(data)
+                        if (availableWidth < 900) {
+                            $('.ui.mini.steps').addClass('vertical')
+                        }
+                    },
+                    error: function (error) {
+                        let errorMessage = error.responseJSON ? error.responseJSON.error : error.responseText
+                        $(target).html(buildHtmlError(errorMessage))
+                    }
+                })
+            }
+        }
+    }
+
+    elaastic.chatGPT = {
+        initialize(url) {
+            chatGPTBaseUrl = url
+        },
+
+        loadReview(event, responseId) {
+            event.preventDefault()
+
+            let elmBtnLoadReviews = event.target
+            let target = findElmReviewsContainer(
+                findElmExplanationContainer(elmBtnLoadReviews)
+            )
+
+            if ($(target).html().length > 0) {
+                // The reviews are already loaded
+                if ($(target).is(':visible')) {
+                    // The reviews are visible
+                    $(target).slideUp();
+                } else {
+                    // The reviews are hidden
+                    $(target).slideDown();
+                }
+            } else {
+                // The reviews are not loaded
+                $(target).html(buildHtmlLoader())
+
+                let data = {}
+
+                $.ajax({
+                    url: chatGPTBaseUrl + '/' + responseId,
                     method: 'GET',
                     data,
                     success: function (data) {

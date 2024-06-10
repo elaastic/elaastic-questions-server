@@ -45,6 +45,9 @@
   <script th:inline="javascript">
     elaastic.draxo.initialize(/*[[@{/peer-grading/draxo}]]*/);
   </script>
+  <script th:inline="javascript">
+    elaastic.chatGPT.initialize(/*[[@{/peer-grading/draxo}]]*/);
+  </script>
   <script th:src="@{/js/onboarding.js}"></script>
   <meta th:replace="${extraHeader}"/>
 

@@ -45,6 +45,9 @@
     <script th:inline="javascript">
       elaastic.draxo.initialize(/*[[@{/peer-grading/draxo}]]*/);
     </script>
+    <script th:inline="javascript">
+      elaastic.chatGPT.initialize(/*[[@{/peer-grading/draxo}]]*/);
+    </script>
     <script th:src="@{/js/intro.min.js}"></script>
     <script th:src="@{/js/onboarding.js}"></script>
     <meta th:replace="${extraHeader}"/>
@@ -94,7 +97,7 @@
          data-inverted="">
         <i class="folder open icon"></i>
       </a>
-      
+
       <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
          th:href="@{/subject}"
          href="/subjects"
