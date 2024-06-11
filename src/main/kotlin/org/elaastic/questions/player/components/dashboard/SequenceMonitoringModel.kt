@@ -16,36 +16,19 @@ class SequenceMonitoringModel(
     val executionContext: ExecutionContext,
     val phase1State: DashboardPhaseState,
     val phase2State: DashboardPhaseState,
-    val phase3State: DashboardPhaseState,
+    val phase3State: DashboardPhaseState = DashboardPhaseState.NOT_STARTED,
     val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
 ) {
 
     init {
         // Check coherence of the model
         when (executionContext) {
-            ExecutionContext.Distance -> {
-                require(phase1State == phase2State) { "In Distant mode phase 1 and 2 have the same state" }
-                if (phase3State == DashboardPhaseState.IN_PROGRESS) {
-                    //    All the phase can be in the same state,
-                    // OR the first two phases are stopped while the third is in progress
-                    require(phase2State == phase3State || phase2State == DashboardPhaseState.STOPPED)
-                }
-                if (phase1State == DashboardPhaseState.IN_PROGRESS) require(phase3State == DashboardPhaseState.IN_PROGRESS) { "In Distant mode phase 3 must be in progress when phase 1 is started" }
-            }
-
-            ExecutionContext.Blended -> {
-                require(phase1State == phase2State) { "In Blended mode phase 1 and 2 have the same state" }
-                if (phase1State == DashboardPhaseState.IN_PROGRESS) require(phase3State == DashboardPhaseState.NOT_STARTED) { "In Blended mode phase 3 must be not started when phase 1 is started" }
-            }
-
             ExecutionContext.FaceToFace -> {
                 if (phase1State == DashboardPhaseState.IN_PROGRESS) require(phase2State == DashboardPhaseState.NOT_STARTED) { "In FaceToFace mode phase 2 must be not started when phase 1 is started" }
-
-                if (phase2State == DashboardPhaseState.IN_PROGRESS) require(phase3State == DashboardPhaseState.NOT_STARTED) { "In FaceToFace mode phase 3 must be not started when phase 2 is started" }
                 if (phase2State == DashboardPhaseState.IN_PROGRESS) require(phase1State == DashboardPhaseState.STOPPED) { "In FaceToFace mode phase 1 must be completed when phase 2 is started" }
-
-                if (phase3State == DashboardPhaseState.IN_PROGRESS) require(phase1State == DashboardPhaseState.STOPPED && phase2State == DashboardPhaseState.STOPPED) { "In FaceToFace mode phase 1 and 2 must be completed when phase 3 is started" }
             }
+
+            else -> require(phase1State == phase2State) { "In Remote mode phase 1 and 2 must have the same state" }
         }
     }
 
@@ -98,9 +81,7 @@ class SequenceMonitoringModel(
             newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) }
             newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.NOT_TERMINATED) }
             newLearnersList.sortByDescending { it.getStateCell(LearnerPhaseType.EVALUATION) == LearnerMonitoringModel.StateCell.IN_PROGRESS }
-        }
-
-        if (this.phase3State == DashboardPhaseState.IN_PROGRESS) {
+        } else {
             newLearnersList.sortByDescending { it.getStateCell(LearnerPhaseType.RESPONSE) == LearnerMonitoringModel.StateCell.NOT_TERMINATED }
             newLearnersList.sortByDescending { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.NOT_TERMINATED) }
         }
@@ -145,7 +126,7 @@ class LearnerMonitoringModel(
     val learnerName: String,
     val learnerStateOnPhase1: LearnerStateOnPhase,
     val learnerStateOnPhase2: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-    val learnerStateOnPhase3: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+    private val learnerStateOnPhase3: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
     val sequenceMonitoringModel: SequenceMonitoringModel
 ) {
 
@@ -250,7 +231,6 @@ class LearnerMonitoringModel(
         val states: List<StateCell> = listOf(
             this.getStateCell(LearnerPhaseType.RESPONSE),
             this.getStateCell(LearnerPhaseType.EVALUATION),
-            this.getStateCell(LearnerPhaseType.RESULT)
         )
 
         return states.count { it == stateCell }

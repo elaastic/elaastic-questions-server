@@ -53,7 +53,6 @@ object DashboardModelFactory {
             sequence.executionContext,
             convertPhaseState(learnerStepsModel.responseSubmissionState),
             convertPhaseState(learnerStepsModel.evaluationState),
-            convertPhaseState(learnerStepsModel.readState)
         )
 
         val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
@@ -70,14 +69,7 @@ object DashboardModelFactory {
                         sequenceMonitoringModel.phase2State,
                         evaluationCountByUser
                     ),
-                    getAttendeeStateOnReadPhase(
-                        sequence,
-                        sequenceMonitoringModel.phase3State,
-                        it,
-                        sequenceMonitoringModel.phase2State,
-                        evaluationCountByUser
-                    ),
-                    sequenceMonitoringModel
+                    sequenceMonitoringModel = sequenceMonitoringModel
                 )
             )
         }
@@ -186,56 +178,6 @@ object DashboardModelFactory {
         sequence.getEvaluationSpecification().responseToEvaluateCount.toLong() == nbEvaluationMade
     } catch (e: IllegalStateException) {
         false /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function */
-    }
-
-    /**
-     * Get the LearnerStateOnPhase of the attendee on the Read phase. (eq. the
-     * result phase)
-     *
-     * By default, the learner has not terminated the activity
-     *
-     * If the sequence is *Face-to-Face or blended and the read phase is in
-     * progress, the learner is waiting.
-     *
-     * If the sequence is *Distance*, we need to check if the learner has
-     * terminated the previous activity, the Evaluation phase. For that we
-     * need to get the argument for the [getAttendeeStateOnEvaluationPhase]
-     * function.
-     *
-     * @param sequence the sequence
-     * @param readPhaseState the state of the read phase
-     * @param attendee the attendee
-     * @param evaluationPhaseState the state of the evaluation phase
-     * @param evaluationCountByUser the number of evaluations made by each user
-     * @return the state of the attendee on the read phase
-     * @see LearnerStateOnPhase
-     * @see getAttendeeStateOnEvaluationPhase
-     */
-    private fun getAttendeeStateOnReadPhase(
-        sequence: Sequence,
-        readPhaseState: DashboardPhaseState,
-        attendee: LearnerAssignment,
-        evaluationPhaseState: DashboardPhaseState,
-        evaluationCountByUser: Map<LearnerAssignment, Long>
-    ): LearnerStateOnPhase {
-
-        return if ((sequence.executionIsFaceToFace() || sequence.executionIsBlended())) {
-            if (readPhaseState == DashboardPhaseState.IN_PROGRESS) {
-                LearnerStateOnPhase.WAITING
-            } else {
-                LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
-            }
-        } else if (getAttendeeStateOnEvaluationPhase(
-                attendee,
-                sequence,
-                evaluationPhaseState,
-                evaluationCountByUser
-            ) == LearnerStateOnPhase.ACTIVITY_TERMINATED
-        ) {
-            LearnerStateOnPhase.WAITING
-        } else {
-            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
-        }
     }
 
     /**
