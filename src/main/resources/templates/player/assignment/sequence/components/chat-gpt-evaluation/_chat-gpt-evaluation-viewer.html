@@ -112,7 +112,7 @@
     <script th:inline="javascript">
         function refreshFragment() {
             $.ajax({
-                url: '/player/sequence/' + [[${chatGptEvaluationModel.sequenceId}]] + '/chat-gpt-evaluation',
+                url: '/player/sequence/' + [[${chatGptEvaluationModel.responseId}]] + '/chat-gpt-evaluation',
                 type: "GET",
                 success: function (data) {
                     var chatGptEvaluationFragment = data.replace( /<!--[\s\S]*?-->/, '');

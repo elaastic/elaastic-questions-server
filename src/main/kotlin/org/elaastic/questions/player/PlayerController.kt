@@ -593,21 +593,20 @@ class PlayerController(
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }
 
-    @GetMapping("sequence/{id}/chat-gpt-evaluation")
+    @GetMapping("sequence/{responseId}/chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun viewChatGptEvaluation(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
+        @PathVariable responseId: Long
     ): String {
         val user: User = authentication.principal as User
-        val sequence = sequenceService.get(id, true)
 
-        val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
+        val response = responseService.findById(responseId)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         model.addAttribute(
             "chatGptEvaluationModel",
-            ChatGptEvaluationModelFactory.build(chatGptEvaluation, sequence, responseId = response?.id)
+            ChatGptEvaluationModelFactory.build(chatGptEvaluation, response.interaction.sequence, responseId = response?.id)
         )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
     }
