@@ -19,6 +19,7 @@
 package org.elaastic.questions.assignment.sequence.peergrading
 
 import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.ReportReason
@@ -495,4 +496,81 @@ internal class PeerGradingServiceTest(
             assertEquals(response, evaluations.first().response)
         }
     }
+
+    /**
+     * The method tested is [PeerGradingService.countEvaluationsMadeByUsers] do
+     * not mistake with [PeerGradingService.countEvaluationsMadeByUser]
+     */
+    @Test
+    fun `test of countEvaluationsMadeByUsers`() {
+        // Given
+        val learners = integrationTestingService.getNLearners(2)
+        val grader = learners[0]
+        val learner = learners[1]
+        val subject = functionalTestingService.createSubject(integrationTestingService.getTestTeacher())
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+
+        val learnersAssignementList: List<LearnerAssignment> = listOf(
+            LearnerAssignment(grader, assignement),
+            LearnerAssignment(learner, assignement),
+        )
+        val mapUserToEvaluatioCount: MutableMap<LearnerAssignment, Long> =
+            learnersAssignementList.associateWith { 0.toLong() }.toMutableMap()
+        assertEquals(
+            mapUserToEvaluatioCount,
+            peerGradingService.countEvaluationsMadeByUsers(learnersAssignementList, sequence),
+            ""
+        ) //No evaluations made by the users, because the submission interaction isn't initialized
+
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace) // Phase 1 (Start)
+
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "response"
+        )
+        functionalTestingService.nextPhase(sequence) // Phase 2 (Evaluation)
+
+        assertEquals(
+            mapUserToEvaluatioCount,
+            peerGradingService.countEvaluationsMadeByUsers(learnersAssignementList, sequence),
+            "No evaluations made by the users"
+        )
+        assertEquals(
+            emptyMap<LearnerAssignment, Long>(),
+            peerGradingService.countEvaluationsMadeByUsers(emptyList<LearnerAssignment>(), sequence),
+            "No user given"
+        )
+
+        tGiven("A peerGrading given by the grader") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.save(it)
+                    it
+                }
+        }.tWhen("We get all the evaluations for the response") {
+            val evaluations = peerGradingService.findAllEvaluation(grader, response.interaction.sequence)
+            evaluations
+        }.tThen("the peerGrading is returned") { evaluations ->
+            mapUserToEvaluatioCount[learnersAssignementList[0]] = 1
+            assertEquals(
+                mapUserToEvaluatioCount,
+                peerGradingService.countEvaluationsMadeByUsers(learnersAssignementList, sequence)
+            )
+            assertEquals(1, evaluations.count())
+            assertEquals(grader, evaluations.first().grader)
+            assertEquals(response, evaluations.first().response)
+        }
+    }
+
 }
