@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 
-class LearnersMonitoringModelTest(
+class SequenceMonitoringModelTest(
 
 ) {
     private val namesUnsorted: List<String> = mutableListOf(
