@@ -43,7 +43,7 @@
             th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
         </span>
 
-        <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0}">
+        <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher)}">
         (<a class="detail-link" href="#"
             th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'"
             th:text="#{evaluation.see.chatGPT.review}">see ChatGPT review</a> )
