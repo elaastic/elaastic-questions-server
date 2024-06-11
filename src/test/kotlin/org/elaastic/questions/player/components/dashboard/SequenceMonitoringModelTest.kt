@@ -29,8 +29,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.FaceToFace,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.IN_PROGRESS,
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -42,33 +41,13 @@ class SequenceMonitoringModelTest(
             )
         }
 
-        tGiven("A wrong LearnersMonitoringModel") {
-            val block: () -> Unit = {
-                SequenceMonitoringModel(
-                    ExecutionContext.FaceToFace,
-                    DashboardPhaseState.IN_PROGRESS,
-                    DashboardPhaseState.IN_PROGRESS,
-                    DashboardPhaseState.IN_PROGRESS,
-                    mutableListOf()
-                )
-            }
-            block
-        }.tThen("An IllegalArgumentException should be thrown") {
-            assertThrows(
-                IllegalArgumentException::class.java,
-                it,
-                "A Face to Face sequence can't have three phases in IN_PROGRESS"
-            )
-        }
-
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
                 SequenceMonitoringModel(
                     ExecutionContext.FaceToFace,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.NOT_STARTED,
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -82,8 +61,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.FaceToFace,
                     DashboardPhaseState.NOT_STARTED,
                     DashboardPhaseState.NOT_STARTED,
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -103,8 +81,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.Blended,
                     DashboardPhaseState.IN_PROGRESS, // Only one phase in IN_PROGRESS /!\. It's wrong
                     DashboardPhaseState.NOT_STARTED,
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -121,8 +98,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.Blended,
                     DashboardPhaseState.NOT_STARTED,
                     DashboardPhaseState.IN_PROGRESS, // Only one phase in IN_PROGRESS /!\. It's wrong
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -134,33 +110,13 @@ class SequenceMonitoringModelTest(
             )
         }
 
-        tGiven("A wrong LearnersMonitoringModel") {
-            val block: () -> Unit = {
-                SequenceMonitoringModel(
-                    ExecutionContext.Blended,
-                    DashboardPhaseState.IN_PROGRESS, // All three phases in IN_PROGRESS /!\. It's wrong
-                    DashboardPhaseState.IN_PROGRESS,
-                    DashboardPhaseState.IN_PROGRESS,
-                    mutableListOf()
-                )
-            }
-            block
-        }.tThen("An IllegalArgumentException should be thrown") {
-            assertThrows(
-                IllegalArgumentException::class.java,
-                it,
-                "A Blended sequence can't have three phases in IN_PROGRESS"
-            )
-        }
-
         tGiven("A correct LearnersMonitoringModel") {
             val block: () -> Unit = {
                 SequenceMonitoringModel(
                     ExecutionContext.Blended,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.IN_PROGRESS,
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -174,8 +130,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.Blended,
                     DashboardPhaseState.STOPPED,
                     DashboardPhaseState.STOPPED,
-                    DashboardPhaseState.IN_PROGRESS,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -189,8 +144,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.Blended,
                     DashboardPhaseState.NOT_STARTED,
                     DashboardPhaseState.NOT_STARTED,
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -201,25 +155,6 @@ class SequenceMonitoringModelTest(
 
     @Test
     fun `In a Distance sequence a LearnersMonitoringModel all phase can be in IN_PROGRESS state`() {
-        tGiven("A wrong LearnersMonitoringModel") {
-            val block: () -> Unit = {
-                SequenceMonitoringModel(
-                    ExecutionContext.Distance,
-                    DashboardPhaseState.IN_PROGRESS, // Only two phases in IN_PROGRESS /!\. It's wrong
-                    DashboardPhaseState.IN_PROGRESS, //
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
-                )
-            }
-            block
-        }.tThen("An IllegalArgumentException should be thrown") {
-            assertThrows(
-                IllegalArgumentException::class.java,
-                it,
-                "A Distance sequence can't have only two phases in IN_PROGRESS"
-            )
-        }
-
         tGiven("A wrong LearnersMonitoringModel") {
             val block: () -> Unit = {
                 SequenceMonitoringModel(
@@ -245,8 +180,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.Distance,
                     DashboardPhaseState.NOT_STARTED,
                     DashboardPhaseState.NOT_STARTED,
-                    DashboardPhaseState.NOT_STARTED,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -263,8 +197,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.Distance,
                     DashboardPhaseState.IN_PROGRESS,
                     DashboardPhaseState.IN_PROGRESS,
-                    DashboardPhaseState.IN_PROGRESS,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -278,8 +211,7 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.Distance,
                     DashboardPhaseState.STOPPED,
                     DashboardPhaseState.STOPPED,
-                    DashboardPhaseState.IN_PROGRESS,
-                    mutableListOf()
+                    learners = mutableListOf()
                 )
             }
             block
@@ -342,6 +274,12 @@ class SequenceMonitoringModelTest(
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    sequenceMonitoringModel = learnersMonitoringModel
+                ),
+                LearnerMonitoringModel(
+                    1,
+                    "Alice",
+                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
@@ -349,21 +287,13 @@ class SequenceMonitoringModelTest(
                     1,
                     "Alice",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 1 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 2 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    sequenceMonitoringModel = learnersMonitoringModel
-                ),
-                LearnerMonitoringModel(
-                    1,
-                    "Alice",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 3 IN_PROGRESS
+                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 2 IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -374,7 +304,7 @@ class SequenceMonitoringModelTest(
             val learnersSorted =
                 learnersMonitoringModel.learners.map { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) }
             assertEquals(
-                listOf(3, 2, 1, 0),
+                listOf(2, 1, 0, 0),
                 learnersSorted,
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
             )
