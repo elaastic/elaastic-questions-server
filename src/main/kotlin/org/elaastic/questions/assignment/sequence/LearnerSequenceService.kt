@@ -84,15 +84,13 @@ class LearnerSequenceService(
      * count is 0
      */
     fun countReportMade(user: User, sequence: Sequence): Int {
-        val peerGrading = emptyList<PeerGrading>().toMutableList()
         return try {
-            peerGrading.addAll(peerGradingService.findAllEvaluationMadeForLearner(user, sequence))
-            peerGrading.addAll(peerGradingService.findAllEvaluationMadeForLearner(user, sequence, 2))
-            peerGrading.count { !it.reportReasons.isNullOrBlank() }
+            peerGradingService.findAllEvaluationMadeForLearner(user, sequence)
+                .count { !it.reportReasons.isNullOrBlank() }
         } catch (_: IllegalStateException) {
             0
-        /* If the sequence isn't initialized, an IllegalStateException will be throws
-        * So if the sequence isn't initialized, the user has not been able to report something */
+            /* If the sequence isn't initialized, an IllegalStateException will be throws
+            * So if the sequence isn't initialized, the user has not been able to report something */
         }
     }
 }

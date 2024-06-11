@@ -178,10 +178,11 @@ class PeerGradingService(
     /**
      * Count the number of evaluations made by a list of users on a sequence.
      *
-     * If a user has not made any evaluation, 0 is returned.
-     * If the sequence is not initialized, 0 is returned for all users.
+     * If a user has not made any evaluation, 0 is returned. If the sequence is
+     * not initialized, 0 is returned for all users.
      *
-     * To avoid N+1 Select, we didn't use the method [countEvaluationsMadeByUser].
+     * To avoid N+1 Select, we didn't use the method
+     * [countEvaluationsMadeByUser].
      *
      * @param users the list of users who performed the evaluations.
      * @param sequence the sequence.
@@ -354,31 +355,27 @@ class PeerGradingService(
     }
 
     /**
-     * Return all the DRAXO evaluation another user made to the learner response of
-     * the sequence
+     * Return all the DRAXO evaluation another user made to the learner
+     * response of the sequence.
      *
      * @param user the user
      * @param sequence the sequence
-     * @param attempt the attempt
      * @return the list of evaluation
      */
-    fun findAllEvaluationMadeForLearner(user: User, sequence: Sequence, attempt: Int = 1): List<PeerGrading> {
-        val query = entityManager.createQuery(
+    fun findAllEvaluationMadeForLearner(user: User, sequence: Sequence): List<PeerGrading> {
+        return entityManager.createQuery(
             """
             SELECT pg
             FROM PeerGrading pg
             WHERE pg.response IN (
                 FROM Response resp
                 WHERE resp.interaction = :interaction 
-                      AND resp.attempt = :attempt 
                       AND resp.learner = :learner
             )
         """.trimIndent(), PeerGrading::class.java
         )
             .setParameter("interaction", sequence.getResponseSubmissionInteraction())
             .setParameter("learner", user)
-            .setParameter("attempt", attempt)
-
-        return query.resultList
+            .resultList as List<PeerGrading>
     }
 }
