@@ -22,7 +22,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{'/css/evaluation.css'}"/>
 
     <!--/* Link to the online documentation of the DRAXO evaluation */-->
-    <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url')}">
+    <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url') != null && evaluationModel.draxoEvaluationModels != null}">
         <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}" target="_blank">
             <i class="question circle outline ui icon"></i> <span th:text="#{draxo.help.title}">Link to the detailed explanation of the DRAXO grid</span>
         </a>
