@@ -34,8 +34,7 @@
             <!--/* Name of the learner */-->
             <td style="display: flex; align-items: center; justify-content: space-between" class="learner-name">
                 <div th:text="${learner.learnerName}"></div>
-                <button class="ui right labeled icon button" id="see-detail" th:attr="learner-id=${learner.learnerId}">
-                    <i class="search icon"></i>
+                <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.learnerId}">
                     <span class="content" th:text="#{attendee.details}">Details</span>
                 </button>
             </td>
