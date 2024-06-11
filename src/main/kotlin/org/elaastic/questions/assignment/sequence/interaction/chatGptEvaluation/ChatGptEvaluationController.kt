@@ -7,12 +7,10 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGra
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
-import org.elaastic.questions.util.requireAccess
 import org.elaastic.questions.util.requireAccessThrowDenied
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
-import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -102,7 +100,6 @@ class ChatGptEvaluationController(
         }
     }
 
-    @ResponseBody
     @GetMapping("/{responseId}")
     fun getChatGptEvaluation(
         authentication: Authentication,
@@ -111,7 +108,9 @@ class ChatGptEvaluationController(
     ): String {
         val user: User = authentication.principal as User
 
-        val response = responseService.findById(responseId)
+        // The ChatGPT evaluation is only generated for the last attempt of the response
+        // So to ensure we get the evaluation, we get the last attempt of the response
+        val response = responseService.findByIdLastAttempt(responseId)
         val assignment = response.interaction.sequence.assignment
 
         // Check authorizations
@@ -125,8 +124,8 @@ class ChatGptEvaluationController(
 
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         val chatGptEvaluationModel =
-            // If it isn't the teacher, we check if the teacher has hidden the chatGPT evaluation.
-            // Eq. If it's a student, we check if the teacher has hidden the chatGPT evaluation.
+        // If it isn't the teacher, we check if the teacher has hidden the chatGPT evaluation.
+        // Eq. If it's a student, we check if the teacher has hidden the chatGPT evaluation.
             // If it's hidden, we give a null value to the model.
             if (response.interaction.sequence.chatGptEvaluationEnabled && !(user != assignment!!.owner && chatGptEvaluation?.hiddenByTeacher == true)) {
                 // If the ChatGPT evaluation is enabled, we add it to the model

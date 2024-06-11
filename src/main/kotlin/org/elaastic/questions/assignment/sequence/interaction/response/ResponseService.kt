@@ -60,6 +60,23 @@ class ResponseService(
         EntityNotFoundException("There is no response with id='$id'")
     }
 
+    /**
+     * Return the response with the given id. It will return the last attempt
+     * if it's exist
+     *
+     * @param id the id of the response to find
+     * @return the response with the given id, or the last attempt if it exists
+     */
+    fun findByIdLastAttempt(id: Long): Response {
+        val response = findById(id)
+        val secondAttempt = responseRepository.findByInteractionAndAttemptAndLearner(
+            response.interaction,
+            2,
+            response.learner
+        )
+        return secondAttempt ?: response
+    }
+
     fun findAll(sequence: Sequence, excludeFakes: Boolean = true): ResponseSet =
         findAll(sequence.getResponseSubmissionInteraction(), excludeFakes)
 
