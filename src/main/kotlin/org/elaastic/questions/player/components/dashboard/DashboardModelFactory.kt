@@ -99,12 +99,9 @@ object DashboardModelFactory {
         attendeeResponses: List<Response>,
         responsePhaseState: DashboardPhaseState
     ): LearnerStateOnPhase {
-
-        val hasResponseForPhase: Boolean = learnerHasAnswer(attendeeResponses, attendee)
-
         return if (responsePhaseState == DashboardPhaseState.NOT_STARTED) {
             LearnerStateOnPhase.WAITING
-        } else if (hasResponseForPhase) {
+        } else if (learnerHasAnswer(attendeeResponses, attendee)) {
             LearnerStateOnPhase.ACTIVITY_TERMINATED
         } else {
             LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
@@ -142,18 +139,12 @@ object DashboardModelFactory {
         attendee: LearnerAssignment,
         sequence: Sequence,
         evaluationPhaseState: DashboardPhaseState,
+        // To not use any Service in a Factory, we need to pass the evaluationCountByUser as an argument
         evaluationCountByUser: Map<LearnerAssignment, Long>
     ): LearnerStateOnPhase {
-
-        // To not use any Service in a Factory, we need to pass the evaluationCountByUser as an argument
-        val nbEvaluationMade = evaluationCountByUser[attendee]
-
-        val hasMadeAllEvaluationForPhase: Boolean =
-            allEvaluationHaveBeenMade(sequence, nbEvaluationMade)
-
         return if (evaluationPhaseState == DashboardPhaseState.NOT_STARTED) {
             LearnerStateOnPhase.WAITING
-        } else if (hasMadeAllEvaluationForPhase) {
+        } else if (allEvaluationHaveBeenMade(sequence, evaluationCountByUser[attendee])) {
             LearnerStateOnPhase.ACTIVITY_TERMINATED
         } else {
             LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
