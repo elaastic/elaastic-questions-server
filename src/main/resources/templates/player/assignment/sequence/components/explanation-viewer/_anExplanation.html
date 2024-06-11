@@ -39,14 +39,20 @@
 
         <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) > 0}">
         (<a class="detail-link" id="loadReview" href="#"
-            th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'"
-            th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
+            th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'">
+            <span th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}"
+                  class="see-review">see reviews</span>
+            <span th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.hide.reviews} : #{draxo.hide.review}"
+                  class="hide-review" style="display: none">see reviews</span>
+        </a> )
         </span>
 
         <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher)}">
         (<a class="detail-link" id="loadReview" href="#"
-            th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'"
-            th:text="#{evaluation.see.chatGPT.review}">see ChatGPT review</a> )
+            th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'">
+            <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
+            <span th:text="#{evaluation.hide.chatGPT.review}" class="hide-review" style="display: none">see ChatGPT review</span>
+            </a> )
         </span>
 
         <span th:if="${explanation.hiddenByTeacher}">
