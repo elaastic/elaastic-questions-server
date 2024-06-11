@@ -157,11 +157,7 @@ object DashboardModelFactory {
         val nbEvaluationMade = evaluationCountByUser[attendee]
 
         val hasMadeAllEvaluationForPhase: Boolean =
-            try {
-                sequence.getEvaluationSpecification().responseToEvaluateCount.toLong() == nbEvaluationMade
-            } catch (e: IllegalStateException) {
-                false /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function */
-            }
+            allEvaluationHaveBeenMade(sequence, nbEvaluationMade)
 
         return if (evaluationPhaseState == DashboardPhaseState.NOT_STARTED) {
             LearnerStateOnPhase.WAITING
@@ -170,6 +166,26 @@ object DashboardModelFactory {
         } else {
             LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
         }
+    }
+
+    /**
+     * Check if all the evaluations have been made for the sequence.
+     *
+     * Compare the number of evaluations made by the user with the number of
+     * evaluations to make specified in the sequence.
+     *
+     * @param sequence the sequence
+     * @param nbEvaluationMade the number of evaluations made by the user
+     * @return true if all the evaluations have been made, false otherwise
+     * @see EvaluationSpecification
+     */
+    fun allEvaluationHaveBeenMade(
+        sequence: Sequence,
+        nbEvaluationMade: Long?
+    ) = try {
+        sequence.getEvaluationSpecification().responseToEvaluateCount.toLong() == nbEvaluationMade
+    } catch (e: IllegalStateException) {
+        false /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function */
     }
 
     /**
