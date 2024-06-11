@@ -58,7 +58,9 @@ class LearnerResultPhaseExecutionLoader(
                 )
         }
 
-        val evaluation = chatGptEvaluationService.findEvaluationByResponse(secondResponse ?: firstResponse)
+        // If both responses are null, then the chatGptEvaluation will be null
+        val evaluation =
+            (secondResponse ?: firstResponse)?.let { chatGptEvaluationService.findEvaluationByResponse(it) }
 
         val myChatGptEvaluationModel = if (learnerPhase.learnerSequence.sequence.chatGptEvaluationEnabled) {
             ChatGptEvaluationModelFactory.build(evaluation, learnerPhase.learnerSequence.sequence)

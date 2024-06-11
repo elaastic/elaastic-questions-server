@@ -74,13 +74,8 @@ class ChatGptEvaluationService(
 
     }
 
-    fun findEvaluationByResponse(response: Response?): ChatGptEvaluation? {
-        // TODO Review JT : Code smell ==> How comes one can ask for findEvaluationByResponse(null) ?
-        if (response == null) {
-            return null
-        }
-        return chatGptEvaluationRepository.findByResponse(response)
-    }
+    fun findEvaluationByResponse(response: Response): ChatGptEvaluation? =
+        chatGptEvaluationRepository.findByResponse(response)
 
     fun findEvaluationById(id: Long): ChatGptEvaluation? {
         return chatGptEvaluationRepository.findById(id).get()
