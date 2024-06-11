@@ -69,14 +69,12 @@ class InteractionService(
         sequence: Sequence
     ): Response? = interactionRepository.findResponseByOwnerAndSequenceAndType(
         learnerAssignment.learner,
-        sequence,
-        InteractionType.ResponseSubmission
+        sequence
     )
 
     fun findAllResponsesBySequenceOrderById(sequence: Sequence): List<Response> =
         interactionRepository.findAllResponsesBySequenceAndType(
-            sequence,
-            InteractionType.ResponseSubmission
+            sequence
         )
 
     fun stop(user: User, interactionId: Long) =

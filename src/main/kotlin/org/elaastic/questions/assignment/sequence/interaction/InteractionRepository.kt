@@ -35,9 +35,8 @@ interface InteractionRepository : JpaRepository<Interaction, Long> {
            "INNER JOIN Response r " +
            "ON i = r.interaction " +
            "WHERE i.sequence = :sequence " +
-           "AND i.interactionType = :interactionType")
-    fun findAllResponsesBySequenceAndType(sequence: Sequence,
-                                   interactionType: InteractionType): List<Response>
+           "AND i.interactionType = 'ResponseSubmission'")
+    fun findAllResponsesBySequenceAndType(sequence: Sequence): List<Response>
 
     @Query("SELECT DISTINCT r " +
            "FROM Interaction i " +
@@ -45,8 +44,7 @@ interface InteractionRepository : JpaRepository<Interaction, Long> {
            "ON i = r.interaction " +
            "WHERE i.owner = :owner " +
            "AND i.sequence = :sequence " +
-           "AND i.interactionType = :interactionType")
+           "AND i.interactionType = 'ResponseSubmission'")
     fun findResponseByOwnerAndSequenceAndType(owner: User,
-                                              sequence: Sequence,
-                                              interactionType: InteractionType): Response?
+                                              sequence: Sequence): Response?
 }
