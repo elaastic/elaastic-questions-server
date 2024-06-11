@@ -23,7 +23,6 @@ var elaastic = elaastic || {};
 
 (function () {
     let draxoBaseUrl = ''
-    let chatGPTBaseUrl = ''
 
     elaastic.draxo = {
         initialize(url) {
@@ -79,10 +78,6 @@ var elaastic = elaastic || {};
     }
 
     elaastic.chatGPT = {
-        initialize(url) {
-            chatGPTBaseUrl = url
-        },
-
         loadReview(event, responseId) {
             event.preventDefault()
 
@@ -107,7 +102,7 @@ var elaastic = elaastic || {};
                 let data = {}
 
                 $.ajax({
-                    url: chatGPTBaseUrl + '/' + responseId,
+                    url: '/chatGptEvaluation/' + responseId,
                     method: 'GET',
                     data,
                     success: function (data) {
