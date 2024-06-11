@@ -66,9 +66,6 @@
     </button>
   </header>
 
-  <div
-    th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
-    
   <div th:replace="|${components}/revision-info/_revision-info.html| :: revisionInfo(${playerModel.assignmentOverviewModel}, content)"></div>
   <div th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
 </aside>
