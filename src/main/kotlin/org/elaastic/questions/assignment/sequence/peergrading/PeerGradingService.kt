@@ -188,7 +188,7 @@ class PeerGradingService(
      * @param sequence the sequence.
      */
     @EntityGraph("PeerGrading.with_grader_and_response", type = EntityGraph.EntityGraphType.LOAD)
-    fun countEvaluationMadeByUsers(users: List<LearnerAssignment>, sequence: Sequence): Map<LearnerAssignment, Long> {
+    fun countEvaluationsMadeByUsers(users: List<LearnerAssignment>, sequence: Sequence): Map<LearnerAssignment, Long> {
         val graderWithEvaluationCount: MutableMap<LearnerAssignment, Long> =
             emptyMap<LearnerAssignment, Long>().toMutableMap()
 
