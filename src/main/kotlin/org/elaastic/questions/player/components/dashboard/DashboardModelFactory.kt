@@ -108,11 +108,7 @@ object DashboardModelFactory {
         responsePhaseState: DashboardPhaseState
     ): LearnerStateOnPhase {
 
-        val hasResponseForPhase: Boolean = attendeeResponses.count {
-            it.attempt == 1
-                    && it.interaction.interactionType == InteractionType.ResponseSubmission
-                    && it.learner == attendee.learner
-        } == 1
+        val hasResponseForPhase: Boolean = learnerHasAnswer(attendeeResponses, attendee)
 
         return if (responsePhaseState == DashboardPhaseState.NOT_STARTED) {
             LearnerStateOnPhase.WAITING
@@ -122,6 +118,20 @@ object DashboardModelFactory {
             LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
         }
     }
+
+    /**
+     * Check if among the responses of the sequence, one of them is from the
+     * learner and is the first attempt.
+     *
+     * @param attendeeResponses the list of responses of the attendee
+     * @param attendee the attendee
+     * @return true if the learner has answered the question, false otherwise
+     */
+    fun learnerHasAnswer(attendeeResponses: List<Response>, attendee: LearnerAssignment) = attendeeResponses.count {
+        it.attempt == 1
+                && it.interaction.interactionType == InteractionType.ResponseSubmission
+                && it.learner == attendee.learner
+    } == 1
 
     /**
      * Get the LearnerStateOnPhase of the attendee on the Evaluation phase.
