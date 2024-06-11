@@ -144,38 +144,6 @@ class PeerGradingService(
             .resultList as List<PeerGrading>
 
     /**
-     * Count the number of evaluations made by a user on a sequence.
-     *
-     * If the user has not made any evaluation, 0 is returned.
-     *
-     * @param grader the user who performed the evaluations.
-     * @param sequence the sequence.
-     * @return the number of evaluations.
-     */
-    fun countEvaluationsMadeByUser(grader: User, sequence: Sequence): Long {
-        return try {
-            entityManager.createQuery(
-                """
-            SELECT count(*)
-            FROM PeerGrading  pg
-            WHERE pg.grader = :grader
-                AND pg.response IN (
-                    FROM Response resp
-                    WHERE resp.interaction = :interaction
-                )
-        """.trimIndent()
-            )
-                .setParameter("grader", grader)
-                .setParameter("interaction", sequence.getResponseSubmissionInteraction())
-                .singleResult as Long
-        } catch (_: IllegalStateException) {
-            /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function
-               If the sequence isn't initialized, that means the user has not made any evaluation */
-            0
-        }
-    }
-
-    /**
      * Count the number of evaluations made by a list of users on a sequence.
      *
      * If a user has not made any evaluation, 0 is returned. If the sequence is

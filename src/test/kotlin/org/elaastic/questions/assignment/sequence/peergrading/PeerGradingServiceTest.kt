@@ -452,56 +452,6 @@ internal class PeerGradingServiceTest(
     }
 
     @Test
-    fun `test of countEvaluationsMadeByUser`() {
-        // Given
-        val learners = integrationTestingService.getNLearners(2)
-        val grader = learners[0]
-        val learner = learners[1]
-        val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.createSubject(teacher)
-        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
-        val assignement = functionalTestingService.createAssignment(subject)
-        val sequence = assignement.sequences.first()
-        assertEquals(0, peerGradingService.countEvaluationsMadeByUser(grader, sequence))
-        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace) // Phase 1 (Start)
-        val response = functionalTestingService.submitResponse(
-            Phase.PHASE_1,
-            learner,
-            sequence,
-            true,
-            ConfidenceDegree.CONFIDENT,
-            "response"
-        )
-        functionalTestingService.nextPhase(sequence) // Phase 2 (Evaluation)
-        assertEquals(0, peerGradingService.countEvaluationsMadeByUser(grader, response.interaction.sequence))
-
-        tGiven("A peerGrading given by the grader") {
-            DraxoPeerGrading(
-                grader = grader,
-                response = response,
-                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
-                lastSequencePeerGrading = false
-            )
-                .tWhen {
-                    peerGradingRepository.save(it)
-                    it
-                }
-        }.tWhen("We get all the evaluations for the response") {
-            val evaluations = peerGradingService.findAllEvaluation(grader, response.interaction.sequence)
-            evaluations
-        }.tThen("the peerGrading is returned") { evaluations ->
-            assertEquals(1, peerGradingService.countEvaluationsMadeByUser(grader, response.interaction.sequence))
-            assertEquals(1, evaluations.count())
-            assertEquals(grader, evaluations.first().grader)
-            assertEquals(response, evaluations.first().response)
-        }
-    }
-
-    /**
-     * The method tested is [PeerGradingService.countEvaluationsMadeByUsers] do
-     * not mistake with [PeerGradingService.countEvaluationsMadeByUser]
-     */
-    @Test
     fun `test of countEvaluationsMadeByUsers`() {
         // Given
         val learners = integrationTestingService.getNLearners(2)
