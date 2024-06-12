@@ -258,6 +258,20 @@ class PlayerController(
 
         // Associate each learner with the number of evaluations he made
         val evaluationCountByUser = peerGradingService.countEvaluationsMadeByUsers(registeredUsers, sequence)
+        // Associate each learner with a boolean indicating if he answered the question
+        val reponseAvailable = try {
+            peerGradingService.learnerToIfTheyAnswer(registeredUsers, sequence)
+        } catch (_: IllegalStateException) {
+            registeredUsers.associateWith { false }
+        }
+        // Count the number of responses gradable
+        val countResponseGradable: Long = try {
+            val responseStudent = responseService.findAllByAttemptNotFake(1, sequence).size.toLong()
+            val responseFake = responseService.findAllFakeResponses(sequence).size.toLong()
+            responseStudent + responseFake
+        } catch (_: IllegalStateException) {
+            0
+        }
 
 
         val dashboardModel: DashboardModel =
@@ -269,6 +283,8 @@ class PlayerController(
                 responses,
                 openedPane,
                 evaluationCountByUser,
+                reponseAvailable,
+                countResponseGradable,
             )
 
         var learnerSequence: ILearnerSequence

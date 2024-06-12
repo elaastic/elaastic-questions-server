@@ -25,6 +25,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.elaastic.questions.player.components.steps.StepsModelFactory
 import org.springframework.stereotype.Service
@@ -44,7 +45,9 @@ object DashboardModelFactory {
         attendees: List<LearnerAssignment>,
         responses: List<Response>,
         openedPane: String,
-        evaluationCountByUser: Map<LearnerAssignment, Long>
+        evaluationCountByUser: Map<LearnerAssignment, Long>,
+        learnerToIfTheyAnswer: Map<LearnerAssignment, Boolean>,
+        countResponseGradable: Long,
     ): DashboardModel {
 
         val learnerStepsModel: StepsModel = StepsModelFactory.buildForTeacher(sequence)
@@ -67,7 +70,9 @@ object DashboardModelFactory {
                         it,
                         sequence,
                         sequenceMonitoringModel.phase2State,
-                        evaluationCountByUser
+                        evaluationCountByUser,
+                        learnerToIfTheyAnswer,
+                        countResponseGradable,
                     ),
                     sequenceMonitoringModel = sequenceMonitoringModel
                 )
@@ -132,6 +137,8 @@ object DashboardModelFactory {
      * @param sequence the sequence
      * @param evaluationPhaseState the state of the evaluation phase
      * @param evaluationCountByUser the number of evaluations made by each user
+     * @param learnerToIfTheyAnswer the number of responses available for
+     *     evaluation for each user.
      * @return the LearnerStateOnPhase base on the argument
      * @see EvaluationSpecification
      */
@@ -140,11 +147,19 @@ object DashboardModelFactory {
         sequence: Sequence,
         evaluationPhaseState: DashboardPhaseState,
         // To not use any Service in a Factory, we need to pass the evaluationCountByUser as an argument
-        evaluationCountByUser: Map<LearnerAssignment, Long>
+        evaluationCountByUser: Map<LearnerAssignment, Long>,
+        learnerToIfTheyAnswer: Map<LearnerAssignment, Boolean>,
+        responseCount: Long
     ): LearnerStateOnPhase {
         return if (evaluationPhaseState == DashboardPhaseState.NOT_STARTED) {
             LearnerStateOnPhase.WAITING
-        } else if (allEvaluationHaveBeenMade(sequence, evaluationCountByUser[attendee])) {
+        } else if (evaluationHaveBeenFinished(
+                sequence,
+                evaluationCountByUser[attendee],
+                learnerToIfTheyAnswer[attendee],
+                responseCount
+            )
+        ) {
             LearnerStateOnPhase.ACTIVITY_TERMINATED
         } else {
             LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
@@ -159,14 +174,20 @@ object DashboardModelFactory {
      *
      * @param sequence the sequence
      * @param nbEvaluationMade the number of evaluations made by the user
+     * @param learnerHaveAnswered if the learner has answered the question
+     * @param responseCount the number of responses available for evaluation
      * @return true if all the evaluations have been made, false otherwise
      * @see EvaluationSpecification
      */
-    fun allEvaluationHaveBeenMade(
+    fun evaluationHaveBeenFinished(
         sequence: Sequence,
-        nbEvaluationMade: Long?
-    ) = try {
+        nbEvaluationMade: Long?,
+        learnerHaveAnswered: Boolean?,
+        responseCount: Long
+    ): Boolean = try {
         sequence.getEvaluationSpecification().responseToEvaluateCount.toLong() == nbEvaluationMade
+                // If the learner has answered, we need to remove one to total of responses
+                || nbEvaluationMade == (responseCount - if (learnerHaveAnswered == true) 1 else 0)
     } catch (e: IllegalStateException) {
         false /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function */
     }

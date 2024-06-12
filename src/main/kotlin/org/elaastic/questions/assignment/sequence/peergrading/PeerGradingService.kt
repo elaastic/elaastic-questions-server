@@ -346,4 +346,33 @@ class PeerGradingService(
             .setParameter("learner", user)
             .resultList as List<PeerGrading>
     }
+
+    /**
+     * Return a map with the learner and a boolean indicating if the learner
+     * answered the sequence.
+     *
+     * @param registeredUsers the list of learners
+     * @param sequence the sequence
+     * @return the map with the learner and a boolean indicating if the learner
+     *     answered the sequence
+     */
+    fun learnerToIfTheyAnswer(
+        registeredUsers: List<LearnerAssignment>,
+        sequence: Sequence
+    ): Map<LearnerAssignment, Boolean> {
+        val learnersWhoAnswered = entityManager.createQuery(
+            """
+            SELECT response.learner, response
+            FROM Response response
+            JOIN User user ON response.learner = user
+            WHERE response.interaction = :interaction
+            """.trimIndent(), Tuple::class.java
+        )
+            .setParameter("interaction", sequence.getResponseSubmissionInteraction())
+            .resultList as List<Tuple>
+
+        return registeredUsers.associateWith {
+            learnersWhoAnswered.any { tuple -> tuple[0] == it.learner }
+        }
+    }
 }
