@@ -33,20 +33,21 @@ import org.springframework.transaction.annotation.Transactional
 import java.text.Normalizer
 import java.time.LocalDate
 import java.util.regex.Pattern
+import kotlin.jvm.Throws
 
 
 @Service
 class UserService(
-        @Autowired val userRepository: UserRepository,
-        @Autowired val passwordEncoder: PasswordEncoder,
-        @Autowired val settingsRepository: SettingsRepository,
-        @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository,
-        @Autowired val activationKeyRepository: ActivationKeyRepository,
-        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
-        @Autowired val termsService: TermsService,
-        @Autowired val userConsentRepository: UserConsentRepository,
-        @Autowired val onboardingStateRepository: OnboardingStateRepository,
-        @Autowired val entityManager: EntityManager
+    @Autowired val userRepository: UserRepository,
+    @Autowired val passwordEncoder: PasswordEncoder,
+    @Autowired val settingsRepository: SettingsRepository,
+    @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository,
+    @Autowired val activationKeyRepository: ActivationKeyRepository,
+    @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
+    @Autowired val termsService: TermsService,
+    @Autowired val userConsentRepository: UserConsentRepository,
+    @Autowired val onboardingStateRepository: OnboardingStateRepository,
+    @Autowired val entityManager: EntityManager
 ) {
 
     val FAKE_USER_PREFIX = "John_Doe___"
@@ -55,14 +56,15 @@ class UserService(
 
     /**
      * Get user by id checking access authorization
+     *
      * @param authUser the user triggering the get
      * @param id the id
      * @return the found user or null
      * @throws AccessDeniedException when authorization failed
      */
-    fun get(authUser: User, id: Long) : User {
+    fun get(authUser: User, id: Long): User {
         get(id).let {
-            if(it != authUser) {
+            if (it != authUser) {
                 logger.severe("Trying illegal access on user ${it?.id} from ${authUser.id}")
                 throw AccessDeniedException("You are not autorized to access to this user")
             }
@@ -72,6 +74,7 @@ class UserService(
 
     /**
      * Get user by id
+     *
      * @param id the id
      * @return the found user or null
      */
@@ -87,9 +90,10 @@ class UserService(
 
 
     /**
-     *  Find user by username
-     *  @param username the username provided as input
-     *  @return the found user or null otherwise
+     * Find user by username
+     *
+     * @param username the username provided as input
+     * @return the found user or null otherwise
      */
     fun findByUsername(username: String): User? {
         return userRepository.findByUsername(username)
@@ -97,6 +101,7 @@ class UserService(
 
     /**
      * Get the default admin user
+     *
      * @return the default admin user
      */
     fun getDefaultAdminUser(): User {
@@ -106,9 +111,10 @@ class UserService(
     }
 
     /**
-     *  Find users by email
-     *  @param email the email provided as input
-     *  @return the found users
+     * Find users by email
+     *
+     * @param email the email provided as input
+     * @return the found users
      */
     fun findAllByEmail(email: String): List<User> {
         return userRepository.findAllByEmail(email)
@@ -116,18 +122,20 @@ class UserService(
 
     /**
      * Save and initialize settings for a user newly created
+     *
      * @param user the user to process
      * @param language the preferred language of the user
-     * @param checkEmailAccount flag to indicates if mail checking must be perform by the system
+     * @param checkEmailAccount flag to indicates if mail checking must be
+     *     perform by the system
      * @return the saved user
-     *
      */
     @Transactional
-    fun addUser(user: User,
-                language: String = "fr",
-                checkEmailAccount: Boolean = false,
-                enable: Boolean = true,
-                addUserConsent: Boolean = true
+    fun addUser(
+        user: User,
+        language: String = "fr",
+        checkEmailAccount: Boolean = false,
+        enable: Boolean = true,
+        addUserConsent: Boolean = true
     ): User {
 
         require(user.roles.isNotEmpty())
@@ -151,7 +159,7 @@ class UserService(
     }
 
     @Transactional
-    fun saveUser(authUser: User, user: User):User {
+    fun saveUser(authUser: User, user: User): User {
         if (authUser != user) {
             logger.severe("Trying illegal access on user ${user.id} from ${authUser.id}")
             throw AccessDeniedException("You are not authorized to access to this user")
@@ -166,6 +174,7 @@ class UserService(
 
     /**
      * Change the password of a user
+     *
      * @param user the processed user
      * @param newPlainTextPassword the new plain text password
      * @return the user with its new password
@@ -180,15 +189,21 @@ class UserService(
 
     /**
      * Change the password of a user
+     *
      * @param user the processed user
-     * @param currentPassword the current password used to check current password is known by the user
+     * @param currentPassword the current password used to check current
+     *     password is known by the user
      * @param newPlainTextPassword the new plain text password
      * @return the user with its new password
      * @throws AccessDeniedException if current password not valid
      */
-    fun changePasswordForUserWithCurrentPasswordChecking(user: User, currentPassword: String, newPlainTextPassword: String): User {
+    fun changePasswordForUserWithCurrentPasswordChecking(
+        user: User,
+        currentPassword: String,
+        newPlainTextPassword: String
+    ): User {
         passwordEncoder.encode(currentPassword).let {
-            if (!passwordEncoder.matches(currentPassword,user.password)) {
+            if (!passwordEncoder.matches(currentPassword, user.password)) {
                 logger.severe("Trying illegal access on user ${user.id} with bad password")
                 throw SecurityException("Bad.user.password")
             }
@@ -198,6 +213,7 @@ class UserService(
 
     /**
      * Initialize settings for a new user
+     *
      * @param user the user
      * @return the settings object
      */
@@ -212,13 +228,14 @@ class UserService(
 
     /**
      * Initialize unsubscribe key for a new user
+     *
      * @param user the user
      * @return the unsubscribe key object
      */
     fun initializeUnsubscribeKeyForUser(user: User): UnsubscribeKey {
         UnsubscribeKey(
-                user = user,
-                unsubscribeKey = UUID.randomUUID().toString()
+            user = user,
+            unsubscribeKey = UUID.randomUUID().toString()
         ).let {
             unsubscribeKeyRepository.save(it)
         }.let {
@@ -229,13 +246,14 @@ class UserService(
 
     /**
      * Initialize activation key for a new user
+     *
      * @param user the user
      * @return the activation key object
      */
     fun initializeActivationKeyForUser(user: User): ActivationKey {
         ActivationKey(
-                user = user,
-                activationKey = UUID.randomUUID().toString()
+            user = user,
+            activationKey = UUID.randomUUID().toString()
         ).let {
             activationKeyRepository.save(it)
         }.let {
@@ -246,6 +264,7 @@ class UserService(
 
     /**
      * Enable user with activation key
+     *
      * @param activationKey the string value of the activation key
      * @return the enabled user or null if no activation key is found
      */
@@ -266,6 +285,7 @@ class UserService(
 
     /**
      * Find user by given activiation key
+     *
      * @param activationKey the activiation key value
      * @return the user or null if not found
      */
@@ -275,10 +295,11 @@ class UserService(
 
     /**
      * Disable user
+     *
      * @param user the user to disable
      * @return the disabled user
      */
-    fun disableUser(user: User):User {
+    fun disableUser(user: User): User {
         user.enabled = false
         userRepository.saveAndFlush(user)
         return user
@@ -286,11 +307,12 @@ class UserService(
 
     /**
      * Initialize first activity of user user
+     *
      * @param user the user whose first activity is to initialize
      * @return the updated user
      */
-    fun updateUserActiveSince(user: User):User {
-        if(user.activeSince == null) {
+    fun updateUserActiveSince(user: User): User {
+        if (user.activeSince == null) {
             user.activeSince = LocalDate.now()
             userRepository.saveAndFlush(user)
         }
@@ -298,7 +320,8 @@ class UserService(
     }
 
     /**
-     * Generate password reset key for a  user
+     * Generate password reset key for a user
+     *
      * @param user the processed user
      * @param lifetime lifetime of a password key in hour, default set to 1
      * @return the password reset key object user
@@ -308,10 +331,11 @@ class UserService(
         when (passwordResetKey) {
             null -> {
                 PasswordResetKey(
-                        passwordResetKey = UUID.randomUUID().toString(),
-                        user = user
+                    passwordResetKey = UUID.randomUUID().toString(),
+                    user = user
                 )
             }
+
             else -> {
                 if (passwordResetKey.dateCreated < DateUtils.addHours(Date(), -lifetime)) {
                     passwordResetKey.passwordResetKey = UUID.randomUUID().toString()
@@ -330,6 +354,7 @@ class UserService(
 
     /**
      * Find user by password reset key
+     *
      * @param passwordResetKeyValue the string value of the password reset key
      * @return the found user or null otherwise
      */
@@ -340,9 +365,11 @@ class UserService(
     }
 
     /**
-     * Remove old activation keys and corresponding users who didn't activate their
-     * accounts
-     * @param lifetime the lifetime in hours of activation keys, default set to 3
+     * Remove old activation keys and corresponding users who didn't activate
+     * their accounts
+     *
+     * @param lifetime the lifetime in hours of activation keys, default set to
+     *     3
      */
     fun removeOldActivationKeys(lifetime: Int = 3) {
         activationKeyRepository.findAllByDateCreatedLessThan(DateUtils.addHours(Date(), -lifetime)).let {
@@ -368,9 +395,7 @@ class UserService(
         }
     }
 
-    /**
-     * Remove password reset keys older than lifetime hours, default to 1
-     */
+    /** Remove password reset keys older than lifetime hours, default to 1 */
     fun removeOldPasswordResetKeys(lifetime: Int = 1) {
         passwordResetKeyRepository.findAllByDateCreatedLessThan(DateUtils.addHours(Date(), -lifetime)).let {
             passwordResetKeyRepository.deleteAll(it)
@@ -378,18 +403,17 @@ class UserService(
         }
     }
 
-    /**
-     * Return true if user gave consent to active terms
-     */
-    fun userHasGivenConsentToActiveTerms(username:String): Boolean {
+    /** Return true if user gave consent to active terms */
+    fun userHasGivenConsentToActiveTerms(username: String): Boolean {
         return userConsentRepository.existsByUsernameAndTerms(
-                username,
-                termsService.getActive()
+            username,
+            termsService.getActive()
         )
     }
 
     /**
      * Store user consent to active terms if not already stored
+     *
      * @param username the username of the user
      * @return the username
      */
@@ -404,6 +428,7 @@ class UserService(
 
     /**
      * Generate a password (not encoded)
+     *
      * @return the password
      */
     fun generatePassword(): String {
@@ -423,7 +448,7 @@ class UserService(
 
     private fun buildFakeUserList(): List<User> {
         return mutableListOf<User>().also { fakeUserList ->
-            for(i in 1..9) {
+            for (i in 1..9) {
                 fakeUserList.add(findByUsername("$FAKE_USER_PREFIX${i}")!!)
             }
         }
@@ -432,7 +457,7 @@ class UserService(
     @Transactional
     fun updateOnboardingChapter(chapterToUpdate: OnboardingChapter, user: User?) {
         val onboardingState = user?.onboardingState
-        if(onboardingState != null) {
+        if (onboardingState != null) {
             onboardingState.chaptersSeen.add(chapterToUpdate)
             onboardingStateRepository.save(onboardingState)
         }
@@ -446,6 +471,7 @@ class UserService(
 
     /**
      * Generate username from firstname and lastname
+     *
      * @param firstName the firstname
      * @param lastName the lastname
      * @return the username
@@ -475,6 +501,7 @@ class UserService(
 
     /**
      * Replace accents in a string
+     *
      * @param str the string to modify
      * @return
      */
@@ -486,6 +513,7 @@ class UserService(
 
     /**
      * Get the most recent user who begin with username param
+     *
      * @param username the username
      * @return a username if found else null
      */
@@ -499,6 +527,17 @@ class UserService(
             true -> null
             false -> result.first().toString()
         }
+    }
+
+    /**
+     * return the learner with the given id
+     * @param learnerId id to find the learner
+     * @return learner with the given id
+     * @throws IllegalArgumentException if a learner with the given id doesn't exist
+     */
+    @Throws(IllegalArgumentException::class)
+    fun findById(learnerId: Long): User {
+        return userRepository.findById(learnerId).orElseThrow { IllegalArgumentException("Learner not found") }
     }
 
 }
