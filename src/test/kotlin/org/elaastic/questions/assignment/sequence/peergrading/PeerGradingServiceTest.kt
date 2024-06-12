@@ -24,12 +24,15 @@ import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
@@ -58,6 +61,7 @@ internal class PeerGradingServiceTest(
     @Autowired val subjectService: SubjectService,
     @Autowired val functionalTestingService: FunctionalTestingService,
     @Autowired val roleService: RoleService,
+    @Autowired val interactionService: InteractionService,
 ) {
 
     @Test
@@ -521,6 +525,60 @@ internal class PeerGradingServiceTest(
             assertEquals(grader, evaluations.first().grader)
             assertEquals(response, evaluations.first().response)
         }
+    }
+
+    @Test
+    fun `test of learnerToIfTheyAnswer`() {
+        // Given
+        val learners = integrationTestingService.getNLearners(3)
+        val subject = functionalTestingService.createSubject(integrationTestingService.getTestTeacher())
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+
+        tGiven("A started sequence") {
+            functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+            val learnersAssignementList: List<LearnerAssignment> = learners.map { LearnerAssignment(it, assignement) }
+
+            assertEquals(
+                learnersAssignementList.associateWith { false },
+                peerGradingService.learnerToIfTheyAnswer(learnersAssignementList, sequence),
+                "No response given by the users"
+            )
+            learnersAssignementList
+        }.tWhen("Two learner answer") {
+            functionalTestingService.submitResponse(
+                Phase.PHASE_1,
+                learners[0],
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                "response"
+            )
+            functionalTestingService.submitResponse(
+                Phase.PHASE_1,
+                learners[1],
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                "response"
+            )
+            it //learnersAssignementList
+        }.tThen("the two learner who answer, are mark as so") { learnersAssignementList ->
+            val mapUserToIfTheyAnswerExpected: MutableMap<LearnerAssignment, Boolean> =
+                learnersAssignementList.associateWith { false }.toMutableMap()
+            mapUserToIfTheyAnswerExpected[learnersAssignementList[0]] = true
+            mapUserToIfTheyAnswerExpected[learnersAssignementList[1]] = true
+            assertEquals(
+                mapUserToIfTheyAnswerExpected,
+                peerGradingService.learnerToIfTheyAnswer(learnersAssignementList, sequence)
+            )
+            learnersAssignementList
+        }.tThen { learnersAssignementList ->
+            val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
+            assertTrue(DashboardModelFactory.learnerHasAnswer(responses, learnersAssignementList[0]))
+        }
+
     }
 
 }
