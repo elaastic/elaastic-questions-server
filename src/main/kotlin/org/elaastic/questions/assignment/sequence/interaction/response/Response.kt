@@ -44,10 +44,11 @@ import javax.validation.constraints.NotNull
  *
  * In the database, the name of the table is `choice_interaction_response`
  *
- * To find the sequence to which this response is related, you can use the `interaction` property
+ * To find the sequence to which this response is related, you can use the
+ * `interaction` property
  *
- * A response can be hidden or removed by a teacher.
- * That's why it implements the [ModerationCandidate] interface
+ * A response can be hidden or removed by a teacher. That's why it
+ * implements the [ModerationCandidate] interface
  *
  * A teacher can recommend a response.
  *
@@ -68,8 +69,8 @@ class Response(
     var interaction: Interaction,
 
     /**
-     * if the learner changes his response in the second phase of the interaction, this field will be set to 2
-     * otherwise it will be set to 1
+     * if the learner changes his response in the second phase of the
+     * interaction, this field will be set to 2 otherwise it will be set to 1
      */
     var attempt: Int = 1,
 
@@ -77,6 +78,7 @@ class Response(
 
     /**
      * the confidence degree of the learner
+     *
      * @see ConfidenceDegree
      */
     @field:Enumerated(EnumType.ORDINAL)
@@ -84,12 +86,15 @@ class Response(
 
     /**
      * the mean grade of the response given by the PeerGrading
+     *
      * @see org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
      */
     var meanGrade: BigDecimal? = null,
 
     /**
-     * the choice made by the learner, if the statement is a (multiple or exclusive) choice statement
+     * the choice made by the learner, if the statement is a (multiple or
+     * exclusive) choice statement
+     *
      * @see LearnerChoice
      */
     @field:Convert(converter = LearnerChoiceConverter::class)
@@ -98,18 +103,22 @@ class Response(
 
     var score: BigDecimal? = null,
 
+    /*
+     * If the response is a fake response
+     *
+     * A fake response is a response not made by a learner but by the teacher at the creation of the statement
+     */
     @field:Column(name = "is_a_fake")
     var fake: Boolean = false,
 
     var evaluationCount: Int = 0,
 
-    /**
-     * Number of all evaluations made by Draxo
-     */
+    /** Number of all evaluations made by Draxo */
     var draxoEvaluationCount: Int = 0,
 
     /**
      * the statement to which this response is related
+     *
      * @see Statement
      */
     @field:ManyToOne
@@ -137,15 +146,11 @@ class Response(
     @Column(name = "last_updated")
     var lastUpdated: Date? = null
 
-    /**
-     * Number of evaluations made by Draxo that are hidden to the learner
-     */
+    /** Number of evaluations made by Draxo that are hidden to the learner */
     @Column(name = "draxo_evaluation_hidden_count")
     var draxoEvaluationHiddenCount: Int = 0
 
-    /**
-     * Allow treating this response as an update of an existing response
-     */
+    /** Allow treating this response as an update of an existing response */
     fun makeAsUpdateOf(initialResponse: Response) {
         this.id = initialResponse.id
         this.uuid = initialResponse.uuid
@@ -157,23 +162,29 @@ class Response(
         /**
          * Compute the score of a learner choice
          *
-         * Depending on the type of the statement, the score is computed differently
+         * Depending on the type of the statement, the score is computed
+         * differently
          *
-         * If the statement is an exclusive choice, the score is `100` if the choice is correct, `0` otherwise.
+         * If the statement is an exclusive choice, the score is `100` if the
+         * choice is correct, `0` otherwise.
          *
          * If the statement is a multiple choice, the score is computed as follows:
-         * - for each correct choice, the learner earns `100 / nbCorrectChoices` points
-         * - for each incorrect choice, the learner loses `100 / nbIncorrectChoices` points
+         * - for each correct choice, the learner earns `100 / nbCorrectChoices`
+         *   points
+         * - for each incorrect choice, the learner loses `100 /
+         *   nbIncorrectChoices` points
          * - the score is the sum of the points earned minus the points lost
          * - the score is then rounded to the nearest integer
          * - the score is at least 0
          *
-         * If the statement is not an exclusive or multiple choice, an error is thrown
+         * If the statement is not an exclusive or multiple choice, an error is
+         * thrown
          *
          * @param learnerChoice the choice made by the learner
          * @param choiceSpecification the specification of the choice
          * @return the score of the learner choice
-         * @exception IllegalStateException if the choice is not an exclusive or multiple choice
+         * @exception IllegalStateException if the choice is not an exclusive or
+         *     multiple choice
          * @see ExclusiveChoiceSpecification
          * @see MultipleChoiceSpecification
          * @see LearnerChoice
