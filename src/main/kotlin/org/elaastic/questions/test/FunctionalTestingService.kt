@@ -176,7 +176,7 @@ class FunctionalTestingService(
         correct: Boolean,
         confidenceDegree: ConfidenceDegree,
         explanation: String? = null
-    ) {
+    ): Response {
         registerUserIfNeeded(user, sequence)
 
         // Check preconditions depending on phase
@@ -212,7 +212,7 @@ class FunctionalTestingService(
             }
         }
 
-        sequenceService.submitResponse(
+        return sequenceService.submitResponse(
             user,
             sequence,
             PlayerController.ResponseSubmissionData(
