@@ -22,7 +22,8 @@
      th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
      th:styleappend="${explanation.getNbEvaluation(isTeacher) > 0 || explanation.fromTeacher || (isOwner && explanation.hiddenByTeacher) ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
      th:attr="data-response-id=${explanation.responseId}"
-     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz">
     <div th:if="${explanation.getNbEvaluation(isTeacher) > 0}" class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
 
@@ -47,7 +48,8 @@
         </a> )
         </span>
 
-        <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher)}">
+        <span togglz:active="'CHATGPT_EVALUATION'"
+              class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher)}">
         (<a class="detail-link" id="loadReview" href="#"
             th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'">
             <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
