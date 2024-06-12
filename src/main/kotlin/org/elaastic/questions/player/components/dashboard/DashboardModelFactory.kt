@@ -56,6 +56,8 @@ object DashboardModelFactory {
             sequence.executionContext,
             convertPhaseState(learnerStepsModel.responseSubmissionState),
             convertPhaseState(learnerStepsModel.evaluationState),
+            convertPhaseState(learnerStepsModel.readState),
+            sequenceId = sequence.id
         )
 
         val learners: MutableList<LearnerMonitoringModel> = mutableListOf()

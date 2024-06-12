@@ -63,10 +63,12 @@
     <script th:inline="javascript">
         $(function () {
             const learnerId = [[${learnerMonitoringModel.learnerId}]]
+            const sequenceId = [[${learnerMonitoringModel.sequenceMonitoringModel.sequenceId}]]
 
             $('#detailModal_' + learnerId).modal({
                 onShow: function () {
                     console.log("Modal for learner with ID: " + learnerId)
+                    console.log("Sequence ID: " + sequenceId)
                     //Fetch method for the results of the learner goes here
                 }
             });
