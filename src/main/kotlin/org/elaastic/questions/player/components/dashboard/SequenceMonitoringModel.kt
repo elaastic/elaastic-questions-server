@@ -16,8 +16,9 @@ class SequenceMonitoringModel(
     val executionContext: ExecutionContext,
     val phase1State: DashboardPhaseState,
     val phase2State: DashboardPhaseState,
-    val phase3State: DashboardPhaseState = DashboardPhaseState.NOT_STARTED,
-    val learners: MutableList<LearnerMonitoringModel> = mutableListOf()
+    val phase3State: DashboardPhaseState,
+    val learners: MutableList<LearnerMonitoringModel> = mutableListOf(),
+    val sequenceId: Long? = null
 ) {
 
     init {
