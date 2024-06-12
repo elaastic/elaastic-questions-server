@@ -31,8 +31,7 @@ import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -63,13 +62,13 @@ internal class UserServiceIntegrationTest(
         tWhen {
             // adding a user
             userService.addUser(
-                    User(
-                            username = "foo",
-                            firstName = "f",
-                            lastName = "oo",
-                            plainTextPassword = "1234",
-                            email = "foo@elaastic.org"
-                    ).addRole(roleService.roleStudent())
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "foo@elaastic.org"
+                ).addRole(roleService.roleStudent())
             )
         }.tThen {
             assertThat(it.id, notNullValue())
@@ -97,15 +96,15 @@ internal class UserServiceIntegrationTest(
         tWhen {
             // adding a user
             userService.addUser(
-                    User(
-                            username = "foo",
-                            firstName = "f",
-                            lastName = "oo",
-                            plainTextPassword = "1234",
-                            email = "foo@elaastic.org"
-                    ).addRole(roleService.roleStudent()),
-                    "fr",
-                    true
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "foo@elaastic.org"
+                ).addRole(roleService.roleStudent()),
+                "fr",
+                true
             )
         }.tThen {
             assertThat(it.id, notNullValue())
@@ -126,25 +125,25 @@ internal class UserServiceIntegrationTest(
     fun addUserWithError() {
         assertThrows<ConstraintViolationException> {
             userService.addUser(
-                    User(
-                            username = "foo",
-                            firstName = "f",
-                            lastName = "oo",
-                            plainTextPassword = "1",
-                            email = "foo@elaastic.org"
-                    ).addRole(roleService.roleStudent())
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1",
+                    email = "foo@elaastic.org"
+                ).addRole(roleService.roleStudent())
             )
         }
 
         assertThrows<ConstraintViolationException> {
             userService.addUser(
-                    User(
-                            username = "foo",
-                            firstName = "f",
-                            lastName = "oo",
-                            plainTextPassword = "1234",
-                            email = "fooelaastic.org"
-                    ).addRole(roleService.roleStudent())
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "fooelaastic.org"
+                ).addRole(roleService.roleStudent())
             )
         }
     }
@@ -196,15 +195,15 @@ internal class UserServiceIntegrationTest(
         tGiven {
             // a user
             userService.addUser(
-                    User(
-                            username = "foo",
-                            firstName = "f",
-                            lastName = "oo",
-                            plainTextPassword = "1234",
-                            email = "foo@elaastic.org"
-                    ).addRole(roleService.roleStudent()),
-                    "fr",
-                    true
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "foo@elaastic.org"
+                ).addRole(roleService.roleStudent()),
+                "fr",
+                true
             )
         }.tWhen {
             // triggering research by email with the email of the user
@@ -275,11 +274,11 @@ internal class UserServiceIntegrationTest(
         tGiven {
             // a user with an activation key
             User(
-                    username = "foo",
-                    firstName = "f",
-                    lastName = "oo",
-                    plainTextPassword = "1234",
-                    email = "foo@elaastic.org"
+                username = "foo",
+                firstName = "f",
+                lastName = "oo",
+                plainTextPassword = "1234",
+                email = "foo@elaastic.org"
             ).addRole(roleService.roleStudent()).let {
                 userService.addUser(it, "fr", true).let { user ->
                     assertFalse(user.enabled)
@@ -340,12 +339,12 @@ internal class UserServiceIntegrationTest(
     fun `test change password user with password check`() {
         tGiven {
             // a user with "abcd" password
-            integrationTestingService.getAnyUser(). let {
+            integrationTestingService.getAnyUser().let {
                 userService.changePasswordForUser(it, "abcd")
             }
         }.tWhen {
             // changing the password with a correct plain password and correct current password
-            userService.changePasswordForUserWithCurrentPasswordChecking(it,"abcd", "1234").let { user ->
+            userService.changePasswordForUserWithCurrentPasswordChecking(it, "abcd", "1234").let { user ->
                 entityManager.refresh(user)
             }
             it
@@ -365,53 +364,53 @@ internal class UserServiceIntegrationTest(
         tGiven {
             // 3 users with old activation keys and with only the first one who is enabled
             listOf(
-                    User(
-                            username = "foo",
-                            firstName = "f",
-                            lastName = "oo",
-                            plainTextPassword = "1234",
-                            email = "foo@elaastic.org"
-                    ).addRole(roleService.roleStudent()).let {
-                        userService.addUser(it, "fr", true).let { user ->
-                            user.enabled = true
-                            userRepository.saveAndFlush(user)
-                            assertThat(user.activationKey, notNullValue())
-                            assertTrue(user.enabled)
-                            user.activationKey!!.dateCreated = DateUtils.addHours(Date(),-4)
-                            activationKeyRepository.saveAndFlush(user.activationKey!!)
-                            user
-                        }
-                    },
-                    User(
-                            username = "foo2",
-                            firstName = "f2",
-                            lastName = "oo",
-                            plainTextPassword = "1234",
-                            email = "foo2@elaastic.org"
-                    ).addRole(roleService.roleStudent()).let {
-                        userService.addUser(it, "fr", true).let { user ->
-                            assertFalse(user.enabled)
-                            assertThat(user.activationKey, notNullValue())
-                            user.activationKey!!.dateCreated = DateUtils.addHours(Date(),-4)
-                            activationKeyRepository.saveAndFlush(user.activationKey!!)
-                            user
-                        }
-                    },
-                    User(
-                            username = "foo3",
-                            firstName = "f3",
-                            lastName = "oo",
-                            plainTextPassword = "1234",
-                            email = "foo3@elaastic.org"
-                    ).addRole(roleService.roleStudent()).let {
-                        userService.addUser(it, "fr", true).let { user ->
-                            assertFalse(user.enabled)
-                            assertThat(user.activationKey, notNullValue())
-                            user.activationKey!!.dateCreated = DateUtils.addHours(Date(),-4)
-                            activationKeyRepository.saveAndFlush(user.activationKey!!)
-                            user
-                        }
+                User(
+                    username = "foo",
+                    firstName = "f",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "foo@elaastic.org"
+                ).addRole(roleService.roleStudent()).let {
+                    userService.addUser(it, "fr", true).let { user ->
+                        user.enabled = true
+                        userRepository.saveAndFlush(user)
+                        assertThat(user.activationKey, notNullValue())
+                        assertTrue(user.enabled)
+                        user.activationKey!!.dateCreated = DateUtils.addHours(Date(), -4)
+                        activationKeyRepository.saveAndFlush(user.activationKey!!)
+                        user
                     }
+                },
+                User(
+                    username = "foo2",
+                    firstName = "f2",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "foo2@elaastic.org"
+                ).addRole(roleService.roleStudent()).let {
+                    userService.addUser(it, "fr", true).let { user ->
+                        assertFalse(user.enabled)
+                        assertThat(user.activationKey, notNullValue())
+                        user.activationKey!!.dateCreated = DateUtils.addHours(Date(), -4)
+                        activationKeyRepository.saveAndFlush(user.activationKey!!)
+                        user
+                    }
+                },
+                User(
+                    username = "foo3",
+                    firstName = "f3",
+                    lastName = "oo",
+                    plainTextPassword = "1234",
+                    email = "foo3@elaastic.org"
+                ).addRole(roleService.roleStudent()).let {
+                    userService.addUser(it, "fr", true).let { user ->
+                        assertFalse(user.enabled)
+                        assertThat(user.activationKey, notNullValue())
+                        user.activationKey!!.dateCreated = DateUtils.addHours(Date(), -4)
+                        activationKeyRepository.saveAndFlush(user.activationKey!!)
+                        user
+                    }
+                }
             )
         }.tWhen {
             // triggering the deletion of old activation keys
@@ -443,24 +442,24 @@ internal class UserServiceIntegrationTest(
         tGiven {
             // 3 users with the last one only with a password reset key "alive"
             listOf(
-                    integrationTestingService.getAnyUser().let {
-                        userService.generatePasswordResetKeyForUser(it).let { passwordResetKey ->
-                            passwordResetKey.dateCreated = DateUtils.addHours(Date(), -2)
-                            passwordResetKeyRepository.saveAndFlush(passwordResetKey)
-                        }
-                        it
-                    },
-                    integrationTestingService.getTestStudent().let {
-                        userService.generatePasswordResetKeyForUser(it).let { passwordResetKey ->
-                            passwordResetKey.dateCreated = DateUtils.addHours(Date(), -2)
-                            passwordResetKeyRepository.saveAndFlush(passwordResetKey)
-                        }
-                        it
-                    },
-                    integrationTestingService.getTestTeacher().let {
-                        userService.generatePasswordResetKeyForUser(it)
-                        it
+                integrationTestingService.getAnyUser().let {
+                    userService.generatePasswordResetKeyForUser(it).let { passwordResetKey ->
+                        passwordResetKey.dateCreated = DateUtils.addHours(Date(), -2)
+                        passwordResetKeyRepository.saveAndFlush(passwordResetKey)
                     }
+                    it
+                },
+                integrationTestingService.getTestStudent().let {
+                    userService.generatePasswordResetKeyForUser(it).let { passwordResetKey ->
+                        passwordResetKey.dateCreated = DateUtils.addHours(Date(), -2)
+                        passwordResetKeyRepository.saveAndFlush(passwordResetKey)
+                    }
+                    it
+                },
+                integrationTestingService.getTestTeacher().let {
+                    userService.generatePasswordResetKeyForUser(it)
+                    it
+                }
             )
         }.tWhen {
             // removing old password keys
@@ -469,7 +468,10 @@ internal class UserServiceIntegrationTest(
             // it remains only the last user key
             assertThat(passwordResetKeyRepository.findByUser(integrationTestingService.getAnyUser()), nullValue())
             assertThat(passwordResetKeyRepository.findByUser(integrationTestingService.getTestStudent()), nullValue())
-            assertThat(passwordResetKeyRepository.findByUser(integrationTestingService.getTestTeacher()), notNullValue())
+            assertThat(
+                passwordResetKeyRepository.findByUser(integrationTestingService.getTestTeacher()),
+                notNullValue()
+            )
         }
     }
 
@@ -483,7 +485,7 @@ internal class UserServiceIntegrationTest(
             }
         }.tWhen {
             // changing the main role in student
-            it.replaceRolesWithMainRole(roleService.roleForName(Role.RoleId.STUDENT.roleName,true))
+            it.replaceRolesWithMainRole(roleService.roleForName(Role.RoleId.STUDENT.roleName, true))
             // and saving the user
             userService.saveUser(it, it)
         }.tThen {
@@ -534,8 +536,8 @@ internal class UserServiceIntegrationTest(
             userService.fakeUserList
         }.tThen {
             assertThat(it!!.size, equalTo(9))
-            for(i in 0..8) {
-                assertThat(it[i].username, equalTo("${userService.FAKE_USER_PREFIX}${i+1}"))
+            for (i in 0..8) {
+                assertThat(it[i].username, equalTo("${userService.FAKE_USER_PREFIX}${i + 1}"))
             }
         }
     }
@@ -713,6 +715,29 @@ internal class UserServiceIntegrationTest(
         }.tThen {
             assertThat(it.id, notNullValue())
             it
+        }
+    }
+
+    @Test
+    fun `test of findById`() {
+        lateinit var user: User
+        tGiven("a user") {
+            user = integrationTestingService.getAnyUser()
+        }.tWhen("we find the user by id") {
+            userService.findById(user.id!!)
+        }.tThen("The user is found") {
+            assertNotNull(it)
+            assertEquals(it, user)
+        }
+
+        tGiven("a unknow Id") {
+            365843L
+        }.tWhen("find the user by id") {
+            { userService.findById(it) }
+        }.tThen("An exception is throws") {
+            assertThrows(IllegalArgumentException::class.java) {
+                it()
+            }
         }
     }
 }
