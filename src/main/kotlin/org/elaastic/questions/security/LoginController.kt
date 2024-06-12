@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import java.nio.file.Paths
 import javax.servlet.http.HttpServletRequest
 
 @Controller
@@ -37,8 +38,14 @@ class LoginController(
             casSecurityConfigurer.casInfoList
         )
         model.addAttribute(
-            "serviceUrlMap",
-            casSecurityConfigurer.casInfoList.map { it.casKey }.associateWith { casSecurityConfigurer.getServiceCasLoginUrl(it) }
+            "casUrlWithServiceMap",
+            casSecurityConfigurer.casInfoList.map { it.casKey }.associateWith {
+                // get the current casInfo and append the /login to the casUrl
+                val serverUrl = casSecurityConfigurer.casKeyToServerUrl[it]
+                val casLoginUrl = Paths.get(serverUrl, "login").toString()
+                val serviceUrl = casSecurityConfigurer.getServiceCasLoginUrl(it)
+                "$casLoginUrl?service=$serviceUrl"
+            }
         )
 
         return "login"
