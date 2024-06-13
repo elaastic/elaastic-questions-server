@@ -32,6 +32,9 @@ interface LearnerAssignmentRepository : JpaRepository<LearnerAssignment, Long> {
 
     fun countAllByAssignment(assignment: Assignment): Int
 
+    // TODO: order by phase & name.
+    fun findAllByAssignment(assignment: Assignment): List<LearnerAssignment>
+
     @Query("SELECT DISTINCT u from User u JOIN u.registrations la LEFT JOIN FETCH u.casUser WHERE la.assignment = ?1")
     fun findAllRegisteredLearnersOnAssignmentWithCasUser(assignment: Assignment): List<User>
 }

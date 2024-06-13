@@ -1,0 +1,167 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!--   TODO: only dashboardModel !!    -->
+
+<div th:fragment="assignmentNavigator(model, context, dashboardModel)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <!-- TODO: verify if th:if is teacher works successfully!! -->
+
+
+    <h3 class="ui top attached block header">
+        <i class="question circle outline icon"></i>
+
+        <div class="content" th:text="${model.statement.getTitle()}"></div>
+    </h3>
+
+    <div class="ui segment attached sequence-content"
+         th:utext="${model.statement.getContent()}">
+    </div>
+
+    <div class="ui header attached block assignment-navigator-actions">
+        <div>
+            <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${dashboardModel.previousSequence}?currentPane=attendees|"
+               th:if="${dashboardModel.previousSequence != null}">
+
+                <button class="ui button"
+                        style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
+                     padding: 10px;">
+
+                    <i class="angle left icon" style="margin: 0;"></i>
+
+                    <p style="margin: 0;"
+                       th:text="#{attendees.navigator.previous}">
+                        previous_assignment</p>
+                </button>
+            </a>
+        </div>
+
+        <div>
+            <a th:href="|/player/assignment/${model.assignmentOverviewModel.assignmentId}/${dashboardModel.nextSequence}?currentPane=attendees|"
+               th:if="${dashboardModel.nextSequence != null}">
+
+                <button class="ui button"
+                        style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
+                     padding: 10px;">
+
+                    <p style="margin: 0;"
+                       th:text="#{attendees.navigator.next}">
+                        next_assignment</p>
+
+                    <i class="angle right icon" style="margin: 0;"></i>
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <style>
+        .assignment-navigator-actions {
+            display: flex;
+            justify-content: space-between;
+            column-gap: 10px;
+        }
+    </style>
+
+</div>
+
+<div th:fragment="attendeesOverview(dashboardModel, context, stepsModel)"
+
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <!-- TODO: verify if th:if is teacher works successfully!! -->
+
+    <div class="ui top attached block header" style="display: flex; align-items: center">
+        <i class="users alternate outline icon" style="flex: none;"></i>
+
+        <h3 class="content"
+            style="flex: 1; margin: 0;"
+            th:text="#{attendees.sectionTitle(${#lists.size(dashboardModel.sequenceMonitoringModel.learners)})}"></h3>
+
+        <button class="ui button"
+                style="height: 30px; flex: none; padding: 10px;"
+                onclick="window.location.reload()">
+
+            <i class="icon refresh"></i>
+            <span th:text="#{attendees.refresh}">
+        refresh_button</span>
+        </button>
+    </div>
+
+    <!--/* Error message if there are no learners */-->
+    <div class="ui segment attached"
+         th:if="${#lists.isEmpty(dashboardModel.sequenceMonitoringModel.learners)}">
+
+        <div class="ui message warning"
+             th:text="#{attendees.empty}">
+            empty_assignment_error
+        </div>
+    </div>
+
+    <div class="ui attached fluid"
+         style="border-radius: 0;"
+         th:if="${!#lists.isEmpty(dashboardModel.sequenceMonitoringModel.learners)}">
+
+        <th:block th:replace="player/assignment/sequence/components/dashboard/_attendees-table:: attendeesTable(${dashboardModel.sequenceMonitoringModel})">
+        </th:block>
+    </div>
+
+    <script th:if="${context == 'aside' && dashboardModel.sequence.id != null}" th:inline="javascript">
+        (() => {
+            var container = $('#layout-aside')
+            var target = $('#' + [[${context}]] + '-[[${dashboardModel.sequence.id}]]')
+
+            if (!elaastic.util.isVisible(target, container, 50)) {
+                elaastic.util.ensureIsVisible(target, container)
+            }
+        })();
+    </script>
+
+    <style>
+        .ui.selected.segment {
+            background-color: #fffaf3;
+            color: #573a08;
+        }
+
+        .ui.selected.segment .elaastic-phase.icon {
+            display: none !important;
+        }
+
+        .sequence-content {
+            max-height: 500px;
+            overflow: hidden;
+        }
+
+        .ui.accordion > .title.accordion-disabled {
+            pointer-events: none;
+            opacity: .8;
+        }
+
+        .ui.accordion > .title.accordion-disabled:hover {
+            cursor: not-allowed !important;
+        }
+
+        /* Attendees lit item CSS */
+        @media only screen and (min-width: 1200px) {
+            .attendee-item {
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+        }
+    </style>
+</div>

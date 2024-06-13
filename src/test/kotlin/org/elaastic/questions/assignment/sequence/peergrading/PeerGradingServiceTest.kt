@@ -18,19 +18,28 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
+import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.LearnerAssignment
+import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.UserService
+import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.subject.SubjectService
+import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.questions.test.interpreter.command.Phase
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -49,11 +58,11 @@ internal class PeerGradingServiceTest(
     @Autowired val userService: UserService,
     @Autowired val peerGradingRepository: PeerGradingRepository,
     @Autowired val entityManager: EntityManager,
-    @Autowired val subjectService: SubjectService
+    @Autowired val subjectService: SubjectService,
+    @Autowired val functionalTestingService: FunctionalTestingService,
+    @Autowired val roleService: RoleService,
+    @Autowired val interactionService: InteractionService,
 ) {
-
-    @Autowired
-    private lateinit var roleService: RoleService
 
     @Test
     fun `a student can report a peerGrading`() {
@@ -61,7 +70,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val reporter = integrationTestingService.getTestStudent()
         response.learner = reporter
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -90,11 +99,11 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val reporter = integrationTestingService.getTestStudent()
         response.learner = reporter
-        lateinit var peerGrading: DraxoPeerGrading;
+        lateinit var peerGrading: DraxoPeerGrading
         tGiven("A draxo peerGrading without a content to report") {
             val grader = integrationTestingService.getAnyUser()
-            // A peerGrading where there are no content to report, is a peerGrading where there are no comment
-            // We can achieve the zero comment peerGrading by giving all the criteria a positive option
+            // A peerGrading where there is no content to report, is a peerGrading where there is no comment
+            // We can achieve the zero-comment peerGrading by giving all the criteria a positive option
             peerGrading = DraxoPeerGrading(
                 grader = grader,
                 response = response,
@@ -126,11 +135,47 @@ internal class PeerGradingServiceTest(
     }
 
     @Test
+    fun `report a Draxo peerGrading with an explanation`() {
+        val response = integrationTestingService.getAnyResponse()
+        val grader = integrationTestingService.getAnyUser()
+        val reporter = integrationTestingService.getTestStudent()
+        response.learner = reporter
+        lateinit var peerGrading: DraxoPeerGrading
+        val comment = "This is a comment to explain the reason of the report"
+
+        tGiven("A draxo peer grading") {
+            peerGrading = DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation()
+                    .addEvaluation(Criteria.D, OptionId.YES)
+                    .addEvaluation(Criteria.R, OptionId.NO, "Reportable content"),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.saveAndFlush(it)
+                    entityManager.clear()
+                    it
+                }
+        }.tWhen("We report it") {
+            val reportReason: List<String> = listOf(ReportReason.INCOHERENCE.name)
+            assertDoesNotThrow {
+                peerGradingService.updateReport(reporter, peerGrading, reportReason, comment)
+            }
+            reportReason
+        }.tThen("the peerGrading is reported") { reportReason ->
+            assertNotNull(peerGrading.reportReasons)
+            assertEquals(comment, peerGrading.reportComment)
+            assertTrue(peerGrading.reportReasons!!.contains(reportReason.first()))
+        }
+    }
+
+    @Test
     fun `a report with the reason 'OTHER' and without comment should not be possible`() {
         val response = integrationTestingService.getAnyResponse()
         val reporter = integrationTestingService.getTestStudent()
         response.learner = reporter
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             val grader = integrationTestingService.getAnyUser()
             peerGrading = LikertPeerGrading(
@@ -168,7 +213,7 @@ internal class PeerGradingServiceTest(
         val reporter = integrationTestingService.getTestStudent()
         val comment = "This is a comment to explain the reason of the report"
         response.learner = reporter
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -198,7 +243,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val learner = integrationTestingService.getTestStudent()
         response.learner = learner
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -227,7 +272,7 @@ internal class PeerGradingServiceTest(
         val learner = integrationTestingService.getTestStudent()
         val reporterWhoDontOwnTheResponse = integrationTestingService.getNLearners(1).first()
         response.learner = learner
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -262,7 +307,7 @@ internal class PeerGradingServiceTest(
         val teacher = integrationTestingService.getTestTeacher()
         response.interaction.sequence.assignment!!.owner = teacher
 
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -300,7 +345,7 @@ internal class PeerGradingServiceTest(
         val response = integrationTestingService.getAnyResponse()
         val grader = integrationTestingService.getAnyUser()
         val teacher = response.interaction.sequence.assignment!!.owner
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = DraxoPeerGrading(
                 grader = grader,
@@ -334,7 +379,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val teacher = integrationTestingService.getTestTeacher()
         response.interaction.sequence.assignment!!.owner = teacher
-        lateinit var peerGrading: PeerGrading;
+        lateinit var peerGrading: PeerGrading
         tGiven("A peer grading") {
             peerGrading = LikertPeerGrading(
                 grade = BigDecimal(2),
@@ -379,7 +424,7 @@ internal class PeerGradingServiceTest(
         val grader = integrationTestingService.getAnyUser()
         val teacher = integrationTestingService.getTestTeacher()
         response.interaction.sequence.assignment!!.owner = teacher
-        lateinit var peerGrading: DraxoPeerGrading;
+        lateinit var peerGrading: DraxoPeerGrading
         tGiven("A draxo peer grading") {
             peerGrading = DraxoPeerGrading(
                 grader = grader,
@@ -407,7 +452,133 @@ internal class PeerGradingServiceTest(
             assertThrows<Exception> {
                 peerGradingService.getDraxoPeerGrading(-1)
             }
-
         }
     }
+
+    @Test
+    fun `test of countEvaluationsMadeByUsers`() {
+        // Given
+        val learners = integrationTestingService.getNLearners(2)
+        val grader = learners[0]
+        val learner = learners[1]
+        val subject = functionalTestingService.createSubject(integrationTestingService.getTestTeacher())
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+
+        val learnersAssignementList: List<LearnerAssignment> = listOf(
+            LearnerAssignment(grader, assignement),
+            LearnerAssignment(learner, assignement),
+        )
+        val mapUserToEvaluatioCount: MutableMap<LearnerAssignment, Long> =
+            learnersAssignementList.associateWith { 0.toLong() }.toMutableMap()
+        assertEquals(
+            mapUserToEvaluatioCount,
+            peerGradingService.countEvaluationsMadeByUsers(learnersAssignementList, sequence),
+            ""
+        ) //No evaluations made by the users, because the submission interaction isn't initialized
+
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace) // Phase 1 (Start)
+
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "response"
+        )
+        functionalTestingService.nextPhase(sequence) // Phase 2 (Evaluation)
+
+        assertEquals(
+            mapUserToEvaluatioCount,
+            peerGradingService.countEvaluationsMadeByUsers(learnersAssignementList, sequence),
+            "No evaluations made by the users"
+        )
+        assertEquals(
+            emptyMap<LearnerAssignment, Long>(),
+            peerGradingService.countEvaluationsMadeByUsers(emptyList<LearnerAssignment>(), sequence),
+            "No user given"
+        )
+
+        tGiven("A peerGrading given by the grader") {
+            DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.save(it)
+                    it
+                }
+        }.tWhen("We get all the evaluations for the response") {
+            val evaluations = peerGradingService.findAllEvaluation(grader, response.interaction.sequence)
+            evaluations
+        }.tThen("the peerGrading is returned") { evaluations ->
+            mapUserToEvaluatioCount[learnersAssignementList[0]] = 1
+            assertEquals(
+                mapUserToEvaluatioCount,
+                peerGradingService.countEvaluationsMadeByUsers(learnersAssignementList, sequence)
+            )
+            assertEquals(1, evaluations.count())
+            assertEquals(grader, evaluations.first().grader)
+            assertEquals(response, evaluations.first().response)
+        }
+    }
+
+    @Test
+    fun `test of learnerToIfTheyAnswer`() {
+        // Given
+        val learners = integrationTestingService.getNLearners(3)
+        val subject = functionalTestingService.createSubject(integrationTestingService.getTestTeacher())
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+
+        tGiven("A started sequence") {
+            functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+            val learnersAssignementList: List<LearnerAssignment> = learners.map { LearnerAssignment(it, assignement) }
+
+            assertEquals(
+                learnersAssignementList.associateWith { false },
+                peerGradingService.learnerToIfTheyAnswer(learnersAssignementList, sequence),
+                "No response given by the users"
+            )
+            learnersAssignementList
+        }.tWhen("Two learner answer") {
+            functionalTestingService.submitResponse(
+                Phase.PHASE_1,
+                learners[0],
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                "response"
+            )
+            functionalTestingService.submitResponse(
+                Phase.PHASE_1,
+                learners[1],
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                "response"
+            )
+            it //learnersAssignementList
+        }.tThen("the two learner who answer, are mark as so") { learnersAssignementList ->
+            val mapUserToIfTheyAnswerExpected: MutableMap<LearnerAssignment, Boolean> =
+                learnersAssignementList.associateWith { false }.toMutableMap()
+            mapUserToIfTheyAnswerExpected[learnersAssignementList[0]] = true
+            mapUserToIfTheyAnswerExpected[learnersAssignementList[1]] = true
+            assertEquals(
+                mapUserToIfTheyAnswerExpected,
+                peerGradingService.learnerToIfTheyAnswer(learnersAssignementList, sequence)
+            )
+            learnersAssignementList
+        }.tThen { learnersAssignementList ->
+            val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
+            assertTrue(DashboardModelFactory.learnerHasAnswer(responses, learnersAssignementList[0]))
+        }
+
+    }
+
 }

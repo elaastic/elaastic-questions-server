@@ -45,7 +45,7 @@
     <th:block th:with="rejectedCriteria = ${draxoEvaluationModel.draxoEvaluation.getRejectedCriteria()}">
         <div class="comment-area" th:if="${rejectedCriteria}">
             <div class="comment-header">
-                <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+' :'">
+                <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+'&ensp;:'">
                     The answer is readable :</h4>
                 <div class="ui label"
                      th:text="#{${draxoEvaluationModel.draxoEvaluation.get(rejectedCriteria).codeI18n}}">

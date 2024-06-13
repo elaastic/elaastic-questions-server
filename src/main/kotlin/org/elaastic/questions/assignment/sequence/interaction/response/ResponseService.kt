@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.interaction.response
 
+import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.ia.ResponseRecommendationService
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
@@ -198,10 +199,13 @@ class ResponseService(
         response.evaluationCount = res[0]?.let { (it as Long).toInt() } ?: 0
         response.draxoEvaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
 
-        val meangrade =
-            entityManager.createQuery("select avg(pg.grade) from PeerGrading pg where pg.response = :response and pg.hiddenByTeacher = false")
-                .setParameter("response", response)
-                .singleResult as Double?
+        val meangrade = entityManager.createQuery(
+            "SELECT AVG(pg.grade) " +
+                    "FROM PeerGrading pg " +
+                    "WHERE pg.response = :response AND pg.hiddenByTeacher = false"
+        )
+            .setParameter("response", response)
+            .singleResult as Double?
         response.meanGrade = meangrade?.let { BigDecimal(it).setScale(2, RoundingMode.HALF_UP) }
 
         return responseRepository.save(response)
@@ -374,7 +378,11 @@ class ResponseService(
     }
 
     /**
+<<<<<<< HEAD
      * Mark a response as recommended by a teacher
+=======
+     * Mark a response as `recommended` by a teacher
+>>>>>>> c1840104 (feat(Dashboard): Update the compute of the state for the phase 2)
      *
      * @param response the response to add as recommended
      * @return the response
@@ -393,7 +401,11 @@ class ResponseService(
     }
 
     /**
+<<<<<<< HEAD
      * Mark a response as NOT recommended by a teacher
+=======
+     * Mark a response as `NOT recommended` by a teacher
+>>>>>>> c1840104 (feat(Dashboard): Update the compute of the state for the phase 2)
      *
      * @param response the previously recommended response
      * @return the response
@@ -433,5 +445,42 @@ class ResponseService(
      */
     fun canReactOnFeedbackOfResponse(user: User, response: Response): Boolean {
         return response.learner == user
+    }
+
+    /**
+     * Return all the responses of the sequence that are not fake for the given attempt
+     *
+     * The teacher created fake Response to simulate a learner's response
+     * @param attempt the attempt of the sequence
+     * @param sequence the sequence
+     * @return All the responses of the sequence that are not fake for the given attempt
+     * @see Response.fake
+     */
+    fun findAllByAttemptNotFake(attempt: Int, sequence: Sequence): List<Response> {
+        return responseRepository.findAllByInteractionAndAttempt(sequence.getResponseSubmissionInteraction(), attempt)
+            .filter { !it.fake }
+    }
+
+    /**
+     * Return all the fake responses of the sequence
+     *
+     * The attempt for a fake response depends on the execution context of the sequence
+     *
+     * @param sequence the sequence
+     * @return All the fake responses of the sequence
+     * @see Response.fake
+     */
+    fun findAllFakeResponses(sequence: Sequence): List<Response> {
+        return when (sequence.executionContext) {
+            ExecutionContext.FaceToFace -> responseRepository.findAllByAttemptAndInteractionAndFakeIsTrue(
+                1,
+                sequence.getResponseSubmissionInteraction()
+            )
+
+            else -> responseRepository.findAllByAttemptAndInteractionAndFakeIsTrue(
+                2,
+                sequence.getResponseSubmissionInteraction()
+            )
+        }
     }
 }

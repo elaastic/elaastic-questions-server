@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
@@ -40,6 +41,7 @@ import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -63,7 +65,7 @@ class SequenceService(
 
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
         get(id, fetchInteractions).let {
-            if (it.owner != user) throw AccessDeniedException("You are not autorized to access to this sequence")
+            if (it.owner != user) throw AccessDeniedException("You are not authorized to access to this sequence")
             it
         }
 
@@ -78,6 +80,16 @@ class SequenceService(
             sequence
         } ?: throw EntityNotFoundException("There is no sequence for id \"$id\"")
     }
+
+    fun findPreviousSequence(sequence: Sequence): Sequence?
+        = sequenceRepository.findPreviousSequence(sequence.rank,
+                                                  sequence.assignment!!,
+                                                  PageRequest.of(0, 1)).firstOrNull()
+
+    fun findNextSequence(sequence: Sequence): Sequence?
+        = sequenceRepository.findNextSequence(sequence.rank,
+                                              sequence.assignment!!,
+                                              PageRequest.of(0, 1)).firstOrNull()
 
     fun findByUuid(uuid: UUID, fetchInteractions: Boolean = false): Sequence {
         return sequenceRepository.findByUuid(uuid)?.let { sequence ->

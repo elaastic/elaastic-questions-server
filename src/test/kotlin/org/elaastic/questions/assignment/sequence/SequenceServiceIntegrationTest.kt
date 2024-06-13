@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.test.IntegrationTestingService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

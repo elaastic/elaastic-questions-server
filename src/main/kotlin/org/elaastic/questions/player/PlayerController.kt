@@ -21,18 +21,23 @@ package org.elaastic.questions.player
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.*
 import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.player.components.dashboard.DashboardModel
+import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
@@ -43,6 +48,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
@@ -68,6 +74,7 @@ class PlayerController(
     @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val eventLogService: EventLogService,
+    @Autowired val peerGradingService: PeerGradingService,
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
@@ -194,7 +201,8 @@ class PlayerController(
         httpServletRequest: HttpServletRequest,
         model: Model,
         @PathVariable assignmentId: Long,
-        @PathVariable sequenceId: Long?
+        @PathVariable sequenceId: Long?,
+        @RequestParam("currentPane", required = false) openedPane: String?,
     ): String {
 
         val user: User = authentication.principal as User
@@ -213,22 +221,82 @@ class PlayerController(
             val teacher = user == sequence.owner
 
             return if (teacher)
-                playAssignmentForTeacher(user, model, sequence, httpServletRequest)
-            else playAssignmentForLearner(user, model, sequence, httpServletRequest)
+                playAssignmentForTeacher(
+                    user,
+                    model,
+                    sequence,
+                    openedPane ?: "assignments",
+                    httpServletRequest
+                )
+            else
+                playAssignmentForLearner(
+                    user,
+                    model,
+                    sequence,
+                    openedPane ?: "assignments",
+                    httpServletRequest
+                )
         }
 
     }
-
 
     private fun playAssignmentForTeacher(
         user: User,
         model: Model,
         sequence: Sequence,
+        openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
 
-        val assignment = sequence.assignment!!
-        val nbRegisteredUsers = assignmentService.getNbRegisteredUsers(assignment)
+        val assignment: Assignment = sequence.assignment!!
+        val previousSequence: Sequence? = sequenceService.findPreviousSequence(sequence)
+        val nextSequence: Sequence? = sequenceService.findNextSequence(sequence)
+        val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
+        val nbRegisteredUsers = registeredUsers.size
+        val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
+        val attendeesSequences: MutableMap<Long, ILearnerSequence> = mutableMapOf()
+
+        // Associate each learner with the number of evaluations he made
+        val evaluationCountByUser = peerGradingService.countEvaluationsMadeByUsers(registeredUsers, sequence)
+        // Associate each learner with a boolean indicating if he answered the question
+        val reponseAvailable = try {
+            peerGradingService.learnerToIfTheyAnswer(registeredUsers, sequence)
+        } catch (_: IllegalStateException) {
+            registeredUsers.associateWith { false }
+        }
+        // Count the number of responses gradable
+        val countResponseGradable: Long = try {
+            val responseStudent = responseService.findAllByAttemptNotFake(1, sequence).size.toLong()
+            val responseFake = responseService.findAllFakeResponses(sequence).size.toLong()
+            responseStudent + responseFake
+        } catch (_: IllegalStateException) {
+            0
+        }
+
+
+        val dashboardModel: DashboardModel =
+            DashboardModelFactory.build(
+                sequence,
+                previousSequence,
+                nextSequence,
+                registeredUsers,
+                responses,
+                openedPane,
+                evaluationCountByUser,
+                reponseAvailable,
+                countResponseGradable,
+            )
+
+        var learnerSequence: ILearnerSequence
+
+        for (attendee in registeredUsers) {
+            learnerSequence = learnerSequenceService.getLearnerSequence(attendee.learner, sequence)
+            learnerPhaseService.loadPhaseList(learnerSequence)
+
+            attendeesSequences.put(attendee.learner.id!!, learnerSequence)
+        }
+
+        model["dashboardModel"] = dashboardModel
 
         model.addAttribute(
             "playerModel",
@@ -251,6 +319,7 @@ class PlayerController(
         user: User,
         model: Model,
         sequence: Sequence,
+        openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
 
@@ -265,6 +334,7 @@ class PlayerController(
             PlayerModelFactory.buildForLearner(
                 sequence = sequence,
                 nbRegisteredUsers = nbRegisteredUsers,
+                openedPane = openedPane,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith {
                     if (it.executionIsFaceToFace())
                         it.activeInteraction
@@ -290,7 +360,6 @@ class PlayerController(
     fun getNbRegisteredUsers(@PathVariable id: Long): Int {
         return assignmentService.getNbRegisteredUsers(id)
     }
-
 
     @GetMapping("/sequence/{id}/start")
     fun startSequence(
@@ -642,7 +711,7 @@ class PlayerController(
         val sequence = sequenceService.get(id, true)
 
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
-        val reasonComment = if (otherReasonComment.isNotEmpty()) otherReasonComment else null
+        val reasonComment = otherReasonComment.ifEmpty { null }
         chatGptEvaluationService.reportEvaluation(chatGptEvaluation!!, reasons, reasonComment)
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }

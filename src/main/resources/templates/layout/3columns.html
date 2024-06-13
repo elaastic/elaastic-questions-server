@@ -168,25 +168,6 @@
         <i class="yellow browser icon"></i>
       </div>
 
-      <div class="not mobile item"
-           id="hide-aside"
-           onclick="tableOfContent.hide()"
-           th:attr="data-tooltip=#{common.table-of-content.hide}"
-           data-position="right center"
-           data-inverted="">
-        <i class="yellow double left angle icon"></i>
-      </div>
-
-      <div class="not mobile item"
-           id="show-aside"
-           style="display: none"
-           onclick="tableOfContent.show()"
-           th:attr="data-tooltip=#{common.table-of-content.show}"
-           data-position="right center"
-           data-inverted="">
-        <i class="yellow double right angle icon"></i>
-      </div>
-
       <script>
         /**
          * if the URL param 'hideToc' has the value 'true' then the toc will be hidden by default
@@ -197,38 +178,81 @@
 
         $(document).ready(function () {
           let layoutAside = $('#layout-aside')
-          let showAsideBtn = $('#show-aside')
-          let hideAsideBtn = $('#hide-aside')
-          let urlParams = new URLSearchParams(location.search)
+          let assignmentsPane = $("#assignments_container");
+          let attendeesPane = $("#attendees_container");
+          let showPaneBtn = $("#open_pane_button");
+          let hidePaneBtn = $("#close_pane_button");
+          let showAssignmentsBtn = $("#show_assignments_button");
+          let showAttendeesBtn = $("#show_attendees_button");
+          let urlParams = new URLSearchParams(location.search);
+          let currentPane = urlParams.get("currentPane");
 
-          tableOfContent.show = function () {
-            layoutAside.show()
-            showAsideBtn.hide()
-            hideAsideBtn.show()
-            urlParams.delete('hideToc')
-            window.location.search = urlParams.toString()
-            Cookies.set('hideToc', 'false')
-          }
+          tableOfContent.showAside = function () {
+            layoutAside.show();
 
-          tableOfContent.hide = function () {
-            layoutAside.hide()
-            showAsideBtn.show()
-            hideAsideBtn.hide()
-            urlParams.set('hideToc', 'true')
-            Cookies.set('hideToc', 'true')
-          }
+            showPaneBtn.hide();
+            hidePaneBtn.show();
+            Cookies.set('currentPane', currentPane);
 
-          if (urlParams.has('hideToc')) {
-            if (urlParams.get('hideToc') === 'true') {
-              Cookies.set('hideToc', 'true')
-            } else {
-              Cookies.remove('hideToc')
+            if (!urlParams.has("currentPane")
+                || urlParams.get("currentPane") === ''
+                || urlParams.get("currentPane") !== "assignments"
+                && urlParams.get("currentPane") !== "attendees") {
+
+              //urlParams.set("currentPane", "assignments");
+              Cookies.set("currentPane", "assignments");
             }
 
-          }
+            //urlParams.delete('currentPane');
+            window.location.search = urlParams.toString();
+          };
 
-          if (Cookies.get('hideToc') === 'true') {
-            tableOfContent.hide()
+          tableOfContent.hideAside = function () {
+            layoutAside.hide();
+            showPaneBtn.show();
+            hidePaneBtn.hide();
+            //urlParams.set('currentPane', 'none');
+            Cookies.set('currentPane', 'none');
+          };
+
+          tableOfContent.showAssignments = function () {
+            attendeesPane.hide();
+            assignmentsPane.show();
+
+            showAssignmentsBtn.addClass("active");
+            showAttendeesBtn.removeClass("active");
+
+            //urlParams.set("currentPane", "assignments");
+            Cookies.set("currentPane", "assignments");
+            window.location.search = urlParams.toString();
+          };
+
+          tableOfContent.showAttendees = function () {
+            assignmentsPane.hide();
+            attendeesPane.show();
+
+            showAttendeesBtn.addClass("active");
+            showAssignmentsBtn.removeClass("active");
+
+            //urlParams.set("currentPane", "attendees");
+            Cookies.set("currentPane", "attendees");
+            window.location.search = urlParams.toString();
+          };
+
+          showPaneBtn.hide();
+
+          if (!Cookies.get("currentPane") || Cookies.get("currentPane") === "assignments") {
+            assignmentsPane.show();
+            showAssignmentsBtn.addClass("active");
+            showAttendeesBtn.removeClass("active");
+          } else if (Cookies.get("currentPane") === "attendees") {
+            attendeesPane.show();
+            showAttendeesBtn.addClass("active");
+            showAssignmentsBtn.removeClass("active");
+          } else if (Cookies.get("currentPane") === "none") {
+            layoutAside.hide();
+            showPaneBtn.show();
+            hidePaneBtn.hide();
           }
 
         })
@@ -242,7 +266,22 @@
         <aside id="layout-aside" th:replace="${aside}">
         </aside>
 
-        <article>
+        <article style="display: flex; column-gap: 30px;">
+
+          <section id="pane_actions"
+                   style="display: flex; flex-direction: column; row-gap: 20px; flex: none;">
+
+            <button id="open_pane_button"
+                    class="ui button"
+                    style="margin-bottom: 20px;"
+                    onclick="tableOfContent.showAside()">
+
+              <span th:text="#{dashboard.open}">
+                open_pane_button_label</span>
+              <i class="icon angle double right"></i>
+            </button>
+          </section>
+
           <div class="ui container">
             <div th:replace="${content}"></div>
           </div>

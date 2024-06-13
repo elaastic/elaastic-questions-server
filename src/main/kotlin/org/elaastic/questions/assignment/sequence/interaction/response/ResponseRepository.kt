@@ -18,11 +18,14 @@
 
 package org.elaastic.questions.assignment.sequence.interaction.response
 
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import java.math.BigDecimal
 
 
@@ -50,4 +53,6 @@ interface ResponseRepository : JpaRepository<Response, Long> {
                                                    attempt: AttemptNum): Int
 
     fun countByStatement(statement: Statement): Int
+
+    fun findAllByAttemptAndInteractionAndFakeIsTrue(attempt: AttemptNum, interaction: Interaction): List<Response>
 }

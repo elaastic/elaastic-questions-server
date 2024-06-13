@@ -55,7 +55,7 @@ object PlayerModelFactory {
                 assignment = assignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
-                teacher = true
+                teacher = true,
             ),
             stepsModel = StepsModelFactory.buildForTeacher(sequence),
             sequenceStatistics = sequenceStatistics,
@@ -77,6 +77,7 @@ object PlayerModelFactory {
     fun buildForLearner(
         sequence: Sequence,
         nbRegisteredUsers: Int,
+        openedPane: String,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
         activeInteraction: Interaction?,
@@ -91,7 +92,7 @@ object PlayerModelFactory {
                 assignment = assignment,
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
-                teacher = false
+                teacher = false,
             ),
             stepsModel = StepsModelFactory.buildForLearner(sequence, activeInteraction),
             sequenceInfoModel = SequenceInfoResolver.resolve(false, sequence, messageBuilder),

@@ -19,9 +19,13 @@
 package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.subject.statement.Statement
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import java.util.UUID
 
 
@@ -40,4 +44,22 @@ interface SequenceRepository : JpaRepository<Sequence, Long> {
     fun findAllByStatementAndStateNot(statement: Statement, state:State) : List<Sequence>
 
     fun findAllByStatement(statement: Statement) : List<Sequence>
+
+    fun findSequenceByRankAndAssignment(rank: Int, assignment: Assignment): Sequence?
+
+    @Query("SELECT s FROM Sequence s " +
+           "WHERE s.assignment = :assignment " +
+           "AND s.rank < :rank " +
+           "ORDER BY s.rank DESC")
+    fun findPreviousSequence(@Param("rank") rank: Int,
+                             @Param("assignment") assignment: Assignment,
+                             pageable: Pageable): List<Sequence>
+
+    @Query("SELECT s FROM Sequence s " +
+           "WHERE s.assignment = :assignment " +
+           "AND s.rank > :rank " +
+           "ORDER BY s.rank")
+    fun findNextSequence(@Param("rank") rank: Int,
+                         @Param("assignment") assignment: Assignment,
+                         pageable: Pageable): List<Sequence>
 }

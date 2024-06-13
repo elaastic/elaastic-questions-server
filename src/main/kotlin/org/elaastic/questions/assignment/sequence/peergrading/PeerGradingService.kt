@@ -18,6 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.Sequence
@@ -30,10 +31,13 @@ import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import javax.persistence.EntityManager
+import javax.persistence.Tuple
 import javax.transaction.Transactional
 
 @Service
@@ -116,7 +120,14 @@ class PeerGradingService(
             .setParameter("interaction", sequence.getResponseSubmissionInteraction())
             .singleResult as Long > 0
 
-    fun findAllEvaluation(user: User, sequence: Sequence): List<PeerGrading> =
+    /**
+     * Find all the evaluations made by a user on a sequence.
+     *
+     * @param grader the user who performed the evaluations.
+     * @param sequence the sequence.
+     * @return the list of evaluations.
+     */
+    fun findAllEvaluation(grader: User, sequence: Sequence): List<PeerGrading> =
         entityManager.createQuery(
             """
             SELECT pg
@@ -126,12 +137,61 @@ class PeerGradingService(
                     FROM Response resp
                     WHERE resp.interaction = :interaction
                 )
-        """.trimIndent()
+        """.trimIndent(), PeerGrading::class.java
         )
-            .setParameter("grader", user)
+            .setParameter("grader", grader)
             .setParameter("interaction", sequence.getResponseSubmissionInteraction())
             .resultList as List<PeerGrading>
 
+    /**
+     * Count the number of evaluations made by a list of users on a sequence.
+     *
+     * If a user has not made any evaluation, 0 is returned. If the sequence is
+     * not initialized, 0 is returned for all users.
+     *
+     * To avoid N+1 Select, we didn't use the method
+     * [countEvaluationsMadeByUser].
+     *
+     * @param users the list of users who performed the evaluations.
+     * @param sequence the sequence.
+     */
+    @EntityGraph("PeerGrading.with_grader_and_response", type = EntityGraph.EntityGraphType.LOAD)
+    fun countEvaluationsMadeByUsers(users: List<LearnerAssignment>, sequence: Sequence): Map<LearnerAssignment, Long> {
+        val graderWithEvaluationCount: MutableMap<LearnerAssignment, Long> =
+            emptyMap<LearnerAssignment, Long>().toMutableMap()
+
+        return try {
+            val queryResult = entityManager.createQuery(
+                """
+            SELECT pg.grader, count(pg)
+            FROM PeerGrading pg
+            WHERE pg.response IN (
+                FROM Response resp
+                WHERE resp.interaction = :interaction
+            )
+            GROUP BY pg.grader
+        """.trimIndent(), Tuple::class.java
+            )
+                .setParameter("interaction", sequence.getResponseSubmissionInteraction())
+                .resultList as List<Tuple>
+
+            // For each given student, we associate it with the number of evaluations he made
+            // If the student isn't found in the query result, we associate it with 0
+            for (learner in users) {
+                val tupleResult = queryResult.find { it[0] == learner.learner }
+                graderWithEvaluationCount += if (tupleResult == null) {
+                    learner to 0
+                } else {
+                    learner to tupleResult[1] as Long
+                }
+            }
+            graderWithEvaluationCount
+        } catch (_: IllegalStateException) {
+            /* If the sequence isn't initialized an Exception his throw by the getEvaluationSpecification function
+               If the sequence isn't initialized, that means the users haven't made any evaluation */
+            users.associateWith { 0 } // No evaluation made by any user
+        }
+    }
 
     fun countEvaluations(sequence: Sequence) =
         countEvaluations(sequence.getResponseSubmissionInteraction())
@@ -156,9 +216,10 @@ class PeerGradingService(
         )
 
     /**
-     * Mark peer grading as hidden by teacher.
-     * if the user can't hide the peer grading, an exception is thrown
-     * @param teacher the teacher who hide the peer grading.
+     * Mark peer grading as hidden by teacher. If the user can't hide the peer
+     * grading, an exception is thrown
+     *
+     * @param teacher the teacher who hides the peer grading.
      * @param peerGrading the peer grading to hide
      */
     fun markAsHidden(teacher: User, peerGrading: PeerGrading) {
@@ -173,7 +234,7 @@ class PeerGradingService(
     /**
      * Mark peer grading as removed by teacher.
      *
-     * @param teacher the teacher who remove the peer grading.
+     * @param teacher the teacher who removes the peer grading.
      * @param peerGrading the peer grading to remove.
      */
     fun markAsRemoved(teacher: User, peerGrading: PeerGrading) {
@@ -186,7 +247,7 @@ class PeerGradingService(
     /**
      * Update the report of a peer grading.
      *
-     * @param reporter the learner who own the response.
+     * @param reporter the learner who owns the response.
      * @param peerGrading the peer grading to update.
      * @param reportReasons the list of report.
      * @param reportComment the comment of the report.
@@ -197,23 +258,26 @@ class PeerGradingService(
         reportReasons: List<String>,
         reportComment: String? = null
     ) {
-        if (reporter != peerGrading.response.learner) {
-            throw IllegalAccessException("Only the learner who own the response can report a peer grading")
+        requireAccess(reporter == peerGrading.response.learner) {
+            "Only the learner who own the response can report a peer grading"
         }
-        if (peerGrading is DraxoPeerGrading && peerGrading.getDraxoEvaluation().getExplanation() == null) {
-            throw IllegalStateException("You can't report something that doesn't exist. The evaluation doesn't have any comment")
+        check(!(peerGrading is DraxoPeerGrading && peerGrading.getDraxoEvaluation().getExplanation() == null)) {
+            "You can't report something that doesn't exist. The evaluation doesn't have any comment"
         }
-        if (reportReasons.contains(ReportReason.OTHER.name) && reportComment.isNullOrBlank()) {
-            throw IllegalArgumentException("You must provide a comment when you report a peer grading for the reason OTHER")
+        require(!(reportReasons.contains(ReportReason.OTHER.name) && reportComment.isNullOrBlank())) {
+            "You must provide a comment when you report a peer grading for the reason OTHER"
         }
+
         reportCandidateService.updateReport(peerGrading, reportReasons, reportComment, peerGradingRepository)
     }
 
     /**
      * Find a Draxo peer grading by its id.
+     *
      * @param id the id of the peer grading.
      * @return the Draxo peer grading.
-     * @throws IllegalArgumentException if no Draxo peer grading is found with the given id.
+     * @throws IllegalArgumentException if no Draxo peer grading is found with
+     *     the given id.
      */
     fun getDraxoPeerGrading(id: Long): DraxoPeerGrading =
         peerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
@@ -222,38 +286,93 @@ class PeerGradingService(
     /**
      * Update the utility grade of a peer grading.
      *
-     * @param learner the learner who own the response.
+     * @param learner the learner who owns the response.
      * @param peerGrading the draxo peer grading to update.
      * @param utilityGrade the utility grade.
-     * @throws IllegalArgumentException if the learner is not the owner of the response.
+     * @throws IllegalArgumentException if the learner is not the owner of the
+     *     response.
      */
     fun updateUtilityGrade(learner: User, peerGrading: PeerGrading, utilityGrade: UtilityGrade) {
-        if (learner != peerGrading.response.learner) {
-            throw IllegalAccessException("Only the learner who own the response can update the utility grade of a peer grading")
+        requireAccess(learner == peerGrading.response.learner) {
+            "Only the learner who own the response can update the utility grade of a peer grading"
         }
         reportCandidateService.updateGrade(peerGrading, utilityGrade, peerGradingRepository)
     }
 
-    /**
-     * Show a peer grading that was hidden by the teacher.
-     */
+    /** Show a peer grading that was hidden by the teacher. */
     fun markAsShow(teacher: User, peerGrading: PeerGrading) {
-        if (canHidePeerGrading(teacher, peerGrading).not()) {
-            throw IllegalAccessException("Only the teacher who own the sequence can show a peer grading")
+        requireAccess(canHidePeerGrading(teacher, peerGrading)) {
+            "Only the teacher who own the sequence can show a peer grading"
         }
+
         reportCandidateService.markAsShown(peerGrading, peerGradingRepository)
         peerGrading.response.draxoEvaluationHiddenCount--
         responseService.updateMeanGradeAndEvaluationCount(peerGrading.response)
     }
 
     /**
-     * Return true if the user can hide the peer grading
-     * An user can hide the peer grading if he is the owner of the assigment
-     * @param teacher the user who want to hide the peer grading
+     * Return true if the user can hide the peer grading An user can hide the
+     * peer grading if he is the owner of the assigment
+     *
+     * @param teacher the user who wants to hide the peer grading
      * @param peerGrading the peer grading to hide
      * @return true if the user can hide the peer grading
      */
     fun canHidePeerGrading(teacher: User, peerGrading: PeerGrading): Boolean {
         return responseService.canHidePeerGrading(teacher, peerGrading.response)
+    }
+
+    /**
+     * Return all the DRAXO evaluation another user made to the learner
+     * response of the sequence.
+     *
+     * @param user the user
+     * @param sequence the sequence
+     * @return the list of evaluation
+     */
+    fun findAllEvaluationMadeForLearner(user: User, sequence: Sequence): List<PeerGrading> {
+        return entityManager.createQuery(
+            """
+            SELECT pg
+            FROM PeerGrading pg
+            WHERE pg.response IN (
+                FROM Response resp
+                WHERE resp.interaction = :interaction 
+                      AND resp.learner = :learner
+            )
+        """.trimIndent(), PeerGrading::class.java
+        )
+            .setParameter("interaction", sequence.getResponseSubmissionInteraction())
+            .setParameter("learner", user)
+            .resultList as List<PeerGrading>
+    }
+
+    /**
+     * Return a map with the learner and a boolean indicating if the learner
+     * answered the sequence.
+     *
+     * @param registeredUsers the list of learners
+     * @param sequence the sequence
+     * @return the map with the learner and a boolean indicating if the learner
+     *     answered the sequence
+     */
+    fun learnerToIfTheyAnswer(
+        registeredUsers: List<LearnerAssignment>,
+        sequence: Sequence
+    ): Map<LearnerAssignment, Boolean> {
+        val learnersWhoAnswered = entityManager.createQuery(
+            """
+            SELECT response.learner, response
+            FROM Response response
+            JOIN User user ON response.learner = user
+            WHERE response.interaction = :interaction
+            """.trimIndent(), Tuple::class.java
+        )
+            .setParameter("interaction", sequence.getResponseSubmissionInteraction())
+            .resultList as List<Tuple>
+
+        return registeredUsers.associateWith {
+            learnersWhoAnswered.any { tuple -> tuple[0] == it.learner }
+        }
     }
 }

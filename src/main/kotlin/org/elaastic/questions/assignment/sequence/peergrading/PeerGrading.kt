@@ -26,6 +26,7 @@ import org.elaastic.questions.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import org.springframework.data.jpa.repository.EntityGraph
 import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
@@ -34,21 +35,48 @@ import javax.persistence.*
 /**
  * Peer grading entity.
  *
- * This entity is used to store the peer grading of a response.
- * It contains the grade given by the grader, the annotation and the grader.
+ * This entity is used to store the peer grading of a response. It contains
+ * the grade given by the grader, the annotation and the grader.
  *
- * The type of the peer grading is stored in the `type` column.
- * The type can be one of the following:
+ * The type of the peer grading is stored in the `type` column. The type
+ * can be one of the following:
  * - LIKERT
  * - DRAXO
  *
- * A peer grading can be moderate by a teacher.
- * And the learner of the response can give a utility grade to the peer grading.
- * It's why this entity implements the [ReportCandidate] interface.
+ * A peer grading can be moderate by a teacher. And the learner of the
+ * response can give a utility grade to the peer grading. It's why this
+ * entity implements the [ReportCandidate] interface.
  *
  * @see LikertPeerGrading
- * @see org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+ * @see
+ *     org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
  */
+/*
+ The graph is used to when we want to compute the number of evaluations a student has done
+    for a sequence.
+    It's used in the PlayerController.
+ */
+@NamedEntityGraph(
+    name = "PeerGrading.with_grader_and_response",
+    attributeNodes = [
+        NamedAttributeNode("response", subgraph = "Response.withSequence"),
+        NamedAttributeNode("grader")
+    ],
+    subgraphs = [
+        NamedSubgraph(
+            name = "Response.withSequence",
+            attributeNodes = [
+                NamedAttributeNode("interaction", subgraph = "Interaction.withSequence"),
+            ]
+        ),
+        NamedSubgraph(
+            name = "Interaction.withSequence",
+            attributeNodes = [
+                NamedAttributeNode("sequence")
+            ]
+        )
+    ]
+)
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "`type`", length = 12)
@@ -67,7 +95,10 @@ class PeerGrading(
     var grade: BigDecimal?,
     var annotation: String? = null,
 
-    /** Indicates that this grading is the last one for this grader & this sequence (useful for DRAXO strategy) */
+    /**
+     * Indicates that this grading is the last one for this grader & this
+     * sequence (useful for DRAXO strategy)
+     */
     var lastSequencePeerGrading: Boolean = true,
 
     // Moderation attributes

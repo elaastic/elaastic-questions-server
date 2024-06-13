@@ -1,0 +1,51 @@
+<!--
+  ~
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<th:block th:fragment="attendeesTable(sequenceMonitoringModel)">
+
+    <table class="ui celled definition table">
+        <thead>
+        <tr>
+            <th></th>
+            <th class="center aligned" th:text="#{attendee.phase(${1})}">first_phase_label</th>
+            <th class="center aligned" th:text="#{attendee.phase(${2})}">second_phase_label</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="learner: ${sequenceMonitoringModel.learners}">
+            <!--/* Name of the learner */-->
+            <td>
+                <div th:text="${learner.learnerName}"></div>
+            </td>
+
+            <!--/* States of the learner */-->
+<!--            ${T(org.elaastic.questions.player.phase.LearnerPhaseType).values()}-->
+            <th:block
+                    th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInResponsePhase().name})">
+            </th:block>
+            <th:block
+                    th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInEvaluationPhase().name})">
+            </th:block>
+        </tr>
+        </tbody>
+    </table>
+
+</th:block>

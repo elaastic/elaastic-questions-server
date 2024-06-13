@@ -20,6 +20,8 @@ package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -28,7 +30,8 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class LearnerSequenceService(
-    @Autowired val learnerSequenceRepository: LearnerSequenceRepository
+    @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
+    @Autowired val peerGradingService: PeerGradingService
 ) {
 
     fun getActiveInteractionForLearner(learnerSequence: ILearnerSequence) =
@@ -43,8 +46,10 @@ class LearnerSequenceService(
             else -> findOrCreateLearnerSequence(learner, sequence).activeInteraction
         }
 
-    fun getLearnerSequence(learner: User,
-                           sequence: Sequence): ILearnerSequence =
+    fun getLearnerSequence(
+        learner: User,
+        sequence: Sequence
+    ): ILearnerSequence =
         when {
             // For synchronous sequences, we do not need a persistent LearnerSequence
             sequence.executionIsFaceToFace() -> TransientLearnerSequence(learner, sequence)
@@ -72,4 +77,20 @@ class LearnerSequenceService(
             } else it
         }
 
+    /**
+     * Count the number of reports made by the user for the given sequence
+     *
+     * If an error occurred when we retrieve all the peerGrading, then the
+     * count is 0
+     */
+    fun countReportMade(user: User, sequence: Sequence): Int {
+        return try {
+            peerGradingService.findAllEvaluationMadeForLearner(user, sequence)
+                .count { !it.reportReasons.isNullOrBlank() }
+        } catch (_: IllegalStateException) {
+            0
+            /* If the sequence isn't initialized, an IllegalStateException will be throws
+            * So if the sequence isn't initialized, the user has not been able to report something */
+        }
+    }
 }
