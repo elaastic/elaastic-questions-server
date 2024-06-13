@@ -251,6 +251,10 @@ class LearnerMonitoringModel(
         NOT_TERMINATED,
         TERMINATED
     }
+
+    fun hasAnswered(): Boolean {
+        return this.learnerStateOnPhase1 == LearnerStateOnPhase.ACTIVITY_TERMINATED
+    }
 }
 
 /**
