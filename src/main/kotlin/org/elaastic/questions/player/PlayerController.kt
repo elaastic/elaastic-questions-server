@@ -774,6 +774,7 @@ class PlayerController(
         // The resultId is used to initialize the accordion in the view.
         // So to discriminate between all accordions in the page, we use the learnerId
         model["resultId"] = userId
+        model["seenByTeacher"] = true
 
         return "player/assignment/sequence/components/my-results/_my-results::myResults"
     }
