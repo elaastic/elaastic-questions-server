@@ -40,7 +40,7 @@ import org.elaastic.questions.player.components.studentResults.LearnerResultsMod
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
-import org.elaastic.questions.util.requireAccess
+import org.elaastic.questions.util.requireAccessThrowDenied
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -743,8 +743,7 @@ class PlayerController(
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
 
-        // TODO change requireAccess to requireAccessThrowDenied when fix/249-cant-see-chatgpt-feedback-with-likert will be merged
-        requireAccess(user == sequence.owner) {
+        requireAccessThrowDenied(user == sequence.owner) {
             "You must be the teacher of the sequence to see the results of the learners"
         }
 
