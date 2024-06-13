@@ -34,7 +34,7 @@
             <!--/* Name of the learner */-->
             <td style="display: flex; align-items: center; justify-content: space-between" class="learner-name">
                 <div th:text="${learner.learnerName}"></div>
-                <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.learnerId}">
+                <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.userId}">
                     <span class="content" th:text="#{attendee.details}">Details</span>
                 </button>
             </td>
@@ -57,8 +57,8 @@
     <script th:inline="javascript">
         $(function () {
             $('[id="see-detail"]').click(function () {
-                let learnerId = $(this).attr('learner-id');
-                $('#detailModal_' + learnerId).modal('show');
+                let userId = $(this).attr('learner-id');
+                $('#detailModal_' + userId).modal('show');
             });
         })
     </script>
