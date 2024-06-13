@@ -54,9 +54,22 @@
         </div>
 
         <div class="ui segment">
-            <div class="header">
-                Result goes here
-            </div>
+            <!---/* The learner didn't answer yet */-->
+            <th:block th:unless="${learnerMonitoringModel.hasAnswered()}">
+                <div class="ui message warning">
+                    <div class="header" th:text="#{player.sequence.studentResults.noAnswer}">No answer</div>
+                    <div class="content" th:text="#{player.sequence.studentResults.noAnswer.description.teacherView}">No
+                        answer
+                        description
+                    </div>
+                </div>
+            </th:block>
+            <!---/* The learner answered */-->
+            <th:block th:if="${learnerMonitoringModel.hasAnswered()}">
+                <div class="header">
+                    Result goes here
+                </div>
+            </th:block>
         </div>
 
     </div>
@@ -64,12 +77,18 @@
         $(function () {
             const learnerId = [[${learnerMonitoringModel.learnerId}]]
             const sequenceId = [[${learnerMonitoringModel.sequenceMonitoringModel.sequenceId}]]
+            const hasAnswered = [[${learnerMonitoringModel.hasAnswered()}]]
 
             $('#detailModal_' + learnerId).modal({
                 onShow: function () {
-                    console.log("Modal for learner with ID: " + learnerId)
-                    console.log("Sequence ID: " + sequenceId)
-                    //Fetch method for the results of the learner goes here
+                    if (hasAnswered) {
+                        console.log("Modal for learner with ID: " + learnerId)
+                        console.log("Sequence ID: " + sequenceId)
+                        //Fetch method for the results of the learner goes here
+                    } else {
+                        // If the learner didn't answer yet, we don't fetch his results
+                        console.log("Learner has not answered yet")
+                    }
                 }
             });
         });
