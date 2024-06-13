@@ -81,14 +81,6 @@ class SequenceService(
         } ?: throw EntityNotFoundException("There is no sequence for id \"$id\"")
     }
 
-    // TODO: delete this method!
-    @Deprecated("Will be deleted",
-                ReplaceWith("findPreviousSequence() and findNextSequence() methods"))
-    fun findSequenceByRankAndAssignment(rank: Int, assignment: Assignment): Sequence
-        = sequenceRepository.findSequenceByRankAndAssignment(rank, assignment)
-            ?: throw EntityNotFoundException(
-                "There is no sequence for id \"$rank\" with assignment id \"${assignment.rank}\"")
-
     fun findPreviousSequence(sequence: Sequence): Sequence?
         = sequenceRepository.findPreviousSequence(sequence.rank,
                                                   sequence.assignment!!,
