@@ -65,7 +65,7 @@ object DashboardModelFactory {
         attendees.forEach {
             learners.add(
                 LearnerMonitoringModel(
-                    it.id!!,
+                    it.learner.id!!,
                     it.learner.getFullname(),
                     getAttendeeStateOnResponsePhase(it, responses, sequenceMonitoringModel.phase1State),
                     getAttendeeStateOnEvaluationPhase(

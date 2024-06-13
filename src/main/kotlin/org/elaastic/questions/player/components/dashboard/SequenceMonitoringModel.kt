@@ -116,14 +116,14 @@ class SequenceMonitoringModel(
  *
  * Represents a learner's state in each phase, a line in the table.
  *
- * @property learnerId the learner's id
+ * @property userId the user id of the learner
  * @property learnerName the learner's name
  * @property learnerStateOnPhase1 the learner's state on phase 1
  * @property learnerStateOnPhase2 the learner's state on phase 2
  * @property learnerStateOnPhase3 the learner's state on phase 3
  */
 class LearnerMonitoringModel(
-    val learnerId: Long,
+    val userId: Long,
     val learnerName: String,
     val learnerStateOnPhase1: LearnerStateOnPhase,
     val learnerStateOnPhase2: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
