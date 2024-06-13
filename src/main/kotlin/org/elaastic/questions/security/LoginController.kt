@@ -39,13 +39,16 @@ class LoginController(
         )
         model.addAttribute(
             "casUrlWithServiceMap",
-            casSecurityConfigurer.casInfoList.map { it.casKey }.associateWith {
-                // get the current casInfo and append the /login to the casUrl
-                val serverUrl = casSecurityConfigurer.casKeyToServerUrl[it]
-                val casLoginUrl = Paths.get(serverUrl, "login").toString()
-                val serviceUrl = casSecurityConfigurer.getServiceCasLoginUrl(it)
-                "$casLoginUrl?service=$serviceUrl"
-            }
+            casSecurityConfigurer.casInfoList.associateBy(
+                { it.casKey },
+                {
+                    // get the current casInfo and append the /login to the casUrl
+                    val serverUrl = it.serverUrl
+                    val casLoginUrl = Paths.get(serverUrl, "login").toString()
+                    val serviceUrl = casSecurityConfigurer.getServiceCasLoginUrl(it.casKey)
+                    "$casLoginUrl?service=$serviceUrl"
+                }
+            )
         )
 
         return "login"
