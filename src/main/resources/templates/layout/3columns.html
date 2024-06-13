@@ -199,7 +199,8 @@
                 || urlParams.get("currentPane") !== "assignments"
                 && urlParams.get("currentPane") !== "attendees") {
 
-              urlParams.set("currentPane", "assignments");
+              //urlParams.set("currentPane", "assignments");
+              Cookies.set("currentPane", "assignments");
             }
 
             //urlParams.delete('currentPane');
@@ -208,11 +209,10 @@
 
           tableOfContent.hideAside = function () {
             layoutAside.hide();
-
             showPaneBtn.show();
             hidePaneBtn.hide();
             //urlParams.set('currentPane', 'none');
-            //Cookies.set('currentPane', 'none');
+            Cookies.set('currentPane', 'none');
           };
 
           tableOfContent.showAssignments = function () {
@@ -222,7 +222,8 @@
             showAssignmentsBtn.addClass("active");
             showAttendeesBtn.removeClass("active");
 
-            urlParams.set("currentPane", "assignments");
+            //urlParams.set("currentPane", "assignments");
+            Cookies.set("currentPane", "assignments");
             window.location.search = urlParams.toString();
           };
 
@@ -233,28 +234,22 @@
             showAttendeesBtn.addClass("active");
             showAssignmentsBtn.removeClass("active");
 
-            urlParams.set("currentPane", "attendees");
+            //urlParams.set("currentPane", "attendees");
+            Cookies.set("currentPane", "attendees");
             window.location.search = urlParams.toString();
           };
 
           showPaneBtn.hide();
 
-          if (!urlParams.has('currentPane')
-              || urlParams.get("currentPane") === ''
-              || urlParams.get("currentPane") === "assignments") {
-
-            Cookies.set("currentPane", "assignments");
+          if (!Cookies.get("currentPane") || Cookies.get("currentPane") === "assignments") {
             assignmentsPane.show();
             showAssignmentsBtn.addClass("active");
             showAttendeesBtn.removeClass("active");
-          } else if (urlParams.has("currentPane") && urlParams.get("currentPane") === "attendees") {
-            Cookies.set("currentPane", "attendees");
+          } else if (Cookies.get("currentPane") === "attendees") {
             attendeesPane.show();
-
             showAttendeesBtn.addClass("active");
             showAssignmentsBtn.removeClass("active");
-          } else {
-            Cookies.set("currentPane", "none");
+          } else if (Cookies.get("currentPane") === "none") {
             layoutAside.hide();
             showPaneBtn.show();
             hidePaneBtn.hide();
