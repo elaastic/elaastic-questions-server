@@ -84,32 +84,20 @@
             detailModal.modal({
                 observeChanges: true,
                 onShow: function () {
-                    if (hasAnswered) {
-                        console.log("Modal for learner with ID: " + userId)
-                        console.log("Sequence ID: " + sequenceId)
-
-                        if ($.trim(segment.html()) !== "" ) {
-                            console.log("Results already fetched")
-                        } else {
-                            console.log("Fetching the results of the learner")
-                            segment.addClass('loading')
-                            $.get('/player/' + sequenceId + '/result/' + userId)
-                                .done(function (data) {
-                                    segment.removeClass('loading')
-                                    console.log(data)
-                                    segment.html(data)
-                                    // We put the content after the modal is shown
-                                    // So we need to update it to make it scrollable
-                                    detailModal.children(".content").addClass("scrolling")
-                                })
-                                .fail(function () {
-                                    segment.removeClass('loading')
-                                    segment.html('<div class="ui message negative">An error occurred while fetching the results</div>')
-                                })
-                        }
-                    } else {
-                        // If the learner didn't answer yet, we don't fetch his results
-                        console.log("Learner has not answered yet")
+                    if (hasAnswered && $.trim(segment.html()) === "") {
+                        segment.addClass('loading')
+                        $.get('/player/' + sequenceId + '/result/' + userId)
+                            .done(function (data) {
+                                segment.removeClass('loading')
+                                segment.html(data)
+                                // We put the content after the modal is shown
+                                // So we need to update it to make it scrollable
+                                detailModal.children(".content").addClass("scrolling")
+                            })
+                            .fail(function () {
+                                segment.removeClass('loading')
+                                segment.html('<div class="ui message negative">An error occurred while fetching the results</div>')
+                            })
                     }
                 }
             });
