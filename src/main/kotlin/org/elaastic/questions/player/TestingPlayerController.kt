@@ -2987,7 +2987,6 @@ class TestingPlayerController(
                 ExecutionContext.FaceToFace,
                 DashboardPhaseState.IN_PROGRESS,
                 DashboardPhaseState.NOT_STARTED,
-                DashboardPhaseState.NOT_STARTED,
                 mutableListOf()
             )
             val learners = mutableListOf(
@@ -3025,7 +3024,6 @@ class TestingPlayerController(
                 ExecutionContext.FaceToFace,
                 DashboardPhaseState.NOT_STARTED,
                 DashboardPhaseState.NOT_STARTED,
-                DashboardPhaseState.NOT_STARTED,
                 mutableListOf()
             )
             val learners = mutableListOf(
@@ -3045,7 +3043,6 @@ class TestingPlayerController(
         fun learnersMonitoringModel3(): SequenceMonitoringModel {
             val learnersMonitoringModel: SequenceMonitoringModel = SequenceMonitoringModel(
                 ExecutionContext.Distance,
-                DashboardPhaseState.IN_PROGRESS,
                 DashboardPhaseState.IN_PROGRESS,
                 DashboardPhaseState.IN_PROGRESS,
                 mutableListOf()
@@ -3103,7 +3100,6 @@ class TestingPlayerController(
                 ExecutionContext.FaceToFace,
                 DashboardPhaseState.STOPPED,
                 DashboardPhaseState.IN_PROGRESS,
-                DashboardPhaseState.NOT_STARTED,
                 mutableListOf()
             )
             val learners = mutableListOf(
@@ -3160,7 +3156,6 @@ class TestingPlayerController(
                 ExecutionContext.FaceToFace,
                 DashboardPhaseState.STOPPED,
                 DashboardPhaseState.STOPPED,
-                DashboardPhaseState.IN_PROGRESS,
                 mutableListOf()
             )
 
@@ -3225,7 +3220,6 @@ class TestingPlayerController(
                 ExecutionContext.FaceToFace,
                 DashboardPhaseState.STOPPED,
                 DashboardPhaseState.STOPPED,
-                DashboardPhaseState.IN_PROGRESS,
                 mutableListOf()
             )
 

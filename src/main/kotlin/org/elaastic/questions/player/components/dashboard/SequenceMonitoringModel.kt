@@ -16,7 +16,6 @@ class SequenceMonitoringModel(
     val executionContext: ExecutionContext,
     val phase1State: DashboardPhaseState,
     val phase2State: DashboardPhaseState,
-    val phase3State: DashboardPhaseState,
     val learners: MutableList<LearnerMonitoringModel> = mutableListOf(),
     val sequenceId: Long? = null
 ) {
@@ -218,8 +217,7 @@ class LearnerMonitoringModel(
     private fun getPhaseStateByType(phase: LearnerPhaseType): DashboardPhaseState {
         return when (phase) {
             LearnerPhaseType.RESPONSE -> this.sequenceMonitoringModel.phase1State
-            LearnerPhaseType.EVALUATION -> this.sequenceMonitoringModel.phase2State
-            LearnerPhaseType.RESULT -> this.sequenceMonitoringModel.phase3State
+            else -> this.sequenceMonitoringModel.phase2State
         }
     }
 
