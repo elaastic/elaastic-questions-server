@@ -82,6 +82,7 @@
             const segment = $('#results_' + userId)
 
             detailModal.modal({
+                observeChanges: true,
                 onShow: function () {
                     if (hasAnswered) {
                         console.log("Modal for learner with ID: " + userId)
