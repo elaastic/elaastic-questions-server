@@ -22,28 +22,41 @@
 var elaastic = elaastic || {};
 
 (function () {
-    let baseUrl = ''
+    let draxoBaseUrl = ''
 
     elaastic.draxo = {
         initialize(url) {
-            baseUrl = url
+            draxoBaseUrl = url
         },
 
         loadReviews(event, responseId) {
             event.preventDefault()
 
-            let elmBtnLoadReviews = event.target
+            let elmBtnLoadReviews = event.target.parentNode
             let target = findElmReviewsContainer(
                 findElmExplanationContainer(elmBtnLoadReviews)
             )
 
+            console.log(event.target)
+
+            const hideReviewLink = $(elmBtnLoadReviews).find('.hide-review')
+            const seeReviewLink = $(elmBtnLoadReviews).find('.see-review')
+
+            if (hideReviewLink.is(':visible')) {
+                hideReviewLink.hide()
+                seeReviewLink.show()
+            } else {
+                hideReviewLink.show()
+                seeReviewLink.hide()
+            }
+
             if ($(target).html().length > 0) {
                 // The reviews are already loaded
                 if ($(target).is(':visible')) {
-                    // The reviews are visible
+                    // The reviews are visible -> hide them
                     $(target).slideUp();
                 } else {
-                    // The reviews are hidden
+                    // The reviews are hidden -> show them
                     $(target).slideDown();
                 }
             } else {
@@ -56,7 +69,65 @@ var elaastic = elaastic || {};
                 }
 
                 $.ajax({
-                    url: baseUrl + '/' + responseId,
+                    url: draxoBaseUrl + '/' + responseId,
+                    method: 'GET',
+                    data,
+                    success: function (data) {
+                        const targetElm = $(target)
+                        const availableWidth = targetElm.width()
+
+                        targetElm.html(data)
+                        if (availableWidth < 900) {
+                            $('.ui.mini.steps').addClass('vertical')
+                        }
+                    },
+                    error: function (error) {
+                        let errorMessage = error.responseJSON ? error.responseJSON.error : error.responseText
+                        $(target).html(buildHtmlError(errorMessage))
+                    }
+                })
+            }
+        }
+    }
+
+    elaastic.chatGPT = {
+        loadReview(event, responseId) {
+            event.preventDefault()
+
+            let elmBtnLoadReviews = event.target.parentNode
+            let target = findElmReviewsContainer(
+                findElmExplanationContainer(elmBtnLoadReviews)
+            )
+            console.log(event.target)
+
+            const hideReviewLink = $(elmBtnLoadReviews).find('.hide-review')
+            const seeReviewLink = $(elmBtnLoadReviews).find('.see-review')
+
+            if (hideReviewLink.is(':visible')) {
+                hideReviewLink.hide()
+                seeReviewLink.show()
+            } else {
+                hideReviewLink.show()
+                seeReviewLink.hide()
+            }
+
+            if ($(target).html().length > 0) {
+                // The reviews are already loaded
+                if ($(target).is(':visible')) {
+                    // The reviews are visible -> hide them
+                    $(target).slideUp();
+                } else {
+                    // The reviews are hidden -> show them
+                    $(target).slideDown();
+                }
+            } else {
+                // The reviews are not loaded
+                $(target).html(buildHtmlLoader())
+
+                let data = {}
+
+                $.ajax({
+                    url: '/chatGptEvaluation/' + responseId,
                     method: 'GET',
                     data,
                     success: function (data) {

@@ -80,8 +80,10 @@
 
     <script>
         /*<![CDATA[*/
-        $(document).ready(function () {
-            $('#my-results-accordion-[[${resultId}]]').accordion()
+        $(function () {
+            const myResponseContainer = $('#my-results-accordion-[[${resultId}]]');
+            myResponseContainer.accordion()
+            myResponseContainer.find('.see-review').click()
         })
         /*]]>*/
     </script>

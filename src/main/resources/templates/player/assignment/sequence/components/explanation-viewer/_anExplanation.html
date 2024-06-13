@@ -22,7 +22,8 @@
      th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
      th:styleappend="${explanation.getNbEvaluation(isTeacher) > 0 || explanation.fromTeacher || (isOwner && explanation.hiddenByTeacher) ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
      th:attr="data-response-id=${explanation.responseId}"
-     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz">
     <div th:if="${explanation.getNbEvaluation(isTeacher) > 0}" class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
 
@@ -38,10 +39,24 @@
               th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.evaluations}"></span>
 
         <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) > 0}">
-        (<a class="detail-link" href="#"
-            th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'"
-            th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}">see reviews</a> )
+        (<a class="detail-link" id="loadReview" href="#"
+            th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'">
+            <span th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}"
+                  class="see-review">see reviews</span>
+            <span th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.hide.reviews} : #{draxo.hide.review}"
+                  class="hide-review" style="display: none">see reviews</span>
+        </a> )
         </span>
+
+        <span togglz:active="'CHATGPT_EVALUATION'"
+              class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher)}">
+        (<a class="detail-link" id="loadReview" href="#"
+            th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'">
+            <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
+            <span th:text="#{evaluation.hide.chatGPT.review}" class="hide-review" style="display: none">see ChatGPT review</span>
+            </a> )
+        </span>
+
         <span th:if="${explanation.hiddenByTeacher}">
             <i class="exclamation triangle icon" style="margin: 0 0.4em;"></i>
             <span th:text="#{player.sequence.explanation.hiddenExplanation}"></span>
@@ -61,35 +76,42 @@
                 <!-- If explanation is in recommended -->
                 <a th:classappend="'removeRecommendation-' + ${explanation.responseId}"
                    th:onclick="removeRecommendation([[${explanation.responseId}]])"
-                   type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.removeRecommended}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                   type="button" data-position="bottom right"
+                   th:data-tooltip="#{player.sequence.explanation.removeRecommended}" class="ui button"
+                   style="padding: 0.5rem; margin-right: 0;">
                     <i class="star icon"></i>
                 </a>
 
                 <!-- If explanation is not in recommended -->
                 <a th:classappend="'addRecommendation-' + ${explanation.responseId}"
                    th:onclick="addRecommendation([[${explanation.responseId}]])"
-                   type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.addRecommended}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+                   type="button" data-position="bottom right"
+                   th:data-tooltip="#{player.sequence.explanation.addRecommended}" class="ui button"
+                   style="padding: 0.5rem; margin-right: 0;">
                     <i class="empty star icon"></i>
                 </a>
             </div>
 
             <!-- If explanation is not hidden -->
-            <a  th:if="${!explanation.hiddenByTeacher}"
-                    th:href="@{/player/response/{responseId}/hide-response(responseId=${explanation.responseId})}"
-                    type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.hideResponse}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+            <a th:if="${!explanation.hiddenByTeacher}"
+               th:href="@{/player/response/{responseId}/hide-response(responseId=${explanation.responseId})}"
+               type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.hideResponse}"
+               class="ui button" style="padding: 0.5rem; margin-right: 0;">
                 <i class="unhide icon"></i>
             </a>
 
             <!-- If explanation is hidden -->
-            <a  th:if="${explanation.hiddenByTeacher}"
-                th:href="@{/player/response/{responseId}/unhide-response(responseId=${explanation.responseId})}"
-                type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.showResponse}" class="ui button" style="padding: 0.5rem; margin-right: 0;">
+            <a th:if="${explanation.hiddenByTeacher}"
+               th:href="@{/player/response/{responseId}/unhide-response(responseId=${explanation.responseId})}"
+               type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.showResponse}"
+               class="ui button" style="padding: 0.5rem; margin-right: 0;">
                 <i class="hide icon"></i>
             </a>
         </div>
-    </div >
+    </div>
 
-    <div th:if="${explanation.getNbEvaluation(isTeacher) == 0 && explanation.fromTeacher}" class="ui top left attached label green">
+    <div th:if="${explanation.getNbEvaluation(isTeacher) == 0 && explanation.fromTeacher}"
+         class="ui top left attached label green">
         <i class="graduation cap icon" style="margin-right: 0.4em;"></i>
         <span th:text="#{player.sequence.explanation.teacher.label}"></span>
     </div>
@@ -108,13 +130,13 @@
     </div>
     <span th:if="${!explanation.hiddenByTeacher or isOwner}" th:utext="${explanation.content}"></span>
 
-    <div class="reviews-container"></div>
+    <div class="reviews-container" style="margin-top: 20px"></div>
     <script th:inline="javascript">
 
-        var toReload = false;
+        let toReload = false;
 
-        $(document).ready(function() {
-            setupRecommendedByTeacher([[${explanation.responseId}]],[[${explanation.recommendedByTeacher}]])
+        $(document).ready(function () {
+            setupRecommendedByTeacher([[${explanation.responseId}]], [[${explanation.recommendedByTeacher}]])
         });
 
         function setupRecommendedByTeacher(responseId, recommendedByTeacher) {
@@ -124,6 +146,7 @@
                 $('.removeRecommendation-' + responseId).hide()
             }
         }
+
         function removeRecommendation(responseId) {
             toReload = true
             $.ajax({
@@ -131,9 +154,9 @@
                 url: '/player/response/' + responseId + '/remove-recommended-by-teacher',
                 success: () => {
                     $('.removeRecommendation-' + responseId).hide()
-                    $('.addRecommendation-' + + responseId).show()
+                    $('.addRecommendation-' + +responseId).show()
                 },
-                error: function(error) {
+                error: function (error) {
                     // Handle error
                     console.error(error);
                 }
@@ -149,7 +172,7 @@
                     $('.addRecommendation-' + responseId).hide()
                     $(".removeRecommendation-" + responseId).show()
                 },
-                error: function(error) {
+                error: function (error) {
                     // Handle error
                     console.error(error);
                 }
