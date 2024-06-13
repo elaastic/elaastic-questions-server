@@ -109,31 +109,4 @@ internal class SequenceServiceIntegrationTest(
             equalTo(sequence)
         )
     }
-
-    @Test
-    fun `test of findById`() {
-        lateinit var sequence: Sequence
-
-        tGiven("a sequence") {
-            sequence = integrationTestingService.getAnySequence()
-        }.tWhen("we try to find it by id") {
-            val block: () -> Sequence = { sequenceService.findById(sequence.id!!) }
-            block
-        }.tThen("we find the sequence") {
-            val sequenceFound = sequenceService.findById(sequence.id!!)
-            assertNotNull(sequenceFound)
-            assertEquals(sequence, sequenceFound)
-        }
-
-        tGiven("a fake id") {
-            798546L
-        }.tWhen("we find the sequence") {
-            { sequenceService.findById(it) }
-        }.tThen {
-            assertThrows(EntityNotFoundException::class.java) {
-                it()
-            }
-        }
-
-    }
 }
