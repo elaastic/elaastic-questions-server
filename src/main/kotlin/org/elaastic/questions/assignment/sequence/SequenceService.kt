@@ -47,7 +47,6 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
-import kotlin.jvm.Throws
 
 @Service
 @Transactional
