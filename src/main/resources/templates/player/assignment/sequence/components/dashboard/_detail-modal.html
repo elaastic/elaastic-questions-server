@@ -18,7 +18,7 @@
 <!-- Pop up modal to report an evaluation from a peer -->
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      th:fragment="detailModal(learnerMonitoringModel)"
-     class="ui small modal"
+     class="ui modal scrolling"
      th:id="|detailModal_${learnerMonitoringModel.userId}|">
 
     <i class="close icon"></i>
@@ -85,6 +85,18 @@
                         console.log("Modal for learner with ID: " + userId)
                         console.log("Sequence ID: " + sequenceId)
                         //Fetch method for the results of the learner goes here
+                        const segment = $('#results_' + userId)
+                        segment.addClass('loading')
+                        $.get('/player/' + sequenceId + '/result/' + userId)
+                            .done(function (data) {
+                                segment.removeClass('loading')
+                                console.log(data)
+                                segment.html(data)
+                            })
+                            .fail(function () {
+                                segment.removeClass('loading')
+                                segment.html('<div class="ui message negative">An error occurred while fetching the results</div>')
+                            })
                     } else {
                         // If the learner didn't answer yet, we don't fetch his results
                         console.log("Learner has not answered yet")
