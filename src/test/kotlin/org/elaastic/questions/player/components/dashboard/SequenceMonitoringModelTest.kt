@@ -491,7 +491,7 @@ class SequenceMonitoringModelTest(
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             val learnersIdSorted = learnersMonitoringModel.learners.map {
-                it.learnerId
+                it.userId
             }
             // The list of learners has been created in such a way that the ids are in ascending order
             // starting from 1 when sorting.
@@ -587,7 +587,7 @@ class SequenceMonitoringModelTest(
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             val learnersIdSorted = learnersMonitoringModel.learners.map {
-                it.learnerId
+                it.userId
             }
             // The list of learners has been created in such a way that the ids are in ascending order
             // starting from 1 when sorting.

@@ -19,7 +19,7 @@
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      th:fragment="detailModal(learnerMonitoringModel)"
      class="ui small modal"
-     th:id="|detailModal_${learnerMonitoringModel.learnerId}|">
+     th:id="|detailModal_${learnerMonitoringModel.userId}|">
 
     <i class="close icon"></i>
 
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="ui segment">
+        <div class="ui segment" th:id="|results_${learnerMonitoringModel.userId}|">
             <!---/* The learner didn't answer yet */-->
             <th:block th:unless="${learnerMonitoringModel.hasAnswered()}">
                 <div class="ui message warning">
@@ -75,14 +75,14 @@
     </div>
     <script th:inline="javascript">
         $(function () {
-            const learnerId = [[${learnerMonitoringModel.learnerId}]]
+            const userId = [[${learnerMonitoringModel.userId}]]
             const sequenceId = [[${learnerMonitoringModel.sequenceMonitoringModel.sequenceId}]]
             const hasAnswered = [[${learnerMonitoringModel.hasAnswered()}]]
 
-            $('#detailModal_' + learnerId).modal({
+            $('#detailModal_' + userId).modal({
                 onShow: function () {
                     if (hasAnswered) {
-                        console.log("Modal for learner with ID: " + learnerId)
+                        console.log("Modal for learner with ID: " + userId)
                         console.log("Sequence ID: " + sequenceId)
                         //Fetch method for the results of the learner goes here
                     } else {
