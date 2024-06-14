@@ -22,7 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import java.nio.file.Paths
+import java.net.URL
+import java.net.URLEncoder
 import javax.servlet.http.HttpServletRequest
 
 @Controller
@@ -42,15 +43,31 @@ class LoginController(
             casSecurityConfigurer.casInfoList.associateBy(
                 { it.casKey },
                 {
-                    // get the current casInfo and append the /login to the casUrl
-                    val serverUrl = it.serverUrl
-                    val casLoginUrl = Paths.get(serverUrl, "login").toString()
-                    val serviceUrl = casSecurityConfigurer.getServiceCasLoginUrl(it.casKey)
-                    "$casLoginUrl?service=$serviceUrl"
+                    buildCasUrlWithService(
+                        it.serverUrl,
+                        casSecurityConfigurer.getServiceCasLoginUrl(it.casKey)
+                    )
                 }
             )
         )
 
         return "login"
     }
+
+    companion object {
+        /**
+         * Build the CAS login URL with the service parameter
+         *
+         * @param serverUrl the CAS server URL
+         * @param serviceUrl the service URL
+         *
+         * @return the CAS login URL with the service parameter
+         */
+        fun buildCasUrlWithService(serverUrl: String, serviceUrl: String): String {
+            val casLoginUrl = URL("$serverUrl/login").toString()
+            val encodedServiceUrl = URLEncoder.encode(serviceUrl, "UTF-8")
+            return "$casLoginUrl?service=$encodedServiceUrl"
+        }
+    }
+
 }
