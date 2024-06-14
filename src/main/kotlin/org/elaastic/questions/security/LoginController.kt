@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import java.net.URL
+import java.net.URI
 import java.net.URLEncoder
 import javax.servlet.http.HttpServletRequest
 
@@ -64,7 +64,7 @@ class LoginController(
          * @return the CAS login URL with the service parameter
          */
         fun buildCasUrlWithService(serverUrl: String, serviceUrl: String): String {
-            val casLoginUrl = URL("$serverUrl/login").toString()
+            val casLoginUrl = URI("$serverUrl/login").normalize().toString()
             val encodedServiceUrl = URLEncoder.encode(serviceUrl, "UTF-8")
             return "$casLoginUrl?service=$encodedServiceUrl"
         }
