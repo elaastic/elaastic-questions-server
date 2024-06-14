@@ -674,7 +674,11 @@ class PlayerController(
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         model.addAttribute(
             "chatGptEvaluationModel",
-            ChatGptEvaluationModelFactory.build(chatGptEvaluation, response.interaction.sequence, responseId = response?.id)
+            ChatGptEvaluationModelFactory.build(
+                chatGptEvaluation,
+                response.interaction.sequence,
+                responseId = response?.id
+            )
         )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
     }
