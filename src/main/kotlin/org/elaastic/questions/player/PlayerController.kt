@@ -694,12 +694,30 @@ class PlayerController(
     ): String {
         val user: User = authentication.principal as User
         val sequence = sequenceService.get(id, true)
-
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
-        chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation!!, utilityGrade)
+
+                // Check authorizations
+        requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
+            "You must be the learner of the response to report the evaluation"
+        }
+
+        chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation, utilityGrade)
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }
 
+    /**
+     * Report a chatGptEvaluation
+     * Only the learner of the response can report the evaluation
+     *
+     * @param authentication the current authentication
+     * @param model the model
+     * @param evaluationId the id of the ChatGPT evaluation to report
+     * @param reasons the list of reasons to report the evaluation
+     * @param otherReasonComment the comment of the other reason
+     * @param id the id of the sequence where the ChatGPT evaluation is
+     * @return the view of the sequence
+     * @throws AccessDeniedException if the user is not the learner of the response
+     */
     @PostMapping("sequence/{id}/report-chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun reportchatGptEvaluation(
@@ -712,10 +730,15 @@ class PlayerController(
     ): String {
         val user: User = authentication.principal as User
         val sequence = sequenceService.get(id, true)
-        // TODO test if the learner can report the evaluation
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
         val reasonComment = otherReasonComment.ifEmpty { null }
-        chatGptEvaluationService.reportEvaluation(chatGptEvaluation!!, reasons, reasonComment)
+
+        // Check authorizations
+        requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
+            "You must be the learner of the response to report the evaluation"
+        }
+
+        chatGptEvaluationService.reportEvaluation(chatGptEvaluation, reasons, reasonComment)
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }
 
