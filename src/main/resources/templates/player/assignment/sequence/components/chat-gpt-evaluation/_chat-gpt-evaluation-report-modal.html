@@ -28,7 +28,9 @@
     </div>
 
     <div class="content">
-        <form id="report-form" th:action="@{/player/sequence/{sequenceId}/report-chat-gpt-evaluation(sequenceId=${chatGptEvaluationModel.sequenceId})}" method="post">
+        <form th:id="${'report-form-' + evaluationId}"
+              th:action="@{/player/sequence/{sequenceId}/report-chat-gpt-evaluation(sequenceId=${chatGptEvaluationModel.sequenceId})}"
+              method="post">
             <div class="ui form">
                 <input type="hidden" name="evaluationId" th:value="${evaluationId}">
                 <div class="field">
@@ -49,7 +51,8 @@
                 </div>
                 <div class="field" id="other-text-field">
                     <label th:text="#{player.sequence.chatGptEvaluation.reportModal.reportDetails}"></label>
-                    <textarea rows="2" name="other-reason-comment" th:placeholder="#{player.sequence.chatGptEvaluation.reportModal.reportDetails.placeholder}"></textarea>
+                    <textarea rows="2" name="other-reason-comment"
+                              th:placeholder="#{player.sequence.chatGptEvaluation.reportModal.reportDetails.placeholder}"></textarea>
                 </div>
             </div>
         </form>
@@ -58,8 +61,8 @@
     </div>
 
     <div class="actions">
-        <div id="submit-button" class="ui approve primary button ob-start-sequence-8"
-             th:onclick="|document.getElementById('report-form').submit();|"
+        <div th:id="|submit-button-${evaluationId}|" class="ui approve primary button ob-start-sequence-8"
+
              th:text="#{player.sequence.chatGptEvaluation.reportModal.send}">
             Send
         </div>
@@ -71,12 +74,17 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            $("#other-text-field").hide();
-            $('#submit-button').addClass('disabled');
+    <script th:inline="javascript">
+        $(function () {
 
-            $("input[name='reason']").change(function() {
+            const evaluationId = [[${evaluationId}]];
+
+            const submitButton = $('#submit-button-' + evaluationId);
+
+            $("#other-text-field").hide();
+            submitButton.addClass('disabled');
+
+            $("input[name='reason']").change(function () {
                 if ($("input[value='OTHER']").is(":checked")) {
                     $("#other-text-field").stop().slideDown();
                 } else {
@@ -84,10 +92,18 @@
                 }
 
                 if ($('input[name="reason"]:checked').length > 0) {
-                    $('#submit-button').removeClass('disabled');
+                    submitButton.removeClass('disabled');
                 } else {
-                    $('#submit-button').addClass('disabled');
+                    submitButton.addClass('disabled');
                 }
+            });
+
+            submitButton.click(function () {
+                console.log('submit button clicked');
+                if (submitButton.hasClass('disabled')) {
+                    return;
+                }
+                $('#report-form-' + evaluationId).submit();
             });
 
         });
