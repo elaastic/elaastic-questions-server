@@ -1,5 +1,6 @@
 package org.elaastic.questions.security
 
+import org.jasig.cas.client.validation.Cas20ServiceTicketValidator
 import org.jasig.cas.client.validation.Cas30ServiceTicketValidator
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 import org.springframework.beans.factory.support.BeanDefinitionBuilder
@@ -13,7 +14,6 @@ import org.springframework.core.env.EnumerablePropertySource
 import org.springframework.security.cas.ServiceProperties
 import org.springframework.security.cas.authentication.CasAuthenticationProvider
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint
-import org.springframework.security.cas.web.CasAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 
@@ -24,6 +24,9 @@ private const val CAS_AUTHENTICATION_FILTER_BEAN_PREFIX = "casAuthenticationFilt
 private const val TICKET_VALIDATOR_BEAN_PREFIX = "ticketValidator_"
 private const val CAS_AUTHENTICATION_PROVIDER_BEAN_PREFIX = "casAuthenticationProvider_"
 private const val CAS_AUTHENTICATION_ENTRY_POINT = "casAuthenticationEntryPoint_"
+
+private const val CAS_3_0 = "3.0"
+private const val CAS_2_0 = "2.0"
 
 /**
  * This configuration class is responsible for creating all the spring-security artifacts required to interconnect
@@ -175,7 +178,11 @@ class CasSecurityConfig {
                 }
         }
 
-        private fun registerCasAuthenticationProvider(registry: BeanDefinitionRegistry, casKey: String, casProvider: String) {
+        private fun registerCasAuthenticationProvider(
+            registry: BeanDefinitionRegistry,
+            casKey: String,
+            casProvider: String
+        ) {
             BeanDefinitionBuilder.genericBeanDefinition(ElaasticCasAuthenticationProvider::class.java).setLazyInit(true)
                 .let { builder ->
                     builder.addConstructorArgValue(casKey)
@@ -191,10 +198,30 @@ class CasSecurityConfig {
         }
 
         private fun registerTicketValidator(registry: BeanDefinitionRegistry, casKey: String) {
-            BeanDefinitionBuilder.genericBeanDefinition(Cas30ServiceTicketValidator::class.java).setLazyInit(true)
+            readCasProperty("protocol", casKey, environment).let { protocol ->
+                val validatorClass = when (protocol) {
+                    CAS_3_0 -> Cas30ServiceTicketValidator::class.java
+                    CAS_2_0 -> Cas20ServiceTicketValidator::class.java
+                    else -> throw IllegalStateException("Unsupported CAS protocol $protocol")
+                }
+
+                registerBeanDefinition(registry, casKey, validatorClass)
+            }
+        }
+
+        private fun registerBeanDefinition(
+            registry: BeanDefinitionRegistry,
+            casKey: String,
+            validatorClass: Class<out Any>
+        ) {
+            BeanDefinitionBuilder.genericBeanDefinition(validatorClass)
+                .setLazyInit(true)
                 .let { builder ->
                     builder.addConstructorArgValue(readCasProperty("server.url", casKey, environment))
-                    registry.registerBeanDefinition("$TICKET_VALIDATOR_BEAN_PREFIX${casKey}", builder.beanDefinition)
+                    registry.registerBeanDefinition(
+                        "$TICKET_VALIDATOR_BEAN_PREFIX${casKey}",
+                        builder.beanDefinition
+                    )
                 }
         }
 
