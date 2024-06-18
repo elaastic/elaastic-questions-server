@@ -20,12 +20,16 @@ package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.questions.test.directive.tGiven
+import org.elaastic.questions.test.directive.tThen
+import org.elaastic.questions.test.directive.tWhen
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import org.springframework.security.access.AccessDeniedException
 import javax.persistence.EntityNotFoundException
@@ -34,8 +38,8 @@ import javax.persistence.EntityNotFoundException
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class SequenceServiceIntegrationTest(
-        @Autowired val sequenceService: SequenceService,
-        @Autowired val integrationTestingService: IntegrationTestingService
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     @Test
@@ -44,15 +48,15 @@ internal class SequenceServiceIntegrationTest(
         val user = assignment.owner
 
         assertThat(
-                "The testing data are corrupted",
-                assignment.sequences.size,
-                equalTo(2)
+            "The testing data are corrupted",
+            assignment.sequences.size,
+            equalTo(2)
         )
 
         val testingSequence = assignment.sequences.first()
         assertThat(
-                sequenceService.get(user, testingSequence.id!!),
-                equalTo(testingSequence)
+            sequenceService.get(user, testingSequence.id!!),
+            equalTo(testingSequence)
         )
     }
 
@@ -62,9 +66,9 @@ internal class SequenceServiceIntegrationTest(
         val user = integrationTestingService.getTestTeacher()
 
         assertThat(
-                "The testing data are corrupted",
-                assignment.sequences.size,
-                equalTo(2)
+            "The testing data are corrupted",
+            assignment.sequences.size,
+            equalTo(2)
         )
 
         val testingSequence = assignment.sequences.first()

@@ -32,12 +32,14 @@
         <tbody>
         <tr th:each="learner: ${sequenceMonitoringModel.learners}">
             <!--/* Name of the learner */-->
-            <td>
+            <td style="display: flex; align-items: center; justify-content: space-between" class="learner-name">
                 <div th:text="${learner.learnerName}"></div>
+                <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.userId}">
+                    <span class="content" th:text="#{attendee.details}">Details</span>
+                </button>
             </td>
 
             <!--/* States of the learner */-->
-<!--            ${T(org.elaastic.questions.player.phase.LearnerPhaseType).values()}-->
             <th:block
                     th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInResponsePhase().name})">
             </th:block>
@@ -47,5 +49,17 @@
         </tr>
         </tbody>
     </table>
+    <!--/* Detail modal for each learner */-->
+    <th:block th:each="learner: ${sequenceMonitoringModel.learners}">
+        <div th:replace="player/assignment/sequence/components/dashboard/_detail-modal.html :: detailModal(${learner})"></div>
+    </th:block>
 
+    <script th:inline="javascript">
+        $(function () {
+            $('[id="see-detail"]').click(function () {
+                let userId = $(this).attr('learner-id');
+                $('#detailModal_' + userId).modal('show');
+            });
+        })
+    </script>
 </th:block>

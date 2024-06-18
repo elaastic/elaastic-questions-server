@@ -16,12 +16,14 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="myResults(resultId,studentResultsModel)"
+<div th:fragment="myResults(resultId,studentResultsModel, seenByTeacher)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <div class="ui accordion segment" th:id="|my-results-accordion-${resultId}|" style="padding-bottom: 0;">
         <div class="ui active title header">
-            <i class="dropdown icon"></i> <span th:text="#{player.sequence.studentResults.myResults}"></span>
+            <i class="dropdown icon"></i>
+            <span th:if="${seenByTeacher}" th:text="#{player.sequence.studentResults.seenByTeacher}"></span>
+            <span th:if="${!seenByTeacher}" th:text="#{player.sequence.studentResults.myResults}"></span>
         </div>
 
         <div class="ui basic padded large text segment content active">
@@ -45,7 +47,6 @@
                     </div>
                 </th:block>
             </div>
-
 
             <div th:if="${studentResultsModel.hasAnsweredPhase2() and !studentResultsModel.areBothResponsesEqual()}"
                  style="margin-top: 2.5em;">

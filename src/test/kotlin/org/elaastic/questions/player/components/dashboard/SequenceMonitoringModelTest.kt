@@ -161,7 +161,6 @@ class SequenceMonitoringModelTest(
                     ExecutionContext.Distance,
                     DashboardPhaseState.IN_PROGRESS, // Only one phases in IN_PROGRESS /!\. It's wrong
                     DashboardPhaseState.NOT_STARTED,
-                    DashboardPhaseState.NOT_STARTED,
                     mutableListOf()
                 )
             }
@@ -230,7 +229,6 @@ class SequenceMonitoringModelTest(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.NOT_STARTED,
-            DashboardPhaseState.NOT_STARTED,
             mutableListOf()
         )
 
@@ -262,7 +260,6 @@ class SequenceMonitoringModelTest(
     fun `In a remote sequence the setLearners should sort them by the number of IN_PROGRESS state descending`() {
         val learnersMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.Distance,
-            DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.IN_PROGRESS,
             mutableListOf()
@@ -317,7 +314,6 @@ class SequenceMonitoringModelTest(
             ExecutionContext.Blended,
             DashboardPhaseState.IN_PROGRESS,
             DashboardPhaseState.IN_PROGRESS,
-            DashboardPhaseState.NOT_STARTED,
             mutableListOf()
         )
         tGiven("A list of LearnerMonitoringModel") {
@@ -364,7 +360,6 @@ class SequenceMonitoringModelTest(
         val learnersMonitoringModel = SequenceMonitoringModel(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.IN_PROGRESS,
-            DashboardPhaseState.NOT_STARTED,
             DashboardPhaseState.NOT_STARTED,
             mutableListOf()
         )
@@ -432,7 +427,6 @@ class SequenceMonitoringModelTest(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.STOPPED,
             DashboardPhaseState.IN_PROGRESS,
-            DashboardPhaseState.NOT_STARTED,
             mutableListOf()
         )
         tGiven("A list of LearnerMonitoringModel") {
@@ -491,7 +485,7 @@ class SequenceMonitoringModelTest(
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             val learnersIdSorted = learnersMonitoringModel.learners.map {
-                it.learnerId
+                it.userId
             }
             // The list of learners has been created in such a way that the ids are in ascending order
             // starting from 1 when sorting.
@@ -527,7 +521,6 @@ class SequenceMonitoringModelTest(
             ExecutionContext.FaceToFace,
             DashboardPhaseState.STOPPED,
             DashboardPhaseState.STOPPED,
-            DashboardPhaseState.IN_PROGRESS,
             mutableListOf()
         )
         tGiven("A list of LearnerMonitoringModel") {
@@ -587,7 +580,7 @@ class SequenceMonitoringModelTest(
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             val learnersIdSorted = learnersMonitoringModel.learners.map {
-                it.learnerId
+                it.userId
             }
             // The list of learners has been created in such a way that the ids are in ascending order
             // starting from 1 when sorting.

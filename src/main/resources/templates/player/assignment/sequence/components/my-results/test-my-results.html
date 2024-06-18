@@ -33,7 +33,7 @@
     <h3 th:text="${situation.description}"></h3>
 
     <div
-      th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults(${i.index}, ${situation.learnerResultsModel})"></div>
+      th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults(${i.index}, ${situation.learnerResultsModel}, false)"></div>
   </th:block>
 
 </section>

@@ -18,10 +18,7 @@
 
 package org.elaastic.questions.player
 
-import org.elaastic.questions.assignment.Assignment
-import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.LearnerAssignment
+import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
@@ -39,9 +36,11 @@ import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.Cha
 import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
+import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
+import org.elaastic.questions.util.requireAccessThrowDenied
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -151,7 +150,7 @@ class PlayerController(
      * Start an anonymous session for a student :
      * - the user is only identified by a nickname
      * - a user entity will be created (with isAnonymous flag)
-     * - the user won't be able to log anymore for this user ; it may just uses
+     * - the user won't be able to log anymore for this user ; it may just use
      *   the service during the session lifetime
      * - the session start by registering the on the assignment identified by
      *   globalId
@@ -585,7 +584,7 @@ class PlayerController(
         // Get response from database
         var response = responseService.findById(responseId)
 
-        println(response);
+        println(response)
         // Update response visibility
         response = responseService.hideResponse(user, response)
         println("Response hidden by teacher: ${response.hiddenByTeacher}")
@@ -675,7 +674,11 @@ class PlayerController(
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         model.addAttribute(
             "chatGptEvaluationModel",
-            ChatGptEvaluationModelFactory.build(chatGptEvaluation, response.interaction.sequence, responseId = response?.id)
+            ChatGptEvaluationModelFactory.build(
+                chatGptEvaluation,
+                response.interaction.sequence,
+                responseId = response?.id
+            )
         )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
     }
@@ -691,12 +694,30 @@ class PlayerController(
     ): String {
         val user: User = authentication.principal as User
         val sequence = sequenceService.get(id, true)
-
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
-        chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation!!, utilityGrade)
+
+                // Check authorizations
+        requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
+            "You must be the learner of the response to report the evaluation"
+        }
+
+        chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation, utilityGrade)
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }
 
+    /**
+     * Report a chatGptEvaluation
+     * Only the learner of the response can report the evaluation
+     *
+     * @param authentication the current authentication
+     * @param model the model
+     * @param evaluationId the id of the ChatGPT evaluation to report
+     * @param reasons the list of reasons to report the evaluation
+     * @param otherReasonComment the comment of the other reason
+     * @param id the id of the sequence where the ChatGPT evaluation is
+     * @return the view of the sequence
+     * @throws AccessDeniedException if the user is not the learner of the response
+     */
     @PostMapping("sequence/{id}/report-chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun reportchatGptEvaluation(
@@ -709,10 +730,15 @@ class PlayerController(
     ): String {
         val user: User = authentication.principal as User
         val sequence = sequenceService.get(id, true)
-
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
         val reasonComment = otherReasonComment.ifEmpty { null }
-        chatGptEvaluationService.reportEvaluation(chatGptEvaluation!!, reasons, reasonComment)
+
+        // Check authorizations
+        requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
+            "You must be the learner of the response to report the evaluation"
+        }
+
+        chatGptEvaluationService.reportEvaluation(chatGptEvaluation, reasons, reasonComment)
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
     }
 
@@ -723,4 +749,59 @@ class PlayerController(
         val confidenceDegree: ConfidenceDegree?,
         val explanation: String?
     )
+
+    /**
+     * Get the result view for the given learner
+     *
+     * @param authentication the current authentication
+     * @param model the model
+     * @param userId the id of the learner to get the result view
+     * @return the result view for the given learner
+     */
+    @GetMapping("/{sequenceId}/result/{userId}")
+    fun result(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable sequenceId: Long,
+        @PathVariable userId: Long
+    ): String {
+        val user: User = authentication.principal as User
+
+        val sequence = sequenceService.get(sequenceId, true)
+        val learner = userService.findById(userId)
+
+        requireAccessThrowDenied(user == sequence.owner) {
+            "You must be the teacher of the sequence to see the results of the learners"
+        }
+
+        val responseFirstAttempt = responseService.find(learner, sequence, 1)
+        val responseSecondAttempt = responseService.find(learner, sequence, 2)
+
+        val learnerResultsModel = when (sequence.statement.questionType) {
+            QuestionType.ExclusiveChoice -> LearnerResultsModelFactory.buildExclusiveChoiceResult(
+                responseFirstAttempt,
+                responseSecondAttempt,
+                sequence.statement
+            )
+
+            QuestionType.MultipleChoice -> LearnerResultsModelFactory.buildMultipleChoiceResult(
+                responseFirstAttempt,
+                responseSecondAttempt,
+                sequence.statement
+            )
+
+            QuestionType.OpenEnded -> LearnerResultsModelFactory.buildOpenResult(
+                responseFirstAttempt,
+                responseSecondAttempt
+            )
+        }
+
+        model["studentResultsModel"] = learnerResultsModel
+        // The resultId is used to initialize the accordion in the view.
+        // So to discriminate between all accordions in the page, we use the learnerId
+        model["resultId"] = userId
+        model["seenByTeacher"] = true
+
+        return "player/assignment/sequence/components/my-results/_my-results::myResults"
+    }
 }
