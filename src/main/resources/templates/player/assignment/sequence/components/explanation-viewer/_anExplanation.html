@@ -133,7 +133,7 @@
     <div class="reviews-container" style="margin-top: 20px"></div>
     <script th:inline="javascript">
 
-        let toReload = false;
+        var toReload = false;
 
         $(document).ready(function () {
             setupRecommendedByTeacher([[${explanation.responseId}]], [[${explanation.recommendedByTeacher}]])
