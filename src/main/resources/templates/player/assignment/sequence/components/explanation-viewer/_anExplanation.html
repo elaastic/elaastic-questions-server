@@ -33,7 +33,9 @@
 
         <th:block th:if="${explanation.meanGrade != null}"><span th:text="${explanation.meanGrade}"></span>/5</th:block>
 
-        <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) <= 1}"
+        <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) == 0}"
+              th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.peerEvaluation}"></span>
+        <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) == 1}"
               th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.evaluation}"></span>
         <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) > 1}"
               th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.evaluations}"></span>
@@ -133,7 +135,7 @@
     <div class="reviews-container" style="margin-top: 20px"></div>
     <script th:inline="javascript">
 
-        let toReload = false;
+        var toReload = false;
 
         $(document).ready(function () {
             setupRecommendedByTeacher([[${explanation.responseId}]], [[${explanation.recommendedByTeacher}]])
