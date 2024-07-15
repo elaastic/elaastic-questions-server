@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication
 
 class ElaasticCasAuthenticationProvider(
     val casKey: String,
+    val casProvider: String,
     casUserDetailService: CasUserDetailService,
     serviceProperties: ServiceProperties,
     ticketValidator: TicketValidator,
@@ -21,7 +22,8 @@ class ElaasticCasAuthenticationProvider(
         this.setAuthenticationUserDetailsService(
             CasAuthenticationUserDetailService(
                 casUserDetailService,
-                casKey
+                casKey,
+                casProvider,
             )
         )
         this.key = casKey

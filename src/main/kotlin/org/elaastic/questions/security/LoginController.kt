@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import java.net.URI
+import java.net.URLEncoder
 import javax.servlet.http.HttpServletRequest
 
 @Controller
@@ -37,10 +39,35 @@ class LoginController(
             casSecurityConfigurer.casInfoList
         )
         model.addAttribute(
-            "serviceUrlMap",
-            casSecurityConfigurer.casInfoList.map { it.casKey }.associateWith { casSecurityConfigurer.getServiceCasLoginUrl(it) }
+            "casUrlWithServiceMap",
+            casSecurityConfigurer.casInfoList.associateBy(
+                { it.casKey },
+                {
+                    buildCasUrlWithService(
+                        it.serverUrl,
+                        casSecurityConfigurer.getServiceCasLoginUrl(it.casKey)
+                    )
+                }
+            )
         )
 
         return "login"
     }
+
+    companion object {
+        /**
+         * Build the CAS login URL with the service parameter
+         *
+         * @param serverUrl the CAS server URL
+         * @param serviceUrl the service URL
+         *
+         * @return the CAS login URL with the service parameter
+         */
+        fun buildCasUrlWithService(serverUrl: String, serviceUrl: String): String {
+            val casLoginUrl = URI("$serverUrl/login").normalize().toString()
+            val encodedServiceUrl = URLEncoder.encode(serviceUrl, "UTF-8")
+            return "$casLoginUrl?service=$encodedServiceUrl"
+        }
+    }
+
 }

@@ -132,8 +132,8 @@
 
               <div class="cas-container">
                 <div class="cas-item" th:each="casInfo : ${casInfoList}">
-
-                  <a th:href="@{${casInfo.serverUrl}(service=${serviceUrlMap[casInfo.casKey]})}"
+                  <!-- Generate the service URL for the CAS -->
+                  <a th:href="@{${casUrlWithServiceMap[casInfo.casKey]}}"
                      th:title="${casInfo.label}"
                      class="ui secondary button cas-button">
                     <img src="/images/cas/ecollege.haute-garonne.long.png"
