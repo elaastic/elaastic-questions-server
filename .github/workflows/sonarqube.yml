@@ -22,7 +22,7 @@ jobs:
           distribution: 'zulu' # Alternative distribution options are available
 
       - name: Run Elaastic DB test
-        run: docker-compose up -d  elaastic-questions-db-test-8
+        run: docker compose up -d  elaastic-questions-db-test-8
 
       - name: Build and analyze
         env:
