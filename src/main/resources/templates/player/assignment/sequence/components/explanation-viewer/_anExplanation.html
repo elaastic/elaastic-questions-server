@@ -50,7 +50,7 @@
                   class="hide-review" style="display: none">see reviews</span>
         </a> )
         </span>
-        
+
         <!--/* If there is no evaluation, we display the link to see the ChatGPT review */-->
         <span togglz:active="'CHATGPT_EVALUATION'"
               class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher) && !explanation.fromTeacher}">
