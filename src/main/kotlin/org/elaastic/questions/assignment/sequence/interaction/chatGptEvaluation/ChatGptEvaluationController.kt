@@ -127,7 +127,10 @@ class ChatGptEvaluationController(
         // If it isn't the teacher, we check if the teacher has hidden the chatGPT evaluation.
         // Eq. If it's a student, we check if the teacher has hidden the chatGPT evaluation.
             // If it's hidden, we give a null value to the model.
-            if (response.interaction.sequence.chatGptEvaluationEnabled && !(user != assignment!!.owner && chatGptEvaluation?.hiddenByTeacher == true)) {
+            if (response.interaction.sequence.chatGptEvaluationEnabled
+                && !(user != assignment!!.owner && chatGptEvaluation?.hiddenByTeacher == true)
+                && assignment.owner != response.learner // We don't need a ChatGPT evaluation for the teacher
+            ) {
                 // If the ChatGPT evaluation is enabled, we add it to the model
                 ChatGptEvaluationModelFactory.build(
                     evaluation = chatGptEvaluation,

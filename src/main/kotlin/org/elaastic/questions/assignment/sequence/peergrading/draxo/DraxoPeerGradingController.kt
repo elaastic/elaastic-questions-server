@@ -92,9 +92,12 @@ class DraxoPeerGradingController(
         }
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         val chatGptEvaluationModel =
-            // If it isn't the teacher, we check if the chatGPT evaluation is hidden by the teacher.
+        // If it isn't the teacher, we check if the chatGPT evaluation is hidden by the teacher.
             // eq. If it's a student, we check if the chatGPT evaluation is hidden by the teacher. If it's hidden, we give a null value to the model.
-            if (response.interaction.sequence.chatGptEvaluationEnabled && !(user != assignment.owner && chatGptEvaluation?.hiddenByTeacher == true)) {
+            if (response.interaction.sequence.chatGptEvaluationEnabled
+                && !(user != assignment.owner && chatGptEvaluation?.hiddenByTeacher == true)
+                && assignment.owner != response.learner // We don't need a ChatGPT evaluation for the teacher
+            ) {
                 // If the ChatGPT evaluation is enabled, we add it to the model
                 ChatGptEvaluationModelFactory.build(
                     evaluation = chatGptEvaluation,
@@ -128,7 +131,7 @@ class DraxoPeerGradingController(
      * @param evaluationId the id of the evaluation to update
      * @param utilityGrade the utility grade to set
      * @return [ResponseSubmissionAsynchronous] the response of the submission
-     *     in JSON format
+     *    in JSON format
      * @see ResponseSubmissionAsynchronous
      */
     @ResponseBody
@@ -175,7 +178,7 @@ class DraxoPeerGradingController(
      * @param reasons the reasons to report the evaluation
      * @param otherReasonComment the comment of the other reason
      * @return [ResponseSubmissionAsynchronous] the response of the submission
-     *     in JSON format
+     *    in JSON format
      */
     @ResponseBody
     @PostMapping("/report-draxo-evaluation")
@@ -220,7 +223,7 @@ class DraxoPeerGradingController(
      * @param model the model
      * @param id the id of the evaluation to hide
      * @return [ResponseSubmissionAsynchronous] the response of the submission
-     *     in JSON format
+     *    in JSON format
      * @see ResponseSubmissionAsynchronous
      */
     @ResponseBody
@@ -273,7 +276,7 @@ class DraxoPeerGradingController(
      * @param model the model
      * @param id the id of the evaluation to unhide
      * @return [ResponseSubmissionAsynchronous] the response of the submission
-     *     in JSON format
+     *    in JSON format
      * @see ResponseSubmissionAsynchronous
      */
     @ResponseBody
@@ -324,9 +327,9 @@ class DraxoPeerGradingController(
      *
      * @param success true if the submission was successful, false otherwise
      * @param header the header of the response (Meant to be used in a
-     *     semantic-ui message)
+     *    semantic-ui message)
      * @param content the content of the response (Meant to be used in a
-     *     semantic-ui message)
+     *    semantic-ui message)
      */
     data class ResponseSubmissionAsynchronous(val success: Boolean, val header: String, val content: String)
 }
