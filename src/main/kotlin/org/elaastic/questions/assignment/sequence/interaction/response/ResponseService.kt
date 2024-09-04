@@ -378,11 +378,7 @@ class ResponseService(
     }
 
     /**
-<<<<<<< HEAD
      * Mark a response as recommended by a teacher
-=======
-     * Mark a response as `recommended` by a teacher
->>>>>>> c1840104 (feat(Dashboard): Update the compute of the state for the phase 2)
      *
      * @param response the response to add as recommended
      * @return the response
@@ -401,11 +397,7 @@ class ResponseService(
     }
 
     /**
-<<<<<<< HEAD
      * Mark a response as NOT recommended by a teacher
-=======
-     * Mark a response as `NOT recommended` by a teacher
->>>>>>> c1840104 (feat(Dashboard): Update the compute of the state for the phase 2)
      *
      * @param response the previously recommended response
      * @return the response
