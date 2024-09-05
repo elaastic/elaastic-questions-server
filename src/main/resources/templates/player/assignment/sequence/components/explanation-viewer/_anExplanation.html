@@ -23,7 +23,9 @@
      th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
      th:attr="data-response-id=${explanation.responseId}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz">
+     xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
+     th:with="nbDraxoEvaluation=${explanation.getNbDraxoEvaluation(isTeacher)}"
+>
 
     <div class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
@@ -46,25 +48,31 @@
             <th:block th:if="${nbEvaluation > 1 }" th:text="#{common.evaluations}"></th:block>
         </span>
 
-
-        <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) > 0}">
-        (<a class="detail-link" id="loadReview" href="#"
-            th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'">
-            <span th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}"
-                  class="see-review">see reviews</span>
-            <span th:text="${(explanation.getNbEvaluation(isTeacher) > 1)} ? #{draxo.hide.reviews} : #{draxo.hide.review}"
-                  class="hide-review" style="display: none">see reviews</span>
-        </a> )
+        <!--/* Display the number of Draxo evaluations and the link to see them */-->
+        <span class="detail" th:if="${nbDraxoEvaluation > 0}">
+            (
+            <a class="detail-link" id="loadReview" href="#"
+               th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'">
+                <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}"
+                      class="see-review">see reviews</span>
+                <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.hide.reviews} : #{draxo.hide.review}"
+                      class="hide-review" style="display: none">
+                    hide reviews
+                </span>
+            </a>
+            )
         </span>
 
-        <span togglz:active="'CHATGPT_EVALUATION'"
-              class="detail"
-              th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher) && !explanation.fromTeacher}">
-        (<a class="detail-link" id="loadReview" href="#"
-            th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'">
-            <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
-            <span th:text="#{evaluation.hide.chatGPT.review}" class="hide-review" style="display: none">see ChatGPT review</span>
-            </a> )
+        <!--/* Link to see the ChatGPT evaluation */-->
+        <span togglz:active="'CHATGPT_EVALUATION'" class="detail"
+              th:if="${nbDraxoEvaluation == 0 && (isOwner || isTeacher) && !explanation.fromTeacher}">
+            (
+            <a class="detail-link" id="loadReview" href="#"
+               th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'">
+                <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
+                <span th:text="#{evaluation.hide.chatGPT.review}" class="hide-review" style="display: none">hide ChatGPT review</span>
+            </a>
+            )
         </span>
 
         <!--/* Indication that the explanation is hidden by the teacher */-->
