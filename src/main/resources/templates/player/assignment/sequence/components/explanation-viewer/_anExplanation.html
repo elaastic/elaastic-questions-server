@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="anExplanation(explanationViewerModel, studentsIdentitiesAreDisplayable, displayChoices, isTeacher, isOwner)"
+<div th:fragment="anExplanation(explanationViewerModel, studentsIdentitiesAreDisplayable, displayChoices, isTeacher, isOwner, isDisplayReview)"
      th:if="${!explanationViewerModel.content.isBlank() and (!explanationViewerModel.hiddenByTeacher or isTeacher or isOwner)}"
      class="ui message explanation"
      style="padding-top: 3em; overflow: unset"
@@ -48,8 +48,10 @@
             <th:block th:if="${nbEvaluation > 1 }" th:text="#{common.evaluations}"></th:block>
         </span>
 
-        <!--/* Display the number of Draxo evaluations and the link to see them */-->
-        <span class="detail" th:if="${nbDraxoEvaluation > 0}">
+        <!--/* Links to show the detail modal or the reviews */-->
+        <th:block th:if="${isDisplayReview}">
+            <!--/* Display the number of Draxo evaluations and the link to see them */-->
+            <span class="detail" th:if="${nbDraxoEvaluation > 0}">
             (
             <a class="detail-link" id="loadReview" href="#"
                th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanationViewerModel.responseId}+')'">
@@ -63,17 +65,29 @@
             )
         </span>
 
-        <!--/* Link to see the ChatGPT evaluation */-->
-        <span togglz:active="'CHATGPT_EVALUATION'" class="detail"
-              th:if="${nbDraxoEvaluation == 0 && (isOwner || isTeacher) && !explanationViewerModel.fromTeacher}">
-            (
-            <a class="detail-link" id="loadReview" href="#"
-               th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanationViewerModel.responseId}+')'">
-                <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
-                <span th:text="#{evaluation.hide.chatGPT.review}" class="hide-review" style="display: none">hide ChatGPT review</span>
-            </a>
-            )
-        </span>
+            <!--/* Link to see the ChatGPT evaluation */-->
+            <span togglz:active="'CHATGPT_EVALUATION'" class="detail"
+                  th:if="${nbDraxoEvaluation == 0 && (isOwner || isTeacher) && !explanationViewerModel.fromTeacher}">
+                (
+                <a class="detail-link" id="loadReview" href="#"
+                   th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanationViewerModel.responseId}+')'">
+                    <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
+                    <span th:text="#{evaluation.hide.chatGPT.review}" class="hide-review" style="display: none">hide ChatGPT review</span>
+                </a>
+                )
+            </span>
+        </th:block>
+        <th:block th:if="${!isDisplayReview}">
+            <span class="detail">
+                (
+                <a class="detail-link" href="#" onclick="console.log('Afficher la modal')">
+                    Voir les d&eacute;tails
+                    <!--/* TODO Make i18n */-->
+                </a>
+                )
+            </span>
+        </th:block>
+
 
         <!--/* Indication that the explanation is hidden by the teacher */-->
         <span th:if="${explanationViewerModel.hiddenByTeacher}">
