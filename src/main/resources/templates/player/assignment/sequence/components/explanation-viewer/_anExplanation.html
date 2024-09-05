@@ -16,31 +16,31 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices, isTeacher, isOwner)"
-     th:if="${!explanation.content.isBlank() and (!explanation.hiddenByTeacher or isTeacher or isOwner)}"
+<div th:fragment="anExplanation(explanationViewerModel, studentsIdentitiesAreDisplayable, displayChoices, isTeacher, isOwner)"
+     th:if="${!explanationViewerModel.content.isBlank() and (!explanationViewerModel.hiddenByTeacher or isTeacher or isOwner)}"
      class="ui message explanation"
      style="padding-top: 3em; overflow: unset"
-     th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
-     th:attr="data-response-id=${explanation.responseId}"
+     th:classappend="|${explanationViewerModel.fromTeacher ? 'success' : ''} ${explanationViewerModel.hiddenByTeacher ? 'disabled' : 'info'}|"
+     th:attr="data-response-id=${explanationViewerModel.responseId}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
-     th:with="nbDraxoEvaluation=${explanation.getNbDraxoEvaluation(isTeacher)}"
+     th:with="nbDraxoEvaluation=${explanationViewerModel.getNbDraxoEvaluation(isTeacher)}"
 >
 
     <div class="ui top left attached label"
-         th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
+         th:classappend="|${explanationViewerModel.fromTeacher ? 'green' : ''} ${explanationViewerModel.hiddenByTeacher ? 'grey' : 'teal'}|">
 
         <!--/* Icon and label for teacher explanation */-->
-        <i th:if="${explanation.fromTeacher}" class="graduation cap icon" style="margin-right: 0.4em;"></i>
-        <span th:if="${explanation.fromTeacher}" th:text="#{player.sequence.explanation.teacher.label}"
+        <i th:if="${explanationViewerModel.fromTeacher}" class="graduation cap icon" style="margin-right: 0.4em;"></i>
+        <span th:if="${explanationViewerModel.fromTeacher}" th:text="#{player.sequence.explanation.teacher.label}"
               style="margin-right: 1em;"></span>
 
         <!--/* The grade of the explanation */-->
-        <th:block th:if="${explanation.meanGrade != null}"><span th:text="${explanation.meanGrade}"></span>/5</th:block>
-        <th:block th:if="${explanation.meanGrade == null}">-</th:block>
+        <th:block th:if="${explanationViewerModel.meanGrade != null}"><span th:text="${explanationViewerModel.meanGrade}"></span>/5</th:block>
+        <th:block th:if="${explanationViewerModel.meanGrade == null}">-</th:block>
 
         <!--/* Display the number of evaluations */-->
-        <span class="detail" th:with="nbEvaluation=${explanation.getNbEvaluation(isTeacher)}">
+        <span class="detail" th:with="nbEvaluation=${explanationViewerModel.getNbEvaluation(isTeacher)}">
             <th:block th:text="${nbEvaluation}+' '"></th:block>
 
             <th:block th:if="${nbEvaluation == 0}" th:text="#{common.peerEvaluation}"></th:block>
@@ -52,7 +52,7 @@
         <span class="detail" th:if="${nbDraxoEvaluation > 0}">
             (
             <a class="detail-link" id="loadReview" href="#"
-               th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanation.responseId}+')'">
+               th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanationViewerModel.responseId}+')'">
                 <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}"
                       class="see-review">see reviews</span>
                 <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.hide.reviews} : #{draxo.hide.review}"
@@ -65,10 +65,10 @@
 
         <!--/* Link to see the ChatGPT evaluation */-->
         <span togglz:active="'CHATGPT_EVALUATION'" class="detail"
-              th:if="${nbDraxoEvaluation == 0 && (isOwner || isTeacher) && !explanation.fromTeacher}">
+              th:if="${nbDraxoEvaluation == 0 && (isOwner || isTeacher) && !explanationViewerModel.fromTeacher}">
             (
             <a class="detail-link" id="loadReview" href="#"
-               th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'">
+               th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanationViewerModel.responseId}+')'">
                 <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
                 <span th:text="#{evaluation.hide.chatGPT.review}" class="hide-review" style="display: none">hide ChatGPT review</span>
             </a>
@@ -76,33 +76,33 @@
         </span>
 
         <!--/* Indication that the explanation is hidden by the teacher */-->
-        <span th:if="${explanation.hiddenByTeacher}">
+        <span th:if="${explanationViewerModel.hiddenByTeacher}">
             <i class="exclamation triangle icon" style="margin: 0 0.4em;"></i>
             <span th:text="#{player.sequence.explanation.hiddenExplanation}"></span>
         </span>
     </div>
 
     <!--/* Label for hidden explanation */-->
-    <span th:if="${explanation.hiddenByTeacher and !isOwner}" th:text="#{player.sequence.explanation.hiddenContent}">
+    <span th:if="${explanationViewerModel.hiddenByTeacher and !isOwner}" th:text="#{player.sequence.explanation.hiddenContent}">
         Hidden content
     </span>
 
     <!--/* Label for hidden content displayed to the owner */-->
-    <div th:if="${explanation.hiddenByTeacher and isOwner}" class="ui top left attached label grey">
+    <div th:if="${explanationViewerModel.hiddenByTeacher and isOwner}" class="ui top left attached label grey">
         <span th:text="#{player.sequence.explanation.moderatedContentByTheTeacher}"></span>
     </div>
     <!--/* Actions on the explanations */-->
     <div class="ui top right attached label" style="padding: 0; margin-top: -0.6rem; margin-right: 0.5rem"
-         th:if="${isTeacher} and ${!explanation.fromTeacher}"
+         th:if="${isTeacher} and ${!explanationViewerModel.fromTeacher}"
     >
         <div class="floating ui icon buttons" style="display: inline-flex; border-radius: 14px">
 
-            <!-- If explanation is correct, you can add / remove as recommendedByTeacher -->
-            <div th:if="${!explanation.hiddenByTeacher
-                        and (explanation.correct or explanation.score == null)}">
+            <!-- If explanationViewerModel is correct, you can add / remove as recommendedByTeacher -->
+            <div th:if="${!explanationViewerModel.hiddenByTeacher
+                        and (explanationViewerModel.correct or explanationViewerModel.score == null)}">
 
-                <!-- If explanation is in recommended -->
-                <a th:classappend="'removeRecommendation-' + ${explanation.responseId}"
+                <!-- If explanationViewerModel is in recommended -->
+                <a th:classappend="'removeRecommendation-' + ${explanationViewerModel.responseId}"
                    th:onclick="removeRecommendation([[${explanation.responseId}]])"
                    type="button" data-position="bottom right"
                    th:data-tooltip="#{player.sequence.explanation.removeRecommended}" class="ui button"
@@ -110,8 +110,8 @@
                     <i class="star icon"></i>
                 </a>
 
-                <!-- If explanation is not in recommended -->
-                <a th:classappend="'addRecommendation-' + ${explanation.responseId}"
+                <!-- If explanationViewerModel is not in recommended -->
+                <a th:classappend="'addRecommendation-' + ${explanationViewerModel.responseId}"
                    th:onclick="addRecommendation([[${explanation.responseId}]])"
                    type="button" data-position="bottom right"
                    th:data-tooltip="#{player.sequence.explanation.addRecommended}" class="ui button"
@@ -120,17 +120,17 @@
                 </a>
             </div>
 
-            <!-- If explanation is not hidden -->
-            <a th:if="${!explanation.hiddenByTeacher}"
-               th:href="@{/player/response/{responseId}/hide-response(responseId=${explanation.responseId})}"
+            <!-- If explanationViewerModel is not hidden -->
+            <a th:if="${!explanationViewerModel.hiddenByTeacher}"
+               th:href="@{/player/response/{responseId}/hide-response(responseId=${explanationViewerModel.responseId})}"
                type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.hideResponse}"
                class="ui button" style="padding: 0.5rem; margin-right: 0;">
                 <i class="unhide icon"></i>
             </a>
 
-            <!-- If explanation is hidden -->
-            <a th:if="${explanation.hiddenByTeacher}"
-               th:href="@{/player/response/{responseId}/unhide-response(responseId=${explanation.responseId})}"
+            <!-- If explanationViewerModel is hidden -->
+            <a th:if="${explanationViewerModel.hiddenByTeacher}"
+               th:href="@{/player/response/{responseId}/unhide-response(responseId=${explanationViewerModel.responseId})}"
                type="button" data-position="bottom right" th:data-tooltip="#{player.sequence.explanation.showResponse}"
                class="ui button" style="padding: 0.5rem; margin-right: 0;">
                 <i class="hide icon"></i>
@@ -141,17 +141,17 @@
     <!--/* Author name and confidence degree */-->
     <b>
         <span class="name-explanation"
-              th:if="${studentsIdentitiesAreDisplayable && !explanation.hiddenByTeacher}"
-              th:text="|${explanation.author} - #{|player.sequence.interaction.confidenceDegree.${explanation.confidenceDegree}|}|">
+              th:if="${studentsIdentitiesAreDisplayable && !explanationViewerModel.hiddenByTeacher}"
+              th:text="|${explanationViewerModel.author} - #{|player.sequence.interaction.confidenceDegree.${explanationViewerModel.confidenceDegree}|}|">
         </span>
-        <span th:if="${displayChoices && explanation.choiceList != null}"
-              th:text="|#{player.sequence.users.responses}: ${explanation.choiceList}|">
+        <span th:if="${displayChoices && explanationViewerModel.choiceList != null}"
+              th:text="|#{player.sequence.users.responses}: ${explanationViewerModel.choiceList}|">
             Responses: [2]
         </span>
     </b>
 
     <!--/* Content of the explanation */-->
-    <span th:if="${!explanation.hiddenByTeacher or isOwner}" th:utext="${explanation.content}"></span>
+    <span th:if="${!explanationViewerModel.hiddenByTeacher or isOwner}" th:utext="${explanationViewerModel.content}"></span>
 
     <!--/* Container for the reviews (DRAXO and/or ChatGPT) */-->
     <div class="reviews-container" style="margin-top: 20px"></div>
@@ -161,7 +161,7 @@
         var toReload = false;
 
         $(document).ready(function () {
-            setupRecommendedByTeacher([[${explanation.responseId}]], [[${explanation.recommendedByTeacher}]])
+            setupRecommendedByTeacher([[${explanationViewerModel.responseId}]], [[${explanationViewerModel.recommendedByTeacher}]])
         });
 
         function setupRecommendedByTeacher(responseId, recommendedByTeacher) {
