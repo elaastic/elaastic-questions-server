@@ -697,7 +697,7 @@ class PlayerController(
         val sequence = sequenceService.get(id, true)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
 
-                // Check authorizations
+        // Check authorizations
         requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
             "You must be the learner of the response to report the evaluation"
         }
@@ -707,8 +707,8 @@ class PlayerController(
     }
 
     /**
-     * Report a chatGptEvaluation
-     * Only the learner of the response can report the evaluation
+     * Report a chatGptEvaluation Only the learner of the response can report
+     * the evaluation
      *
      * @param authentication the current authentication
      * @param model the model
@@ -717,7 +717,8 @@ class PlayerController(
      * @param otherReasonComment the comment of the other reason
      * @param id the id of the sequence where the ChatGPT evaluation is
      * @return the view of the sequence
-     * @throws AccessDeniedException if the user is not the learner of the response
+     * @throws AccessDeniedException if the user is not the learner of the
+     *    response
      */
     @PostMapping("sequence/{id}/report-chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
