@@ -82,6 +82,15 @@
         </span>
     </div>
 
+    <!--/* Label for hidden explanation */-->
+    <span th:if="${explanation.hiddenByTeacher and !isOwner}" th:text="#{player.sequence.explanation.hiddenContent}">
+        Hidden content
+    </span>
+
+    <!--/* Label for hidden content displayed to the owner */-->
+    <div th:if="${explanation.hiddenByTeacher and isOwner}" class="ui top left attached label grey">
+        <span th:text="#{player.sequence.explanation.moderatedContentByTheTeacher}"></span>
+    </div>
     <!--/* Actions on the explanations */-->
     <div class="ui top right attached label" style="padding: 0; margin-top: -0.6rem; margin-right: 0.5rem"
          th:if="${isTeacher} and ${!explanation.fromTeacher}"
@@ -140,16 +149,6 @@
             Responses: [2]
         </span>
     </b>
-
-    <!--/* Label for hidden explanation */-->
-    <span th:if="${explanation.hiddenByTeacher and !isOwner}" th:text="#{player.sequence.explanation.hiddenContent}">
-        Hidden content
-    </span>
-
-    <!--/* Label for hidden content displayed to the owner */-->
-    <div th:if="${explanation.hiddenByTeacher and isOwner}" class="ui top left attached label grey">
-        <span th:text="#{player.sequence.explanation.moderatedContentByTheTeacher}"></span>
-    </div>
 
     <!--/* Content of the explanation */-->
     <span th:if="${!explanation.hiddenByTeacher or isOwner}" th:utext="${explanation.content}"></span>
