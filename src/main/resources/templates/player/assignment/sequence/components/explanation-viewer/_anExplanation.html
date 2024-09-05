@@ -36,7 +36,9 @@
               style="margin-right: 1em;"></span>
 
         <!--/* The grade of the explanation */-->
-        <th:block th:if="${explanationViewerModel.meanGrade != null}"><span th:text="${explanationViewerModel.meanGrade}"></span>/5</th:block>
+        <th:block th:if="${explanationViewerModel.meanGrade != null}"><span
+                th:text="${explanationViewerModel.meanGrade}"></span>/5
+        </th:block>
         <th:block th:if="${explanationViewerModel.meanGrade == null}">-</th:block>
 
         <!--/* Display the number of evaluations */-->
@@ -97,7 +99,8 @@
     </div>
 
     <!--/* Label for hidden explanation */-->
-    <span th:if="${explanationViewerModel.hiddenByTeacher and !isOwner}" th:text="#{player.sequence.explanation.hiddenContent}">
+    <span th:if="${explanationViewerModel.hiddenByTeacher and !isOwner}"
+          th:text="#{player.sequence.explanation.hiddenContent}">
         Hidden content
     </span>
 
@@ -165,7 +168,8 @@
     </b>
 
     <!--/* Content of the explanation */-->
-    <span th:if="${!explanationViewerModel.hiddenByTeacher or isOwner}" th:utext="${explanationViewerModel.content}"></span>
+    <span th:if="${!explanationViewerModel.hiddenByTeacher or isOwner}"
+          th:utext="${explanationViewerModel.content}"></span>
 
     <!--/* Container for the reviews (DRAXO and/or ChatGPT) */-->
     <div class="reviews-container" style="margin-top: 20px"></div>
@@ -175,7 +179,10 @@
         var toReload = false;
 
         $(document).ready(function () {
-            setupRecommendedByTeacher([[${explanationViewerModel.responseId}]], [[${explanationViewerModel.recommendedByTeacher}]])
+            setupRecommendedByTeacher([[${explanationViewerModel.responseId}]], [[${
+                explanationViewerModel
+                .recommendedByTeacher
+            }]])
         });
 
         function setupRecommendedByTeacher(responseId, recommendedByTeacher) {
