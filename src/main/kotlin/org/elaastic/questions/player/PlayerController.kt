@@ -36,6 +36,7 @@ import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.Cha
 import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
+import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
@@ -774,6 +775,46 @@ class PlayerController(
             "You must be the teacher of the sequence to see the results of the learners"
         }
 
+        val learnerResultsModel = builtLearnerResultsModel(learner, sequence)
+
+        model["studentResultsModel"] = learnerResultsModel
+        // The resultId is used to initialize the accordion in the view.
+        // So to discriminate between all accordions in the page, we use the learnerId
+        model["resultId"] = userId
+        model["seenByTeacher"] = true
+
+        return "player/assignment/sequence/components/my-results/_my-results::myResults"
+    }
+
+    @GetMapping("/detailsResponse/{responseId}")
+    fun detailsResponse(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable responseId: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val response = responseService.findById(responseId)
+        val sequence = response.interaction.sequence
+        val learner = response.learner
+        val learnerResultsModel = builtLearnerResultsModel(learner, sequence)
+
+        model["studentResultsModel"] = learnerResultsModel
+        model["resultId"] = learner.id!!
+        model["seenByTeacher"] = true
+
+        return "player/assignment/sequence/components/my-results/_my-results::myResults"
+    }
+
+    /**
+     * Get the LearnerResultsModel for the given learner and sequence
+     *
+     * @param learner the learner
+     * @param sequence the sequence
+     */
+    private fun builtLearnerResultsModel(
+        learner: User,
+        sequence: Sequence
+    ): LearnerResultsModel {
         val responseFirstAttempt = responseService.find(learner, sequence, 1)
         val responseSecondAttempt = responseService.find(learner, sequence, 2)
 
@@ -795,13 +836,6 @@ class PlayerController(
                 responseSecondAttempt
             )
         }
-
-        model["studentResultsModel"] = learnerResultsModel
-        // The resultId is used to initialize the accordion in the view.
-        // So to discriminate between all accordions in the page, we use the learnerId
-        model["resultId"] = userId
-        model["seenByTeacher"] = true
-
-        return "player/assignment/sequence/components/my-results/_my-results::myResults"
+        return learnerResultsModel
     }
 }
