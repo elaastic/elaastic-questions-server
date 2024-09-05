@@ -51,7 +51,7 @@
     </table>
     <!--/* Detail modal for each learner */-->
     <th:block th:each="learner: ${sequenceMonitoringModel.learners}">
-        <div th:replace="player/assignment/sequence/components/dashboard/_detail-modal.html :: detailModal(${learner})"></div>
+        <div th:replace="player/assignment/sequence/components/_detail-modal.html ::  detailModalTeacher(${learner})"></div>
     </th:block>
 
     <script th:inline="javascript">
