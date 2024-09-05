@@ -19,13 +19,13 @@
 <div th:fragment="anExplanation(explanation, studentsIdentitiesAreDisplayable, displayChoices, isTeacher, isOwner)"
      th:if="${!explanation.content.isBlank() and (!explanation.hiddenByTeacher or isTeacher or isOwner)}"
      class="ui message explanation"
+     style="padding-top: 3em; overflow: unset"
      th:classappend="|${explanation.fromTeacher ? 'success' : ''} ${explanation.hiddenByTeacher ? 'disabled' : 'info'}|"
-     th:styleappend="${explanation.getNbEvaluation(isTeacher) > 0 || explanation.fromTeacher || (isOwner && explanation.hiddenByTeacher) ? 'padding-top: 3em; overflow: unset' : 'overflow: unset'}"
      th:attr="data-response-id=${explanation.responseId}"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz">
 
-    <div th:if="${explanation.getNbEvaluation(isTeacher) > 0}" class="ui top left attached label"
+    <div class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
 
         <!--/* Icon and label for teacher explanation */-->
@@ -35,6 +35,7 @@
 
         <!--/* The grade of the explanation */-->
         <th:block th:if="${explanation.meanGrade != null}"><span th:text="${explanation.meanGrade}"></span>/5</th:block>
+        <th:block th:if="${explanation.meanGrade == null}">-</th:block>
 
         <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) == 0}"
               th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.peerEvaluation}"></span>
