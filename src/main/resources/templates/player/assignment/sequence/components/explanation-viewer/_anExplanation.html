@@ -28,10 +28,12 @@
     <div th:if="${explanation.getNbEvaluation(isTeacher) > 0}" class="ui top left attached label"
          th:classappend="|${explanation.fromTeacher ? 'green' : ''} ${explanation.hiddenByTeacher ? 'grey' : 'teal'}|">
 
+        <!--/* Icon and label for teacher explanation */-->
         <i th:if="${explanation.fromTeacher}" class="graduation cap icon" style="margin-right: 0.4em;"></i>
         <span th:if="${explanation.fromTeacher}" th:text="#{player.sequence.explanation.teacher.label}"
               style="margin-right: 1em;"></span>
 
+        <!--/* The grade of the explanation */-->
         <th:block th:if="${explanation.meanGrade != null}"><span th:text="${explanation.meanGrade}"></span>/5</th:block>
 
         <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) == 0}"
@@ -51,7 +53,6 @@
         </a> )
         </span>
 
-        <!--/* If there is no evaluation, we display the link to see the ChatGPT review */-->
         <span togglz:active="'CHATGPT_EVALUATION'"
               class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher) && !explanation.fromTeacher}">
         (<a class="detail-link" id="loadReview" href="#"
@@ -61,13 +62,14 @@
             </a> )
         </span>
 
+        <!--/* Indication that the explanation is hidden by the teacher */-->
         <span th:if="${explanation.hiddenByTeacher}">
             <i class="exclamation triangle icon" style="margin: 0 0.4em;"></i>
             <span th:text="#{player.sequence.explanation.hiddenExplanation}"></span>
         </span>
     </div>
 
-
+    <!--/* Actions on the explanations */-->
     <div class="ui top right attached label" style="padding: 0; margin-top: -0.6rem; margin-right: 0.5rem"
          th:if="${isTeacher} and ${!explanation.fromTeacher}"
     >
@@ -114,27 +116,34 @@
         </div>
     </div>
 
-    <div th:if="${explanation.getNbEvaluation(isTeacher) == 0 && explanation.fromTeacher}"
-         class="ui top left attached label green">
-        <i class="graduation cap icon" style="margin-right: 0.4em;"></i>
-        <span th:text="#{player.sequence.explanation.teacher.label}"></span>
-    </div>
-
+    <!--/* Author name and confidence degree */-->
     <b>
-        <span class="name-explanation" th:if="${studentsIdentitiesAreDisplayable && !explanation.hiddenByTeacher}"
-              th:text="|${explanation.author} - #{|player.sequence.interaction.confidenceDegree.${explanation.confidenceDegree}|}|"></span>
+        <span class="name-explanation"
+              th:if="${studentsIdentitiesAreDisplayable && !explanation.hiddenByTeacher}"
+              th:text="|${explanation.author} - #{|player.sequence.interaction.confidenceDegree.${explanation.confidenceDegree}|}|">
+        </span>
         <span th:if="${displayChoices && explanation.choiceList != null}"
-              th:text="|#{player.sequence.users.responses}: ${explanation.choiceList}|">Responses: [2]</span>
+              th:text="|#{player.sequence.users.responses}: ${explanation.choiceList}|">
+            Responses: [2]
+        </span>
     </b>
+
+    <!--/* Label for hidden explanation */-->
     <span th:if="${explanation.hiddenByTeacher and !isOwner}" th:text="#{player.sequence.explanation.hiddenContent}">
         Hidden content
     </span>
+
+    <!--/* Label for hidden content displayed to the owner */-->
     <div th:if="${explanation.hiddenByTeacher and isOwner}" class="ui top left attached label grey">
         <span th:text="#{player.sequence.explanation.moderatedContentByTheTeacher}"></span>
     </div>
+
+    <!--/* Content of the explanation */-->
     <span th:if="${!explanation.hiddenByTeacher or isOwner}" th:utext="${explanation.content}"></span>
 
+    <!--/* Container for the reviews (DRAXO and/or ChatGPT) */-->
     <div class="reviews-container" style="margin-top: 20px"></div>
+
     <script th:inline="javascript">
 
         var toReload = false;
