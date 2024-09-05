@@ -42,7 +42,7 @@
                 <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content)}">
                     <div
                             th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
-                        :: anExplanation(${studentResultsModel.explanationFirstTry},${false},${false},${false},${true})">
+                        :: anExplanation(${studentResultsModel.explanationFirstTry},${false},${false},${false},${true}, ${true})">
                         <!-- isTeacher is false since it's student view -->
                     </div>
                 </th:block>
@@ -63,7 +63,7 @@
                 <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationSecondTry?.content)}">
                     <div
                             th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
-                        :: anExplanation(${studentResultsModel.explanationSecondTry}, ${false},${false}, ${false}, ${true})">
+                        :: anExplanation(${studentResultsModel.explanationSecondTry}, ${false},${false}, ${false}, ${true}, ${true})">
                         <!-- isTeacher is false since it's student view -->
                     </div>
                 </th:block>
