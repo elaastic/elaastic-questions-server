@@ -37,12 +37,15 @@
         <th:block th:if="${explanation.meanGrade != null}"><span th:text="${explanation.meanGrade}"></span>/5</th:block>
         <th:block th:if="${explanation.meanGrade == null}">-</th:block>
 
-        <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) == 0}"
-              th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.peerEvaluation}"></span>
-        <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) == 1}"
-              th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.evaluation}"></span>
-        <span class="detail" th:if="${explanation.getNbEvaluation(isTeacher) > 1}"
-              th:text="${explanation.getNbEvaluation(isTeacher)}+' '+#{common.evaluations}"></span>
+        <!--/* Display the number of evaluations */-->
+        <span class="detail" th:with="nbEvaluation=${explanation.getNbEvaluation(isTeacher)}">
+            <th:block th:text="${nbEvaluation}+' '"></th:block>
+
+            <th:block th:if="${nbEvaluation == 0}" th:text="#{common.peerEvaluation}"></th:block>
+            <th:block th:if="${nbEvaluation == 1}" th:text="#{common.evaluation}"></th:block>
+            <th:block th:if="${nbEvaluation > 1 }" th:text="#{common.evaluations}"></th:block>
+        </span>
+
 
         <span class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) > 0}">
         (<a class="detail-link" id="loadReview" href="#"
@@ -55,7 +58,8 @@
         </span>
 
         <span togglz:active="'CHATGPT_EVALUATION'"
-              class="detail" th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher) && !explanation.fromTeacher}">
+              class="detail"
+              th:if="${explanation.getNbDraxoEvaluation(isTeacher) == 0 && (isOwner || isTeacher) && !explanation.fromTeacher}">
         (<a class="detail-link" id="loadReview" href="#"
             th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanation.responseId}+')'">
             <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
