@@ -90,6 +90,7 @@
                             .done(function (data) {
                                 segment.removeClass('loading')
                                 segment.html(data)
+                                segment.removeClass('ui segment')
                                 // We put the content after the modal is shown
                                 // So we need to update it to make it scrollable
                                 detailModal.children(".content").addClass("scrolling")
