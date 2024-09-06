@@ -19,7 +19,7 @@
 <div th:fragment="detailModalTeacher(learnerMonitoringModel)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      class="ui modal"
-     th:id="|detailModal_${learnerMonitoringModel.userId}|">
+     th:id="|detailModalTeacher_${learnerMonitoringModel.userId}|">
 
     <i class="close icon"></i>
 
@@ -85,7 +85,7 @@
             const sequenceId = [[${learnerMonitoringModel.sequenceMonitoringModel.sequenceId}]]
             const hasAnswered = [[${learnerMonitoringModel.hasAnswered()}]]
 
-            const detailModal = $('#detailModal_' + userId);
+            const detailModal = $('#detailModalTeacher_' + userId);
             const segment = $('#results_' + userId)
             const warning = $('#warning_' + userId)
 
