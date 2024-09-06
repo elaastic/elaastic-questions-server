@@ -440,12 +440,15 @@ class ResponseService(
     }
 
     /**
-     * Return all the responses of the sequence that are not fake for the given attempt
+     * Return all the responses of the sequence that are not fake for the given
+     * attempt
      *
      * The teacher created fake Response to simulate a learner's response
+     *
      * @param attempt the attempt of the sequence
      * @param sequence the sequence
-     * @return All the responses of the sequence that are not fake for the given attempt
+     * @return All the responses of the sequence that are not fake for the
+     *    given attempt
      * @see Response.fake
      */
     fun findAllByAttemptNotFake(attempt: Int, sequence: Sequence): List<Response> {
@@ -456,7 +459,8 @@ class ResponseService(
     /**
      * Return all the fake responses of the sequence
      *
-     * The attempt for a fake response depends on the execution context of the sequence
+     * The attempt for a fake response depends on the execution context of the
+     * sequence
      *
      * @param sequence the sequence
      * @return All the fake responses of the sequence
