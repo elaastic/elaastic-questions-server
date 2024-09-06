@@ -20,15 +20,22 @@
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <div class="ui accordion segment" th:id="|my-results-accordion-${resultId}|" style="padding-bottom: 0;">
+
+        <!--/* Title of the accordion */-->
         <div class="ui active title header">
             <i class="dropdown icon"></i>
             <span th:if="${seenByTeacher}" th:text="#{player.sequence.studentResults.seenByTeacher}"></span>
             <span th:if="${!seenByTeacher}" th:text="#{player.sequence.studentResults.myResults}"></span>
         </div>
 
+        <!--/* Content of the accordion */-->
         <div class="ui basic padded large text segment content active">
+
+            <!--/* First attempt to the question */-->
             <div th:if="${studentResultsModel.hasAnsweredPhase1()}">
                 <div class="ui tiny header" th:text="#{sequence.phase.1}">Phase 1</div>
+
+                <!--/* Display the choice of the student for a ExclusiveChoice or MultipleChoice question */-->
                 <div th:if="${studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
                               studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
                               !studentResultsModel.isFirstChoiceEmpty()}">
@@ -36,44 +43,46 @@
                     <div th:replace="|player/assignment/sequence/components/my-results/_student-results-choice.html|
                             :: studentResultsChoice(${studentResultsModel},
                             ${studentResultsModel.choiceFirstTry},
-                            ${studentResultsModel.scoreFirstTry})">
-                    </div>
+                            ${studentResultsModel.scoreFirstTry})"></div>
                 </div>
+
+                <!--/* Display the explanation of the student for an OpenEnded question */-->
                 <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content)}">
-                    <div
-                            th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
-                        :: anExplanation(${studentResultsModel.explanationFirstTry},${false},${false},${false},${true}, ${true})">
-                        <!-- isTeacher is false since it's student view -->
-                    </div>
+                    <div th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
+                        :: anExplanation(${studentResultsModel.explanationFirstTry},${false},${false},${seenByTeacher},${true}, ${true})"></div>
+
                 </th:block>
             </div>
 
+            <!--/* Second attempt to the question */-->
             <div th:if="${studentResultsModel.hasAnsweredPhase2() and !studentResultsModel.areBothResponsesEqual()}"
                  style="margin-top: 2.5em;">
                 <div class="ui tiny header" th:text="#{sequence.phase.2}">Phase 2</div>
+
+                <!--/* Display the choice of the student for a ExclusiveChoice or MultipleChoice question */-->
                 <div th:if="${studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
-                                  studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
-                                  !studentResultsModel.isSecondChoiceEmpty()}">
+                              studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
+                              !studentResultsModel.isSecondChoiceEmpty()}">
+
                     <div th:replace="|player/assignment/sequence/components/my-results/_student-results-choice.html|
                             :: studentResultsChoice(${studentResultsModel},
                             ${studentResultsModel.choiceSecondTry},
-                            ${studentResultsModel.scoreSecondTry})">
-                    </div>
+                            ${studentResultsModel.scoreSecondTry})"></div>
                 </div>
+
+                <!--/* Display the explanation of the student for an OpenEnded question */-->
                 <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationSecondTry?.content)}">
-                    <div
-                            th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
-                        :: anExplanation(${studentResultsModel.explanationSecondTry}, ${false},${false}, ${false}, ${true}, ${true})">
-                        <!-- isTeacher is false since it's student view -->
-                    </div>
+                    <div th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
+                        :: anExplanation(${studentResultsModel.explanationSecondTry}, ${false},${false}, ${seenByTeacher}, ${true}, ${true})"></div>
                 </th:block>
             </div>
 
+            <!--/* The student didn't answer */-->
             <div th:if="${!studentResultsModel.hasAnsweredPhase2() and !studentResultsModel.hasAnsweredPhase1()}">
                 <div class="ui message warning">
                     <div class="header" th:text="#{player.sequence.studentResults.noAnswer}">No answer</div>
-                    <div class="content" th:text="#{player.sequence.studentResults.noAnswer.description}">No answer
-                        description
+                    <div class="content" th:text="#{player.sequence.studentResults.noAnswer.description}">
+                        No answer description
                     </div>
                 </div>
             </div>
