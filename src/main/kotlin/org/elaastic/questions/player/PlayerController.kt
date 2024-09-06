@@ -41,6 +41,7 @@ import org.elaastic.questions.player.components.studentResults.LearnerResultsMod
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.util.requireAccessThrowDenied
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -293,7 +294,7 @@ class PlayerController(
             learnerSequence = learnerSequenceService.getLearnerSequence(attendee.learner, sequence)
             learnerPhaseService.loadPhaseList(learnerSequence)
 
-            attendeesSequences.put(attendee.learner.id!!, learnerSequence)
+            attendeesSequences[attendee.learner.id!!] = learnerSequence
         }
 
         model["dashboardModel"] = dashboardModel
@@ -669,7 +670,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        authentication.principal as User
 
         val response = responseService.findById(responseId)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
@@ -678,7 +679,7 @@ class PlayerController(
             ChatGptEvaluationModelFactory.build(
                 chatGptEvaluation,
                 response.interaction.sequence,
-                responseId = response?.id
+                responseId = response.id
             )
         )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
@@ -776,9 +777,11 @@ class PlayerController(
             "You must be the teacher of the sequence to see the results of the learners"
         }
 
-        val learnerResultsModel = builtLearnerResultsModel(learner, sequence)
-
-        model["studentResultsModel"] = learnerResultsModel
+        model["studentResultsModel"] = builtLearnerResultsModel(
+            responseService.find(learner, sequence, 1),
+            responseService.find(learner, sequence, 2),
+            sequence.statement
+        )
         // The resultId is used to initialize the accordion in the view.
         // So to discriminate between all accordions in the page, we use the learnerId
         model["resultId"] = userId
@@ -793,13 +796,20 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        authentication.principal as User
         val response = responseService.findById(responseId)
         val sequence = response.interaction.sequence
         val learner = response.learner
-        val learnerResultsModel = builtLearnerResultsModel(learner, sequence)
 
-        model["studentResultsModel"] = learnerResultsModel
+        // Get the two attempts of the learner
+        val (responseFirstAttempt, responseSecondAttempt) = when (response.attempt) {
+            1 -> response to responseService.findResponseByResponseAndAttempt(response, 2)
+            2 -> responseService.findResponseByResponseAndAttempt(response, 1) to response
+            else -> null to null
+        }
+
+        model["studentResultsModel"] =
+            builtLearnerResultsModel(responseFirstAttempt, responseSecondAttempt, sequence.statement)
         model["resultId"] = learner.id!!
         model["seenByTeacher"] = true
 
@@ -809,27 +819,27 @@ class PlayerController(
     /**
      * Get the LearnerResultsModel for the given learner and sequence
      *
-     * @param learner the learner
-     * @param sequence the sequence
+     * @param responseFirstAttempt the response of the learner for the first attempt
+     * @param responseSecondAttempt the response of the learner for the second attempt
+     * @param statement the statement of the sequence
      */
     private fun builtLearnerResultsModel(
-        learner: User,
-        sequence: Sequence
+        responseFirstAttempt: Response?,
+        responseSecondAttempt: Response?,
+        statement: Statement
     ): LearnerResultsModel {
-        val responseFirstAttempt = responseService.find(learner, sequence, 1)
-        val responseSecondAttempt = responseService.find(learner, sequence, 2)
 
-        val learnerResultsModel = when (sequence.statement.questionType) {
+        val learnerResultsModel = when (statement.questionType) {
             QuestionType.ExclusiveChoice -> LearnerResultsModelFactory.buildExclusiveChoiceResult(
                 responseFirstAttempt,
                 responseSecondAttempt,
-                sequence.statement
+                statement
             )
 
             QuestionType.MultipleChoice -> LearnerResultsModelFactory.buildMultipleChoiceResult(
                 responseFirstAttempt,
                 responseSecondAttempt,
-                sequence.statement
+                statement
             )
 
             QuestionType.OpenEnded -> LearnerResultsModelFactory.buildOpenResult(
