@@ -49,7 +49,8 @@
                 <!--/* Display the explanation of the student for an OpenEnded question */-->
                 <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content)}">
                     <div th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
-                        :: anExplanation(${studentResultsModel.explanationFirstTry},${false},${false},${seenByTeacher},${true}, ${true})"></div>
+                        :: anExplanation(${studentResultsModel.explanationFirstTry},${false},${false},${false},${true}, ${true})"></div>
+                    <!-- isTeacher (4th argument) is false since it's student view -->
 
                 </th:block>
             </div>
@@ -73,7 +74,8 @@
                 <!--/* Display the explanation of the student for an OpenEnded question */-->
                 <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationSecondTry?.content)}">
                     <div th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
-                        :: anExplanation(${studentResultsModel.explanationSecondTry}, ${false},${false}, ${seenByTeacher}, ${true}, ${true})"></div>
+                        :: anExplanation(${studentResultsModel.explanationSecondTry}, ${false},${false}, ${false}, ${true}, ${true})"></div>
+                    <!-- isTeacher (4th argument) is false since it's student view -->
                 </th:block>
             </div>
 
