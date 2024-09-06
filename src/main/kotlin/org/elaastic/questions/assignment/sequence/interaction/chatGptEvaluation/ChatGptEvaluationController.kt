@@ -17,6 +17,7 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.persistence.EntityNotFoundException
 
 @Controller
 @RequestMapping("/chatGptEvaluation")
@@ -107,46 +108,57 @@ class ChatGptEvaluationController(
         @PathVariable responseId: Long,
     ): String {
         val user: User = authentication.principal as User
+        
+        val evaluationModel = try {
+            val response = responseService.findById(responseId)
 
-        // The ChatGPT evaluation is only generated for the last attempt of the response
-        // So to ensure we get the evaluation, we get the last attempt of the response
-        val response = responseService.findByIdLastAttempt(responseId)
-        val assignment = response.interaction.sequence.assignment
+            val assignment = response.interaction.sequence.assignment
 
-        // Check authorizations
-        requireAccessThrowDenied(
-            assignment?.owner == user
-                    || (assignment != null
-                    && assignmentService.userIsRegisteredInAssignment(user, assignment))
-        ) {
-            "You are not authorized to access to these feedback"
-        }
-
-        val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
-        val chatGptEvaluationModel =
-        // If it isn't the teacher, we check if the teacher has hidden the chatGPT evaluation.
-        // Eq. If it's a student, we check if the teacher has hidden the chatGPT evaluation.
-            // If it's hidden, we give a null value to the model.
-            if (response.interaction.sequence.chatGptEvaluationEnabled
-                && !(user != assignment!!.owner && chatGptEvaluation?.hiddenByTeacher == true)
-                && assignment.owner != response.learner // We don't need a ChatGPT evaluation for the teacher
+            // Check authorizations
+            requireAccessThrowDenied(
+                assignment?.owner == user
+                        || (assignment != null
+                        && assignmentService.userIsRegisteredInAssignment(user, assignment))
             ) {
-                // If the ChatGPT evaluation is enabled, we add it to the model
-                ChatGptEvaluationModelFactory.build(
-                    evaluation = chatGptEvaluation,
-                    sequence = response.interaction.sequence,
-                    canHideGrading = responseService.canHidePeerGrading(user, response),
-                    responseId = response.id
-                )
-            } else null
+                "You are not authorized to access to these feedback"
+            }
 
-        val evaluationModel = EvaluationModel(
-            null,
-            chatGptEvaluationModel,
-            false,
-            canSeeChatGPTEvaluation = user == assignment!!.owner || user == response.learner, // Only the teacher and the learner of the question can see the chatGPT evaluation
-            isTeacher = user == assignment.owner
-        )
+            val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
+            val chatGptEvaluationModel =
+            // If it isn't the teacher, we check if the teacher has hidden the ChatGPT evaluation.
+            // Eq. If it's a student, we check if the teacher has hidden the ChatGPT evaluation.
+                // If it's hidden, we give a null value to the model.
+                if (response.interaction.sequence.chatGptEvaluationEnabled
+                    && !(user != assignment!!.owner && chatGptEvaluation?.hiddenByTeacher == true)
+                    && assignment.owner != response.learner // We don't need a ChatGPT evaluation for the teacher
+                    && chatGptEvaluation != null
+                ) {
+                    // If the ChatGPT evaluation is enabled, we add it to the model
+                    ChatGptEvaluationModelFactory.build(
+                        evaluation = chatGptEvaluation,
+                        sequence = response.interaction.sequence,
+                        canHideGrading = responseService.canHidePeerGrading(user, response),
+                        responseId = response.id
+                    )
+                } else null
+
+            EvaluationModel(
+                null,
+                chatGptEvaluationModel,
+                false,
+                canSeeChatGPTEvaluation = user == assignment!!.owner || user == response.learner, // Only the teacher and the learner of the question can see the ChatGPT evaluation
+                isTeacher = user == assignment.owner
+            )
+        } catch (e: EntityNotFoundException) {
+            // If the response doesn't exist, we give a null value to the model.
+            EvaluationModel(
+                null,
+                null,
+                false,
+                canSeeChatGPTEvaluation = false,
+                isTeacher = false
+            )
+        }
 
         model["user"] = user
         model["evaluationModel"] = evaluationModel
