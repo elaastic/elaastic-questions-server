@@ -82,7 +82,7 @@
         <th:block th:if="${!isDisplayReview}">
             <span class="detail">
                 (
-                <a class="detail-link" href="#" th:onclick="showDetails([[${explanationData.responseId}]], [[${isTeacher}]])"
+                <a class="detail-link" href="#" th:onclick="showDetails([[${explanationData.responseId}]], [[${explanationData.userId}]], [[${isTeacher}]])"
                    th:text="#{player.sequence.explanation.showDetails}">
                 </a>
                 )
@@ -174,6 +174,15 @@
     <!--/* Container for the reviews (DRAXO and/or ChatGPT) */-->
     <div class="reviews-container" style="margin-top: 20px"></div>
 
+    <!--/* The detail modal setup for a student (no name and no progression) */-->
+    <!--/* We insert the modal only if the explanation isn't in the mod to display reviews
+    and if it's not the teacher because the teacher already has this modal through the dashboard */-->
+    <th:block th:if="${!isDisplayReview && !isTeacher}">
+        <div th:replace="|player/assignment/sequence/components/_detail-modal| ::
+             detailModal(${explanationData.responseId})">
+        </div>
+    </th:block>
+
     <script th:inline="javascript">
 
         var toReload = false;
@@ -221,6 +230,15 @@
                     console.error(error);
                 }
             });
+        }
+
+        function showDetails(responseId, userId, isTeacher) {
+            console.log('Afficher la modal_' + responseId)
+            if (isTeacher) {
+                $('#detailModalTeacher_' + userId).modal('show')
+            } else {
+                $('#detailModal_' + responseId).modal('show')
+            }
         }
 
     </script>
