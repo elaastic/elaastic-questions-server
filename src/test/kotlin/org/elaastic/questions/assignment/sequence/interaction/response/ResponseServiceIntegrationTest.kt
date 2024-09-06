@@ -915,4 +915,44 @@ internal class ResponseServiceIntegrationTest(
             assertEquals(it, responseService.findByIdLastAttempt(responseAttenmpt1.id!!))
         }
     }
+
+    @Test
+    fun `test of findResponseByResponseAndAttempt`() {
+        // Given
+        val learners = integrationTestingService.getNLearners(1).first()
+        val subject = functionalTestingService.createSubject(integrationTestingService.getTestTeacher())
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+
+        lateinit var responseAttenmpt1: Response
+
+        tWhen("we start the sequence") {
+            functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+        }.tWhen("we submit a response for the learner") {
+            responseAttenmpt1 = functionalTestingService.submitResponse(
+                Phase.PHASE_1,
+                learners,
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                learners.getDisplayName() + " 1",
+            )
+
+        }.tThen("we get the response for the first attempt") {
+            assertEquals(responseAttenmpt1, responseService.findResponseByResponseAndAttempt(responseAttenmpt1, 1))
+        }.tWhen("The student change is response") {
+            functionalTestingService.nextPhase(sequence) // Evaluation Phase
+            functionalTestingService.submitResponse(
+                Phase.PHASE_2,
+                learners,
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                learners.getDisplayName() + " 2",
+            )
+        }.tThen("We get the response for the second attempt with the id of the first attempt") {
+            assertEquals(it, responseService.findResponseByResponseAndAttempt(responseAttenmpt1, 2))
+        }
+    }
 }

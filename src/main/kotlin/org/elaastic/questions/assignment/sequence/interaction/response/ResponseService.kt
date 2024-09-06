@@ -475,4 +475,18 @@ class ResponseService(
             )
         }
     }
+
+    /**
+     * Return the same response but with the given attempt
+     *
+     * @param response the response to find
+     * @param attempt the attempt of the response to find
+     */
+    fun findResponseByResponseAndAttempt(response: Response, attempt: Int): Response? {
+        return if (attempt == response.attempt) {
+            response
+        } else {
+            responseRepository.findByInteractionAndAttemptAndLearner(response.interaction, attempt, response.learner)
+        }
+    }
 }
