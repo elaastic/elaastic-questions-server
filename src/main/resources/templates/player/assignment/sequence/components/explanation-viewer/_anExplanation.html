@@ -43,9 +43,9 @@
 
         <!--/* Display the number of evaluations */-->
         <span class="detail" th:with="nbEvaluation=${explanationData.getNbEvaluation(isTeacher)}">
-            <th:block th:text="${nbEvaluation}+' '"></th:block>
+            <th:block th:if="${nbEvaluation != 0}" th:text="${nbEvaluation}+' '"></th:block>
 
-            <th:block th:if="${nbEvaluation == 0}" th:text="#{common.peerEvaluation}"></th:block>
+            <th:block th:if="${nbEvaluation == 0}" th:text="#{common.noEvaluation}"></th:block>
             <th:block th:if="${nbEvaluation == 1}" th:text="#{common.evaluation}"></th:block>
             <th:block th:if="${nbEvaluation > 1 }" th:text="#{common.evaluations}"></th:block>
         </span>
