@@ -54,18 +54,18 @@
         <th:block th:if="${isDisplayReview}">
             <!--/* Display the number of Draxo evaluations and the link to see them */-->
             <span class="detail" th:if="${nbDraxoEvaluation > 0}">
-            (
-            <a class="detail-link" id="loadReview" href="#"
-               th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanationData.responseId}+')'">
-                <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}"
-                      class="see-review">see reviews</span>
-                <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.hide.reviews} : #{draxo.hide.review}"
-                      class="hide-review" style="display: none">
-                    hide reviews
-                </span>
-            </a>
-            )
-        </span>
+                (
+                <a class="detail-link" id="loadReview" href="#"
+                   th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanationData.responseId}+')'">
+                    <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}"
+                          class="see-review">see reviews</span>
+                    <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.hide.reviews} : #{draxo.hide.review}"
+                          class="hide-review" style="display: none">
+                        hide reviews
+                    </span>
+                </a>
+                )
+            </span>
 
             <!--/* Link to see the ChatGPT evaluation */-->
             <span togglz:active="'CHATGPT_EVALUATION'" class="detail"
