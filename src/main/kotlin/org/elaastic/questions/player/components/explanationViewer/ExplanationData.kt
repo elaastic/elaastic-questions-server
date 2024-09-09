@@ -39,6 +39,7 @@ open class ExplanationData(
     val recommendedByTeacher: Boolean = false,
     val nbDraxoEvaluationsHidden: Int = 0,
     val userId: Long? = null,
+    val sequenceId: Long? = null,
 ) {
     constructor(response: Response) : this(
         responseId = response.id!!,
@@ -54,7 +55,8 @@ open class ExplanationData(
         hiddenByTeacher = response.hiddenByTeacher,
         recommendedByTeacher = response.recommendedByTeacher,
         nbDraxoEvaluationsHidden = response.draxoEvaluationHiddenCount,
-        userId = response.learner.id
+        userId = response.learner.id,
+        sequenceId = response.interaction.sequence.id,
     )
 
     val meanGrade = meanGrade

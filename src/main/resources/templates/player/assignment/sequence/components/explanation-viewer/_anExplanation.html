@@ -82,7 +82,7 @@
         <th:block th:if="${!isDisplayReview}">
             <span class="detail">
                 (
-                <a class="detail-link" href="#" th:onclick="showDetails([[${explanationData.responseId}]], [[${explanationData.userId}]], [[${isTeacher}]])"
+                <a class="detail-link" href="#" th:onclick="showDetails([[${explanationData.userId}]], [[${isTeacher}]])"
                    th:text="#{player.sequence.explanation.showDetails}">
                 </a>
                 )
@@ -179,7 +179,7 @@
     and if it's not the teacher because the teacher already has this modal through the dashboard */-->
     <th:block th:if="${!isDisplayReview && !isTeacher}">
         <div th:replace="|player/assignment/sequence/components/_detail-modal| ::
-             detailModal(${explanationData.responseId})">
+             detailModal(${explanationData.userId}, ${explanationData.sequenceId})">
         </div>
     </th:block>
 
@@ -232,12 +232,11 @@
             });
         }
 
-        function showDetails(responseId, userId, isTeacher) {
-            console.log('Afficher la modal_' + responseId)
+        function showDetails(userId, isTeacher) {
             if (isTeacher) {
                 $('#detailModalTeacher_' + userId).modal('show')
             } else {
-                $('#detailModal_' + responseId).modal('show')
+                $('#detailModal_' + userId).modal('show')
             }
         }
 

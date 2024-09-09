@@ -106,6 +106,11 @@
                             .fail(function () {
                                 segment.removeClass('loading')
                                 warning.show()
+                                console.log("An error occurred while fetching the results")
+                                console.log(userId)
+                                console.log(detailModal)
+                                console.log(segment)
+                                console.log(warning)
                             })
                     }
                 }
@@ -114,10 +119,10 @@
     </script>
 </div>
 
-<div th:fragment="detailModal(responseId)"
+<div th:fragment="detailModal(userId, sequenceId)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      class="ui modal"
-     th:id="|detailModal_${responseId}|">
+     th:id="|detailModal_${userId}|">
 
     <i class="close icon"></i>
 
@@ -127,11 +132,11 @@
 
     <div class="content">
         <div class="ui segment">
-            <div th:id="|results_${responseId}|">
+            <div th:id="|results_${userId}|">
                 <!--/* Don't put any content here! */-->
                 <!--/* The condition to fetch the result is div to be empty */-->
             </div>
-            <div class="ui message negative" th:id="|warning_${responseId}|" style="display: none">
+            <div class="ui message negative" th:id="|warning_${userId}|" style="display: none">
                 An error occurred while fetching the results
                 <!--/* TODO Make i18n */-->
             </div>
@@ -140,18 +145,19 @@
 
     <script th:inline="javascript">
         $(function () {
-            const responseId = [[${responseId}]]
+            const userId = [[${userId}]]
+            const sequenceId = [[${sequenceId}]]
 
-            const detailModal = $('#detailModal_' + responseId);
-            const segment = $('#results_' + responseId)
-            const warning = $('#warning_' + responseId)
+            const detailModal = $('#detailModal_' + userId);
+            const segment = $('#results_' + userId)
+            const warning = $('#warning_' + userId)
 
             detailModal.modal({
                 observeChanges: true,
                 onShow: function () {
                     if ($.trim(segment.html()) === "") {
                         segment.addClass('loading')
-                        $.get('/player/detailsResponse/' + responseId)
+                        $.get('/player/' + sequenceId + '/result/' + userId)
                             .done(function (data) {
                                 segment.removeClass('loading')
                                 segment.html(data)
@@ -163,6 +169,11 @@
                             .fail(function () {
                                 segment.removeClass('loading')
                                 warning.show()
+                                console.log("An error occurred while fetching the results")
+                                console.log(userId)
+                                console.log(detailModal)
+                                console.log(segment)
+                                console.log(warning)
                             })
                     }
                 }

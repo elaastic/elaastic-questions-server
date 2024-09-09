@@ -773,10 +773,6 @@ class PlayerController(
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
 
-        requireAccessThrowDenied(user == sequence.owner) {
-            "You must be the teacher of the sequence to see the results of the learners"
-        }
-
         model["studentResultsModel"] = builtLearnerResultsModel(
             responseService.find(learner, sequence, 1),
             responseService.find(learner, sequence, 2),
@@ -785,39 +781,13 @@ class PlayerController(
         // The resultId is used to initialize the accordion in the view.
         // So to discriminate between all accordions in the page, we use the learnerId
         model["resultId"] = userId
-        model["seenByTeacher"] = true
-
-        return "player/assignment/sequence/components/my-results/_my-results::myResults"
-    }
-
-    @GetMapping("/detailsResponse/{responseId}")
-    fun detailsResponse(
-        authentication: Authentication,
-        model: Model,
-        @PathVariable responseId: Long
-    ): String {
-        authentication.principal as User
-        val response = responseService.findById(responseId)
-        val sequence = response.interaction.sequence
-        val learner = response.learner
-
-        // Get the two attempts of the learner
-        val (responseFirstAttempt, responseSecondAttempt) = when (response.attempt) {
-            1 -> response to responseService.findResponseByResponseAndAttempt(response, 2)
-            2 -> responseService.findResponseByResponseAndAttempt(response, 1) to response
-            else -> null to null
-        }
-
-        model["studentResultsModel"] =
-            builtLearnerResultsModel(responseFirstAttempt, responseSecondAttempt, sequence.statement)
-        model["resultId"] = learner.id!!
-        model["seenByTeacher"] = true
+        model["seenByTeacher"] = user == sequence.owner
 
         return "player/assignment/sequence/components/my-results/_my-results::myResults"
     }
 
     /**
-     * Get the LearnerResultsModel for the given learner and sequence
+     * Get the LearnerResultsModel for the given responses and statement
      *
      * @param responseFirstAttempt the response of the learner for the first attempt
      * @param responseSecondAttempt the response of the learner for the second attempt
