@@ -24,10 +24,6 @@
         <!--/* Title of the accordion */-->
         <div class="ui active title header">
             <i class="dropdown icon"></i>
-            <div>
-                <span>seenByTeacher</span>
-                <span th:text="${seenByTeacher}"></span>
-            </div>
             <span th:if="${seenByTeacher}" th:text="#{player.sequence.studentResults.seenByTeacher}"></span>
             <span th:unless="${seenByTeacher}" th:text="#{player.sequence.studentResults.myResults}"></span>
         </div>
@@ -48,17 +44,6 @@
                             :: studentResultsChoice(${studentResultsModel},
                             ${studentResultsModel.choiceFirstTry},
                             ${studentResultsModel.scoreFirstTry})"></div>
-                </div>
-
-                <div>
-                    <h3>Debug</h3>
-
-                    <span>seenByTeacher</span>
-                    <span th:text="${seenByTeacher}"></span>
-                    <span th:if="${seenByTeacher}"> if seenByTeacher </span>
-                    <span th:unless="${seenByTeacher}"> unless seenByTeacher </span>
-                    <span th:if="${!seenByTeacher}"> if !seenByTeacher </span>
-
                 </div>
 
                 <!--/* Display the explanation of the student for an OpenEnded question */-->
