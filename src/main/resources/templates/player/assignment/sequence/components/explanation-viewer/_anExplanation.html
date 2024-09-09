@@ -120,7 +120,7 @@
 
                 <!-- If explanationData is in recommended -->
                 <a th:classappend="'removeRecommendation-' + ${explanationData.responseId}"
-                   th:onclick="removeRecommendation([[${explanation.responseId}]])"
+                   th:onclick="removeRecommendation([[${explanationData.responseId}]])"
                    type="button" data-position="bottom right"
                    th:data-tooltip="#{player.sequence.explanation.removeRecommended}" class="ui button"
                    style="padding: 0.5rem; margin-right: 0;">
@@ -129,7 +129,7 @@
 
                 <!-- If explanationData is not in recommended -->
                 <a th:classappend="'addRecommendation-' + ${explanationData.responseId}"
-                   th:onclick="addRecommendation([[${explanation.responseId}]])"
+                   th:onclick="addRecommendation([[${explanationData.responseId}]])"
                    type="button" data-position="bottom right"
                    th:data-tooltip="#{player.sequence.explanation.addRecommended}" class="ui button"
                    style="padding: 0.5rem; margin-right: 0;">
