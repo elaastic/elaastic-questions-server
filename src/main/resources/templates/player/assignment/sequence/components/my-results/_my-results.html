@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="myResults(resultId,studentResultsModel, seenByTeacher)"
+<div th:fragment="myResults(resultId,studentResultsModel, seenByTeacher, seenByOwner)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <div class="ui accordion segment" th:id="|my-results-accordion-${resultId}|" style="padding-bottom: 0;">
@@ -24,8 +24,12 @@
         <!--/* Title of the accordion */-->
         <div class="ui active title header">
             <i class="dropdown icon"></i>
+            <div>
+                <span>seenByTeacher</span>
+                <span th:text="${seenByTeacher}"></span>
+            </div>
             <span th:if="${seenByTeacher}" th:text="#{player.sequence.studentResults.seenByTeacher}"></span>
-            <span th:if="${!seenByTeacher}" th:text="#{player.sequence.studentResults.myResults}"></span>
+            <span th:unless="${seenByTeacher}" th:text="#{player.sequence.studentResults.myResults}"></span>
         </div>
 
         <!--/* Content of the accordion */-->
@@ -46,11 +50,23 @@
                             ${studentResultsModel.scoreFirstTry})"></div>
                 </div>
 
+                <div>
+                    <h3>Debug</h3>
+
+                    <span>seenByTeacher</span>
+                    <span th:text="${seenByTeacher}"></span>
+                    <span th:if="${seenByTeacher}"> if seenByTeacher </span>
+                    <span th:unless="${seenByTeacher}"> unless seenByTeacher </span>
+                    <span th:if="${!seenByTeacher}"> if !seenByTeacher </span>
+
+                </div>
+
                 <!--/* Display the explanation of the student for an OpenEnded question */-->
-                <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content)}">
+                <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationFirstTry?.content)}"
+                          th:with="studentIdentitiesAreDisplayable=${false}, displayChoice=${false}, isTeacher=${seenByTeacher}, isOwner=${seenByOwner}, isDisplayReview=${true}">
+
                     <div th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
-                        :: anExplanation(${studentResultsModel.explanationFirstTry},${false},${false},${false},${true}, ${true})"></div>
-                    <!-- isTeacher (4th argument) is false since it's student view -->
+                        :: anExplanation(${studentResultsModel.explanationFirstTry},${studentIdentitiesAreDisplayable},${displayChoice},${isTeacher},${isOwner}, ${isDisplayReview})"></div>
 
                 </th:block>
             </div>
@@ -72,9 +88,11 @@
                 </div>
 
                 <!--/* Display the explanation of the student for an OpenEnded question */-->
-                <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationSecondTry?.content)}">
+                <th:block th:if="${!#strings.isEmpty(studentResultsModel.explanationSecondTry?.content)}"
+                          th:with="studentIdentitiesAreDisplayable=${false}, displayChoice=${false}, isTeacher=${seenByTeacher}, isOwner=${seenByOwner}, isDisplayReview=${true}">
+
                     <div th:replace="|player/assignment/sequence/components/explanation-viewer/_anExplanation.html|
-                        :: anExplanation(${studentResultsModel.explanationSecondTry}, ${false},${false}, ${false}, ${true}, ${true})"></div>
+                        :: anExplanation(${studentResultsModel.explanationSecondTry}, ${studentIdentitiesAreDisplayable},${displayChoice}, ${isTeacher}, ${isOwner}, ${isDisplayReview})"></div>
                     <!-- isTeacher (4th argument) is false since it's student view -->
                 </th:block>
             </div>

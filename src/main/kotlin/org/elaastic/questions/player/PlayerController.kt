@@ -782,6 +782,7 @@ class PlayerController(
         // So to discriminate between all accordions in the page, we use the learnerId
         model["resultId"] = userId
         model["seenByTeacher"] = user == sequence.owner
+        model["seenByOwner"] = user == learner
 
         return "player/assignment/sequence/components/my-results/_my-results::myResults"
     }

@@ -21,21 +21,20 @@
       th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-<head>
-  <meta charset="UTF-8">
-  <title>Test statement</title>
-</head>
-<body>
-<section>
-  <h2>My results</h2>
+    <head>
+        <meta charset="UTF-8">
+        <title>Test statement</title>
+    </head>
+    <body>
+    <section>
+        <h2>My results</h2>
 
-  <th:block th:each="situation,i : ${myResultsSituations}">
-    <h3 th:text="${situation.description}"></h3>
+        <th:block th:each="situation,i : ${myResultsSituations}" th:with="seenByTeacher=${false}, seenByOwner=${true}">
+            <h3 th:text="${situation.description}"></h3>
 
-    <div
-      th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults(${i.index}, ${situation.learnerResultsModel}, false)"></div>
-  </th:block>
+            <div th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults(${i.index}, ${situation.learnerResultsModel}, ${seenByTeacher}, ${seenByOwner})"></div>
+        </th:block>
 
-</section>
-</body>
+    </section>
+    </body>
 </html>

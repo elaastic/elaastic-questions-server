@@ -42,11 +42,11 @@
         </div>
     </div>
 
-    <th:block th:if="${learnerResultPhaseViewModel.resultsArePublished}">
+    <th:block th:if="${learnerResultPhaseViewModel.resultsArePublished}" th:with="seenByTeacher=${false}, seenByOwner=${true}">
         <div th:replace="player/assignment/sequence/components/results/_results :: results(${learnerResultPhaseViewModel.sequenceResultsModel}, false)"></div>
         
         <div th:if="${learnerResultPhaseViewModel.myResultsModel}"
-             th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults('my-results', ${learnerResultPhaseViewModel.myResultsModel}, false)">
+             th:replace="player/assignment/sequence/components/my-results/_my-results.html :: myResults('my-results', ${learnerResultPhaseViewModel.myResultsModel}, ${seenByTeacher}, ${seenByOwner})">
         </div>
     </th:block>
 </div>
