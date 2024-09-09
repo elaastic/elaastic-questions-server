@@ -30,11 +30,12 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
+import org.elaastic.questions.directory.AnonymousUserService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.*
-import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
+import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
@@ -790,8 +791,10 @@ class PlayerController(
     /**
      * Get the LearnerResultsModel for the given responses and statement
      *
-     * @param responseFirstAttempt the response of the learner for the first attempt
-     * @param responseSecondAttempt the response of the learner for the second attempt
+     * @param responseFirstAttempt the response of the learner for the first
+     *    attempt
+     * @param responseSecondAttempt the response of the learner for the second
+     *    attempt
      * @param statement the statement of the sequence
      */
     private fun builtLearnerResultsModel(
