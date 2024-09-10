@@ -779,13 +779,13 @@ class PlayerController(
 
         val longBooleanMap = chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(
             listOf(
-                responseFirstTry!!.id,
-                responseSecondTry!!.id
+                responseFirstTry?.id,
+                responseSecondTry?.id
             )
         )
 
-        val responseFirstTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseFirstTry.id] == true
-        val responseSecondTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseSecondTry.id] == true
+        val responseFirstTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseFirstTry?.id] == true
+        val responseSecondTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseSecondTry?.id] == true
 
         model["studentResultsModel"] = builtLearnerResultsModel(
             responseFirstTry,
