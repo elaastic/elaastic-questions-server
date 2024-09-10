@@ -19,20 +19,23 @@
 package org.elaastic.questions.assignment.sequence.interaction.response
 
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
 class ResponseSet(responses: List<Response>) {
 
     private val responsesByAttempt = Array<MutableList<Response>>(2) { mutableListOf() }
-    
+
     init {
         responses.forEach { add(it) }
     }
 
     fun isEmpty(): Boolean =
-            get(1).isEmpty() && get(2).isEmpty()
+        get(1).isEmpty() && get(2).isEmpty()
 
+    /**
+     * Get the responses of a given attempt.
+     * @param i the attempt number (1 or 2)
+     * @throws IllegalArgumentException if the attempt number is not 1 or 2
+     */
     operator fun get(i: AttemptNum) = when (i) {
         1 -> responsesByAttempt[0]
         2 -> responsesByAttempt[1]
@@ -41,8 +44,8 @@ class ResponseSet(responses: List<Response>) {
 
     fun getWithoutFake(attempt: AttemptNum) = get(attempt).filter { !it.fake }
 
-    fun add(response: Response) = when(response.attempt) {
-        1, 2 -> responsesByAttempt[response.attempt-1].add(response)
+    fun add(response: Response) = when (response.attempt) {
+        1, 2 -> responsesByAttempt[response.attempt - 1].add(response)
         else -> throw IllegalStateException("Invalid response ; attempt=${response.attempt}")
     }
 }
