@@ -69,7 +69,7 @@
 
             <!--/* Link to see the ChatGPT evaluation */-->
             <span togglz:active="'CHATGPT_EVALUATION'" class="detail"
-                  th:if="${nbDraxoEvaluation == 0 && (isOwner || isTeacher) && !explanationData.fromTeacher}">
+                  th:if="${nbDraxoEvaluation == 0 && (isOwner || isTeacher) && !explanationData.fromTeacher && explanationData.explanationHasChatGPTEvaluation}">
                 (
                 <a class="detail-link" id="loadReview" href="#"
                    th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanationData.responseId}+')'">
