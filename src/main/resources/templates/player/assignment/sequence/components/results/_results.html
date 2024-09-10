@@ -198,6 +198,7 @@
           currentUrl.search = urlParams.toString();
           window.history.pushState(null, "", currentUrl.toString());
           Cookies.set('hideName', 'false')
+          $(window).trigger("hideNamesToggle")
         }
 
         nameStudents.hide = function () {
@@ -208,7 +209,8 @@
           currentUrl.search = urlParams.toString();
           window.history.pushState(null, "", currentUrl.toString());
           Cookies.set('hideName', 'true')
-
+          // Launch an event to trigger another component who might have personal data to hide
+          $(window).trigger("hideNamesToggle")
         }
 
         if (urlParams.has('hideName')) {

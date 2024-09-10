@@ -33,7 +33,7 @@
         <tr th:each="learner: ${sequenceMonitoringModel.learners}">
             <!--/* Name of the learner */-->
             <td style="display: flex; align-items: center; justify-content: space-between" class="learner-name">
-                <div th:text="${learner.learnerName}"></div>
+                <div class="learnerName" th:text="${learner.learnerName}"></div>
                 <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.userId}">
                     <span class="content" th:text="#{attendee.details}">Details</span>
                 </button>
@@ -60,6 +60,16 @@
                 let userId = $(this).attr('learner-id');
                 $('#detailModalTeacher_' + userId).modal('show');
             });
+
+            // The event is trigger when the user toggles the button.
+            //* Logic happens here: `templates/player/assignment/sequence/components/results/_results.html` (line 201 and 212) *//
+            $(window).on("hideNamesToggle", function () {
+                if (new URLSearchParams(location.search).get('hideName')) {
+                    $(".learnerName").hide()
+                } else {
+                    $(".learnerName").show()
+                }
+            })
         })
     </script>
 </th:block>

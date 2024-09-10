@@ -27,9 +27,9 @@
         <div th:text="#{attendee.details}"></div>
     </div>
     <div class="content">
-        <div class="ui message info">
-            <div id="learnerName" class="header" th:text="${learnerMonitoringModel.learnerName}"></div>
-            <div id="learnerProgression" class="content">
+        <div class="ui message info personalData">
+            <div class="header" th:text="${learnerMonitoringModel.learnerName}"></div>
+            <div class="content">
                 <table class="ui celled table">
                     <thead>
                     <tr>
@@ -89,9 +89,18 @@
             const segment = $('#results_' + userId)
             const warning = $('#warning_' + userId)
 
+            const personalData = $(".personalData")
+
             detailModal.modal({
                 observeChanges: true,
                 onShow: function () {
+
+                    if (new URLSearchParams(location.search).get('hideName')) {
+                        personalData.hide()
+                    } else {
+                        personalData.show()
+                    }
+
                     if (hasAnswered && $.trim(segment.html()) === "") {
                         segment.addClass('loading')
                         $.get('/player/' + sequenceId + '/result/' + userId)

@@ -33,7 +33,7 @@
                 <!--/* Reviewer */-->
                 <div class="reviewer">
                     <span th:text="#{evaluation.reviewer} + ' :'">Reviewer :</span>
-                    <span class="ui label" th:styleappend="${hideName} ? 'display: none'"
+                    <span class="ui label reviewerName" th:styleappend="${hideName} ? 'display: none'"
                           th:text="${draxoEvaluationModel.userCanDisplayStudentsIdentity} ? ${draxoEvaluationModel.graderName} : ${draxoEvaluationModel.graderNum}"></span>
                 </div>
                 <!--/* Score */-->
@@ -173,6 +173,8 @@
             const showBtn = toggleContentBtn.children('#show');
             const hideBtn = toggleContentBtn.children('#hide');
 
+            const reviewerName = $(".reviewerName")
+
             toggleContentBtn.click(function () {
                 if (showBtn.is(':visible')) {
                     console.log("show")
@@ -190,6 +192,16 @@
             $('.message .close').on('click', function () {
                 $(this).closest('.message').slideUp();
             });
+
+            // The event is trigger when the user toggles the button.
+            //* Logic happens here: `templates/player/assignment/sequence/components/results/_results.html` (line 201 and 212) *//
+            $(window).on("hideNamesToggle", function () {
+                if (new URLSearchParams(location.search).get('hideName')) {
+                    reviewerName.hide()
+                } else {
+                    reviewerName.show()
+                }
+            })
         });
     </script>
 
