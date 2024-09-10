@@ -38,10 +38,8 @@ import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import org.springframework.web.multipart.MultipartFile
-import java.io.FileWriter
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 

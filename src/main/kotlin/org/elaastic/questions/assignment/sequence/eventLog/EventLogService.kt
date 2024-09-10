@@ -19,7 +19,6 @@
 package org.elaastic.questions.assignment.sequence.eventLog
 
 import org.elaastic.questions.assignment.sequence.ILearnerSequence
-import org.elaastic.questions.assignment.sequence.LearnerSequence
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.Role
 import org.elaastic.questions.directory.User

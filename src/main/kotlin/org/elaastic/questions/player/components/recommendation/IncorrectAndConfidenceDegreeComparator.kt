@@ -1,8 +1,6 @@
 package org.elaastic.questions.player.components.recommendation
 
 import org.elaastic.questions.player.components.explanationViewer.ExplanationData
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 class IncorrectAndConfidenceDegreeComparator : Comparator<ExplanationData> {
     override fun compare(expl1: ExplanationData?, expl2: ExplanationData?): Int =

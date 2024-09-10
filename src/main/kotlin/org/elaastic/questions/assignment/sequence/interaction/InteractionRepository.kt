@@ -23,7 +23,6 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.directory.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 
 
 interface InteractionRepository : JpaRepository<Interaction, Long> {

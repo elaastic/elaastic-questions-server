@@ -21,11 +21,9 @@ package org.elaastic.questions.directory
 import org.elaastic.questions.onboarding.OnboardingChapter
 import org.elaastic.questions.onboarding.OnboardingChapterConverter
 import org.elaastic.questions.persistence.AbstractJpaPersistable
-import org.elaastic.questions.terms.Terms
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 @Entity

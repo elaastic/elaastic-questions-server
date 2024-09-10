@@ -4,7 +4,6 @@ import org.togglz.core.annotation.ActivationParameter
 import org.togglz.core.annotation.DefaultActivationStrategy
 import org.togglz.core.annotation.EnabledByDefault
 import org.togglz.core.context.FeatureContext
-import org.togglz.core.spi.FeatureManagerProvider
 import org.togglz.spring.activation.SpringProfileActivationStrategy
 
 /**

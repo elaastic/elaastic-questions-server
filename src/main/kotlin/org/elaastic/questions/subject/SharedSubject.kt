@@ -25,7 +25,6 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotNull
 
 
 @Entity

@@ -1,7 +1,5 @@
 package org.elaastic.questions.onboarding
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import javax.persistence.EntityListeners
 
 enum class OnboardingChapter(val propertyString: String, val i18nMessages: List<String>) {
     COURSE_PAGE(
