@@ -57,7 +57,7 @@
             </div>
 
             <!--/* Second attempt to the question */-->
-            <div th:if="${studentResultsModel.hasAnsweredPhase2() and !studentResultsModel.areBothResponsesEqual()}"
+            <div th:if="${studentResultsModel.hasAnsweredPhase2()}"
                  style="margin-top: 2.5em;">
                 <div class="ui tiny header" th:text="#{sequence.phase.2}">Phase 2</div>
 
