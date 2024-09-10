@@ -301,4 +301,39 @@ class ChatGptEvaluationServiceTest(
             it
         }
     }
+
+    @Test
+    fun `test of associateResponseToChatGPTEvaluationExistence`() {
+        // Given
+        val response = integrationTestingService.getAnyResponse()
+
+        var expected: Map<Long, Boolean> = mapOf(response.id!! to false)
+        assertEquals(
+            expected,
+            chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(listOf(response.id))
+        )
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("The teacher try to unhide the evaluation") {
+            expected = mapOf(response.id!! to true)
+            assertEquals(
+                expected,
+                chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(listOf(response.id))
+            )
+        }
+    }
 }
