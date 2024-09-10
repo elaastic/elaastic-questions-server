@@ -20,7 +20,6 @@ package org.elaastic.questions.assignment.choice
 
 import org.elaastic.questions.assignment.sequence.TeacherExplanation
 import javax.validation.constraints.Max
-import javax.validation.constraints.Min
 
 /**
  * This class is used to store the specification of an exclusive choice statement.

@@ -21,7 +21,6 @@ package org.elaastic.questions.lti
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User

@@ -24,10 +24,8 @@ import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.directory.UserSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.text.Normalizer
 import java.util.*
 import java.util.logging.Logger
-import java.util.regex.Pattern
 import javax.persistence.EntityManager
 
 

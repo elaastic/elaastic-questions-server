@@ -19,7 +19,6 @@
 package org.elaastic.questions.player.components.recommendation
 
 import org.elaastic.questions.player.components.explanationViewer.ExplanationData
-import org.elaastic.questions.player.components.explanationViewer.ExplanationViewerModel
 
 data class RecommendationModel(
         val message: String? = "",

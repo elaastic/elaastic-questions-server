@@ -19,12 +19,9 @@
 package org.elaastic.questions.player.components.recommendation
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.controller.MessageBuilder
-import org.elaastic.questions.player.components.explanationViewer.ExplanationData
-import org.elaastic.questions.player.components.explanationViewer.ExplanationViewerModelFactory
 import java.math.BigDecimal
 
 object RecommendationResolver {

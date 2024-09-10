@@ -18,7 +18,6 @@
 
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
