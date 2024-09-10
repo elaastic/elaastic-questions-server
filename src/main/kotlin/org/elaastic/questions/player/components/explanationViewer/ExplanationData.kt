@@ -40,8 +40,14 @@ open class ExplanationData(
     val nbDraxoEvaluationsHidden: Int = 0,
     val userId: Long? = null,
     val sequenceId: Long? = null,
+    val explanationHasChatGPTEvaluation: Boolean = false,
 ) {
-    constructor(response: Response) : this(
+    /**
+     * Constructor for the ExplanationData class
+     * @param response the response to create the ExplanationData from
+     * @param explanationHasChatGPTEvaluation true if the explanation has a ChatGPT evaluation
+     */
+    constructor(response: Response, explanationHasChatGPTEvaluation: Boolean) : this(
         responseId = response.id!!,
         content = response.explanation,
         author = response.learner.getDisplayName(),
@@ -57,6 +63,7 @@ open class ExplanationData(
         nbDraxoEvaluationsHidden = response.draxoEvaluationHiddenCount,
         userId = response.learner.id,
         sequenceId = response.interaction.sequence.id,
+        explanationHasChatGPTEvaluation = explanationHasChatGPTEvaluation,
     )
 
     val meanGrade = meanGrade

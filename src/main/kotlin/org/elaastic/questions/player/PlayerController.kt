@@ -774,9 +774,24 @@ class PlayerController(
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
 
+        val responseFirstTry = responseService.find(learner, sequence, 1)
+        val responseSecondTry = responseService.find(learner, sequence, 2)
+
+        val longBooleanMap = chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(
+            listOf(
+                responseFirstTry!!.id,
+                responseSecondTry!!.id
+            )
+        )
+
+        val responseFirstTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseFirstTry.id] == true
+        val responseSecondTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseSecondTry.id] == true
+
         model["studentResultsModel"] = builtLearnerResultsModel(
-            responseService.find(learner, sequence, 1),
-            responseService.find(learner, sequence, 2),
+            responseFirstTry,
+            responseSecondTry,
+            responseFirstTryHasChatGPTEvaluation,
+            responseSecondTryHasChatGPTEvaluation,
             sequence.statement
         )
         // The resultId is used to initialize the accordion in the view.
@@ -800,6 +815,8 @@ class PlayerController(
     private fun builtLearnerResultsModel(
         responseFirstAttempt: Response?,
         responseSecondAttempt: Response?,
+        responseFirstTryHasChatGPTEvaluation: Boolean,
+        responseSecondTryHasChatGPTEvaluation: Boolean,
         statement: Statement
     ): LearnerResultsModel {
 
@@ -807,18 +824,24 @@ class PlayerController(
             QuestionType.ExclusiveChoice -> LearnerResultsModelFactory.buildExclusiveChoiceResult(
                 responseFirstAttempt,
                 responseSecondAttempt,
+                responseFirstTryHasChatGPTEvaluation,
+                responseSecondTryHasChatGPTEvaluation,
                 statement
             )
 
             QuestionType.MultipleChoice -> LearnerResultsModelFactory.buildMultipleChoiceResult(
                 responseFirstAttempt,
                 responseSecondAttempt,
+                responseFirstTryHasChatGPTEvaluation,
+                responseSecondTryHasChatGPTEvaluation,
                 statement
             )
 
             QuestionType.OpenEnded -> LearnerResultsModelFactory.buildOpenResult(
                 responseFirstAttempt,
-                responseSecondAttempt
+                responseSecondAttempt,
+                responseFirstTryHasChatGPTEvaluation,
+                responseSecondTryHasChatGPTEvaluation,
             )
         }
         return learnerResultsModel

@@ -43,7 +43,8 @@ object ResultsModelFactory {
         responseSet: ResponseSet,
         userCanRefreshResults: Boolean,
         messageBuilder: MessageBuilder,
-        peerGradings: List<PeerGrading>? = null
+        peerGradings: List<PeerGrading>? = null,
+        explanationHasChatGPTEvaluationMap: Map<Long, Boolean>
     ): ResultsModel =
         if (sequence.statement.hasChoices()) {
             val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
@@ -65,7 +66,8 @@ object ResultsModelFactory {
                     teacher,
                     sequence,
                     responseSet,
-                    recommendationModel?.recommendedExplanationsComparator
+                    recommendationModel?.recommendedExplanationsComparator,
+                    explanationHasChatGPTEvaluationMap
                 ),
                 userCanRefreshResults = userCanRefreshResults,
                 userCanDisplayStudentsIdentity = teacher
@@ -75,7 +77,8 @@ object ResultsModelFactory {
             sequenceId = sequence.id ?: error("This sequence has no ID"),
             explanationViewerModel = ExplanationViewerModelFactory.buildOpen(
                 teacher,
-                responseSet[sequence.whichAttemptEvaluate()]
+                responseSet[sequence.whichAttemptEvaluate()],
+                explanationHasChatGPTEvaluationMap
             ),
             userCanRefreshResults = userCanRefreshResults,
             userCanDisplayStudentsIdentity = teacher
@@ -138,14 +141,16 @@ object ResultsModelFactory {
         teacher: Boolean,
         sequence: Sequence,
         responseSet: ResponseSet,
-        recommendedExplanations: Comparator<ExplanationData>? = null
+        recommendedExplanations: Comparator<ExplanationData>? = null,
+        explanationHasChatGPTEvaluationMap: Map<Long, Boolean>
     ) =
         if (sequence.getResponseSubmissionSpecification().studentsProvideExplanation)
             ExplanationViewerModelFactory.buildChoice(
                 teacher = teacher,
                 choiceSpecification = sequence.statement.choiceSpecification!!,
                 responseList = responseSet[sequence.whichAttemptEvaluate()],
-                recommendedExplanationsComparator = recommendedExplanations
+                recommendedExplanationsComparator = recommendedExplanations,
+                explanationHasChatGPTEvaluationMap = explanationHasChatGPTEvaluationMap,
             )
         else null
 

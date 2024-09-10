@@ -24,10 +24,11 @@ object ExplanationViewerModelFactory {
 
     fun buildOpen(
         teacher: Boolean,
-        responseList: List<Response>
+        responseList: List<Response>,
+        explanationHasChatGPTEvaluationMap: Map<Long, Boolean>
     ) =
         OpenExplanationViewerModel(
-            responseList.map { ExplanationDataFactory.create(it) },
+            responseList.map { ExplanationDataFactory.create(it,explanationHasChatGPTEvaluationMap[it.id] == true) },
             true,
             studentsIdentitiesAreDisplayable = teacher
         )
@@ -36,13 +37,15 @@ object ExplanationViewerModelFactory {
         teacher: Boolean,
         responseList: List<Response>,
         choiceSpecification: ChoiceSpecification,
-        recommendedExplanationsComparator: Comparator<ExplanationData>? = null
+        recommendedExplanationsComparator: Comparator<ExplanationData>? = null,
+        explanationHasChatGPTEvaluationMap: Map<Long, Boolean>
     ): ExplanationViewerModel =
         ChoiceExplanationViewerModel(
             // TODO I should simplify (merge ChoiceExplanationViewerModel & ChoiceExplanationStore)
             explanationsByResponse = ChoiceExplanationStore(
                 choiceSpecification,
-                responseList
+                responseList,
+                explanationHasChatGPTEvaluationMap,
             ),
             alreadySorted = true,
             studentsIdentitiesAreDisplayable = teacher,
