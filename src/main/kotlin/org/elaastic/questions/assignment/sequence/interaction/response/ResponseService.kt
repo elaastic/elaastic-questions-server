@@ -96,6 +96,11 @@ class ResponseService(
     fun count(sequence: Sequence, attempt: AttemptNum) =
         count(sequence.getResponseSubmissionInteraction(), attempt)
 
+    /**
+     * @param interaction
+     * @param attempt
+     * @return the number of response made in an [Interaction] and it's not [Response.fake] with the given [Response.attempt]
+     */
     fun count(interaction: Interaction, attempt: AttemptNum) =
         responseRepository.countByInteractionAndAttemptAndFakeIsFalse(interaction, attempt)
 
