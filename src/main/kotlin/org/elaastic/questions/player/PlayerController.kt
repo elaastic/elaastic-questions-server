@@ -259,7 +259,6 @@ class PlayerController(
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
         val nbRegisteredUsers = registeredUsers.size
         val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
-        val attendeesSequences: MutableMap<Long, ILearnerSequence> = mutableMapOf()
 
         // Associate each learner with the number of evaluations he made
         val evaluationCountByUser = peerGradingService.countEvaluationsMadeByUsers(registeredUsers, sequence)
@@ -291,16 +290,6 @@ class PlayerController(
                 reponseAvailable,
                 countResponseGradable,
             )
-
-        var learnerSequence: ILearnerSequence
-
-        for (attendee in registeredUsers) {
-            learnerSequence = learnerSequenceService.getLearnerSequence(attendee.learner, sequence)
-            learnerPhaseService.loadPhaseList(learnerSequence)
-
-            attendeesSequences[attendee.learner.id!!] = learnerSequence
-        }
-
         model["dashboardModel"] = dashboardModel
 
         model.addAttribute(
