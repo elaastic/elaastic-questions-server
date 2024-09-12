@@ -33,12 +33,22 @@ import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationStatus
 import org.elaastic.questions.assignment.sequence.interaction.results.*
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.controller.MessageBuilder
-import org.elaastic.questions.directory.User
+import org.elaastic.questions.directory.*
 import org.elaastic.questions.features.ElaasticFeatures
-import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModel
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
+import org.elaastic.questions.player.components.dashboard.DashboardPhaseState
+import org.elaastic.questions.player.components.dashboard.LearnerMonitoringModel
+import org.elaastic.questions.player.components.dashboard.LearnerStateOnPhase
+import org.elaastic.questions.player.components.dashboard.SequenceMonitoringModel
+import org.elaastic.questions.player.components.evaluation.EvaluationModel
+import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModel
+import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.recommendation.*
 import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
@@ -58,18 +68,8 @@ import org.elaastic.questions.player.components.studentResults.LearnerOpenResult
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
-import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
 import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.questions.player.components.dashboard.LearnerMonitoringModel
-import org.elaastic.questions.player.components.dashboard.LearnerStateOnPhase
-import org.elaastic.questions.player.components.dashboard.SequenceMonitoringModel
-import org.elaastic.questions.player.components.dashboard.DashboardPhaseState
-import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
 import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
 import org.springframework.beans.factory.annotation.Autowired
@@ -95,7 +95,9 @@ class TestingPlayerController(
     val messageBuilder: MessageBuilder,
 
     @Autowired
-    val featureManager: FeatureManager
+    val featureManager: FeatureManager,
+    private val userService: UserService,
+    private val userRepository: UserRepository
 
 ) {
 
@@ -3295,5 +3297,81 @@ class TestingPlayerController(
         model["situationList"] = situationList
 
         return "player/assignment/sequence/components/dashboard/test-attendees-table"
+    }
+
+    fun <T> List<T>.getRandom() = this[Random.nextInt(0, size)]
+
+    @GetMapping("/getTestUsers")
+    fun getTestUser(
+        authentication: Authentication,
+        model: Model,
+        @RequestParam nbUserRequested: Int? = null,
+    ): String {
+        val safeNbUser = nbUserRequested ?: 0
+        var existingUsers: List<User> = emptyList()
+        if (0 < safeNbUser) {
+
+            val emailDomain = "fakeemail"
+            val plainTextPassword = "1234"
+
+            existingUsers = userRepository.findUsersByEmailLike("%$emailDomain%")
+            if (safeNbUser < existingUsers.size) {
+                existingUsers = existingUsers.subList(0, safeNbUser)
+            } else if (existingUsers.size < safeNbUser) {
+                val newUsers: MutableList<User> = emptyList<User>().toMutableList()
+                val firstNames: List<String> = listOf(
+                    "Emma",
+                    "Jade",
+                    "Louise",
+                    "Alice",
+                    "Chloé",
+                    "Lina",
+                    "Léa",
+                    "Rose",
+                    "Anna",
+                    "Inès",
+                    "Lucas",
+                    "Maël",
+                    "Nolan",
+                    "Arthur",
+                    "Théo",
+                    "Ethan",
+                    "Noah",
+                    "Mathis"
+                )
+                val lastNames = listOf(
+                    "Martin", "Bernard", "Dubois", "Thomas", "Robert", "Richard", "Petit", "Durand", "Leroy", "Moreau"
+                )
+
+                val nbUserToCreate = safeNbUser - existingUsers.size
+
+                for (i in 1..nbUserToCreate) {
+                    val firstName = firstNames.getRandom()
+                    val lastName = lastNames.getRandom()
+                    val username = userService.generateUsername(firstName, lastName)
+
+                    val newUser = User(
+                            firstName = firstName,
+                            lastName = lastName,
+                            username = username,
+                            plainTextPassword = plainTextPassword,
+                            email = "$username@$emailDomain.com",
+                            source = UserSource.ELAASTIC,
+                    )
+
+                    newUser.addRole(Role("STUDENT_ROLE"))
+                    userService.addUser((newUser))
+                    newUsers.add(newUser)
+                }
+
+                existingUsers = existingUsers + newUsers
+            }
+        }
+
+        model["user"] = authentication.principal as User
+        model["newUsersCreated"] = existingUsers
+        model["nbNewUser"] = existingUsers.size
+
+        return "test/get-test-user"
     }
 }
