@@ -3312,7 +3312,7 @@ class TestingPlayerController(
         if (0 < safeNbUser) {
 
             val emailDomain = "fakeemail"
-            val plainTextPassword = "1234"
+            val testPswd = "1234"
 
             existingUsers = userRepository.findUsersByEmailLike("%$emailDomain%")
             if (safeNbUser < existingUsers.size) {
@@ -3354,7 +3354,7 @@ class TestingPlayerController(
                             firstName = firstName,
                             lastName = lastName,
                             username = username,
-                            plainTextPassword = plainTextPassword,
+                            plainTextPassword = testPswd,
                             email = "$username@$emailDomain.com",
                             source = UserSource.ELAASTIC,
                     )
