@@ -45,6 +45,8 @@ import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.util.requireAccessThrowDenied
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -77,6 +79,7 @@ class PlayerController(
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val eventLogService: EventLogService,
     @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val messageSource: MessageSource,
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
@@ -701,7 +704,7 @@ class PlayerController(
 
         // Check authorizations
         requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
-            "You must be the learner of the response to report the evaluation"
+            messageSource.getMessage("evaluation.chatGPT.error.access.utilityGrade", null, LocaleContextHolder.getLocale())
         }
 
         chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation, utilityGrade)
