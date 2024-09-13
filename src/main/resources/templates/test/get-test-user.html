@@ -32,11 +32,12 @@
 
         <div class="ui segment">
             <form class="ui form"
-                  method="post"
-                  action="player/test/getTestUsers">
+                  method="get"
+                  action="/player/test/getTestUsers">
                 <div class="field">
-                    <label>Number of user to create</label>
-                    <input id="nbUserToCreate" type="number" name="nbLearner" placeholder="Number of user to retreive"
+                    <label>Number of user to retreive</label>
+                    <input id="nbUserToCreate" type="number" name="nbUserRequested"
+                           placeholder="Number of user to retreive"
                            th:value="${nbNewUser}">
                 </div>
                 <button class="ui button" type="submit" id="createUserSubmit">Submit</button>
@@ -46,16 +47,35 @@
 
         <div class="ui segment" th:if="${newUsersCreated != null && 0 < nbNewUser}">
             <h1>User retrieved : <span th:text="${nbNewUser}"></span></h1>
-
-            <div th:each="user: ${newUsersCreated}">
-                <span th:text="${user.username}"></span><br>
+            <button class="ui labeled icon button" id="copyToCliboard">
+                <i id="iconBtn" class="copy icon"></i>
+                Copy to clipboard
+            </button>
+            <div class="ui form">
+                <div class="field">
+                    <label for="resultNewUser">Users retrieved :</label>
+                    <textarea id="resultNewUser" th:text="${newUsersString}"></textarea>
+                </div>
             </div>
+
+
         </div>
 
 
     </section>
     <script>
         $(function () {
+            const btnCopy = $("#copyToCliboard")
+            const resultNewUser = $("#resultNewUser")
+            const iconBtn = $("#iconBtn")
+
+            btnCopy.on("click", function () {
+                navigator.clipboard.writeText(resultNewUser.text())
+                btnCopy.addClass("positive")
+                btnCopy.text("Copied !")
+                iconBtn.removeClass("copy")
+                iconBtn.addClass("check circle")
+            })
         })
     </script>
     </body>
