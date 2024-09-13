@@ -742,7 +742,7 @@ class PlayerController(
 
         // Check authorizations
         requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
-            "You must be the learner of the response to report the evaluation"
+            messageSource.getMessage("evaluatio.chatGPT.error.access.report", null, LocaleContextHolder.getLocale())
         }
 
         chatGptEvaluationService.reportEvaluation(chatGptEvaluation, reasons, reasonComment)
