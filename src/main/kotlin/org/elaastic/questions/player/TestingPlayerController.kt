@@ -3369,7 +3369,6 @@ class TestingPlayerController(
         }
 
         model["user"] = authentication.principal as User
-        model["newUsersCreated"] = existingUsers
         model["newUsersString"] = existingUsers.joinToString("\n")
         model["nbNewUser"] = existingUsers.size
 

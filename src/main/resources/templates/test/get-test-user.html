@@ -36,7 +36,7 @@
                   action="/player/test/getTestUsers">
                 <div class="field">
                     <label>Number of user to retreive</label>
-                    <input id="nbUserToCreate" type="number" name="nbUserRequested"
+                    <input id="nbUserToRetreive" type="number" name="nbUserRequested"
                            placeholder="Number of user to retreive"
                            th:value="${nbNewUser}">
                 </div>
@@ -45,26 +45,25 @@
         </div>
 
 
-        <div class="ui segment" th:if="${newUsersCreated != null && 0 < nbNewUser}">
+        <div class="ui segment" th:if="${ 0 < nbNewUser}">
             <h1>User retrieved : <span th:text="${nbNewUser}"></span></h1>
             <button class="ui labeled icon button" id="copyToCliboard">
                 <i id="iconBtn" class="copy icon"></i>
-                Copy to clipboard
+                <span id="txtBtnCopy">Copy to clipboard</span>
             </button>
             <div class="ui form">
                 <div class="field">
-                    <label for="resultNewUser">Users retrieved :</label>
                     <textarea id="resultNewUser" th:text="${newUsersString}"></textarea>
                 </div>
             </div>
-
-
         </div>
 
 
     </section>
     <script>
         $(function () {
+            $("#nbUserToRetreive").focus()
+
             const btnCopy = $("#copyToCliboard")
             const resultNewUser = $("#resultNewUser")
             const iconBtn = $("#iconBtn")
@@ -72,7 +71,7 @@
             btnCopy.on("click", function () {
                 navigator.clipboard.writeText(resultNewUser.text())
                 btnCopy.addClass("positive")
-                btnCopy.text("Copied !")
+                $("#txtBtnCopy").text("Copied !")
                 iconBtn.removeClass("copy")
                 iconBtn.addClass("check circle")
             })
