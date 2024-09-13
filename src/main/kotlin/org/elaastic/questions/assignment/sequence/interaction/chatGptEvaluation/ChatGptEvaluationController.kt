@@ -120,7 +120,7 @@ class ChatGptEvaluationController(
                         || (assignment != null
                         && assignmentService.userIsRegisteredInAssignment(user, assignment))
             ) {
-                "You are not authorized to access to these feedback"
+                messageSource.getMessage("evaluation.chatGPT.error.access", null, LocaleContextHolder.getLocale())
             }
 
             val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
