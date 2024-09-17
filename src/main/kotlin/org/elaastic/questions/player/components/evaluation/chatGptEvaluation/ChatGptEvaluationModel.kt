@@ -23,7 +23,7 @@ data class ChatGptEvaluationModel(
     val gradingID: Long? = null,
     val canHideGrading: Boolean = false,
     val responseId: Long? = null,
-): ReportCandidate {
+    ) : ReportCandidate {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -38,4 +38,11 @@ data class ChatGptEvaluationModel(
         return evaluationId?.hashCode() ?: 0
     }
 
+    /**
+     * Check if the student has reported this evaluation
+     *
+     * @return true if the student has reported this evaluation, false
+     *    otherwise
+     */
+    fun isReported() = reportReasons.isNullOrBlank().not()
 }

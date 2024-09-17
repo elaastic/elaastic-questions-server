@@ -20,19 +20,21 @@
      th:fragment="chatGptEvaluation(chatGptEvaluationModel)">
 
     <div class="review" id="chat-gpt-evaluation-accordion" style="padding-bottom: 0"
-         th:classappend="${chatGptEvaluationModel.hiddenByTeacher} ? 'hidden' : ''">
+         th:classappend="${chatGptEvaluationModel.hiddenByTeacher || chatGptEvaluationModel.isReported()} ? 'hidden' : ''">
 
         <!--/* Header */-->
         <div class="review-header review-border" style="padding: 0 10px 0 0">
             <div class="reviewer-icon robot">
                 <i class="laptop icon"></i>
             </div>
+
             <div class="info-header">
                 <div class="reviewer">
                     <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
                 </div>
                 <div class="score"
-                     th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.grade != null && !chatGptEvaluationModel.hiddenByTeacher}">
+                     th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.grade != null
+                     && !chatGptEvaluationModel.hiddenByTeacher && !chatGptEvaluationModel.isReported()}">
                     <span th:text=" #{evaluation.score} + ' :'">Score :</span>
                     <div class="ui label"
                          th:text="${chatGptEvaluationModel.grade} + '/5'"
@@ -80,8 +82,13 @@
             </div>
         </div>
 
+        <!--/* Feedback message when the student reports the ChatGPTEvaluation */-->
+        <div class="review-border message-hidden" th:if="${!chatGptEvaluationModel.hiddenByTeacher && chatGptEvaluationModel.isReported()}">
+            <div th:text="#{evaluation.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
+        </div>
+
         <!--/* Content */-->
-        <div class="review-border" th:if="${!chatGptEvaluationModel.hiddenByTeacher}">
+        <div class="review-border" th:if="${!chatGptEvaluationModel.hiddenByTeacher && !chatGptEvaluationModel.isReported()}">
             <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
         </div>
 
@@ -93,7 +100,8 @@
 
         <!--/* If the evaluation is generated and it's not the teacher viewed the evaluation Then dispay the command */-->
         <div class="review-border"
-             th:if="${chatGptEvaluationModel.status == 'DONE' && !chatGptEvaluationModel.viewedByTeacher && !chatGptEvaluationModel.hiddenByTeacher}">
+             th:if="${chatGptEvaluationModel.status == 'DONE' && !chatGptEvaluationModel.viewedByTeacher
+             && !chatGptEvaluationModel.hiddenByTeacher && !chatGptEvaluationModel.isReported()}">
             <th:block>
                 <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-student-command.html :: chatGptEvaluationCommand(${chatGptEvaluationModel})"></div>
             </th:block>
