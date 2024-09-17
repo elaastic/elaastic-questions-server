@@ -21,5 +21,6 @@ object ChatGptEvaluationModelFactory {
         hiddenByTeacher = evaluation?.hiddenByTeacher ?: false,
         canHideGrading = canHideGrading,
         responseId = responseId,
+        reportReasons = evaluation?.reportReasons,
     )
 }
