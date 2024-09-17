@@ -1,0 +1,81 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body},extraHeader=~{::head/script})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Get Test User</title>
+        <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
+    </head>
+    <body>
+    <section>
+        <h2>Get a certain number of users</h2>
+
+        <div class="ui segment">
+            <form class="ui form"
+                  method="get"
+                  action="/player/test/getTestUsers">
+                <div class="field">
+                    <label>Number of user to retreive</label>
+                    <input id="nbUserToRetreive" type="number" name="nbUserRequested"
+                           placeholder="Number of user to retreive"
+                           th:value="${nbNewUser}">
+                </div>
+                <button class="ui button" type="submit" id="createUserSubmit">Submit</button>
+            </form>
+        </div>
+
+
+        <div class="ui segment" th:if="${ 0 < nbNewUser}">
+            <h1>User retrieved : <span th:text="${nbNewUser}"></span></h1>
+            <button class="ui labeled icon button" id="copyToCliboard">
+                <i id="iconBtn" class="copy icon"></i>
+                <span id="txtBtnCopy">Copy to clipboard</span>
+            </button>
+            <div class="ui form">
+                <div class="field">
+                    <textarea id="resultNewUser" th:text="${newUsersString}"></textarea>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <script>
+        $(function () {
+            $("#nbUserToRetreive").focus()
+
+            const btnCopy = $("#copyToCliboard")
+            const resultNewUser = $("#resultNewUser")
+            const iconBtn = $("#iconBtn")
+
+            btnCopy.on("click", function () {
+                navigator.clipboard.writeText(resultNewUser.text())
+                btnCopy.addClass("positive")
+                $("#txtBtnCopy").text("Copied !")
+                iconBtn.removeClass("copy")
+                iconBtn.addClass("check circle")
+            })
+        })
+    </script>
+    </body>
+</html>
