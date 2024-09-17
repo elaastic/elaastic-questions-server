@@ -30,18 +30,23 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.ControllerUtil
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.course.Course
+import org.elaastic.questions.directory.AnonymousUserService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.*
-import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
+import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
+import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.util.requireAccessThrowDenied
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -74,6 +79,7 @@ class PlayerController(
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val eventLogService: EventLogService,
     @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val messageSource: MessageSource,
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
@@ -292,7 +298,7 @@ class PlayerController(
             learnerSequence = learnerSequenceService.getLearnerSequence(attendee.learner, sequence)
             learnerPhaseService.loadPhaseList(learnerSequence)
 
-            attendeesSequences.put(attendee.learner.id!!, learnerSequence)
+            attendeesSequences[attendee.learner.id!!] = learnerSequence
         }
 
         model["dashboardModel"] = dashboardModel
@@ -668,7 +674,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        authentication.principal as User
 
         val response = responseService.findById(responseId)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
@@ -677,7 +683,7 @@ class PlayerController(
             ChatGptEvaluationModelFactory.build(
                 chatGptEvaluation,
                 response.interaction.sequence,
-                responseId = response?.id
+                responseId = response.id
             )
         )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
@@ -696,9 +702,9 @@ class PlayerController(
         val sequence = sequenceService.get(id, true)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
 
-                // Check authorizations
+        // Check authorizations
         requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
-            "You must be the learner of the response to report the evaluation"
+            messageSource.getMessage("evaluation.chatGPT.error.access.utilityGrade", null, LocaleContextHolder.getLocale())
         }
 
         chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation, utilityGrade)
@@ -706,8 +712,8 @@ class PlayerController(
     }
 
     /**
-     * Report a chatGptEvaluation
-     * Only the learner of the response can report the evaluation
+     * Report a chatGptEvaluation Only the learner of the response can report
+     * the evaluation
      *
      * @param authentication the current authentication
      * @param model the model
@@ -716,7 +722,8 @@ class PlayerController(
      * @param otherReasonComment the comment of the other reason
      * @param id the id of the sequence where the ChatGPT evaluation is
      * @return the view of the sequence
-     * @throws AccessDeniedException if the user is not the learner of the response
+     * @throws AccessDeniedException if the user is not the learner of the
+     *    response
      */
     @PostMapping("sequence/{id}/report-chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
@@ -735,7 +742,7 @@ class PlayerController(
 
         // Check authorizations
         requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
-            "You must be the learner of the response to report the evaluation"
+            messageSource.getMessage("evaluatio.chatGPT.error.access.report", null, LocaleContextHolder.getLocale())
         }
 
         chatGptEvaluationService.reportEvaluation(chatGptEvaluation, reasons, reasonComment)
@@ -770,38 +777,76 @@ class PlayerController(
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
 
-        requireAccessThrowDenied(user == sequence.owner) {
-            "You must be the teacher of the sequence to see the results of the learners"
-        }
+        val responseFirstTry = responseService.find(learner, sequence, 1)
+        val responseSecondTry = responseService.find(learner, sequence, 2)
 
-        val responseFirstAttempt = responseService.find(learner, sequence, 1)
-        val responseSecondAttempt = responseService.find(learner, sequence, 2)
+        val longBooleanMap = chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(
+            listOf(
+                responseFirstTry?.id,
+                responseSecondTry?.id
+            )
+        )
 
-        val learnerResultsModel = when (sequence.statement.questionType) {
+        val responseFirstTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseFirstTry?.id] == true
+        val responseSecondTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseSecondTry?.id] == true
+
+        model["studentResultsModel"] = builtLearnerResultsModel(
+            responseFirstTry,
+            responseSecondTry,
+            responseFirstTryHasChatGPTEvaluation,
+            responseSecondTryHasChatGPTEvaluation,
+            sequence.statement
+        )
+        // The resultId is used to initialize the accordion in the view.
+        // So to discriminate between all accordions in the page, we use the learnerId
+        model["resultId"] = userId
+        model["seenByTeacher"] = user == sequence.owner
+        model["seenByOwner"] = user == learner
+
+        return "player/assignment/sequence/components/my-results/_my-results::myResults"
+    }
+
+    /**
+     * Get the LearnerResultsModel for the given responses and statement
+     *
+     * @param responseFirstAttempt the response of the learner for the first
+     *    attempt
+     * @param responseSecondAttempt the response of the learner for the second
+     *    attempt
+     * @param statement the statement of the sequence
+     */
+    private fun builtLearnerResultsModel(
+        responseFirstAttempt: Response?,
+        responseSecondAttempt: Response?,
+        responseFirstTryHasChatGPTEvaluation: Boolean,
+        responseSecondTryHasChatGPTEvaluation: Boolean,
+        statement: Statement
+    ): LearnerResultsModel {
+
+        val learnerResultsModel = when (statement.questionType) {
             QuestionType.ExclusiveChoice -> LearnerResultsModelFactory.buildExclusiveChoiceResult(
                 responseFirstAttempt,
                 responseSecondAttempt,
-                sequence.statement
+                responseFirstTryHasChatGPTEvaluation,
+                responseSecondTryHasChatGPTEvaluation,
+                statement
             )
 
             QuestionType.MultipleChoice -> LearnerResultsModelFactory.buildMultipleChoiceResult(
                 responseFirstAttempt,
                 responseSecondAttempt,
-                sequence.statement
+                responseFirstTryHasChatGPTEvaluation,
+                responseSecondTryHasChatGPTEvaluation,
+                statement
             )
 
             QuestionType.OpenEnded -> LearnerResultsModelFactory.buildOpenResult(
                 responseFirstAttempt,
-                responseSecondAttempt
+                responseSecondAttempt,
+                responseFirstTryHasChatGPTEvaluation,
+                responseSecondTryHasChatGPTEvaluation,
             )
         }
-
-        model["studentResultsModel"] = learnerResultsModel
-        // The resultId is used to initialize the accordion in the view.
-        // So to discriminate between all accordions in the page, we use the learnerId
-        model["resultId"] = userId
-        model["seenByTeacher"] = true
-
-        return "player/assignment/sequence/components/my-results/_my-results::myResults"
+        return learnerResultsModel
     }
 }

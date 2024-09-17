@@ -378,11 +378,7 @@ class ResponseService(
     }
 
     /**
-<<<<<<< HEAD
      * Mark a response as recommended by a teacher
-=======
-     * Mark a response as `recommended` by a teacher
->>>>>>> c1840104 (feat(Dashboard): Update the compute of the state for the phase 2)
      *
      * @param response the response to add as recommended
      * @return the response
@@ -401,11 +397,7 @@ class ResponseService(
     }
 
     /**
-<<<<<<< HEAD
      * Mark a response as NOT recommended by a teacher
-=======
-     * Mark a response as `NOT recommended` by a teacher
->>>>>>> c1840104 (feat(Dashboard): Update the compute of the state for the phase 2)
      *
      * @param response the previously recommended response
      * @return the response
@@ -448,12 +440,15 @@ class ResponseService(
     }
 
     /**
-     * Return all the responses of the sequence that are not fake for the given attempt
+     * Return all the responses of the sequence that are not fake for the given
+     * attempt
      *
      * The teacher created fake Response to simulate a learner's response
+     *
      * @param attempt the attempt of the sequence
      * @param sequence the sequence
-     * @return All the responses of the sequence that are not fake for the given attempt
+     * @return All the responses of the sequence that are not fake for the
+     *    given attempt
      * @see Response.fake
      */
     fun findAllByAttemptNotFake(attempt: Int, sequence: Sequence): List<Response> {
@@ -464,7 +459,8 @@ class ResponseService(
     /**
      * Return all the fake responses of the sequence
      *
-     * The attempt for a fake response depends on the execution context of the sequence
+     * The attempt for a fake response depends on the execution context of the
+     * sequence
      *
      * @param sequence the sequence
      * @return All the fake responses of the sequence
@@ -481,6 +477,20 @@ class ResponseService(
                 2,
                 sequence.getResponseSubmissionInteraction()
             )
+        }
+    }
+
+    /**
+     * Return the same response but with the given attempt
+     *
+     * @param response the response to find
+     * @param attempt the attempt of the response to find
+     */
+    fun findResponseByResponseAndAttempt(response: Response, attempt: Int): Response? {
+        return if (attempt == response.attempt) {
+            response
+        } else {
+            responseRepository.findByInteractionAndAttemptAndLearner(response.interaction, attempt, response.learner)
         }
     }
 }

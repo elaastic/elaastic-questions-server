@@ -28,6 +28,6 @@
        th:each="explanation, i : ${explanations}"
        th:remove="tag">
     <div
-      th:replace="|${components}/_anExplanation|::anExplanation(${explanation},${studentsIdentitiesAreDisplayable}, ${displayChoices}, ${isTeacher}, ${false})"></div>
+      th:replace="|${components}/_anExplanation|::anExplanation(${explanation},${studentsIdentitiesAreDisplayable}, ${displayChoices}, ${isTeacher}, ${false}, ${false})"></div>
   </div>
 </div>

@@ -1,0 +1,193 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!-- Pop up modal to report an evaluation from a peer -->
+<div th:fragment="detailModalTeacher(learnerMonitoringModel)"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     class="ui modal"
+     th:id="|detailModalTeacher_${learnerMonitoringModel.userId}|">
+
+    <i class="close icon"></i>
+
+    <div class="header">
+        <div th:text="#{attendee.details}"></div>
+    </div>
+    <div class="content">
+        <div class="ui message info personalData">
+            <div class="header" th:text="${learnerMonitoringModel.learnerName}"></div>
+            <div class="content">
+                <table class="ui celled table">
+                    <thead>
+                    <tr>
+                        <th class="center aligned" th:text="#{attendee.phase(${1})}">first_phase_label</th>
+                        <th class="center aligned" th:text="#{attendee.phase(${2})}">second_phase_label</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <!--/* States of the learner */-->
+                        <th:block
+                                th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learnerMonitoringModel.getStateCellInResponsePhase().name})">
+                        </th:block>
+                        <th:block
+                                th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learnerMonitoringModel.getStateCellInEvaluationPhase().name})">
+                        </th:block>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="ui segment">
+            <div th:id="|results_${learnerMonitoringModel.userId}|">
+                <!--/* The learner didn't answer yet */-->
+                <th:block th:unless="${learnerMonitoringModel.hasAnswered()}">
+                    <div class="ui message warning">
+                        <div class="header" th:text="#{player.sequence.studentResults.noAnswer}">No answer</div>
+                        <div class="content"
+                             th:text="#{player.sequence.studentResults.noAnswer.description.teacherView}">No
+                            answer
+                            description
+                        </div>
+                    </div>
+                </th:block>
+                <!--/* The learner answered */-->
+                <th:block th:if="${learnerMonitoringModel.hasAnswered()}">
+                    <!--/* Don't put any content here! */-->
+                    <!--/* The condition to fetch the result is div to be empty */-->
+                </th:block>
+            </div>
+            <div class="ui message negative" th:id="|warning_${learnerMonitoringModel.userId}|" style="display: none">
+                An error occurred while fetching the results
+                <!--/* TODO Make i18n */-->
+            </div>
+        </div>
+
+    </div>
+    <script th:inline="javascript">
+        $(function () {
+            const userId = [[${learnerMonitoringModel.userId}]]
+            const sequenceId = [[${learnerMonitoringModel.sequenceMonitoringModel.sequenceId}]]
+            const hasAnswered = [[${learnerMonitoringModel.hasAnswered()}]]
+
+            const detailModal = $('#detailModalTeacher_' + userId);
+            const segment = $('#results_' + userId)
+            const warning = $('#warning_' + userId)
+
+            const personalData = $(".personalData")
+
+            detailModal.modal({
+                observeChanges: true,
+                onShow: function () {
+
+                    if (new URLSearchParams(location.search).get('hideName')) {
+                        personalData.hide()
+                    } else {
+                        personalData.show()
+                    }
+
+                    if (hasAnswered && $.trim(segment.html()) === "") {
+                        segment.addClass('loading')
+                        $.get('/player/' + sequenceId + '/result/' + userId)
+                            .done(function (data) {
+                                segment.removeClass('loading')
+                                segment.html(data)
+                                segment.parent().removeClass('ui segment')
+                                // We put the content after the modal is shown
+                                // So we need to update it to make it scrollable
+                                detailModal.children(".content").addClass("scrolling")
+                            })
+                            .fail(function () {
+                                segment.removeClass('loading')
+                                warning.show()
+                                console.log("An error occurred while fetching the results")
+                                console.log(userId)
+                                console.log(detailModal)
+                                console.log(segment)
+                                console.log(warning)
+                            })
+                    }
+                }
+            });
+        });
+    </script>
+</div>
+
+<div th:fragment="detailModal(userId, sequenceId)"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     class="ui modal"
+     th:id="|detailModal_${userId}|">
+
+    <i class="close icon"></i>
+
+    <div class="header">
+        <div th:text="#{attendee.details}"></div>
+    </div>
+
+    <div class="content">
+        <div class="ui segment">
+            <div th:id="|results_${userId}|">
+                <!--/* Don't put any content here! */-->
+                <!--/* The condition to fetch the result is div to be empty */-->
+            </div>
+            <div class="ui message negative" th:id="|warning_${userId}|" style="display: none">
+                An error occurred while fetching the results
+                <!--/* TODO Make i18n */-->
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        $(function () {
+            const userId = [[${userId}]]
+            const sequenceId = [[${sequenceId}]]
+
+            const detailModal = $('#detailModal_' + userId);
+            const segment = $('#results_' + userId)
+            const warning = $('#warning_' + userId)
+
+            detailModal.modal({
+                observeChanges: true,
+                onShow: function () {
+                    if ($.trim(segment.html()) === "") {
+                        segment.addClass('loading')
+                        $.get('/player/' + sequenceId + '/result/' + userId)
+                            .done(function (data) {
+                                segment.removeClass('loading')
+                                segment.html(data)
+                                segment.parent().removeClass('ui segment')
+                                // We put the content after the modal is shown
+                                // So we need to update it to make it scrollable
+                                detailModal.children(".content").addClass("scrolling")
+                            })
+                            .fail(function () {
+                                segment.removeClass('loading')
+                                warning.show()
+                                console.log("An error occurred while fetching the results")
+                                console.log(userId)
+                                console.log(detailModal)
+                                console.log(segment)
+                                console.log(warning)
+                            })
+                    }
+                }
+            });
+        });
+    </script>
+
+</div>

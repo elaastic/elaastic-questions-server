@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityManager
 import kotlin.jvm.Throws
 
 @Service
@@ -23,7 +24,8 @@ class ChatGptEvaluationService(
     @Autowired val chatGptApiClient: ChatGptApiClient,
     @Autowired val chatGptPromptService: ChatGptPromptService,
     @Autowired val reportCandidateService: ReportCandidateService,
-    private val responseService: ResponseService
+    private val responseService: ResponseService,
+    @Autowired val entityManager: EntityManager,
 ) {
 
 
@@ -202,5 +204,27 @@ class ChatGptEvaluationService(
             )
         ) { "You don't have the permission to unhide this evaluation" }
         reportCandidateService.markAsShown(chatGPTEvaluation, chatGptEvaluationRepository)
+    }
+
+    /**
+     * With the given list of response ids, if the response has been evaluated by ChatGPT, associate the evaluation to true.
+     * If the response has not been evaluated by ChatGPT, associate the evaluation to false.
+     * @param listIdResponse the list of response ids to evaluate
+     * @return a map with the response id as key and a boolean as value
+     */
+    fun associateResponseToChatGPTEvaluationExistence(listIdResponse: List<Long?>): Map<Long, Boolean> {
+        entityManager.createQuery(
+            """
+            SELECT r.id, gpt.response.id
+            FROM Response r
+            LEFT JOIN ChatGptEvaluation gpt ON r.id = gpt.response.id
+            WHERE r.id IN :listIdResponse
+        """.trimIndent()
+        )
+            .setParameter("listIdResponse", listIdResponse)
+            .resultList
+            .map { it as Array<*> }
+            .associate { (it[0] as Long) to (it[1] != null) }
+            .let { return it }
     }
 }

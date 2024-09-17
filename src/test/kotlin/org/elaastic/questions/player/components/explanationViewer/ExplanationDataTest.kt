@@ -94,7 +94,7 @@ class ExplanationDataTest(
             }.tThen("The number of evaluations should be 2 for the student and the teacher") { peerGrading ->
                 response = responseService.responseRepository.findById(response.id!!).get()
                 response = responseService.updateMeanGradeAndEvaluationCount(response)
-                val explanationData = ExplanationData(response)
+                val explanationData = ExplanationData(response, false)
                 assertEquals(2, explanationData.getNbEvaluation(false))
                 assertEquals(2, explanationData.getNbEvaluation(true))
                 peerGrading
@@ -102,7 +102,7 @@ class ExplanationDataTest(
                 peerGradingService.markAsHidden(teacher, peerGrading)
             }.tThen("The number of evaluations should be 1 for the student and 2 for the teacher") {
                 response = responseService.responseRepository.findById(response.id!!).get()
-                val explanationData = ExplanationData(response)
+                val explanationData = ExplanationData(response, false)
                 assertEquals(1, explanationData.getNbEvaluation(false))
                 assertEquals(2, explanationData.getNbEvaluation(true))
             }
@@ -145,7 +145,7 @@ class ExplanationDataTest(
             }.tThen("The number of evaluations should be 2 for the student and the teacher") { peerGrading ->
                 response = responseService.responseRepository.findById(response.id!!).get()
                 response = responseService.updateMeanGradeAndEvaluationCount(response)
-                val explanationData = ExplanationData(response)
+                val explanationData = ExplanationData(response, false)
                 assertEquals(1, explanationData.getNbDraxoEvaluation(false))
                 assertEquals(1, explanationData.getNbDraxoEvaluation(true))
                 peerGrading
@@ -153,7 +153,7 @@ class ExplanationDataTest(
                 peerGradingService.markAsHidden(teacher, peerGrading)
             }.tThen("The number of draxo evaluations should be 0 for the student and 1 for the teacher") {
                 response = responseService.responseRepository.findById(response.id!!).get()
-                val explanationData = ExplanationData(response)
+                val explanationData = ExplanationData(response, false)
                 assertEquals(0, explanationData.getNbDraxoEvaluation(false))
                 assertEquals(1, explanationData.getNbDraxoEvaluation(true))
             }.tWhen ("The likert evaluation is hidden by the teacher") {
@@ -163,7 +163,7 @@ class ExplanationDataTest(
                 }
             }.tThen ("The number of draxo evaluations should be 0 for the student and 1 for the teacher") {
                 response = responseService.responseRepository.findById(response.id!!).get()
-                val explanationData = ExplanationData(response)
+                val explanationData = ExplanationData(response, false)
                 assertEquals(0, explanationData.getNbDraxoEvaluation(false))
                 assertEquals(1, explanationData.getNbDraxoEvaluation(true))
             }

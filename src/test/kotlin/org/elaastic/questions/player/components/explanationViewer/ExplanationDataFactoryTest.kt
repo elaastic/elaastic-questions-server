@@ -48,7 +48,7 @@ class ExplanationDataFactoryTest(
         tGiven("a response") {
             response = integrationTestingService.getAnyResponse()
         }.tWhen("we create an explanation data") {
-            ExplanationDataFactory.create(response)
+            ExplanationDataFactory.create(response, false)
         }.tThen("we should regain the same data as the response") { explanationData ->
             assertEquals(response.id, explanationData.responseId)
             assertEquals(response.explanation, explanationData.content)

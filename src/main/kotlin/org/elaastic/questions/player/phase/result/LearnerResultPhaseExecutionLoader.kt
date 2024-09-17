@@ -7,9 +7,9 @@ import org.elaastic.questions.assignment.sequence.interaction.results.ResultsSer
 import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
+import org.elaastic.questions.player.phase.LearnerPhase
 import org.elaastic.questions.player.phase.LearnerPhaseExecution
 import org.elaastic.questions.player.phase.LearnerPhaseExecutionLoader
-import org.elaastic.questions.player.phase.LearnerPhase
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.togglz.core.manager.FeatureManager
@@ -35,18 +35,33 @@ class LearnerResultPhaseExecutionLoader(
             2
         )
 
+        val longBooleanMap = chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(
+            listOf(
+                firstResponse!!.id,
+                secondResponse!!.id
+            )
+        )
+
+        val responseFirstTryHasChatGPTEvaluation: Boolean = longBooleanMap[firstResponse.id] == true
+        val responseSecondTryHasChatGPTEvaluation: Boolean = longBooleanMap[secondResponse.id] == true
+
+
         // Get the "My results" data for the learner
         val myResultsModel = when (learnerPhase.learnerSequence.sequence.statement.questionType) {
             QuestionType.OpenEnded ->
                 LearnerResultsModelFactory.buildOpenResult(
                     firstResponse,
-                    secondResponse
+                    secondResponse,
+                    responseFirstTryHasChatGPTEvaluation,
+                    responseSecondTryHasChatGPTEvaluation,
                 )
 
             QuestionType.ExclusiveChoice ->
                 LearnerResultsModelFactory.buildExclusiveChoiceResult(
                     firstResponse,
                     secondResponse,
+                    responseFirstTryHasChatGPTEvaluation,
+                    responseSecondTryHasChatGPTEvaluation,
                     learnerPhase.learnerSequence.sequence.statement
                 )
 
@@ -54,13 +69,15 @@ class LearnerResultPhaseExecutionLoader(
                 LearnerResultsModelFactory.buildMultipleChoiceResult(
                     firstResponse,
                     secondResponse,
+                    responseFirstTryHasChatGPTEvaluation,
+                    responseSecondTryHasChatGPTEvaluation,
                     learnerPhase.learnerSequence.sequence.statement
                 )
         }
 
         // If both responses are null, then the chatGptEvaluation will be null
         val evaluation =
-            (secondResponse ?: firstResponse)?.let { chatGptEvaluationService.findEvaluationByResponse(it) }
+            (secondResponse ?: firstResponse).let { chatGptEvaluationService.findEvaluationByResponse(it) }
 
         val myChatGptEvaluationModel = if (learnerPhase.learnerSequence.sequence.chatGptEvaluationEnabled) {
             ChatGptEvaluationModelFactory.build(evaluation, learnerPhase.learnerSequence.sequence)

@@ -83,6 +83,7 @@ html.elaastic.three-columns, .elaastic.three-columns body {
 
 .detail a.detail-link {
   color: white;
+  cursor: pointer;
 }
 
 .detail a.detail-link:hover {
