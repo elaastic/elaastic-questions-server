@@ -71,18 +71,19 @@
 
         <!--/* Hidden message when the teacher hides it. It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it. */-->
         <!--/* Feedback message when the student reports the DraxoPeerGrading */-->
-        <th:block th:with="hidden=${draxoEvaluationModel.hiddenByTeacher == true}, reported=${draxoEvaluationModel.isReported() == true}">
+        <th:block
+                th:with="hidden=${draxoEvaluationModel.hiddenByTeacher == true}, reported=${draxoEvaluationModel.isReported() == true}">
             <div class="review-border message-hidden" th:if="${hidden || reported}">
                 <!--/* Message */-->
                 <th:block>
                     <div th:if="${hidden}" th:text="#{evaluation.hiddenByTeacher}">Hidden by the teacher</div>
-                    <div th:if="${reported && !hidden}" th:text="#{evaluation.hiddenByYouReport}">As you reported this evaluation,
-                        it is
-                        hidden to you.
+                    <div th:if="${reported && !hidden}" th:text="#{evaluation.hiddenByYouReport}">This evaluation have
+                        been reported
                     </div>
                 </th:block>
                 <!--/* Button to toggle the content */-->
                 <div id="toggleContentDisplay" class="ui button black basic"
+                     th:if="${draxoEvaluationModel.canHidePeerGrading}"
                      style="text-transform: none; font-weight: initial"
                      th:attr="evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}">
                     <th:block th:if="${hidden}">
@@ -110,7 +111,7 @@
         */-->
         <div class="draxo-content" th:id="draxoContent"
              th:attr="evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
-             th:if="${draxoEvaluationModel.hiddenByTeacher || draxoEvaluationModel.isReported()}">
+             th:if="${(draxoEvaluationModel.hiddenByTeacher || draxoEvaluationModel.isReported()) && draxoEvaluationModel.canHidePeerGrading}">
             <th:block
                     th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-content.html :: draxoPeerGradingContent(${draxoEvaluationModel})"></th:block>
         </div>

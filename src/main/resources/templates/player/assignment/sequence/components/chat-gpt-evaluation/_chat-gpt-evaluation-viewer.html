@@ -74,13 +74,13 @@
                 <!--/* Message */-->
                 <th:block>
                     <div th:if="${hidden}" th:text="#{evaluation.hiddenByTeacher}">Hidden by the teacher</div>
-                    <div th:if="${reported && !hidden}" th:text="#{evaluation.hiddenByYouReport}">As you reported this evaluation,
-                        it is
-                        hidden to you.
+                    <div th:if="${reported && !hidden}" th:text="#{evaluation.hiddenByYouReport}">This evaluation have
+                        been reported
                     </div>
                 </th:block>
                 <!--/* Button to toggle the content */-->
                 <div id="toggleContentDisplay" class="ui button black basic"
+                     th:if="${chatGptEvaluationModel.canHideGrading}"
                      style="text-transform: none; font-weight: initial"
                      th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}">
                     <th:block th:if="${hidden}">
@@ -103,7 +103,7 @@
 
         <!--/* Container for the Content when the evaluation is hidden */-->
         <div class="review-border" th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}" th:id="content"
-             th:if="${chatGptEvaluationModel.hiddenByTeacher || chatGptEvaluationModel.isReported()}">
+             th:if="${(chatGptEvaluationModel.hiddenByTeacher || chatGptEvaluationModel.isReported()) && chatGptEvaluationModel.canHideGrading}">
             <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
         </div>
 
