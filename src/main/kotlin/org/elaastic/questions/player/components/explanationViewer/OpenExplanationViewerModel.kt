@@ -37,7 +37,12 @@ class OpenExplanationViewerModel(explanations: List<ExplanationData>,
         if (nbRecommendedExplanations > 3) {
             recommendedStudentsExplanations.filter { it.recommendedByTeacher }
         } else {
-            recommendedStudentsExplanations.sortedWith(compareByDescending<ExplanationData> { it.recommendedByTeacher }.thenByDescending { it.meanGrade }.thenByDescending { it.nbEvaluations })
+            recommendedStudentsExplanations
+                .sortedWith(
+                    compareByDescending<ExplanationData> { it.recommendedByTeacher }
+                    .thenByDescending { it.meanGrade }
+                    .thenByDescending { it.nbEvaluations }
+                ).take(3)
         }
     val nbExplanationsForCorrectResponse = nbExplanations
     override val hasMoreThanExcerpt = nbExplanations > 3
