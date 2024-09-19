@@ -60,14 +60,15 @@ class ChoiceExplanationViewerModel(
     override val nbRecommendedExplanations = recommendedStudentsExplanations.count {it.recommendedByTeacher }
 
     override val explanationsExcerpt =
-        if (nbRecommendedExplanations < 3) {
-            recommendedStudentsExplanations
-                .sortedWith(compareByDescending<ExplanationData> { it.recommendedByTeacher }
-                .thenByDescending { it.meanGrade }
-                .thenByDescending { it.nbEvaluations })
-                .take(3)
-        } else {
+        if (nbRecommendedExplanations >= 3) {
             recommendedStudentsExplanations.filter { it.recommendedByTeacher }
+        } else {
+            recommendedStudentsExplanations
+                .sortedWith(
+                    compareByDescending<ExplanationData> { it.recommendedByTeacher }
+                    .thenByDescending { it.meanGrade }
+                    .thenByDescending { it.nbEvaluations }
+                ).take(3)
         }
 
     override val nbExplanations = this.explanationsByResponse.values.flatten().count()
