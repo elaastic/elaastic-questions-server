@@ -66,35 +66,44 @@
             </div>
         </div>
 
-        <!--/*
-        Hidden message when the teacher hides it.
-        It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it.
-        */-->
-        <div class="review-border message-hidden" th:if="${chatGptEvaluationModel.hiddenByTeacher}">
-            <div th:text="#{evaluation.hiddenByTeacher}">Hidden by the teacher</div>
-            <div id="toggleContentDisplay" class="ui button black basic"
-                 style="text-transform: none; font-weight: initial"
-                 th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}">
-
-                <span id="show" th:text="#{evaluation.action.showEvaluationContent}">Show hidden content</span>
-                <span id="hide" th:text="#{evaluation.action.hideEvaluationContent}"
-                      style="display: none;">Mask hidden content</span>
-            </div>
-        </div>
-
+        <!--/* Hidden message when the teacher hides it. It's only visible by the teacher because if an evaluation is hidden, only the teacher can see it.*/-->
         <!--/* Feedback message when the student reports the ChatGPTEvaluation */-->
-        <div class="review-border message-hidden" th:if="${!chatGptEvaluationModel.hiddenByTeacher && chatGptEvaluationModel.isReported()}">
-            <div th:text="#{evaluation.hiddenByYouReport}">As you reported this evaluation, it is hidden to you.</div>
-        </div>
+        <th:block
+                th:with="hidden=${chatGptEvaluationModel.hiddenByTeacher == true}, reported=${chatGptEvaluationModel.isReported() == true}">
+            <div class="review-border message-hidden" th:if="${hidden || reported}">
+                <!--/* Message */-->
+                <th:block>
+                    <div th:if="${hidden}" th:text="#{evaluation.hiddenByTeacher}">Hidden by the teacher</div>
+                    <div th:if="${reported && !hidden}" th:text="#{evaluation.hiddenByYouReport}">This evaluation have
+                        been reported
+                    </div>
+                </th:block>
+                <!--/* Button to toggle the content */-->
+                <div id="toggleContentDisplay" class="ui button black basic"
+                     th:if="${chatGptEvaluationModel.canHideGrading}"
+                     style="text-transform: none; font-weight: initial"
+                     th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}">
+                    <th:block th:if="${hidden}">
+                        <span id="show" th:text="#{evaluation.action.showHiddenContent}">Show hidden content</span>
+                        <span id="hide" th:text="#{evaluation.action.hideHiddenContent}" style="display: none;">Mask hidden content</span>
+                    </th:block>
+                    <th:block th:if="${reported && !hidden}">
+                        <span id="show" th:text="#{evaluation.action.showReportedContent}">Show reported content</span>
+                        <span id="hide" th:text="#{evaluation.action.hideReportedContent}" style="display: none;">Mask reported content</span>
+                    </th:block>
+                </div>
+            </div>
+        </th:block>
 
         <!--/* Content */-->
-        <div class="review-border" th:if="${!chatGptEvaluationModel.hiddenByTeacher && !chatGptEvaluationModel.isReported()}">
+        <div class="review-border"
+             th:if="${!chatGptEvaluationModel.hiddenByTeacher && !chatGptEvaluationModel.isReported()}">
             <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
         </div>
 
         <!--/* Container for the Content when the evaluation is hidden */-->
         <div class="review-border" th:attr="evaluation-id=${chatGptEvaluationModel.gradingID}" th:id="content"
-             th:if="${chatGptEvaluationModel.hiddenByTeacher}">
+             th:if="${(chatGptEvaluationModel.hiddenByTeacher || chatGptEvaluationModel.isReported()) && chatGptEvaluationModel.canHideGrading}">
             <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
         </div>
 

@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
@@ -80,15 +80,17 @@ class SequenceService(
         } ?: throw EntityNotFoundException("There is no sequence for id \"$id\"")
     }
 
-    fun findPreviousSequence(sequence: Sequence): Sequence?
-        = sequenceRepository.findPreviousSequence(sequence.rank,
-                                                  sequence.assignment!!,
-                                                  PageRequest.of(0, 1)).firstOrNull()
+    fun findPreviousSequence(sequence: Sequence): Sequence? = sequenceRepository.findPreviousSequence(
+        sequence.rank,
+        sequence.assignment!!,
+        PageRequest.of(0, 1)
+    ).firstOrNull()
 
-    fun findNextSequence(sequence: Sequence): Sequence?
-        = sequenceRepository.findNextSequence(sequence.rank,
-                                              sequence.assignment!!,
-                                              PageRequest.of(0, 1)).firstOrNull()
+    fun findNextSequence(sequence: Sequence): Sequence? = sequenceRepository.findNextSequence(
+        sequence.rank,
+        sequence.assignment!!,
+        PageRequest.of(0, 1)
+    ).firstOrNull()
 
     fun findByUuid(uuid: UUID, fetchInteractions: Boolean = false): Sequence {
         return sequenceRepository.findByUuid(uuid)?.let { sequence ->
@@ -235,7 +237,7 @@ class SequenceService(
         user: User,
         sequence: Sequence,
         responseSubmissionData: PlayerController.ResponseSubmissionData
-    ) : Response {
+    ): Response {
         val choiceListSpecification = responseSubmissionData.choiceList?.let {
             LearnerChoice(it)
         }

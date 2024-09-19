@@ -21,7 +21,7 @@
 
   <form class="ui form"
         style="align-items: end;"
-        th:action="@{/player/sequence/{sequenceId}/submit-utility-grade(sequenceId=${chatGptEvaluationModel.sequenceId})}"
+        th:action="@{/chatGptEvaluation/sequence/{sequenceId}/submit-utility-grade(sequenceId=${chatGptEvaluationModel.sequenceId})}"
         method="post">
     <input type="hidden" name="evaluationId" th:value="${chatGptEvaluationModel.evaluationId}">
     <div class="ui grid stackable" style="align-items: end;">

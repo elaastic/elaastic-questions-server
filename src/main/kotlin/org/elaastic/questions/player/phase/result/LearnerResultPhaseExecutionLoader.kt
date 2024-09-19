@@ -37,13 +37,13 @@ class LearnerResultPhaseExecutionLoader(
 
         val longBooleanMap = chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(
             listOf(
-                firstResponse!!.id,
-                secondResponse!!.id
+                firstResponse?.id,
+                secondResponse?.id
             )
         )
 
-        val responseFirstTryHasChatGPTEvaluation: Boolean = longBooleanMap[firstResponse.id] == true
-        val responseSecondTryHasChatGPTEvaluation: Boolean = longBooleanMap[secondResponse.id] == true
+        val responseFirstTryHasChatGPTEvaluation: Boolean = longBooleanMap[firstResponse?.id] == true
+        val responseSecondTryHasChatGPTEvaluation: Boolean = longBooleanMap[secondResponse?.id] == true
 
 
         // Get the "My results" data for the learner
@@ -76,11 +76,12 @@ class LearnerResultPhaseExecutionLoader(
         }
 
         // If both responses are null, then the chatGptEvaluation will be null
-        val evaluation =
-            (secondResponse ?: firstResponse).let { chatGptEvaluationService.findEvaluationByResponse(it) }
+        val chatGptEvaluation = listOfNotNull(secondResponse, firstResponse)
+            .firstOrNull()
+            ?.let { chatGptEvaluationService.findEvaluationByResponse(it) }
 
         val myChatGptEvaluationModel = if (learnerPhase.learnerSequence.sequence.chatGptEvaluationEnabled) {
-            ChatGptEvaluationModelFactory.build(evaluation, learnerPhase.learnerSequence.sequence)
+            ChatGptEvaluationModelFactory.build(chatGptEvaluation, learnerPhase.learnerSequence.sequence)
         } else null
 
         LearnerResultPhaseExecution(

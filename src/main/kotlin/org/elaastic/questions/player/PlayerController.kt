@@ -549,6 +549,14 @@ class PlayerController(
         return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
+    data class ResponseSubmissionData(
+        val interactionId: Long,
+        val attempt: AttemptNum,
+        val choiceList: List<Int>?,
+        val confidenceDegree: ConfidenceDegree?,
+        val explanation: String?
+    )
+
     @PostMapping("/sequence/{id}/submit-response")
     fun submitResponse(
         authentication: Authentication,
@@ -678,73 +686,7 @@ class PlayerController(
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
     }
 
-    @PostMapping("sequence/{id}/submit-utility-grade")
-    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
-    fun submitChatGptEvaluationUtilityGrade(
-        authentication: Authentication,
-        model: Model,
-        @RequestParam(required = true) evaluationId: Long,
-        @RequestParam(required = true) utilityGrade: UtilityGrade,
-        @PathVariable id: Long
-    ): String {
-        val user: User = authentication.principal as User
-        val sequence = sequenceService.get(id, true)
-        val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
 
-        // Check authorizations
-        requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
-            messageSource.getMessage("evaluation.chatGPT.error.access.utilityGrade", null, LocaleContextHolder.getLocale())
-        }
-
-        chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation, utilityGrade)
-        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
-    }
-
-    /**
-     * Report a chatGptEvaluation Only the learner of the response can report
-     * the evaluation
-     *
-     * @param authentication the current authentication
-     * @param model the model
-     * @param evaluationId the id of the ChatGPT evaluation to report
-     * @param reasons the list of reasons to report the evaluation
-     * @param otherReasonComment the comment of the other reason
-     * @param id the id of the sequence where the ChatGPT evaluation is
-     * @return the view of the sequence
-     * @throws AccessDeniedException if the user is not the learner of the
-     *    response
-     */
-    @PostMapping("sequence/{id}/report-chat-gpt-evaluation")
-    @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
-    fun reportchatGptEvaluation(
-        authentication: Authentication,
-        model: Model,
-        @RequestParam(required = true) evaluationId: Long,
-        @RequestParam(value = "reason", required = true) reasons: List<String>,
-        @RequestParam(value = "other-reason-comment", required = false) otherReasonComment: String,
-        @PathVariable id: Long
-    ): String {
-        val user: User = authentication.principal as User
-        val sequence = sequenceService.get(id, true)
-        val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
-        val reasonComment = otherReasonComment.ifEmpty { null }
-
-        // Check authorizations
-        requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
-            messageSource.getMessage("evaluatio.chatGPT.error.access.report", null, LocaleContextHolder.getLocale())
-        }
-
-        chatGptEvaluationService.reportEvaluation(chatGptEvaluation, reasons, reasonComment)
-        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
-    }
-
-    data class ResponseSubmissionData(
-        val interactionId: Long,
-        val attempt: AttemptNum,
-        val choiceList: List<Int>?,
-        val confidenceDegree: ConfidenceDegree?,
-        val explanation: String?
-    )
 
     /**
      * Get the result view for the given learner
