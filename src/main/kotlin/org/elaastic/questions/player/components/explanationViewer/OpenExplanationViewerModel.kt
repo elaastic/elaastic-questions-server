@@ -22,35 +22,6 @@ class OpenExplanationViewerModel(
     explanations: List<ExplanationData>,
     alreadySorted: Boolean = false,
     override val studentsIdentitiesAreDisplayable: Boolean = false
-) : ExplanationViewerModel {
-    val explanations =
-        if (alreadySorted) explanations
-        else explanations.sortedWith(
-            compareByDescending<ExplanationData> { it.meanGrade }.thenByDescending { it.nbEvaluations }
-        )
+) : DefaultExplanationViewerModel(explanations, alreadySorted) {
     override val hasChoice = false
-    override val nbExplanations = this.explanations.count()
-    val recommendedStudentsExplanations = this.explanations
-        .filter { !it.fromTeacher && !it.hiddenByTeacher }
-
-    override val nbRecommendedExplanations = recommendedStudentsExplanations.count { it.recommendedByTeacher }
-
-    override val explanationsExcerpt =
-        if (nbRecommendedExplanations > 3) {
-            recommendedStudentsExplanations.filter { it.recommendedByTeacher }
-        } else {
-            recommendedStudentsExplanations
-                .sortedWith(
-                    compareByDescending<ExplanationData> { it.recommendedByTeacher }
-                    .thenByDescending { it.meanGrade }
-                    .thenByDescending { it.nbEvaluations }
-                ).take(3)
-        }
-    val nbExplanationsForCorrectResponse = nbExplanations
-    override val hasMoreThanExcerpt = nbExplanations > 3
-    override val hasHiddenByTeacherExplanations = this.explanations.any { it.hiddenByTeacher }
-    val hasRecommendedExplanations = false
-    override val teacherExplanation =
-        this.explanations.firstOrNull { it is TeacherExplanationData } as TeacherExplanationData?
-
 }
