@@ -618,4 +618,52 @@ class PeerGradingServiceIntegrationTest(
 
     }
 
+    @Test
+    fun `test of findAllDraxoPeerGradingReportedNotHidden`() {
+        // Given
+        val learners = integrationTestingService.getNLearners(2)
+        val subject = functionalTestingService.createSubject(integrationTestingService.getTestTeacher())
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+
+        tGiven("A started sequence") {
+            functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+            val learnersAssignementList: List<LearnerAssignment> = learners.map { LearnerAssignment(it, assignement) }
+
+            assertEquals(
+                emptyList<DraxoPeerGrading>(),
+                peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence),
+                "No peerGrading reported"
+            )
+            learnersAssignementList
+        }.tWhen("Two learner answer and report a peerGrading") { learnerAssignments ->
+            val response = functionalTestingService.submitResponse(
+                Phase.PHASE_1,
+                learners[0],
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                "response"
+            )
+            val grader = learners[1]
+            val peerGrading = DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.save(it)
+                    it
+                }
+            peerGradingService.updateReport(learners[0], peerGrading, listOf(ReportReason.INCOHERENCE.name))
+            learnerAssignments //learnersAssignementList
+        }.tThen("the two learner who answer, are mark as so") {
+            val peerGradingReportedNotHidden = peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence)
+            assertEquals(1, peerGradingReportedNotHidden.size)
+            assertEquals(learners[1], peerGradingReportedNotHidden.first().grader)
+            assertEquals(learners[0], peerGradingReportedNotHidden.first().response.learner)
+        }
+    }
 }
