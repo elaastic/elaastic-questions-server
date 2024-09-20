@@ -22,110 +22,80 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.MessageBuilder
-import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 object SequenceInfoResolver {
 
-    @Autowired lateinit var peerGradingService: PeerGradingService
-    @Autowired lateinit var chatGptEvaluationService: ChatGptEvaluationService
+    fun resolve(
+        isTeacher: Boolean,
+        sequence: Sequence,
+        messageBuilder: MessageBuilder,
+        nbReportedEvaluation: Int = 0
+    ): SequenceInfoModel = when (sequence.state) {
+        State.beforeStart -> SequenceInfoModel(
+            messageBuilder.message(
+                "player.sequence.beforeStart.message"
+            ),
+            color = "warning",
+            refreshable = !isTeacher
+        )
 
-    fun resolve(isTeacher: Boolean, sequence: Sequence, messageBuilder: MessageBuilder): SequenceInfoModel {
-        val nbReportedEvaluation = getReportedEvaluation(sequence, isTeacher)
+        State.afterStop -> SequenceInfoModel(
+            messageBuilder.message("player.sequence.closed")
+        )
 
-        return when (sequence.state) {
-            State.beforeStart -> SequenceInfoModel(
-                messageBuilder.message(
-                    "player.sequence.beforeStart.message"
-                ),
-                color = "warning",
-                refreshable = !isTeacher
-            )
+        State.show ->
+            if (sequence.executionContext != ExecutionContext.FaceToFace) {
+                SequenceInfoModel(
+                    messageBuilder.message(
+                        "player.sequence.open"
+                    ),
+                    color = "blue",
+                    refreshable = true,
+                    nbEvaluationReported = nbReportedEvaluation
+                )
+            } else {
+                when (sequence.activeInteraction?.interactionType) {
+                    InteractionType.ResponseSubmission,
+                    InteractionType.Evaluation
+                        -> {
+                        when (sequence.activeInteraction?.state) {
+                            null -> throw IllegalStateException()
+                            State.beforeStart -> SequenceInfoModel(
+                                messageBuilder.message(
+                                    "player.sequence.interaction.beforeStart.message",
+                                    sequence.activeInteraction?.rank?.toString() ?: ""
+                                ),
+                                color = "blue",
+                                refreshable = !isTeacher
+                            )
 
-            State.afterStop -> SequenceInfoModel(
-                messageBuilder.message("player.sequence.closed")
-            )
+                            State.show -> SequenceInfoModel(
+                                messageBuilder.message(
+                                    "player.sequence.interaction.inprogress",
+                                    sequence.activeInteraction?.rank?.toString() ?: ""
+                                ),
+                                color = "blue",
+                                refreshable = true
+                            )
 
-            State.show ->
-                if (sequence.executionContext != ExecutionContext.FaceToFace) {
-                    SequenceInfoModel(
-                        messageBuilder.message(
-                            "player.sequence.open"
-                        ),
-                        color = "blue",
-                        refreshable = true,
-                    )
-                } else {
-                    when (sequence.activeInteraction?.interactionType) {
-                        InteractionType.ResponseSubmission,
-                        InteractionType.Evaluation
-                            -> {
-                            when (sequence.activeInteraction?.state) {
-                                null -> throw IllegalStateException()
-                                State.beforeStart -> SequenceInfoModel(
-                                    messageBuilder.message(
-                                        "player.sequence.interaction.beforeStart.message",
-                                        sequence.activeInteraction?.rank?.toString() ?: ""
-                                    ),
-                                    color = "blue",
-                                    refreshable = !isTeacher
-                                )
-
-                                State.show -> SequenceInfoModel(
-                                    messageBuilder.message(
-                                        "player.sequence.interaction.inprogress",
-                                        sequence.activeInteraction?.rank?.toString() ?: ""
-                                    ),
-                                    color = "blue",
-                                    refreshable = true
-                                )
-
-                                State.afterStop -> SequenceInfoModel(
-                                    messageBuilder.message(
-                                        "player.sequence.interaction.closed.forTeacher",
-                                        sequence.activeInteraction?.rank?.toString() ?: ""
-                                    ),
-                                    color = "blue",
-                                    refreshable = !isTeacher
-                                )
-                            }
+                            State.afterStop -> SequenceInfoModel(
+                                messageBuilder.message(
+                                    "player.sequence.interaction.closed.forTeacher",
+                                    sequence.activeInteraction?.rank?.toString() ?: ""
+                                ),
+                                color = "blue",
+                                refreshable = !isTeacher
+                            )
                         }
-
-                        // Read interaction
-                        else -> getSequenceInfoModelWhenReadInteraction(sequence, messageBuilder, nbReportedEvaluation)
                     }
+
+                    // Read interaction
+                    else -> getSequenceInfoModelWhenReadInteraction(sequence, messageBuilder, nbReportedEvaluation)
                 }
-        }
-    }
-
-    /**
-     * @param sequence [Sequence] to get the information
-     * @param teacher [Boolean] to know if the user is a teacher
-     * @return [Int] for the reported evaluation
-     */
-    private fun getReportedEvaluation(sequence: Sequence, teacher: Boolean): Int {
-        if (!teacher) {
-            return 0
-        }
-
-        val nbDRAXOEvaluationReported: Int = if (sequence.evaluationPhaseConfig == EvaluationPhaseConfig.DRAXO) {
-            peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence).count()
-        } else {
-            0
-        }
-
-        val nbChatGPTEvaluationReported: Int = if (sequence.chatGptEvaluationEnabled) {
-            chatGptEvaluationService.findAllReportedNotHidden(sequence).count()
-        } else {
-            0
-        }
-
-        return nbDRAXOEvaluationReported + nbChatGPTEvaluationReported
+            }
     }
 
     /**
