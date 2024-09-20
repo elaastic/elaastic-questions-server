@@ -229,14 +229,25 @@ class ChatGptEvaluationService(
             .let { return it }
     }
 
+    /**
+     * Find all the evaluations made on a sequence.
+     * We retrieve all the responses of the sequence, and then we retrieve all the
+     * peer grading that have been made on these responses.
+     * @param sequence the sequence.
+     * @return the list of peer grading.
+     */
     fun findAllBySequence(sequence: Sequence): List<ChatGptEvaluation> =
         chatGptEvaluationRepository.findAllByResponseIn(
-            responseRepository.findAllByInteractionAndAttempt(
+            responseRepository.findAllByInteraction(
                 sequence.getResponseSubmissionInteraction(),
-                1
             )
         )
 
+    /**
+     * Find all the evaluations made on a sequence that have been reported and not hidden.
+     * @param sequence the sequence.
+     * @return the list of peer grading.
+     */
     fun findAllReportedNotHidden(sequence: Sequence): List<ChatGptEvaluation> {
         return findAllBySequence(sequence)
             .filter { !it.hiddenByTeacher }

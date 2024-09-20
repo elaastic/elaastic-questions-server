@@ -99,7 +99,8 @@ class PeerGradingService(
         peerGradingRepository.findAllByResponseAndType(response, PeerGradingType.DRAXO)
 
     fun findAllDraxo(sequence: Sequence): List<DraxoPeerGrading> =
-        findAll(sequence).filterIsInstance<DraxoPeerGrading>()
+        findAll(sequence)
+            .filterIsInstance<DraxoPeerGrading>()
 
     fun isGraderRegisteredOnAssignment(grader: User, response: Response) =
         learnerAssignmentService.isRegistered(
@@ -210,12 +211,35 @@ class PeerGradingService(
             .setParameter("interaction", interaction)
             .singleResult as Long).toInt()
 
-    fun findAll(sequence: Sequence): List<PeerGrading> =
+    /**
+     * Find all the evaluations made on a sequence at a specific attempt. We
+     * retrieve all the responses of the sequence at the given attempt, and
+     * then we retrieve all the peer grading that have been made on these
+     * responses.
+     *
+     * @param sequence the sequence.
+     * @param attempt the attempt.
+     * @return the list of peer grading.
+     */
+    fun findAllByAttempt(sequence: Sequence, attempt: Int): List<PeerGrading> =
         peerGradingRepository.findAllByResponseIn(
             responseRepository.findAllByInteractionAndAttempt(
                 sequence.getResponseSubmissionInteraction(),
-                1
+                attempt
             )
+        )
+
+    /**
+     * Find all the evaluations made on a sequence. We retrieve all the
+     * responses of the sequence, and then we retrieve all the peer grading
+     * that have been made on these responses.
+     *
+     * @param sequence the sequence.
+     * @return the list of peer grading.
+     */
+    fun findAll(sequence: Sequence): List<PeerGrading> =
+        peerGradingRepository.findAllByResponseIn(
+            responseRepository.findAllByInteraction(sequence.getResponseSubmissionInteraction())
         )
 
     /**
@@ -380,15 +404,14 @@ class PeerGradingService(
     }
 
     /**
-     * Return the list of all the DRAXO peer grading that have been reported and
-     * are not hidden by the teacher.
+     * Return the list of all the DRAXO peer grading that have been reported
+     * and are not hidden by the teacher.
      *
      * @param sequence the sequence
      * @return the list of DRAXO peer grading
      */
-    fun findAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): List<DraxoPeerGrading> {
-        return findAllDraxo(sequence)
+    fun findAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): List<DraxoPeerGrading> =
+        findAllDraxo(sequence)
             .filter { it.reportReasons?.isNotEmpty() == true }
             .filter { !it.hiddenByTeacher }
-    }
 }
