@@ -1,5 +1,6 @@
 package org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation
 
+import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.chatGptApi.ChatGptApiClient
@@ -180,7 +181,7 @@ class ChatGptEvaluationService(
                 chatGptEvaluation,
                 user
             )
-        ) { "You don't have the permission to hide this evaluation" }
+        ) { "You don't have the permission to hide this evaluation" } // TODO make i18n
         reportCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
     }
 
@@ -202,7 +203,7 @@ class ChatGptEvaluationService(
                 chatGPTEvaluation,
                 user
             )
-        ) { "You don't have the permission to unhide this evaluation" }
+        ) { "You don't have the permission to unhide this evaluation" } // TODO make i18n
         reportCandidateService.markAsShown(chatGPTEvaluation, chatGptEvaluationRepository)
     }
 
@@ -226,5 +227,30 @@ class ChatGptEvaluationService(
             .map { it as Array<*> }
             .associate { (it[0] as Long) to (it[1] != null) }
             .let { return it }
+    }
+
+    /**
+     * Find all the evaluations made on a sequence.
+     * We retrieve all the responses of the sequence, and then we retrieve all the
+     * peer grading that have been made on these responses.
+     * @param sequence the sequence.
+     * @return the list of peer grading.
+     */
+    fun findAllBySequence(sequence: Sequence): List<ChatGptEvaluation> =
+        chatGptEvaluationRepository.findAllByResponseIn(
+            responseRepository.findAllByInteraction(
+                sequence.getResponseSubmissionInteraction(),
+            )
+        )
+
+    /**
+     * Find all the evaluations made on a sequence that have been reported and not hidden.
+     * @param sequence the sequence.
+     * @return the list of peer grading.
+     */
+    fun findAllReportedNotHidden(sequence: Sequence): List<ChatGptEvaluation> {
+        return findAllBySequence(sequence)
+            .filter { !it.hiddenByTeacher }
+            .filter { it.reportReasons?.isNotEmpty() == true }
     }
 }

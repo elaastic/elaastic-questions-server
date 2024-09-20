@@ -34,7 +34,7 @@ class TeacherResultDashboardService(
             responseSet = responseSet,
             true,
             messageBuilder,
-            peerGradings = peerGradingService.findAll(sequence),
+            peerGradings = peerGradingService.findAllByAttempt(sequence, 1),
             explanationHasChatGPTEvaluationMap = explanationHasChatGPTEvaluationMap
         )
     }

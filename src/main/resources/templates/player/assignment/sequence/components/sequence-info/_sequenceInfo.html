@@ -17,17 +17,25 @@
   -->
 
 <div th:fragment="sequenceInfo(model, sequenceId)"
-     th:remove="tag"
-     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-  <div class="ui bottom attached message"
-       th:classappend="${model.color}">
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+     class="ui bottom attached message" th:classappend="${model.color}">
+
     <span th:text="${model.message}" th:remove="tag"></span>
 
-<!--    TODO partial reloading with updateSequenceDisplay -->
-    <a th:if="${model.refreshable}"
-       th:href="@{./{id}(id=${sequenceId})}"
-       th:title="#{common.refresh}">
-      <i class="refresh icon"></i>
+    <!--/*    TODO partial reloading with updateSequenceDisplay */-->
+    <a th:if="${model.refreshable}" th:href="@{./{id}(id=${sequenceId})}" th:title="#{common.refresh}">
+        <i class="refresh icon"></i>
     </a>
-  </div>
+
+    <th:block th:if="${model.nbEvaluationReported > 0}">
+        <i class="red explanation triangle icon"></i>
+        <span style="color: red" th:if="${model.nbEvaluationReported == 1}"
+              th:text="#{assignment.sequence.info.nbEvaluationReported.one(${model.nbEvaluationReported})}"></span>
+        <span style="color: red" th:if="${model.nbEvaluationReported > 1}"
+              th:text="#{assignment.sequence.info.nbEvaluationReported.multiple(${model.nbEvaluationReported})}"></span>
+
+<!--        <a href="https://github.com/elaastic/elaastic-questions-server/issues/279" style="color: black" target="_blank">&lt;!&ndash;/* TODO Add  here the link to the correct page */&ndash;&gt;-->
+<!--            ( <span th:text="#{assignment.sequence.info.seeAndModerate}"></span><i class="external alternate icon"></i> )-->
+<!--        </a>-->
+    </th:block>
 </div>

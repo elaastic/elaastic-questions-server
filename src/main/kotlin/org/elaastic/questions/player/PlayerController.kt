@@ -19,7 +19,10 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.*
-import org.elaastic.questions.assignment.sequence.*
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.questions.assignment.sequence.LearnerSequenceService
+import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
@@ -43,10 +46,8 @@ import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.util.requireAccessThrowDenied
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -303,6 +304,7 @@ class PlayerController(
                 messageBuilder = messageBuilder,
                 sequenceStatistics = sequenceService.getStatistics(sequence),
                 teacherResultDashboardService = teacherResultDashboardService,
+                nbReportedEvaluation = getReportedEvaluation(sequence, true),
             )
         )
 
@@ -687,7 +689,6 @@ class PlayerController(
     }
 
 
-
     /**
      * Get the result view for the given learner
      *
@@ -780,4 +781,30 @@ class PlayerController(
         }
         return learnerResultsModel
     }
+
+    /**
+     * @param sequence [Sequence] to get the information
+     * @param teacher [Boolean] to know if the user is a teacher
+     * @return [Int] for the reported evaluation
+     */
+    private fun getReportedEvaluation(sequence: Sequence, teacher: Boolean): Int {
+        if (!teacher) {
+            return 0
+        }
+
+        val nbDRAXOEvaluationReported: Int = if (sequence.evaluationPhaseConfig == EvaluationPhaseConfig.DRAXO) {
+            peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence).count()
+        } else {
+            0
+        }
+
+        val nbChatGPTEvaluationReported: Int = if (sequence.chatGptEvaluationEnabled) {
+            chatGptEvaluationService.findAllReportedNotHidden(sequence).count()
+        } else {
+            0
+        }
+
+        return nbDRAXOEvaluationReported + nbChatGPTEvaluationReported
+    }
+
 }

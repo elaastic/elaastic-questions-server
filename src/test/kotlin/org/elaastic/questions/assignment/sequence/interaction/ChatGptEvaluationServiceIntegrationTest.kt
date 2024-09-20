@@ -1,16 +1,21 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
+import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluation
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationRepository
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationStatus
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.hamcrest.MatcherAssert.*
+import org.elaastic.questions.test.interpreter.command.Phase
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -25,14 +30,14 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = ["no-async"])
 @EnabledIf(value = "#{@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))}", loadContext = true)
+@Transactional
 internal class ChatGptEvaluationServiceIntegrationTest(
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val responseRepository: ResponseRepository,
+    @Autowired val functionalTestingService: FunctionalTestingService,
 ) {
-
-
 
     @BeforeEach
     @Transactional
@@ -366,6 +371,60 @@ internal class ChatGptEvaluationServiceIntegrationTest(
                 expected,
                 chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(listOf(response.id))
             )
+        }
+    }
+
+    @Test
+    fun `test of findAllReportedNotHidden`() {
+        // Given
+        val sequence = integrationTestingService.getAnySequence()
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+
+        val learner = integrationTestingService.getNLearners(3).shuffled().first()
+
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "explanation",
+        )
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tThen("The evaluation exist but it's not reported") {
+            assertEquals(
+                emptyList<ChatGptEvaluation>(),
+                chatGptEvaluationService.findAllReportedNotHidden(response.interaction.sequence)
+            )
+            assertEquals(
+                listOf(it),
+                chatGptEvaluationService.findAllBySequence(response.interaction.sequence)
+            )
+            it
+        }.tWhen("a learner report it") {
+            chatGptEvaluationService.reportEvaluation(it, listOf(ReportReason.INCOHERENCE.name))
+            it
+        }.tThen("The evaluation is reported") {
+            assertEquals(
+                listOf(it),
+                chatGptEvaluationService.findAllReportedNotHidden(response.interaction.sequence)
+            )
+            it
         }
     }
 }

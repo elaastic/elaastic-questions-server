@@ -27,10 +27,10 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
+import org.elaastic.questions.directory.User
 import org.elaastic.questions.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.EntityGraph
@@ -97,6 +97,10 @@ class PeerGradingService(
 
     fun findAllDraxo(response: Response): List<DraxoPeerGrading> =
         peerGradingRepository.findAllByResponseAndType(response, PeerGradingType.DRAXO)
+
+    fun findAllDraxo(sequence: Sequence): List<DraxoPeerGrading> =
+        findAll(sequence)
+            .filterIsInstance<DraxoPeerGrading>()
 
     fun isGraderRegisteredOnAssignment(grader: User, response: Response) =
         learnerAssignmentService.isRegistered(
@@ -207,12 +211,35 @@ class PeerGradingService(
             .setParameter("interaction", interaction)
             .singleResult as Long).toInt()
 
-    fun findAll(sequence: Sequence): List<PeerGrading> =
+    /**
+     * Find all the evaluations made on a sequence at a specific attempt. We
+     * retrieve all the responses of the sequence at the given attempt, and
+     * then we retrieve all the peer grading that have been made on these
+     * responses.
+     *
+     * @param sequence the sequence.
+     * @param attempt the attempt.
+     * @return the list of peer grading.
+     */
+    fun findAllByAttempt(sequence: Sequence, attempt: Int): List<PeerGrading> =
         peerGradingRepository.findAllByResponseIn(
             responseRepository.findAllByInteractionAndAttempt(
                 sequence.getResponseSubmissionInteraction(),
-                1
+                attempt
             )
+        )
+
+    /**
+     * Find all the evaluations made on a sequence. We retrieve all the
+     * responses of the sequence, and then we retrieve all the peer grading
+     * that have been made on these responses.
+     *
+     * @param sequence the sequence.
+     * @return the list of peer grading.
+     */
+    fun findAll(sequence: Sequence): List<PeerGrading> =
+        peerGradingRepository.findAllByResponseIn(
+            responseRepository.findAllByInteraction(sequence.getResponseSubmissionInteraction())
         )
 
     /**
@@ -277,7 +304,7 @@ class PeerGradingService(
      * @param id the id of the peer grading.
      * @return the Draxo peer grading.
      * @throws IllegalArgumentException if no Draxo peer grading is found with
-     *     the given id.
+     *    the given id.
      */
     fun getDraxoPeerGrading(id: Long): DraxoPeerGrading =
         peerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
@@ -290,7 +317,7 @@ class PeerGradingService(
      * @param peerGrading the draxo peer grading to update.
      * @param utilityGrade the utility grade.
      * @throws IllegalArgumentException if the learner is not the owner of the
-     *     response.
+     *    response.
      */
     fun updateUtilityGrade(learner: User, peerGrading: PeerGrading, utilityGrade: UtilityGrade) {
         requireAccess(learner == peerGrading.response.learner) {
@@ -354,7 +381,7 @@ class PeerGradingService(
      * @param registeredUsers the list of learners
      * @param sequence the sequence
      * @return the map with the learner and a boolean indicating if the learner
-     *     answered the sequence
+     *    answered the sequence
      */
     fun learnerToIfTheyAnswer(
         registeredUsers: List<LearnerAssignment>,
@@ -375,4 +402,16 @@ class PeerGradingService(
             learnersWhoAnswered.any { tuple -> tuple[0] == it.learner }
         }
     }
+
+    /**
+     * Return the list of all the DRAXO peer grading that have been reported
+     * and are not hidden by the teacher.
+     *
+     * @param sequence the sequence
+     * @return the list of DRAXO peer grading
+     */
+    fun findAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): List<DraxoPeerGrading> =
+        findAllDraxo(sequence)
+            .filter { it.reportReasons?.isNotEmpty() == true }
+            .filter { !it.hiddenByTeacher }
 }

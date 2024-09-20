@@ -42,12 +42,13 @@ object PlayerModelFactory {
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         messageBuilder: MessageBuilder,
         sequenceStatistics: SequenceStatistics,
-        teacherResultDashboardService: TeacherResultDashboardService
-    ): TeacherPlayerModel = run {
+        teacherResultDashboardService: TeacherResultDashboardService,
+        nbReportedEvaluation: Int,
+    ): TeacherPlayerModel {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResults = sequence.state != State.beforeStart
 
-        TeacherPlayerModel(
+        return TeacherPlayerModel(
             serverBaseUrl = serverBaseUrl,
             sequence = sequence,
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
@@ -60,7 +61,7 @@ object PlayerModelFactory {
             stepsModel = StepsModelFactory.buildForTeacher(sequence),
             sequenceStatistics = sequenceStatistics,
             commandModel = CommandModelFactory.build(user, sequence),
-            sequenceInfoModel = SequenceInfoResolver.resolve(true, sequence, messageBuilder),
+            sequenceInfoModel = SequenceInfoResolver.resolve(true, sequence, messageBuilder, nbReportedEvaluation),
             statementPanelModel = StatementPanelModel(
                 hideStatement = false,
                 panelClosed = sequence.state != State.beforeStart
