@@ -25,7 +25,6 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.controller.MessageBuilder
 import org.springframework.stereotype.Component
 
-@Component
 object SequenceInfoResolver {
 
     fun resolve(
