@@ -27,10 +27,10 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
+import org.elaastic.questions.directory.User
 import org.elaastic.questions.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.EntityGraph
@@ -97,6 +97,9 @@ class PeerGradingService(
 
     fun findAllDraxo(response: Response): List<DraxoPeerGrading> =
         peerGradingRepository.findAllByResponseAndType(response, PeerGradingType.DRAXO)
+
+    fun findAllDraxo(sequence: Sequence): List<DraxoPeerGrading> =
+        findAll(sequence).filterIsInstance<DraxoPeerGrading>()
 
     fun isGraderRegisteredOnAssignment(grader: User, response: Response) =
         learnerAssignmentService.isRegistered(
@@ -277,7 +280,7 @@ class PeerGradingService(
      * @param id the id of the peer grading.
      * @return the Draxo peer grading.
      * @throws IllegalArgumentException if no Draxo peer grading is found with
-     *     the given id.
+     *    the given id.
      */
     fun getDraxoPeerGrading(id: Long): DraxoPeerGrading =
         peerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
@@ -290,7 +293,7 @@ class PeerGradingService(
      * @param peerGrading the draxo peer grading to update.
      * @param utilityGrade the utility grade.
      * @throws IllegalArgumentException if the learner is not the owner of the
-     *     response.
+     *    response.
      */
     fun updateUtilityGrade(learner: User, peerGrading: PeerGrading, utilityGrade: UtilityGrade) {
         requireAccess(learner == peerGrading.response.learner) {
@@ -354,7 +357,7 @@ class PeerGradingService(
      * @param registeredUsers the list of learners
      * @param sequence the sequence
      * @return the map with the learner and a boolean indicating if the learner
-     *     answered the sequence
+     *    answered the sequence
      */
     fun learnerToIfTheyAnswer(
         registeredUsers: List<LearnerAssignment>,
@@ -374,5 +377,18 @@ class PeerGradingService(
         return registeredUsers.associateWith {
             learnersWhoAnswered.any { tuple -> tuple[0] == it.learner }
         }
+    }
+
+    /**
+     * Return the list of all the DRAXO peer grading that have been reported and
+     * are not hidden by the teacher.
+     *
+     * @param sequence the sequence
+     * @return the list of DRAXO peer grading
+     */
+    fun findAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): List<DraxoPeerGrading> {
+        return findAllDraxo(sequence)
+            .filter { it.reportReasons?.isNotEmpty() == true }
+            .filter { !it.hiddenByTeacher }
     }
 }
