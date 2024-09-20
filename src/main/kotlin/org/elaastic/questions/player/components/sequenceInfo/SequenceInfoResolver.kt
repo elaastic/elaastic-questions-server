@@ -22,12 +22,23 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
+@Component
 object SequenceInfoResolver {
 
-    fun resolve(isTeacher: Boolean, sequence: Sequence, messageBuilder: MessageBuilder): SequenceInfoModel =
-        when (sequence.state) {
+    @Autowired lateinit var peerGradingService: PeerGradingService
+    @Autowired lateinit var chatGptEvaluationService: ChatGptEvaluationService
+
+    fun resolve(isTeacher: Boolean, sequence: Sequence, messageBuilder: MessageBuilder): SequenceInfoModel {
+        val nbReportedEvaluation = getReportedEvaluation(sequence, isTeacher)
+
+        return when (sequence.state) {
             State.beforeStart -> SequenceInfoModel(
                 messageBuilder.message(
                     "player.sequence.beforeStart.message"
@@ -85,35 +96,74 @@ object SequenceInfoResolver {
                             }
                         }
 
-                        else -> { // Read interaction
-                            if (sequence.resultsArePublished) {
-                                SequenceInfoModel(
-                                    messageBuilder.message(
-                                        "player.sequence.interaction.read.teacher.show.message"
-                                    ),
-                                    color = "blue"
-                                )
-                            } else if (sequence.state == State.show) {
-                                SequenceInfoModel(
-                                    messageBuilder.message(
-                                        "player.sequence.readinteraction.beforeStart.message",
-                                        sequence.activeInteraction?.rank?.toString() ?: ""
-                                    ),
-                                    color = "blue",
-                                    refreshable = true
-                                )
-                            } else {
-                                SequenceInfoModel(
-                                    messageBuilder.message(
-                                        "player.sequence.readinteraction.not.published"
-                                    ),
-                                    refreshable = true
-                                )
-                            }
-                        }
+                        // Read interaction
+                        else -> getSequenceInfoModelWhenReadInteraction(sequence, messageBuilder, nbReportedEvaluation)
                     }
                 }
         }
+    }
 
+    /**
+     * @param sequence [Sequence] to get the information
+     * @param teacher [Boolean] to know if the user is a teacher
+     * @return [Int] for the reported evaluation
+     */
+    private fun getReportedEvaluation(sequence: Sequence, teacher: Boolean): Int {
+        if (!teacher) {
+            return 0
+        }
 
+        val nbDRAXOEvaluationReported: Int = if (sequence.evaluationPhaseConfig == EvaluationPhaseConfig.DRAXO) {
+            peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence).count()
+        } else {
+            0
+        }
+
+        val nbChatGPTEvaluationReported: Int = if (sequence.chatGptEvaluationEnabled) {
+            chatGptEvaluationService.findAllReportedNotHidden(sequence).count()
+        } else {
+            0
+        }
+
+        return nbDRAXOEvaluationReported + nbChatGPTEvaluationReported
+    }
+
+    /**
+     * @param sequence [Sequence] to get the information
+     * @param messageBuilder [MessageBuilder] to get the message from the
+     *    properties
+     * @return [SequenceInfoModel] for read interaction and the execution
+     *    context is Blended or Distance
+     */
+    private fun getSequenceInfoModelWhenReadInteraction(
+        sequence: Sequence,
+        messageBuilder: MessageBuilder,
+        nbReportedEvaluation: Int = 0,
+    ) = if (sequence.resultsArePublished) {
+        SequenceInfoModel(
+            messageBuilder.message(
+                "player.sequence.interaction.read.teacher.show.message"
+            ),
+            color = "blue",
+            nbEvaluationReported = nbReportedEvaluation,
+        )
+    } else if (sequence.state == State.show) {
+        SequenceInfoModel(
+            messageBuilder.message(
+                "player.sequence.readinteraction.beforeStart.message",
+                sequence.activeInteraction?.rank?.toString() ?: ""
+            ),
+            color = "blue",
+            refreshable = true,
+            nbEvaluationReported = nbReportedEvaluation,
+        )
+    } else {
+        SequenceInfoModel(
+            messageBuilder.message(
+                "player.sequence.readinteraction.not.published"
+            ),
+            refreshable = true,
+            nbEvaluationReported = nbReportedEvaluation,
+        )
+    }
 }
