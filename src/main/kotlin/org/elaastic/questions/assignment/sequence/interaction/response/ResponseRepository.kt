@@ -51,4 +51,6 @@ interface ResponseRepository : JpaRepository<Response, Long> {
     fun countByStatement(statement: Statement): Int
 
     fun findAllByAttemptAndInteractionAndFakeIsTrue(attempt: AttemptNum, interaction: Interaction): List<Response>
+
+    fun findAllByInteraction(interaction: Interaction): List<Response>
 }
