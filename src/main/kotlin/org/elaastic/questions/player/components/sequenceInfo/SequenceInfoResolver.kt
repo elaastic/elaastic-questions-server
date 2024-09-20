@@ -23,7 +23,6 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.controller.MessageBuilder
-import java.lang.IllegalStateException
 
 object SequenceInfoResolver {
 
@@ -37,80 +36,83 @@ object SequenceInfoResolver {
                 refreshable = !isTeacher
             )
 
-            State.show -> if (sequence.executionContext == ExecutionContext.FaceToFace) {
-                if (sequence.activeInteraction?.interactionType in listOf(
-                        InteractionType.ResponseSubmission,
-                        InteractionType.Evaluation
-                    )
-                ) {
-                    when (sequence.activeInteraction?.state) {
-                        null -> throw IllegalStateException()
-                        State.beforeStart -> SequenceInfoModel(
-                            messageBuilder.message(
-                                "player.sequence.interaction.beforeStart.message",
-                                sequence.activeInteraction?.rank?.toString() ?: ""
-                            ),
-                            color = "blue",
-                            refreshable = !isTeacher
-                        )
-
-                        State.show -> SequenceInfoModel(
-                            messageBuilder.message(
-                                "player.sequence.interaction.inprogress",
-                                sequence.activeInteraction?.rank?.toString() ?: ""
-                            ),
-                            color = "blue",
-                            refreshable = true
-                        )
-
-                        State.afterStop -> SequenceInfoModel(
-                            messageBuilder.message(
-                                "player.sequence.interaction.closed.forTeacher",
-                                sequence.activeInteraction?.rank?.toString() ?: ""
-                            ),
-                            color = "blue",
-                            refreshable = !isTeacher
-                        )
-                    }
-                } else {
-                    when {
-                        sequence.resultsArePublished -> SequenceInfoModel(
-                            messageBuilder.message(
-                                "player.sequence.interaction.read.teacher.show.message"
-                            ),
-                            color = "blue"
-                        )
-
-                        sequence.state == State.show -> SequenceInfoModel(
-                            messageBuilder.message(
-                                "player.sequence.readinteraction.beforeStart.message",
-                                sequence.activeInteraction?.rank?.toString() ?: ""
-                            ),
-                            color = "blue",
-                            refreshable = true
-                        )
-
-                        else -> SequenceInfoModel(
-                            messageBuilder.message(
-                                "player.sequence.readinteraction.not.published"
-                            ),
-                            refreshable = true
-                        )
-                    }
-                }
-            } else {
-                SequenceInfoModel(
-                    messageBuilder.message(
-                        "player.sequence.open"
-                    ),
-                    color = "blue",
-                    refreshable = true,
-                )
-            }
-
             State.afterStop -> SequenceInfoModel(
                 messageBuilder.message("player.sequence.closed")
             )
+
+            State.show ->
+                if (sequence.executionContext != ExecutionContext.FaceToFace) {
+                    SequenceInfoModel(
+                        messageBuilder.message(
+                            "player.sequence.open"
+                        ),
+                        color = "blue",
+                        refreshable = true,
+                    )
+                } else {
+                    when (sequence.activeInteraction?.interactionType) {
+                        InteractionType.ResponseSubmission,
+                        InteractionType.Evaluation
+                            -> {
+                            when (sequence.activeInteraction?.state) {
+                                null -> throw IllegalStateException()
+                                State.beforeStart -> SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.interaction.beforeStart.message",
+                                        sequence.activeInteraction?.rank?.toString() ?: ""
+                                    ),
+                                    color = "blue",
+                                    refreshable = !isTeacher
+                                )
+
+                                State.show -> SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.interaction.inprogress",
+                                        sequence.activeInteraction?.rank?.toString() ?: ""
+                                    ),
+                                    color = "blue",
+                                    refreshable = true
+                                )
+
+                                State.afterStop -> SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.interaction.closed.forTeacher",
+                                        sequence.activeInteraction?.rank?.toString() ?: ""
+                                    ),
+                                    color = "blue",
+                                    refreshable = !isTeacher
+                                )
+                            }
+                        }
+
+                        else -> { // Read interaction
+                            if (sequence.resultsArePublished) {
+                                SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.interaction.read.teacher.show.message"
+                                    ),
+                                    color = "blue"
+                                )
+                            } else if (sequence.state == State.show) {
+                                SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.readinteraction.beforeStart.message",
+                                        sequence.activeInteraction?.rank?.toString() ?: ""
+                                    ),
+                                    color = "blue",
+                                    refreshable = true
+                                )
+                            } else {
+                                SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.readinteraction.not.published"
+                                    ),
+                                    refreshable = true
+                                )
+                            }
+                        }
+                    }
+                }
         }
 
 
