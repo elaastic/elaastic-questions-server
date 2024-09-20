@@ -28,7 +28,7 @@ class ResponseData(
 ) {
     constructor(response: Response) : this(
             choices = response.learnerChoice ?: error("The learner choice is undefined"),
-            score = ((response.score ?: error("The score is undefined"))).toInt(),
+            score = (response.score ?: error("The score is undefined")).toInt(),
             correct = response.score?.compareTo(BigDecimal(100)) == 0
     )
 
