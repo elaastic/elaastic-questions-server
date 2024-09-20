@@ -23,7 +23,6 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.controller.MessageBuilder
-import org.springframework.stereotype.Component
 
 object SequenceInfoResolver {
 
