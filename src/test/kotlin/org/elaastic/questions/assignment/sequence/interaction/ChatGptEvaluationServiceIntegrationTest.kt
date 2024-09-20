@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = ["no-async"])
 @EnabledIf(value = "#{@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))}", loadContext = true)
+@Transactional
 internal class ChatGptEvaluationServiceIntegrationTest(
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val integrationTestingService: IntegrationTestingService,
