@@ -55,6 +55,17 @@
         </div>
     </div>
 
+
+    <div class="field" style="margin-top: 16px;">
+        <label th:text="#{subject.form.public}">
+
+        </label>
+        <div class="ui toggle checkbox">
+            <input type="checkbox" name="public" th:field="*{public}">
+            <label></label>
+        </div>
+    </div>
+
     <script th:inline="javascript">
         $(document)
             .ready(function () {
