@@ -27,6 +27,7 @@ import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.User
 import org.elaastic.common.persistence.pagination.PaginationUtil
+import org.elaastic.questions.rabbitmq.RabbitMQService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementController
 import org.elaastic.questions.subject.statement.StatementService
@@ -572,16 +573,19 @@ class SubjectController(
         var version: Long? = null,
         @field:NotBlank var title: String? = null,
         @field:NotNull var owner: User? = null,
-        var course: Course? = null
+        var course: Course? = null,
+        var public: Boolean = false,
     ) {
         fun toEntity(): Subject {
             return Subject(
                 title = title!!,
                 owner = owner!!,
-                course = course
+                course = course,
+                public = public
             ).let {
                 it.id = id
                 it.version = version
+                it.public = public
                 it
             }
         }
