@@ -9,12 +9,14 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.email.MailCheckingMailJob
 import org.elaastic.questions.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.util.logging.Logger
 import javax.persistence.EntityManager
 import kotlin.jvm.Throws
 
@@ -29,6 +31,7 @@ class ChatGptEvaluationService(
     @Autowired val entityManager: EntityManager,
 ) {
 
+    val logger = Logger.getLogger(ChatGptEvaluationService::class.java.name)
 
     @Async
     @Transactional(propagation = Propagation.NEVER)
@@ -60,7 +63,12 @@ class ChatGptEvaluationService(
             .replace("\${studentExplanation}", studentExplanation.replace(regexHtml, ""))
 
         try {
+            logger.info("Generating response with ChatGPT for response ${response.id}")
+            logger.fine("Prompt: $prompt")
             val generatedResponse = chatGptApiClient.generateResponseFromPrompt(prompt)
+
+            logger.info("Response generated with ChatGPT for response ${response.id}")
+            logger.fine("Generated response: $generatedResponse")
 
             val regexGrade = Regex("""(?:Note)?\s*:?\s*\[(\d+(?:[.,]\d+)?)(?:/5)?]""")
 
@@ -75,6 +83,7 @@ class ChatGptEvaluationService(
 
         } catch (e: Exception) {
             chatGptEvaluation.status = ChatGptEvaluationStatus.ERROR.name
+            logger.severe("Error while evaluating response with ChatGPT: ${e.message}")
         }
 
         return chatGptEvaluationRepository.save(chatGptEvaluation)

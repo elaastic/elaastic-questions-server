@@ -47,7 +47,6 @@ internal class ChatGptEvaluationRepositoryIntegrationTest(
             }
             .tThen {
                 MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
-                MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(0L))
                 MatcherAssert.assertThat(it.dateCreated, CoreMatchers.notNullValue())
                 MatcherAssert.assertThat(it.lastUpdated, CoreMatchers.notNullValue())
 

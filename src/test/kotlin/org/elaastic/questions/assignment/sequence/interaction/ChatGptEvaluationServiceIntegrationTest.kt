@@ -59,7 +59,6 @@ internal class ChatGptEvaluationServiceIntegrationTest(
             chatGptEvaluationService.createEvaluation(response, "fr")
         }.tThen {
             assertThat(it.id, notNullValue())
-            assertThat(it.version, equalTo(1L))
             assertThat(it.dateCreated, notNullValue())
             assertThat(it.lastUpdated, notNullValue())
 

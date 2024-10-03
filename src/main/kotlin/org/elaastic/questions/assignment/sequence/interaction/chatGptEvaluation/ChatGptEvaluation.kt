@@ -72,8 +72,6 @@ class ChatGptEvaluation(
 
 ) : AbstractJpaPersistable<Long>(), ReportCandidate {
 
-    @Version
-    var version: Long? = null
 
     @CreatedDate
     lateinit var dateCreated: Date

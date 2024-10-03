@@ -14,8 +14,11 @@ class ChatGptApiClient(
     @Value("\${chatgptapi.token}")
     val apiToken: String,
 
-    @Value("\${chatgptapi.orgtoken}")
-    val orgToken: String,
+    @Value("\${chatgptapi.model}")
+    val model: String,
+
+    @Value("\${chatgptapi.maxTokens}")
+    val maxTokens: Int,
 
 ) {
 
@@ -32,7 +35,6 @@ class ChatGptApiClient(
         val headers = HttpHeaders().apply {
             contentType = MediaType.APPLICATION_JSON
             set("Authorization", "Bearer $apiToken")
-            set("OpenAI-Organization", orgToken)
         }
 
         val requestBody = mapOf(
@@ -60,8 +62,6 @@ class ChatGptApiClient(
 
     fun generateResponseFromPrompt(
         prompt : String,
-        model: String = "gpt-3.5-turbo",
-        maxTokens: Int = 2000
     ): String {
         val response = get(model, listOf(ChatGptApiMessageData("user",prompt)), maxTokens)
         return response?.message?.content
