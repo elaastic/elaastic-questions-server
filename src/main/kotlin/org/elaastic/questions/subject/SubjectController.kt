@@ -402,8 +402,7 @@ class SubjectController(
         model: Model,
         @PathVariable id: Long,
         response: HttpServletResponse,
-        redirectAttributes: RedirectAttributes,
-        request: HttpServletRequest
+        redirectAttributes: RedirectAttributes
     ): String {
         val user: User = authentication.principal as User
 
