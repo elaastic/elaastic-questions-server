@@ -25,6 +25,7 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.OnboardingState
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.rabbitmq.RabbitMQService
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.statement.StatementService
 import org.junit.jupiter.api.Test
@@ -78,6 +79,10 @@ internal class SubjectControllerTest(
     @MockBean
     lateinit var subjectExporter: SubjectExporter
 
+    @MockBean
+    lateinit var rabbitMQService: RabbitMQService
+
+
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
     @Test
@@ -117,11 +122,13 @@ internal class SubjectControllerTest(
     fun `test save - valid`() {
         val subjectId = 301L
         val title = "A random Title"
+        val public = false
 
         val subjectData = SubjectController.SubjectData(
                 id = subjectId,
                 title = title,
-                owner = user
+                owner = user,
+                public = public
         )
 
         mockMvc.perform(
