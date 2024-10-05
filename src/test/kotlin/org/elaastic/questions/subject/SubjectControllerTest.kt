@@ -147,6 +147,64 @@ internal class SubjectControllerTest(
     }
 
     @Test
+    fun ` test a subject public without a description`() {
+        val subjectId = 301L
+        val title = "A random Title"
+        val public = true
+
+        val subjectData = SubjectController.SubjectData(
+            id = subjectId,
+            title = title,
+            owner = user,
+            public = public
+        )
+
+        mockMvc.perform(
+            post("/subject/save")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .flashAttr("subjectData", subjectData)
+        )
+            .andExpect(status().isFound)
+            .andExpect(
+                redirectedUrlTemplate(
+                    "/subject/{subjectId}?activeTab=questions",
+                    subjectId
+                )
+            )
+    }
+
+    @Test
+    fun `test save with a subject public with a description`() {
+        val subjectId = 301L
+        val title = "A random Title"
+        val public = true
+        val description = "A random description"
+
+        val subjectData = SubjectController.SubjectData(
+            id = subjectId,
+            title = title,
+            owner = user,
+            public = public,
+            description = description
+        )
+
+        mockMvc.perform(
+            post("/subject/save")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .flashAttr("subjectData", subjectData)
+        )
+            .andExpect(status().isFound)
+            .andExpect(
+                redirectedUrlTemplate(
+                    "/subject/{subjectId}?activeTab=questions",
+                    subjectId
+                )
+            )
+    }
+
+    @Test
     fun `test save - invalid because of blank title`() {
         mockMvc.perform(
                 post("/subject/save")
