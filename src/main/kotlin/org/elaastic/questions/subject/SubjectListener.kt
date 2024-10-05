@@ -1,7 +1,6 @@
-package org.elaastic.questions.subject.statement
+package org.elaastic.questions.subject
 
 import org.elaastic.questions.rabbitmq.RabbitMQService
-import org.elaastic.questions.subject.Subject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import java.sql.Timestamp

@@ -26,7 +26,8 @@ class RabbitMQService(
                 }
             }
         """.trimIndent()
-        rabbitTemplate.convertAndSend(exchange, queueName, message)
+
+        this.send(message)
     }
 
     fun privatizeSubject(subject: Subject) {
@@ -38,7 +39,8 @@ class RabbitMQService(
                 }
             }
         """.trimIndent()
-        rabbitTemplate.convertAndSend(exchange, queueName, message)
+
+        this.send(message)
     }
 
     fun deleteSubject(subject: Subject) {
@@ -50,6 +52,14 @@ class RabbitMQService(
                 }
             }
         """.trimIndent()
-        rabbitTemplate.convertAndSend(exchange, queueName, message)
+        this.send(message)
+    }
+
+    private fun send(message: String) {
+        try {
+            rabbitTemplate.convertAndSend(exchange, queueName, message)
+        } catch (e: Exception) {
+            println("Error sending message: $e")
+        }
     }
 }
