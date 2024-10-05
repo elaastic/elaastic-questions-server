@@ -402,7 +402,8 @@ class SubjectController(
         model: Model,
         @PathVariable id: Long,
         response: HttpServletResponse,
-        redirectAttributes: RedirectAttributes
+        redirectAttributes: RedirectAttributes,
+        request: HttpServletRequest
     ): String {
         val user: User = authentication.principal as User
 
@@ -575,17 +576,20 @@ class SubjectController(
         @field:NotNull var owner: User? = null,
         var course: Course? = null,
         var public: Boolean = false,
+        var description: String? = null,
     ) {
         fun toEntity(): Subject {
             return Subject(
                 title = title!!,
                 owner = owner!!,
                 course = course,
-                public = public
+                public = public,
+                description = description
             ).let {
                 it.id = id
                 it.version = version
                 it.public = public
+                it.description = description
                 it
             }
         }
