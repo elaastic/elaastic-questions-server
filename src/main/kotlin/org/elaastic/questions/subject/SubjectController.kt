@@ -27,7 +27,6 @@ import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.User
 import org.elaastic.common.persistence.pagination.PaginationUtil
-import org.elaastic.questions.rabbitmq.RabbitMQService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementController
 import org.elaastic.questions.subject.statement.StatementService
