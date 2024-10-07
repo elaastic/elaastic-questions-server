@@ -48,10 +48,21 @@
 
     <!-- Public checkbox -->
     <div class="field" style="margin-top: 16px;">
-        <label th:text="#{subject.form.public}">Make subject public</label>
+        <label th:text="#{subject.form.shareToggle}">Share this subject with community</label>
         <div class="ui toggle checkbox">
             <input type="checkbox" name="public" th:field="*{public}" class="publicCheckbox">
             <label></label>
+        </div>
+        <br/>
+        <div style="display: inline; font-size: .9rem; font-style: italic;">
+            <span th:text="#{subject.public.licence}">
+                Subject shared with the community is distributed under
+            </span>
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr" target="_blank"> Creative Commons BY-NC-SA 4.0</a>
+            <span th:text="#{subject.public.available}">
+                and available on
+            </span>
+            <a th:href="${@environment.getProperty('katalog.url')}" target="_blank"> Katalog</a>
         </div>
     </div>
 
