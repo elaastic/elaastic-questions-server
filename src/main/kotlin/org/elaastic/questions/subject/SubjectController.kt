@@ -21,12 +21,12 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.AssignmentController
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.controller.ControllerUtil
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.ControllerUtil
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.persistence.pagination.PaginationUtil
+import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementController
 import org.elaastic.questions.subject.statement.StatementService

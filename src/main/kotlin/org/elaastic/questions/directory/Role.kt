@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.springframework.cache.annotation.Cacheable

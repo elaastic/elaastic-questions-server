@@ -21,7 +21,7 @@ package org.elaastic.questions.subject
 import com.nhaarman.mockitokotlin2.*
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.OnboardingState
 import org.elaastic.questions.directory.User

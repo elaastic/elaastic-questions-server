@@ -31,7 +31,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluat
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.util.requireAccess
+import org.elaastic.common.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.stereotype.Service

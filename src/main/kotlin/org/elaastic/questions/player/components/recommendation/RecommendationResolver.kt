@@ -21,7 +21,7 @@ package org.elaastic.questions.player.components.recommendation
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import java.math.BigDecimal
 
 object RecommendationResolver {
@@ -29,7 +29,8 @@ object RecommendationResolver {
     fun resolve(responseSet: ResponseSet,
                 peerGradings: List<PeerGrading>?,
                 sequence: Sequence,
-                messageBuilder: MessageBuilder): RecommendationModel? {
+                messageBuilder: MessageBuilder
+    ): RecommendationModel? {
         var result: RecommendationModel? = null
         val firstResponses = responseSet[1].filter { response -> !response.fake }
         if (firstResponses.size >= 10) {

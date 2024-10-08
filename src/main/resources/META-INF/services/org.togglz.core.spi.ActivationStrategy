@@ -1,2 +1,2 @@
-org.elaastic.questions.features.OnlyTeacherActivationStrategy
-org.elaastic.questions.features.ShowRecommendationsActivationStrategy
+org.elaastic.common.abtesting.OnlyTeacherActivationStrategy
+org.elaastic.common.abtesting.ShowRecommendationsActivationStrategy

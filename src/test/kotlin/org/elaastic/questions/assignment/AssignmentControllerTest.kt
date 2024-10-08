@@ -19,7 +19,7 @@
 package org.elaastic.questions.assignment
 
 import com.nhaarman.mockitokotlin2.*
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.directory.OnboardingState
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.security.TestSecurityConfig

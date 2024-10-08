@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.player.components.evaluation
 
-import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModel
+import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModel
 import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 
 /**

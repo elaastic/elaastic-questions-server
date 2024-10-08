@@ -27,7 +27,7 @@ import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.util.toDate
+import org.elaastic.common.util.toDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

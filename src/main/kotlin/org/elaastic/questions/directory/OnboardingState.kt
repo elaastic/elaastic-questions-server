@@ -18,11 +18,10 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.onboarding.OnboardingChapter
-import org.elaastic.questions.onboarding.OnboardingChapterConverter
-import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.common.onboarding.OnboardingChapter
+import org.elaastic.common.onboarding.OnboardingChapterConverter
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 

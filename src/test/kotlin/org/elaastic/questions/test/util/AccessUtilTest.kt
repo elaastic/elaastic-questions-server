@@ -1,7 +1,7 @@
 package org.elaastic.questions.test.util
 
-import org.elaastic.questions.util.requireAccess
-import org.elaastic.questions.util.requireAccessThrowDenied
+import org.elaastic.common.util.requireAccess
+import org.elaastic.common.util.requireAccessThrowDenied
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.*

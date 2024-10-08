@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.StatementService
-import org.elaastic.questions.util.ZipService
+import org.elaastic.common.util.ZipService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter

@@ -17,14 +17,15 @@
  */
 package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.UtilityGrade
-import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.evaluation.EvaluationModel
-import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource

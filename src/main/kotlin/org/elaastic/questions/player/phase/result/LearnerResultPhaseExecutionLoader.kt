@@ -1,11 +1,11 @@
 package org.elaastic.questions.player.phase.result
 
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
-import org.elaastic.questions.controller.MessageBuilder
-import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModelFactory
+import org.elaastic.common.web.MessageBuilder
+import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
 import org.elaastic.questions.player.phase.LearnerPhase
 import org.elaastic.questions.player.phase.LearnerPhaseExecution

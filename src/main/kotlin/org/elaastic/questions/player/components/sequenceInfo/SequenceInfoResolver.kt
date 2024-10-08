@@ -22,7 +22,7 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 
 object SequenceInfoResolver {
 

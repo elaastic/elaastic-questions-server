@@ -24,7 +24,7 @@ import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.directory.controller.command.PasswordData
 import org.elaastic.questions.directory.controller.command.UserData
-import org.elaastic.questions.onboarding.OnboardingChapter
+import org.elaastic.common.onboarding.OnboardingChapter
 import org.elaastic.questions.terms.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value

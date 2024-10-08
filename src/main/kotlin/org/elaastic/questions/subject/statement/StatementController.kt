@@ -25,7 +25,7 @@ import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.*
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,12 +49,12 @@ import javax.validation.constraints.NotNull
 @RequestMapping("/subject/{subjectId}/statement")
 @Transactional
 class StatementController(
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val statementService: StatementService,
-        @Autowired val fakeExplanationService: FakeExplanationService,
-        @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val subjectService: SubjectService,
-        @Autowired val attachmentService: AttachmentService
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val statementService: StatementService,
+    @Autowired val fakeExplanationService: FakeExplanationService,
+    @Autowired val messageBuilder: MessageBuilder,
+    @Autowired val subjectService: SubjectService,
+    @Autowired val attachmentService: AttachmentService
 ) {
 
     @GetMapping("{id}/edit")
