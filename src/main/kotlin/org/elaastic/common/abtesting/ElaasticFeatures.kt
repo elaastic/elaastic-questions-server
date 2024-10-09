@@ -47,9 +47,16 @@ enum class ElaasticFeatures {
     /**
      * Import and Export Subjects as a ZIP archive
      */
+    @EnabledByDefault
     IMPORT_EXPORT,
 
-    // Disabled by default
+    @EnabledByDefault
+    @DefaultActivationStrategy(
+        id = SomeTeachersAllStudentsActivationStrategy.ID,
+        parameters = [
+            ActivationParameter(name = "users", value = "fsil")
+        ]
+    )
     CHATGPT_EVALUATION,
 
     // Disabled by default, accessible on username strategy
