@@ -44,6 +44,6 @@ ENTRYPOINT [ \
     "-server", "-XX:+UseParallelGC", \
     "-Djava.security.egd=file:/dev/./urandom", \
     "-Djava.io.tmpdir=/tmp/", \
-    "org.elaastic.questions.ElaasticQuestionsServerKt", \
+    "org.elaastic.ElaasticQuestionsServerKt", \
     "--spring.config.additional-location=file:/configuration/" \
 ]
