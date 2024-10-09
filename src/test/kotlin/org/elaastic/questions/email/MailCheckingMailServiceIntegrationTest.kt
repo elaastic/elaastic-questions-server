@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.email
 
-import org.elaastic.questions.bootstrap.BootstrapService
+import org.elaastic.bootstrap.BootstrapService
 import org.elaastic.questions.directory.ActivationKeyRepository
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User

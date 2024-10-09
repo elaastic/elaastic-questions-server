@@ -19,7 +19,7 @@
 package org.elaastic.questions.email
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.questions.bootstrap.BootstrapService
+import org.elaastic.bootstrap.BootstrapService
 import org.elaastic.questions.directory.*
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat

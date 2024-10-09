@@ -26,7 +26,7 @@ import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -107,7 +107,7 @@ class Sequence(
      * ChatGPT will submit an evaluation for each student response.
      *
      * @see
-     *     org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluation
+     *     org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
      */
     var chatGptEvaluationEnabled: Boolean = false
 

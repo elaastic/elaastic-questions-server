@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import javax.persistence.Entity
 import javax.persistence.OneToOne
 import javax.persistence.Version

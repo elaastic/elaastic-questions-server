@@ -18,9 +18,9 @@
 
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.persistence.pagination.PaginationUtil
+import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement

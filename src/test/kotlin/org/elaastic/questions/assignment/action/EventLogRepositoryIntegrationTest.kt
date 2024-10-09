@@ -31,7 +31,7 @@ import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-internal class EventLogRepositoryIntegrationTest(
+class EventLogRepositoryIntegrationTest(
         @Autowired val eventLogRepository: EventLogRepository,
         @Autowired val integrationTestingService: IntegrationTestingService
 ) {

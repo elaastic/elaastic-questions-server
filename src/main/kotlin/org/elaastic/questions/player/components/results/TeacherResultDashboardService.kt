@@ -1,10 +1,10 @@
 package org.elaastic.questions.player.components.results
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.togglz.core.manager.FeatureManager

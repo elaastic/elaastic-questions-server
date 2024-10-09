@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.terms
 
-import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull

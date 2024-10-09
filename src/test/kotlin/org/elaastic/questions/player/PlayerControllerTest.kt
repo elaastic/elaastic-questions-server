@@ -28,10 +28,10 @@ import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.questions.assignment.sequence.interaction.chatGptEvaluation.ChatGptEvaluationService
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.directory.AnonymousUserService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService

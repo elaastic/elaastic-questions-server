@@ -18,9 +18,9 @@
 
 package org.elaastic.questions.course
 
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.persistence.pagination.PaginationUtil
+import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.SubjectController
 import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired

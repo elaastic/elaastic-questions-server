@@ -1,6 +1,6 @@
 package org.elaastic.questions.player.phase.result
 
-import org.elaastic.questions.player.components.evaluation.chatGptEvaluation.ChatGptEvaluationModel
+import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModel
 import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.phase.PhaseViewModel

@@ -1,7 +1,7 @@
 package org.elaastic.questions.directory.cas
 
 import org.elaastic.questions.directory.User
-import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import java.time.LocalDate
 import javax.persistence.*
 

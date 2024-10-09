@@ -20,7 +20,7 @@ package org.elaastic.questions.assignment.sequence.eventLog
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.controller.MessageBuilder
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/action")
 class EventLogController(
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val sequenceService: SequenceService,
-        @Autowired val messageBuilder: MessageBuilder,
-        @Autowired val eventLogService: EventLogService
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val messageBuilder: MessageBuilder,
+    @Autowired val eventLogService: EventLogService
 ) {
 
     @GetMapping("/{sequenceId}/saveAction/{action}/{obj}")

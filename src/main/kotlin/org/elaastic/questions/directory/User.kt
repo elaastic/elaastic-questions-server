@@ -22,7 +22,7 @@ import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.directory.cas.CasUser
 import org.elaastic.questions.directory.validation.PlainTextPasswordIsTooShort
 import org.elaastic.questions.directory.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
-import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable

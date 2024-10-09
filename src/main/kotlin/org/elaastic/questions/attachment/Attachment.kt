@@ -19,7 +19,7 @@
 package org.elaastic.questions.attachment
 
 import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.persistence.AbstractJpaPersistable
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank

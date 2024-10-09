@@ -17,16 +17,8 @@
  */
 package org.elaastic.questions.player.components.recommendation
 
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.Sequence
 import org.junit.jupiter.api.Test
-import com.nhaarman.mockitokotlin2.*
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
 import java.math.BigDecimal
-import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
-import org.elaastic.questions.controller.MessageBuilder
 import org.elaastic.questions.player.components.explanationViewer.ExplanationData
 
 internal class CorrectAndMeanGradeComparatorTest {

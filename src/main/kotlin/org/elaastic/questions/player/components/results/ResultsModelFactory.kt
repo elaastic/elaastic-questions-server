@@ -25,8 +25,8 @@ import org.elaastic.questions.assignment.sequence.interaction.results.Confidence
 import org.elaastic.questions.assignment.sequence.interaction.results.GradingDistributionFactory
 import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistributionFactory
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
-import org.elaastic.questions.controller.MessageBuilder
-import org.elaastic.questions.features.ElaasticFeatures
+import org.elaastic.common.web.MessageBuilder
+import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.recommendation.RecommendationResolver
 import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
