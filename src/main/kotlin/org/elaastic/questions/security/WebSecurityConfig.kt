@@ -128,6 +128,7 @@ class WebSecurityConfig(
                 authorize("/launch/consent", permitAll)
                 authorize("/player/register", permitAll)
                 authorize("/ltiConsumer/**", hasAuthority(Role.RoleId.ADMIN.roleName))
+                authorize("/chatgpt/prompt/**", hasAuthority(Role.RoleId.ADMIN.roleName))
                 authorize(anyRequest, authenticated)
             }
 

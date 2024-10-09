@@ -1,0 +1,113 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>elaastic: Chat GPT prompt</title>
+</head>
+
+<body>
+<aside id="pageSpecificMenu">
+
+</aside>
+
+<section>
+
+  <h2 class="ui header">
+    <i class="large icons">
+      <i class="book icon"></i>
+      <i class="corner pencil alternate  icon"></i>
+    </i>
+
+    <div class="content" style="vertical-align: middle;">
+      The active chatGPT prompts
+    </div>
+  </h2>
+
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message
+  </div>
+
+  <h3 class="ui top attached block header">
+    <div class="content">
+      [[${promptDefaultLanguage.language}]]
+    </div>
+  </h3>
+
+  <div class="ui segment bottom attached">
+    <p>
+      <label>Content:</label>
+      <strong>[[${promptDefaultLanguage.content}]]</strong>
+    </p>
+    <p>
+      <label>Enable from:</label>
+      <strong>[[${#dates.format(promptDefaultLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]</strong>
+    </p>
+  </div>
+
+  <h3 class="ui top attached block header">
+    <div class="content">
+      [[${promptFrLanguage.language}]]
+    </div>
+  </h3>
+
+  <div class="ui segment bottom attached">
+    <p>
+      <label>Content:</label>
+      <strong>[[${promptFrLanguage.content}]]</strong>
+    </p>
+    <p>
+      <label>Enable from:</label>
+      <strong>[[${#dates.format(promptFrLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]</strong>
+    </p>
+  </div>
+
+  <h3 class="ui top attached block header">
+    <div class="content">
+      [[${promptEsLanguage.language}]]
+    </div>
+  </h3>
+
+  <div class="ui segment bottom attached">
+    <p>
+      <label>Content:</label>
+      <strong>[[${promptEsLanguage.content}]]</strong>
+    </p>
+    <p>
+      <label>Enable from:</label>
+      <strong>[[${#dates.format(promptEsLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]</strong>
+    </p>
+  </div>
+<!--  <div>-->
+<!--    <a th:href="@{/ltiConsumer/{id}/edit(id=${ltiConsumer.key})}"-->
+<!--       href="edit"-->
+<!--       class="ui primary button">-->
+<!--      <i class="edit icon"></i>-->
+<!--      <span>-->
+<!--        Edit-->
+<!--      </span>-->
+<!--    </a>-->
+<!--  </div>-->
+
+</section>
+
+</body>
+</html>
