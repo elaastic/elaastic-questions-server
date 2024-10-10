@@ -54,58 +54,55 @@
 
   <div class="ui segment bottom attached">
     <p>
-      <label>Content:</label>
-      <strong>[[${promptDefaultLanguage.content}]]</strong>
+      [[${promptDefaultLanguage.content}]]
     </p>
     <p>
       <label>Enable from:</label>
-      <strong>[[${#dates.format(promptDefaultLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]</strong>
+      [[${#dates.format(promptDefaultLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]
     </p>
   </div>
 
   <h3 class="ui top attached block header">
     <div class="content">
-      [[${promptFrLanguage.language}]]
+      Language: [[${promptFrLanguage.language}]]
     </div>
   </h3>
 
   <div class="ui segment bottom attached">
     <p>
-      <label>Content:</label>
-      <strong>[[${promptFrLanguage.content}]]</strong>
+      [[${promptFrLanguage.content}]]
     </p>
     <p>
       <label>Enable from:</label>
-      <strong>[[${#dates.format(promptFrLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]</strong>
+      [[${#dates.format(promptFrLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]
     </p>
   </div>
 
   <h3 class="ui top attached block header">
     <div class="content">
-      [[${promptEsLanguage.language}]]
+      Language: [[${promptEsLanguage.language}]]
     </div>
   </h3>
 
   <div class="ui segment bottom attached">
     <p>
-      <label>Content:</label>
-      <strong>[[${promptEsLanguage.content}]]</strong>
+      [[${promptEsLanguage.content}]]
     </p>
     <p>
       <label>Enable from:</label>
-      <strong>[[${#dates.format(promptEsLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]</strong>
+      [[${#dates.format(promptEsLanguage.startDate, 'dd/MM/yyyy HH:mm')}]]
     </p>
   </div>
-<!--  <div>-->
-<!--    <a th:href="@{/ltiConsumer/{id}/edit(id=${ltiConsumer.key})}"-->
-<!--       href="edit"-->
-<!--       class="ui primary button">-->
-<!--      <i class="edit icon"></i>-->
-<!--      <span>-->
-<!--        Edit-->
-<!--      </span>-->
-<!--    </a>-->
-<!--  </div>-->
+  <div>
+    <a th:href="@{/chatgpt/prompt/edit}"
+       href="edit"
+       class="ui primary button">
+      <i class="edit icon"></i>
+      <span>
+        Edit
+      </span>
+    </a>
+  </div>
 
 </section>
 

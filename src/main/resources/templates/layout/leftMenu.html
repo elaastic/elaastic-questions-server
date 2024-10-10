@@ -147,6 +147,16 @@
     <i class="settings icon"></i>
   </a>
 
+  <a sec:authorize="hasAuthority('ADMIN_ROLE')"
+     th:href="@{/chatgpt/prompt/show}"
+     href="/chatgpt/prompt/show"
+     class="item"
+     data-tooltip="Chat GPT Prompts"
+     data-position="right center"
+     data-inverted="">
+    <i class="terminal icon"></i>
+  </a>
+
   <style>
       .bottom-menu {
           position: relative;

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, content=~{::section})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <title>elaastic: Chat GPT prompt</title>
+</head>
+
+<body>
+<aside id="pageSpecificMenu">
+
+</aside>
+
+<section>
+
+  <h2 class="ui header">
+    <i class="large icons">
+      <i class="book icon"></i>
+      <i class="corner pencil alternate  icon"></i>
+    </i>
+
+    <div class="content" style="vertical-align: middle;">
+      The active chatGPT prompts
+    </div>
+  </h2>
+
+  <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+    Message
+  </div>
+
+  <!-- Form for Default Language Prompt -->
+  <h3 class="ui top attached block header">
+    <div class="content">
+      English
+    </div>
+  </h3>
+  <div class="ui segment bottom attached">
+    <form th:action="@{/chatgpt/prompt/update}" method="post">
+      <input type="hidden" name="language" th:value="en" />
+      <div class="field">
+        <textarea name="content" rows="10" th:text="${promptDefaultLanguage.content}" style="width: 100%;"></textarea>
+      </div>
+      <button type="submit" class="ui primary button">Update</button>
+    </form>
+  </div>
+
+  <!-- Form for French Language Prompt -->
+  <h3 class="ui top attached block header">
+    <div class="content">
+      French
+    </div>
+  </h3>
+  <div class="ui segment bottom attached">
+    <form th:action="@{/chatgpt/prompt/update}" method="post">
+      <input type="hidden" name="language" th:value="fr" />
+      <div class="field">
+        <textarea name="content" rows="10" th:text="${promptFrLanguage.content}" style="width: 100%;"></textarea>
+      </div>
+      <button type="submit" class="ui primary button">Update</button>
+    </form>
+  </div>
+
+  <!-- Form for Spanish Language Prompt -->
+  <h3 class="ui top attached block header">
+    <div class="content">
+      Spanish
+    </div>
+  </h3>
+  <div class="ui segment bottom attached">
+    <form th:action="@{/chatgpt/prompt/update}" method="post">
+      <input type="hidden" name="language" th:value="es" />
+      <div class="field">
+        <textarea name="content" rows="10" th:text="${promptEsLanguage.content}" style="width: 100%;"></textarea>
+      </div>
+      <button type="submit" class="ui primary button">Update</button>
+    </form>
+  </div>
+
+</section>
+
+</body>
+</html>
