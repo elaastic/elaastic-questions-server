@@ -1,15 +1,15 @@
 package org.elaastic.ai.evaluation.chatgpt
 
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
-import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.ai.evaluation.chatgpt.api.ChatGptApiClient
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
+import org.elaastic.common.util.requireAccess
+import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.directory.User
-import org.elaastic.common.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.util.logging.Logger
 import javax.persistence.EntityManager
-import kotlin.jvm.Throws
 
 @Service
 class ChatGptEvaluationService(
@@ -79,6 +78,7 @@ class ChatGptEvaluationService(
             chatGptEvaluation.status = ChatGptEvaluationStatus.DONE.name
             chatGptEvaluation.grade = grade
             chatGptEvaluation.annotation = annotation
+            chatGptEvaluation.prompt = chatGptPrompt
 
         } catch (e: Exception) {
             chatGptEvaluation.status = ChatGptEvaluationStatus.ERROR.name

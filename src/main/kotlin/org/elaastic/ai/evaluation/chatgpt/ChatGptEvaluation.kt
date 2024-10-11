@@ -18,16 +18,20 @@
 
 package org.elaastic.ai.evaluation.chatgpt
 
-import org.elaastic.questions.assignment.sequence.report.ReportCandidate
+import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.math.BigDecimal
 import java.util.*
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.EntityListeners
+import javax.persistence.ManyToOne
+import javax.persistence.OneToOne
 
 /**
  * This class represents the evaluation of a ChatGPT response.
@@ -68,7 +72,14 @@ class ChatGptEvaluation(
      * @see Response
      */
     @field:OneToOne
-    var response: Response
+    var response: Response,
+
+    /**
+     *  The prompt used to generate the evaluation
+     *  @see ChatGptPrompt
+     */
+    @field:ManyToOne
+    var prompt: ChatGptPrompt? = null,
 
 ) : AbstractJpaPersistable<Long>(), ReportCandidate {
 

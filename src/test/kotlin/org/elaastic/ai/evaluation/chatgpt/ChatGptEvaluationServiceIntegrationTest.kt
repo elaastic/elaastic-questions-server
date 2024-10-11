@@ -1,5 +1,6 @@
 package org.elaastic.ai.evaluation.chatgpt
 
+import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.ReportReason
@@ -33,6 +34,8 @@ internal class ChatGptEvaluationServiceIntegrationTest(
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val functionalTestingService: FunctionalTestingService,
+    @Autowired val chatGptPromptService: ChatGptPromptService,
+
 ) {
 
     @BeforeEach
@@ -49,7 +52,7 @@ internal class ChatGptEvaluationServiceIntegrationTest(
 
         val response = integrationTestingService.getAnyResponse()
         response.explanation = "explanation test"
-
+        val promptFr = chatGptPromptService.getPrompt("fr")
 
         tWhen {
             chatGptEvaluationService.createEvaluation(response, "fr")
@@ -60,6 +63,7 @@ internal class ChatGptEvaluationServiceIntegrationTest(
 
             assertThat(it.status, equalTo("DONE"))
             assertThat(it.annotation, notNullValue())
+            assertEquals(promptFr, it.prompt)
 
             assertThat(it.reportReasons, nullValue())
             assertThat(it.reportComment, nullValue())
