@@ -16,3 +16,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 ALTER TABLE `subject` ADD COLUMN is_public BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE `subject` ADD COLUMN description TEXT DEFAULT NULL;
