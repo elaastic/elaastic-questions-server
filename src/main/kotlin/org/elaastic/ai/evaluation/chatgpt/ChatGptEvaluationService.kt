@@ -1,6 +1,10 @@
 package org.elaastic.ai.evaluation.chatgpt
 
-import org.elaastic.ai.evaluation.chatgpt.api.ChatGptApiClient
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.elaastic.ai.evaluation.chatgpt.api.ChatGptApiMessageData
+import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
+import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
 import org.elaastic.common.util.requireAccess
 import org.elaastic.questions.assignment.sequence.Sequence
@@ -10,27 +14,35 @@ import org.elaastic.questions.assignment.sequence.interaction.response.ResponseR
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.directory.User
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.util.logging.Logger
 import javax.persistence.EntityManager
 
 @Service
 class ChatGptEvaluationService(
-    @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
-    @Autowired val responseRepository: ResponseRepository,
-    @Autowired val chatGptApiClient: ChatGptApiClient,
-    @Autowired val chatGptPromptService: ChatGptPromptService,
-    @Autowired val reportCandidateService: ReportCandidateService,
-    private val responseService: ResponseService,
-    @Autowired val entityManager: EntityManager,
+    val chatGptEvaluationRepository: ChatGptEvaluationRepository,
+    val responseRepository: ResponseRepository,
+    val chatGptPromptService: ChatGptPromptService,
+    val reportCandidateService: ReportCandidateService,
+    val responseService: ResponseService,
+    val entityManager: EntityManager,
+    val chatGptCompletionService: ChatGptCompletionService,
 ) {
 
     val logger = Logger.getLogger(ChatGptEvaluationService::class.java.name)
 
+    /**
+     * Create a ChatGPT evaluation for a response.
+     * The evaluation is created asynchronously.
+     * @param response the response to evaluate
+     * @param language the language of the evaluation
+     * @param chatGptExistingEvaluation the existing evaluation if it exists
+     * @return the created evaluation
+     */
     @Async
     @Transactional(propagation = Propagation.NEVER)
     fun createEvaluation(
@@ -38,56 +50,40 @@ class ChatGptEvaluationService(
         language: String,
         chatGptExistingEvaluation: ChatGptEvaluation? = null
     ): ChatGptEvaluation {
-
-        val title = response.statement.title
-        val questionContent = response.statement.content
-        val teacherExplanation = response.statement.expectedExplanation
-        val studentExplanation = response.explanation
-
-        requireNotNull(teacherExplanation) { throw IllegalArgumentException("Error: You must define an expected explanation to create a ChatGPT evaluation") }
-        requireNotNull(studentExplanation) { throw IllegalArgumentException("Error: No explanation to evaluate") }
-
+        // get the default prompt for the language
+        val chatGptDefaultPrompt = chatGptPromptService.getPrompt(language)
+        // Initialization of the evaluation
         val chatGptEvaluation = chatGptExistingEvaluation ?: ChatGptEvaluation(response = response)
+        chatGptEvaluation.prompt = chatGptDefaultPrompt
         markEvaluationAsPending(chatGptEvaluation)
-
-        val regexHtml = Regex("<.*?>")
-        val chatGptPrompt = chatGptPromptService.getPrompt(language)
-
-        // TODO Review JT : This deserves a dedicated method
-        val prompt = chatGptPrompt.content
-            .replace("\${title}", title.replace(regexHtml, ""))
-            .replace("\${questionContent}", questionContent.replace(regexHtml, ""))
-            .replace("\${teacherExplanation}", teacherExplanation.replace(regexHtml, ""))
-            .replace("\${studentExplanation}", studentExplanation.replace(regexHtml, ""))
-
+        // build the prompt
+        val prompt = buildThePrompt(chatGptDefaultPrompt, response)
+        // build the evaluation
         try {
+            // get the response from ChatGPT
             logger.info("Generating response with ChatGPT for response ${response.id}")
             logger.fine("Prompt: $prompt")
-            val generatedResponse = chatGptApiClient.generateResponseFromPrompt(prompt)
-
+            val generatedResponse = chatGptCompletionService.getChatGptResponse(
+                listOf(ChatGptApiMessageData(role = "user", content = prompt)),
+            ).messageList.first().content
             logger.info("Response generated with ChatGPT for response ${response.id}")
             logger.fine("Generated response: $generatedResponse")
-
-            val regexGrade = Regex("""(?:Note)?\s*:?\s*\[(\d+(?:[.,]\d+)?)(?:/5)?]""")
-
-            val annotation = regexGrade.replace(generatedResponse, "")
-
-            val matchResult = regexGrade.find(generatedResponse)
-            val grade = matchResult?.groupValues?.last()?.toBigDecimal()
-
+            // convert the generated response to a ChatGptEvaluationData object
+            val chatGptEvaluationData = ObjectMapper().readValue(
+                generatedResponse,
+                ChatGptEvaluationData::class.java
+            )
+            // finalize the evaluation
             chatGptEvaluation.status = ChatGptEvaluationStatus.DONE.name
-            chatGptEvaluation.grade = grade
-            chatGptEvaluation.annotation = annotation
-            chatGptEvaluation.prompt = chatGptPrompt
-
+            chatGptEvaluation.grade = chatGptEvaluationData.grade
+            chatGptEvaluation.annotation = chatGptEvaluationData.annotation
         } catch (e: Exception) {
             chatGptEvaluation.status = ChatGptEvaluationStatus.ERROR.name
             logger.severe("Error while evaluating response with ChatGPT: ${e.message}")
         }
-
         return chatGptEvaluationRepository.save(chatGptEvaluation)
-
     }
+
 
     fun findEvaluationByResponse(response: Response): ChatGptEvaluation? =
         chatGptEvaluationRepository.findByResponse(response)
@@ -261,4 +257,47 @@ class ChatGptEvaluationService(
             .filter { !it.hiddenByTeacher }
             .filter { it.reportReasons?.isNotEmpty() == true }
     }
+
+    private fun buildThePrompt(
+        chatGptPrompt: ChatGptPrompt,
+        response: Response
+    ): String {
+        val questionTitle = response.statement.title
+        val questionStatement = response.statement.content
+        val teacherExplanation = response.statement.expectedExplanation
+        val studentExplanation = response.explanation
+
+        requireNotNull(teacherExplanation) { throw IllegalArgumentException("Error: You must define an expected explanation to create a ChatGPT evaluation") }
+        requireNotNull(studentExplanation) { throw IllegalArgumentException("Error: No explanation to evaluate") }
+
+        // add to the prompt the title, the question content, the teacher explanation and the student explanation as a json object
+        val promptData = PromptData(
+            questionTitle = questionTitle,
+            questionStatement = questionStatement,
+            teacherExplanation = teacherExplanation,
+            studentExplanation = studentExplanation,
+            studentChoices = response.learnerChoice,
+            studentScoreBasedOnChoices = response.score,
+        )
+
+        val objectMapper = ObjectMapper()
+        val jsonObject = objectMapper.writeValueAsString(promptData)
+
+        return chatGptPrompt.content + "\n" + jsonObject
+    }
 }
+
+
+data class PromptData(
+    val questionTitle: String,
+    val questionStatement: String,
+    val teacherExplanation: String,
+    val studentExplanation: String,
+    val studentChoices: List<Int>? = null,
+    val studentScoreBasedOnChoices: BigDecimal? = null,
+)
+
+data class ChatGptEvaluationData(
+    @JsonProperty("grade") val grade: BigDecimal,
+    @JsonProperty("annotation") val annotation: String,
+)

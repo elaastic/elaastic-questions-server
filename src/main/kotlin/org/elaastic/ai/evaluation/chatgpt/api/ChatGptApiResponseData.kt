@@ -8,6 +8,9 @@ data class ChatGptApiResponseData (
     val promptTokens: Int,
     val completionTokens: Int,
     val totalTokens: Int,
-    val message: ChatGptApiMessageData,
-    val finishReason: String,
-)
+    val messageList: List<ChatGptApiMessageData>,
+) {
+    fun toSimpleString(): String {
+        return messageList.joinToString("\n") { it.content }
+    }
+}

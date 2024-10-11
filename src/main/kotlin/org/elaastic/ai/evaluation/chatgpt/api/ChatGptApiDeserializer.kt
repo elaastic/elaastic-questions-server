@@ -9,8 +9,14 @@ class ChatGptApiDeserializer : JsonDeserializer<ChatGptApiResponseData>() {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): ChatGptApiResponseData {
         val node: JsonNode = p.codec.readTree(p)
         val usage: JsonNode = node["usage"]
-        val firstChoice: JsonNode = node["choices"][0]
-        val messageNode: JsonNode = firstChoice["message"]
+        val messageList = node["choices"].map {
+            ChatGptApiMessageData(
+                role = it["message"]["role"].asText(),
+                content = it["message"]["content"].asText(),
+                finishReason = it["finish_reason"].asText()
+            )
+        }
+
 
         return ChatGptApiResponseData(
             id = node["id"].asText(),
@@ -20,11 +26,7 @@ class ChatGptApiDeserializer : JsonDeserializer<ChatGptApiResponseData>() {
             promptTokens = usage["prompt_tokens"].asInt(),
             completionTokens = usage["completion_tokens"].asInt(),
             totalTokens = usage["total_tokens"].asInt(),
-            ChatGptApiMessageData(
-                role = messageNode["role"].asText(),
-                content = messageNode["content"].asText()
-            ),
-            finishReason = firstChoice["finish_reason"].asText()
+            messageList = messageList,
         )
     }
 }

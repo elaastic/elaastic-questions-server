@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @ActiveProfiles(profiles = ["no-async"])
 @EnabledIf(value = "#{@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))}", loadContext = true)
 @Transactional
-class ChatGptPromptServiceTest(
+class ChatGptPromptServiceIntegrationTest(
     @Autowired
     val chatGptPromptService: ChatGptPromptService
 ) {
