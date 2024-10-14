@@ -35,7 +35,6 @@ class HomeController {
     @GetMapping("/home", "/elaastic-questions/home")
     fun home(authentication: Authentication): ModelAndView {
         val user: User = authentication.principal as User
-
         return ModelAndView(
                 when {
                     user.isLearner() -> "forward:/player/index"

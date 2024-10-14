@@ -53,7 +53,7 @@ import kotlin.collections.ArrayList
                     )
         ]
 )
-@EntityListeners(AuditingEntityListener::class)
+@EntityListeners(AuditingEntityListener::class, SubjectListener::class)
 class Subject (
 
         @field:NotNull
@@ -67,7 +67,18 @@ class Subject (
         var parentSubject: Subject? = null,
 
         @field:ManyToOne(fetch = FetchType.EAGER)
-        var course: Course? = null
+        var course: Course? = null,
+
+        @Column(name="is_public", columnDefinition = "BOOLEAN")
+        var public: Boolean = false,
+
+        @Column
+        var description: String? = null,
+
+        // This field is not persisted in the database and is used to know if the subject is new or not
+        // Mandataory for the MessagingService (RabbitMQ for now)
+        @Transient
+        var isNew: Boolean = false
 
 ): AbstractJpaPersistable<Long>() {
 
@@ -111,7 +122,6 @@ class Subject (
     @Column(name="`uuid`", columnDefinition = "BINARY(16)")
     var globalId: UUID = UUID.randomUUID()
 
-
     /**
      * Update the subject with the values of another subject.
      *
@@ -127,6 +137,8 @@ class Subject (
 
         this.title = otherSubject.title
         this.course = otherSubject.course
+        this.public = otherSubject.public
+        this.description = otherSubject.description
     }
 
     /**

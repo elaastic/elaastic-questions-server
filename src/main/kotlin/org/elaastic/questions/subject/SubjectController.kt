@@ -572,16 +572,22 @@ class SubjectController(
         var version: Long? = null,
         @field:NotBlank var title: String? = null,
         @field:NotNull var owner: User? = null,
-        var course: Course? = null
+        var course: Course? = null,
+        var public: Boolean = false,
+        var description: String? = null,
     ) {
         fun toEntity(): Subject {
             return Subject(
                 title = title!!,
                 owner = owner!!,
-                course = course
+                course = course,
+                public = public,
+                description = description
             ).let {
                 it.id = id
                 it.version = version
+                it.public = public
+                it.description = description
                 it
             }
         }

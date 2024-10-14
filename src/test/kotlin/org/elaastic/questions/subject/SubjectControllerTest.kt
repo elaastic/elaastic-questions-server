@@ -25,6 +25,7 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.OnboardingState
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.rabbitmq.RabbitMQService
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.statement.StatementService
 import org.junit.jupiter.api.Test
@@ -78,6 +79,10 @@ internal class SubjectControllerTest(
     @MockBean
     lateinit var subjectExporter: SubjectExporter
 
+    @MockBean
+    lateinit var rabbitMQService: RabbitMQService
+
+
     val user = userDetailsService.loadUserByUsername("teacher") as User
 
     @Test
@@ -117,11 +122,13 @@ internal class SubjectControllerTest(
     fun `test save - valid`() {
         val subjectId = 301L
         val title = "A random Title"
+        val public = false
 
         val subjectData = SubjectController.SubjectData(
                 id = subjectId,
                 title = title,
-                owner = user
+                owner = user,
+                public = public
         )
 
         mockMvc.perform(
@@ -137,6 +144,64 @@ internal class SubjectControllerTest(
                                 subjectId
                         )
                 )
+    }
+
+    @Test
+    fun ` test a subject public without a description`() {
+        val subjectId = 301L
+        val title = "A random Title"
+        val public = true
+
+        val subjectData = SubjectController.SubjectData(
+            id = subjectId,
+            title = title,
+            owner = user,
+            public = public
+        )
+
+        mockMvc.perform(
+            post("/subject/save")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .flashAttr("subjectData", subjectData)
+        )
+            .andExpect(status().isFound)
+            .andExpect(
+                redirectedUrlTemplate(
+                    "/subject/{subjectId}?activeTab=questions",
+                    subjectId
+                )
+            )
+    }
+
+    @Test
+    fun `test save with a subject public with a description`() {
+        val subjectId = 301L
+        val title = "A random Title"
+        val public = true
+        val description = "A random description"
+
+        val subjectData = SubjectController.SubjectData(
+            id = subjectId,
+            title = title,
+            owner = user,
+            public = public,
+            description = description
+        )
+
+        mockMvc.perform(
+            post("/subject/save")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .flashAttr("subjectData", subjectData)
+        )
+            .andExpect(status().isFound)
+            .andExpect(
+                redirectedUrlTemplate(
+                    "/subject/{subjectId}?activeTab=questions",
+                    subjectId
+                )
+            )
     }
 
     @Test
