@@ -27,6 +27,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.User
@@ -56,6 +57,7 @@ class ExplanationDataTest(
     @Autowired val subjectService: SubjectService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired var responseService: ResponseService,
+    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
 ) {
 
 
@@ -86,7 +88,7 @@ class ExplanationDataTest(
                 entityManager.clear()
                 peerGrading
             }.tThen("variables are set as expected") { peerGrading ->
-                assertEquals(1, peerGradingService.findAllDraxo(response).size)
+                assertEquals(1, draxoPeerGradingService.findAllDraxo(response).size)
                 assertEquals(2, response.evaluationCount)
                 assertEquals(1, response.draxoEvaluationCount)
                 assertEquals(0, response.draxoEvaluationHiddenCount)
@@ -137,7 +139,7 @@ class ExplanationDataTest(
                 entityManager.clear()
                 peerGrading
             }.tThen("variables are set as expected") { peerGrading ->
-                assertEquals(1, peerGradingService.findAllDraxo(response).size)
+                assertEquals(1, draxoPeerGradingService.findAllDraxo(response).size)
                 assertEquals(2, response.evaluationCount)
                 assertEquals(1, response.draxoEvaluationCount)
                 assertEquals(0, response.draxoEvaluationHiddenCount)

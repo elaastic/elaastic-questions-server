@@ -7,7 +7,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface DraxoPeerGradingRepository : JpaRepository<PeerGrading, Long>, PeerGradingRepository {
-    fun findAllByResponseAndType(response: Response, type: PeerGradingType): List<DraxoPeerGrading>
+    override fun findAllByResponseAndType(response: Response, type: PeerGradingType): List<DraxoPeerGrading>
 
     fun findByIdAndType(id: Long, type: PeerGradingType): DraxoPeerGrading?
 
