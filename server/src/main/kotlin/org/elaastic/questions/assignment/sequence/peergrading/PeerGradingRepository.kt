@@ -21,6 +21,7 @@ package org.elaastic.questions.assignment.sequence.peergrading
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.report.ReportCandidateRepository
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 import org.elaastic.questions.directory.User
 import org.springframework.data.jpa.repository.JpaRepository
 
@@ -29,8 +30,4 @@ interface PeerGradingRepository : JpaRepository<PeerGrading, Long>, ReportCandid
     fun findByGraderAndResponse(grader: User, response: Response): PeerGrading?
 
     fun findAllByResponseIn(response: List<Response>): List<PeerGrading>
-
-    fun findAllByResponseAndType(response: Response, type: PeerGradingType): List<DraxoPeerGrading>
-
-    fun findByIdAndType(id: Long, type: PeerGradingType): DraxoPeerGrading?
 }
