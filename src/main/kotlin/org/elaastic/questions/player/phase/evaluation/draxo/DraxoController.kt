@@ -3,6 +3,7 @@ package org.elaastic.questions.player.phase.evaluation.draxo
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaEvaluation
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 class DraxoController(
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val responseService: ResponseService,
+    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
 ) {
 
     @PostMapping("submit-evaluation")
@@ -39,7 +41,7 @@ class DraxoController(
             "The response $responseId is not bound to the sequence $sequenceId"
         }
 
-        val peerGrading = peerGradingService.createOrUpdateDraxo(user, response, evaluation, lastResponseToGrade)
+        val peerGrading = draxoPeerGradingService.createOrUpdateDraxo(user, response, evaluation, lastResponseToGrade)
 
         return ResponseEntity.ok(peerGrading.getDraxoEvaluation())
     }

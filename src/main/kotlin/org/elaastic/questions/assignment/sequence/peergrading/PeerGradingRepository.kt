@@ -30,4 +30,6 @@ interface PeerGradingRepository : JpaRepository<PeerGrading, Long>, ReportCandid
     fun findByGraderAndResponse(grader: User, response: Response): PeerGrading?
 
     fun findAllByResponseIn(response: List<Response>): List<PeerGrading>
+
+    fun findAllByResponseAndType(response: Response, type: PeerGradingType): List<PeerGrading>
 }

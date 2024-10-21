@@ -1,6 +1,5 @@
 package org.elaastic.questions.assignment.sequence.bdd;
 
-import io.cucumber.java.PendingException
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -10,6 +9,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.ResponseS
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.User
@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import javax.persistence.EntityManager
-import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ModerationStepdefs(
@@ -32,8 +31,8 @@ class ModerationStepdefs(
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val responseService: ResponseService,
     @Autowired val entityManager: EntityManager,
+    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
 ) {
-
     lateinit var teacher: User
     lateinit var subject: Subject
     lateinit var sequence: Sequence
@@ -58,8 +57,8 @@ class ModerationStepdefs(
         DraxoEvaluation()
             .addEvaluation(Criteria.D, OptionId.YES)
             .addEvaluation(Criteria.R, OptionId.PARTIALLY, explanation)
-            .let {draxoEvaluation ->
-                peerGrading = peerGradingService.createOrUpdateDraxo(grader, response, draxoEvaluation ,false)
+            .let { draxoEvaluation ->
+                peerGrading = draxoPeerGradingService.createOrUpdateDraxo(grader, response, draxoEvaluation, false)
             }
     }
 
@@ -92,7 +91,7 @@ class ModerationStepdefs(
 
     @Given("the learner owner of the response the peer grading belongs to")
     fun the_learner_owner_of_the_response_the_peer_grading_belongs_to() {
-        assertNotNull( peerGrading.response.learner)
+        assertNotNull(peerGrading.response.learner)
     }
 
     @When("The learner report the peer grading without comment")

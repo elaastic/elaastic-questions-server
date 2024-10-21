@@ -20,7 +20,6 @@ package org.elaastic.questions.assignment.sequence.peergrading.draxo
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.UtilityGrade
-
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
@@ -36,7 +35,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.*
-import java.util.Locale
+import java.util.*
 
 @Controller
 @RequestMapping("/peer-grading/draxo")
@@ -46,6 +45,7 @@ class DraxoPeerGradingController(
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val messageSource: MessageSource,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
+    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
 ) {
 
     /**
@@ -77,7 +77,7 @@ class DraxoPeerGradingController(
             throw AccessDeniedException("You are not authorized to access to those feedbacks")
         }
 
-        var draxoPeerGradingList = peerGradingService.findAllDraxo(response)
+        var draxoPeerGradingList = draxoPeerGradingService.findAllDraxo(response)
 
         // The student can't see the hidden feedbacks
         if (user != assignment.owner) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
@@ -94,7 +94,7 @@ class DraxoPeerGradingController(
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         val chatGptEvaluationModel =
         // If it isn't the teacher, we check if the ChatGPT evaluation is hidden by the teacher.
-            // eq. If it's a student, we check if the ChatGPT evaluation is hidden by the teacher.
+        // eq. If it's a student, we check if the ChatGPT evaluation is hidden by the teacher.
             // If it's hidden, we give a null value to the model.
             if (response.interaction.sequence.chatGptEvaluationEnabled
                 && !(user != assignment.owner && chatGptEvaluation?.hiddenByTeacher == true)
@@ -145,7 +145,7 @@ class DraxoPeerGradingController(
         @RequestParam(required = true) utilityGrade: UtilityGrade
     ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
-        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
+        val evaluation: DraxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(evaluationId)
         val locale: Locale = LocaleContextHolder.getLocale()
 
         val responseSubmissionAsynchronous = kotlin.run {
@@ -192,7 +192,7 @@ class DraxoPeerGradingController(
         @RequestParam(value = "other-reason-comment", required = false) otherReasonComment: String
     ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
-        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(evaluationId)
+        val evaluation: DraxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(evaluationId)
         val reasonComment = otherReasonComment.ifEmpty { null }
         val locale: Locale = LocaleContextHolder.getLocale()
 
@@ -236,7 +236,7 @@ class DraxoPeerGradingController(
         @PathVariable id: Long
     ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
-        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(id)
+        val evaluation: DraxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(id)
         val locale: Locale = LocaleContextHolder.getLocale()
 
         val responseSubmissionAsynchronous = kotlin.run {
@@ -289,7 +289,7 @@ class DraxoPeerGradingController(
         @PathVariable id: Long
     ): ResponseSubmissionAsynchronous {
         val user: User = authentication.principal as User
-        val evaluation: DraxoPeerGrading = peerGradingService.getDraxoPeerGrading(id)
+        val evaluation: DraxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(id)
         val locale: Locale = LocaleContextHolder.getLocale()
 
         val responseSubmissionAsynchronous = kotlin.run {

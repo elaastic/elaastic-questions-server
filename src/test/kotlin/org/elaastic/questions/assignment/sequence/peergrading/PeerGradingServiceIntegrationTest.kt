@@ -11,6 +11,7 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.RoleService
@@ -27,15 +28,15 @@ import org.elaastic.questions.test.getAnyAssignment
 import org.elaastic.questions.test.getAnySequence
 import org.elaastic.questions.test.interpreter.command.Phase
 import org.hamcrest.CoreMatchers.*
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import javax.persistence.EntityManager
-import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import java.math.BigDecimal
+import javax.persistence.EntityManager
+import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
@@ -48,16 +49,11 @@ class PeerGradingServiceIntegrationTest(
     @Autowired val roleService: RoleService,
     @Autowired val interactionService: InteractionService,
     @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
+    @Autowired val statementRepository: StatementRepository,
+    @Autowired val subjectRepository: SubjectRepository,
+    @Autowired val subjectService: SubjectService,
 ) {
-
-    @Autowired
-    private lateinit var statementRepository: StatementRepository
-
-    @Autowired
-    private lateinit var subjectRepository: SubjectRepository
-
-    @Autowired
-    private lateinit var subjectService: SubjectService
 
     @Test
     fun `save a DRAXO Peer Grading`() {
@@ -79,7 +75,7 @@ class PeerGradingServiceIntegrationTest(
             .addEvaluation(Criteria.D, OptionId.YES)
             .addEvaluation(Criteria.R, OptionId.PARTIALLY, explanation)
             .tWhen { draxoEvaluation ->
-                val peerGrading = peerGradingService.createOrUpdateDraxo(grader, response, draxoEvaluation, false)
+                val peerGrading = draxoPeerGradingService.createOrUpdateDraxo(grader, response, draxoEvaluation, false)
                 entityManager.flush()
                 entityManager.clear()
                 peerGrading
@@ -480,14 +476,14 @@ class PeerGradingServiceIntegrationTest(
                     it
                 }
         }.tWhen("We get the draxo peer grading") {
-            val draxoPeerGrading = peerGrading.id?.let { it1 -> peerGradingService.getDraxoPeerGrading(it1) }
+            val draxoPeerGrading = peerGrading.id?.let { it1 -> draxoPeerGradingService.getDraxoPeerGrading(it1) }
             draxoPeerGrading
         }.tThen("the draxo peer grading is returned") { draxoPeerGrading ->
             assertNotNull(draxoPeerGrading)
             assertEquals(peerGrading.id, draxoPeerGrading!!.id)
         }.tWhen("we get with an inexisting id") {}.tThen("we get an exception") {
             assertThrows<Exception> {
-                peerGradingService.getDraxoPeerGrading(-1)
+                draxoPeerGradingService.getDraxoPeerGrading(-1)
             }
         }
     }
@@ -633,7 +629,7 @@ class PeerGradingServiceIntegrationTest(
 
             assertEquals(
                 emptyList<DraxoPeerGrading>(),
-                peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence),
+                draxoPeerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence),
                 "No peerGrading reported"
             )
             learnersAssignementList
@@ -660,7 +656,8 @@ class PeerGradingServiceIntegrationTest(
             peerGradingService.updateReport(learners[0], peerGrading, listOf(ReportReason.INCOHERENCE.name))
             learnerAssignments //learnersAssignementList
         }.tThen("the two learner who answer, are mark as so") {
-            val peerGradingReportedNotHidden = peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence)
+            val peerGradingReportedNotHidden =
+                draxoPeerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence)
             assertEquals(1, peerGradingReportedNotHidden.size)
             assertEquals(learners[1], peerGradingReportedNotHidden.first().grader)
             assertEquals(learners[0], peerGradingReportedNotHidden.first().response.learner)
