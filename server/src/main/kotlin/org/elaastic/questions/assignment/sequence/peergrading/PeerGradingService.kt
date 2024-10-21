@@ -219,7 +219,7 @@ class PeerGradingService(
             throw IllegalAccessException("Only the teacher who own the sequence can hide a peer grading")
         }
         reportCandidateService.markAsHidden(peerGrading, peerGradingRepository)
-        peerGrading.response.draxoEvaluationHiddenCount++
+        if (peerGrading is DraxoPeerGrading) peerGrading.response.draxoEvaluationHiddenCount++
         responseService.updateMeanGradeAndEvaluationCount(peerGrading.response)
     }
 
