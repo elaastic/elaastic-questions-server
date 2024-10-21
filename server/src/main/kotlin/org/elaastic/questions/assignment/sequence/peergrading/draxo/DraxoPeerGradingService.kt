@@ -84,7 +84,7 @@ class DraxoPeerGradingService(
      *    not hidden by the teacher
      */
     fun countAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): Int =
-        draxoPeerGradingRepository.countAllByHiddenByTeacherIsFalseAndReportReasonsIsNotEmptyAndResponseIn(
+        draxoPeerGradingRepository.countAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(
             responseRepository.findAllByInteraction(sequence.getResponseSubmissionInteraction())
         )
 }
