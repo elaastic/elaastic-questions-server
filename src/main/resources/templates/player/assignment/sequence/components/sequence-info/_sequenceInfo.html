@@ -16,26 +16,32 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="sequenceInfo(model, sequenceId)"
+<div th:fragment="sequenceInfo(sequenceInfoModel, sequenceId)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     class="ui bottom attached message" th:classappend="${model.color}">
+     class="ui bottom attached message" th:classappend="${sequenceInfoModel.color}">
 
-    <span th:text="${model.message}" th:remove="tag"></span>
+    <span th:text="${sequenceInfoModel.message}" th:remove="tag"></span>
 
     <!--/*    TODO partial reloading with updateSequenceDisplay */-->
-    <a th:if="${model.refreshable}" th:href="@{./{id}(id=${sequenceId})}" th:title="#{common.refresh}">
+    <a th:if="${sequenceInfoModel.refreshable}" th:href="@{./{id}(id=${sequenceId})}" th:title="#{common.refresh}">
         <i class="refresh icon"></i>
     </a>
 
-    <th:block th:if="${model.nbEvaluationReported > 0}">
-        <i class="red explanation triangle icon"></i>
-        <span style="color: red" th:if="${model.nbEvaluationReported == 1}"
-              th:text="#{assignment.sequence.info.nbEvaluationReported.one(${model.nbEvaluationReported})}"></span>
-        <span style="color: red" th:if="${model.nbEvaluationReported > 1}"
-              th:text="#{assignment.sequence.info.nbEvaluationReported.multiple(${model.nbEvaluationReported})}"></span>
+    <!--/*To apply the red color from semantic to the text,
+    the best option I found is to use a label and remove the border and the background-color */-->
+    <!--/* The label from semantic makes the text a little bit smaller, so I use a large label. */-->
+    <div class="ui label red basic large"
+         style="background-color: transparent !important; border: none"
+         th:if="${sequenceInfoModel.nbEvaluationReported > 0}">
 
-<!--        <a href="https://github.com/elaastic/elaastic-questions-server/issues/279" style="color: black" target="_blank">&lt;!&ndash;/* TODO Add  here the link to the correct page */&ndash;&gt;-->
-<!--            ( <span th:text="#{assignment.sequence.info.seeAndModerate}"></span><i class="external alternate icon"></i> )-->
-<!--        </a>-->
-    </th:block>
+        <i class="red exclamation triangle icon"></i>
+        <span th:if="${sequenceInfoModel.nbEvaluationReported == 1}"
+              th:text="#{assignment.sequence.info.nbEvaluationReported.one(${sequenceInfoModel.nbEvaluationReported})}"></span>
+        <span th:if="${sequenceInfoModel.nbEvaluationReported > 1}"
+              th:text="#{assignment.sequence.info.nbEvaluationReported.multiple(${sequenceInfoModel.nbEvaluationReported})}"></span>
+
+        <a href="/report-manager" class="detail" style="color: black" target="_blank">
+            <span th:text="|(#{assignment.sequence.info.seeAndModerate}|"></span><i class="external alternate icon"></i>)
+        </a>
+    </div>
 </div>
