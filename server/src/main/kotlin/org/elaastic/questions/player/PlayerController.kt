@@ -801,7 +801,7 @@ class PlayerController(
         }
 
         val nbChatGPTEvaluationReported: Int = if (sequence.chatGptEvaluationEnabled) {
-            chatGptEvaluationService.findAllReportedNotHidden(sequence).count()
+            chatGptEvaluationService.countAllReportedNotHidden(sequence)
         } else {
             0
         }
