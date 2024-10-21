@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/leftMenu :: leftMenuLayout(title=~{::title}, pageSpecificMenu=~{}, content=~{::body})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta name="layout" content="left_menu-elaastic">
+        <title th:text="|elaastic: #{reportManager.title}|">elaastic: Report Manager</title>
+    </head>
+
+    <body>
+
+    <div class="ui two column container">
+        <div class="two wide column"></div>
+        <div class="six wide column"></div>
+    </div>
+
+
+    </body>
+</html>
