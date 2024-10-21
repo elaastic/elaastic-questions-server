@@ -9,7 +9,8 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 
 /**
- * Warning : this service is actually used within Thymeleaf template
+ * Warning : this service is actually used within Thymeleaf template.
+ * It'd use to describe a DRAXO peer grading.
  */
 @Service
 class DraxoService(
