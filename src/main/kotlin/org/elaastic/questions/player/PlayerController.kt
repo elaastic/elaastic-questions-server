@@ -793,7 +793,7 @@ class PlayerController(
         }
 
         val nbDRAXOEvaluationReported: Int = if (sequence.evaluationPhaseConfig == EvaluationPhaseConfig.DRAXO) {
-            peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence).count()
+            draxoPeerGradingService.countAllDraxoPeerGradingReportedNotHidden(sequence)
         } else {
             0
         }
