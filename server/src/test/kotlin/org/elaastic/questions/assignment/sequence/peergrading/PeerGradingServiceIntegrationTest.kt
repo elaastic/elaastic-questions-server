@@ -628,6 +628,11 @@ class PeerGradingServiceIntegrationTest(
             val learnersAssignementList: List<LearnerAssignment> = learners.map { LearnerAssignment(it, assignement) }
 
             assertEquals(
+                0,
+                draxoPeerGradingService.countAllDraxoPeerGradingReportedNotHidden(sequence),
+                "No peerGrading reported"
+            )
+            assertEquals(
                 emptyList<DraxoPeerGrading>(),
                 draxoPeerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence),
                 "No peerGrading reported"

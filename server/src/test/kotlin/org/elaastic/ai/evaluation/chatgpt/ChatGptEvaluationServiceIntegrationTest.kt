@@ -419,8 +419,8 @@ internal class ChatGptEvaluationServiceIntegrationTest(
             }
         }.tThen("The evaluation exist but it's not reported") {
             assertEquals(
-                emptyList<ChatGptEvaluation>(),
-                chatGptEvaluationService.findAllReportedNotHidden(response.interaction.sequence)
+                0,
+                chatGptEvaluationService.countAllReportedNotHidden(response.interaction.sequence)
             )
             assertEquals(
                 listOf(it),
@@ -432,8 +432,8 @@ internal class ChatGptEvaluationServiceIntegrationTest(
             it
         }.tThen("The evaluation is reported") {
             assertEquals(
-                listOf(it),
-                chatGptEvaluationService.findAllReportedNotHidden(response.interaction.sequence)
+                listOf(it).size,
+                chatGptEvaluationService.countAllReportedNotHidden(response.interaction.sequence)
             )
             it
         }
