@@ -258,6 +258,19 @@ class ChatGptEvaluationService(
             .filter { it.reportReasons?.isNotEmpty() == true }
     }
 
+    /**
+     * Count all the evaluations made on a sequence that have been reported and not hidden.
+     * @param sequence the sequence.
+     * @return the number of peer grading.
+     */
+    fun countAllReportedNotHidden(sequence: Sequence): Int {
+        return chatGptEvaluationRepository.countAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(
+            responseRepository.findAllByInteraction(
+                sequence.getResponseSubmissionInteraction(),
+            )
+        )
+    }
+
     private fun buildThePrompt(
         chatGptPrompt: ChatGptPrompt,
         response: Response
