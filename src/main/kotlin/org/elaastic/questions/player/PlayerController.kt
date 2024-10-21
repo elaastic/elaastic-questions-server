@@ -32,6 +32,7 @@ import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.AnonymousUserService
 import org.elaastic.questions.directory.User
@@ -66,20 +67,21 @@ import javax.transaction.Transactional
 @Controller
 @RequestMapping("/player", "/elaastic-questions/player")
 class PlayerController(
-    @Autowired val assignmentService: AssignmentService,
-    @Autowired val sequenceService: SequenceService,
-    @Autowired val learnerSequenceService: LearnerSequenceService,
-    @Autowired val interactionService: InteractionService,
-    @Autowired val responseService: ResponseService,
-    @Autowired val messageBuilder: MessageBuilder,
     @Autowired val anonymousUserService: AnonymousUserService,
-    @Autowired val learnerPhaseService: LearnerPhaseService,
-    @Autowired val userService: UserService,
-    @Autowired val featureManager: FeatureManager,
-    @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
+    @Autowired val assignmentService: AssignmentService,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
+    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
     @Autowired val eventLogService: EventLogService,
+    @Autowired val interactionService: InteractionService,
+    @Autowired val learnerPhaseService: LearnerPhaseService,
+    @Autowired val learnerSequenceService: LearnerSequenceService,
     @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val responseService: ResponseService,
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
+    @Autowired val userService: UserService,
+    @Autowired val messageBuilder: MessageBuilder,
+    @Autowired val featureManager: FeatureManager,
     @Autowired val messageSource: MessageSource,
 ) {
 
