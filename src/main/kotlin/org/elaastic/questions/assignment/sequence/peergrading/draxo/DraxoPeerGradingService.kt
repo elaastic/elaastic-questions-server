@@ -92,9 +92,9 @@ class DraxoPeerGradingService(
      * @return the list of DRAXO peer grading
      */
     fun findAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): List<DraxoPeerGrading> =
-        findAllDraxo(sequence)
-            .filter { it.reportReasons?.isNotEmpty() == true }
-            .filter { !it.hiddenByTeacher }
+        draxoPeerGradingRepository.findAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(
+            responseRepository.findAllByInteraction(sequence.getResponseSubmissionInteraction())
+        )
 
     /**
      * @param sequence the sequence

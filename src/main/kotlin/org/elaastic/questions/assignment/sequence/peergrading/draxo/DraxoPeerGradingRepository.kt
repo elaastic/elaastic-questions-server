@@ -29,6 +29,8 @@ interface DraxoPeerGradingRepository : JpaRepository<PeerGrading, Long>, PeerGra
 
     fun findByIdAndType(id: Long, type: PeerGradingType): DraxoPeerGrading?
 
+    fun findAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(responses: List<Response>): List<DraxoPeerGrading>
+
     fun countAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(responses: List<Response>): Int
 
     override fun findAllByResponseIn(response: List<Response>): List<DraxoPeerGrading>

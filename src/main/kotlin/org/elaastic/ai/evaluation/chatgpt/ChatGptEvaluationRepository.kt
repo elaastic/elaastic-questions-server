@@ -12,6 +12,8 @@ interface ChatGptEvaluationRepository : JpaRepository<ChatGptEvaluation, Long>,
 
     fun findAllByResponseIn(response: List<Response>): List<ChatGptEvaluation>
 
+    fun findAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(responses: List<Response>): List<ChatGptEvaluation>
+
     fun countAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(responses: List<Response>): Int
 
 }

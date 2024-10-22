@@ -253,9 +253,11 @@ class ChatGptEvaluationService(
      * @return the list of peer grading.
      */
     fun findAllReportedNotHidden(sequence: Sequence): List<ChatGptEvaluation> {
-        return findAllBySequence(sequence)
-            .filter { !it.hiddenByTeacher }
-            .filter { it.reportReasons?.isNotEmpty() == true }
+        return chatGptEvaluationRepository.findAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(
+            responseRepository.findAllByInteraction(
+                sequence.getResponseSubmissionInteraction(),
+            )
+        )
     }
 
     /**
