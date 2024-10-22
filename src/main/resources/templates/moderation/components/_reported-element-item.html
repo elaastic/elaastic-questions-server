@@ -16,25 +16,26 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<!--/* TODO use a model */-->
-<div th:fragment="reportedElement(content, reasons)"
+<div th:fragment="reportedElement(reportedCandidateModel)"
      xmlns="http://www.w3.org/1999/html"
      xmlns:th="http://www.thymeleaf.org"
      class="ui card"
      style="width: auto; cursor: pointer">
-
+    <!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.questions.moderation.ReportedCandidateModel"*/-->
 
 
     <div class="content">
-        <div class="description reported-content" th:text="${content}">
+        <div class="description reported-content" th:text="${reportedCandidateModel.contentReported}">
             I am content that has been reported, and therefore I appear in this component.
             The exact reason for my report is written below.
             But to have all the context and remaining details, click on me.
         </div>
     </div>
     <div class="extra content">
-        <div class="ui label" th:text="${reasons}">
-            Reason for report
-        </div>
+        <th:block th:each="reason: ${reportedCandidateModel.reasons}">
+            <div class="ui label" th:text="${reason}">
+                Reason for report
+            </div>
+        </th:block>
     </div>
 </div>
