@@ -36,8 +36,9 @@ class ChatGptEvaluationService(
     val logger = Logger.getLogger(ChatGptEvaluationService::class.java.name)
 
     /**
-     * Create a ChatGPT evaluation for a response.
-     * The evaluation is created asynchronously.
+     * Create a ChatGPT evaluation for a response. The evaluation is created
+     * asynchronously.
+     *
      * @param response the response to evaluate
      * @param language the language of the evaluation
      * @param chatGptExistingEvaluation the existing evaluation if it exists
@@ -156,9 +157,9 @@ class ChatGptEvaluationService(
      *
      * @param chatGptEvaluation the chatGPT evaluation to check.
      * @param user the user who wants to update the visibility of the
-     *     evaluation.
+     *    evaluation.
      * @return true if the visibility of the chatGPT evaluation can be changed,
-     *     false otherwise.
+     *    false otherwise.
      */
     fun canUpdateVisibilityEvaluation(chatGptEvaluation: ChatGptEvaluation, user: User): Boolean {
         return responseService.canHidePeerGrading(
@@ -176,7 +177,7 @@ class ChatGptEvaluationService(
      * @param chatGptEvaluation the chatGPT evaluation to hide.
      * @param user the user who wants to hide the evaluation.
      * @throws IllegalAccessException if the user doesn't have the permission
-     *     to hide the evaluation.
+     *    to hide the evaluation.
      */
     @Throws(IllegalAccessException::class)
     fun markAsHidden(chatGptEvaluation: ChatGptEvaluation, user: User) {
@@ -198,7 +199,7 @@ class ChatGptEvaluationService(
      * @param chatGPTEvaluation the chatGPT evaluation to unhide
      * @param user the user who wants to unhide the evaluation.
      * @throws IllegalAccessException if the user doesn't have the permission
-     *     to unhide the evaluation.
+     *    to unhide the evaluation.
      */
     @Throws(IllegalAccessException::class)
     fun markAsShown(chatGPTEvaluation: ChatGptEvaluation, user: User) {
@@ -212,8 +213,10 @@ class ChatGptEvaluationService(
     }
 
     /**
-     * With the given list of response ids, if the response has been evaluated by ChatGPT, associate the evaluation to true.
-     * If the response has not been evaluated by ChatGPT, associate the evaluation to false.
+     * With the given list of response ids, if the response has been evaluated
+     * by ChatGPT, associate the evaluation to true. If the response has
+     * not been evaluated by ChatGPT, associate the evaluation to false.
+     *
      * @param listIdResponse the list of response ids to evaluate
      * @return a map with the response id as key and a boolean as value
      */
@@ -234,9 +237,10 @@ class ChatGptEvaluationService(
     }
 
     /**
-     * Find all the evaluations made on a sequence.
-     * We retrieve all the responses of the sequence, and then we retrieve all the
-     * peer grading that have been made on these responses.
+     * Find all the evaluations made on a sequence. We retrieve all the
+     * responses of the sequence, and then we retrieve all the peer grading
+     * that have been made on these responses.
+     *
      * @param sequence the sequence.
      * @return the list of peer grading.
      */
@@ -248,7 +252,9 @@ class ChatGptEvaluationService(
         )
 
     /**
-     * Find all the evaluations made on a sequence that have been reported and not hidden.
+     * Find all the evaluations made on a sequence that have been reported and
+     * not hidden.
+     *
      * @param sequence the sequence.
      * @return the list of peer grading.
      */
@@ -261,7 +267,9 @@ class ChatGptEvaluationService(
     }
 
     /**
-     * Count all the evaluations made on a sequence that have been reported and not hidden.
+     * Count all the evaluations made on a sequence that have been reported and
+     * not hidden.
+     *
      * @param sequence the sequence.
      * @return the number of peer grading.
      */
