@@ -27,10 +27,12 @@
 
     <body>
 
+    <!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.questions.moderation.ReportedCandidateModel"*/-->
     <aside id="layout-aside">
-        <div class="">
-            <th:block
-                    th:replace="moderation/components/_reported-element-item :: reportedElement(content='Je suis du contenu qui a &eacute;t&eacute; signaler et donc j&rsquo;apparais dans ce composant. La raison exacte de mon signalement est &eacute;crite en dessous. Mais pour avoir tous le context et les d&eacute;tails restant, cliquez sur moi.', reasons='Fausse information')"></th:block>
+        <div>
+            <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">
+                <th:block th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel})"></th:block>
+            </th:block>
         </div>
 
         <style>
@@ -45,7 +47,7 @@
                 let isSelected = $(this).hasClass('selected');
 
                 $('.ui.card').removeClass('selected');
-                
+
                 if (!isSelected) {
                     $(this).addClass('selected');
                 }
@@ -57,6 +59,10 @@
     <section>
         Selectionner un contenu pour voir les d&eacute;tails
     </section>
+
+    <div id="modal-aside">
+
+    </div>
 
     </body>
 </html>
