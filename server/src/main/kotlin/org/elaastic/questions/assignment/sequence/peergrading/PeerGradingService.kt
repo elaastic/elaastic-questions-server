@@ -28,10 +28,7 @@ import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingRepository
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -47,11 +44,10 @@ import javax.transaction.Transactional
 class PeerGradingService(
     @Autowired val reportCandidateService: ReportCandidateService,
     @Autowired val peerGradingRepository: PeerGradingRepository,
-    @Autowired val draxoPeerGradingRepository: DraxoPeerGradingRepository,
     @Autowired val responseService: ResponseService,
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val learnerAssignmentService: LearnerAssignmentService,
-    @Autowired val entityManager: EntityManager
+    @Autowired val entityManager: EntityManager,
 ) {
 
     fun createOrUpdateLikert(grader: User, response: Response, grade: BigDecimal): LikertPeerGrading {
