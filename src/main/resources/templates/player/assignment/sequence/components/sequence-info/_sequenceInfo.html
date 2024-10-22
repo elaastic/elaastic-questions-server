@@ -40,7 +40,7 @@
         <span th:if="${sequenceInfoModel.nbEvaluationReported > 1}"
               th:text="#{assignment.sequence.info.nbEvaluationReported.multiple(${sequenceInfoModel.nbEvaluationReported})}"></span>
 
-        <a href="/report-manager" class="detail" style="color: black" target="_blank">
+        <a th:href="/report-manager/${sequenceId}" class="detail" style="color: black" target="_blank">
             <span th:text="|(#{assignment.sequence.info.seeAndModerate}|"></span><i class="external alternate icon"></i>)
         </a>
     </div>
