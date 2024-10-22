@@ -18,7 +18,7 @@
 
 <!DOCTYPE html>
 <html lang="en"
-      th:replace="layout/3columns :: 3columns(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, aside=~{::#layout-aside}, modalAside=~{::#modal-aside}, content=~{::section},extraHeader=~{::head/script})"
+      th:replace="layout/3columns :: 3columns(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, aside=~{::aside#layout-aside}, modalAside=~{::#modal-aside}, content=~{::section},extraHeader=~{::head/script})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <head>
         <meta name="layout" content="left_menu-elaastic">
@@ -26,6 +26,37 @@
     </head>
 
     <body>
+
+    <aside id="layout-aside">
+        <div class="">
+            <th:block
+                    th:replace="moderation/components/_reported-element-item :: reportedElement(content='Je suis du contenu qui a &eacute;t&eacute; signaler et donc j&rsquo;apparais dans ce composant. La raison exacte de mon signalement est &eacute;crite en dessous. Mais pour avoir tous le context et les d&eacute;tails restant, cliquez sur moi.', reasons='Fausse information')"></th:block>
+        </div>
+
+        <style>
+            .ui.selected.card {
+                background-color: #fff4e6;
+                color: #573a08;
+            }
+        </style>
+
+        <script>
+            $('.ui.card').click(function () {
+                let isSelected = $(this).hasClass('selected');
+
+                $('.ui.card').removeClass('selected');
+                
+                if (!isSelected) {
+                    $(this).addClass('selected');
+                }
+            });
+
+        </script>
+    </aside>
+
+    <section>
+        Selectionner un contenu pour voir les d&eacute;tails
+    </section>
 
     </body>
 </html>
