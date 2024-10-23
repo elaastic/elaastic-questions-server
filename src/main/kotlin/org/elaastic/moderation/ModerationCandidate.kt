@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence.moderation
+package org.elaastic.moderation
 
 /**
  * Interface describing an object that may be candidate for moderation.

@@ -1,4 +1,4 @@
-package org.elaastic.questions.moderation
+package org.elaastic.moderation
 
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
@@ -6,7 +6,6 @@ import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
@@ -46,7 +45,7 @@ class ReportManagerController(
         val chatGPTReported = chatGptEvaluationService.findAllReportedNotHidden(sequence)
 
         val allReportedCandidateModel: List<ReportedCandidateModel> = (draxoReported + chatGPTReported)
-            .mapNotNull { reportedCandidateModelFactory.build(it) }
+            .mapNotNull { ReportedCandidateModelFactory.build(it) }
 
         model["user"] = user
         model["allReportedCandidateModel"] = allReportedCandidateModel

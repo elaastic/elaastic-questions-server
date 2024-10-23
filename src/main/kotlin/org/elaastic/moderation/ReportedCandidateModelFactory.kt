@@ -16,11 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.moderation
+package org.elaastic.moderation
 
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 
 object ReportedCandidateModelFactory {
 

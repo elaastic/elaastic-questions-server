@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence.report
+package org.elaastic.moderation
 
 /**
  * Marker interface for moderation candidate repository

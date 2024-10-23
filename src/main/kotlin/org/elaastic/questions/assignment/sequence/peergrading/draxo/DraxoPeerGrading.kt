@@ -20,9 +20,9 @@ package org.elaastic.questions.assignment.sequence.peergrading.draxo
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
-import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
+import org.elaastic.questions.directory.User
 import javax.persistence.*
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
@@ -42,7 +42,8 @@ import kotlin.reflect.KClass
  * - X: Exhaustive
  * - O: Optimal
  *
- * Check the online [documentation](https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO)
+ * Check the online
+ * [documentation](https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO)
  * for more information about DRAXO grading
  *
  * @see PeerGrading
@@ -57,6 +58,7 @@ class DraxoPeerGrading(
 
     /**
      * unDerstandable criteria
+     *
      * @see Criteria.D
      */
     @Enumerated(EnumType.STRING)
@@ -65,6 +67,7 @@ class DraxoPeerGrading(
 
     /**
      * Relevant criteria
+     *
      * @see Criteria.R
      */
     @Enumerated(EnumType.STRING)
@@ -73,6 +76,7 @@ class DraxoPeerGrading(
 
     /**
      * Agreed criteria
+     *
      * @see Criteria.A
      */
     @Enumerated(EnumType.STRING)
@@ -81,6 +85,7 @@ class DraxoPeerGrading(
 
     /**
      * Exhaustive criteria
+     *
      * @see Criteria.X
      */
     @Enumerated(EnumType.STRING)
@@ -89,15 +94,14 @@ class DraxoPeerGrading(
 
     /**
      * Optimal criteria
+     *
      * @see Criteria.O
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "criteria_O")
     var criteriaO: OptionId? = null,
 
-    /**
-     * Depending on the selected OptionId, a comment may be provided
-     */
+    /** Depending on the selected OptionId, a comment may be provided */
     annotation: String? = null,
 
     lastSequencePeerGrading: Boolean

@@ -3,7 +3,7 @@ package org.elaastic.questions.player.components.evaluation.chatgpt
 import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
-import org.elaastic.questions.assignment.sequence.report.ReportCandidate
+import org.elaastic.moderation.ReportCandidate
 import java.math.BigDecimal
 
 data class ChatGptEvaluationModel(

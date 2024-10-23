@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.moderation
 
 enum class ReportReason {
     FALSE_INFORMATION,

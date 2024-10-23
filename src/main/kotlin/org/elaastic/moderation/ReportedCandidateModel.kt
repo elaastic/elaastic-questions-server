@@ -16,10 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.moderation
+package org.elaastic.moderation
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.elaastic.questions.assignment.sequence.ReportReason
 
 /**
  * A ReportedCandidateModel is a ReportCandidate that have been reported
@@ -41,7 +40,10 @@ open class ReportedCandidateModel(
     private val objectMapper = ObjectMapper()
 
     val reasons: List<ReportReason> = reportReasons?.let {
-        objectMapper.readValue(it, objectMapper.typeFactory.constructCollectionType(List::class.java, ReportReason::class.java))
+        objectMapper.readValue(
+            it,
+            objectMapper.typeFactory.constructCollectionType(List::class.java, ReportReason::class.java)
+        )
     } ?: emptyList()
 }
 

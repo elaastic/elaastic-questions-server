@@ -1,6 +1,4 @@
-package org.elaastic.questions.assignment.sequence.report
-
-import org.elaastic.questions.assignment.sequence.UtilityGrade
+package org.elaastic.moderation
 
 /**
  * Interface describing an object that may be candidate for report.
