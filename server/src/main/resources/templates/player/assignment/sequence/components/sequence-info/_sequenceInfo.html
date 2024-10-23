@@ -19,6 +19,7 @@
 <div th:fragment="sequenceInfo(sequenceInfoModel, sequenceId)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      class="ui bottom attached message" th:classappend="${sequenceInfoModel.color}">
+    <!--/*@thymesVar id="sequenceInfoModel" type="org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel"*/-->
 
     <span th:text="${sequenceInfoModel.message}" th:remove="tag"></span>
 
@@ -40,7 +41,7 @@
         <span th:if="${sequenceInfoModel.nbEvaluationReported > 1}"
               th:text="#{assignment.sequence.info.nbEvaluationReported.multiple(${sequenceInfoModel.nbEvaluationReported})}"></span>
 
-        <a th:href="/report-manager/${sequenceId}" class="detail" style="color: black" target="_blank">
+        <a th:href="@{/report-manager/{id}(id=${sequenceId})}" class="detail" style="color: black" target="_blank">
             <span th:text="|(#{assignment.sequence.info.seeAndModerate}|"></span><i class="external alternate icon"></i>)
         </a>
     </div>
