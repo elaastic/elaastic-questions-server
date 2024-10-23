@@ -42,6 +42,7 @@ object ReportedCandidateModelFactory {
             contentReported = draxoPeerGrading.annotation!!,
             reportReasons = draxoPeerGrading.reportReasons,
             reportComment = draxoPeerGrading.reportComment,
+            type = ReportedCandidateType.PEER_GRADING,
         )
     }
 
@@ -53,6 +54,7 @@ object ReportedCandidateModelFactory {
             contentReported = chatGptEvaluation.annotation!!,
             reportReasons = chatGptEvaluation.reportReasons,
             reportComment = chatGptEvaluation.reportComment,
+            type = ReportedCandidateType.CHAT_GPT_EVALUATION,
         )
     }
 }

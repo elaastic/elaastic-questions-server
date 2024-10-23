@@ -31,11 +31,12 @@ import org.elaastic.questions.assignment.sequence.ReportReason
  * @param reportComment the comment of the reporter
  * @see ReportManagerController
  */
-class ReportedCandidateModel(
+open class ReportedCandidateModel(
     val id: Long,
     val contentReported: String,
     private val reportReasons: String?,
     val reportComment: String?,
+    val type: ReportedCandidateType
 ) {
     private val objectMapper = ObjectMapper()
 
@@ -44,3 +45,7 @@ class ReportedCandidateModel(
     } ?: emptyList()
 }
 
+enum class ReportedCandidateType {
+    PEER_GRADING,
+    CHAT_GPT_EVALUATION,
+}
