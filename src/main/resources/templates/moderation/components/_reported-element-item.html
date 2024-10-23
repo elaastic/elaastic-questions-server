@@ -16,12 +16,16 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.questions.moderation.ReportedCandidateModel"*/-->
 <div th:fragment="reportedElement(reportedCandidateModel)"
      xmlns="http://www.w3.org/1999/html"
      xmlns:th="http://www.thymeleaf.org"
      class="ui card"
-     style="width: auto; cursor: pointer">
-    <!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.questions.moderation.ReportedCandidateModel"*/-->
+     style="width: auto; cursor: pointer"
+     th:id="${'reportedCandidate-' + reportedCandidateModel.id}"
+     th:id-reported-Candidate="${reportedCandidateModel.id}"
+     th:reported-candidate-type="${reportedCandidateModel.type}"
+>
 
 
     <div class="content">
@@ -36,7 +40,8 @@
         <th:block th:each="reason: ${reportedCandidateModel.reasons}">
             <div class="ui label"
                  th:text="#{|reportManager.reportReason.${reason.name()}|}"
-                 th:data-tooltip="#{|player.sequence.chatGptEvaluation.reportReason.${reason.name()}|}" data-position="top left">
+                 th:data-tooltip="#{|player.sequence.chatGptEvaluation.reportReason.${reason.name()}|}"
+                 data-position="top left">
 
                 Reason for report
             </div>
