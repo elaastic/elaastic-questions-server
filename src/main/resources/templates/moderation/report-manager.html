@@ -33,6 +33,12 @@
             <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">
                 <th:block th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel})"></th:block>
             </th:block>
+            <th:block th:if="${allReportedCandidateModel.isEmpty()}">
+                <div class="ui message info">
+                    <div class="header" th:text="#{reportManager.noReportedItem}">No reported item</div>
+                    <div th:text="#{reportManager.noReportedItem.description}">There are no reported items to display.</div>
+                </div>
+            </th:block>
         </div>
 
         <style>
@@ -51,13 +57,17 @@
                 if (!isSelected) {
                     $(this).addClass('selected');
                 }
+
             });
 
         </script>
     </aside>
 
     <section>
-        Selectionner un contenu pour voir les d&eacute;tails
+        <div class="ui message info" id="no-selected-item">
+            <div class="header" th:text="#{reportManager.noItemSelected}">No item selected</div>
+            <div th:text="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
+        </div>
     </section>
 
     <div id="modal-aside">
