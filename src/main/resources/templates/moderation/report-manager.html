@@ -31,12 +31,14 @@
     <aside id="layout-aside">
         <div>
             <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">
-                <th:block th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel})"></th:block>
+                <th:block
+                        th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel})"></th:block>
             </th:block>
             <th:block th:if="${allReportedCandidateModel.isEmpty()}">
                 <div class="ui message info">
                     <div class="header" th:text="#{reportManager.noReportedItem}">No reported item</div>
-                    <div th:text="#{reportManager.noReportedItem.description}">There are no reported items to display.</div>
+                    <div th:text="#{reportManager.noReportedItem.description}">There are no reported items to display.
+                    </div>
                 </div>
             </th:block>
         </div>
@@ -49,24 +51,105 @@
         </style>
 
         <script>
+            /**
+             * Update the container with the details of the selected item.
+             * @param idReportCandidate {number} The id of the selected item.
+             * @param reportedCandidate {HTMLElement} The selected item.
+             * @param isSelected {boolean} true if the item is selected false otherwise.
+             */
+            function updateSelectedItem(idReportCandidate, reportedCandidate, isSelected) {
+                console.log('Selected item id : ' + idReportCandidate);
+                console.log(reportedCandidate);
+                console.log('Is selected : ' + isSelected);
+                console.log("Type : " + $(reportedCandidate).attr('reported-candidate-type'))
+
+                const detailReportCandidate = $('#detail-report-candidate');
+
+                if (!isSelected) {
+                    $('#no-selected-item').show();
+                    detailReportCandidate.slideUp();
+                } else {
+                    $('#no-selected-item').hide();
+                    detailReportCandidate.addClass('loading');
+                    $.get('/report-manager/detail/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                        .done(function (data) {
+                            detailReportCandidate.slideDown();
+                            console.log(data);
+
+                        })
+                        .fail(function () {
+                            $('#detail-report-candidate').html('<div class="ui message error">An error occurred while loading the details of the selected item.</div>');
+                        })
+                        .always(function () {
+                            detailReportCandidate.removeClass('loading');
+                        })
+                    ;
+                }
+            }
+
             $('.ui.card').click(function () {
-                let isSelected = $(this).hasClass('selected');
+                let wasSelected = $(this).hasClass('selected');
 
                 $('.ui.card').removeClass('selected');
 
-                if (!isSelected) {
+                if (!wasSelected) {
                     $(this).addClass('selected');
                 }
-
+                updateSelectedItem($(this).attr('id-reported-Candidate'), $(this), !wasSelected);
             });
 
         </script>
     </aside>
 
     <section>
+        <script>
+            $(function () {
+                $('.ui.accordion').accordion();
+            })
+        </script>
+
         <div class="ui message info" id="no-selected-item">
             <div class="header" th:text="#{reportManager.noItemSelected}">No item selected</div>
             <div th:text="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
+        </div>
+        <div class="ui container" id="detail-report-candidate">
+            <div class="ui segment styled fluid accordion">
+                <div class="title active">
+                    <h1><i class="dropdown icon"></i>D&eacute;tail du signalement</h1>
+                </div>
+                <div class="active content" style="display: flex;flex-direction: column;gap: 10px;">
+                    <div>
+                        <h2>Contenu signal&eacute;</h2>
+                        <div class="ui segment">
+                            Je suis du contenu qui a &eacute;t&eacute; signaler et donc j’apparais dans ce composant.
+                            La raison exact de mon signalement est &eacute;crite en dessous.
+                            Mais pour avoir tous le context et les d&eacute;tails restant cliquez sur moi.
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Raison du signalement</h2>
+                        <div>
+                            <div class="ui label">Jugement personel</div>
+                            <div class="ui label">Autre</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Commentaire</h2>
+                        <div class="ui segment">
+                            Je suis un commentaire ajoutant du d&eacute;tail au signalement
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Etudiant qui a signal&eacute;</h2>
+                        <div class="ui label">Albert Einstein</div>
+                    </div>
+                    <div>
+                        <h2>Etudiant dont le contenu &agrave; &eacute;t&eacute; signal&eacute;</h2>
+                        <div class="ui label">Isaac Newton</div>
+                        Sur cette s&eacute;quence, l'&eacute;tudiant a &eacute;t&eacute; signal&eacute; <span class="ui label">3</span> fois
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
