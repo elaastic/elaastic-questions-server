@@ -7,12 +7,12 @@ import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
 import org.elaastic.common.util.requireAccess
+import org.elaastic.moderation.ReportCandidateService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.directory.User
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service

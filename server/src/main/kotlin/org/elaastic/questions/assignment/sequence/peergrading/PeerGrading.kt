@@ -18,11 +18,11 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
-import org.elaastic.questions.assignment.sequence.UtilityGrade
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.report.ReportCandidate
-import org.elaastic.questions.directory.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.moderation.ReportCandidate
+import org.elaastic.moderation.UtilityGrade
+import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.questions.directory.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -48,7 +48,7 @@ import javax.persistence.*
  *
  * @see LikertPeerGrading
  * @see
- *     org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
+ *    org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
  */
 /*
  The graph is used to when we want to compute the number of evaluations a student has done

@@ -16,10 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.report;
+package org.elaastic.moderation;
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
