@@ -51,53 +51,75 @@
         </style>
 
         <script>
-            /**
-             * Update the container with the details of the selected item.
-             * @param idReportCandidate {number} The id of the selected item.
-             * @param reportedCandidate {HTMLElement} The selected item.
-             * @param isSelected {boolean} true if the item is selected false otherwise.
-             */
-            function updateSelectedItem(idReportCandidate, reportedCandidate, isSelected) {
-                console.log('Selected item id : ' + idReportCandidate);
-                console.log(reportedCandidate);
-                console.log('Is selected : ' + isSelected);
-                console.log("Type : " + $(reportedCandidate).attr('reported-candidate-type'))
 
+            $(function () {
                 const detailReportCandidate = $('#detail-report-candidate');
+                const loader = $('#loader');
 
-                if (!isSelected) {
-                    $('#no-selected-item').show();
-                    detailReportCandidate.slideUp();
-                } else {
-                    $('#no-selected-item').hide();
-                    detailReportCandidate.addClass('loading');
-                    $.get('/report-manager/detail/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
-                        .done(function (data) {
-                            detailReportCandidate.slideDown();
-                            console.log(data);
+                detailReportCandidate.hide();
+                loader.hide();
 
-                        })
-                        .fail(function () {
-                            $('#detail-report-candidate').html('<div class="ui message error">An error occurred while loading the details of the selected item.</div>');
-                        })
-                        .always(function () {
-                            detailReportCandidate.removeClass('loading');
-                        })
-                    ;
+                /**
+                 * Update the container with the details of the selected item.
+                 * @param idReportCandidate {number} The id of the selected item.
+                 * @param reportedCandidate {HTMLElement} The selected item.
+                 * @param isSelected {boolean} true if the item is selected false otherwise.
+                 */
+                function updateSelectedItem(idReportCandidate, reportedCandidate, isSelected) {
+                    console.log('Selected item id : ' + idReportCandidate);
+                    console.log(reportedCandidate);
+                    console.log('Is selected : ' + isSelected);
+                    console.log("Type : " + $(reportedCandidate).attr('reported-candidate-type'))
+
+                    if (!isSelected) {
+                        $('#no-selected-item').slideDown();
+                        detailReportCandidate.slideUp();
+                    } else {
+                        $('#no-selected-item').hide();
+
+                        loader.slideDown();
+                        $.get('/report-manager/detail/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                            .done(function (data) {
+                                detailReportCandidate.slideDown();
+                                console.log(data);
+                                $('#reported-content').html(data.contentReported);
+
+                                $('#report-reasons').empty();
+                                data.reasons.forEach(function (reason) {
+                                    $('#report-reasons').append('<div class="ui label">' + reason + '</div>');
+                                });
+
+                                if (data.comment == null) {
+                                    $('#report-comment-parent').hide()
+                                } else {
+                                    $('#report-comment-parent').show()
+                                    $('#report-comment').html(data.comment);
+                                }
+                                $('#reporter').text(data.reporter);
+                                $('#graderThatHaveBeenReported').text(data.graderThatHaveBeenReported);
+                                $('#numberOfReport').text(data.numberOfReport);
+                            })
+                            .fail(function () {
+                                $('#detail-report-candidate').html('<div class="ui message error">An error occurred while loading the details of the selected item.</div>');
+                            })
+                            .always(function () {
+                                loader.slideUp();
+                            })
+                        ;
+                    }
                 }
-            }
 
-            $('.ui.card').click(function () {
-                let wasSelected = $(this).hasClass('selected');
+                $('.ui.card').click(function () {
+                    let wasSelected = $(this).hasClass('selected');
 
-                $('.ui.card').removeClass('selected');
+                    $('.ui.card').removeClass('selected');
 
-                if (!wasSelected) {
-                    $(this).addClass('selected');
-                }
-                updateSelectedItem($(this).attr('id-reported-Candidate'), $(this), !wasSelected);
-            });
-
+                    if (!wasSelected) {
+                        $(this).addClass('selected');
+                    }
+                    updateSelectedItem($(this).attr('id-reported-Candidate'), $(this), !wasSelected);
+                });
+            })
         </script>
     </aside>
 
@@ -108,9 +130,16 @@
             })
         </script>
 
-        <div class="ui message info" id="no-selected-item">
+        <div class="ui message info" id="no-selected-item" style="display: none">
             <div class="header" th:text="#{reportManager.noItemSelected}">No item selected</div>
             <div th:text="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
+        </div>
+        <!--/*Loader*/-->
+        <div class="ui message" id="loader" style="display: none">
+            <div class="ui active inverted dimmer" style="background-color: rgba(255,255,255,.60)">
+                <div class="ui text loader" th:text="#{common.loading}">Loading</div>
+            </div>
+            <div class="placeholder" style="height: 50px"></div>
         </div>
         <div class="ui container" id="detail-report-candidate">
             <div class="ui segment styled fluid accordion">
@@ -120,33 +149,30 @@
                 <div class="active content" style="display: flex;flex-direction: column;gap: 10px;">
                     <div>
                         <h2>Contenu signal&eacute;</h2>
-                        <div class="ui segment">
-                            Je suis du contenu qui a &eacute;t&eacute; signaler et donc j’apparais dans ce composant.
-                            La raison exact de mon signalement est &eacute;crite en dessous.
-                            Mais pour avoir tous le context et les d&eacute;tails restant cliquez sur moi.
+                        <div class="ui segment" id="reported-content">
+                            Reported Content
                         </div>
                     </div>
                     <div>
                         <h2>Raison du signalement</h2>
-                        <div>
-                            <div class="ui label">Jugement personel</div>
-                            <div class="ui label">Autre</div>
+                        <div id="report-reasons">
                         </div>
                     </div>
-                    <div>
+                    <div id="report-comment-parent">
                         <h2>Commentaire</h2>
-                        <div class="ui segment">
-                            Je suis un commentaire ajoutant du d&eacute;tail au signalement
+                        <div class="ui segment" id="report-comment">
+                            Comment
                         </div>
                     </div>
                     <div>
                         <h2>Etudiant qui a signal&eacute;</h2>
-                        <div class="ui label">Albert Einstein</div>
+                        <div class="ui label" id="reporter">Student</div>
                     </div>
                     <div>
                         <h2>Etudiant dont le contenu &agrave; &eacute;t&eacute; signal&eacute;</h2>
-                        <div class="ui label">Isaac Newton</div>
-                        Sur cette s&eacute;quence, l'&eacute;tudiant a &eacute;t&eacute; signal&eacute; <span class="ui label">3</span> fois
+                        <div class="ui label" id="graderThatHaveBeenReported">Student</div>
+                        Sur cette s&eacute;quence, l'&eacute;tudiant a &eacute;t&eacute; signal&eacute; <span
+                            class="ui label" id="numberOfReport">3</span> fois
                     </div>
                 </div>
             </div>
