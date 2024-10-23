@@ -111,7 +111,7 @@ class ReportManagerController(
     class ReportCandidateDetail(
         id: Long,
         contentReported: String,
-        reportReasons: String?,
+        reportReasons: String?, //TODO Get the list of reasons from i18n
         reportComment: String?,
         type: ReportedCandidateType,
         val reporter: String,
