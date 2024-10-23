@@ -144,35 +144,35 @@
         <div class="ui container" id="detail-report-candidate">
             <div class="ui segment styled fluid accordion">
                 <div class="title active">
-                    <h1><i class="dropdown icon"></i>D&eacute;tail du signalement</h1>
+                    <h1><i class="dropdown icon"></i><span th:text="#{reportManager.detail.title}"></span></h1>
                 </div>
                 <div class="active content" style="display: flex;flex-direction: column;gap: 10px;">
                     <div>
-                        <h2>Contenu signal&eacute;</h2>
+                        <h2 th:text="#{reportManager.detail.reportedContent.title}"></h2>
                         <div class="ui segment" id="reported-content">
                             Reported Content
                         </div>
                     </div>
                     <div>
-                        <h2>Raison du signalement</h2>
+                        <h2 th:text="#{reportManager.detail.reportReasons.title}"></h2>
                         <div id="report-reasons">
                         </div>
                     </div>
                     <div id="report-comment-parent">
-                        <h2>Commentaire</h2>
+                        <h2 th:text="#{reportManager.detail.comment.title}"></h2>
                         <div class="ui segment" id="report-comment">
                             Comment
                         </div>
                     </div>
                     <div>
-                        <h2>Etudiant qui a signal&eacute;</h2>
+                        <h2 th:text="#{reportManager.detail.reporter.title}"></h2>
                         <div class="ui label" id="reporter">Student</div>
                     </div>
                     <div>
-                        <h2>Etudiant dont le contenu &agrave; &eacute;t&eacute; signal&eacute;</h2>
+                        <h2 th:text="#{reportManager.detail.studentReported.title}"></h2>
                         <div class="ui label" id="graderThatHaveBeenReported">Student</div>
-                        Sur cette s&eacute;quence, l'&eacute;tudiant a &eacute;t&eacute; signal&eacute; <span
-                            class="ui label" id="numberOfReport">3</span> fois
+                        <span th:text="#{reportManager.detail.numberOfReport.title}"></span>
+                        <span class="ui label" id="numberOfReport">3</span>
                     </div>
                 </div>
             </div>
