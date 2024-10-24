@@ -8,8 +8,8 @@ import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
 import org.elaastic.common.util.requireAccess
 import org.elaastic.moderation.ReportCandidateService
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService

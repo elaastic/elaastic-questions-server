@@ -1,15 +1,15 @@
 package org.elaastic.ai.evaluation.chatgpt
 
+import org.elaastic.common.util.requireAccessThrowDenied
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingController.ResponseSubmissionAsynchronous
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModelFactory
-import org.elaastic.common.util.requireAccessThrowDenied
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
@@ -112,7 +112,7 @@ class ChatGptEvaluationController(
         @PathVariable responseId: Long,
     ): String {
         val user: User = authentication.principal as User
-        
+
         val evaluationModel = try {
             val response = responseService.findById(responseId)
 
@@ -170,14 +170,14 @@ class ChatGptEvaluationController(
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
     }
 
-        @PostMapping("sequence/{id}/submit-utility-grade")
+    @PostMapping("sequence/{id}/submit-utility-grade")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun submitChatGptEvaluationUtilityGrade(
-            authentication: Authentication,
-            model: Model,
-            @RequestParam(required = true) evaluationId: Long,
-            @RequestParam(required = true) utilityGrade: UtilityGrade,
-            @PathVariable id: Long
+        authentication: Authentication,
+        model: Model,
+        @RequestParam(required = true) evaluationId: Long,
+        @RequestParam(required = true) utilityGrade: UtilityGrade,
+        @PathVariable id: Long
     ): String {
         val user: User = authentication.principal as User
         val sequence = sequenceService.get(id, true)
@@ -185,7 +185,11 @@ class ChatGptEvaluationController(
 
         // Check authorizations
         requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
-            messageSource.getMessage("evaluation.chatGPT.error.access.utilityGrade", null, LocaleContextHolder.getLocale())
+            messageSource.getMessage(
+                "evaluation.chatGPT.error.access.utilityGrade",
+                null,
+                LocaleContextHolder.getLocale()
+            )
         }
 
         chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation, utilityGrade)

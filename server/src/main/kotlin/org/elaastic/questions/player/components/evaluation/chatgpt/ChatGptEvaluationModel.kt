@@ -1,9 +1,9 @@
 package org.elaastic.questions.player.components.evaluation.chatgpt
 
-import org.elaastic.questions.assignment.sequence.ReportReason
-import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
 import org.elaastic.moderation.ReportCandidate
+import org.elaastic.moderation.ReportReason
+import org.elaastic.moderation.UtilityGrade
 import java.math.BigDecimal
 
 data class ChatGptEvaluationModel(
@@ -23,7 +23,7 @@ data class ChatGptEvaluationModel(
     val gradingID: Long? = null,
     val canHideGrading: Boolean = false,
     val responseId: Long? = null,
-    ) : ReportCandidate {
+) : ReportCandidate {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

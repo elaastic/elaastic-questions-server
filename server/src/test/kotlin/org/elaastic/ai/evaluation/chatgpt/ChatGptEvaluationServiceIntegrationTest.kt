@@ -1,9 +1,9 @@
 package org.elaastic.ai.evaluation.chatgpt
 
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
+import org.elaastic.moderation.ReportReason
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.test.FunctionalTestingService
@@ -63,7 +63,8 @@ internal class ChatGptEvaluationServiceIntegrationTest(
     fun `get a chatgpt evaluation - valid`() {
 
         val response = integrationTestingService.getAnyResponse()
-        response.explanation = "Git est le meilleur système de gestion de version, il coche donc toutes les bonnes options."
+        response.explanation =
+            "Git est le meilleur système de gestion de version, il coche donc toutes les bonnes options."
         val promptFr = chatGptPromptService.getPrompt("fr")
 
         tWhen {
