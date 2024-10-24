@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.moderation;
+package org.elaastic.moderation
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Service
