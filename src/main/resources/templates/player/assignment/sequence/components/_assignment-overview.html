@@ -18,9 +18,9 @@
 
 <!--/*@thymesVar id="assignmentOverviewModel" type="org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel"*/-->
 <div
-  th:fragment="assignmentOverview(assignmentOverviewModel, context)"
-  th:remove="tag"
-  xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+        th:fragment="assignmentOverview(assignmentOverviewModel, context)"
+        th:remove="tag"
+        xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <script th:if="${context == 'aside' && assignmentOverviewModel.selectedSequenceId != null}" th:inline="javascript">
         (function () {
@@ -46,41 +46,42 @@
         }
     </style>
 
-  <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
-    <div class="floating ui grey label"
-         style="left: 3em;"
-         th-attr="data-tooltip=#{player.assignment.registeredUserCount2}"
-         data-inverted=""
-         data-position="bottom left">
-      <i class="users icon"></i> <span th:text="${assignmentOverviewModel.nbRegisteredUser}"></span>
-    </div>
-    <i class="file alternate outline icon"></i>
+    <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
+        <div class="floating ui grey label"
+             style="left: 3em;"
+             th-attr="data-tooltip=#{player.assignment.registeredUserCount2}"
+             data-inverted=""
+             data-position="bottom left">
+            <i class="users icon"></i> <span th:text="${assignmentOverviewModel.nbRegisteredUser}"></span>
+        </div>
+        <i class="file alternate outline icon"></i>
 
-    <div class="content" th:text="${assignmentOverviewModel.assignmentTitle}"></div>
-  </h3>
+        <div class="content" th:text="${assignmentOverviewModel.assignmentTitle}"></div>
+    </h3>
 
-  <div class="ui segment attached" th:if="${assignmentOverviewModel.teacher}">
-    <div class="ui breadcrumb">
+    <div class="ui segment attached" th:if="${assignmentOverviewModel.teacher}">
+        <div class="ui breadcrumb">
 
-      <th:block th:if="${not #strings.isEmpty(assignmentOverviewModel.courseTitle)}">
+            <th:block th:if="${not #strings.isEmpty(assignmentOverviewModel.courseTitle)}">
         <span class="section">
         <i class="folder icon"></i> <a class="section"
                                        th:href="@{/course/{id}(id=${assignmentOverviewModel.courseId})}"
                                        th:text="${assignmentOverviewModel.courseTitle}"></a>
           </span>
-        <div class="divider"> /</div>
-      </th:block>
+                <div class="divider"> /</div>
+            </th:block>
 
-      <th:block th:if="${assignmentOverviewModel.subjectTitle != null}">
+            <th:block th:if="${assignmentOverviewModel.subjectTitle != null}">
         <span class="active section">
         <i class="book icon"></i>
-        <a th:href="@{/subject/{id}(id=${assignmentOverviewModel.subjectId})}" th:text="${assignmentOverviewModel.subjectTitle}">Subject
+        <a th:href="@{/subject/{id}(id=${assignmentOverviewModel.subjectId})}"
+           th:text="${assignmentOverviewModel.subjectTitle}">Subject
           link</a>
         </span>
-        <div class="divider"> /</div>
-      </th:block>
+                <div class="divider"> /</div>
+            </th:block>
 
-      <th:block th:if="${!#strings.isEmpty(assignmentOverviewModel.audience)}">
+            <th:block th:if="${!#strings.isEmpty(assignmentOverviewModel.audience)}">
         <span class="section">
         <i class="podcast icon"></i>
         <a th:href="@{/subject/{subjectId}(subjectId=${assignmentOverviewModel.subjectId}, activeTab='assignments')}"
@@ -98,61 +99,63 @@
         </a>
         ]
           </span>
-      </th:block>
+            </th:block>
+        </div>
     </div>
-  </div>
 
-  <div class="ui segment attached"
-       th:if="${#lists.isEmpty(assignmentOverviewModel.sequences)}"
-       th:text="#{assignment.empty}">
-    This assignment is empty.
-  </div>
 
-  <div th:each="sequence, i : ${assignmentOverviewModel.sequences}"
-       class="ui clearing attached segment"
-       th:classappend="|${sequence.id == assignmentOverviewModel.selectedSequenceId ? 'selected' : ''}|"
-       th:id="|${context}-${sequence.id}|"
-       style="padding-bottom: 1em; cursor: pointer; "
-       th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${assignmentOverviewModel.assignmentId}, sequenceId=${sequence.id})}'|">
+    <div class="ui segment attached"
+         th:if="${#lists.isEmpty(assignmentOverviewModel.sequences)}"
+         th:text="#{assignment.empty}">
+        This assignment is empty.
+    </div>
 
-    <div class="ui grid">
-      <div class="twelve wide column">
-        <div style="overflow: hidden; height: 100%; padding-top: 2px;">
-          <h4 class="ui header">
-            <div class="ui tiny circular label"
-                 style="margin-right: 1em;"
-                 th:text="|${i.index+1}.|">
+    <div th:each="sequence, i : ${assignmentOverviewModel.sequences}"
+         class="ui clearing attached segment"
+         th:classappend="|${sequence.id == assignmentOverviewModel.selectedSequenceId ? 'selected' : ''}|"
+         th:id="|${context}-${sequence.id}|"
+         style="padding-bottom: 1em; cursor: pointer; "
+         th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${assignmentOverviewModel.assignmentId}, sequenceId=${sequence.id})}'|">
+
+        <div class="ui grid">
+            <div class="twelve wide column">
+                <div style="overflow: hidden; height: 100%; padding-top: 2px;">
+                    <h4 class="ui header">
+                        <div class="ui tiny circular label"
+                             style="margin-right: 1em;"
+                             th:text="|${i.index+1}.|">
+                        </div>
+                        <span th:utext="${sequence.title}"></span>
+                    </h4>
+
+                    <div style="height: 4em; overflow: hidden;"
+                         th:unless="${sequence.hideStatementContent}"
+                         th:utext="${sequence.content}">
+                    </div>
+
+                </div>
             </div>
-            <span th:utext="${sequence.title}"></span>
-          </h4>
 
-          <div style="height: 4em; overflow: hidden;"
-               th:unless="${sequence.hideStatementContent}"
-               th:utext="${sequence.content}">
-          </div>
+            <div class="four wide column" style="text-align: center;">
+                <div>
+                    <h4 class="ui header circular small basic blue label"
+                        style="height: 0.6em !important; padding-top: 2px;"
+                        th:if="${sequence.revisionTag}"
+                        th:title="#{assignment.overview.revisionAvailability}"
+                        th:text="#{assignment.overview.revisionTag}">
+                        Revisions
+                    </h4>
+                </div>
+                <div style="height: 80%; display:flex">
+                    <i th:each="icon : ${sequence.icons}"
+                       class="elaastic-phase icon"
+                       style="margin: auto"
+                       th:classappend="${icon.icon}"
+                       th:title="#{${icon.title}}"
+                    ></i>
+                </div>
+            </div>
+        </div>
 
-        </div>
-      </div>
-
-      <div class="four wide column" style="text-align: center;">
-        <div>
-          <h4 class="ui header circular small basic blue label" style="height: 0.6em !important; padding-top: 2px;"
-          th:if="${sequence.revisionTag}"
-          th:title="#{assignment.overview.revisionAvailability}"
-          th:text="#{assignment.overview.revisionTag}">
-            Revisions
-          </h4>
-        </div>
-        <div style="height: 80%; display:flex">
-          <i th:each="icon : ${sequence.icons}"
-             class="elaastic-phase icon"
-             style="margin: auto"
-             th:classappend="${icon.icon}"
-             th:title="#{${icon.title}}"
-          ></i>
-        </div>
-      </div>
     </div>
-
-  </div>
 </div>
