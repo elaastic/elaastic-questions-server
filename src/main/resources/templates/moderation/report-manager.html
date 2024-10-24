@@ -31,6 +31,7 @@
     <aside id="layout-aside">
         <div th:replace="|player/assignment/sequence/components/_assignment-overview.html| :: assignmentOverview(${assignmentOverviewModel}, aside)"></div>
         <div class="ui segment attached">
+            <div class="ui header" th:text="#{reportManager.itemContainer.title}"></div>
             <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">
                 <th:block
                         th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel})"></th:block>
@@ -86,8 +87,8 @@
                                 $('#reported-content').html(data.contentReported);
 
                                 $('#report-reasons').empty();
-                                data.reasons.forEach(function (reason) {
-                                    $('#report-reasons').append('<div class="ui label">' + reason + '</div>');
+                                data.reportReasonsI18N.forEach(function (reason) {
+                                    $('#report-reasons').append('<li>' + reason + '</li>');
                                 });
 
                                 if (data.comment == null) {
@@ -98,6 +99,14 @@
                                 }
                                 $('#reporter').text(data.reporter);
                                 $('#graderThatHaveBeenReported').text(data.graderThatHaveBeenReported);
+                                if (data.type === "PEER_GRADING") {
+                                    $('#user-icon').show();
+                                    $('#laptop-icon').hide();
+                                } else {
+                                    $('#user-icon').hide();
+                                    $('#laptop-icon').show();
+                                }
+
                                 $('#numberOfReport').text(data.numberOfReport);
                             })
                             .fail(function () {
@@ -131,49 +140,89 @@
             })
         </script>
 
-        <div class="ui message info" id="no-selected-item" style="display: none">
+        <!--/* No item in list message */-->
+        <div class="ui message info" id="no-selected-item">
             <div class="header" th:text="#{reportManager.noItemSelected}">No item selected</div>
             <div th:text="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
         </div>
-        <!--/*Loader*/-->
+
+        <!--/* Loader */-->
         <div class="ui message" id="loader" style="display: none">
             <div class="ui active inverted dimmer" style="background-color: rgba(255,255,255,.60)">
                 <div class="ui text loader" th:text="#{common.loading}">Loading</div>
             </div>
             <div class="placeholder" style="height: 50px"></div>
         </div>
+
+        <!--/*Detail of the selected item*/-->
         <div class="ui container" id="detail-report-candidate">
             <div class="ui segment styled fluid accordion">
+
+                <!--/* Title of the accordion */-->
                 <div class="title active">
                     <h1><i class="dropdown icon"></i><span th:text="#{reportManager.detail.title}"></span></h1>
                 </div>
+
+                <!--/* Content of the accordion */-->
                 <div class="active content" style="display: flex;flex-direction: column;gap: 10px;">
-                    <div>
+
+                    <!--/* Content reported */-->
+                    <div class="ui segment vertical">
                         <h2 th:text="#{reportManager.detail.reportedContent.title}"></h2>
                         <div class="ui segment" id="reported-content">
                             Reported Content
                         </div>
                     </div>
-                    <div>
+
+                    <!--/* Reasons of the report */-->
+                    <div class="ui segment vertical">
                         <h2 th:text="#{reportManager.detail.reportReasons.title}"></h2>
-                        <div id="report-reasons">
-                        </div>
+                        <ul id="report-reasons" class="ui list">
+                        </ul>
                     </div>
-                    <div id="report-comment-parent">
+
+                    <!--/* Comment of the report */-->
+                    <div id="report-comment-parent" class="ui segment vertical">
                         <h2 th:text="#{reportManager.detail.comment.title}"></h2>
                         <div class="ui segment" id="report-comment">
                             Comment
                         </div>
                     </div>
-                    <div>
-                        <h2 th:text="#{reportManager.detail.reporter.title}"></h2>
-                        <div class="ui label" id="reporter">Student</div>
-                    </div>
-                    <div>
-                        <h2 th:text="#{reportManager.detail.studentReported.title}"></h2>
-                        <div class="ui label" id="graderThatHaveBeenReported">Student</div>
-                        <span th:text="#{reportManager.detail.numberOfReport.title}"></span>
-                        <span class="ui label" id="numberOfReport">3</span>
+
+                    <div class="ui segment vertical">
+                        <div class="ui two column very relaxed grid">
+                            <!--/* Author of the report */-->
+                            <div class="column">
+                                <h2 th:text="#{reportManager.detail.reporter.title}"></h2>
+                                <div class="ui compact segment">
+                                    <div style="display: flex; flex-direction: row">
+                                        <i class="user circle icon"></i>
+                                        <div id="reporter">Student</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--/* Author of the evaluation */-->
+                            <div class="column">
+                                <h2 th:text="#{reportManager.detail.studentReported.title}"></h2>
+                                <div class="ui compact segment">
+                                    <div style="display: flex; flex-direction: row">
+                                        <i class="user circle icon" id="user-icon"></i>
+                                        <i class="laptop icon" id="laptop-icon"></i>
+                                        <div id="graderThatHaveBeenReported">Student</div>
+                                    </div>
+                                </div>
+                                <span th:text="#{reportManager.detail.numberOfReport.title}"></span>
+                                <span class="ui label" id="numberOfReport">3</span>
+                            </div>
+                        </div>
+                        <style>
+                            .ui.vertical.divider.without-text::after,
+                            .ui.vertical.divider.without-text::before {
+                                height: 100%;
+                            }
+                        </style>
+                        <div class="ui vertical divider without-text" ></div>
                     </div>
                 </div>
             </div>
