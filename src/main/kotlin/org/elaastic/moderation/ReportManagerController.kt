@@ -2,11 +2,14 @@ package org.elaastic.moderation
 
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.directory.User
+import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -26,6 +29,7 @@ class ReportManagerController(
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val assignmentService: AssignmentService,
 ) {
 
     @GetMapping("/{idSequence}")
@@ -44,8 +48,20 @@ class ReportManagerController(
         val allReportedCandidateModel: List<ReportedCandidateModel> = (draxoReported + chatGPTReported)
             .mapNotNull { ReportedCandidateModelFactory.build(it) }
 
+        val registeredUsers: Int = assignmentService.countAllRegisteredUsers(sequence.assignment!!)
+
+        val assignmentOverviewModel = AssignmentOverviewModelFactory.buildOnSequence(
+            true,
+            sequence.assignment!!,
+            nbRegisteredUser = registeredUsers,
+            userActiveInteraction = sequence.activeInteraction,
+            selectedSequence = sequence,
+        )
+
+
         model["user"] = user
         model["allReportedCandidateModel"] = allReportedCandidateModel
+        model["assignmentOverviewModel"] = assignmentOverviewModel
 
         return "moderation/report-manager"
     }

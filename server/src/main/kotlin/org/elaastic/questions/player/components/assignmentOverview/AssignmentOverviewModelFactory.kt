@@ -31,7 +31,8 @@ object AssignmentOverviewModelFactory {
     val lockIcon = AssignmentOverviewModel.PhaseIcon("big grey lock", "assignment.overview.lockIcon")
     val minusIcon = AssignmentOverviewModel.PhaseIcon("big grey minus", "assignment.overview.minusIcon")
     val commentIcon = AssignmentOverviewModel.PhaseIcon("big grey comment outline", "assignment.overview.commentIcon")
-    val commentsIcon = AssignmentOverviewModel.PhaseIcon("big grey comments outline", "assignment.overview.commentsIcon")
+    val commentsIcon =
+        AssignmentOverviewModel.PhaseIcon("big grey comments outline", "assignment.overview.commentsIcon")
 
     fun build(
         teacher: Boolean,
@@ -77,7 +78,7 @@ object AssignmentOverviewModelFactory {
         sequence: Sequence,
         userActiveInteraction: Interaction?
     ): List<AssignmentOverviewModel.PhaseIcon> =
-            if (sequence.executionIsFaceToFace() || !teacher) {
+        if (sequence.executionIsFaceToFace() || !teacher) {
             when {
                 sequence.isStopped() ->
                     if (sequence.resultsArePublished)
@@ -103,17 +104,51 @@ object AssignmentOverviewModelFactory {
 
                 else ->
                     if (sequence.resultsArePublished) listOf(commentIcon, commentsIcon, chartIcon)
-                    else listOf(commentIcon, commentsIcon )
+                    else listOf(commentIcon, commentsIcon)
             }
         }
 
     private fun resolveRevisionTag(
         sequence: Sequence,
         revisionMode: RevisionMode
-    ): Boolean = when (revisionMode){
+    ): Boolean = when (revisionMode) {
         RevisionMode.NotAtAll -> false
         RevisionMode.Immediately -> true
         RevisionMode.AfterTeachings -> sequence.resultsArePublished && (sequence.executionIsFaceToFace() || sequence.isStopped())
     }
 
+    /** Build a [AssignmentOverviewModel] for only one [Sequence]. */
+    fun buildOnSequence(
+        teacher: Boolean,
+        assignment: Assignment,
+        nbRegisteredUser: Int,
+        userActiveInteraction: Interaction?,
+        selectedSequence: Sequence
+    ): AssignmentOverviewModel = AssignmentOverviewModel(
+        teacher = teacher,
+        nbRegisteredUser = nbRegisteredUser,
+        assignmentTitle = assignment.title,
+        courseTitle = if (teacher) assignment.subject?.course?.title else null,
+        courseId = if (teacher) assignment.subject?.course?.id else null,
+        subjectTitle = if (teacher) assignment.subject!!.title else null,
+        subjectId = if (teacher) assignment.subject!!.id else null,
+        audience = if (teacher) assignment.audience + " ${assignment.scholarYear ?: ""}" else null,
+        assignmentId = assignment.id!!,
+        sequences = listOf(
+            AssignmentOverviewModel.SequenceInfo(
+                id = selectedSequence.id!!,
+                title = selectedSequence.statement.title,
+                content = selectedSequence.statement.content,
+                hideStatementContent = !teacher && selectedSequence.state == State.beforeStart,
+                icons = resolveIcons(
+                    teacher,
+                    selectedSequence,
+                    userActiveInteraction
+                ),
+                revisionTag = resolveRevisionTag(selectedSequence, assignment.revisionMode)
+            )
+        ),
+        selectedSequenceId = selectedSequence.id,
+        isRevisionMode = assignment.revisionMode != RevisionMode.NotAtAll
+    )
 }
