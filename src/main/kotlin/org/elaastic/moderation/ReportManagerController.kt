@@ -11,6 +11,8 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGra
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -29,6 +31,7 @@ class ReportManagerController(
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val messageSource: MessageSource,
     @Autowired val assignmentService: AssignmentService,
 ) {
 
@@ -90,6 +93,13 @@ class ReportManagerController(
         id: Long,
         type: ReportedCandidateType
     ): ReportCandidateDetail {
+        val reportResaonToStringI18N = ReportReason.values().associateWith {
+            messageSource.getMessage(
+                "player.sequence.chatGptEvaluation.reportReason.$it",
+                null,
+                LocaleContextHolder.getLocale()
+            )
+        }
         val reportedCandidateDetail: ReportCandidateDetail = when (type) {
             ReportedCandidateType.PEER_GRADING -> {
                 val peerGrading = peerGradingRepository.findById(id).orElseThrow()
@@ -101,6 +111,7 @@ class ReportManagerController(
                     type = ReportedCandidateType.PEER_GRADING,
                     reporter = peerGrading.response.learner.getDisplayName(),
                     graderThatHaveBeenReported = peerGrading.grader.getDisplayName(),
+                    reportReasonToStringI18N = reportResaonToStringI18N,
                 )
             }
 
@@ -114,6 +125,7 @@ class ReportManagerController(
                     type = ReportedCandidateType.CHAT_GPT_EVALUATION,
                     reporter = chatGptEvaluation.response.learner.getDisplayName(),
                     graderThatHaveBeenReported = "ChatGPT", //TODO Introduce constant
+                    reportReasonToStringI18N = reportResaonToStringI18N,
                 )
             }
         }
@@ -123,17 +135,20 @@ class ReportManagerController(
     class ReportCandidateDetail(
         id: Long,
         contentReported: String,
-        reportReasons: String?, //TODO Get the list of reasons from i18n
+        reportReasons: String?,
         reportComment: String?,
         type: ReportedCandidateType,
         val reporter: String,
         val graderThatHaveBeenReported: String,
         val numberOfReport: Int = 0,
+        private val reportReasonToStringI18N: Map<ReportReason, String>,
     ) : ReportedCandidateModel(
         id,
         contentReported,
         reportReasons,
         reportComment,
         type
-    )
+    ) {
+        val reportReasonsI18N: List<String> = reasons.map { reportReasonToStringI18N[it]!! }
+    }
 }
