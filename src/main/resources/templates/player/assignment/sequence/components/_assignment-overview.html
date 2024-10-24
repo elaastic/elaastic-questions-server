@@ -16,8 +16,9 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<!--/*@thymesVar id="assignmentOverviewModel" type="org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel"*/-->
 <div
-  th:fragment="assignmentOverview(model, context)"
+  th:fragment="assignmentOverview(assignmentOverviewModel, context)"
   th:remove="tag"
   xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -28,44 +29,44 @@
          th-attr="data-tooltip=#{player.assignment.registeredUserCount2}"
          data-inverted=""
          data-position="bottom left">
-      <i class="users icon"></i> <span th:text="${model.nbRegisteredUser}"></span>
+      <i class="users icon"></i> <span th:text="${assignmentOverviewModel.nbRegisteredUser}"></span>
     </div>
     <i class="file alternate outline icon"></i>
 
-    <div class="content" th:text="${model.assignmentTitle}"></div>
+    <div class="content" th:text="${assignmentOverviewModel.assignmentTitle}"></div>
   </h3>
 
-  <div class="ui segment attached" th:if="${model.teacher}">
+  <div class="ui segment attached" th:if="${assignmentOverviewModel.teacher}">
     <div class="ui breadcrumb">
 
-      <th:block th:if="${not #strings.isEmpty(model.courseTitle)}">
+      <th:block th:if="${not #strings.isEmpty(assignmentOverviewModel.courseTitle)}">
         <span class="section">
         <i class="folder icon"></i> <a class="section"
-                                       th:href="@{/course/{id}(id=${model.courseId})}"
-                                       th:text="${model.courseTitle}"></a>
+                                       th:href="@{/course/{id}(id=${assignmentOverviewModel.courseId})}"
+                                       th:text="${assignmentOverviewModel.courseTitle}"></a>
           </span>
         <div class="divider"> /</div>
       </th:block>
 
-      <th:block th:if="${model.subjectTitle != null}">
+      <th:block th:if="${assignmentOverviewModel.subjectTitle != null}">
         <span class="active section">
         <i class="book icon"></i>
-        <a th:href="@{/subject/{id}(id=${model.subjectId})}" th:text="${model.subjectTitle}">Subject
+        <a th:href="@{/subject/{id}(id=${assignmentOverviewModel.subjectId})}" th:text="${assignmentOverviewModel.subjectTitle}">Subject
           link</a>
         </span>
         <div class="divider"> /</div>
       </th:block>
 
-      <th:block th:if="${!#strings.isEmpty(model.audience)}">
+      <th:block th:if="${!#strings.isEmpty(assignmentOverviewModel.audience)}">
         <span class="section">
         <i class="podcast icon"></i>
-        <a th:href="@{/subject/{subjectId}(subjectId=${model.subjectId}, activeTab='assignments')}"
-           th:text="${model.audience}"
+        <a th:href="@{/subject/{subjectId}(subjectId=${assignmentOverviewModel.subjectId}, activeTab='assignments')}"
+           th:text="${assignmentOverviewModel.audience}"
            th:attr="data-tooltip=#{subject.assignment.change.action}"
            data-tooltip="Change assignment"
            data-inverted="">The audience</a>
         [
-        <a th:href="@{/assignment/{id}/edit(id=${model.assignmentId})}"
+        <a th:href="@{/assignment/{id}/edit(id=${assignmentOverviewModel.assignmentId})}"
            href="subject/123/edit"
            th:attr="data-tooltip=#{subject.propertiesEdition.label}"
            data-tooltip="Modify subject"
@@ -79,17 +80,17 @@
   </div>
 
   <div class="ui segment attached"
-       th:if="${#lists.isEmpty(model.sequences)}"
+       th:if="${#lists.isEmpty(assignmentOverviewModel.sequences)}"
        th:text="#{assignment.empty}">
     This assignment is empty.
   </div>
 
-  <div th:each="sequence, i : ${model.sequences}"
+  <div th:each="sequence, i : ${assignmentOverviewModel.sequences}"
        class="ui clearing attached segment"
-       th:classappend="|${sequence.id == model.selectedSequenceId ? 'selected' : ''}|"
+       th:classappend="|${sequence.id == assignmentOverviewModel.selectedSequenceId ? 'selected' : ''}|"
        th:id="|${context}-${sequence.id}|"
        style="padding-bottom: 1em; cursor: pointer; "
-       th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${model.assignmentId}, sequenceId=${sequence.id})}'|">
+       th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${assignmentOverviewModel.assignmentId}, sequenceId=${sequence.id})}'|">
 
     <div class="ui grid">
       <div class="twelve wide column">
@@ -132,10 +133,10 @@
 
   </div>
 
-  <script th:if="${context == 'aside' && model.selectedSequenceId != null}" th:inline="javascript">
+  <script th:if="${context == 'aside' && assignmentOverviewModel.selectedSequenceId != null}" th:inline="javascript">
     (function () {
       var container = $('#layout-aside')
-      var target = $('#' + [[${context}]] + '-[[${model.selectedSequenceId}]]')
+      var target = $('#' + [[${context}]] + '-[[${assignmentOverviewModel.selectedSequenceId}]]')
 
       if (!elaastic.util.isVisible(target, container, 50)) {
         elaastic.util.ensureIsVisible(target, container)
