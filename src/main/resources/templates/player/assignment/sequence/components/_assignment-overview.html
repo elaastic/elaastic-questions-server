@@ -22,6 +22,29 @@
   th:remove="tag"
   xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
+    <script th:if="${context == 'aside' && assignmentOverviewModel.selectedSequenceId != null}" th:inline="javascript">
+        (function () {
+            var container = $('#layout-aside')
+            var target = $('#' + [[${context}]] + '-[[${assignmentOverviewModel.selectedSequenceId}]]')
+
+            if (!elaastic.util.isVisible(target, container, 50)) {
+                elaastic.util.ensureIsVisible(target, container)
+            }
+        })()
+
+    </script>
+
+
+    <style>
+        .ui.selected.segment {
+            background-color: #fffaf3;
+            color: #573a08;
+        }
+
+        .ui.selected.segment .elaastic-phase.icon {
+            display: none !important;
+        }
+    </style>
 
   <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
     <div class="floating ui grey label"
@@ -132,28 +155,4 @@
     </div>
 
   </div>
-
-  <script th:if="${context == 'aside' && assignmentOverviewModel.selectedSequenceId != null}" th:inline="javascript">
-    (function () {
-      var container = $('#layout-aside')
-      var target = $('#' + [[${context}]] + '-[[${assignmentOverviewModel.selectedSequenceId}]]')
-
-      if (!elaastic.util.isVisible(target, container, 50)) {
-        elaastic.util.ensureIsVisible(target, container)
-      }
-    })()
-
-  </script>
-
-
-  <style>
-      .ui.selected.segment {
-          background-color: #fffaf3;
-          color: #573a08;
-      }
-
-      .ui.selected.segment .elaastic-phase.icon {
-          display: none !important;
-      }
-  </style>
 </div>
