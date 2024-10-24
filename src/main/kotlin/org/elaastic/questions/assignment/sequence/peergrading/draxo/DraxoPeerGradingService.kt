@@ -20,6 +20,7 @@ package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
 import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
@@ -104,5 +105,11 @@ class DraxoPeerGradingService(
     fun countAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): Int =
         draxoPeerGradingRepository.countAllReportedNotHidden(
             sequence.getResponseSubmissionInteraction()
+        )
+
+    fun countAllReportedNotHiddenForGrader(interaction: Interaction, grader: User): Int =
+        draxoPeerGradingRepository.countAllReportedNotHiddenForGrader(
+            interaction,
+            grader
         )
 }

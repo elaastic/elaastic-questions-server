@@ -10,6 +10,7 @@ import org.elaastic.common.util.requireAccess
 import org.elaastic.moderation.ReportCandidateService
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
@@ -274,6 +275,19 @@ class ChatGptEvaluationService(
     fun countAllReportedNotHidden(sequence: Sequence): Int {
         return chatGptEvaluationRepository.countAllReportedNotHidden(
             sequence.getResponseSubmissionInteraction(),
+        )
+    }
+
+    /**
+     * Count all the evaluations made on a sequence that have been reported and
+     * not hidden.
+     *
+     * @param interaction the interaction.
+     * @return the number of peer grading.
+     */
+    fun countAllReportedNotHidden(interaction: Interaction): Int {
+        return chatGptEvaluationRepository.countAllReportedNotHidden(
+            interaction
         )
     }
 

@@ -3,7 +3,6 @@ package org.elaastic.moderation
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -103,6 +102,11 @@ class ReportManagerController(
         val reportedCandidateDetail: ReportCandidateDetail = when (type) {
             ReportedCandidateType.PEER_GRADING -> {
                 val peerGrading = peerGradingRepository.findById(id).orElseThrow()
+                val nbReport = draxoPeerGradingService.countAllReportedNotHiddenForGrader(
+                    peerGrading.response.interaction,
+                    peerGrading.grader
+                )
+
                 ReportCandidateDetail(
                     id = peerGrading.id!!,
                     contentReported = peerGrading.annotation!!,
@@ -112,11 +116,16 @@ class ReportManagerController(
                     reporter = peerGrading.response.learner.getDisplayName(),
                     graderThatHaveBeenReported = peerGrading.grader.getDisplayName(),
                     reportReasonToStringI18N = reportResaonToStringI18N,
+                    numberOfReport = nbReport,
                 )
             }
 
             ReportedCandidateType.CHAT_GPT_EVALUATION -> {
                 val chatGptEvaluation = chatGptEvaluationRepository.findById(id).orElseThrow()
+                val nbReport = chatGptEvaluationService.countAllReportedNotHidden(
+                    chatGptEvaluation.response.interaction,
+                )
+
                 ReportCandidateDetail(
                     id = chatGptEvaluation.id!!,
                     contentReported = chatGptEvaluation.annotation!!,
@@ -126,6 +135,7 @@ class ReportManagerController(
                     reporter = chatGptEvaluation.response.learner.getDisplayName(),
                     graderThatHaveBeenReported = "ChatGPT", //TODO Introduce constant
                     reportReasonToStringI18N = reportResaonToStringI18N,
+                    numberOfReport = nbReport,
                 )
             }
         }
