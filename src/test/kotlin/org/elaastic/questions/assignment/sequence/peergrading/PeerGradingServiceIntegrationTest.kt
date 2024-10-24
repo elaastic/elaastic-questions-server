@@ -1,11 +1,11 @@
 package org.elaastic.questions.assignment.sequence.peergrading
 
+import org.elaastic.moderation.ReportReason
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.ReportReason
-import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService

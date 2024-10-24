@@ -17,7 +17,7 @@
  */
 package org.elaastic.questions.player.components.evaluation.draxo
 
-import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading

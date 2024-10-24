@@ -18,35 +18,14 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
-import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.LearnerAssignment
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.ReportReason
-import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.UserService
-import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tGiven
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
-import org.elaastic.questions.test.interpreter.command.Phase
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.math.BigDecimal
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 

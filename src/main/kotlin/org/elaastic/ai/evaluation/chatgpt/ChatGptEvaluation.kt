@@ -21,7 +21,7 @@ package org.elaastic.ai.evaluation.chatgpt
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.moderation.ReportCandidate
-import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
