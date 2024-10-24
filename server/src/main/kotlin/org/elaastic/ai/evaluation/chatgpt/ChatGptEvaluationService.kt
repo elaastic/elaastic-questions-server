@@ -259,10 +259,8 @@ class ChatGptEvaluationService(
      * @return the list of peer grading.
      */
     fun findAllReportedNotHidden(sequence: Sequence): List<ChatGptEvaluation> {
-        return chatGptEvaluationRepository.findAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(
-            responseRepository.findAllByInteraction(
-                sequence.getResponseSubmissionInteraction(),
-            )
+        return chatGptEvaluationRepository.findAllReportedNotHidden(
+            sequence.getResponseSubmissionInteraction()
         )
     }
 
@@ -274,10 +272,8 @@ class ChatGptEvaluationService(
      * @return the number of peer grading.
      */
     fun countAllReportedNotHidden(sequence: Sequence): Int {
-        return chatGptEvaluationRepository.countAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(
-            responseRepository.findAllByInteraction(
-                sequence.getResponseSubmissionInteraction(),
-            )
+        return chatGptEvaluationRepository.countAllReportedNotHidden(
+            sequence.getResponseSubmissionInteraction(),
         )
     }
 

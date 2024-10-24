@@ -18,16 +18,36 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 
 interface DraxoPeerGradingRepository : JpaRepository<PeerGrading, Long>, PeerGradingRepository {
     override fun findAllByResponseAndType(response: Response, type: PeerGradingType): List<DraxoPeerGrading>
 
     fun findByIdAndType(id: Long, type: PeerGradingType): DraxoPeerGrading?
+
+    @Query("SELECT draxo " +
+            "FROM DraxoPeerGrading draxo " +
+            "JOIN Response r on draxo.response = r " +
+            "JOIN Interaction i on r.interaction = i " +
+            "WHERE draxo.hiddenByTeacher = false " +
+            "AND draxo.reportReasons IS NOT NULL " +
+            "AND i = :interaction")
+    fun findAllReportedNotHidden(interaction: Interaction): List<DraxoPeerGrading>
+
+    @Query("SELECT COUNT(draxo) " +
+            "FROM DraxoPeerGrading draxo " +
+            "JOIN Response r on draxo.response = r " +
+            "JOIN Interaction i on r.interaction = i " +
+            "WHERE draxo.hiddenByTeacher = false " +
+            "AND draxo.reportReasons IS NOT NULL " +
+            "AND i = :interaction")
+    fun countAllReportedNotHidden(interaction: Interaction): Int
 
     fun findAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(responses: List<Response>): List<DraxoPeerGrading>
 
