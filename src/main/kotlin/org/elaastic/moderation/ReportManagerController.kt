@@ -23,13 +23,10 @@ class ReportManagerController(
     @Autowired val sequenceService: SequenceService,
     @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
-    @Autowired val reportCandidateService: ReportCandidateService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val peerGradingRepository: PeerGradingRepository,
 ) {
-
-    private val reportedCandidateModelFactory: ReportedCandidateModelFactory = ReportedCandidateModelFactory
 
     @GetMapping("/{idSequence}")
     fun getAllReport(
