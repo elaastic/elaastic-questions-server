@@ -14,25 +14,25 @@ interface ChatGptEvaluationRepository : JpaRepository<ChatGptEvaluation, Long>,
 
     fun findAllByResponseIn(response: List<Response>): List<ChatGptEvaluation>
 
-    @Query("SELECT gpt " +
-            "FROM ChatGptEvaluation gpt " +
-            "JOIN Response r on gpt.response = r " +
-            "JOIN Interaction i on r.interaction = i " +
-            "WHERE gpt.hiddenByTeacher = false " +
-            "AND gpt.reportReasons IS NOT NULL " +
-            "AND i = :interaction")
+    @Query(
+        "SELECT gpt " +
+                "FROM ChatGptEvaluation gpt " +
+                "JOIN Response r on gpt.response = r " +
+                "JOIN Interaction i on r.interaction = i " +
+                "WHERE gpt.hiddenByTeacher = false " +
+                "AND gpt.reportReasons IS NOT NULL " +
+                "AND i = :interaction"
+    )
     fun findAllReportedNotHidden(interaction: Interaction): List<ChatGptEvaluation>
 
-    @Query("SELECT COUNT(gpt) " +
-            "FROM ChatGptEvaluation gpt " +
-            "JOIN Response r on gpt.response = r " +
-            "JOIN Interaction i on r.interaction = i " +
-            "WHERE gpt.hiddenByTeacher = false " +
-            "AND gpt.reportReasons IS NOT NULL " +
-            "AND i = :interaction")
+    @Query(
+        "SELECT COUNT(gpt) " +
+                "FROM ChatGptEvaluation gpt " +
+                "JOIN Response r on gpt.response = r " +
+                "JOIN Interaction i on r.interaction = i " +
+                "WHERE gpt.hiddenByTeacher = false " +
+                "AND gpt.reportReasons IS NOT NULL " +
+                "AND i = :interaction"
+    )
     fun countAllReportedNotHidden(interaction: Interaction): Int
-
-
-    fun countAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(responses: List<Response>): Int
-
 }

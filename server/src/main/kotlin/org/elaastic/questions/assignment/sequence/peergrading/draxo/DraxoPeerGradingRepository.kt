@@ -32,37 +32,39 @@ interface DraxoPeerGradingRepository : JpaRepository<PeerGrading, Long>, PeerGra
 
     fun findByIdAndType(id: Long, type: PeerGradingType): DraxoPeerGrading?
 
-    @Query("SELECT draxo " +
-            "FROM DraxoPeerGrading draxo " +
-            "JOIN Response r on draxo.response = r " +
-            "JOIN Interaction i on r.interaction = i " +
-            "WHERE draxo.hiddenByTeacher = false " +
-            "AND draxo.reportReasons IS NOT NULL " +
-            "AND i = :interaction")
+    @Query(
+        "SELECT draxo " +
+                "FROM DraxoPeerGrading draxo " +
+                "JOIN Response r on draxo.response = r " +
+                "JOIN Interaction i on r.interaction = i " +
+                "WHERE draxo.hiddenByTeacher = false " +
+                "AND draxo.reportReasons IS NOT NULL " +
+                "AND i = :interaction"
+    )
     fun findAllReportedNotHidden(interaction: Interaction): List<DraxoPeerGrading>
 
-    @Query("SELECT COUNT(draxo) " +
-            "FROM DraxoPeerGrading draxo " +
-            "JOIN Response r on draxo.response = r " +
-            "JOIN Interaction i on r.interaction = i " +
-            "WHERE draxo.hiddenByTeacher = false " +
-            "AND draxo.reportReasons IS NOT NULL " +
-            "AND i = :interaction")
+    @Query(
+        "SELECT COUNT(draxo) " +
+                "FROM DraxoPeerGrading draxo " +
+                "JOIN Response r on draxo.response = r " +
+                "JOIN Interaction i on r.interaction = i " +
+                "WHERE draxo.hiddenByTeacher = false " +
+                "AND draxo.reportReasons IS NOT NULL " +
+                "AND i = :interaction"
+    )
     fun countAllReportedNotHidden(interaction: Interaction): Int
-
-    fun findAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(responses: List<Response>): List<DraxoPeerGrading>
-
-    fun countAllByHiddenByTeacherIsFalseAndReportReasonsIsNotNullAndResponseIn(responses: List<Response>): Int
 
     override fun findAllByResponseIn(response: List<Response>): List<DraxoPeerGrading>
 
-    @Query("SELECT COUNT(draxo) " +
-            "FROM DraxoPeerGrading draxo " +
-            "JOIN Response r on draxo.response = r " +
-            "JOIN Interaction i on r.interaction = i " +
-            "WHERE draxo.hiddenByTeacher = false " +
-            "AND draxo.reportReasons IS NOT NULL " +
-            "AND i = :responseSubmissionInteraction " +
-            "AND draxo.grader = :grader")
+    @Query(
+        "SELECT COUNT(draxo) " +
+                "FROM DraxoPeerGrading draxo " +
+                "JOIN Response r on draxo.response = r " +
+                "JOIN Interaction i on r.interaction = i " +
+                "WHERE draxo.hiddenByTeacher = false " +
+                "AND draxo.reportReasons IS NOT NULL " +
+                "AND i = :responseSubmissionInteraction " +
+                "AND draxo.grader = :grader"
+    )
     fun countAllReportedNotHiddenForGrader(responseSubmissionInteraction: Interaction, grader: User): Int
 }
