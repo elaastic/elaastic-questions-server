@@ -67,10 +67,6 @@
                  * @param isSelected {boolean} true if the item is selected false otherwise.
                  */
                 function updateSelectedItem(idReportCandidate, reportedCandidate, isSelected) {
-                    console.log('Selected item id : ' + idReportCandidate);
-                    console.log(reportedCandidate);
-                    console.log('Is selected : ' + isSelected);
-                    console.log("Type : " + $(reportedCandidate).attr('reported-candidate-type'))
 
                     if (!isSelected) {
                         $('#no-selected-item').slideDown();
@@ -82,7 +78,6 @@
 
                         $.get('/report-manager/detail/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
                             .done(function (data) {
-                                console.log(data);
                                 $('#reported-content').html(data.contentReported);
 
                                 $('#report-reasons').empty();
