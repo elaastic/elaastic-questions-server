@@ -29,7 +29,8 @@
 
     <!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.questions.moderation.ReportedCandidateModel"*/-->
     <aside id="layout-aside">
-        <div th:replace="|player/assignment/sequence/components/_assignment-overview.html| :: assignmentOverview(${assignmentOverviewModel}, aside)"></div>
+        <div th:replace="|player/assignment/sequence/components/_assignment-overview.html| :: assignmentOverview(${assignmentOverviewModel}, aside, false)"></div>
+
         <div class="ui segment attached">
             <div class="ui header" th:text="#{reportManager.itemContainer.title}"></div>
             <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">

@@ -17,8 +17,10 @@
   -->
 
 <!--/*@thymesVar id="assignmentOverviewModel" type="org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel"*/-->
+<!--/*@thymesVar id="linkClikable" type="java.lang.Boolean"
+comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
 <div
-        th:fragment="assignmentOverview(assignmentOverviewModel, context)"
+        th:fragment="assignmentOverview(assignmentOverviewModel, context, linkClickable)"
         th:remove="tag"
         xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
@@ -64,13 +66,19 @@
     <!--/* The breadcrumb */-->
     <div class="ui segment attached" th:if="${assignmentOverviewModel.teacher}">
         <div class="ui breadcrumb">
-            <!--/* Course link */-->
+            <!--/* Course */-->
             <th:block th:if="${not #strings.isEmpty(assignmentOverviewModel.courseTitle)}">
                 <span class="section">
                     <i class="folder icon"></i>
-                    <a class="section"
+
+                    <!--/* The course link if linkClickable is true */-->
+                    <a th:if="${linkClickable}" class="section"
                        th:href="@{/course/{id}(id=${assignmentOverviewModel.courseId})}"
                        th:text="${assignmentOverviewModel.courseTitle}"></a>
+
+                    <!--/* The course title if linkClickable is false */-->
+                    <span class="section" th:unless="${linkClickable}"
+                          th:text="${assignmentOverviewModel.courseTitle}"></span>
                 </span>
                 <div class="divider"> /</div>
             </th:block>
@@ -79,8 +87,14 @@
             <th:block th:if="${assignmentOverviewModel.subjectTitle != null}">
                 <span class="active section">
                     <i class="book icon"></i>
-                    <a th:href="@{/subject/{id}(id=${assignmentOverviewModel.subjectId})}"
+
+                    <!--/* The subject link if linkClickable is true */-->
+                    <a th:if="${linkClickable}" th:href="@{/subject/{id}(id=${assignmentOverviewModel.subjectId})}"
                        th:text="${assignmentOverviewModel.subjectTitle}">Subject link</a>
+
+                    <!--/* The subject title if linkClickable is false */-->
+                    <span th:unless="${linkClickable}"
+                          th:text="${assignmentOverviewModel.subjectTitle}">Subject title</span>
                 </span>
                 <div class="divider"> /</div>
             </th:block>
@@ -90,26 +104,33 @@
                 <span class="section">
                     <i class="podcast icon"></i>
 
-                    <!--/* The diffusion audience */-->
-                    <a th:href="@{/subject/{subjectId}(subjectId=${assignmentOverviewModel.subjectId}, activeTab='assignments')}"
+                    <!--/* The diffusion audience if linkClickable is true */-->
+                    <a th:if="${linkClickable}"
+                       th:href="@{/subject/{subjectId}(subjectId=${assignmentOverviewModel.subjectId}, activeTab='assignments')}"
                        th:text="${assignmentOverviewModel.audience}"
                        th:attr="data-tooltip=#{subject.assignment.change.action}"
                        data-tooltip="Change assignment"
                        data-inverted="">The audience</a>
 
-                    <!--/* Edit diffusion link */-->
-                    [<a th:href="@{/assignment/{id}/edit(id=${assignmentOverviewModel.assignmentId})}"
-                       href="subject/123/edit"
-                       th:attr="data-tooltip=#{subject.propertiesEdition.label}"
-                       data-tooltip="Modify subject"
-                       data-inverted="">
-                      <i class="edit outline icon" style="margin: 0;"></i>
-                    </a>]
+                    <!--/* Edit diffusion link if linkClickable is true */-->
+                    <th:block th:if="${linkClickable}">
+                        [<a th:href="@{/assignment/{id}/edit(id=${assignmentOverviewModel.assignmentId})}"
+                            href="subject/123/edit"
+                            th:attr="data-tooltip=#{subject.propertiesEdition.label}"
+                            data-tooltip="Modify subject"
+                            data-inverted="">
+                          <i class="edit outline icon" style="margin: 0;"></i>
+                        </a>]
+                    </th:block>
+
+                    <!--/* The diffusion audience if linkClickable is false */-->
+                    <span th:unless="${linkClickable}"
+                          th:text="${assignmentOverviewModel.audience}"></span>
+
                 </span>
             </th:block>
         </div>
     </div>
-
 
     <!--/* If the assignement does not have any sequence */-->
     <div class="ui segment attached"
@@ -123,8 +144,9 @@
          class="ui clearing attached segment"
          th:classappend="|${sequence.id == assignmentOverviewModel.selectedSequenceId ? 'selected' : ''}|"
          th:id="|${context}-${sequence.id}|"
-         style="padding-bottom: 1em; cursor: pointer; "
-         th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${assignmentOverviewModel.assignmentId}, sequenceId=${sequence.id})}'|">
+         style="padding-bottom: 1em;"
+         th:styleappend="${linkClickable ? 'cursor: pointer;' : ''}"
+         th:attr="onclick=${linkClickable} ? 'window.location.href=\'/player/assignment/' + ${assignmentOverviewModel.assignmentId} + '/play/sequence/' + ${sequence.id} + '\';' : ''">
 
         <!--/* A sequence */-->
         <div class="ui grid">

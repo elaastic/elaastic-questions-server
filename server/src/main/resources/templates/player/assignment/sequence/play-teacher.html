@@ -125,7 +125,7 @@
         <div id="assignments_container"
              style="display: none;">
 
-            <div th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside)"></div>
+            <div th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, aside, true)"></div>
         </div>
 
         <div id="attendees_container"
@@ -141,7 +141,7 @@
 
     <div id="modal-aside" th:with="components=${'player/assignment/sequence/components'}">
         <div
-                th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, modal-aside)"></div>
+                th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModel}, modal-aside, true)"></div>
     </div>
 
     <section th:with="components=${'player/assignment/sequence/components'}">
