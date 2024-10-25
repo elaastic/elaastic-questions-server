@@ -127,6 +127,19 @@ comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
                     <span th:unless="${linkClickable}"
                           th:text="${assignmentOverviewModel.audience}"></span>
 
+                    <div th:if="${assignmentOverviewModel.isSingleSequence}" class="divider"> /</div>
+                </span>
+            </th:block>
+
+            <!--/* The sequence link */-->
+            <th:block th:if="${assignmentOverviewModel.isSingleSequence}">
+                <span class="section">
+                    <a th:if="${linkClickable}"
+                       th:text="${assignmentOverviewModel.sequences.get(0).title}"
+                       th:href="@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${assignmentOverviewModel.assignmentId}, sequenceId=${assignmentOverviewModel.selectedSequenceId})}"></a>
+
+                    <span th:unless="${linkClickable}"
+                          th:text="${assignmentOverviewModel.sequences.get(0).title}"></span>
                 </span>
             </th:block>
         </div>

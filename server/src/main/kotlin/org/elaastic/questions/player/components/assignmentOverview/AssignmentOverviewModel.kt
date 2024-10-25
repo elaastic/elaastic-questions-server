@@ -18,7 +18,22 @@
 
 package org.elaastic.questions.player.components.assignmentOverview
 
-
+/**
+ * Model for the assignment overview page.
+ * @param teacher true if the user is a teacher
+ * @param nbRegisteredUser the number of registered users
+ * @param assignmentTitle the title of the assignment
+ * @param courseTitle the title of the course
+ * @param courseId the id of the course
+ * @param subjectTitle the title of the subject
+ * @param subjectId the id of the subject
+ * @param audience the audience of the assignment
+ * @param assignmentId the id of the assignment
+ * @param sequences the list of sequences
+ * @param selectedSequenceId the id of the selected sequence
+ * @param hideStatementContent true if the statement content should be hidden
+ * @param isRevisionMode true if the assignment is in revision mode
+ */
 data class AssignmentOverviewModel(
         val teacher: Boolean,
         val nbRegisteredUser: Int,
@@ -32,8 +47,10 @@ data class AssignmentOverviewModel(
         val sequences: List<SequenceInfo>,
         val selectedSequenceId: Long? = null,
         val hideStatementContent: Boolean = false,
-        val isRevisionMode: Boolean = false
+        val isRevisionMode: Boolean = false,
 ) {
+
+        val isSingleSequence: Boolean = sequences.size == 1
 
     data class SequenceInfo(
             val id: Long,
