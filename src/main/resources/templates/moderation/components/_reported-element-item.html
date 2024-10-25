@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="extra content">
-        <!--/*@thymesVar id="reason" type="org.elaastic.questions.assignment.sequence.ReportReason"*/-->
+        <!--/*@thymesVar id="reason" type="org.elaastic.moderation.ReportReason"*/-->
         <th:block th:each="reason: ${reportedCandidateModel.reasons}">
             <div class="ui label"
                  th:text="#{|reportManager.reportReason.${reason.name()}|}"

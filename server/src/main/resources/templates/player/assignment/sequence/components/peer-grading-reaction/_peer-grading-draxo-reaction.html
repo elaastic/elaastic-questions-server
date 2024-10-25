@@ -36,7 +36,7 @@
                 />
 
                 <div class="ui menu stackable fluid pagination">
-                    <a th:each="utilityGrade : ${T(org.elaastic.questions.assignment.sequence.UtilityGrade).values()}"
+                    <a th:each="utilityGrade : ${T(org.elaastic.moderation.UtilityGrade).values()}"
                        class="item utilityGrade"
                        th:classappend="${draxoEvaluationModel.isUtilityGradeSelected(utilityGrade)} ? 'active' : ''"
                        th:attr="utilityGradeName=${utilityGrade.name()},
