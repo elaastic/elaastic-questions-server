@@ -90,11 +90,11 @@
                                     $('#report-reasons').append('<li>' + reason + '</li>');
                                 });
 
-                                if (data.comment == null) {
+                                if (data.reportComment == null) {
                                     $('#report-comment-parent').hide()
                                 } else {
                                     $('#report-comment-parent').show()
-                                    $('#report-comment').html(data.comment);
+                                    $('#report-comment').html(data.reportComment);
                                 }
                                 $('#reporter').text(data.reporter);
                                 $('#graderThatHaveBeenReported').text(data.graderThatHaveBeenReported);
