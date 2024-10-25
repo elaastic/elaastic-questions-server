@@ -135,6 +135,22 @@
             })
         </script>
 
+        <!--/* Title and description of the page */-->
+        <div class="ui steps one top">
+            <div class="step">
+                <i class="icons icon">
+                    <i class="flag icon"></i>
+                    <i class="corner warning sign icon"></i>
+                </i>
+                <div class="content">
+                    <div class="title" th:text="#{reportManager.title}">Report Manager</div>
+                    <div class="description" th:text="#{reportManager.description}">This page allows you to manage the
+                        reports made by students.
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!--/* No item in list message */-->
         <div class="ui message info" id="no-selected-item">
             <div class="header" th:text="#{reportManager.noItemSelected}">No item selected</div>
@@ -142,7 +158,7 @@
         </div>
 
         <!--/*Detail of the selected item*/-->
-        <div class="ui container">
+        <div>
             <div class="ui segment styled fluid accordion" id="detail-report-candidate">
 
                 <!--/* Title of the accordion */-->
