@@ -34,7 +34,6 @@
 
     </script>
 
-
     <style>
         .ui.selected.segment {
             background-color: #fffaf3;
@@ -46,7 +45,9 @@
         }
     </style>
 
+    <!--/* Header with title and number of students */-->
     <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
+        <!--/* Number of students */-->
         <div class="floating ui grey label"
              style="left: 3em;"
              th-attr="data-tooltip=#{player.assignment.registeredUserCount2}"
@@ -54,62 +55,70 @@
              data-position="bottom left">
             <i class="users icon"></i> <span th:text="${assignmentOverviewModel.nbRegisteredUser}"></span>
         </div>
-        <i class="file alternate outline icon"></i>
 
+        <!--/* Title */-->
+        <i class="file alternate outline icon"></i>
         <div class="content" th:text="${assignmentOverviewModel.assignmentTitle}"></div>
     </h3>
 
+    <!--/* The breadcrumb */-->
     <div class="ui segment attached" th:if="${assignmentOverviewModel.teacher}">
         <div class="ui breadcrumb">
-
+            <!--/* Course link */-->
             <th:block th:if="${not #strings.isEmpty(assignmentOverviewModel.courseTitle)}">
-        <span class="section">
-        <i class="folder icon"></i> <a class="section"
-                                       th:href="@{/course/{id}(id=${assignmentOverviewModel.courseId})}"
-                                       th:text="${assignmentOverviewModel.courseTitle}"></a>
-          </span>
+                <span class="section">
+                    <i class="folder icon"></i>
+                    <a class="section"
+                       th:href="@{/course/{id}(id=${assignmentOverviewModel.courseId})}"
+                       th:text="${assignmentOverviewModel.courseTitle}"></a>
+                </span>
                 <div class="divider"> /</div>
             </th:block>
 
+            <!--/* Subject link */-->
             <th:block th:if="${assignmentOverviewModel.subjectTitle != null}">
-        <span class="active section">
-        <i class="book icon"></i>
-        <a th:href="@{/subject/{id}(id=${assignmentOverviewModel.subjectId})}"
-           th:text="${assignmentOverviewModel.subjectTitle}">Subject
-          link</a>
-        </span>
+                <span class="active section">
+                    <i class="book icon"></i>
+                    <a th:href="@{/subject/{id}(id=${assignmentOverviewModel.subjectId})}"
+                       th:text="${assignmentOverviewModel.subjectTitle}">Subject link</a>
+                </span>
                 <div class="divider"> /</div>
             </th:block>
 
+            <!--/* Diffusion link */-->
             <th:block th:if="${!#strings.isEmpty(assignmentOverviewModel.audience)}">
-        <span class="section">
-        <i class="podcast icon"></i>
-        <a th:href="@{/subject/{subjectId}(subjectId=${assignmentOverviewModel.subjectId}, activeTab='assignments')}"
-           th:text="${assignmentOverviewModel.audience}"
-           th:attr="data-tooltip=#{subject.assignment.change.action}"
-           data-tooltip="Change assignment"
-           data-inverted="">The audience</a>
-        [
-        <a th:href="@{/assignment/{id}/edit(id=${assignmentOverviewModel.assignmentId})}"
-           href="subject/123/edit"
-           th:attr="data-tooltip=#{subject.propertiesEdition.label}"
-           data-tooltip="Modify subject"
-           data-inverted="">
-          <i class="edit outline icon" style="margin: 0;"></i>
-        </a>
-        ]
-          </span>
+                <span class="section">
+                    <i class="podcast icon"></i>
+
+                    <!--/* The diffusion audience */-->
+                    <a th:href="@{/subject/{subjectId}(subjectId=${assignmentOverviewModel.subjectId}, activeTab='assignments')}"
+                       th:text="${assignmentOverviewModel.audience}"
+                       th:attr="data-tooltip=#{subject.assignment.change.action}"
+                       data-tooltip="Change assignment"
+                       data-inverted="">The audience</a>
+
+                    <!--/* Edit diffusion link */-->
+                    [<a th:href="@{/assignment/{id}/edit(id=${assignmentOverviewModel.assignmentId})}"
+                       href="subject/123/edit"
+                       th:attr="data-tooltip=#{subject.propertiesEdition.label}"
+                       data-tooltip="Modify subject"
+                       data-inverted="">
+                      <i class="edit outline icon" style="margin: 0;"></i>
+                    </a>]
+                </span>
             </th:block>
         </div>
     </div>
 
 
+    <!--/* If the assignement does not have any sequence */-->
     <div class="ui segment attached"
          th:if="${#lists.isEmpty(assignmentOverviewModel.sequences)}"
          th:text="#{assignment.empty}">
         This assignment is empty.
     </div>
 
+    <!--/* The sequences */-->
     <div th:each="sequence, i : ${assignmentOverviewModel.sequences}"
          class="ui clearing attached segment"
          th:classappend="|${sequence.id == assignmentOverviewModel.selectedSequenceId ? 'selected' : ''}|"
@@ -117,17 +126,24 @@
          style="padding-bottom: 1em; cursor: pointer; "
          th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${assignmentOverviewModel.assignmentId}, sequenceId=${sequence.id})}'|">
 
+        <!--/* A sequence */-->
         <div class="ui grid">
+            <!--/* The sequence title and content */-->
             <div class="twelve wide column">
                 <div style="overflow: hidden; height: 100%; padding-top: 2px;">
+                    <!--/* The sequence title */-->
                     <h4 class="ui header">
+                        <!--/* Index of the sequence in the assignment */-->
                         <div class="ui tiny circular label"
                              style="margin-right: 1em;"
                              th:text="|${i.index+1}.|">
                         </div>
+
+                        <!--/* The sequence title */-->
                         <span th:utext="${sequence.title}"></span>
                     </h4>
 
+                    <!--/* The sequence content */-->
                     <div style="height: 4em; overflow: hidden;"
                          th:unless="${sequence.hideStatementContent}"
                          th:utext="${sequence.content}">
@@ -136,7 +152,9 @@
                 </div>
             </div>
 
+            <!--/* The sequence icons */-->
             <div class="four wide column" style="text-align: center;">
+                <!--/* The revision tag */-->
                 <div>
                     <h4 class="ui header circular small basic blue label"
                         style="height: 0.6em !important; padding-top: 2px;"
@@ -146,6 +164,7 @@
                         Revisions
                     </h4>
                 </div>
+                <!--/* The sequence icons */-->
                 <div style="height: 80%; display:flex">
                     <i th:each="icon : ${sequence.icons}"
                        class="elaastic-phase icon"
@@ -156,6 +175,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
