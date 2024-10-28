@@ -69,30 +69,14 @@ class ReportManagerController(
         return "moderation/report-manager"
     }
 
-    @GetMapping("/detail/CHAT_GPT_EVALUATION/{idReportedCandidate}")
+    @GetMapping("/detail/{type}/{idReportedCandidate}")
     @ResponseBody
-    fun getChatGptEvaluationReportedCandidateDetail(
-        authentication: Authentication,
-        @PathVariable idReportedCandidate: Long
-    ): ReportCandidateDetail {
-        val user = authentication.principal as User
-        return getReportedCandidateDetail(idReportedCandidate, ReportedCandidateType.CHAT_GPT_EVALUATION)
-    }
-
-    @GetMapping("/detail/PEER_GRADING/{idReportedCandidate}")
-    @ResponseBody
-    fun getPeerGradingReportedCandidateDetail(
-        authentication: Authentication,
-        @PathVariable idReportedCandidate: Long
-    ): ReportCandidateDetail {
-        val user = authentication.principal as User
-        return getReportedCandidateDetail(idReportedCandidate, ReportedCandidateType.PEER_GRADING)
-    }
-
     fun getReportedCandidateDetail(
-        id: Long,
-        type: ReportedCandidateType
+        authentication: Authentication,
+        @PathVariable type: ReportedCandidateType,
+        @PathVariable idReportedCandidate: Long
     ): ReportCandidateDetail {
+        val user = authentication.principal as User
         val reportResaonToStringI18N = ReportReason.values().associateWith {
             messageSource.getMessage(
                 "player.sequence.chatGptEvaluation.reportReason.$it",
@@ -102,7 +86,7 @@ class ReportManagerController(
         }
         val reportedCandidateDetail: ReportCandidateDetail = when (type) {
             ReportedCandidateType.PEER_GRADING -> {
-                val peerGrading = peerGradingRepository.findById(id).orElseThrow()
+                val peerGrading = peerGradingRepository.findById(idReportedCandidate).orElseThrow()
                 val nbReport = draxoPeerGradingService.countAllReportedNotHiddenForGrader(
                     peerGrading.response.interaction,
                     peerGrading.grader
@@ -123,7 +107,7 @@ class ReportManagerController(
             }
 
             ReportedCandidateType.CHAT_GPT_EVALUATION -> {
-                val chatGptEvaluation = chatGptEvaluationRepository.findById(id).orElseThrow()
+                val chatGptEvaluation = chatGptEvaluationRepository.findById(idReportedCandidate).orElseThrow()
                 val nbReport = chatGptEvaluationService.countAllReportedNotHidden(
                     chatGptEvaluation.response.interaction,
                 )
