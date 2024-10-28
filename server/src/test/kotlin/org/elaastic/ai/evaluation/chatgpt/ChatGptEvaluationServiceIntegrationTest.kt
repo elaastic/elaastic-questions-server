@@ -439,4 +439,59 @@ internal class ChatGptEvaluationServiceIntegrationTest(
             it
         }
     }
+
+    @Test
+    fun `test of removeReport`() {
+        // Given
+        val sequence = integrationTestingService.getAnySequence()
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+
+        val learner = integrationTestingService.getNLearners(3).shuffled().first()
+
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "explanation",
+        )
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("a learner report it") {
+            chatGptEvaluationService.reportEvaluation(it, listOf(ReportReason.INCOHERENCE.name))
+            it
+        }.tThen("The evaluation is reported") {
+            assertNotNull(it.reportReasons)
+            it
+        }.tWhen("The teacher remove the report") {
+            assertThrows(IllegalAccessException::class.java, {
+                chatGptEvaluationService.removeReport(learner, it.id!!)
+            }, "The learner should not be able to remove the report")
+            assertDoesNotThrow({
+                chatGptEvaluationService.removeReport(sequence.owner, it)
+            }, "The teacher should be able to remove the report")
+
+            it
+        }.tThen("The evaluation is not reported") {
+            assertEquals(
+                0,
+                chatGptEvaluationService.countAllReportedNotHidden(response.interaction.sequence)
+            )
+        }
+    }
 }

@@ -668,4 +668,68 @@ class PeerGradingServiceIntegrationTest(
             assertEquals(learners[0], peerGradingReportedNotHidden.first().response.learner)
         }
     }
+
+    @Test
+    fun `test of removereport`() {
+// Given
+        val learners = integrationTestingService.getNLearners(2)
+        val teacher = integrationTestingService.getTestTeacher()
+        val subject = functionalTestingService.createSubject(teacher)
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+
+        tGiven("A started sequence") {
+            functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+            val learnersAssignementList: List<LearnerAssignment> = learners.map { LearnerAssignment(it, assignement) }
+
+            assertEquals(
+                0,
+                draxoPeerGradingService.countAllDraxoPeerGradingReportedNotHidden(sequence),
+                "No peerGrading reported"
+            )
+            assertEquals(
+                emptyList<DraxoPeerGrading>(),
+                draxoPeerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence),
+                "No peerGrading reported"
+            )
+            learnersAssignementList
+        }.tWhen("Two learner answer and report a peerGrading") { learnerAssignments ->
+            val response = functionalTestingService.submitResponse(
+                Phase.PHASE_1,
+                learners[0],
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                "response"
+            )
+            val grader = learners[1]
+            val peerGrading = DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.save(it)
+                    it
+                }
+            peerGradingService.updateReport(learners[0], peerGrading, listOf(ReportReason.INCOHERENCE.name))
+            peerGrading
+        }.tThen("the peerGrading is reported") {
+            assertNotNull(it.reportReasons)
+            it
+        }.tWhen("We remove the report") {
+            assertThrows(IllegalAccessException::class.java, {
+                peerGradingService.removeReport(learners[0], it.id!!)
+            }, "A student can't remove a report")
+            assertDoesNotThrow({
+                peerGradingService.removeReport(teacher, it)
+            }, "A teacher can remove a report")
+            it
+        }.tThen("the peerGrading is not reported") {
+            assertNull(it.reportReasons)
+            assertNull(it.reportComment)
+        }
+    }
 }
