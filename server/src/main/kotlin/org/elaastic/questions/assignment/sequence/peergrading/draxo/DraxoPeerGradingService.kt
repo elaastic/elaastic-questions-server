@@ -63,7 +63,9 @@ class DraxoPeerGradingService(
     }
 
     fun findAllDraxo(responses: List<Response>): List<DraxoPeerGrading> =
-        draxoPeerGradingRepository.findAllByResponseIn(responses)
+        draxoPeerGradingRepository
+            .findAllByResponseIn(responses)
+            .filter { !it.removedByTeacher }
 
     fun findAllDraxo(sequence: Sequence): List<DraxoPeerGrading> =
         findAllDraxo(
@@ -71,7 +73,9 @@ class DraxoPeerGradingService(
         )
 
     fun findAllDraxo(response: Response): List<DraxoPeerGrading> =
-        draxoPeerGradingRepository.findAllByResponseAndType(response, PeerGradingType.DRAXO)
+        draxoPeerGradingRepository
+            .findAllByResponseAndType(response, PeerGradingType.DRAXO)
+            .filter { !it.removedByTeacher }
 
     /**
      * Find a Draxo peer grading by its id.

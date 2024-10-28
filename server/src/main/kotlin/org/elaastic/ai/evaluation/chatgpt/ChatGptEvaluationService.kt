@@ -88,10 +88,10 @@ class ChatGptEvaluationService(
 
 
     fun findEvaluationByResponse(response: Response): ChatGptEvaluation? =
-        chatGptEvaluationRepository.findByResponse(response)
+        chatGptEvaluationRepository.findByResponse(response).takeIf { it?.removedByTeacher == false }
 
     fun findEvaluationById(id: Long): ChatGptEvaluation? {
-        return chatGptEvaluationRepository.findById(id).get()
+        return chatGptEvaluationRepository.findById(id).get().takeIf { !it.removedByTeacher }
     }
 
 
@@ -250,7 +250,7 @@ class ChatGptEvaluationService(
             responseRepository.findAllByInteraction(
                 sequence.getResponseSubmissionInteraction(),
             )
-        )
+        ).filter { !it.removedByTeacher }
 
     /**
      * Find all the evaluations made on a sequence that have been reported and
