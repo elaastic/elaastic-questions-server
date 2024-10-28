@@ -634,7 +634,7 @@ class PeerGradingServiceIntegrationTest(
             )
             assertEquals(
                 emptyList<DraxoPeerGrading>(),
-                draxoPeerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence),
+                draxoPeerGradingService.findAllDraxoPeerGradingReported(sequence),
                 "No peerGrading reported"
             )
             learnersAssignementList
@@ -662,7 +662,7 @@ class PeerGradingServiceIntegrationTest(
             learnerAssignments //learnersAssignementList
         }.tThen("the two learner who answer, are mark as so") {
             val peerGradingReportedNotHidden =
-                draxoPeerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence)
+                draxoPeerGradingService.findAllDraxoPeerGradingReported(sequence)
             assertEquals(1, peerGradingReportedNotHidden.size)
             assertEquals(learners[1], peerGradingReportedNotHidden.first().grader)
             assertEquals(learners[0], peerGradingReportedNotHidden.first().response.learner)
@@ -690,7 +690,7 @@ class PeerGradingServiceIntegrationTest(
             )
             assertEquals(
                 emptyList<DraxoPeerGrading>(),
-                draxoPeerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence),
+                draxoPeerGradingService.findAllDraxoPeerGradingReported(sequence),
                 "No peerGrading reported"
             )
             learnersAssignementList

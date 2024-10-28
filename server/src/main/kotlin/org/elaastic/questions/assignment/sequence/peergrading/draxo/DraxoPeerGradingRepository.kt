@@ -37,22 +37,22 @@ interface DraxoPeerGradingRepository : JpaRepository<PeerGrading, Long>, PeerGra
                 "FROM DraxoPeerGrading draxo " +
                 "JOIN Response r on draxo.response = r " +
                 "JOIN Interaction i on r.interaction = i " +
-                "WHERE draxo.hiddenByTeacher = false " +
+                "WHERE draxo.removedByTeacher = :removed " +
                 "AND draxo.reportReasons IS NOT NULL " +
                 "AND i = :interaction"
     )
-    fun findAllReportedNotHidden(interaction: Interaction): List<DraxoPeerGrading>
+    fun findAllReported(interaction: Interaction, removed: Boolean = false): List<DraxoPeerGrading>
 
     @Query(
         "SELECT COUNT(draxo) " +
                 "FROM DraxoPeerGrading draxo " +
                 "JOIN Response r on draxo.response = r " +
                 "JOIN Interaction i on r.interaction = i " +
-                "WHERE draxo.hiddenByTeacher = false " +
+                "WHERE draxo.removedByTeacher = false " +
                 "AND draxo.reportReasons IS NOT NULL " +
                 "AND i = :interaction"
     )
-    fun countAllReportedNotHidden(interaction: Interaction): Int
+    fun countAllReportedNotRemoved(interaction: Interaction): Int
 
     override fun findAllByResponseIn(response: List<Response>): List<DraxoPeerGrading>
 
@@ -61,10 +61,10 @@ interface DraxoPeerGradingRepository : JpaRepository<PeerGrading, Long>, PeerGra
                 "FROM DraxoPeerGrading draxo " +
                 "JOIN Response r on draxo.response = r " +
                 "JOIN Interaction i on r.interaction = i " +
-                "WHERE draxo.hiddenByTeacher = false " +
+                "WHERE draxo.removedByTeacher = false " +
                 "AND draxo.reportReasons IS NOT NULL " +
                 "AND i = :responseSubmissionInteraction " +
                 "AND draxo.grader = :grader"
     )
-    fun countAllReportedNotHiddenForGrader(responseSubmissionInteraction: Interaction, grader: User): Int
+    fun countAllReportedNotRemovedForGrader(responseSubmissionInteraction: Interaction, grader: User): Int
 }

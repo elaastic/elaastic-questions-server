@@ -96,9 +96,10 @@ class DraxoPeerGradingService(
      * @param sequence the sequence
      * @return the list of DRAXO peer grading
      */
-    fun findAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): List<DraxoPeerGrading> =
-        draxoPeerGradingRepository.findAllReportedNotHidden(
-            sequence.getResponseSubmissionInteraction()
+    fun findAllDraxoPeerGradingReported(sequence: Sequence, removed: Boolean = false): List<DraxoPeerGrading> =
+        draxoPeerGradingRepository.findAllReported(
+            sequence.getResponseSubmissionInteraction(),
+            removed = removed
         )
 
     /**
@@ -107,12 +108,12 @@ class DraxoPeerGradingService(
      *    not hidden by the teacher
      */
     fun countAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): Int =
-        draxoPeerGradingRepository.countAllReportedNotHidden(
+        draxoPeerGradingRepository.countAllReportedNotRemoved(
             sequence.getResponseSubmissionInteraction()
         )
 
     fun countAllReportedNotHiddenForGrader(interaction: Interaction, grader: User): Int =
-        draxoPeerGradingRepository.countAllReportedNotHiddenForGrader(
+        draxoPeerGradingRepository.countAllReportedNotRemovedForGrader(
             interaction,
             grader
         )

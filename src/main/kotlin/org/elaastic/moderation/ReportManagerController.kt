@@ -45,11 +45,11 @@ class ReportManagerController(
 
         val sequence = sequenceService.get(user, idSequence, true)
 
-        val draxoReported = draxoPeerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence)
-        val chatGPTReported = chatGptEvaluationService.findAllReportedNotHidden(sequence)
-
-        val allReportedCandidateModel: List<ReportedCandidateModel> = (draxoReported + chatGPTReported)
+        val draxoReportedNotRemoved = draxoPeerGradingService.findAllDraxoPeerGradingReported(sequence)
+        val chatGPTReportedNotRemoved = chatGptEvaluationService.findAllReportedNotHidden(sequence)
+        val allReportedCandidateModelNotHidden: List<ReportedCandidateModel> = (draxoReportedNotRemoved + chatGPTReportedNotRemoved)
             .mapNotNull { ReportedCandidateModelFactory.build(it) }
+
 
         val registeredUsers: Int = assignmentService.countAllRegisteredUsers(sequence.assignment!!)
 
@@ -63,7 +63,7 @@ class ReportManagerController(
 
 
         model["user"] = user
-        model["allReportedCandidateModel"] = allReportedCandidateModel
+        model["allReportedCandidateModel"] = allReportedCandidateModelNotHidden
         model["assignmentOverviewModel"] = assignmentOverviewModel
 
         return "moderation/report-manager"

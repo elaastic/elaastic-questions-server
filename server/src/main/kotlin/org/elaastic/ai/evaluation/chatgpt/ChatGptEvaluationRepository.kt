@@ -19,20 +19,20 @@ interface ChatGptEvaluationRepository : JpaRepository<ChatGptEvaluation, Long>,
                 "FROM ChatGptEvaluation gpt " +
                 "JOIN Response r on gpt.response = r " +
                 "JOIN Interaction i on r.interaction = i " +
-                "WHERE gpt.hiddenByTeacher = false " +
+                "WHERE gpt.removedByTeacher = :removed " +
                 "AND gpt.reportReasons IS NOT NULL " +
                 "AND i = :interaction"
     )
-    fun findAllReportedNotHidden(interaction: Interaction): List<ChatGptEvaluation>
+    fun findAllReported(interaction: Interaction, removed: Boolean = false): List<ChatGptEvaluation>
 
     @Query(
         "SELECT COUNT(gpt) " +
                 "FROM ChatGptEvaluation gpt " +
                 "JOIN Response r on gpt.response = r " +
                 "JOIN Interaction i on r.interaction = i " +
-                "WHERE gpt.hiddenByTeacher = false " +
+                "WHERE gpt.removedByTeacher = false " +
                 "AND gpt.reportReasons IS NOT NULL " +
                 "AND i = :interaction"
     )
-    fun countAllReportedNotHidden(interaction: Interaction): Int
+    fun countAllReportedNotRemoved(interaction: Interaction): Int
 }
