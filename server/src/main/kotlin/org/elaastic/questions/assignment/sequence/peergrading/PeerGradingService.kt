@@ -351,4 +351,30 @@ class PeerGradingService(
             learnersWhoAnswered.any { tuple -> tuple[0] == it.learner }
         }
     }
+
+    /**
+     * Remove the report of a peer grading.
+     *
+     * @param user the user who wants to remove the report
+     * @param peerGrading the peer grading to update
+     * @throws IllegalArgumentException if the user is not the owner of the response
+     */
+    fun removeReport(
+        user: User,
+        peerGrading: PeerGrading
+    ) {
+        requireAccess(user == peerGrading.response.interaction.owner) {
+            "Only the teacher who own the sequence can remove a report"
+        }
+
+        peerGrading.reportReasons = null
+        peerGrading.reportComment = null
+
+        peerGradingRepository.save(peerGrading)
+    }
+
+    fun removeReport(user: User, id: Long) {
+        val peerGrading = peerGradingRepository.findById(id).orElseThrow()
+        removeReport(user, peerGrading)
+    }
 }

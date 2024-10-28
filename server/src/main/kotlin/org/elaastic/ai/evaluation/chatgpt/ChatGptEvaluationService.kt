@@ -318,6 +318,33 @@ class ChatGptEvaluationService(
 
         return chatGptPrompt.content + "\n" + jsonObject
     }
+
+    /**
+     * Remove the report associated with a ChatGPT evaluation.
+     *
+     * @param user the user who wants to remove the report.
+     * @param chatGptEvaluation the ChatGPT evaluation to update.
+     * @throws IllegalAccessException if the user doesn't have the permission
+     *    to remove the report.
+     */
+    fun removeReport(
+        user: User,
+        chatGptEvaluation: ChatGptEvaluation
+    ) {
+        requireAccess(user == chatGptEvaluation.response.interaction.owner) {
+            "You don't have the permission to remove the report"
+        }
+
+        chatGptEvaluation.reportReasons = null
+        chatGptEvaluation.reportComment = null
+
+        chatGptEvaluationRepository.save(chatGptEvaluation)
+    }
+
+    fun removeReport(user: User, id: Long) {
+        val chatGptEvaluation = chatGptEvaluationRepository.findById(id).orElseThrow()
+        removeReport(user, chatGptEvaluation)
+    }
 }
 
 
