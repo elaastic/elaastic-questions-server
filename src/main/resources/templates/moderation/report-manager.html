@@ -31,7 +31,7 @@
     <aside id="layout-aside">
         <div th:replace="|player/assignment/sequence/components/_assignment-overview.html| :: assignmentOverview(${assignmentOverviewModel}, aside, false)"></div>
 
-        <div class="ui segment attached">
+        <div class="ui segment attached" id="reported-item-container">
             <div class="ui header" th:text="#{reportManager.itemContainer.title}"></div>
             <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">
                 <th:block
@@ -61,6 +61,8 @@
                 const errorDetailReportCandidate = $('#error-detail-report-candidate');
                 const errorContextReportCandidate = $('#error-context-report-candidate');
 
+                const actionButtons = $('#action-buttons');
+
                 const sequenceId = [[${assignmentOverviewModel.selectedSequenceId}]];
 
                 detailReportCandidate.hide();
@@ -70,6 +72,16 @@
 
                 errorDetailReportCandidate.hide();
                 errorContextReportCandidate.hide();
+
+                function handleIReportedtemRemovedFromList() {
+                    $('#no-selected-item').slideDown();
+                    actionButtons.slideUp();
+                    detailReportCandidate.slideUp();
+                    contextReportCandidate.slideUp();
+                    if ($('#reported-item-container').find('.ui.card').length === 0) {
+                        $('#no-selected-item').slideDown();
+                    }
+                }
 
                 /**
                  * Get the context of the reported candidate.
@@ -85,17 +97,64 @@
                     $.get('/player/' + sequenceId + '/result/' + userId)
                         .done(function (data) {
                             const content = $(data).find(".active.content");
-                            console.log(content);
                             container.children("#content").html(content);
                             container.slideDown();
                         })
                         .fail(function () {
-                            container.slideUp();
                             errorContextReportCandidate.slideDown();
+                            container.slideUp();
                         }).always(function () {
                             container.removeClass("loading");
                         }
                     );
+                }
+
+                /**
+                 * Update the action buttons with the details of the selected item.
+                 * @param idReportCandidate {number} The id of the selected item.
+                 * @param reportedCandidate {HTMLElement} The selected item.
+                 * @param isSelected {boolean} true if the item is selected false otherwise.
+                 */
+                function updateActionButtons(idReportCandidate, reportedCandidate, isSelected) {
+                    // Remove the previous event listener
+                    actionButtons.children('#remove-report-action').off();
+                    actionButtons.children('#hide-action').off();
+
+                    if (!isSelected) {
+                        actionButtons.slideUp();
+                    } else {
+                        actionButtons.children('#remove-report-action').click(function () {
+                            console.log("remove-report-action");
+                            console.log($(reportedCandidate).attr('reported-candidate-type'));
+                            console.log(idReportCandidate);
+                            //TODO ask confirmation
+
+
+                            $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                .done(function (data) {
+                                    console.log(data)
+                                    $(reportedCandidate).remove();
+                                    handleIReportedtemRemovedFromList()
+                                })
+                                .fail(function () {
+                                    alert('An error occurred while removing the report.');
+                                });
+                        });
+                        actionButtons.children('#hide-action').click(function () {
+                            console.log("hide-action");
+                            console.log($(reportedCandidate).attr('reported-candidate-type'));
+                            console.log(idReportCandidate);
+                            //TODO ask confirmation
+                            $.get('/report-manager/remove-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                .done(function () {
+                                    $(reportedCandidate).remove();
+                                    handleIReportedtemRemovedFromList()
+                                })
+                                .fail(function () {
+                                    alert('An error occurred while hiding the report.');
+                                });
+                        });
+                    }
                 }
 
                 /**
@@ -108,13 +167,17 @@
                     errorDetailReportCandidate.hide();
                     errorContextReportCandidate.hide();
 
+                    actionButtons.slideUp();
                     detailReportCandidate.slideUp();
                     contextReportCandidate.slideUp();
+
+                    updateActionButtons(idReportCandidate, reportedCandidate, isSelected);
 
                     if (!isSelected) {
                         $('#no-selected-item').slideDown();
                     } else {
                         $('#no-selected-item').hide();
+                        actionButtons.slideDown();
                         detailReportCandidate.addClass("loading");
                         detailReportCandidate.slideDown();
 
@@ -151,6 +214,7 @@
                             })
                             .fail(function () {
                                 $('#error-detail-report-candidate').slideDown();
+                                detailReportCandidate.slideUp();
                             })
                             .always(function () {
                                 detailReportCandidate.removeClass("loading");
@@ -201,12 +265,26 @@
             <div th:text="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
         </div>
 
-        <!--/*Detail of the selected item*/-->
-        <div>
+        <!--/* Sticky button group */-->
+        <div class="ui two buttons" id="action-buttons" style="display: none">
+            <button class="ui button negative"
+                    id="hide-action"
+                    th:text="#{reportManager.button.hide}"
+                    th:data-tooltip="#{reportManager.button.hide.detail}">
+                Hide for everyone
+            </button>
+            <button class="ui button positive basic"
+                    style="text-transform: inherit;"
+                    id="remove-report-action"
+                    th:text="#{reportManager.button.remove-report}"
+                    th:data-tooltip="#{reportManager.button.remove-report.detail}">
+                Remove report
+            </button>
+        </div>
 
         <div id="info-report-manager-container">
             <!--/* Error message */-->
-            <div class="ui error message" id="error-detail-report-candidate">
+            <div class="ui error message" id="error-detail-report-candidate" style="display:none;">
                 <div class="header" th:text="#{reportManager.error.detail.title}"></div>
                 <p th:text="#{reportManager.error.detail.description}"></p>
             </div>
@@ -283,7 +361,7 @@
             </div>
 
             <!--/* Error message */-->
-            <div class="ui message error" id="error-context-report-candidate">
+            <div class="ui message error" id="error-context-report-candidate" style="display:none;">
                 <div class="header" th:text="#{reportManager.error.context.title}"></div>
                 <p th:text="#{reportManager.error.context.description}"></p>
             </div>
