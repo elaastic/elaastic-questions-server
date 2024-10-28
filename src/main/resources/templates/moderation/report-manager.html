@@ -57,9 +57,46 @@
 
             $(function () {
                 const detailReportCandidate = $('#detail-report-candidate');
+                const contextReportCandidate = $('#context-report-candidate');
+                const errorDetailReportCandidate = $('#error-detail-report-candidate');
+                const errorContextReportCandidate = $('#error-context-report-candidate');
+
+                const sequenceId = [[${assignmentOverviewModel.selectedSequenceId}]];
 
                 detailReportCandidate.hide();
                 detailReportCandidate.removeClass("loading");
+                contextReportCandidate.hide();
+                contextReportCandidate.removeClass("loading");
+
+                errorDetailReportCandidate.hide();
+                errorContextReportCandidate.hide();
+
+                /**
+                 * Get the context of the reported candidate.
+                 * The contexte is the response and the evaluation.
+                 * @param sequenceId {number} The id of the sequence.
+                 * @param userId {number} The id of the user who answer.
+                 * @param container The container where the context will be displayed.
+                 */
+                function getContextOfReportedCandidate(sequenceId, userId, container) {
+                    container.addClass("loading");
+                    contextReportCandidate.slideDown();
+
+                    $.get('/player/' + sequenceId + '/result/' + userId)
+                        .done(function (data) {
+                            const content = $(data).find(".active.content");
+                            console.log(content);
+                            container.children("#content").html(content);
+                            container.slideDown();
+                        })
+                        .fail(function () {
+                            container.slideUp();
+                            errorContextReportCandidate.slideDown();
+                        }).always(function () {
+                            container.removeClass("loading");
+                        }
+                    );
+                }
 
                 /**
                  * Update the container with the details of the selected item.
@@ -68,17 +105,25 @@
                  * @param isSelected {boolean} true if the item is selected false otherwise.
                  */
                 function updateSelectedItem(idReportCandidate, reportedCandidate, isSelected) {
+                    errorDetailReportCandidate.hide();
+                    errorContextReportCandidate.hide();
+
+                    detailReportCandidate.slideUp();
+                    contextReportCandidate.slideUp();
 
                     if (!isSelected) {
                         $('#no-selected-item').slideDown();
-                        detailReportCandidate.slideUp();
                     } else {
                         $('#no-selected-item').hide();
                         detailReportCandidate.addClass("loading");
                         detailReportCandidate.slideDown();
 
+
                         $.get('/report-manager/detail/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
                             .done(function (data) {
+                                getContextOfReportedCandidate(sequenceId, data.reporterId, contextReportCandidate);
+
+
                                 $('#reported-content').html(data.contentReported);
 
                                 $('#report-reasons').empty();
@@ -105,12 +150,11 @@
                                 $('#numberOfReport').text(data.numberOfReport);
                             })
                             .fail(function () {
-                                $('#detail-report-candidate').html('<div class="ui message error">An error occurred while loading the details of the selected item.</div>');
+                                $('#error-detail-report-candidate').slideDown();
                             })
                             .always(function () {
                                 detailReportCandidate.removeClass("loading");
-                            })
-                        ;
+                            });
                     }
                 }
 
@@ -159,6 +203,14 @@
 
         <!--/*Detail of the selected item*/-->
         <div>
+
+        <div id="info-report-manager-container">
+            <!--/* Error message */-->
+            <div class="ui error message" id="error-detail-report-candidate">
+                <div class="header" th:text="#{reportManager.error.detail.title}"></div>
+                <p th:text="#{reportManager.error.detail.description}"></p>
+            </div>
+            <!--/* Detail of the selected item */-->
             <div class="ui segment styled fluid accordion" id="detail-report-candidate">
 
                 <!--/* Title of the accordion */-->
@@ -227,6 +279,22 @@
                         </style>
                         <div class="ui vertical divider without-text"></div>
                     </div>
+                </div>
+            </div>
+
+            <!--/* Error message */-->
+            <div class="ui message error" id="error-context-report-candidate">
+                <div class="header" th:text="#{reportManager.error.context.title}"></div>
+                <p th:text="#{reportManager.error.context.description}"></p>
+            </div>
+            <!--/* Context of the evaluation */-->
+            <div class="ui segment styled fluid accordion" id="context-report-candidate">
+                <!--/* Title of the accordion */-->
+                <div class="title active">
+                    <h1><i class="dropdown icon"></i><span th:text="#{reportManager.context.title}"></span></h1>
+                </div>
+                <!--/* Content of the accordion */-->
+                <div class="active content" id="content">
                 </div>
             </div>
         </div>

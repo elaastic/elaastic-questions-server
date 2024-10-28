@@ -114,6 +114,7 @@ class ReportManagerController(
                     reportComment = peerGrading.reportComment,
                     type = ReportedCandidateType.PEER_GRADING,
                     reporter = peerGrading.response.learner.getDisplayName(),
+                    reporterId = peerGrading.response.learner.id!!,
                     graderThatHaveBeenReported = peerGrading.grader.getDisplayName(),
                     reportReasonToStringI18N = reportResaonToStringI18N,
                     numberOfReport = nbReport,
@@ -133,6 +134,7 @@ class ReportManagerController(
                     reportComment = chatGptEvaluation.reportComment,
                     type = ReportedCandidateType.CHAT_GPT_EVALUATION,
                     reporter = chatGptEvaluation.response.learner.getDisplayName(),
+                    reporterId = chatGptEvaluation.response.learner.id!!,
                     graderThatHaveBeenReported = "ChatGPT", //TODO Introduce constant
                     reportReasonToStringI18N = reportResaonToStringI18N,
                     numberOfReport = nbReport,
@@ -149,6 +151,7 @@ class ReportManagerController(
         reportComment: String?,
         type: ReportedCandidateType,
         val reporter: String,
+        val reporterId: Long,
         val graderThatHaveBeenReported: String,
         val numberOfReport: Int = 0,
         private val reportReasonToStringI18N: Map<ReportReason, String>,
