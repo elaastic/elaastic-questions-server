@@ -12,6 +12,7 @@ import org.elaastic.questions.player.components.assignmentOverview.AssignmentOve
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -163,5 +164,25 @@ class ReportManagerController(
         type
     ) {
         val reportReasonsI18N: List<String> = reasons.map { reportReasonToStringI18N[it]!! }
+    }
+
+    @GetMapping("/remove-report/{type}/{id}")
+    @ResponseBody
+    fun removeReport(
+        authentication: Authentication,
+        @PathVariable type: ReportedCandidateType,
+        @PathVariable id: Long
+    ): ResponseEntity<String> {
+        val user = authentication.principal as User
+
+        when (type) {
+            ReportedCandidateType.PEER_GRADING -> {
+                peerGradingService.removeReport(user, id)
+            }
+            ReportedCandidateType.CHAT_GPT_EVALUATION -> {
+                chatGptEvaluationService.removeReport(user, id)
+            }
+        }
+        return ResponseEntity.ok("Report removed")
     }
 }
