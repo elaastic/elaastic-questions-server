@@ -169,4 +169,26 @@ class ReportManagerController(
         }
         return ResponseEntity.ok("Report removed")
     }
+
+    @GetMapping("/remove-reported-evaluation/{type}/{id}")
+    @ResponseBody
+    fun removeReportedEvaluation(
+        authentication: Authentication,
+        @PathVariable type: ReportedCandidateType,
+        @PathVariable id: Long
+    ): ResponseEntity<String> {
+        val user = authentication.principal as User
+
+        when (type) {
+            ReportedCandidateType.PEER_GRADING -> {
+                val peerGrading = peerGradingRepository.findById(id).orElseThrow()
+                peerGradingService.markAsRemoved(user, peerGrading)
+            }
+            ReportedCandidateType.CHAT_GPT_EVALUATION -> {
+                val chatGptEvaluation = chatGptEvaluationRepository.findById(id).orElseThrow()
+                chatGptEvaluationService.markAsRemoved(user, chatGptEvaluation)
+            }
+        }
+        return ResponseEntity.ok("Evaluation completely hidden")
+    }
 }
