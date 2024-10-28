@@ -109,7 +109,11 @@ class ChatGptEvaluationService(
      *
      * @param chatGptEvaluation the chatGPT evaluation to remove.
      */
-    fun markAsRemoved(chatGptEvaluation: ChatGptEvaluation) {
+    fun markAsRemoved(user: User, chatGptEvaluation: ChatGptEvaluation) {
+        requireAccess(user == chatGptEvaluation.response.interaction.owner) {
+            "You don't have the permission to remove this evaluation"
+        }
+
         reportCandidateService.markAsRemoved(chatGptEvaluation, chatGptEvaluationRepository)
     }
 
