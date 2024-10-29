@@ -82,7 +82,6 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable idReportedCandidate: Long
     ): ReportCandidateDetail {
-        val user = authentication.principal as User
         val reportedCandidateDetail: ReportCandidateDetail = when (type) {
             ReportedCandidateType.PEER_GRADING -> {
                 val peerGrading = peerGradingRepository.findById(idReportedCandidate).orElseThrow()
