@@ -16,8 +16,8 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.questions.moderation.ReportedCandidateModel"*/-->
-<div th:fragment="reportedElement(reportedCandidateModel)"
+<!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.moderation.ReportedCandidateModel"*/-->
+<div th:fragment="reportedElement(reportedCandidateModel, isRemoved)"
      xmlns="http://www.w3.org/1999/html"
      xmlns:th="http://www.thymeleaf.org"
      class="ui card"
@@ -25,6 +25,7 @@
      th:id="${'reportedCandidate-' + reportedCandidateModel.id}"
      th:id-reported-Candidate="${reportedCandidateModel.id}"
      th:reported-candidate-type="${reportedCandidateModel.type}"
+     th:data-is-removed="${isRemoved}"
 >
 
 

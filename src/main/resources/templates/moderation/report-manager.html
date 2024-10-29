@@ -35,14 +35,25 @@
             <div class="ui header" th:text="#{reportManager.itemContainer.title}"></div>
             <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">
                 <th:block
-                        th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel})"></th:block>
+                        th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel}, false)"></th:block>
             </th:block>
-            <th:block th:if="${allReportedCandidateModel.isEmpty()}">
-                <div class="ui message info">
-                    <div class="header" th:text="#{reportManager.noReportedItem}">No reported item</div>
-                    <div th:text="#{reportManager.noReportedItem.description}">There are no reported items to display.
-                    </div>
+
+            <div class="ui message info"
+                 id="no-reported-item-message"
+                 th:styleappend="${allReportedCandidateModel.isEmpty()} ? '' : 'display: none;'">
+                <div class="header" th:text="#{reportManager.noReportedItem}">No reported item</div>
+                <div th:text="#{reportManager.noReportedItem.description}">There are no reported items to display.
                 </div>
+            </div>
+        </div>
+
+        <div class="ui segment attached"
+             th:styleappend="${allReportedCandidateModelRemoved.isEmpty()} ? 'display: none;' : ''"
+             id="reported-item-removed-container">
+            <div class="ui header" th:text="#{reportManager.itemRemovedContainer.title}"></div>
+            <th:block th:each="reportedCandidateModel: ${allReportedCandidateModelRemoved}">
+                <th:block
+                        th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel}, true)"></th:block>
             </th:block>
         </div>
 
@@ -56,30 +67,37 @@
         <script>
 
             $(function () {
-                const detailReportCandidate = $('#detail-report-candidate');
-                const contextReportCandidate = $('#context-report-candidate');
-                const errorDetailReportCandidate = $('#error-detail-report-candidate');
-                const errorContextReportCandidate = $('#error-context-report-candidate');
+                const $detailReportCandidate = $('#detail-report-candidate');
+                const $contextReportCandidate = $('#context-report-candidate');
+                const $errorDetailReportCandidate = $('#error-detail-report-candidate');
+                const $errorContextReportCandidate = $('#error-context-report-candidate');
+                const $reportedItemRemovedContainer = $('#reported-item-removed-container');
 
-                const actionButtons = $('#action-buttons');
+                const $actionButtons = $('#action-buttons');
 
                 const sequenceId = [[${assignmentOverviewModel.selectedSequenceId}]];
 
-                detailReportCandidate.hide();
-                detailReportCandidate.removeClass("loading");
-                contextReportCandidate.hide();
-                contextReportCandidate.removeClass("loading");
+                $detailReportCandidate.hide();
+                $detailReportCandidate.removeClass("loading");
+                $contextReportCandidate.hide();
+                $contextReportCandidate.removeClass("loading");
 
-                errorDetailReportCandidate.hide();
-                errorContextReportCandidate.hide();
+                $errorDetailReportCandidate.hide();
+                $errorContextReportCandidate.hide();
 
-                function handleIReportedtemRemovedFromList() {
+                /**
+                 * Update the container and the message according to the number of reported items in each container.
+                 */
+                function handleReportedItemRemovedFromList() {
                     $('#no-selected-item').slideDown();
-                    actionButtons.slideUp();
-                    detailReportCandidate.slideUp();
-                    contextReportCandidate.slideUp();
+                    $actionButtons.slideUp();
+                    $detailReportCandidate.slideUp();
+                    $contextReportCandidate.slideUp();
                     if ($('#reported-item-container').find('.ui.card').length === 0) {
-                        $('#no-selected-item').slideDown();
+                        $('#no-reported-item-message').slideDown();
+                    }
+                    if ($reportedItemRemovedContainer.find('.ui.card').length === 0) {
+                        $reportedItemRemovedContainer.slideUp();
                     }
                 }
 
@@ -92,7 +110,7 @@
                  */
                 function getContextOfReportedCandidate(sequenceId, userId, container) {
                     container.addClass("loading");
-                    contextReportCandidate.slideDown();
+                    $contextReportCandidate.slideDown();
 
                     $.get('/player/' + sequenceId + '/result/' + userId)
                         .done(function (data) {
@@ -101,7 +119,7 @@
                             container.slideDown();
                         })
                         .fail(function () {
-                            errorContextReportCandidate.slideDown();
+                            $errorContextReportCandidate.slideDown();
                             container.slideUp();
                         }).always(function () {
                             container.removeClass("loading");
@@ -114,46 +132,58 @@
                  * @param idReportCandidate {number} The id of the selected item.
                  * @param reportedCandidate {HTMLElement} The selected item.
                  * @param isSelected {boolean} true if the item is selected false otherwise.
+                 * @param isRemoved {boolean} true if the item is removed false otherwise.
                  */
-                function updateActionButtons(idReportCandidate, reportedCandidate, isSelected) {
+                function updateActionButtons(idReportCandidate, reportedCandidate, isSelected, isRemoved) {
                     // Remove the previous event listener
-                    actionButtons.children('#remove-report-action').off();
-                    actionButtons.children('#hide-action').off();
+                    $actionButtons.children('#remove-report-action').off();
+                    $actionButtons.children('#hide-action').off();
+                    $actionButtons.children('#restore-reported-item').off();
+
+                    $actionButtons.children('#remove-report-action').hide();
+                    $actionButtons.children('#hide-action').hide();
+                    $actionButtons.children('#restore-reported-item').hide();
 
                     if (!isSelected) {
-                        actionButtons.slideUp();
+                        $actionButtons.slideUp();
+                    } else if (isRemoved) {
+                        $actionButtons.children('#restore-reported-item').click(function () {
+                            $.get('/report-manager/restore-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                .done(function () {
+                                    $(reportedCandidate).remove();
+                                    handleReportedItemRemovedFromList()
+                                })
+                                .fail(function () {
+                                    alert('An error occurred while restoring the report.');
+                                });
+                        });
+
+                        $actionButtons.children('#restore-reported-item').show();
                     } else {
-                        actionButtons.children('#remove-report-action').click(function () {
-                            console.log("remove-report-action");
-                            console.log($(reportedCandidate).attr('reported-candidate-type'));
-                            console.log(idReportCandidate);
-                            //TODO ask confirmation
-
-
+                        $actionButtons.children('#remove-report-action').click(function () {
                             $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
                                 .done(function (data) {
                                     console.log(data)
                                     $(reportedCandidate).remove();
-                                    handleIReportedtemRemovedFromList()
+                                    handleReportedItemRemovedFromList()
                                 })
                                 .fail(function () {
                                     alert('An error occurred while removing the report.');
                                 });
                         });
-                        actionButtons.children('#hide-action').click(function () {
-                            console.log("hide-action");
-                            console.log($(reportedCandidate).attr('reported-candidate-type'));
-                            console.log(idReportCandidate);
-                            //TODO ask confirmation
+                        $actionButtons.children('#hide-action').click(function () {
                             $.get('/report-manager/remove-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
                                 .done(function () {
                                     $(reportedCandidate).remove();
-                                    handleIReportedtemRemovedFromList()
+                                    handleReportedItemRemovedFromList()
                                 })
                                 .fail(function () {
                                     alert('An error occurred while hiding the report.');
                                 });
                         });
+
+                        $actionButtons.children('#remove-report-action').show();
+                        $actionButtons.children('#hide-action').show();
                     }
                 }
 
@@ -162,30 +192,30 @@
                  * @param idReportCandidate {number} The id of the selected item.
                  * @param reportedCandidate {HTMLElement} The selected item.
                  * @param isSelected {boolean} true if the item is selected false otherwise.
+                 * @param isRemoved {boolean} true if the item is removed false otherwise.
                  */
-                function updateSelectedItem(idReportCandidate, reportedCandidate, isSelected) {
-                    errorDetailReportCandidate.hide();
-                    errorContextReportCandidate.hide();
+                function updateSelectedItem(idReportCandidate, reportedCandidate, isSelected, isRemoved) {
+                    $errorDetailReportCandidate.hide();
+                    $errorContextReportCandidate.hide();
 
-                    actionButtons.slideUp();
-                    detailReportCandidate.slideUp();
-                    contextReportCandidate.slideUp();
+                    $actionButtons.hide();
+                    $detailReportCandidate.slideUp();
+                    $contextReportCandidate.slideUp();
 
-                    updateActionButtons(idReportCandidate, reportedCandidate, isSelected);
+                    updateActionButtons(idReportCandidate, reportedCandidate, isSelected, isRemoved);
 
                     if (!isSelected) {
                         $('#no-selected-item').slideDown();
                     } else {
                         $('#no-selected-item').hide();
-                        actionButtons.slideDown();
-                        detailReportCandidate.addClass("loading");
-                        detailReportCandidate.slideDown();
+                        $actionButtons.slideDown();
+                        $detailReportCandidate.addClass("loading");
+                        $detailReportCandidate.slideDown();
 
 
                         $.get('/report-manager/detail/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
                             .done(function (data) {
-                                getContextOfReportedCandidate(sequenceId, data.reporterId, contextReportCandidate);
-
+                                getContextOfReportedCandidate(sequenceId, data.reporterId, $contextReportCandidate);
 
                                 $('#reported-content').html(data.contentReported);
 
@@ -214,10 +244,10 @@
                             })
                             .fail(function () {
                                 $('#error-detail-report-candidate').slideDown();
-                                detailReportCandidate.slideUp();
+                                $detailReportCandidate.slideUp();
                             })
                             .always(function () {
-                                detailReportCandidate.removeClass("loading");
+                                $detailReportCandidate.removeClass("loading");
                             });
                     }
                 }
@@ -230,7 +260,7 @@
                     if (!wasSelected) {
                         $(this).addClass('selected');
                     }
-                    updateSelectedItem($(this).attr('id-reported-Candidate'), $(this), !wasSelected);
+                    updateSelectedItem($(this).attr('id-reported-Candidate'), $(this), !wasSelected, $(this).data('is-removed'));
                 });
             })
         </script>
@@ -280,6 +310,13 @@
                     th:data-tooltip="#{reportManager.button.remove-report.detail}">
                 Remove report
             </button>
+            <button class="ui button positive basic"
+                    style="text-transform: inherit;"
+                    id="restore-reported-item"
+                    th:text="#{reportManager.button.unremove}"
+                    th:data-tooltip="#{reportManager.button.unremove.detail}">
+                Restore evaluation
+            </button>
         </div>
 
         <div id="info-report-manager-container">
@@ -289,7 +326,9 @@
                 <p th:text="#{reportManager.error.detail.description}"></p>
             </div>
             <!--/* Detail of the selected item */-->
-            <div class="ui segment styled fluid accordion" id="detail-report-candidate">
+            <div class="ui segment styled fluid accordion"
+                 id="detail-report-candidate"
+                 style="display: none;">
 
                 <!--/* Title of the accordion */-->
                 <div class="title active">
@@ -366,7 +405,7 @@
                 <p th:text="#{reportManager.error.context.description}"></p>
             </div>
             <!--/* Context of the evaluation */-->
-            <div class="ui segment styled fluid accordion" id="context-report-candidate">
+            <div class="ui segment styled fluid accordion" id="context-report-candidate" style="display: none;">
                 <!--/* Title of the accordion */-->
                 <div class="title active">
                     <h1><i class="dropdown icon"></i><span th:text="#{reportManager.context.title}"></span></h1>
