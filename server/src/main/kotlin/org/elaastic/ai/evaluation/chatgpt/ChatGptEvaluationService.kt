@@ -357,6 +357,13 @@ class ChatGptEvaluationService(
         val chatGptEvaluation = chatGptEvaluationRepository.findById(id).orElseThrow()
         removeReport(user, chatGptEvaluation)
     }
+
+    fun markAsRestored(user: User, chatGptEvaluation: ChatGptEvaluation) {
+        requireAccess(user == chatGptEvaluation.response.interaction.owner) {
+            "You don't have the permission to restore this evaluation"
+        }
+        reportCandidateService.markAsRestored(chatGptEvaluation, chatGptEvaluationRepository)
+    }
 }
 
 

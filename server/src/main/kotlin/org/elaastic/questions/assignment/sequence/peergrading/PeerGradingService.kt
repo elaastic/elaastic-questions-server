@@ -377,4 +377,11 @@ class PeerGradingService(
         val peerGrading = peerGradingRepository.findById(id).orElseThrow()
         removeReport(user, peerGrading)
     }
+
+    fun markAsRestored(user: User, peerGrading: PeerGrading) {
+        requireAccess(user == peerGrading.response.interaction.owner) {
+            "Only the teacher who own the sequence can restore a peer grading"
+        }
+        reportCandidateService.markAsRestored(peerGrading, peerGradingRepository)
+    }
 }

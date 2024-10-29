@@ -19,6 +19,7 @@
 package org.elaastic.moderation
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -88,6 +89,14 @@ class ReportCandidateService {
         repository: ReportCandidateRepository,
     ) {
         reportCandidate.hiddenByTeacher = false
+        repository.save(reportCandidate)
+    }
+
+    fun markAsRestored(
+        reportCandidate: ReportCandidate,
+        repository: ReportCandidateRepository
+    ) {
+        reportCandidate.removedByTeacher = false
         repository.save(reportCandidate)
     }
 }
