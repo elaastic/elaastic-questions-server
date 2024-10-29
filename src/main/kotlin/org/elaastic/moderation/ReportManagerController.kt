@@ -118,7 +118,7 @@ class ReportManagerController(
                     type = ReportedCandidateType.CHAT_GPT_EVALUATION,
                     reporter = chatGptEvaluation.response.learner.getDisplayName(),
                     reporterId = chatGptEvaluation.response.learner.id!!,
-                    graderThatHaveBeenReported = "ChatGPT", //TODO Introduce constant
+                    graderThatHaveBeenReported = chatGptEvaluation.AIName,
                     messageSource = messageSource,
                     numberOfReport = nbReport,
                 )

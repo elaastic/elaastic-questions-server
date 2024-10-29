@@ -91,4 +91,6 @@ class ChatGptEvaluation(
     @LastModifiedDate
     var lastUpdated: Date? = null
 
+    @Transient
+    val AIName: String = "ChatGPT"
 }
