@@ -494,4 +494,49 @@ internal class ChatGptEvaluationServiceIntegrationTest(
             )
         }
     }
+
+    @Test
+    fun `test of markAsRemoved`() {
+        // Given
+        val sequence = integrationTestingService.getAnySequence()
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+
+        val learner = integrationTestingService.getNLearners(3).shuffled().first()
+
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "explanation",
+        )
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("The teacher remove the evaluation") {
+            assertThrows(IllegalAccessException::class.java, {
+                chatGptEvaluationService.markAsRemoved(learner, it)
+            }, "The learner should not be able to remove the evaluation")
+            assertDoesNotThrow({
+                chatGptEvaluationService.markAsRemoved(sequence.owner, it)
+            }, "The teacher should be able to remove the evaluation")
+            it
+        }.tThen("The evaluation is removed") {
+            assertTrue(it.removedByTeacher)
+        }
+    }
 }
