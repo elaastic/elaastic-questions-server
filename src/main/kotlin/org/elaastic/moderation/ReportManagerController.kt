@@ -84,13 +84,6 @@ class ReportManagerController(
         @PathVariable idReportedCandidate: Long
     ): ReportCandidateDetail {
         val user = authentication.principal as User
-        val reportResaonToStringI18N = ReportReason.values().associateWith {
-            messageSource.getMessage(
-                "player.sequence.chatGptEvaluation.reportReason.$it",
-                null,
-                LocaleContextHolder.getLocale()
-            )
-        }
         val reportedCandidateDetail: ReportCandidateDetail = when (type) {
             ReportedCandidateType.PEER_GRADING -> {
                 val peerGrading = peerGradingRepository.findById(idReportedCandidate).orElseThrow()
@@ -108,7 +101,7 @@ class ReportManagerController(
                     reporter = peerGrading.response.learner.getDisplayName(),
                     reporterId = peerGrading.response.learner.id!!,
                     graderThatHaveBeenReported = peerGrading.grader.getDisplayName(),
-                    reportReasonToStringI18N = reportResaonToStringI18N,
+                    messageSource = messageSource,
                     numberOfReport = nbReport,
                 )
             }
@@ -128,7 +121,7 @@ class ReportManagerController(
                     reporter = chatGptEvaluation.response.learner.getDisplayName(),
                     reporterId = chatGptEvaluation.response.learner.id!!,
                     graderThatHaveBeenReported = "ChatGPT", //TODO Introduce constant
-                    reportReasonToStringI18N = reportResaonToStringI18N,
+                    messageSource = messageSource,
                     numberOfReport = nbReport,
                 )
             }
@@ -146,7 +139,7 @@ class ReportManagerController(
         val reporterId: Long,
         val graderThatHaveBeenReported: String,
         val numberOfReport: Int = 0,
-        private val reportReasonToStringI18N: Map<ReportReason, String>,
+        private val messageSource: MessageSource,
     ) : ReportedCandidateModel(
         id,
         contentReported,
@@ -154,7 +147,7 @@ class ReportManagerController(
         reportComment,
         type
     ) {
-        val reportReasonsI18N: List<String> = reasons.map { reportReasonToStringI18N[it]!! }
+        val reportReasonsI18N: List<String> = reasons.map { it.toHumanReadableString(messageSource) }
     }
 
     @GetMapping("/remove-report/{type}/{id}")
