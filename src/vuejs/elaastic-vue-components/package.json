@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "module": "./dist/elaastic-vue-components.js",
   "exports": {
     ".": {
@@ -21,12 +23,23 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "vue": "^3.5.12"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.9.0",
+    "@storybook/addon-essentials": "^8.3.6",
+    "@storybook/addon-interactions": "^8.3.6",
+    "@storybook/addon-links": "^8.3.6",
+    "@storybook/addon-onboarding": "^8.3.6",
+    "@storybook/blocks": "^8.3.6",
+    "@storybook/test": "^8.3.6",
+    "@storybook/vue3": "^8.3.6",
+    "@storybook/vue3-vite": "^8.3.6",
     "@tsconfig/node20": "^20.1.4",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.17.0",
@@ -39,15 +52,22 @@
     "cypress": "^13.15.0",
     "eslint": "^9.13.0",
     "eslint-plugin-cypress": "^4.0.0",
+    "eslint-plugin-storybook": "^0.10.1",
     "eslint-plugin-vue": "^9.29.0",
     "jsdom": "^25.0.1",
     "npm-run-all2": "^7.0.1",
     "prettier": "^3.3.3",
     "start-server-and-test": "^2.0.8",
+    "storybook": "^8.3.6",
     "typescript": "~5.6.0",
     "vite": "^5.4.10",
     "vite-plugin-vue-devtools": "^7.5.3",
     "vitest": "^2.1.3",
     "vue-tsc": "^2.1.6"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
   }
 }
