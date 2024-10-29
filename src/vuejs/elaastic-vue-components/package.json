@@ -1,8 +1,16 @@
 {
   "name": "elaastic-vue-components",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
+  "files": ["dist"],
+  "module": "./dist/elaastic-vue-components.js",
+  "exports": {
+    ".": {
+      "import": "./dist/elaastic-vue-components.js",
+      "require": "./dist/elaastic-vue-components.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",

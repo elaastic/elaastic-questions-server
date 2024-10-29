@@ -1,6 +1,9 @@
-import './assets/main.css'
+import HelloWorld from '@/components/HelloWorld.vue'
+import WelcomeItem from '@/components/WelcomeItem.vue'
+import TheWelcome from '@/components/TheWelcome.vue'
 
-import { createApp } from 'vue'
-import App from './App.vue'
-
-createApp(App).mount('#app')
+export {
+  HelloWorld,
+  WelcomeItem,
+  TheWelcome
+}
