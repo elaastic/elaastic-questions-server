@@ -258,16 +258,13 @@ class ChatGptEvaluationService(
 
     /**
      * Find all the evaluations made on a sequence that have been reported and
-     * not hidden.
+     * not removed.
      *
      * @param sequence the sequence.
-     * @return the list of peer grading.
+     * @return the list of ChatGPTEvaluation.
      */
-    fun findAllReportedNotHidden(sequence: Sequence): List<ChatGptEvaluation> {
-        return chatGptEvaluationRepository.findAllReported(
-            sequence.getResponseSubmissionInteraction(),
-            removed = false
-        )
+    fun findAllReportedNotRemoved(sequence: Sequence): List<ChatGptEvaluation> {
+        return findAllReported(sequence, removed = false)
     }
 
     /**
@@ -296,10 +293,14 @@ class ChatGptEvaluationService(
         )
     }
 
-    fun findAllReportedHidden(sequence: Sequence): List<ChatGptEvaluation> {
+    fun findAllReportedRemoved(sequence: Sequence): List<ChatGptEvaluation> {
+        return findAllReported(sequence, removed = true)
+    }
+
+    fun findAllReported(sequence: Sequence, removed: Boolean): List<ChatGptEvaluation> {
         return chatGptEvaluationRepository.findAllReported(
             sequence.getResponseSubmissionInteraction(),
-            removed = true
+            removed = removed
         )
     }
 

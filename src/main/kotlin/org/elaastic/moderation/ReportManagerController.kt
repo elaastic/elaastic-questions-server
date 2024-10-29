@@ -46,10 +46,16 @@ class ReportManagerController(
         val sequence = sequenceService.get(user, idSequence, true)
 
         val draxoReportedNotRemoved = draxoPeerGradingService.findAllDraxoPeerGradingReported(sequence)
-        val chatGPTReportedNotRemoved = chatGptEvaluationService.findAllReportedNotHidden(sequence)
-        val allReportedCandidateModelNotHidden: List<ReportedCandidateModel> = (draxoReportedNotRemoved + chatGPTReportedNotRemoved)
-            .mapNotNull { ReportedCandidateModelFactory.build(it) }
+        val chatGPTReportedNotRemoved = chatGptEvaluationService.findAllReportedNotRemoved(sequence)
+        val allReportedCandidateModelNotRemoved: List<ReportedCandidateModel> =
+            (draxoReportedNotRemoved + chatGPTReportedNotRemoved)
+                .mapNotNull { ReportedCandidateModelFactory.build(it) }
 
+        val draxoReportedRemoved = draxoPeerGradingService.findAllDraxoPeerGradingReported(sequence, true)
+        val chatGPTReportedRemoved = chatGptEvaluationService.findAllReportedRemoved(sequence)
+        val allReportedCandidateModelRemoved: List<ReportedCandidateModel> =
+            (draxoReportedRemoved + chatGPTReportedRemoved)
+                .mapNotNull { ReportedCandidateModelFactory.build(it) }
 
         val registeredUsers: Int = assignmentService.countAllRegisteredUsers(sequence.assignment!!)
 
@@ -63,7 +69,8 @@ class ReportManagerController(
 
 
         model["user"] = user
-        model["allReportedCandidateModel"] = allReportedCandidateModelNotHidden
+        model["allReportedCandidateModel"] = allReportedCandidateModelNotRemoved
+        model["allReportedCandidateModelRemoved"] = allReportedCandidateModelRemoved
         model["assignmentOverviewModel"] = assignmentOverviewModel
 
         return "moderation/report-manager"
@@ -163,6 +170,7 @@ class ReportManagerController(
             ReportedCandidateType.PEER_GRADING -> {
                 peerGradingService.removeReport(user, id)
             }
+
             ReportedCandidateType.CHAT_GPT_EVALUATION -> {
                 chatGptEvaluationService.removeReport(user, id)
             }
@@ -184,11 +192,34 @@ class ReportManagerController(
                 val peerGrading = peerGradingRepository.findById(id).orElseThrow()
                 peerGradingService.markAsRemoved(user, peerGrading)
             }
+
             ReportedCandidateType.CHAT_GPT_EVALUATION -> {
                 val chatGptEvaluation = chatGptEvaluationRepository.findById(id).orElseThrow()
                 chatGptEvaluationService.markAsRemoved(user, chatGptEvaluation)
             }
         }
         return ResponseEntity.ok("Evaluation completely hidden")
+    }
+
+    @GetMapping("/restore-reported-evaluation/{type}/{id}")
+    @ResponseBody
+    fun unremoveReportedEvaluation(
+        authentication: Authentication,
+        @PathVariable type: ReportedCandidateType,
+        @PathVariable id: Long
+    ): ResponseEntity<String> {
+        val user = authentication.principal as User
+
+        when (type) {
+            ReportedCandidateType.PEER_GRADING -> {
+                val peerGrading = peerGradingRepository.findById(id).orElseThrow()
+                peerGradingService.markAsRestored(user, peerGrading)
+            }
+            ReportedCandidateType.CHAT_GPT_EVALUATION -> {
+                val chatGptEvaluation = chatGptEvaluationRepository.findById(id).orElseThrow()
+                chatGptEvaluationService.markAsRestored(user, chatGptEvaluation)
+            }
+        }
+        return ResponseEntity.ok("Evaluation restored")
     }
 }
