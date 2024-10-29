@@ -27,6 +27,17 @@
     </head>
     <body>
     <section>
+        <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js"></script>
+        <script th:src="@{/vue-components/elaastic-vue-components.umd.js}"></script>
+        <link th:href="@{/vue-components/style.css}" type="text/css" rel="stylesheet" media="screen, projection">
+        <h2>Test Vue components</h2>
+        <div id="demo" style="display: block; margin: 5em;"></div>
+        <script>
+            Vue.createApp(ElaasticVueComponents.App).mount("#demo")
+        </script>
+    </section>
+
+    <section>
         <h2>Index of test components page</h2>
         <ul>
             <li><a th:href="@{/player/test/steps}">Steps</a></li>

@@ -11,7 +11,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/main.ts'),
       name: 'ElaasticVueComponents',
-      fileName: 'elaastic-vue-components'
+      fileName: 'elaastic-vue-components',
+      formats: ['umd']
     },
     rollupOptions: {
       external: ['vue'],
