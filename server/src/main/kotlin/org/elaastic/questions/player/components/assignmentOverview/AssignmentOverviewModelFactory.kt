@@ -132,7 +132,12 @@ object AssignmentOverviewModelFactory {
         courseId = if (teacher) assignment.subject?.course?.id else null,
         subjectTitle = if (teacher) assignment.subject!!.title else null,
         subjectId = if (teacher) assignment.subject!!.id else null,
-        audience = if (teacher) assignment.audience + " ${assignment.scholarYear ?: ""}" else null,
+        audience = if (teacher) {
+            assignment.audience +
+                    if (assignment.scholarYear != null) {
+                        " (${assignment.scholarYear})"
+                    } else ""
+        } else null,
         assignmentId = assignment.id!!,
         sequences = listOf(
             AssignmentOverviewModel.SequenceInfo(
