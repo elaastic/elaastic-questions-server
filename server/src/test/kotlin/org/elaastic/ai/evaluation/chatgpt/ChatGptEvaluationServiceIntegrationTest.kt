@@ -496,7 +496,7 @@ internal class ChatGptEvaluationServiceIntegrationTest(
     }
 
     @Test
-    fun `test of markAsRemoved`() {
+    fun `test of markAsRemoved and markAsRestored`() {
         // Given
         val sequence = integrationTestingService.getAnySequence()
         functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
@@ -537,6 +537,17 @@ internal class ChatGptEvaluationServiceIntegrationTest(
             it
         }.tThen("The evaluation is removed") {
             assertTrue(it.removedByTeacher)
+            it
+        }.tWhen("The teacher restore it") {
+            assertThrows(IllegalAccessException::class.java, {
+                chatGptEvaluationService.markAsRestored(learner, it)
+            }, "The learner should not be able to restore the evaluation")
+            assertDoesNotThrow({
+                chatGptEvaluationService.markAsRestored(sequence.owner, it)
+            }, "The teacher should be able to restore the evaluation")
+            it
+        }.tThen {
+            assertFalse(it.removedByTeacher)
         }
     }
 }

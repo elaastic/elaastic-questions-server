@@ -666,12 +666,14 @@ class PeerGradingServiceIntegrationTest(
             assertEquals(1, peerGradingReportedNotHidden.size)
             assertEquals(learners[1], peerGradingReportedNotHidden.first().grader)
             assertEquals(learners[0], peerGradingReportedNotHidden.first().response.learner)
+
+            assertEquals(peerGradingReportedNotHidden.size, draxoPeerGradingService.countAllDraxoPeerGradingReportedNotHidden(sequence))
         }
     }
 
     @Test
     fun `test of removereport`() {
-// Given
+        // Given
         val learners = integrationTestingService.getNLearners(2)
         val teacher = integrationTestingService.getTestTeacher()
         val subject = functionalTestingService.createSubject(teacher)
@@ -730,6 +732,65 @@ class PeerGradingServiceIntegrationTest(
         }.tThen("the peerGrading is not reported") {
             assertNull(it.reportReasons)
             assertNull(it.reportComment)
+        }
+    }
+
+    @Test
+    fun `test of markAsRestored`() {
+        // Given
+        val learners = integrationTestingService.getNLearners(2)
+        val teacher = integrationTestingService.getTestTeacher()
+        val subject = functionalTestingService.createSubject(teacher)
+        functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
+        val assignement = functionalTestingService.createAssignment(subject)
+        val sequence = assignement.sequences.first()
+
+        tGiven("A started sequence") {
+            functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+        }.tWhen("A learner answer and another evaluate it") {
+            val response = functionalTestingService.submitResponse(
+                Phase.PHASE_1,
+                learners[0],
+                sequence,
+                true,
+                ConfidenceDegree.CONFIDENT,
+                "response"
+            )
+            val grader = learners[1]
+            val peerGrading = DraxoPeerGrading(
+                grader = grader,
+                response = response,
+                draxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
+                lastSequencePeerGrading = false
+            )
+                .tWhen {
+                    peerGradingRepository.save(it)
+                    it
+                }
+            peerGrading
+        }.tWhen("The peergrading is removed") {
+            assertThrows(IllegalAccessException::class.java, {
+                peerGradingService.markAsRemoved(learners[0], it)
+            }, "A student can't remove a report")
+
+            assertDoesNotThrow({
+                peerGradingService.markAsRemoved(teacher, it)
+            }, "A teacher can remove a report")
+            it
+        }.tThen("The peergrading is removed") {
+            assertTrue(it.removedByTeacher)
+            it
+        }.tWhen("The peergrading is restored") {
+            assertThrows(IllegalAccessException::class.java, {
+                peerGradingService.markAsRestored(learners[0], it)
+            }, "A student can't remove a report")
+
+            assertDoesNotThrow({
+                peerGradingService.markAsRestored(teacher, it)
+            }, "A teacher can remove a report")
+            it
+        }.tThen("The peergrading is restored") {
+            assertFalse(it.removedByTeacher)
         }
     }
 }
