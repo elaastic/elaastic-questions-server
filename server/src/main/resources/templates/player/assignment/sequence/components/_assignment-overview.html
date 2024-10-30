@@ -171,7 +171,7 @@ comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
                         <!--/* Index of the sequence in the assignment */-->
                         <div class="ui tiny circular label"
                              style="margin-right: 1em;"
-                             th:text="|${i.index+1}.|">
+                             th:text="|${assignmentOverviewModel.isSingleSequence ? assignmentOverviewModel.indexOfSelectedSequence + 1 : i.index + 1}.|">
                         </div>
 
                         <!--/* The sequence title */-->

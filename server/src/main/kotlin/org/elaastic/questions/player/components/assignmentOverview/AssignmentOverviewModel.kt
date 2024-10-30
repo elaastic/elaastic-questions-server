@@ -48,6 +48,7 @@ data class AssignmentOverviewModel(
         val selectedSequenceId: Long? = null,
         val hideStatementContent: Boolean = false,
         val isRevisionMode: Boolean = false,
+        val indexOfSelectedSequence: Int
 ) {
 
         val isSingleSequence: Boolean = sequences.size == 1

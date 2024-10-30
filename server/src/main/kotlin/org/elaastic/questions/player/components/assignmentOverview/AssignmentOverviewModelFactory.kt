@@ -70,7 +70,8 @@ object AssignmentOverviewModelFactory {
             )
         },
         selectedSequenceId = selectedSequenceId,
-        isRevisionMode = assignment.revisionMode != RevisionMode.NotAtAll
+        isRevisionMode = assignment.revisionMode != RevisionMode.NotAtAll,
+        indexOfSelectedSequence = assignment.sequences.indexOfFirst { it.id == selectedSequenceId }
     )
 
     private fun resolveIcons(
@@ -154,6 +155,7 @@ object AssignmentOverviewModelFactory {
             )
         ),
         selectedSequenceId = selectedSequence.id,
-        isRevisionMode = assignment.revisionMode != RevisionMode.NotAtAll
+        isRevisionMode = assignment.revisionMode != RevisionMode.NotAtAll,
+        indexOfSelectedSequence = assignment.sequences.indexOfFirst { it.id == selectedSequence.id }
     )
 }
