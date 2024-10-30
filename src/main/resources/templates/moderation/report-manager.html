@@ -161,15 +161,26 @@
                         $actionButtons.children('#restore-reported-item').show();
                     } else {
                         $actionButtons.children('#remove-report-action').click(function () {
-                            $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
-                                .done(function (data) {
-                                    console.log(data)
-                                    $(reportedCandidate).remove();
-                                    handleReportedItemRemovedFromList()
+                            $('#confirmation-modal-remove-report')
+                                .modal({
+                                    closable: false,
+                                    onDeny: function () {
+                                        console.log('cancel remove report');
+                                    },
+                                    onApprove: function () {
+                                        $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                            .done(function (data) {
+                                                console.log(data)
+                                                $(reportedCandidate).remove();
+                                                handleReportedItemRemovedFromList()
+                                            })
+                                            .fail(function () {
+                                                alert('An error occurred while removing the report.');
+                                            });
+                                    }
                                 })
-                                .fail(function () {
-                                    alert('An error occurred while removing the report.');
-                                });
+                                .modal('show')
+                            ;
                         });
                         $actionButtons.children('#hide-action').click(function () {
                             $.get('/report-manager/remove-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
@@ -296,7 +307,7 @@
             <div th:text="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
         </div>
 
-        <!--/* Sticky button group */-->
+        <!--/* Action buttons group */-->
         <div class="ui two buttons" id="action-buttons" style="display: none">
             <button class="ui button negative"
                     id="hide-action"
@@ -318,6 +329,22 @@
                     th:data-tooltip="#{reportManager.button.unremove.detail}">
                 Restore evaluation
             </button>
+        </div>
+
+        <!--/* Confirmation modal */-->
+        <div class="ui modal" id="confirmation-modal-remove-report">
+            <div class="header" th:text="#{reportManager.confirmation.remove-report.title}">Remove the report?</div>
+            <div class="content" th:text="#{reportManager.confirmation.remove-report.description}">
+                Are you sure you want to remove this report?
+            </div>
+            <div class="actions">
+                <div class="ui negative cancel button">
+                    <span th:text="#{reportManager.confirmation.remove-report.cancel}">No keep the report</span>
+                </div>
+                <div class="ui positive ok button">
+                    <span th:text="#{reportManager.confirmation.remove-report.confirm}">Yes remove the report</span>
+                </div>
+            </div>
         </div>
 
         <div id="info-report-manager-container">
