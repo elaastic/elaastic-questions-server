@@ -307,29 +307,6 @@
             <div th:text="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
         </div>
 
-        <!--/* Action buttons group */-->
-        <div class="ui two buttons" id="action-buttons" style="display: none">
-            <button class="ui button negative"
-                    id="hide-action"
-                    th:text="#{reportManager.button.hide}"
-                    th:data-tooltip="#{reportManager.button.hide.detail}">
-                Hide for everyone
-            </button>
-            <button class="ui button positive basic"
-                    style="text-transform: inherit;"
-                    id="remove-report-action"
-                    th:text="#{reportManager.button.remove-report}"
-                    th:data-tooltip="#{reportManager.button.remove-report.detail}">
-                Remove report
-            </button>
-            <button class="ui button positive basic"
-                    style="text-transform: inherit;"
-                    id="restore-reported-item"
-                    th:text="#{reportManager.button.unremove}"
-                    th:data-tooltip="#{reportManager.button.unremove.detail}">
-                Restore evaluation
-            </button>
-        </div>
 
         <!--/* Confirmation modal */-->
         <div class="ui modal" id="confirmation-modal-remove-report">
@@ -348,6 +325,22 @@
         </div>
 
         <div id="info-report-manager-container">
+            <!--/* Error message */-->
+            <div class="ui message error" id="error-context-report-candidate" style="display:none;">
+                <div class="header" th:text="#{reportManager.error.context.title}"></div>
+                <p th:text="#{reportManager.error.context.description}"></p>
+            </div>
+            <!--/* Context of the evaluation */-->
+            <div class="ui segment styled fluid accordion" id="context-report-candidate" style="display: none;">
+                <!--/* Title of the accordion */-->
+                <div class="title">
+                    <h1><i class="dropdown icon"></i><span th:text="#{reportManager.context.title}"></span></h1>
+                </div>
+                <!--/* Content of the accordion */-->
+                <div class="content" id="content">
+                </div>
+            </div>
+
             <!--/* Error message */-->
             <div class="ui error message" id="error-detail-report-candidate" style="display:none;">
                 <div class="header" th:text="#{reportManager.error.detail.title}"></div>
@@ -426,22 +419,34 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!--/* Error message */-->
-            <div class="ui message error" id="error-context-report-candidate" style="display:none;">
-                <div class="header" th:text="#{reportManager.error.context.title}"></div>
-                <p th:text="#{reportManager.error.context.description}"></p>
-            </div>
-            <!--/* Context of the evaluation */-->
-            <div class="ui segment styled fluid accordion" id="context-report-candidate" style="display: none;">
-                <!--/* Title of the accordion */-->
-                <div class="title active">
-                    <h1><i class="dropdown icon"></i><span th:text="#{reportManager.context.title}"></span></h1>
-                </div>
-                <!--/* Content of the accordion */-->
-                <div class="active content" id="content">
-                </div>
-            </div>
+
+        <!--/* Action buttons group */-->
+        <div id="action-buttons" style="display: none; margin: 10px 0;">
+            <button class="ui button primary"
+                    id="hide-action"
+                    th:text="#{reportManager.button.hide}"
+                    th:data-tooltip="#{reportManager.button.hide.detail}"
+                    data-position="top left">
+                Hide for everyone
+            </button>
+            <button class="ui button negative"
+                    style="text-transform: inherit;"
+                    id="remove-report-action"
+                    th:text="#{reportManager.button.remove-report}"
+                    th:data-tooltip="#{reportManager.button.remove-report.detail}"
+                    data-position="top left">
+                Remove report
+            </button>
+            <button class="ui button primary"
+                    style="text-transform: inherit;"
+                    id="restore-reported-item"
+                    th:text="#{reportManager.button.unremove}"
+                    th:data-tooltip="#{reportManager.button.unremove.detail}"
+                    data-position="top left">
+                Restore evaluation
+            </button>
         </div>
     </section>
 
