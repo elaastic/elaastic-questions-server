@@ -17,11 +17,11 @@
  */
 package org.elaastic.questions.player
 
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
 import org.elaastic.questions.player.components.command.CommandModelFactory
@@ -71,6 +71,13 @@ object PlayerModelFactory {
             resultsModel = if (showResults)
                 teacherResultDashboardService.buildModel(sequence)
             else null,
+            assignmentOverviewModelOneSequence = AssignmentOverviewModelFactory.buildOnSequence(
+                teacher = true,
+                assignment = assignment,
+                nbRegisteredUser = nbRegisteredUsers,
+                userActiveInteraction = sequenceToUserActiveInteraction[sequence],
+                selectedSequence = sequence,
+            )
         )
     }
 

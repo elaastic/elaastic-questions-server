@@ -131,6 +131,7 @@
         <div id="attendees_container"
              style="display: none;">
 
+            <div th:replace="|${components}/_assignment-overview.html| :: assignmentOverview(${playerModel.assignmentOverviewModelOneSequence}, aside, true)"></div>
             <div th:replace="|${components}/_attendees-overview.html| :: assignmentNavigator(${playerModel}, aside, ${dashboardModel})"></div>
 
             <div class="ui divider"></div>

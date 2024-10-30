@@ -22,20 +22,8 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-
-    <!--/* Name of the statement */-->
-    <h3 class="ui top attached block header">
-        <i class="question circle outline icon"></i>
-        <div class="content" th:text="${playerModel.statement.getTitle()}"></div>
-    </h3>
-
-    <!--/* Title of the sequence */-->
-    <div class="ui segment attached sequence-content"
-         th:utext="${playerModel.statement.getContent()}">
-    </div>
-
     <!--/* Sequence navigator */-->
-    <div class="ui header attached block assignment-navigator-actions">
+    <div class="ui header attached block" style="display: flex; justify-content: space-between; column-gap: 10px;">
         <!--/* Previous sequence button */-->
         <div>
             <a th:href="|/player/assignment/${playerModel.assignmentOverviewModel.assignmentId}/${dashboardModel.previousSequence}?currentPane=attendees|"
@@ -64,15 +52,6 @@
             </a>
         </div>
     </div>
-
-    <style>
-        .assignment-navigator-actions {
-            display: flex;
-            justify-content: space-between;
-            column-gap: 10px;
-        }
-    </style>
-
 </div>
 
 <div th:fragment="attendeesOverview(dashboardModel, context, stepsModel)"
