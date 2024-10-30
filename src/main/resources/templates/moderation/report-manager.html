@@ -245,6 +245,7 @@
                             .fail(function () {
                                 $('#error-detail-report-candidate').slideDown();
                                 $detailReportCandidate.slideUp();
+                                $actionButtons.slideUp();
                             })
                             .always(function () {
                                 $detailReportCandidate.removeClass("loading");
