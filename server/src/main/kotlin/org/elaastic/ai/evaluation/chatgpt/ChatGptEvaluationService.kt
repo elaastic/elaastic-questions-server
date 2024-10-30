@@ -365,6 +365,13 @@ class ChatGptEvaluationService(
         }
         reportCandidateService.markAsRestored(chatGptEvaluation, chatGptEvaluationRepository)
     }
+
+    /**
+     * Return the name of the IA use to generate the evaluation.
+     */
+    fun getAINameProvider(): String {
+        return "ChatGPT"
+    }
 }
 
 
