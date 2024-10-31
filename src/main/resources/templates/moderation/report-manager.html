@@ -29,8 +29,27 @@
 
     <!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.questions.moderation.ReportedCandidateModel"*/-->
     <aside id="layout-aside">
+
+        <!--/* Title and description of the page */-->
+        <div class="ui steps one top">
+            <div class="step">
+                <i class="icons icon">
+                    <i class="flag icon"></i>
+                    <i class="corner warning sign icon"></i>
+                </i>
+                <div class="content">
+                    <div class="title" th:text="#{reportManager.title}">Report Manager</div>
+                    <div class="description" th:text="#{reportManager.description}">This page allows you to manage the
+                        reports made by students.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--/* Assignment overview */-->
         <div th:replace="|player/assignment/sequence/components/_assignment-overview.html| :: assignmentOverview(${assignmentOverviewModel}, aside, false)"></div>
 
+        <!--/* Reported items */-->
         <div class="ui segment attached" id="reported-item-container">
             <div class="ui header" th:text="#{reportManager.itemContainer.title}"></div>
             <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">
@@ -47,6 +66,7 @@
             </div>
         </div>
 
+        <!--/* Reported items removed */-->
         <div class="ui segment attached"
              th:styleappend="${allReportedCandidateModelRemoved.isEmpty()} ? 'display: none;' : ''"
              id="reported-item-removed-container">
@@ -73,7 +93,6 @@
                 const $errorDetailReportCandidate = $('#error-detail-report-candidate');
                 const $errorContextReportCandidate = $('#error-context-report-candidate');
                 const $reportedItemRemovedContainer = $('#reported-item-removed-container');
-
                 const $actionButtons = $('#action-buttons');
 
                 const sequenceId = [[${assignmentOverviewModel.selectedSequenceId}]];
@@ -289,45 +308,13 @@
             })
         </script>
 
-        <!--/* Title and description of the page */-->
-        <div class="ui steps one top">
-            <div class="step">
-                <i class="icons icon">
-                    <i class="flag icon"></i>
-                    <i class="corner warning sign icon"></i>
-                </i>
-                <div class="content">
-                    <div class="title" th:text="#{reportManager.title}">Report Manager</div>
-                    <div class="description" th:text="#{reportManager.description}">This page allows you to manage the
-                        reports made by students.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--/* No item in list message */-->
+        <!--/* Information abour the page */-->
         <div class="ui message info" id="no-selected-item">
-            <div class="header" th:text="#{reportManager.noItemSelected}">No item selected</div>
-            <div th:text="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
+            <div class="header" th:text="#{reportManager.title}">No item selected</div>
+            <div th:utext="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
         </div>
 
-
-        <!--/* Confirmation modal */-->
-        <div class="ui modal" id="confirmation-modal-remove-report">
-            <div class="header" th:text="#{reportManager.confirmation.remove-report.title}">Remove the report?</div>
-            <div class="content" th:text="#{reportManager.confirmation.remove-report.description}">
-                Are you sure you want to remove this report?
-            </div>
-            <div class="actions">
-                <div class="ui negative cancel button">
-                    <span th:text="#{reportManager.confirmation.remove-report.cancel}">No keep the report</span>
-                </div>
-                <div class="ui positive ok button">
-                    <span th:text="#{reportManager.confirmation.remove-report.confirm}">Yes remove the report</span>
-                </div>
-            </div>
-        </div>
-
+        <!--/* Container of the details of the selected item */-->
         <div id="info-report-manager-container" class="ui segment vertical">
 
             <!--/* Title */-->
@@ -423,7 +410,6 @@
             </div>
         </div>
 
-
         <!--/* Action buttons group */-->
         <div id="action-buttons" style="display: none; margin: 30px 0;">
             <button class="ui button primary"
@@ -449,6 +435,22 @@
                     data-position="top left">
                 Restore evaluation
             </button>
+        </div>
+
+        <!--/* Confirmation modal */-->
+        <div class="ui modal" id="confirmation-modal-remove-report">
+            <div class="header" th:text="#{reportManager.confirmation.remove-report.title}">Remove the report?</div>
+            <div class="content" th:utext="#{reportManager.confirmation.remove-report.description}">
+                Are you sure you want to remove this report?
+            </div>
+            <div class="actions">
+                <div class="ui negative cancel button">
+                    <span th:text="#{reportManager.confirmation.remove-report.cancel}">No keep the report</span>
+                </div>
+                <div class="ui positive ok button">
+                    <span th:text="#{reportManager.confirmation.remove-report.confirm}">Yes remove the report</span>
+                </div>
+            </div>
         </div>
     </section>
 
