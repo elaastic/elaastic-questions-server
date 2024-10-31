@@ -18,15 +18,19 @@
 
 <div th:fragment="sequenceInfo(sequenceInfoModel, sequenceId)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     class="ui bottom attached message" th:classappend="${sequenceInfoModel.color}">
+     class="ui bottom attached message"
+     th:classappend="${sequenceInfoModel.color}"
+     style="display: flex; justify-content: space-between; align-items: center">
     <!--/*@thymesVar id="sequenceInfoModel" type="org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel"*/-->
 
-    <span th:text="${sequenceInfoModel.message}" th:remove="tag"></span>
+    <div>
+        <span th:text="${sequenceInfoModel.message}" th:remove="tag"></span>
 
-    <!--/*    TODO partial reloading with updateSequenceDisplay */-->
-    <a th:if="${sequenceInfoModel.refreshable}" th:href="@{./{id}(id=${sequenceId})}" th:title="#{common.refresh}">
-        <i class="refresh icon"></i>
-    </a>
+        <!--/*    TODO partial reloading with updateSequenceDisplay */-->
+        <a th:if="${sequenceInfoModel.refreshable}" th:href="@{./{id}(id=${sequenceId})}" th:title="#{common.refresh}">
+            <i class="refresh icon"></i>
+        </a>
+    </div>
 
     <!--/*To apply the red color from semantic to the text,
     the best option I found is to use a label and remove the border and the background-color */-->
