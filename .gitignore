@@ -91,8 +91,6 @@ fabric.properties
 *.zip
 *.tar.gz
 *.rar
-!lib/ApacheJMeter_oauth-v2.jar
-!lib/tsaap-lti-0.4-no-oauth-dep.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -113,18 +111,5 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
-# email server config
-emailconfig.properties
-
 # Jekyll
 .jekyll-cache
-
-# Misc
-/src/main/resources/mail.properties
-/elaastic
-/src/test/resources/lti-consumers-export-file.csv
-/paper.pdf
-.DS_Store
-/config
-cas-certificate.cer
-thekeystore
