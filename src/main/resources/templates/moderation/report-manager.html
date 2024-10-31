@@ -67,6 +67,7 @@
         <script>
 
             $(function () {
+                const $infoReportManagerContainer = $('#info-report-manager-container');
                 const $detailReportCandidate = $('#detail-report-candidate');
                 const $contextReportCandidate = $('#context-report-candidate');
                 const $errorDetailReportCandidate = $('#error-detail-report-candidate');
@@ -77,8 +78,9 @@
 
                 const sequenceId = [[${assignmentOverviewModel.selectedSequenceId}]];
 
+                $infoReportManagerContainer.hide();
+                $infoReportManagerContainer.removeClass("loading");
                 $detailReportCandidate.hide();
-                $detailReportCandidate.removeClass("loading");
                 $contextReportCandidate.hide();
                 $contextReportCandidate.removeClass("loading");
 
@@ -113,17 +115,17 @@
                     $contextReportCandidate.slideDown();
 
                     $.get('/player/' + sequenceId + '/result/' + userId)
-                        .done(function (data) {
-                            const content = $(data).find(".active.content");
-                            container.children("#content").html(content);
-                            container.slideDown();
-                        })
-                        .fail(function () {
-                            $errorContextReportCandidate.slideDown();
-                            container.slideUp();
-                        }).always(function () {
-                            container.removeClass("loading");
-                        }
+                            .done(function (data) {
+                                const content = $(data).find(".active.content");
+                                container.children("#content").html(content);
+                                container.slideDown();
+                            })
+                            .fail(function () {
+                                $errorContextReportCandidate.slideDown();
+                                container.slideUp();
+                            }).always(function () {
+                                container.removeClass("loading");
+                            }
                     );
                 }
 
@@ -149,48 +151,48 @@
                     } else if (isRemoved) {
                         $actionButtons.children('#restore-reported-item').click(function () {
                             $.get('/report-manager/restore-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
-                                .done(function () {
-                                    $(reportedCandidate).remove();
-                                    handleReportedItemRemovedFromList()
-                                })
-                                .fail(function () {
-                                    alert('An error occurred while restoring the report.');
-                                });
+                                    .done(function () {
+                                        $(reportedCandidate).remove();
+                                        handleReportedItemRemovedFromList()
+                                    })
+                                    .fail(function () {
+                                        alert('An error occurred while restoring the report.');
+                                    });
                         });
 
                         $actionButtons.children('#restore-reported-item').show();
                     } else {
                         $actionButtons.children('#remove-report-action').click(function () {
                             $('#confirmation-modal-remove-report')
-                                .modal({
-                                    closable: false,
-                                    onDeny: function () {
-                                        console.log('cancel remove report');
-                                    },
-                                    onApprove: function () {
-                                        $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
-                                            .done(function (data) {
-                                                console.log(data)
-                                                $(reportedCandidate).remove();
-                                                handleReportedItemRemovedFromList()
-                                            })
-                                            .fail(function () {
-                                                alert('An error occurred while removing the report.');
-                                            });
-                                    }
-                                })
-                                .modal('show')
+                                    .modal({
+                                        closable: false,
+                                        onDeny: function () {
+                                            console.log('cancel remove report');
+                                        },
+                                        onApprove: function () {
+                                            $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                                    .done(function (data) {
+                                                        console.log(data)
+                                                        $(reportedCandidate).remove();
+                                                        handleReportedItemRemovedFromList()
+                                                    })
+                                                    .fail(function () {
+                                                        alert('An error occurred while removing the report.');
+                                                    });
+                                        }
+                                    })
+                                    .modal('show')
                             ;
                         });
                         $actionButtons.children('#hide-action').click(function () {
                             $.get('/report-manager/remove-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
-                                .done(function () {
-                                    $(reportedCandidate).remove();
-                                    handleReportedItemRemovedFromList()
-                                })
-                                .fail(function () {
-                                    alert('An error occurred while hiding the report.');
-                                });
+                                    .done(function () {
+                                        $(reportedCandidate).remove();
+                                        handleReportedItemRemovedFromList()
+                                    })
+                                    .fail(function () {
+                                        alert('An error occurred while hiding the report.');
+                                    });
                         });
 
                         $actionButtons.children('#remove-report-action').show();
@@ -210,6 +212,7 @@
                     $errorContextReportCandidate.hide();
 
                     $actionButtons.hide();
+                    $infoReportManagerContainer.slideUp();
                     $detailReportCandidate.slideUp();
                     $contextReportCandidate.slideUp();
 
@@ -219,48 +222,49 @@
                         $('#no-selected-item').slideDown();
                     } else {
                         $('#no-selected-item').hide();
-                        $actionButtons.slideDown();
-                        $detailReportCandidate.addClass("loading");
-                        $detailReportCandidate.slideDown();
+                        $infoReportManagerContainer.addClass("loading");
+                        $infoReportManagerContainer.slideDown();
 
 
                         $.get('/report-manager/detail/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
-                            .done(function (data) {
-                                getContextOfReportedCandidate(sequenceId, data.reporterId, $contextReportCandidate);
+                                .done(function (data) {
+                                    $actionButtons.slideDown();
+                                    $detailReportCandidate.slideDown();
+                                    getContextOfReportedCandidate(sequenceId, data.reporterId, $contextReportCandidate);
 
-                                $('#reported-content').html(data.contentReported);
+                                    $('#reported-content').html(data.contentReported);
 
-                                $('#report-reasons').empty();
-                                data.reportReasonsI18N.forEach(function (reason) {
-                                    $('#report-reasons').append('<li>' + reason + '</li>');
+                                    $('#report-reasons').empty();
+                                    data.reportReasonsI18N.forEach(function (reason) {
+                                        $('#report-reasons').append('<li>' + reason + '</li>');
+                                    });
+
+                                    if (data.reportComment == null) {
+                                        $('#report-comment-parent').hide()
+                                    } else {
+                                        $('#report-comment-parent').show()
+                                        $('#report-comment').html(data.reportComment);
+                                    }
+                                    $('#reporter').text(data.reporter);
+                                    $('#graderThatHaveBeenReported').text(data.graderThatHaveBeenReported);
+                                    if (data.type === "PEER_GRADING") {
+                                        $('#user-icon').show();
+                                        $('#laptop-icon').hide();
+                                    } else {
+                                        $('#user-icon').hide();
+                                        $('#laptop-icon').show();
+                                    }
+
+                                    $('#numberOfReport').text(data.numberOfReport);
+                                })
+                                .fail(function () {
+                                    $('#error-detail-report-candidate').slideDown();
+                                    $detailReportCandidate.slideUp();
+                                    $actionButtons.slideUp();
+                                })
+                                .always(function () {
+                                    $infoReportManagerContainer.removeClass("loading");
                                 });
-
-                                if (data.reportComment == null) {
-                                    $('#report-comment-parent').hide()
-                                } else {
-                                    $('#report-comment-parent').show()
-                                    $('#report-comment').html(data.reportComment);
-                                }
-                                $('#reporter').text(data.reporter);
-                                $('#graderThatHaveBeenReported').text(data.graderThatHaveBeenReported);
-                                if (data.type === "PEER_GRADING") {
-                                    $('#user-icon').show();
-                                    $('#laptop-icon').hide();
-                                } else {
-                                    $('#user-icon').hide();
-                                    $('#laptop-icon').show();
-                                }
-
-                                $('#numberOfReport').text(data.numberOfReport);
-                            })
-                            .fail(function () {
-                                $('#error-detail-report-candidate').slideDown();
-                                $detailReportCandidate.slideUp();
-                                $actionButtons.slideUp();
-                            })
-                            .always(function () {
-                                $detailReportCandidate.removeClass("loading");
-                            });
                     }
                 }
 
@@ -324,7 +328,11 @@
             </div>
         </div>
 
-        <div id="info-report-manager-container">
+        <div id="info-report-manager-container" class="ui segment vertical">
+
+            <!--/* Title */-->
+            <h1><span th:text="#{reportManager.detail.title}"></span></h1>
+
             <!--/* Error message */-->
             <div class="ui message error" id="error-context-report-candidate" style="display:none;">
                 <div class="header" th:text="#{reportManager.error.context.title}"></div>
@@ -334,7 +342,7 @@
             <div class="ui segment styled fluid accordion" id="context-report-candidate" style="display: none;">
                 <!--/* Title of the accordion */-->
                 <div class="title">
-                    <h1><i class="dropdown icon"></i><span th:text="#{reportManager.context.title}"></span></h1>
+                    <h2><i class="dropdown icon"></i><span th:text="#{reportManager.context.title}"></span></h2>
                 </div>
                 <!--/* Content of the accordion */-->
                 <div class="content" id="content">
@@ -347,17 +355,11 @@
                 <p th:text="#{reportManager.error.detail.description}"></p>
             </div>
             <!--/* Detail of the selected item */-->
-            <div class="ui segment styled fluid accordion"
-                 id="detail-report-candidate"
+            <div id="detail-report-candidate"
                  style="display: none;">
 
-                <!--/* Title of the accordion */-->
-                <div class="title active">
-                    <h1><i class="dropdown icon"></i><span th:text="#{reportManager.detail.title}"></span></h1>
-                </div>
-
-                <!--/* Content of the accordion */-->
-                <div class="active content" style="display: flex;flex-direction: column;gap: 10px;">
+                <!--/* Content */-->
+                <div style="display: flex;flex-direction: column;gap: 10px;">
 
                     <!--/* Content reported */-->
                     <div class="ui segment vertical">
@@ -423,7 +425,7 @@
 
 
         <!--/* Action buttons group */-->
-        <div id="action-buttons" style="display: none; margin: 10px 0;">
+        <div id="action-buttons" style="display: none; margin: 30px 0;">
             <button class="ui button primary"
                     id="hide-action"
                     th:text="#{reportManager.button.hide}"
