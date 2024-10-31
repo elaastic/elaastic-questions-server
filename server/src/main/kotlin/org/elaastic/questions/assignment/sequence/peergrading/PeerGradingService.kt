@@ -226,7 +226,7 @@ class PeerGradingService(
      * @param peerGrading the peer grading to remove.
      */
     fun markAsRemoved(teacher: User, peerGrading: PeerGrading) {
-        require(teacher == peerGrading.response.interaction.sequence.owner) {
+        requireAccess(teacher == peerGrading.response.interaction.sequence.owner) {
             "Only the teacher who own the sequence can remove a peer grading"
         }
         reportCandidateService.markAsRemoved(peerGrading, peerGradingRepository)
