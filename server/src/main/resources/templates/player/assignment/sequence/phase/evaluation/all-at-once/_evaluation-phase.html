@@ -18,6 +18,16 @@
 <div th:fragment="evaluationPhase(model)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+  <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
+  <style>
+      iframe {
+          border: none;
+          box-shadow: none;
+          overflow: hidden;
+      }
+  </style>
+
   <div class="ui segment">
     <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
       Comparing viewpoints
@@ -35,34 +45,40 @@
           th:action="@{/player/sequence/{sequenceId}/phase/evaluation/all-at-once/submit-evaluation(sequenceId=${model.sequenceId})}"
           class="ui form"
           method="post">
-      <input type="hidden" name="id" th:value="${model.interactionId}"/>
+      <input type="hidden" name="id" th:value="${model.interactionId}" />
       <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
         <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.intro}">
           Here are presented one or several alternative responses. Please indicate how much you agree with these
           answers.
         </div>
 
-        <div id="phase2-evaluation-app">
-          <div th:each="currentResponse : ${model.responsesToGrade}" class="ui attached large segment">
 
-            <div th:if="${model.choices}">
-              <h5 class="ui header" style="display: inline; margin-bottom: 0;" th:text="#{player.sequence.interaction.choice.label}+' :'">
-                Choice</h5>
-              <a th:each="choice : ${currentResponse.choiceList}" class="ui blue circular label"
-                 th:text="${choice}"></a>
-            </div>
+        <div th:each="currentResponse : ${model.responsesToGrade}" class="ui attached large segment">
 
-            <h5 class="ui header" style="margin-top: 0; margin-bottom: 0;" th:if="${model.choices}" th:text="#{common.explanation}"></h5>
-            <p th:utext="${currentResponse.explanation}"></p>
-
-            <likert-scale-input th:attr="current-response-id=${currentResponse.id}"
-                                value="-1"></likert-scale-input>
-
+          <div th:if="${model.choices}">
+            <h5 class="ui header" style="display: inline; margin-bottom: 0;"
+                th:text="#{player.sequence.interaction.choice.label}+' :'">
+              Choice</h5>
+            <a th:each="choice : ${currentResponse.choiceList}" class="ui blue circular label"
+               th:text="${choice}"></a>
           </div>
+
+          <h5 class="ui header" style="margin-top: 0; margin-bottom: 0;" th:if="${model.choices}"
+              th:text="#{common.explanation}"></h5>
+          <p th:utext="${currentResponse.explanation}"></p>
+
+
+          <iframe th:src="@{/player/likert-scale}" width="100%"></iframe>
         </div>
 
         <div class="ui hidden divider"></div>
 
+        <script>
+          iframeResize({
+            license: 'GPLv3',
+            waitForLoad: true
+          })
+        </script>
       </th:block>
 
 
@@ -87,7 +103,7 @@
       <input type="submit"
              class="ui primary button"
              onclick="onSubmitResponse()"
-             th:value="#{player.sequence.interaction.submitResponse}"/>
+             th:value="#{player.sequence.interaction.submitResponse}" />
     </form>
 
     <div th:if="${model.userHasCompletedPhase2}"
@@ -102,8 +118,5 @@
 
 
   </div>
-
-
-  <div th:replace="player/assignment/sequence/phase/evaluation/method/likert/_likert_scale_input"></div>
 
 </div>

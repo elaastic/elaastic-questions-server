@@ -159,6 +159,13 @@ class WebSecurityConfig(
             csrf { }
         }
 
+        http.headers {
+            it.frameOptions { frameOptions ->
+                frameOptions.sameOrigin()
+
+            }
+        }
+
         return http.build()
     }
 
