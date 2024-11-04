@@ -39,7 +39,8 @@ object AssignmentOverviewModelFactory {
         assignment: Assignment,
         nbRegisteredUser: Int,
         sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
-        selectedSequenceId: Long? = null
+        selectedSequenceId: Long? = null,
+        nbReportBySequence: Map<Sequence, Pair<Int, Int>> = emptyMap(),
     ): AssignmentOverviewModel = AssignmentOverviewModel(
         teacher = teacher,
         nbRegisteredUser = nbRegisteredUser,
@@ -66,7 +67,9 @@ object AssignmentOverviewModelFactory {
                     it,
                     sequenceToUserActiveInteraction[it]
                 ),
-                revisionTag = resolveRevisionTag(it, assignment.revisionMode)
+                revisionTag = resolveRevisionTag(it, assignment.revisionMode),
+                nbReportTotal = nbReportBySequence[it]?.first ?: 0,
+                nbReportToModerate = nbReportBySequence[it]?.second ?: 0
             )
         },
         selectedSequenceId = selectedSequenceId,

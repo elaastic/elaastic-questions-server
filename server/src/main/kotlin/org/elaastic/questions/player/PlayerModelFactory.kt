@@ -34,6 +34,10 @@ import org.elaastic.questions.player.components.steps.StepsModelFactory
 
 object PlayerModelFactory {
 
+    /**
+     * @param nbReportBySequence Map of sequence to (a pair of (total numbers of reports) and (number of reports to
+     *    moderate))
+     */
     fun buildForTeacher(
         user: User,
         sequence: Sequence,
@@ -43,7 +47,7 @@ object PlayerModelFactory {
         messageBuilder: MessageBuilder,
         sequenceStatistics: SequenceStatistics,
         teacherResultDashboardService: TeacherResultDashboardService,
-        nbReportedEvaluation: Int,
+        nbReportBySequence: Map<Sequence, Pair<Int, Int>>,
     ): TeacherPlayerModel {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResults = sequence.state != State.beforeStart
@@ -57,11 +61,17 @@ object PlayerModelFactory {
                 sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
                 teacher = true,
+                nbReportBySequence = nbReportBySequence,
             ),
             stepsModel = StepsModelFactory.buildForTeacher(sequence),
             sequenceStatistics = sequenceStatistics,
             commandModel = CommandModelFactory.build(user, sequence),
-            sequenceInfoModel = SequenceInfoResolver.resolve(true, sequence, messageBuilder, nbReportedEvaluation),
+            sequenceInfoModel = SequenceInfoResolver.resolve(
+                true,
+                sequence,
+                messageBuilder,
+                nbReportBySequence[sequence] ?: (0 to 0)
+            ),
             statementPanelModel = StatementPanelModel(
                 hideStatement = false,
                 panelClosed = sequence.state != State.beforeStart

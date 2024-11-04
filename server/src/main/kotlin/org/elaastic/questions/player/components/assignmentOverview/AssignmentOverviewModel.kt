@@ -18,8 +18,11 @@
 
 package org.elaastic.questions.player.components.assignmentOverview
 
+import org.elaastic.questions.assignment.sequence.Sequence
+
 /**
  * Model for the assignment overview page.
+ *
  * @param teacher true if the user is a teacher
  * @param nbRegisteredUser the number of registered users
  * @param assignmentTitle the title of the assignment
@@ -35,36 +38,44 @@ package org.elaastic.questions.player.components.assignmentOverview
  * @param isRevisionMode true if the assignment is in revision mode
  */
 data class AssignmentOverviewModel(
-        val teacher: Boolean,
-        val nbRegisteredUser: Int,
-        val assignmentTitle: String,
-        val courseTitle: String?,
-        val courseId: Long?,
-        val subjectTitle: String?,
-        val subjectId: Long?,
-        val audience: String?,
-        val assignmentId: Long,
-        val sequences: List<SequenceInfo>,
-        val selectedSequenceId: Long? = null,
-        val hideStatementContent: Boolean = false,
-        val isRevisionMode: Boolean = false,
-        val indexOfSelectedSequence: Int
+    val teacher: Boolean,
+    val nbRegisteredUser: Int,
+    val assignmentTitle: String,
+    val courseTitle: String?,
+    val courseId: Long?,
+    val subjectTitle: String?,
+    val subjectId: Long?,
+    val audience: String?,
+    val assignmentId: Long,
+    val sequences: List<SequenceInfo>,
+    val selectedSequenceId: Long? = null,
+    val hideStatementContent: Boolean = false,
+    val isRevisionMode: Boolean = false,
+    val indexOfSelectedSequence: Int,
 ) {
 
-        val isSingleSequence: Boolean = sequences.size == 1
 
+    val isSingleSequence: Boolean = sequences.size == 1
+
+    /**
+     * Information about a sequence.
+     * Use to display information about a sequence in the list of sequences in the assignment overview page.
+     * Use by the assignmentOverview component in `_assignment-overview.html`
+     */
     data class SequenceInfo(
-            val id: Long,
-            val title: String,
-            val content: String,
-            val icons: List<PhaseIcon>,
-            val hideStatementContent: Boolean,
-            val revisionTag: Boolean
+        val id: Long,
+        val title: String,
+        val content: String,
+        val icons: List<PhaseIcon>,
+        val hideStatementContent: Boolean,
+        val revisionTag: Boolean,
+        val nbReportTotal: Int = 0,
+        val nbReportToModerate: Int = 0,
     )
 
     data class PhaseIcon(
-            val icon: String,
-            val title: String,
+        val icon: String,
+        val title: String,
     )
 
 }

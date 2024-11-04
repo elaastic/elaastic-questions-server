@@ -198,6 +198,8 @@
                         th:text="#{assignment.overview.revisionTag}">
                         Revisions
                     </h4>
+                    <th:block th:replace="moderation/components/label-nb-report-item.html :: nbReportLabel(${sequenceInfo.id}, ${sequenceInfo.nbReportTotal}, ${sequenceInfo.nbReportToModerate})"></th:block>
+
                 </div>
                 <!--/* The sequence icons */-->
                 <div style="height: 80%; display:flex">

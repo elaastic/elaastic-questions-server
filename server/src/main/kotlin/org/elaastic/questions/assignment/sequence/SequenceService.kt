@@ -18,6 +18,8 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
@@ -34,6 +36,7 @@ import org.elaastic.questions.assignment.sequence.interaction.specification.Eval
 import org.elaastic.questions.assignment.sequence.interaction.specification.ReadSpecification
 import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.player.components.steps.SequenceStatistics
@@ -59,7 +62,9 @@ class SequenceService(
     @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
     @Autowired val learnerSequenceService: LearnerSequenceService,
     @Autowired val responseService: ResponseService,
-    @Autowired val peerGradingService: PeerGradingService
+    @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
+    @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
 ) {
 
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
@@ -362,4 +367,41 @@ class SequenceService(
 
     fun existsById(id: Long): Boolean =
         sequenceRepository.existsById(id)
+
+    /**
+     * @param sequence [Sequence] to get the information
+     * @param teacher [Boolean] to know if the user is a teacher
+     * @param isRemoved [Boolean] false if we want the reported evaluation to moderate and false otherwise
+     * @return [Int] for the reported evaluation
+     */
+    fun getReportedEvaluation(sequence: Sequence, teacher: Boolean, isRemoved: Boolean): Int {
+        if (!teacher || !sequence.responseSubmissionInteractionIsInitialized()) {
+            return 0
+        }
+
+        val nbDRAXOEvaluationReported: Int = if (sequence.evaluationPhaseConfig == EvaluationPhaseConfig.DRAXO) {
+            draxoPeerGradingService.countAllDraxoPeerGradingReported(sequence, isRemoved)
+        } else {
+            0
+        }
+
+        val nbChatGPTEvaluationReported: Int = if (sequence.chatGptEvaluationEnabled) {
+            chatGptEvaluationService.countAllReported(sequence, isRemoved)
+        } else {
+            0
+        }
+
+        return nbDRAXOEvaluationReported + nbChatGPTEvaluationReported
+    }
+
+    fun getNbReportBySequence(assignment: Assignment, isTeacher: Boolean): Map<Sequence, Pair<Int, Int>> {
+        return assignment.sequences.associateWith { sequence ->
+            val nbRemovedReport = getReportedEvaluation(sequence, isTeacher, true)
+            val nbNotRemovedReport = getReportedEvaluation(sequence, isTeacher, false)
+            Pair(
+                nbRemovedReport + nbNotRemovedReport,
+                nbNotRemovedReport
+            )
+        }
+    }
 }

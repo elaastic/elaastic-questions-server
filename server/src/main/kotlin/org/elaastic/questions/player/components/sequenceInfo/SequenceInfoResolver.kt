@@ -30,7 +30,7 @@ object SequenceInfoResolver {
         isTeacher: Boolean,
         sequence: Sequence,
         messageBuilder: MessageBuilder,
-        nbReportedEvaluation: Int = 0
+        nbReportedEvaluation: Pair<Int, Int> = 0 to 0,
     ): SequenceInfoModel = when (sequence.state) {
         State.beforeStart -> SequenceInfoModel(
             messageBuilder.message(
@@ -52,7 +52,7 @@ object SequenceInfoResolver {
                     ),
                     color = "blue",
                     refreshable = true,
-                    nbEvaluationReported = nbReportedEvaluation
+                    nbEvaluationReported = nbReportedEvaluation.second //TODO update
                 )
             } else {
                 when (sequence.activeInteraction?.interactionType) {
@@ -91,7 +91,7 @@ object SequenceInfoResolver {
                     }
 
                     // Read interaction
-                    else -> getSequenceInfoModelWhenReadInteraction(sequence, messageBuilder, nbReportedEvaluation)
+                    else -> getSequenceInfoModelWhenReadInteraction(sequence, messageBuilder, nbReportedEvaluation.second) //TODO update
                 }
             }
     }
