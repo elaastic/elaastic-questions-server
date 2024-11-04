@@ -82,7 +82,12 @@ class ChatGptEvaluation(
     @field:ManyToOne
     var prompt: ChatGptPrompt? = null,
 
-    ) : AbstractJpaPersistable<Long>(), ReportCandidate {
+    /**
+     * Teacher's Utility Grade
+     */
+    var teacherUtilityGrade: UtilityGrade? = null
+
+) : AbstractJpaPersistable<Long>(), ReportCandidate {
 
 
     @CreatedDate
