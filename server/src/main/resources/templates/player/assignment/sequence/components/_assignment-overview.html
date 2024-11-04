@@ -189,8 +189,9 @@
 
             <!--/* The sequence icons */-->
             <div class="five wide column" style="text-align: center;">
-                <!--/* The revision tag */-->
-                <div style="display: flex; flex-direction: column; align-items: end; gap: 10px;">
+                <!--/* Tag */-->
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px; justify-content: end">
+                    <!--/* The Revision tag */-->
                     <h4 class="ui header circular small basic blue label"
                         style="height: 0.6em !important; padding-top: 2px; width: fit-content;"
                         th:if="${sequenceInfo.revisionTag}"
@@ -198,9 +199,12 @@
                         th:text="#{assignment.overview.revisionTag}">
                         Revisions
                     </h4>
-                    <th:block th:replace="moderation/components/label-nb-report-item.html :: nbReportLabel(${sequenceInfo.id}, ${sequenceInfo.nbReportTotal}, ${sequenceInfo.nbReportToModerate})"></th:block>
 
+                    <!--/* The nb report tag */-->
+                    <th:block th:replace="moderation/components/label-nb-report-item.html ::
+                    nbReportLabel(${sequenceInfo.id}, ${sequenceInfo.nbReportTotal}, ${sequenceInfo.nbReportToModerate})"></th:block>
                 </div>
+
                 <!--/* The sequence icons */-->
                 <div style="height: 80%; display:flex">
                     <i th:each="icon : ${sequenceInfo.icons}"
