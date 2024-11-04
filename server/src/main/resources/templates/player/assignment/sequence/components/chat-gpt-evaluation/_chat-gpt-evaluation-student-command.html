@@ -25,14 +25,15 @@
           method="post">
         <input type="hidden" name="evaluationId" th:value="${chatGptEvaluationModel.evaluationId}">
         <div class="ui grid stackable" style="align-items: end;">
+
             <div class="field twelve wide column utilitySelectionApp"
                  th:id="'utilitySelectionApp-' + ${chatGptEvaluationModel.evaluationId}"
                  style="flex-grow: 4;">
+                <!--/* Utility grade label */-->
                 <label th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label}"></label>
-                <input type="hidden"
-                       name="utilityGrade"
-                       v-model="selectedUtilityGrade"/>
+                <input type="hidden" name="utilityGrade" v-model="selectedUtilityGrade"/>
 
+                <!--/* Utility grade selection */-->
                 <div class="ui menu stackable fluid pagination">
                     <a th:each="utilityGrade : ${chatGptEvaluationModel.utilityGradeValues}" class="item"
                        th:attr="'v-on:click'=|setSelectedUtilityGrade('${utilityGrade.name()}')|,'v-bind:class'=|{ active: selectedUtilityGrade === '${utilityGrade.name()}' }|"
@@ -40,17 +41,18 @@
                     </a>
                 </div>
             </div>
+            <!-- Report button -->
             <div class="field four wide column" id="reportSelectionApp" style="margin-bottom: 1em; flex-grow: 1;">
                 <div class="ui menu pagination" style="width: 100%;">
-                    <a
-                            class="item"
-                            style="color: #b03060; width: 100%;"
-                            th:onclick="|$('#reportModal_${chatGptEvaluationModel.sequenceId}').modal('show');|">
-                        <i class="exclamation triangle icon"></i><span
-                            th:text="#{player.sequence.chatGptEvaluation.reportButton}"></span></a>
+                    <a class="item" style="color: #b03060; width: 100%;"
+                       th:onclick="|$('#reportModal_${chatGptEvaluationModel.sequenceId}').modal('show');|">
+                        <i class="exclamation triangle icon"></i>
+                        <span th:text="#{player.sequence.chatGptEvaluation.reportButton}"></span>
+                    </a>
                 </div>
             </div>
         </div>
+        <!-- Submit Utility grade button -->
         <div id="submit-button-utility-grade" style="display: none"
              th:attr="evaluationId=${chatGptEvaluationModel.evaluationId}">
             <input type="submit" value="Soumettre" class="ui primary button">

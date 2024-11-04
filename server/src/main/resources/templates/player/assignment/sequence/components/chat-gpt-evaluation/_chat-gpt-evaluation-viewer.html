@@ -24,14 +24,20 @@
 
         <!--/* Header */-->
         <div class="review-header review-border" style="padding: 0 10px 0 0">
+
+            <!--/* Reviewer icon */-->
             <div class="reviewer-icon robot">
                 <i class="laptop icon"></i>
             </div>
 
+            <!--/* Information and actions for the evalaution */-->
             <div class="info-header">
+                <!--/* Reviewer */-->
                 <div class="reviewer">
                     <span th:text="#{player.sequence.chatGptEvaluation.title}"></span>
                 </div>
+
+                <!--/* Score */-->
                 <div class="score"
                      th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.grade != null
                      && !chatGptEvaluationModel.hiddenByTeacher && !chatGptEvaluationModel.isReported()}">
@@ -42,10 +48,14 @@
                          data-position="top right">-/5
                     </div>
                 </div>
+
+                <!--/* Actions buttons */-->
                 <div class="actions"
                      th:if="${chatGptEvaluationModel.status == 'DONE' && chatGptEvaluationModel.canHideGrading}">
-                    <!--/* Hide evaluation action */-->
+                    <!--/* Visibility evaluation action */-->
                     <div class="hide-peer-grading" th:if="${chatGptEvaluationModel.canHideGrading}">
+
+                        <!--/* Button to hide the evaluation */-->
                         <a class="ui icon button"
                            th:if="${!chatGptEvaluationModel.hiddenByTeacher}"
                            th:attr="data-tooltip=#{evaluation.action.hideEvaluation}"
@@ -54,6 +64,7 @@
                            th:onclick="|updateVisibilityOfGrading(${chatGptEvaluationModel.gradingID})|"
                         ><i class="eye icon"></i></a>
 
+                        <!--/* Button to show the evaluation */-->
                         <a class="ui icon button hidden"
                            th:if="${chatGptEvaluationModel.hiddenByTeacher}"
                            th:attr="data-tooltip=#{evaluation.action.showEvaluation}"
@@ -70,6 +81,8 @@
         <!--/* Feedback message when the student reports the ChatGPTEvaluation */-->
         <th:block
                 th:with="hidden=${chatGptEvaluationModel.hiddenByTeacher == true}, reported=${chatGptEvaluationModel.isReported() == true}">
+
+            <!--/* Message when the evaluation is hidden or reported */-->
             <div class="review-border message-hidden" th:if="${hidden || reported}">
                 <!--/* Message */-->
                 <th:block>
@@ -78,6 +91,7 @@
                         been reported
                     </div>
                 </th:block>
+
                 <!--/* Button to toggle the content */-->
                 <div id="toggleContentDisplay" class="ui button black basic"
                      th:if="${chatGptEvaluationModel.canHideGrading}"
@@ -107,7 +121,7 @@
             <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation.html :: chatGptEvaluation(${chatGptEvaluationModel})"></div>
         </div>
 
-        <!--/* If the evaluation is generated and it's not the teacher viewed the evaluation Then dispay the command */-->
+        <!--/* If the evaluation is generated, and it's not the teacher viewed the evaluation Then dispay the command */-->
         <div class="review-border"
              th:if="${chatGptEvaluationModel.status == 'DONE' && !chatGptEvaluationModel.viewedByTeacher
              && !chatGptEvaluationModel.hiddenByTeacher && !chatGptEvaluationModel.isReported()}">
