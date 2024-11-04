@@ -145,9 +145,11 @@ class Sequence(
     }
 
     @Transient
-    fun getResponseSubmissionInteraction() =
-        interactions[InteractionType.ResponseSubmission]
+    fun getResponseSubmissionInteraction(): Interaction {
+        check(interactions.isNotEmpty()) { "No interaction defined for this sequence" }
+        return interactions[InteractionType.ResponseSubmission]
             ?: throw IllegalStateException("The response submission interaction is not initialized")
+    }
 
     @Transient
     fun responseSubmissionInteractionIsInitialized() =
@@ -182,18 +184,22 @@ class Sequence(
      * @see Interaction
      */
     @Transient
-    fun getEvaluationInteraction() =
-        interactions[InteractionType.Evaluation]
+    fun getEvaluationInteraction(): Interaction {
+        check(interactions.isNotEmpty()) { "No interaction defined for this sequence" }
+        return interactions[InteractionType.Evaluation]
             ?: throw IllegalStateException("The evaluation interaction is not initialized")
+    }
 
     /**
      * @return the read interaction of the sequence.
      * @see Interaction
      */
     @Transient
-    fun getReadInteraction() =
-        interactions[InteractionType.Read]
+    fun getReadInteraction(): Interaction {
+        check(interactions.isNotEmpty()) { "No interaction defined for this sequence" }
+        return interactions[InteractionType.Read]
             ?: throw IllegalStateException("The read interaction is not initialized")
+    }
 
 
     override fun compareTo(other: Sequence): Int {
