@@ -16,13 +16,13 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<!--/*@thymesVar id="assignmentOverviewModel" type="org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel"*/-->
-<!--/*@thymesVar id="linkClikable" type="java.lang.Boolean"
-comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
-<div
-        th:fragment="assignmentOverview(assignmentOverviewModel, context, linkClickable)"
-        th:remove="tag"
-        xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<div th:fragment="assignmentOverview(assignmentOverviewModel, context, linkClickable)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <!--/*@thymesVar id="assignmentOverviewModel" type="org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel"*/-->
+    <!--/*@thymesVar id="linkClikable" type="java.lang.Boolean"
+    comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
 
     <script th:if="${context == 'aside' && assignmentOverviewModel.selectedSequenceId != null}" th:inline="javascript">
         (function () {
@@ -153,18 +153,18 @@ comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
     </div>
 
     <!--/* The sequences */-->
-    <div th:each="sequence, i : ${assignmentOverviewModel.sequences}"
+    <div th:each="sequenceInfo, i : ${assignmentOverviewModel.sequences}"
          class="ui clearing attached segment"
-         th:classappend="|${sequence.id == assignmentOverviewModel.selectedSequenceId ? 'selected' : ''}|"
-         th:id="|${context}-${sequence.id}|"
+         th:classappend="|${sequenceInfo.id == assignmentOverviewModel.selectedSequenceId ? 'selected' : ''}|"
+         th:id="|${context}-${sequenceInfo.id}|"
          style="padding-bottom: 1em;"
          th:styleappend="${linkClickable ? 'cursor: pointer;' : ''}"
-         th:attr="onclick=${linkClickable} ? 'window.location.href=\'/player/assignment/' + ${assignmentOverviewModel.assignmentId} + '/play/sequence/' + ${sequence.id} + '\';' : ''">
+         th:attr="onclick=${linkClickable} ? 'window.location.href=\'/player/assignment/' + ${assignmentOverviewModel.assignmentId} + '/play/sequence/' + ${sequenceInfo.id} + '\';' : ''">
 
         <!--/* A sequence */-->
         <div class="ui grid">
             <!--/* The sequence title and content */-->
-            <div class="twelve wide column">
+            <div class="eleven wide column">
                 <div style="overflow: hidden; height: 100%; padding-top: 2px;">
                     <!--/* The sequence title */-->
                     <h4 class="ui header">
@@ -175,25 +175,25 @@ comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
                         </div>
 
                         <!--/* The sequence title */-->
-                        <span th:utext="${sequence.title}"></span>
+                        <span th:utext="${sequenceInfo.title}"></span>
                     </h4>
 
                     <!--/* The sequence content */-->
                     <div style="height: 4em; overflow: hidden;"
-                         th:unless="${sequence.hideStatementContent}"
-                         th:utext="${sequence.content}">
+                         th:unless="${sequenceInfo.hideStatementContent}"
+                         th:utext="${sequenceInfo.content}">
                     </div>
 
                 </div>
             </div>
 
             <!--/* The sequence icons */-->
-            <div class="four wide column" style="text-align: center;">
+            <div class="five wide column" style="text-align: center;">
                 <!--/* The revision tag */-->
-                <div>
+                <div style="display: flex; flex-direction: column; align-items: end; gap: 10px;">
                     <h4 class="ui header circular small basic blue label"
-                        style="height: 0.6em !important; padding-top: 2px;"
-                        th:if="${sequence.revisionTag}"
+                        style="height: 0.6em !important; padding-top: 2px; width: fit-content;"
+                        th:if="${sequenceInfo.revisionTag}"
                         th:title="#{assignment.overview.revisionAvailability}"
                         th:text="#{assignment.overview.revisionTag}">
                         Revisions
@@ -201,7 +201,7 @@ comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
                 </div>
                 <!--/* The sequence icons */-->
                 <div style="height: 80%; display:flex">
-                    <i th:each="icon : ${sequence.icons}"
+                    <i th:each="icon : ${sequenceInfo.icons}"
                        class="elaastic-phase icon"
                        style="margin: auto"
                        th:classappend="${icon.icon}"
