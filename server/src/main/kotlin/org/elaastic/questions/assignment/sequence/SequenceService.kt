@@ -19,7 +19,6 @@
 package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
-import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
@@ -371,8 +370,10 @@ class SequenceService(
     /**
      * @param sequence [Sequence] to get the information
      * @param teacher [Boolean] to know if the user is a teacher
-     * @param isRemoved [Boolean] false if we want the reported evaluation to moderate and false otherwise
+     * @param isRemoved [Boolean] false if we want the reported evaluation to
+     *    moderate and false otherwise
      * @return [Int] for the reported evaluation
+     * @throws IllegalStateException if the evaluation phase is not initialized
      */
     fun getReportedEvaluation(sequence: Sequence, teacher: Boolean, isRemoved: Boolean): Int {
         if (!teacher || !sequence.responseSubmissionInteractionIsInitialized()) {
@@ -394,10 +395,16 @@ class SequenceService(
         return nbDRAXOEvaluationReported + nbChatGPTEvaluationReported
     }
 
-    fun getNbReportBySequence(assignment: Assignment, isTeacher: Boolean): Map<Sequence, Pair<Int, Int>> {
-        return assignment.sequences.associateWith { sequence ->
-            val nbRemovedReport = getReportedEvaluation(sequence, isTeacher, true)
-            val nbNotRemovedReport = getReportedEvaluation(sequence, isTeacher, false)
+    fun getNbReportBySequence(sequences: List<Sequence>, isTeacher: Boolean): Map<Sequence, Pair<Int, Int>> {
+        return sequences.associateWith { sequence ->
+            // Load interactions if not already loaded
+            val sequenceInteractionsFetched = if (sequence.interactions.isEmpty()) {
+                loadInteractions(sequence)
+            } else {
+                sequence
+            }
+            val nbRemovedReport = getReportedEvaluation(sequenceInteractionsFetched, isTeacher, true)
+            val nbNotRemovedReport = getReportedEvaluation(sequenceInteractionsFetched, isTeacher, false)
             Pair(
                 nbRemovedReport + nbNotRemovedReport,
                 nbNotRemovedReport

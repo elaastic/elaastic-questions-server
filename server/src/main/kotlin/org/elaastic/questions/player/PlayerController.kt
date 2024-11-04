@@ -255,7 +255,6 @@ class PlayerController(
         openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
-
         val assignment: Assignment = selectedSequence.assignment!!
         val previousSequence: Sequence? = sequenceService.findPreviousSequence(selectedSequence)
         val nextSequence: Sequence? = sequenceService.findNextSequence(selectedSequence)
@@ -306,7 +305,7 @@ class PlayerController(
                 messageBuilder = messageBuilder,
                 sequenceStatistics = sequenceService.getStatistics(selectedSequence),
                 teacherResultDashboardService = teacherResultDashboardService,
-                nbReportBySequence = sequenceService.getNbReportBySequence(assignment, true),
+                nbReportBySequence = sequenceService.getNbReportBySequence(assignment.sequences, true),
             )
         )
 
