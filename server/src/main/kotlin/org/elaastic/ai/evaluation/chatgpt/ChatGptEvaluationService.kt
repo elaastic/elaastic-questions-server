@@ -123,8 +123,13 @@ class ChatGptEvaluationService(
      * @param chatGptEvaluation the chatGPT evaluation to update.
      * @param utilityGrade the utility grade.
      */
-    fun changeUtilityGrade(chatGptEvaluation: ChatGptEvaluation, utilityGrade: UtilityGrade) {
-        reportCandidateService.updateGrade(chatGptEvaluation, utilityGrade, chatGptEvaluationRepository)
+    fun changeUtilityGrade(chatGptEvaluation: ChatGptEvaluation, utilityGrade: UtilityGrade, isTeacher: Boolean = false) {
+        if (isTeacher) {
+            chatGptEvaluation.teacherUtilityGrade = utilityGrade
+            chatGptEvaluationRepository.save(chatGptEvaluation)
+        } else {
+            reportCandidateService.updateGrade(chatGptEvaluation, utilityGrade, chatGptEvaluationRepository)
+        }
     }
 
     /**
