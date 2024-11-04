@@ -17,20 +17,23 @@
   -->
 
 <div xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     th:fragment="chatGptEvaluationCommand(chatGptEvaluationModel)">
+     th:fragment="chatGptEvaluationCommand(chatGptEvaluationModel)"
+     th:with="utilityGradeSelected=${chatGptEvaluationModel.viewedByTeacher ? chatGptEvaluationModel.teacherUtilityGrade : chatGptEvaluationModel.utilityGrade}">
 
     <form class="ui form"
           style="align-items: end;"
           th:action="@{/chatGptEvaluation/sequence/{sequenceId}/submit-utility-grade(sequenceId=${chatGptEvaluationModel.sequenceId})}"
           method="post">
+        <input type="hidden" name="isTeacher" th:value="${chatGptEvaluationModel.viewedByTeacher}"><!--/* TODO use a correct data */-->
         <input type="hidden" name="evaluationId" th:value="${chatGptEvaluationModel.evaluationId}">
-        <div class="ui grid stackable" style="align-items: end;">
+        <div class="ui grid stackable" style="align-items: end; margin-bottom: 1em;">
 
             <div class="field twelve wide column utilitySelectionApp"
                  th:id="'utilitySelectionApp-' + ${chatGptEvaluationModel.evaluationId}"
                  style="flex-grow: 4;">
                 <!--/* Utility grade label */-->
-                <label th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label}"></label>
+                <label th:if="${chatGptEvaluationModel.viewedByTeacher}" th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label.teacher}"></label>
+                <label th:unless="${chatGptEvaluationModel.viewedByTeacher}" th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label}"></label>
                 <input type="hidden" name="utilityGrade" v-model="selectedUtilityGrade"/>
 
                 <!--/* Utility grade selection */-->
@@ -41,8 +44,8 @@
                     </a>
                 </div>
             </div>
-            <!-- Report button -->
-            <div class="field four wide column" id="reportSelectionApp" style="margin-bottom: 1em; flex-grow: 1;">
+            <!--/* Report button only visible for the student */-->
+            <div th:unless="${chatGptEvaluationModel.viewedByTeacher}" class="field four wide column" id="reportSelectionApp" style="flex-grow: 1;">
                 <div class="ui menu pagination" style="width: 100%;">
                     <a class="item" style="color: #b03060; width: 100%;"
                        th:onclick="|$('#reportModal_${chatGptEvaluationModel.sequenceId}').modal('show');|">
@@ -66,7 +69,7 @@
         new Vue({
             el: '#utilitySelectionApp-' + [[${chatGptEvaluationModel.evaluationId}]],
             data: {
-                selectedUtilityGrade: [[${chatGptEvaluationModel.utilityGrade?.name()}]]
+                selectedUtilityGrade: [[${utilityGradeSelected?.name()}]]
             },
             methods: {
                 setSelectedUtilityGrade: function (clickedUtilityGrade) {

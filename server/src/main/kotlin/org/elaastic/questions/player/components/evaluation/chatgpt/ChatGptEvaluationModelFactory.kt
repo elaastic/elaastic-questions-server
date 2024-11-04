@@ -2,6 +2,7 @@ package org.elaastic.questions.player.components.evaluation.chatgpt
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
+import org.elaastic.questions.assignment.sequence.UtilityGrade
 
 object ChatGptEvaluationModelFactory {
 
@@ -22,5 +23,6 @@ object ChatGptEvaluationModelFactory {
         canHideGrading = canHideGrading,
         responseId = responseId,
         reportReasons = evaluation?.reportReasons,
+        teacherUtilityGrade = evaluation?.teacherUtilityGrade,
     )
 }
