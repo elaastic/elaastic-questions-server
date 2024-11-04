@@ -106,7 +106,7 @@ class ReportManagerController(
 
             ReportedCandidateType.CHAT_GPT_EVALUATION -> {
                 val chatGptEvaluation = chatGptEvaluationRepository.findById(idReportedCandidate).orElseThrow()
-                val nbReport = chatGptEvaluationService.countAllReportedNotHidden(
+                val nbReport = chatGptEvaluationService.countAllReportedNotRemoved(
                     chatGptEvaluation.response.interaction,
                 )
 

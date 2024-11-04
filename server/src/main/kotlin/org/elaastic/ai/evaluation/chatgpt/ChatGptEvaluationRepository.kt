@@ -30,9 +30,9 @@ interface ChatGptEvaluationRepository : JpaRepository<ChatGptEvaluation, Long>,
                 "FROM ChatGptEvaluation gpt " +
                 "JOIN Response r on gpt.response = r " +
                 "JOIN Interaction i on r.interaction = i " +
-                "WHERE gpt.removedByTeacher = false " +
+                "WHERE gpt.removedByTeacher = :removed " +
                 "AND gpt.reportReasons IS NOT NULL " +
                 "AND i = :interaction"
     )
-    fun countAllReportedNotRemoved(interaction: Interaction): Int
+    fun countAllReported(interaction: Interaction, removed: Boolean = false): Int
 }

@@ -107,9 +107,10 @@ class DraxoPeerGradingService(
      * @return the number of DRAXO peer grading that have been reported and are
      *    not hidden by the teacher
      */
-    fun countAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): Int =
-        draxoPeerGradingRepository.countAllReportedNotRemoved(
-            sequence.getResponseSubmissionInteraction()
+    fun countAllDraxoPeerGradingReported(sequence: Sequence, removed: Boolean): Int =
+        draxoPeerGradingRepository.countAllReported(
+            sequence.getResponseSubmissionInteraction(),
+            removed
         )
 
     fun countAllReportedNotHiddenForGrader(interaction: Interaction, grader: User): Int =

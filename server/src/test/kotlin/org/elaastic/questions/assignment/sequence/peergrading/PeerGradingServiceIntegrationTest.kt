@@ -629,7 +629,7 @@ class PeerGradingServiceIntegrationTest(
 
             assertEquals(
                 0,
-                draxoPeerGradingService.countAllDraxoPeerGradingReportedNotHidden(sequence),
+                draxoPeerGradingService.countAllDraxoPeerGradingReported(sequence, false),
                 "No peerGrading reported"
             )
             assertEquals(
@@ -667,7 +667,7 @@ class PeerGradingServiceIntegrationTest(
             assertEquals(learners[1], peerGradingReportedNotHidden.first().grader)
             assertEquals(learners[0], peerGradingReportedNotHidden.first().response.learner)
 
-            assertEquals(peerGradingReportedNotHidden.size, draxoPeerGradingService.countAllDraxoPeerGradingReportedNotHidden(sequence))
+            assertEquals(peerGradingReportedNotHidden.size, draxoPeerGradingService.countAllDraxoPeerGradingReported(sequence, false))
         }
     }
 
@@ -687,7 +687,7 @@ class PeerGradingServiceIntegrationTest(
 
             assertEquals(
                 0,
-                draxoPeerGradingService.countAllDraxoPeerGradingReportedNotHidden(sequence),
+                draxoPeerGradingService.countAllDraxoPeerGradingReported(sequence, false),
                 "No peerGrading reported"
             )
             assertEquals(

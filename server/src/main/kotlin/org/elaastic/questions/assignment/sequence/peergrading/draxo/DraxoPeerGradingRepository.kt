@@ -48,11 +48,11 @@ interface DraxoPeerGradingRepository : JpaRepository<PeerGrading, Long>, PeerGra
                 "FROM DraxoPeerGrading draxo " +
                 "JOIN Response r on draxo.response = r " +
                 "JOIN Interaction i on r.interaction = i " +
-                "WHERE draxo.removedByTeacher = false " +
+                "WHERE draxo.removedByTeacher = :removed " +
                 "AND draxo.reportReasons IS NOT NULL " +
                 "AND i = :interaction"
     )
-    fun countAllReportedNotRemoved(interaction: Interaction): Int
+    fun countAllReported(interaction: Interaction, removed: Boolean = false): Int
 
     override fun findAllByResponseIn(response: List<Response>): List<DraxoPeerGrading>
 

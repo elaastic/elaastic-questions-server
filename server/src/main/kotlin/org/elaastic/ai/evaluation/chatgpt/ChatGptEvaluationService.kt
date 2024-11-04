@@ -268,14 +268,10 @@ class ChatGptEvaluationService(
     }
 
     /**
-     * Count all the evaluations made on a sequence that have been reported and
-     * not hidden.
-     *
-     * @param sequence the sequence.
-     * @return the number of peer grading.
+     * @see countAllReportedNotRemoved(Interaction)
      */
-    fun countAllReportedNotHidden(sequence: Sequence): Int {
-        return chatGptEvaluationRepository.countAllReportedNotRemoved(
+    fun countAllReportedNotRemoved(sequence: Sequence): Int {
+        return countAllReportedNotRemoved(
             sequence.getResponseSubmissionInteraction(),
         )
     }
@@ -287,9 +283,18 @@ class ChatGptEvaluationService(
      * @param interaction the interaction.
      * @return the number of peer grading.
      */
-    fun countAllReportedNotHidden(interaction: Interaction): Int {
-        return chatGptEvaluationRepository.countAllReportedNotRemoved(
-            interaction
+    fun countAllReportedNotRemoved(interaction: Interaction): Int {
+        return countAllReported(interaction, removed = false)
+    }
+
+    fun countAllReported(sequence: Sequence, removed: Boolean): Int {
+        return countAllReported(sequence.getResponseSubmissionInteraction(), removed)
+    }
+
+    fun countAllReported(interction: Interaction, removed: Boolean): Int {
+        return chatGptEvaluationRepository.countAllReported(
+            interction,
+            removed
         )
     }
 

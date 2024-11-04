@@ -421,7 +421,7 @@ internal class ChatGptEvaluationServiceIntegrationTest(
         }.tThen("The evaluation exist but it's not reported") {
             assertEquals(
                 0,
-                chatGptEvaluationService.countAllReportedNotHidden(response.interaction.sequence)
+                chatGptEvaluationService.countAllReportedNotRemoved(response.interaction.sequence)
             )
             assertEquals(
                 listOf(it),
@@ -434,7 +434,7 @@ internal class ChatGptEvaluationServiceIntegrationTest(
         }.tThen("The evaluation is reported") {
             assertEquals(
                 listOf(it).size,
-                chatGptEvaluationService.countAllReportedNotHidden(response.interaction.sequence)
+                chatGptEvaluationService.countAllReportedNotRemoved(response.interaction.sequence)
             )
             it
         }
@@ -490,7 +490,7 @@ internal class ChatGptEvaluationServiceIntegrationTest(
         }.tThen("The evaluation is not reported") {
             assertEquals(
                 0,
-                chatGptEvaluationService.countAllReportedNotHidden(response.interaction.sequence)
+                chatGptEvaluationService.countAllReportedNotRemoved(response.interaction.sequence)
             )
         }
     }
