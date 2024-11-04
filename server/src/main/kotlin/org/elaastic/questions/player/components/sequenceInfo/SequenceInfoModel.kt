@@ -18,6 +18,10 @@
 
 package org.elaastic.questions.player.components.sequenceInfo
 
+/**
+ * Model use to display information about the selected sequence in player.
+ * Use by the sequenceInfo component in `_sequenceInfo.html`
+ */
 data class SequenceInfoModel(
         val message: String,
         val color: String? = null,
