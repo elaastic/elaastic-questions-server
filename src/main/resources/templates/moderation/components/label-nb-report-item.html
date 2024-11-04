@@ -19,14 +19,27 @@
 <div th:fragment="nbReportLabel(sequenceId, nbTotal, nbToModerate)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
      th:if="${nbTotal > 0}"
-     class="ui label red basic large">
+     th:id="'nbReportLabel-' + ${sequenceId}"
+     th:classappend="${nbToModerate >= 1} ? 'red' : 'grey'"
+     class="ui label basic large"
+     th:data-tooltip="${nbToModerate >= 1} ? #{assignment.sequence.reportToModerate(${nbToModerate})} : #{assignment.sequence.haveBeenModerated(${nbTotal})}"
+     data-position="top right">
+
     <!--/*@thymesVar id="sequenceId" type="java.lang.Long"*/-->
     <!--/*@thymesVar id="nbTotal" type="java.lang.Integer"*/-->
     <!--/*@thymesVar id="nbToModerate" type="java.lang.Integer"*/-->
 
-    <i class="red exclamation triangle icon"></i>
-    <th:block th:text="${nbTotal} + '&nbsp;'"></th:block>
-    (<th:block th:utext="${nbToModerate} + '&nbsp;'"></th:block>
-    <th:block th:if="${nbToModerate <= 1}" th:text="#{assignment.sequence.remaining.one} + ')'"></th:block>
-    <th:block th:if="${1 < nbToModerate}" th:text="#{assignment.sequence.remaining.multiple} + ')'"></th:block>
+    <i class="exclamation triangle icon" th:classappend="${nbToModerate >= 1} ? 'red' : 'grey'" style="margin: 0;"></i>
+
+    <script th:inline="javascript">
+        const sequenceId = [[${sequenceId}]];
+
+        $(document).ready(function () {
+            $('#nbReportLabel-' + sequenceId).click(function (e) {
+                e.stopPropagation(); // Prevent the parent from being clicked
+
+                window.open('/report-manager/' + sequenceId, '_blank');
+            });
+        });
+    </script>
 </div>
