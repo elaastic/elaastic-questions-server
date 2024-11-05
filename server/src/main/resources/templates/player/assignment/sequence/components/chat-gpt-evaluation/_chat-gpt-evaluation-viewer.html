@@ -125,7 +125,7 @@
         <div class="review-border"
              th:if="${chatGptEvaluationModel.status == 'DONE' && !chatGptEvaluationModel.hiddenByTeacher && !chatGptEvaluationModel.isReported()}">
             <th:block>
-                <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-student-command.html :: chatGptEvaluationCommand(${chatGptEvaluationModel})"></div>
+                <div th:replace="player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-command.html :: chatGptEvaluationCommand(${chatGptEvaluationModel})"></div>
             </th:block>
         </div>
 
