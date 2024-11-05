@@ -62,7 +62,7 @@ class StatUtilityGradeController(
     fun getAll(
         authentication: Authentication,
         @RequestParam("type") type: EvaluationType? = null,
-        @RequestParam("non-null") nonNull: Boolean = false,
+        @RequestParam("noNull") noNull: Boolean = false,
     ): List<UtilityGradeStat> {
         val user = authentication.principal as User
 
@@ -75,7 +75,7 @@ class StatUtilityGradeController(
             null -> allChatGptEvaluation + allDraxoEvaluation
         }
 
-        requestedEvaluation = if (nonNull) {
+        requestedEvaluation = if (noNull) {
             requestedEvaluation.filter { it.utilityGrade != null || (it is ChatGptEvaluation && it.teacherUtilityGrade != null) }
         } else {
             requestedEvaluation
