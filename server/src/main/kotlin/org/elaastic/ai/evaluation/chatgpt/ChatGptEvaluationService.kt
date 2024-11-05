@@ -15,11 +15,14 @@ import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.directory.User
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import java.util.*
 import java.util.logging.Logger
 import javax.persistence.EntityManager
 
@@ -32,9 +35,11 @@ class ChatGptEvaluationService(
     val responseService: ResponseService,
     val entityManager: EntityManager,
     val chatGptCompletionService: ChatGptCompletionService,
+    val messageSource: MessageSource,
 ) {
 
     val logger = Logger.getLogger(ChatGptEvaluationService::class.java.name)
+    val locale: Locale = LocaleContextHolder.getLocale()
 
     /**
      * Create a ChatGPT evaluation for a response. The evaluation is created
@@ -196,7 +201,7 @@ class ChatGptEvaluationService(
                 chatGptEvaluation,
                 user
             )
-        ) { "You don't have the permission to hide this evaluation" } // TODO make i18n
+        ) { messageSource.getMessage("chatGPT.error.markAsHidden.accessDenied", null, locale) }
         reportCandidateService.markAsHidden(chatGptEvaluation, chatGptEvaluationRepository)
     }
 
@@ -218,7 +223,7 @@ class ChatGptEvaluationService(
                 chatGPTEvaluation,
                 user
             )
-        ) { "You don't have the permission to unhide this evaluation" } // TODO make i18n
+        ) { messageSource.getMessage("chatGPT.error.markAsShown.accessDenied", null, locale) }
         reportCandidateService.markAsShown(chatGPTEvaluation, chatGptEvaluationRepository)
     }
 
