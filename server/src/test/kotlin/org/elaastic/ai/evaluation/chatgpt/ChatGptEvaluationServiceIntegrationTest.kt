@@ -441,6 +441,54 @@ internal class ChatGptEvaluationServiceIntegrationTest(
     }
 
     @Test
+    fun `test of changeUtilityGrade`() {
+        // Given
+        val sequence = integrationTestingService.getAnySequence()
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+
+        val learner = integrationTestingService.getNLearners(3).first()
+
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "explanation",
+        )
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("The learner change the utility grade") {
+            chatGptEvaluationService.changeUtilityGrade(it, UtilityGrade.AGREE)
+            it
+        }.tThen("The utility grade is changed") {
+            assertEquals(UtilityGrade.AGREE, it.utilityGrade)
+            assertNull(it.teacherUtilityGrade)
+            it
+        }.tWhen("The teacher change the utility grade") {
+            chatGptEvaluationService.changeUtilityGrade(it, UtilityGrade.DISAGREE, true)
+            it
+        }.tThen("The utility grade isn't updated and the teacherUtilityGrade is set") {
+            assertEquals(UtilityGrade.AGREE, it.utilityGrade)
+            assertEquals(UtilityGrade.DISAGREE, it.teacherUtilityGrade)
+        }
+    }
+
+    @Test
     fun `test of removeReport`() {
         // Given
         val sequence = integrationTestingService.getAnySequence()
