@@ -100,7 +100,9 @@ class StatUtilityGradeController(
     /** Stat for mean utility grade */
     data class MeanUtilityGradeStat(
         val meanGradeOfLearner: Double,
-        val meanGradeOfTeacher: Double,
+        val nbGradeOfLearner: Int,
+        val meanGradeOfTeacher: Double?,
+        val nbGradeOfTeacher: Int?,
         val evaluationType: EvaluationType,
     ) {
         val explain = "Each UtilityGrade is between 1 and 4. " +
@@ -136,7 +138,7 @@ class StatUtilityGradeController(
         when (type) {
             EvaluationType.CHAT_GPT -> allDraxoEvaluation = emptyList()
             EvaluationType.DRAXO -> allChatGptEvaluation = emptyList()
-            null -> {}
+            else -> {}
         }
 
         val meanGradeOfLearnerForChatGPT = allChatGptEvaluation
@@ -154,11 +156,23 @@ class StatUtilityGradeController(
             .map { MeanUtilityGradeStat.getValueOfGrade(it) }
             .average()
 
-        val meanGradeOfTeacherForDraxo = -1.0
+        val meanGradeOfTeacherForDraxo = null
 
         return listOf(
-            MeanUtilityGradeStat(meanGradeOfLearnerForChatGPT, meanGradeOfTeacherForChatGPT, EvaluationType.CHAT_GPT),
-            MeanUtilityGradeStat(meanGradeOfLearnerForDraxo, meanGradeOfTeacherForDraxo, EvaluationType.DRAXO)
+            MeanUtilityGradeStat(
+                meanGradeOfLearnerForChatGPT,
+                allChatGptEvaluation.count { it.utilityGrade != null },
+                meanGradeOfTeacherForChatGPT,
+                allChatGptEvaluation.count { it.teacherUtilityGrade != null },
+                EvaluationType.CHAT_GPT
+            ),
+            MeanUtilityGradeStat(
+                meanGradeOfLearnerForDraxo,
+                allDraxoEvaluation.count { it.utilityGrade != null },
+                meanGradeOfTeacherForDraxo,
+                0,
+                EvaluationType.DRAXO
+            )
         )
     }
 }
