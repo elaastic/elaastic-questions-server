@@ -186,7 +186,11 @@ class ChatGptEvaluationController(
 
         //Check consistency
         check((user == sequence.assignment!!.owner) == isTeacher) {
-            "The user must be the teacher if isTeacher is true" //TODO: i18n
+            messageSource.getMessage(
+                "chatGPT.error.updateUtilityGrade.consistency",
+                null,
+                LocaleContextHolder.getLocale()
+            )
         }
 
         // Check authorizations
