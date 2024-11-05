@@ -138,7 +138,7 @@ class StatUtilityGradeController(
         when (type) {
             EvaluationType.CHAT_GPT -> allDraxoEvaluation = emptyList()
             EvaluationType.DRAXO -> allChatGptEvaluation = emptyList()
-            else -> {}
+            else -> {/* Do nothing */}
         }
 
         val meanGradeOfLearnerForChatGPT = allChatGptEvaluation
