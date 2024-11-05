@@ -3,6 +3,7 @@ package org.elaastic.analytics
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.common.util.requireAccess
 import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
@@ -66,6 +67,10 @@ class StatUtilityGradeController(
     ): List<UtilityGradeStat> {
         val user = authentication.principal as User
 
+        requireAccess(user.isAdmin()) {
+            "Only admin can access this endpoint"
+        }
+
         val allChatGptEvaluation = chatGptEvaluationRepository.findAll()
         val allDraxoEvaluation = peerGradingRepository.findAll().filter { it.type == PeerGradingType.DRAXO }
 
@@ -121,6 +126,10 @@ class StatUtilityGradeController(
         @RequestParam("type") type: EvaluationType? = null,
     ): List<MeanUtilityGradeStat> {
         val user = authentication.principal as User
+
+        requireAccess(user.isAdmin()) {
+            "Only admin can access this endpoint"
+        }
 
         var (allChatGptEvaluation, allDraxoEvaluation) = getNoNullEvaluations()
 
