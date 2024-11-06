@@ -8,6 +8,7 @@ import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,17 +72,18 @@ class StatUtilityGradeController(
             "Only admin can access this endpoint"
         }
 
-        val allChatGptEvaluation = chatGptEvaluationRepository.findAll()
-        val allDraxoEvaluation = peerGradingRepository.findAll().filter { it.type == PeerGradingType.DRAXO }
+        val allEvaluation =
+            peerGradingRepository.findAll().filter { it.type == PeerGradingType.DRAXO } +
+                    chatGptEvaluationRepository.findAll()
 
         var requestedEvaluation = when (type) {
-            EvaluationType.CHAT_GPT -> allChatGptEvaluation
-            EvaluationType.DRAXO -> allDraxoEvaluation
-            null -> allChatGptEvaluation + allDraxoEvaluation
+            EvaluationType.CHAT_GPT -> allEvaluation.filterIsInstance<ChatGptEvaluation>()
+            EvaluationType.DRAXO -> allEvaluation.filterIsInstance<DraxoPeerGrading>()
+            else -> allEvaluation
         }
 
         requestedEvaluation = if (noNull) {
-            requestedEvaluation.filter { it.utilityGrade != null || (it is ChatGptEvaluation && it.teacherUtilityGrade != null) }
+            requestedEvaluation.filter { it.utilityGrade != null || it.teacherUtilityGrade != null }
         } else {
             requestedEvaluation
         }
@@ -89,12 +91,13 @@ class StatUtilityGradeController(
         return getUtilityStat(requestedEvaluation)
     }
 
-    private fun getNoNullEvaluations(): Pair<List<ChatGptEvaluation>, List<PeerGrading>> {
-        val allChatGptEvaluation =
-            chatGptEvaluationRepository.findAll().filter { it.utilityGrade != null || it.teacherUtilityGrade != null }
-        val allDraxoEvaluation =
-            peerGradingRepository.findAll().filter { it.type == PeerGradingType.DRAXO && it.utilityGrade != null }
-        return Pair(allChatGptEvaluation, allDraxoEvaluation)
+    private fun getNoNullEvaluations(): List<ReportCandidate> {
+        val allChatGptEvaluation = chatGptEvaluationRepository.findAll()
+            .filter { it.utilityGrade != null || it.teacherUtilityGrade != null }
+        val allDraxoEvaluation = peerGradingRepository.findAll()
+            .filterIsInstance<DraxoPeerGrading>()
+            .filter { it.utilityGrade != null || it.teacherUtilityGrade != null }
+        return allChatGptEvaluation + allDraxoEvaluation
     }
 
     /** Stat for mean utility grade */
@@ -125,7 +128,6 @@ class StatUtilityGradeController(
     @GetMapping("mean", "/mean")
     fun getMean(
         authentication: Authentication,
-        @RequestParam("type") type: EvaluationType? = null,
     ): List<MeanUtilityGradeStat> {
         val user = authentication.principal as User
 
@@ -133,13 +135,10 @@ class StatUtilityGradeController(
             "Only admin can access this endpoint"
         }
 
-        var (allChatGptEvaluation, allDraxoEvaluation) = getNoNullEvaluations()
+        var allEvaluation = getNoNullEvaluations()
 
-        when (type) {
-            EvaluationType.CHAT_GPT -> allDraxoEvaluation = emptyList()
-            EvaluationType.DRAXO -> allChatGptEvaluation = emptyList()
-            else -> {/* Do nothing */}
-        }
+        var allChatGptEvaluation = allEvaluation.filterIsInstance<ChatGptEvaluation>()
+        var allDraxoEvaluation = allEvaluation.filterIsInstance<DraxoPeerGrading>()
 
         val meanGradeOfLearnerForChatGPT = allChatGptEvaluation
             .mapNotNull { it.utilityGrade }
@@ -156,7 +155,10 @@ class StatUtilityGradeController(
             .map { MeanUtilityGradeStat.getValueOfGrade(it) }
             .average()
 
-        val meanGradeOfTeacherForDraxo = null
+        val meanGradeOfTeacherForDraxo = allDraxoEvaluation
+            .mapNotNull { it.teacherUtilityGrade }
+            .map { MeanUtilityGradeStat.getValueOfGrade(it) }
+            .average()
 
         return listOf(
             MeanUtilityGradeStat(
@@ -170,7 +172,7 @@ class StatUtilityGradeController(
                 meanGradeOfLearnerForDraxo,
                 allDraxoEvaluation.count { it.utilityGrade != null },
                 meanGradeOfTeacherForDraxo,
-                0,
+                allDraxoEvaluation.count { it.teacherUtilityGrade != null },
                 EvaluationType.DRAXO
             )
         )
