@@ -16,5 +16,5 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
--- Add Teacher Utility Grade
-ALTER TABLE chat_gpt_evaluation ADD COLUMN teacher_utility_grade TINYINT(2);
+-- Add Teacher Utility Grade to peer_grading table
+ALTER TABLE peer_grading ADD COLUMN teacher_utility_grade TINYINT(2);

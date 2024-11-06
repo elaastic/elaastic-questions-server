@@ -85,7 +85,7 @@ class ChatGptEvaluation(
     /**
      * Teacher's Utility Grade
      */
-    var teacherUtilityGrade: UtilityGrade? = null
+    override var teacherUtilityGrade: UtilityGrade? = null
 
 ) : AbstractJpaPersistable<Long>(), ReportCandidate {
 
