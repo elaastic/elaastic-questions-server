@@ -1,0 +1,20 @@
+# Package Files #
+!lib/ApacheJMeter_oauth-v2.jar
+!lib/tsaap-lti-0.4-no-oauth-dep.jar
+
+### Gradle template
+.gradle
+/build/
+
+# email server config
+emailconfig.properties
+
+# Misc
+/src/main/resources/mail.properties
+/elaastic
+/src/test/resources/lti-consumers-export-file.csv
+/paper.pdf
+.DS_Store
+/config
+cas-certificate.cer
+thekeystore

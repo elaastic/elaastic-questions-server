@@ -1,6 +1,3 @@
-pluginManagement {
-	repositories {
-		gradlePluginPortal()
-	}
-}
-rootProject.name = "elaastic-questions-server"
+rootProject.name = "elaastic"
+include("server", "ui-components")
+

@@ -19,17 +19,10 @@ _elaastic_ is developed with the spring-boot framework and the Kotlin language.
 * Docker
 
 ### Launching the database & cas servers
-
-Initially you need build containers, what can be done with this command :
-
+The databases and cas servers can be run using docker compose :
 ````
-docker-compose up
+docker-compose up -d [<service>]
 ````
-
-Afterward, you can manage the different related services separately with the `docker-compose` commands
-(`docker-compose start <service>`, `docker-compose stop <service>`, ...)
-
-#### Services description
 
 | Service name                 | Description                                                     |
 |:-----------------------------|:----------------------------------------------------------------| 
@@ -38,6 +31,8 @@ Afterward, you can manage the different related services separately with the `do
 | cas                          | a CAS server just for testing CAS integration in dev mode       |
 | cas-2                        | another CAS server for testing multiple CAS servers integration |
 
+Running a database is mandatory.
+CAS servers is optional. It allows to test CAS authentication without to have to deploy a CAS server manually.
 
 ### Launching the application
 
@@ -82,6 +77,36 @@ From `JAVA_HOME`, run the following command :
 ``` 
 .\bin\keytool.exe -importcert -cacerts -alias "elaastic-cas" -file <elaastic-questions-server>\docker-resources\cas\etc\cas\config\elaastic-cas-certificate.cer
 ```
+
+## Development guide
+
+The project _elaastic_ is composed of two modules:
+1. `server`: The Spring Boot webapp developed in Kotlin
+2. `ui-components`: A set of UI components developed in Vue 3
+
+### `ui-components`
+
+#### Setup
+Install `Node v22.11.0` (recommendation: use `nvm` for installing Node).
+
+Then install the dependencies with :
+```shell
+npm install
+```
+
+#### Run storybook
+```shell
+npm run storybook
+```
+
+#### Build
+```shell
+npm run build
+```
+
+The built bundles will be available at `./ui-components/dist`.
+Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
+in order to use it.
 
 ## Licence
 
