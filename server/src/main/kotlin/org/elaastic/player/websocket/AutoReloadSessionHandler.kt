@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.websocket
+package org.elaastic.player.websocket
 
 import java.io.IOException
 import java.util.concurrent.ConcurrentLinkedQueue

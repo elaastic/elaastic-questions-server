@@ -45,7 +45,7 @@ import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvalua
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
-import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
+import org.elaastic.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.phase.LearnerPhaseService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig

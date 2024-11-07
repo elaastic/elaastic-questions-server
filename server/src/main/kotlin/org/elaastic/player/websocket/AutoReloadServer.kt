@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.websocket
+package org.elaastic.player.websocket
 
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
@@ -34,13 +34,13 @@ class AutoReloadServer {
     @OnOpen
     fun onOpen(session: Session, @PathParam("id") sequenceId: String) {
         session.userProperties.put("sequenceId", sequenceId)
-        autoReloadSessionHandler.addSession(session)
+        AutoReloadSessionHandler.addSession(session)
     }
 
     @OnError
     fun onError(session: Session, error:Throwable) {
         logger.severe(error.toString())
-        autoReloadSessionHandler.removeSession(session)
+        AutoReloadSessionHandler.removeSession(session)
     }
 
     @OnMessage
@@ -50,6 +50,6 @@ class AutoReloadServer {
 
     @OnClose
     fun onClose(session: Session) {
-        autoReloadSessionHandler.removeSession(session)
+        AutoReloadSessionHandler.removeSession(session)
     }
 }
