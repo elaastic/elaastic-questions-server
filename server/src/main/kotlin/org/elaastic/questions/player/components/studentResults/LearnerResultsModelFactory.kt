@@ -3,7 +3,7 @@ package org.elaastic.questions.player.components.studentResults
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.questions.player.components.explanationViewer.ExplanationDataFactory
+import org.elaastic.player.explanations.ExplanationDataFactory
 import org.elaastic.questions.subject.statement.Statement
 
 object LearnerResultsModelFactory {

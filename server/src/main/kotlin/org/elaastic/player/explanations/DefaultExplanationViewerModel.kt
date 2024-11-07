@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.explanationViewer
+package org.elaastic.player.explanations
 
 abstract class DefaultExplanationViewerModel(
     explanations: List<ExplanationData>,

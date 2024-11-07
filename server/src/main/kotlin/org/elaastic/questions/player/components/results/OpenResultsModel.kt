@@ -18,16 +18,16 @@
 
 package org.elaastic.questions.player.components.results
 
-import org.elaastic.questions.player.components.explanationViewer.ExplanationViewerModel
+import org.elaastic.player.explanations.ExplanationViewerModel
 import org.elaastic.questions.player.components.recommendation.RecommendationModel
 
 data class OpenResultsModel(
-        override val sequenceIsStopped: Boolean,
-        override val sequenceId: Long,
-        override val userCanRefreshResults: Boolean = true,
-        override val explanationViewerModel: ExplanationViewerModel? = null,
-        override val recommendationModel: RecommendationModel? = null,
-        override val userCanDisplayStudentsIdentity: Boolean = false
+    override val sequenceIsStopped: Boolean,
+    override val sequenceId: Long,
+    override val userCanRefreshResults: Boolean = true,
+    override val explanationViewerModel: ExplanationViewerModel? = null,
+    override val recommendationModel: RecommendationModel? = null,
+    override val userCanDisplayStudentsIdentity: Boolean = false
 ) : ResultsModel {
     override val hasExplanations = explanationViewerModel?.nbExplanations ?: 0 > 0
     override fun getHasChoices() = false

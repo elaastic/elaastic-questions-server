@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.explanationViewer
+package org.elaastic.player.explanations
 
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree

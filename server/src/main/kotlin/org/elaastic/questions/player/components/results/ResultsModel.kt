@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.player.components.results
 
-import org.elaastic.questions.player.components.explanationViewer.ExplanationViewerModel
+import org.elaastic.player.explanations.ExplanationViewerModel
 import org.elaastic.questions.player.components.recommendation.RecommendationModel
 
 interface ResultsModel {

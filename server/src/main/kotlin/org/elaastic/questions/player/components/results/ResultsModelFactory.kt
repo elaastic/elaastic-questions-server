@@ -31,6 +31,8 @@ import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.recommendation.RecommendationResolver
 import org.elaastic.player.chart.response.ChoiceSpecificationData
 import org.elaastic.player.chart.response.ResponseDistributionChartModel
+import org.elaastic.player.explanations.ExplanationData
+import org.elaastic.player.explanations.ExplanationViewerModelFactory
 import org.togglz.core.manager.FeatureManager
 import org.togglz.core.Feature
 

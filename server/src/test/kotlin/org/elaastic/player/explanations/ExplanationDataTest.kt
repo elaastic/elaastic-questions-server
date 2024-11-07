@@ -1,25 +1,5 @@
-/*
- * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+package org.elaastic.player.explanations
 
-package org.elaastic.questions.player.components.explanationViewer
-
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
@@ -28,14 +8,16 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGra
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.user.User
-import org.elaastic.user.UserService
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -64,12 +46,12 @@ class ExplanationDataTest(
 
         response = responseService.updateMeanGradeAndEvaluationCount(response)
 
-        assertEquals(
+        Assertions.assertEquals(
             1,
             response.evaluationCount
         ) //The response come from the integrationTestingService with 1 likert evaluation
-        assertEquals(0, response.draxoEvaluationCount)
-        assertEquals(0, response.draxoEvaluationHiddenCount)
+        Assertions.assertEquals(0, response.draxoEvaluationCount)
+        Assertions.assertEquals(0, response.draxoEvaluationHiddenCount)
 
         tGiven("A peerGrading of the response given by another student") {
             DraxoPeerGrading(
@@ -83,25 +65,25 @@ class ExplanationDataTest(
                 entityManager.clear()
                 peerGrading
             }.tThen("variables are set as expected") { peerGrading ->
-                assertEquals(1, draxoPeerGradingService.findAllDraxo(response).size)
-                assertEquals(2, response.evaluationCount)
-                assertEquals(1, response.draxoEvaluationCount)
-                assertEquals(0, response.draxoEvaluationHiddenCount)
+                Assertions.assertEquals(1, peerGradingService.findAllDraxo(response).size)
+                Assertions.assertEquals(2, response.evaluationCount)
+                Assertions.assertEquals(1, response.draxoEvaluationCount)
+                Assertions.assertEquals(0, response.draxoEvaluationHiddenCount)
                 peerGrading
             }.tThen("The number of evaluations should be 2 for the student and the teacher") { peerGrading ->
                 response = responseService.responseRepository.findById(response.id!!).get()
                 response = responseService.updateMeanGradeAndEvaluationCount(response)
                 val explanationData = ExplanationData(response, false)
-                assertEquals(2, explanationData.getNbEvaluation(false))
-                assertEquals(2, explanationData.getNbEvaluation(true))
+                Assertions.assertEquals(2, explanationData.getNbEvaluation(false))
+                Assertions.assertEquals(2, explanationData.getNbEvaluation(true))
                 peerGrading
             }.tWhen("The peerGrading is hidden by the teacher") { peerGrading ->
                 peerGradingService.markAsHidden(teacher, peerGrading)
             }.tThen("The number of evaluations should be 1 for the student and 2 for the teacher") {
                 response = responseService.responseRepository.findById(response.id!!).get()
                 val explanationData = ExplanationData(response, false)
-                assertEquals(1, explanationData.getNbEvaluation(false))
-                assertEquals(2, explanationData.getNbEvaluation(true))
+                Assertions.assertEquals(1, explanationData.getNbEvaluation(false))
+                Assertions.assertEquals(2, explanationData.getNbEvaluation(true))
             }
         }
 
@@ -115,12 +97,12 @@ class ExplanationDataTest(
 
         response = responseService.updateMeanGradeAndEvaluationCount(response)
 
-        assertEquals(
+        Assertions.assertEquals(
             1,
             response.evaluationCount
-        ) //The response comes from the integrationTestingService with 1 likert evaluation
-        assertEquals(0, response.draxoEvaluationCount)
-        assertEquals(0, response.draxoEvaluationHiddenCount)
+        ) //The response come from the integrationTestingService with 1 likert evaluation
+        Assertions.assertEquals(0, response.draxoEvaluationCount)
+        Assertions.assertEquals(0, response.draxoEvaluationHiddenCount)
 
         tGiven("A peerGrading of the response given by another student") {
             DraxoPeerGrading(
@@ -132,7 +114,37 @@ class ExplanationDataTest(
                 peerGradingRepository.save(draxoPeerGrading)
                 response = responseService.updateMeanGradeAndEvaluationCount(response)
                 entityManager.clear()
-                draxoPeerGrading
+                peerGrading
+            }.tThen("variables are set as expected") { peerGrading ->
+                Assertions.assertEquals(1, peerGradingService.findAllDraxo(response).size)
+                Assertions.assertEquals(2, response.evaluationCount)
+                Assertions.assertEquals(1, response.draxoEvaluationCount)
+                Assertions.assertEquals(0, response.draxoEvaluationHiddenCount)
+                peerGrading
+            }.tThen("The number of evaluations should be 2 for the student and the teacher") { peerGrading ->
+                response = responseService.responseRepository.findById(response.id!!).get()
+                response = responseService.updateMeanGradeAndEvaluationCount(response)
+                val explanationData = ExplanationData(response, false)
+                Assertions.assertEquals(1, explanationData.getNbDraxoEvaluation(false))
+                Assertions.assertEquals(1, explanationData.getNbDraxoEvaluation(true))
+                peerGrading
+            }.tWhen("The peerGrading is hidden by the teacher") { peerGrading ->
+                peerGradingService.markAsHidden(teacher, peerGrading)
+            }.tThen("The number of draxo evaluations should be 0 for the student and 1 for the teacher") {
+                response = responseService.responseRepository.findById(response.id!!).get()
+                val explanationData = ExplanationData(response, false)
+                Assertions.assertEquals(0, explanationData.getNbDraxoEvaluation(false))
+                Assertions.assertEquals(1, explanationData.getNbDraxoEvaluation(true))
+            }.tWhen("The likert evaluation is hidden by the teacher") {
+                response = responseService.responseRepository.findById(response.id!!).get()
+                peerGradingRepository.findAllByResponseAndType(response, PeerGradingType.LIKERT).forEach {
+                    peerGradingService.markAsHidden(teacher, it)
+                }
+            }.tThen("The number of draxo evaluations should be 0 for the student and 1 for the teacher") {
+                response = responseService.responseRepository.findById(response.id!!).get()
+                val explanationData = ExplanationData(response, false)
+                Assertions.assertEquals(0, explanationData.getNbDraxoEvaluation(false))
+                Assertions.assertEquals(1, explanationData.getNbDraxoEvaluation(true))
             }
         }.tThen("variables are set as expected") { peerGrading ->
             assertEquals(1, draxoPeerGradingService.findAllDraxo(response).size, "There should be 1 draxo evaluation")

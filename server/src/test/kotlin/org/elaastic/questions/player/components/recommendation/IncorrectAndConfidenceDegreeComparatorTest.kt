@@ -20,7 +20,7 @@ package org.elaastic.questions.player.components.recommendation
 import org.junit.jupiter.api.Test
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import java.math.BigDecimal
-import org.elaastic.questions.player.components.explanationViewer.ExplanationData
+import org.elaastic.player.explanations.ExplanationData
 
 internal class IncorrectAndConfidenceDegreeComparatorTest {
 

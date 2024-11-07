@@ -3,7 +3,7 @@ package org.elaastic.questions.player.components.studentResults
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.player.components.explanationViewer.ExplanationData
+import org.elaastic.player.explanations.ExplanationData
 
 class LearnerExclusiveChoiceResults(
     override val explanationFirstTry: ExplanationData?,

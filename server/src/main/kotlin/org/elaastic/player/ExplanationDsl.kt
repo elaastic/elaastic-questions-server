@@ -18,6 +18,7 @@
 
 package org.elaastic.player
 
+import org.elaastic.player.explanations.*
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.player.components.explanationViewer.*
 import java.math.BigDecimal
