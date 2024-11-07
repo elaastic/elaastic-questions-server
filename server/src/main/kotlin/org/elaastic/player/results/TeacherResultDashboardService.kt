@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.results
+package org.elaastic.player.results
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService

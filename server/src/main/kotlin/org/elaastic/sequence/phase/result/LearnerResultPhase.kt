@@ -2,7 +2,7 @@ package org.elaastic.sequence.phase.result
 
 import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.player.components.results.ResultsModelFactory
+import org.elaastic.player.results.ResultsModelFactory
 import org.elaastic.sequence.phase.LearnerPhase
 import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhaseType

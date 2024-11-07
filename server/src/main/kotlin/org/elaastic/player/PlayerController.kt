@@ -42,7 +42,7 @@ import org.elaastic.user.UserService
 import org.elaastic.player.dashboard.DashboardModel
 import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
-import org.elaastic.questions.player.components.results.TeacherResultDashboardService
+import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
 import org.elaastic.player.websocket.AutoReloadSessionHandler

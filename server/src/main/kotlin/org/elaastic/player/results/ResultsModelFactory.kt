@@ -15,26 +15,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.elaastic.questions.player.components.results
+package org.elaastic.player.results
 
+import org.elaastic.common.abtesting.ElaasticFeatures
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.player.chart.confidence.ConfidenceDistributionChartModel
 import org.elaastic.player.chart.evaluation.EvaluationDistributionChartModel
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.sequence.interaction.response.ResponseSet
-import org.elaastic.sequence.interaction.results.ConfidenceDistributionFactory
-import org.elaastic.sequence.interaction.results.GradingDistributionFactory
-import org.elaastic.sequence.interaction.results.ResponsesDistributionFactory
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
-import org.elaastic.common.web.MessageBuilder
-import org.elaastic.common.abtesting.ElaasticFeatures
-import org.elaastic.questions.player.components.explanationViewer.*
-import org.elaastic.player.recommendation.RecommendationResolver
 import org.elaastic.player.chart.response.ChoiceSpecificationData
 import org.elaastic.player.chart.response.ResponseDistributionChartModel
 import org.elaastic.player.explanations.ExplanationData
 import org.elaastic.player.explanations.ExplanationViewerModelFactory
-import org.togglz.core.manager.FeatureManager
+import org.elaastic.player.recommendation.RecommendationResolver
+import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
+import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.sequence.interaction.results.ConfidenceDistributionFactory
+import org.elaastic.sequence.interaction.results.GradingDistributionFactory
+import org.elaastic.sequence.interaction.results.ResponsesDistributionFactory
 import org.togglz.core.Feature
+import org.togglz.core.manager.FeatureManager
 
 object ResultsModelFactory {
 
@@ -124,7 +123,8 @@ object ResultsModelFactory {
 
     private fun buildEvaluationDistributionChartModel(
         sequence: Sequence,
-                                                      peerGradings: List<PeerGrading>?): EvaluationDistributionChartModel =
+        peerGradings: List<PeerGrading>?
+    ): EvaluationDistributionChartModel =
         sequence.getResponseSubmissionInteraction().let { responseSubmissionInteraction ->
             val choiceSpecification = sequence.statement.choiceSpecification
                 ?: error("This is an open question ; cannot compute confidence distribution")

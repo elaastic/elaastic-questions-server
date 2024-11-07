@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.results
+package org.elaastic.player.results
 
 import org.elaastic.player.explanations.ExplanationViewerModel
 import org.elaastic.player.recommendation.RecommendationModel

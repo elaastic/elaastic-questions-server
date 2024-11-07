@@ -46,9 +46,9 @@ import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
-import org.elaastic.user.AnonymousUserService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.questions.player.components.results.TeacherResultDashboardService
+import org.elaastic.user.AnonymousUserService
+import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement

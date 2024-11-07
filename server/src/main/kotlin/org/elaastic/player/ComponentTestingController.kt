@@ -51,9 +51,9 @@ import org.elaastic.player.chart.response.ChoiceSpecificationData
 import org.elaastic.player.chart.response.ResponseDistributionChartModel
 import org.elaastic.player.explanations.*
 import org.elaastic.player.recommendation.*
-import org.elaastic.questions.player.components.results.ChoiceResultsModel
-import org.elaastic.questions.player.components.results.OpenResultsModel
-import org.elaastic.questions.player.components.results.ResultsModel
+import org.elaastic.player.results.ChoiceResultsModel
+import org.elaastic.player.results.OpenResultsModel
+import org.elaastic.player.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo

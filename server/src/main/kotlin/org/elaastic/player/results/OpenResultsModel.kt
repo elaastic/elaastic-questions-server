@@ -16,26 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.results
+package org.elaastic.player.results
 
-import org.elaastic.player.chart.confidence.ConfidenceDistributionChartModel
-import org.elaastic.player.chart.evaluation.EvaluationDistributionChartModel
 import org.elaastic.player.explanations.ExplanationViewerModel
 import org.elaastic.player.recommendation.RecommendationModel
-import org.elaastic.player.chart.response.ResponseDistributionChartModel
 
-data class ChoiceResultsModel(
+data class OpenResultsModel(
     override val sequenceIsStopped: Boolean,
     override val sequenceId: Long,
-    val responseDistributionChartModel: ResponseDistributionChartModel? = null,
-    val confidenceDistributionChartModel: ConfidenceDistributionChartModel? = null,
-    val evaluationDistributionChartModel: EvaluationDistributionChartModel? = null,
     override val userCanRefreshResults: Boolean = true,
-    override val userCanDisplayStudentsIdentity: Boolean = false,
     override val explanationViewerModel: ExplanationViewerModel? = null,
-    override val recommendationModel: RecommendationModel? = null
-        ) : ResultsModel {
-    val hasAnyResult = !responseDistributionChartModel?.results.isNullOrEmpty()
-    override val hasExplanations = (explanationViewerModel?.nbExplanations ?: 0) > 0
-    override fun getHasChoices() = true
+    override val recommendationModel: RecommendationModel? = null,
+    override val userCanDisplayStudentsIdentity: Boolean = false
+) : ResultsModel {
+    override val hasExplanations = explanationViewerModel?.nbExplanations ?: 0 > 0
+    override fun getHasChoices() = false
 }
