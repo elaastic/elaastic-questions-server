@@ -1,22 +1,4 @@
-/*
- * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-package org.elaastic.questions.email
+package org.elaastic.user.email
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -34,15 +16,15 @@ import javax.transaction.Transactional
 
 @Service
 class MailCheckingMailService(
-        @Autowired val entityManager: EntityManager,
-        @Autowired val messageSource: MessageSource,
-        @Autowired val mailSender: JavaMailSender,
-        @Autowired val templateEngine: TemplateEngine,
+    @Autowired val entityManager: EntityManager,
+    @Autowired val messageSource: MessageSource,
+    @Autowired val mailSender: JavaMailSender,
+    @Autowired val templateEngine: TemplateEngine,
 
-        @Value("\${elaastic.questions.url}")
+    @Value("\${elaastic.questions.url}")
         val elaasticQuestionUrl:String,
 
-        @Value("\${elaastic.questions.mail.activation.from}")
+    @Value("\${elaastic.questions.mail.activation.from}")
         val elaasticQuestionActivationFrom:String
 
 ) {
@@ -86,7 +68,7 @@ class MailCheckingMailService(
                 "email.checking.title",
                 null,
                 locale)
-        val templateContext:Context = Context(locale)
+        val templateContext: Context = Context(locale)
         templateContext.setVariable("firstName", userInfo["first_name"])
         templateContext.setVariable("activationUrl", "$elaasticQuestionUrl$relativeActivationURL?actKey=$key")
         val htmlText = templateEngine.process("email/emailCheckingMail", templateContext)
@@ -164,4 +146,3 @@ class MailCheckingMailService(
     }
 
 }
-

@@ -24,6 +24,7 @@ import org.elaastic.user.PasswordResetKeyRepository
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
+import org.elaastic.user.email.PasswordResetMailService
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.*
