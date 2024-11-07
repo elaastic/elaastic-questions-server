@@ -47,10 +47,10 @@ import org.elaastic.player.dashboard.SequenceMonitoringModel
 import org.elaastic.player.evaluation.EvaluationModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModel
 import org.elaastic.player.evaluation.draxo.DraxoEvaluationModel
-import org.elaastic.questions.player.components.recommendation.*
 import org.elaastic.player.chart.response.ChoiceSpecificationData
 import org.elaastic.player.chart.response.ResponseDistributionChartModel
 import org.elaastic.player.explanations.*
+import org.elaastic.player.recommendation.*
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
 import org.elaastic.questions.player.components.results.OpenResultsModel
 import org.elaastic.questions.player.components.results.ResultsModel

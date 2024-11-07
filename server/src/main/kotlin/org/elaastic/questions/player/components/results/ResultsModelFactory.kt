@@ -28,7 +28,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.questions.player.components.explanationViewer.*
-import org.elaastic.questions.player.components.recommendation.RecommendationResolver
+import org.elaastic.player.recommendation.RecommendationResolver
 import org.elaastic.player.chart.response.ChoiceSpecificationData
 import org.elaastic.player.chart.response.ResponseDistributionChartModel
 import org.elaastic.player.explanations.ExplanationData

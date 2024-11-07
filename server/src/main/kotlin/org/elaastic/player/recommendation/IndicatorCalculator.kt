@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.recommendation
+package org.elaastic.player.recommendation
 
 import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.interaction.response.ResponseSet

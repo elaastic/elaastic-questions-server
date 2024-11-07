@@ -16,31 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.recommendation
+package org.elaastic.player.recommendation
 
 import org.elaastic.player.explanations.ExplanationData
 
 data class RecommendationModel(
-        val message: String? = "",
-        val noCorrectExplanation: Boolean = false,
+    val message: String? = "",
+    val noCorrectExplanation: Boolean = false,
 
-        /* explanation for the consistency of learners agreement with peers' rationales */
+    /* explanation for the consistency of learners agreement with peers' rationales */
         val explanationPPeer: ExplanationPPeer? = null,
 
-        /* explanation for the consistency of learners confidence degree */
+    /* explanation for the consistency of learners confidence degree */
         val explanationPConf: ExplanationPConf? = null,
 
-        /* explanation for the proportion of correct answers during the first vote*/
+    /* explanation for the proportion of correct answers during the first vote*/
         val explanationP1: ExplanationP1? = null,
 
-        /* explanation for the effect size of the confrontation phase on the proportion of correct answers */
+    /* explanation for the effect size of the confrontation phase on the proportion of correct answers */
         val explanationD: ExplanationD? = null,
 
 //        val correctAnswersMeanConfidenceDegree: Float? = null,
 //        val incorrectAnswersMeanConfidenceDegree: Float? = null,
-        val popupDetailedExplanation: PopupDetailedExplanation? = null,
+    val popupDetailedExplanation: PopupDetailedExplanation? = null,
 
-        val recommendedExplanationsComparator: Comparator<ExplanationData> = CorrectAndMeanGradeComparator()
+    val recommendedExplanationsComparator: Comparator<ExplanationData> = CorrectAndMeanGradeComparator()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

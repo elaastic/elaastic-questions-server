@@ -19,7 +19,7 @@
 package org.elaastic.questions.player.components.results
 
 import org.elaastic.player.explanations.ExplanationViewerModel
-import org.elaastic.questions.player.components.recommendation.RecommendationModel
+import org.elaastic.player.recommendation.RecommendationModel
 
 interface ResultsModel {
     val sequenceIsStopped: Boolean

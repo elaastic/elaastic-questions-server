@@ -1,7 +1,7 @@
 package org.elaastic.player.explanations
 
-import org.elaastic.questions.player.components.recommendation.CorrectAndConfidenceDegreeComparator
-import org.elaastic.questions.player.components.recommendation.CorrectAndMeanGradeComparator
+import org.elaastic.player.recommendation.CorrectAndConfidenceDegreeComparator
+import org.elaastic.player.recommendation.CorrectAndMeanGradeComparator
 
 class ChoiceExplanationViewerModel(
     explanationsByResponse: Map<ResponseData, List<ExplanationData>>,

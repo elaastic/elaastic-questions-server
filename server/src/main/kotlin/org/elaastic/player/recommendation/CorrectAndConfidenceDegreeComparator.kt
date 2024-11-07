@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.recommendation
+package org.elaastic.player.recommendation
 
 import org.elaastic.player.explanations.ExplanationData
 
