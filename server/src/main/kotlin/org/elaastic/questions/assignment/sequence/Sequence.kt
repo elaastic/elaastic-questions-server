@@ -23,8 +23,8 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
-import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.sequence.config.EvaluationSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.directory.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig

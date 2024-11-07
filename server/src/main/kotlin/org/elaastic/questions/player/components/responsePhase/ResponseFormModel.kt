@@ -19,17 +19,17 @@ package org.elaastic.questions.player.components.responsePhase
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
-import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
 
 data class ResponseFormModel(
-        val interactionId: Long,
-        val attempt: AttemptNum,
-        val hasChoices: Boolean,
-        val multipleChoice: Boolean,
-        val nbItem: Int? = null,
-        val firstAttemptChoices: Array<Int> = arrayOf(),
-        val firstAttemptExplanation: String? = null,
-        val firstAttemptConfidenceDegree: ConfidenceDegree? = null,
-        val responseSubmissionSpecification: ResponseSubmissionSpecification,
-        val ConfidenceDegreeValues: Array<ConfidenceDegree> = ConfidenceDegree.values()
+    val interactionId: Long,
+    val attempt: AttemptNum,
+    val hasChoices: Boolean,
+    val multipleChoice: Boolean,
+    val nbItem: Int? = null,
+    val firstAttemptChoices: Array<Int> = arrayOf(),
+    val firstAttemptExplanation: String? = null,
+    val firstAttemptConfidenceDegree: ConfidenceDegree? = null,
+    val responseSubmissionSpecification: ResponseSubmissionSpecification,
+    val ConfidenceDegreeValues: Array<ConfidenceDegree> = ConfidenceDegree.values()
 )

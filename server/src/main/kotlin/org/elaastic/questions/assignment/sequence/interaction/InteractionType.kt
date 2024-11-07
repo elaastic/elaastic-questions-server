@@ -23,32 +23,32 @@ package org.elaastic.questions.assignment.sequence.interaction
  * interaction.
  *
  * @property ResponseSubmission The first phase, where the user submits
- *     their response to the statement.
+ *    their response to the statement.
  * @property Evaluation The second phase, where the user's response is
- *     evaluated by their peers.
+ *    evaluated by their peers.
  * @property Read The third phase, where the user can the result of the two
- *     previous phases.
+ *    previous phases.
  */
 enum class InteractionType {
     /**
      * The first phase, where the user submits their response to the statement.
      *
-     * @see org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+     * @see org.elaastic.sequence.config.ResponseSubmissionSpecification
      */
     ResponseSubmission,
 
     /**
      * The second phase, where the user's response is evaluated by their peers.
      *
-     * @see org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
+     * @see org.elaastic.sequence.config.EvaluationSpecification
      */
     Evaluation,
 
     /**
-     * The third phase, where the user can the result of the two previous
+     * The third phase, where the user can view the result of the two previous
      * phases.
      *
-     * @see org.elaastic.questions.assignment.sequence.interaction.specification.ReadSpecification
+     * @see org.elaastic.sequence.config.ReadSpecification
      */
     Read
 }

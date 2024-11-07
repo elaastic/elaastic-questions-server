@@ -32,7 +32,7 @@ import org.elaastic.questions.assignment.sequence.SequenceGenerator
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
 import org.elaastic.questions.assignment.sequence.interaction.results.*
-import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria

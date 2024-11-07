@@ -27,9 +27,9 @@ import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
-import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
-import org.elaastic.questions.assignment.sequence.interaction.specification.InteractionSpecification
-import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.sequence.config.EvaluationSpecification
+import org.elaastic.sequence.config.InteractionSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

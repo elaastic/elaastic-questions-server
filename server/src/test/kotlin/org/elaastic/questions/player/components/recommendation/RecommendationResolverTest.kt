@@ -27,7 +27,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
-import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.subject.statement.Statement

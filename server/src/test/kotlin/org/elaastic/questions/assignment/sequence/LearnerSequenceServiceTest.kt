@@ -23,8 +23,8 @@ import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.interaction.specification.ReadSpecification
-import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.sequence.config.ReadSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation

@@ -2,7 +2,7 @@ package org.elaastic.sequence.phase.response
 
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.sequence.phase.LearnerPhase
 import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhaseExecutionLoader

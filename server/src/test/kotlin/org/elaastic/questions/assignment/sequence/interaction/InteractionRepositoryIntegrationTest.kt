@@ -19,8 +19,8 @@
 package org.elaastic.questions.assignment.sequence.interaction
 
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
-import org.elaastic.questions.assignment.sequence.interaction.specification.ResponseSubmissionSpecification
+import org.elaastic.sequence.config.EvaluationSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen

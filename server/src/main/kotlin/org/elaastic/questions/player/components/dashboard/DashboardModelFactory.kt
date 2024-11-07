@@ -24,7 +24,7 @@ import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.specification.EvaluationSpecification
+import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.elaastic.questions.player.components.steps.StepsModelFactory
 import org.springframework.stereotype.Service
