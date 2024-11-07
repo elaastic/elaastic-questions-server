@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.assignmentOverview
+package org.elaastic.player.assignmentview
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.RevisionMode

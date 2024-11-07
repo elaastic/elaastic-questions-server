@@ -23,7 +23,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User
-import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
+import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory
 import org.elaastic.questions.player.components.command.CommandModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
