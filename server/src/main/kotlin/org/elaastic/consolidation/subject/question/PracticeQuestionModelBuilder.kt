@@ -1,7 +1,7 @@
-package org.elaastic.questions.api.practice.subject.question
+package org.elaastic.consolidation.subject.question
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiModelBuilder
-import org.elaastic.questions.api.practice.subject.RestPracticeSubjectController
+import org.elaastic.consolidation.subject.RestPracticeSubjectController
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.server.mvc.linkTo
 import java.util.*

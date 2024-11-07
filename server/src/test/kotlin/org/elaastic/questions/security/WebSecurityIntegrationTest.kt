@@ -1,6 +1,6 @@
 package org.elaastic.questions.security
 
-import org.elaastic.questions.api.practice.subject.RestPracticeSubjectController
+import org.elaastic.consolidation.subject.RestPracticeSubjectController
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -135,7 +135,7 @@ internal class WebSecurityIntegrationTest(
     @Test
     fun `An authenticated user cannot access the REST API`() {
         val loginUrl = "http://localhost:$port/login"
-        val apiUrl = "http://localhost:$port"+RestPracticeSubjectController.PRACTICE_API_URL
+        val apiUrl = "http://localhost:$port"+ RestPracticeSubjectController.PRACTICE_API_URL
 
         // Authentication
         val loginHeaders = HttpHeaders()

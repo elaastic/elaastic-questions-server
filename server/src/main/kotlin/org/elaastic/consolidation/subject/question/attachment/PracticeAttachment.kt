@@ -1,4 +1,4 @@
-package org.elaastic.questions.api.practice.subject.question.attachment
+package org.elaastic.consolidation.subject.question.attachment
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType

@@ -1,4 +1,4 @@
-package org.elaastic.questions.api.practice.subject
+package org.elaastic.consolidation.subject
 
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.directory.User
@@ -18,7 +18,6 @@ import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.*
 import org.hamcrest.collection.IsEmptyCollection
 import org.junit.jupiter.api.assertThrows
-import java.util.*
 import javax.persistence.EntityManager
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

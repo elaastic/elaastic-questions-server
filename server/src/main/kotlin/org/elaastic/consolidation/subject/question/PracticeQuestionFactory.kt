@@ -1,9 +1,9 @@
-package org.elaastic.questions.api.practice.subject.question
+package org.elaastic.consolidation.subject.question
 
-import org.elaastic.questions.api.practice.subject.question.attachment.PracticeAttachment
-import org.elaastic.questions.api.practice.subject.question.specification.ExclusiveChoiceQuestionSpecification
-import org.elaastic.questions.api.practice.subject.question.specification.MultipleChoiceQuestionSpecification
-import org.elaastic.questions.api.practice.subject.question.specification.OpenQuestionSpecification
+import org.elaastic.consolidation.subject.question.attachment.PracticeAttachment
+import org.elaastic.consolidation.subject.question.specification.ExclusiveChoiceQuestionSpecification
+import org.elaastic.consolidation.subject.question.specification.MultipleChoiceQuestionSpecification
+import org.elaastic.consolidation.subject.question.specification.OpenQuestionSpecification
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.sequence.Sequence

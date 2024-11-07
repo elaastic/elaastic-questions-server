@@ -1,13 +1,14 @@
-package org.elaastic.questions.api.practice.subject
+package org.elaastic.consolidation.subject
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import com.toedter.spring.hateoas.jsonapi.MediaTypes
-import org.elaastic.questions.api.practice.subject.question.*
-import org.elaastic.questions.api.practice.subject.question.attachment.PracticeAttachment
-import org.elaastic.questions.api.practice.subject.question.specification.ExclusiveChoiceQuestionSpecification
-import org.elaastic.questions.api.practice.subject.question.specification.MultipleChoiceQuestionSpecification
-import org.elaastic.questions.api.practice.subject.question.specification.OpenQuestionSpecification
+import org.elaastic.consolidation.subject.question.PracticeLearnerExplanation
+import org.elaastic.consolidation.subject.question.PracticeQuestion
+import org.elaastic.consolidation.subject.question.attachment.PracticeAttachment
+import org.elaastic.consolidation.subject.question.specification.ExclusiveChoiceQuestionSpecification
+import org.elaastic.consolidation.subject.question.specification.MultipleChoiceQuestionSpecification
+import org.elaastic.consolidation.subject.question.specification.OpenQuestionSpecification
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.security.TestSecurityConfig

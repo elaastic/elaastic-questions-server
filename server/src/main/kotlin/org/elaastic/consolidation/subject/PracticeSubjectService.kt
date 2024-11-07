@@ -1,7 +1,7 @@
-package org.elaastic.questions.api.practice.subject
+package org.elaastic.consolidation.subject
 
-import org.elaastic.questions.api.practice.subject.question.PracticeLearnerExplanation
-import org.elaastic.questions.api.practice.subject.question.PracticeQuestionFactory
+import org.elaastic.consolidation.subject.question.PracticeLearnerExplanation
+import org.elaastic.consolidation.subject.question.PracticeQuestionFactory
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.RevisionMode

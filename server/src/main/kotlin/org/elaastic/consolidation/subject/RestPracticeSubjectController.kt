@@ -1,4 +1,4 @@
-package org.elaastic.questions.api.practice.subject
+package org.elaastic.consolidation.subject
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiModelBuilder.jsonApiModel
 import org.elaastic.questions.attachment.AttachmentService

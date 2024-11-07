@@ -1,10 +1,10 @@
-package org.elaastic.questions.api.practice.subject.question
+package org.elaastic.consolidation.subject.question
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
-import org.elaastic.questions.api.practice.subject.question.attachment.PracticeAttachment
-import org.elaastic.questions.api.practice.subject.question.specification.QuestionSpecification
+import org.elaastic.consolidation.subject.question.attachment.PracticeAttachment
+import org.elaastic.consolidation.subject.question.specification.QuestionSpecification
 import java.util.UUID
 
 /**

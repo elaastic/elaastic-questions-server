@@ -1,4 +1,4 @@
-package org.elaastic.questions.api.practice.subject.question.specification
+package org.elaastic.consolidation.subject.question.specification
 
 import org.elaastic.questions.assignment.QuestionType
 
