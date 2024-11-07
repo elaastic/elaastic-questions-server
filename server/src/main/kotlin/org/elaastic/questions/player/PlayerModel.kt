@@ -18,7 +18,6 @@
 package org.elaastic.questions.player
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.player.phase.LearnerPhase
 import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.results.ResultsModel
@@ -27,6 +26,7 @@ import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModel
+import org.elaastic.sequence.phase.LearnerPhase
 
 abstract class PlayerModel(
     val sequence: Sequence,

@@ -66,12 +66,12 @@ import org.elaastic.questions.player.components.studentResults.LearnerExclusiveC
 import org.elaastic.questions.player.components.studentResults.LearnerMultipleChoiceResults
 import org.elaastic.questions.player.components.studentResults.LearnerOpenResults
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
-import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
-import org.elaastic.questions.player.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
-import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
-import org.elaastic.questions.player.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
-import org.elaastic.questions.player.phase.response.LearnerResponseFormViewModel
-import org.elaastic.questions.player.phase.response.LearnerResponsePhaseViewModel
+import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
+import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
+import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
+import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
+import org.elaastic.sequence.phase.response.LearnerResponseFormViewModel
+import org.elaastic.sequence.phase.response.LearnerResponsePhaseViewModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -2594,12 +2594,12 @@ class TestingPlayerController(
                 choices = true,
                 userHasCompletedPhase2 = false,
                 responsesToGrade = listOf(
-                    org.elaastic.questions.player.phase.evaluation.ResponseData(
+                    org.elaastic.sequence.phase.evaluation.ResponseData(
                         id = 1,
                         choiceList = listOf(1),
                         explanation = "1st explanation"
                     ),
-                    org.elaastic.questions.player.phase.evaluation.ResponseData(
+                    org.elaastic.sequence.phase.evaluation.ResponseData(
                         id = 2,
                         choiceList = listOf(2),
                         explanation = "2nd explanation"
@@ -2647,7 +2647,7 @@ class TestingPlayerController(
                 choices = true,
                 userHasCompletedPhase2 = false,
                 nextResponseToGrade =
-                org.elaastic.questions.player.phase.evaluation.ResponseData(
+                org.elaastic.sequence.phase.evaluation.ResponseData(
                     id = 1,
                     choiceList = listOf(1),
                     explanation = "1st explanation"
@@ -3351,12 +3351,12 @@ class TestingPlayerController(
                     val username = userService.generateUsername(firstName, lastName)
 
                     val newUser = User(
-                            firstName = firstName,
-                            lastName = lastName,
-                            username = username,
-                            plainTextPassword = testPswd,
-                            email = "$username@$emailDomain.com",
-                            source = UserSource.ELAASTIC,
+                        firstName = firstName,
+                        lastName = lastName,
+                        username = username,
+                        plainTextPassword = testPswd,
+                        email = "$username@$emailDomain.com",
+                        source = UserSource.ELAASTIC,
                     )
 
                     newUser.addRole(Role("STUDENT_ROLE"))

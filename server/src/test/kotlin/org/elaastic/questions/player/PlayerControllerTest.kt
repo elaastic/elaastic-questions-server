@@ -18,17 +18,27 @@
 
 package org.elaastic.questions.player
 
-import com.nhaarman.mockitokotlin2.*
-import io.mockk.*
+import com.nhaarman.mockitokotlin2.atLeastOnce
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.every
+import io.mockk.mockkClass
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.analytics.lrs.EventLogService
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.*
-import org.elaastic.analytics.lrs.EventLogService
+import org.elaastic.questions.assignment.sequence.LearnerSequence
+import org.elaastic.questions.assignment.sequence.LearnerSequenceService
+import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.common.web.MessageBuilder
@@ -37,12 +47,12 @@ import org.elaastic.questions.directory.AnonymousUserService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
-import org.elaastic.questions.player.phase.LearnerPhaseService
 import org.elaastic.questions.security.TestSecurityConfig
-import org.elaastic.questions.subject.*
+import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.sequence.phase.LearnerPhaseService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

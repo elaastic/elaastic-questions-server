@@ -18,14 +18,16 @@
 
 package org.elaastic.questions.player
 
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.analytics.lrs.EventLogService
+import org.elaastic.common.web.ControllerUtil
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
-import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
@@ -43,10 +45,10 @@ import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvalua
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
-import org.elaastic.questions.player.phase.LearnerPhaseService
-import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.sequence.phase.LearnerPhaseService
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.security.access.prepost.PreAuthorize

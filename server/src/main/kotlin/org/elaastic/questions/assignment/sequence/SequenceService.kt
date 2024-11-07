@@ -39,7 +39,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGra
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.player.components.steps.SequenceStatistics
-import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest

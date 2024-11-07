@@ -17,11 +17,11 @@ import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository
 import org.elaastic.questions.player.PlayerController
-import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.test.interpreter.command.*
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -49,8 +49,10 @@ class FunctionalTestingService(
             )
         )
 
-    fun createSubject(user: User,
-                      title: String = "Default subject title") =
+    fun createSubject(
+        user: User,
+        title: String = "Default subject title"
+    ) =
         subjectService.save(
             Subject(title, user)
         )
@@ -310,7 +312,8 @@ class FunctionalTestingService(
 
 
     /**
-     * Generate a user choice depending on the question specification & the response must be correct or not
+     * Generate a user choice depending on the question specification & the
+     * response must be correct or not
      */
     private fun generateExclusiveChoiceResponse(
         choiceSpecification: ExclusiveChoiceSpecification,
@@ -329,7 +332,8 @@ class FunctionalTestingService(
     }
 
     /**
-     * Generate a user choice depending on the question specification & the response must be correct or not
+     * Generate a user choice depending on the question specification & the
+     * response must be correct or not
      */
     private fun generateMultipleChoiceResponse(
         choiceSpecification: MultipleChoiceSpecification,
@@ -357,13 +361,13 @@ class FunctionalTestingService(
             .also(::publishResults)
             .also(::stopSequence)
 
-    fun curriedRandomlyPlaySequence(learners: List<User>) : (sequence: Sequence) -> Unit =
+    fun curriedRandomlyPlaySequence(learners: List<User>): (sequence: Sequence) -> Unit =
         { sequence: Sequence -> randomlyPlaySequence(learners, sequence) }
 
     fun randomlyPlayAllSequences(learners: List<User>, assignment: Assignment) =
         assignment.sequences.forEach(curriedRandomlyPlaySequence(learners))
 
-    fun curriedRandomlyPlayAllSequences(learners: List<User>) : (assignment: Assignment) -> Unit =
+    fun curriedRandomlyPlayAllSequences(learners: List<User>): (assignment: Assignment) -> Unit =
         { assignment -> randomlyPlayAllSequences(learners, assignment) }
 
 

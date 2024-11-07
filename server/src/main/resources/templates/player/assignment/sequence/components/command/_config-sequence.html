@@ -162,7 +162,7 @@
                                th:text="#{player.sequence.interaction.evaluation.method.label}">Evaluation
                             method: </label>
                         <div class="field"
-                             th:each="method, it : ${T(org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig).values()}">
+                             th:each="method, it : ${T(org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig).values()}">
                             <div class="ui radio checkbox">
                                 <input type="radio" name="evaluationPhaseConfig" th:value="${method}"
                                        th:checked="${it.index == 0}"/>

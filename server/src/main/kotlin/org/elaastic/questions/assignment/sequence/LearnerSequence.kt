@@ -21,7 +21,7 @@ package org.elaastic.questions.assignment.sequence
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
-import org.elaastic.questions.player.phase.LearnerPhase
+import org.elaastic.sequence.phase.LearnerPhase
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

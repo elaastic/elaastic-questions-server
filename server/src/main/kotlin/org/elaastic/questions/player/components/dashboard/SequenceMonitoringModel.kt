@@ -1,7 +1,7 @@
 package org.elaastic.questions.player.components.dashboard
 
 import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.player.phase.LearnerPhaseType
+import org.elaastic.sequence.phase.LearnerPhaseType
 
 /**
  * Model for the learners monitoring dashboard.

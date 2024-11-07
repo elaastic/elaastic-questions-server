@@ -40,9 +40,8 @@ import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
-import org.elaastic.questions.lti.LtiConsumer
-import org.elaastic.questions.lti.LtiConsumerRepository
-import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.questions.lti.*
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
