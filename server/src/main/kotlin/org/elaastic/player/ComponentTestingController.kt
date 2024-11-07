@@ -38,8 +38,8 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Cri
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.common.abtesting.ElaasticFeatures
-import org.elaastic.questions.player.components.command.CommandModel
-import org.elaastic.questions.player.components.command.CommandModelFactory
+import org.elaastic.player.command.CommandModel
+import org.elaastic.player.command.CommandModelFactory
 import org.elaastic.questions.player.components.dashboard.DashboardPhaseState
 import org.elaastic.questions.player.components.dashboard.LearnerMonitoringModel
 import org.elaastic.questions.player.components.dashboard.LearnerStateOnPhase

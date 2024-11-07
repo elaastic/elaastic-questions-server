@@ -16,27 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.command
+package org.elaastic.player.command
 
 import org.elaastic.questions.assignment.QuestionType
 
 data class CommandModel(
-        val sequenceId: Long,
-        val statementId: Long,
-        val interactionId: Long?,
-        val interactionRank: Int?,
-        val questionType: QuestionType,
-        val hasExpectedExplanation: Boolean,
+    val sequenceId: Long,
+    val statementId: Long,
+    val interactionId: Long?,
+    val interactionRank: Int?,
+    val questionType: QuestionType,
+    val hasExpectedExplanation: Boolean,
 
-        val actionStartSequence: ActionStatus,
-        val actionStartInteraction: ActionStatus,
-        val actionStopInteraction: ActionStatus,
-        val actionStartNextInteraction: ActionStatus,
-        val actionReopenInteraction: ActionStatus,
-        val actionReopenSequence: ActionStatus,
-        val actionStopSequence: ActionStatus,
-        val actionPublishResults: ActionStatus,
-        val actionUnpublishResults: ActionStatus
+    val actionStartSequence: ActionStatus,
+    val actionStartInteraction: ActionStatus,
+    val actionStopInteraction: ActionStatus,
+    val actionStartNextInteraction: ActionStatus,
+    val actionReopenInteraction: ActionStatus,
+    val actionReopenSequence: ActionStatus,
+    val actionStopSequence: ActionStatus,
+    val actionPublishResults: ActionStatus,
+    val actionUnpublishResults: ActionStatus
 
 ) {
 

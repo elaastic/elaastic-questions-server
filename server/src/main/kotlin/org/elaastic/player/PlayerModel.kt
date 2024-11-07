@@ -19,7 +19,7 @@ package org.elaastic.player
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.player.assignmentview.AssignmentOverviewModel
-import org.elaastic.questions.player.components.command.CommandModel
+import org.elaastic.player.command.CommandModel
 import org.elaastic.questions.player.components.results.ResultsModel
 import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
 import org.elaastic.questions.player.components.statement.StatementInfo
