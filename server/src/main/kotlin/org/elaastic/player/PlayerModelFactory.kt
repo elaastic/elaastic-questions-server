@@ -26,7 +26,7 @@ import org.elaastic.user.User
 import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory
 import org.elaastic.player.command.CommandModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
-import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
+import org.elaastic.player.sequence.status.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics

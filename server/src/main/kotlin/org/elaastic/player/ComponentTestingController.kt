@@ -54,8 +54,8 @@ import org.elaastic.player.recommendation.*
 import org.elaastic.player.results.ChoiceResultsModel
 import org.elaastic.player.results.OpenResultsModel
 import org.elaastic.player.results.ResultsModel
-import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoModel
-import org.elaastic.questions.player.components.sequenceInfo.SequenceInfoResolver
+import org.elaastic.player.sequence.status.SequenceInfoModel
+import org.elaastic.player.sequence.status.SequenceInfoResolver
 import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
