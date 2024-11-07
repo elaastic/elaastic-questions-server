@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.elaastic.questions.player.components.evaluation.draxo
+package org.elaastic.player.evaluation.draxo
 
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation

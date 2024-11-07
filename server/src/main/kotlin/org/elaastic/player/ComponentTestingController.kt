@@ -44,9 +44,9 @@ import org.elaastic.player.dashboard.DashboardPhaseState
 import org.elaastic.player.dashboard.LearnerMonitoringModel
 import org.elaastic.player.dashboard.LearnerStateOnPhase
 import org.elaastic.player.dashboard.SequenceMonitoringModel
-import org.elaastic.questions.player.components.evaluation.EvaluationModel
-import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModel
-import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
+import org.elaastic.player.evaluation.EvaluationModel
+import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModel
+import org.elaastic.player.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.recommendation.*
 import org.elaastic.player.chart.response.ChoiceSpecificationData

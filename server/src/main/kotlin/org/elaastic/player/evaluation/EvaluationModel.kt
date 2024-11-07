@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.evaluation
+package org.elaastic.player.evaluation
 
-import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModel
-import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
+import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModel
+import org.elaastic.player.evaluation.draxo.DraxoEvaluationModel
 
 /**
  * Evaluation model.
