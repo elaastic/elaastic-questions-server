@@ -40,10 +40,10 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.player.command.CommandModel
 import org.elaastic.player.command.CommandModelFactory
-import org.elaastic.questions.player.components.dashboard.DashboardPhaseState
-import org.elaastic.questions.player.components.dashboard.LearnerMonitoringModel
-import org.elaastic.questions.player.components.dashboard.LearnerStateOnPhase
-import org.elaastic.questions.player.components.dashboard.SequenceMonitoringModel
+import org.elaastic.player.dashboard.DashboardPhaseState
+import org.elaastic.player.dashboard.LearnerMonitoringModel
+import org.elaastic.player.dashboard.LearnerStateOnPhase
+import org.elaastic.player.dashboard.SequenceMonitoringModel
 import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModel
 import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel

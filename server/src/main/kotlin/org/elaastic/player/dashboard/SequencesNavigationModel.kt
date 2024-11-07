@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.dashboard
+package org.elaastic.player.dashboard
 
 /**
  * Model for the sequences' navigation.

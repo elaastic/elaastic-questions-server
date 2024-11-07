@@ -1,4 +1,4 @@
-package org.elaastic.questions.player.components.dashboard
+package org.elaastic.player.dashboard
 
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.test.directive.*

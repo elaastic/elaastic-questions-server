@@ -39,8 +39,8 @@ import org.elaastic.questions.course.Course
 import org.elaastic.user.AnonymousUserService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
-import org.elaastic.questions.player.components.dashboard.DashboardModel
-import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
+import org.elaastic.player.dashboard.DashboardModel
+import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.results.TeacherResultDashboardService
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
