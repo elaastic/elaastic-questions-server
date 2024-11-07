@@ -23,7 +23,7 @@ import org.elaastic.questions.assignment.ia.ResponseRecommendationService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
+import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService

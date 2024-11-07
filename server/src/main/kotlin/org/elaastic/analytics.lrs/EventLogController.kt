@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.eventLog
+package org.elaastic.analytics.lrs
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
@@ -49,7 +49,8 @@ class EventLogController(
                         eventLogService.create(sequence = it,
                                 user = user,
                                 action = Action.from(action),
-                                obj = ObjectOfAction.from(obj))
+                                obj = ObjectOfAction.from(obj)
+                        )
             }
         }
     }

@@ -23,7 +23,7 @@ import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
+import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.Response

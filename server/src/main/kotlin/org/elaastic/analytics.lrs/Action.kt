@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.eventLog
+package org.elaastic.analytics.lrs
 
 /**
  * An action that can be performed by a user.

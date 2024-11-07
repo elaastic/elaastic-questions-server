@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.action.action
+package org.elaastic.analytics.lrs
 
-import org.elaastic.questions.assignment.sequence.eventLog.*
 import org.elaastic.questions.directory.Role
 import org.elaastic.questions.test.IntegrationTestingService
 import org.hamcrest.MatcherAssert.assertThat
@@ -32,8 +31,8 @@ import javax.transaction.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class EventLogRepositoryIntegrationTest(
-        @Autowired val eventLogRepository: EventLogRepository,
-        @Autowired val integrationTestingService: IntegrationTestingService
+    @Autowired val eventLogRepository: EventLogRepository,
+    @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     @Test

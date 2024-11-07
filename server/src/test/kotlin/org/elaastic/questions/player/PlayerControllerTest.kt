@@ -24,7 +24,7 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.*
-import org.elaastic.questions.assignment.sequence.eventLog.EventLogService
+import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.InteractionService
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType

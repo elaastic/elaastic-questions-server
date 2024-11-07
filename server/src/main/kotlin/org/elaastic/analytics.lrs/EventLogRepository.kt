@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.eventLog
+package org.elaastic.analytics.lrs
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.springframework.data.jpa.repository.JpaRepository

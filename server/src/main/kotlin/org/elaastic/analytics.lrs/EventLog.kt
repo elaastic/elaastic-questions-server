@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.eventLog
+package org.elaastic.analytics.lrs
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.Role
@@ -39,37 +39,37 @@ import javax.persistence.*
 @EntityListeners(AuditingEntityListener::class)
 class EventLog(
 
-        @field:ManyToOne
+    @field:ManyToOne
         val sequence: Sequence,
 
-        @field:ManyToOne(fetch = FetchType.LAZY)
+    @field:ManyToOne(fetch = FetchType.LAZY)
         val user: User,
 
-        /**
+    /**
          * The role of the user at the time of the action.
          * @see Role
          */
         @field:Enumerated(EnumType.STRING)
         val role: Role.RoleId,
 
-        /**
+    /**
          * The action that was performed.
          * @see Action
          */
         @field:Enumerated(EnumType.STRING)
         val action: Action,
 
-        @field:Enumerated(EnumType.STRING)
+    @field:Enumerated(EnumType.STRING)
         @Column(name = "object")
         val obj: ObjectOfAction,
 
-        /**
+    /**
          * The user agent of the user at the time of the action.
          */
         @Column(name = "user_agent")
         val userAgent: String? = null,
 
-) : AbstractJpaPersistable<Long>() {
+    ) : AbstractJpaPersistable<Long>() {
 
     @Column(name = "date")
     @CreatedDate
