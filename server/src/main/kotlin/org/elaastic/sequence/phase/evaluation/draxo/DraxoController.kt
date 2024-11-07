@@ -3,8 +3,8 @@ package org.elaastic.sequence.phase.evaluation.draxo
 import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
+import org.elaastic.user.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.questions.directory.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaEvaluation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

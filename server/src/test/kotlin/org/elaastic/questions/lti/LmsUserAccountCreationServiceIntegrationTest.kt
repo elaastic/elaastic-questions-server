@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.lti
 
-import org.elaastic.questions.directory.UserService
+import org.elaastic.user.UserService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven
@@ -36,9 +36,9 @@ import javax.transaction.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class LmsUserAccountCreationServiceIntegrationTest(
-        @Autowired val lmsUserAccountCreationService: LmsUserAccountCreationService,
-        @Autowired val userService: UserService,
-        @Autowired val integrationTestingService: IntegrationTestingService
+    @Autowired val lmsUserAccountCreationService: LmsUserAccountCreationService,
+    @Autowired val userService: UserService,
+    @Autowired val integrationTestingService: IntegrationTestingService
 ) {
 
     internal var logger = Logger.getLogger(LmsUserAccountCreationServiceIntegrationTest::class.java.name)

@@ -14,7 +14,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGra
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.questions.directory.RoleService
+import org.elaastic.user.RoleService
 import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.subject.SubjectRepository
 import org.elaastic.questions.subject.SubjectService

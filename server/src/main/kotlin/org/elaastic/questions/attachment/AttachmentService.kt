@@ -21,7 +21,7 @@ package org.elaastic.questions.attachment
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.filestore.DataIdentifier
 import org.elaastic.filestore.FileDataStore
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service

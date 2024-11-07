@@ -19,8 +19,8 @@
 package org.elaastic.questions.email
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.questions.directory.PasswordResetKey
-import org.elaastic.questions.directory.PasswordResetKeyRepository
+import org.elaastic.user.PasswordResetKey
+import org.elaastic.user.PasswordResetKeyRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -36,15 +36,15 @@ import javax.transaction.Transactional
 
 @Service
 class PasswordResetMailService(
-        @Autowired val messageSource: MessageSource,
-        @Autowired val mailSender: JavaMailSender,
-        @Autowired val templateEngine: TemplateEngine,
-        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
+    @Autowired val messageSource: MessageSource,
+    @Autowired val mailSender: JavaMailSender,
+    @Autowired val templateEngine: TemplateEngine,
+    @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
 
-        @Value("\${elaastic.questions.url}")
+    @Value("\${elaastic.questions.url}")
         val elaasticQuestionUrl:String,
 
-        @Value("\${elaastic.questions.mail.password.from}")
+    @Value("\${elaastic.questions.mail.password.from}")
         val elaasticQuestionPasswordRecoveringFrom:String
 ) {
 

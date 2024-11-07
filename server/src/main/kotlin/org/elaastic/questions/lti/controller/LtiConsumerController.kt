@@ -19,7 +19,7 @@
 package org.elaastic.questions.lti.controller
 
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.lti.LtiConsumer
 import org.elaastic.questions.lti.LtiConsumerRepository
 import org.elaastic.questions.lti.LtiConsumerService

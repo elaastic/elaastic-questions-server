@@ -12,7 +12,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluat
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService

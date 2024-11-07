@@ -27,7 +27,7 @@ import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.interaction.response.ResponseRepository
 import org.elaastic.sequence.interaction.response.ResponseService
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository

@@ -20,7 +20,7 @@ package org.elaastic.sequence.interaction
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 

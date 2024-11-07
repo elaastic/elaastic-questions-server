@@ -18,10 +18,10 @@
 
 package org.elaastic.questions.lti
 
-import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserService
-import org.elaastic.questions.directory.UserSource
+import org.elaastic.user.RoleService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
+import org.elaastic.user.UserSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -31,9 +31,9 @@ import javax.persistence.EntityManager
 
 @Service
 class LmsUserAccountCreationService(
-        @Autowired val userService: UserService,
-        @Autowired val roleService: RoleService,
-        @Autowired val entityManager: EntityManager
+    @Autowired val userService: UserService,
+    @Autowired val roleService: RoleService,
+    @Autowired val entityManager: EntityManager
 ) {
 
     internal val logger = Logger.getLogger(LmsUserAccountCreationService::class.java.name)

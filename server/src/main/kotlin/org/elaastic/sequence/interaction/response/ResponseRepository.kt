@@ -20,7 +20,7 @@ package org.elaastic.sequence.interaction.response
 
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.results.AttemptNum
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.jpa.repository.JpaRepository
 

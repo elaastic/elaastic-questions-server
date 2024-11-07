@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.test
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.test.interpreter.FunctionalTestInterpreter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize

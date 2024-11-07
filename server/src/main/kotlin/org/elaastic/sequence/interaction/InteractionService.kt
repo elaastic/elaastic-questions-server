@@ -30,7 +30,7 @@ import org.elaastic.sequence.interaction.results.ResultsService
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.InteractionSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional

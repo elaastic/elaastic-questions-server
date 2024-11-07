@@ -2,8 +2,8 @@ package org.elaastic.consolidation.subject
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
-import org.elaastic.questions.directory.ExternalUserRef
-import org.elaastic.questions.directory.User
+import org.elaastic.user.ExternalUserRef
+import org.elaastic.user.User
 import java.util.*
 
 /**

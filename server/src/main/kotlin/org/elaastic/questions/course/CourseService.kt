@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.course
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired

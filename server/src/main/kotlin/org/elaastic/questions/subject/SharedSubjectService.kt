@@ -1,6 +1,6 @@
 package org.elaastic.questions.subject
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional

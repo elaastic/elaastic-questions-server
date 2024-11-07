@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.lti
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import javax.persistence.*
 

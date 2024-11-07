@@ -23,6 +23,10 @@ import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.user.PasswordResetKey
+import org.elaastic.user.PasswordResetKeyRepository
+import org.elaastic.user.User
+import org.elaastic.user.UserService
 import org.hamcrest.CoreMatchers.*
 
 import org.junit.jupiter.api.BeforeEach

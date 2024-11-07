@@ -20,6 +20,10 @@ package org.elaastic.questions.directory
 
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.user.AnonymousUserService
+import org.elaastic.user.RoleService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

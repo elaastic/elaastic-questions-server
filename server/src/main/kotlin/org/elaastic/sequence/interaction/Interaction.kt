@@ -25,7 +25,7 @@ import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.sequence.interaction.results.ResponsesDistribution
 import org.elaastic.sequence.config.InteractionSpecification
 import org.elaastic.sequence.config.InteractionSpecificationConverter
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate

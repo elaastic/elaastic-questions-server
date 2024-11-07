@@ -22,7 +22,7 @@ import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.player.components.evaluation.EvaluationModel
 import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel

@@ -19,6 +19,8 @@
 package org.elaastic.questions.directory
 
 import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.user.Settings
+import org.elaastic.user.SettingsRepository
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

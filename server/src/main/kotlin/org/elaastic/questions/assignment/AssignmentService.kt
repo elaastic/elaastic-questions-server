@@ -24,7 +24,7 @@ import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.course.Course
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.common.util.toDate

@@ -18,7 +18,7 @@
 
 package org.elaastic.analytics.lrs
 
-import org.elaastic.questions.directory.Role
+import org.elaastic.user.Role
 import org.elaastic.questions.test.IntegrationTestingService
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*

@@ -37,7 +37,6 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.directory.*
 import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.questions.player.components.command.CommandModel
 import org.elaastic.questions.player.components.command.CommandModelFactory
@@ -72,6 +71,7 @@ import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhaseViewModel
 import org.elaastic.sequence.phase.response.LearnerResponseFormViewModel
 import org.elaastic.sequence.phase.response.LearnerResponsePhaseViewModel
+import org.elaastic.user.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize

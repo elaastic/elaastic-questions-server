@@ -21,7 +21,7 @@ package org.elaastic.questions.subject
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
 import org.elaastic.questions.subject.statement.StatementService

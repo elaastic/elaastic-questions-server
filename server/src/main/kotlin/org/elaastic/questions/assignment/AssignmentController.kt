@@ -19,7 +19,7 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService

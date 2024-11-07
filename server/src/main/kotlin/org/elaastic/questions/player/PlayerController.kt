@@ -36,9 +36,9 @@ import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.course.Course
-import org.elaastic.questions.directory.AnonymousUserService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserService
+import org.elaastic.user.AnonymousUserService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
 import org.elaastic.questions.player.components.dashboard.DashboardModel
 import org.elaastic.questions.player.components.dashboard.DashboardModelFactory
 import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvaluationModelFactory

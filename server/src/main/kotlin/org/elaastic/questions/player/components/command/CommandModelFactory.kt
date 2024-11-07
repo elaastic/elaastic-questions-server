@@ -20,7 +20,7 @@ package org.elaastic.questions.player.components.command
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import java.lang.IllegalStateException
 
 object CommandModelFactory {

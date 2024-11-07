@@ -30,8 +30,8 @@ import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.results.AttemptNum
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal

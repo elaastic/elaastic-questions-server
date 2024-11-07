@@ -19,8 +19,8 @@
 package org.elaastic.analytics.lrs
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.directory.Role
-import org.elaastic.questions.directory.User
+import org.elaastic.user.Role
+import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

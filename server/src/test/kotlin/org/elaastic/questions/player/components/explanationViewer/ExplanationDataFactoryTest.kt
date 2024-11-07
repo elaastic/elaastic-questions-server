@@ -19,7 +19,7 @@
 package org.elaastic.questions.player.components.explanationViewer
 
 import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.questions.directory.UserService
+import org.elaastic.user.UserService
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven

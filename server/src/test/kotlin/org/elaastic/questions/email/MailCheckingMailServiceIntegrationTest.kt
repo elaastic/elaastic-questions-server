@@ -19,10 +19,10 @@
 package org.elaastic.questions.email
 
 import org.elaastic.bootstrap.BootstrapService
-import org.elaastic.questions.directory.ActivationKeyRepository
-import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserService
+import org.elaastic.user.ActivationKeyRepository
+import org.elaastic.user.RoleService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.*
@@ -39,12 +39,12 @@ import javax.transaction.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class MailCheckingMailServiceIntegrationTest(
-        @Autowired val activationKeyRepository: ActivationKeyRepository,
-        @Autowired val userService: UserService,
-        @Autowired val mailCheckingMailService: MailCheckingMailService,
-        @Autowired val roleService: RoleService,
-        @Autowired val entityManager: EntityManager,
-        @Autowired val bootstrapService: BootstrapService
+    @Autowired val activationKeyRepository: ActivationKeyRepository,
+    @Autowired val userService: UserService,
+    @Autowired val mailCheckingMailService: MailCheckingMailService,
+    @Autowired val roleService: RoleService,
+    @Autowired val entityManager: EntityManager,
+    @Autowired val bootstrapService: BootstrapService
 ) {
 
     lateinit var alPacino: User

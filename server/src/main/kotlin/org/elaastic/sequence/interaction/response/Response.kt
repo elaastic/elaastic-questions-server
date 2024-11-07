@@ -25,7 +25,8 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoiceConverter
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
+import org.elaastic..moderation.ModerationCandidate
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.annotation.CreatedDate

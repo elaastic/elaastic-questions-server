@@ -8,7 +8,7 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.sequence.interaction.results.ItemIndex
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import java.util.Locale
 
 abstract class AbstractEvaluationPhaseExecutionController(

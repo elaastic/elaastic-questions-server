@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.subject
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -31,10 +31,10 @@ import javax.persistence.*
 @EntityListeners(AuditingEntityListener::class)
 class SharedSubject(
 
-        @field:ManyToOne
+    @field:ManyToOne
         var teacher: User,
 
-        @field:ManyToOne(fetch = FetchType.EAGER)
+    @field:ManyToOne(fetch = FetchType.EAGER)
         var subject: Subject
 ) : AbstractJpaPersistable<Long>() {
 

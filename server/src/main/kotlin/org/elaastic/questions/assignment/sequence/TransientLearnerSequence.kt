@@ -1,7 +1,7 @@
 package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.sequence.phase.LearnerPhase
 import java.lang.IllegalStateException
 

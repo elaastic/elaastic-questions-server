@@ -26,7 +26,7 @@ import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
 import org.elaastic.questions.subject.statement.StatementService

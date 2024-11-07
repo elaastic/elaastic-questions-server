@@ -1,6 +1,6 @@
 package org.elaastic.common.abtesting
 
-import org.elaastic.questions.directory.Role
+import org.elaastic.user.Role
 import org.togglz.core.activation.Parameter
 import org.togglz.core.activation.ParameterBuilder
 import org.togglz.core.activation.UsernameActivationStrategy

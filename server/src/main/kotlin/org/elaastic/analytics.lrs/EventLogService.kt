@@ -20,8 +20,8 @@ package org.elaastic.analytics.lrs
 
 import org.elaastic.questions.assignment.sequence.ILearnerSequence
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.directory.Role
-import org.elaastic.questions.directory.User
+import org.elaastic.user.Role
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional

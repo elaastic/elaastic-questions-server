@@ -20,7 +20,10 @@ package org.elaastic.questions.email
 
 import org.apache.commons.lang3.time.DateUtils
 import org.elaastic.bootstrap.BootstrapService
-import org.elaastic.questions.directory.*
+import org.elaastic.user.PasswordResetKeyRepository
+import org.elaastic.user.RoleService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.*
@@ -37,12 +40,12 @@ import javax.transaction.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 internal class PasswordResetMailServiceIntegrationTest(
-        @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
-        @Autowired val userService: UserService,
-        @Autowired val passwordResetMailService: PasswordResetMailService,
-        @Autowired val roleService: RoleService,
-        @Autowired val entityManager: EntityManager,
-        @Autowired val bootstrapService: BootstrapService
+    @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
+    @Autowired val userService: UserService,
+    @Autowired val passwordResetMailService: PasswordResetMailService,
+    @Autowired val roleService: RoleService,
+    @Autowired val entityManager: EntityManager,
+    @Autowired val bootstrapService: BootstrapService
 ) {
 
     lateinit var alPacino: User

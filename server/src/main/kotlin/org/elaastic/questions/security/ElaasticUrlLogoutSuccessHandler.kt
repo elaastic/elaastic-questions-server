@@ -1,6 +1,6 @@
 package org.elaastic.questions.security
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler

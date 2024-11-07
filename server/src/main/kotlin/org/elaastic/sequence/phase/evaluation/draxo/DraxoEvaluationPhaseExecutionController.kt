@@ -8,7 +8,7 @@ import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication

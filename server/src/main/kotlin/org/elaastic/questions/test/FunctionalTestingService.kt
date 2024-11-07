@@ -14,8 +14,8 @@ import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserRepository
+import org.elaastic.user.User
+import org.elaastic.user.UserRepository
 import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService

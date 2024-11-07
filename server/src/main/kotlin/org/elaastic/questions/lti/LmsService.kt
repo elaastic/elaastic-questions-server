@@ -22,9 +22,9 @@ import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.course.CourseService
-import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserService
+import org.elaastic.user.RoleService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired

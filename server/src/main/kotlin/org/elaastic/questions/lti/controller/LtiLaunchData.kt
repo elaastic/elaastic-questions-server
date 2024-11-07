@@ -18,8 +18,8 @@
 
 package org.elaastic.questions.lti.controller
 
-import org.elaastic.questions.directory.Role
-import org.elaastic.questions.directory.RoleService
+import org.elaastic.user.Role
+import org.elaastic.user.RoleService
 import org.elaastic.questions.lti.LtiActivity
 import org.elaastic.questions.lti.LtiUser
 import java.net.URLEncoder

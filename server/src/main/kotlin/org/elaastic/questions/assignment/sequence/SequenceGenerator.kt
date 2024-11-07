@@ -22,7 +22,7 @@ import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 
 object SequenceGenerator {
 

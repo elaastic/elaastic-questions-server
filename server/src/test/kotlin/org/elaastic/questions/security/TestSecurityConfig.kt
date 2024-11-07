@@ -18,8 +18,8 @@
 
 package org.elaastic.questions.security
 
-import org.elaastic.questions.directory.Role
-import org.elaastic.questions.directory.User
+import org.elaastic.user.Role
+import org.elaastic.user.User
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary

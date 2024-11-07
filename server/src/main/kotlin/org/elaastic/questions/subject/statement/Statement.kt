@@ -21,7 +21,7 @@ package org.elaastic.questions.subject.statement
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.*
 import org.elaastic.questions.attachment.Attachment
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.Subject
 import org.springframework.data.annotation.CreatedDate

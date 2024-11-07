@@ -23,8 +23,8 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.directory.OnboardingState
-import org.elaastic.questions.directory.User
+import org.elaastic.user.OnboardingState
+import org.elaastic.user.User
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.SubjectService
 import org.junit.jupiter.api.Test

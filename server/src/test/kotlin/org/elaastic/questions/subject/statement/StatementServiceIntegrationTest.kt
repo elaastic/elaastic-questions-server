@@ -1,6 +1,6 @@
 package org.elaastic.questions.subject.statement
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen

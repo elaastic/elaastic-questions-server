@@ -24,9 +24,9 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserRepository
+import org.elaastic.user.RoleService
+import org.elaastic.user.User
+import org.elaastic.user.UserRepository
 import org.elaastic.questions.lti.*
 import org.elaastic.questions.lti.controller.LtiLaunchData
 import org.elaastic.questions.subject.Subject

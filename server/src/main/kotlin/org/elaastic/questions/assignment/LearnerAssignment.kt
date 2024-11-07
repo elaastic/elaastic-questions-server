@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -35,10 +35,10 @@ import javax.persistence.*
 @EntityListeners(AuditingEntityListener::class)
 class LearnerAssignment(
 
-        @field:ManyToOne(fetch = FetchType.EAGER)
+    @field:ManyToOne(fetch = FetchType.EAGER)
         var learner: User,
 
-        @field:ManyToOne(fetch = FetchType.EAGER)
+    @field:ManyToOne(fetch = FetchType.EAGER)
         var assignment: Assignment
 ) : AbstractJpaPersistable<Long>() {
 

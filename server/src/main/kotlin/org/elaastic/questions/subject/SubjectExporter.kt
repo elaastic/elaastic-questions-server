@@ -2,7 +2,7 @@ package org.elaastic.questions.subject
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.common.util.ZipService
 import org.springframework.beans.factory.annotation.Autowired

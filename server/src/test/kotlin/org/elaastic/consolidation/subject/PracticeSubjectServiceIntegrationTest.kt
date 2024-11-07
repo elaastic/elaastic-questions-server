@@ -1,7 +1,7 @@
 package org.elaastic.consolidation.subject
 
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.test.FunctionalTestingService

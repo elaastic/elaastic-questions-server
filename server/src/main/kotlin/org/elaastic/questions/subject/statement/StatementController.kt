@@ -26,7 +26,7 @@ import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.*
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

@@ -20,7 +20,7 @@ package org.elaastic.questions.subject
 
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.course.Course
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.statement.Statement
 import org.hibernate.annotations.SortNatural
@@ -56,17 +56,17 @@ import kotlin.collections.ArrayList
 @EntityListeners(AuditingEntityListener::class)
 class Subject (
 
-        @field:NotNull
+    @field:NotNull
         @field:NotBlank
         var title: String,
 
-        @field:ManyToOne(fetch = FetchType.LAZY)
+    @field:ManyToOne(fetch = FetchType.LAZY)
         var owner: User,
 
-        @field:ManyToOne(fetch = FetchType.LAZY)
+    @field:ManyToOne(fetch = FetchType.LAZY)
         var parentSubject: Subject? = null,
 
-        @field:ManyToOne(fetch = FetchType.EAGER)
+    @field:ManyToOne(fetch = FetchType.EAGER)
         var course: Course? = null
 
 ): AbstractJpaPersistable<Long>() {

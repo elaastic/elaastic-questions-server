@@ -18,6 +18,8 @@
 
 package org.elaastic.questions.directory
 
+import org.elaastic.user.Role
+import org.elaastic.user.RoleService
 import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*

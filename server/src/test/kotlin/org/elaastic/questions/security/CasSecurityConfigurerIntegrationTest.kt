@@ -1,6 +1,6 @@
 package org.elaastic.questions.security
 
-import org.elaastic.questions.directory.cas.SupportedCasProvider
+import org.elaastic.user.cas.SupportedCasProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.hamcrest.MatcherAssert.*

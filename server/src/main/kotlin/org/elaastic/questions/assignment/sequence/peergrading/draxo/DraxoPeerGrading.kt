@@ -20,6 +20,7 @@ package org.elaastic.questions.assignment.sequence.peergrading.draxo
 import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
+import org.elaastic.user.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.directory.User

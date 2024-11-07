@@ -27,7 +27,7 @@ import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.subject.Subject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException

@@ -23,6 +23,9 @@ import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.user.User
+import org.elaastic.user.UserRepository
+import org.elaastic.user.UserService
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat

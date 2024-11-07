@@ -35,8 +35,8 @@ import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ReadSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
+import org.elaastic.user.User
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.PlayerController
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig

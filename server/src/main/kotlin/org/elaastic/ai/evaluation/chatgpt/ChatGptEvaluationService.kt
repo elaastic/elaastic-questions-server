@@ -13,9 +13,9 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.interaction.response.ResponseRepository
 import org.elaastic.sequence.interaction.response.ResponseService
-import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.context.MessageSource
+import org.elaastic.sequence.interaction.Interaction
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service

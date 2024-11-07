@@ -5,7 +5,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluat
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.questions.directory.UserService
+import org.elaastic.user.UserService
 import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.test.IntegrationTestingService

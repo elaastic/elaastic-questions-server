@@ -20,7 +20,7 @@ package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping

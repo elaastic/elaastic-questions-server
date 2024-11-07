@@ -24,6 +24,7 @@ import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.user.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

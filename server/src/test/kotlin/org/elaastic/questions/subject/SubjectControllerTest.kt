@@ -23,8 +23,8 @@ import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.course.CourseService
-import org.elaastic.questions.directory.OnboardingState
-import org.elaastic.questions.directory.User
+import org.elaastic.user.OnboardingState
+import org.elaastic.user.User
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.statement.StatementService
 import org.junit.jupiter.api.Test

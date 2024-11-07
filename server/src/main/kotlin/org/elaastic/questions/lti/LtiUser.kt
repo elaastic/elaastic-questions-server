@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.lti
 
-import org.elaastic.questions.directory.Role
+import org.elaastic.user.Role
 
 data class LtiUser(
         val lmsKey: String,

@@ -6,7 +6,7 @@ import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
