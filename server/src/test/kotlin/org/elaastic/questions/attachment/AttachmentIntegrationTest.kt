@@ -23,8 +23,8 @@ import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
 import org.elaastic.questions.assignment.sequence.LearnerSequenceRepository
-import org.elaastic.questions.attachment.datastore.DataIdentifier
-import org.elaastic.questions.attachment.datastore.FileDataStore
+import org.elaastic.filestore.DataIdentifier
+import org.elaastic.filestore.FileDataStore
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen

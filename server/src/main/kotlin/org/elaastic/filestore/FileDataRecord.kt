@@ -16,42 +16,39 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.attachment.datastore
+package org.elaastic.filestore
 
+import java.io.File
+import java.io.IOException
 import java.io.InputStream
 
 /**
- * Immutable data record that consists of a binary stream.
+ * Data record that is based on a normal file.
  */
-interface DataRecord {
+class FileDataRecord(
+    identifier: DataIdentifier,
+    private val file: File
+) : AbstractDataRecord(identifier) {
 
-    /**
-     * Returns the identifier of this record.
-     *
-     * @return data identifier
-     */
-    val identifier: DataIdentifier
+    override val length: Long
+        get() = file.length()
 
-    /**
-     * Returns the length of the binary stream in this record.
-     *
-     * @return length of the binary stream
-     * @throws DataStoreException if the record could not be accessed
-     */
-    val length: Long
+    override val stream: InputStream
+        @Throws(DataStoreException::class)
+        get() {
+            try {
+                return LazyFileInputStream(file)
+            } catch (e: IOException) {
+                throw DataStoreException("Error opening input stream of " + file.absolutePath, e)
+            }
 
-    /**
-     * Returns the the binary stream in this record.
-     *
-     * @return binary stream
-     * @throws DataStoreException if the record could not be accessed
-     */
-    val stream: InputStream
+        }
 
-    /**
-     * Returns the last modified of the record.
-     *
-     * @return last modified time of the binary stream
-     */
-    val lastModified: Long
+    override val lastModified: Long
+        get() = file.lastModified()
+
+    init {
+        assert(file.isFile)
+    }
 }
+

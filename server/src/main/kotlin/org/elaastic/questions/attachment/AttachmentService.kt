@@ -19,8 +19,8 @@
 package org.elaastic.questions.attachment
 
 import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.attachment.datastore.DataIdentifier
-import org.elaastic.questions.attachment.datastore.FileDataStore
+import org.elaastic.filestore.DataIdentifier
+import org.elaastic.filestore.FileDataStore
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException

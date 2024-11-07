@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.attachment.datastore
+package org.elaastic.filestore
 
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory

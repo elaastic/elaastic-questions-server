@@ -16,35 +16,42 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.attachment.datastore
+package org.elaastic.filestore
+
+import java.io.InputStream
 
 /**
- * Exception thrown by the Data Store module.
+ * Immutable data record that consists of a binary stream.
  */
-class DataStoreException : Exception {
+interface DataRecord {
 
     /**
-     * Constructs a new instance of this class with the specified detail
-     * message.
+     * Returns the identifier of this record.
      *
-     * @param message the detailed message.
+     * @return data identifier
      */
-    constructor(message: String) : super(message) {}
+    val identifier: DataIdentifier
 
     /**
-     * Constructs a new instance of this class with the specified detail
-     * message and root cause.
+     * Returns the length of the binary stream in this record.
      *
-     * @param message the detailed message.
-     * @param cause   root failure cause
+     * @return length of the binary stream
+     * @throws DataStoreException if the record could not be accessed
      */
-    constructor(message: String, cause: Throwable) : super(message, cause) {}
+    val length: Long
 
     /**
-     * Constructs a new instance of this class with the specified root cause.
+     * Returns the the binary stream in this record.
      *
-     * @param rootCause root failure cause
+     * @return binary stream
+     * @throws DataStoreException if the record could not be accessed
      */
-    constructor(rootCause: Throwable) : super(rootCause) {}
+    val stream: InputStream
 
+    /**
+     * Returns the last modified of the record.
+     *
+     * @return last modified time of the binary stream
+     */
+    val lastModified: Long
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.attachment.datastore
+package org.elaastic.filestore
 
 import java.io.InputStream
 
@@ -85,14 +85,15 @@ interface DataStore {
      * The given stream is consumed and **not closed** by this
      * method. It is the responsibility of the caller to close the stream.
      * A typical call pattern would be:
-     * <pre>
+     *
+     * ```kotlin
      * InputStream stream = ...;
      * try {
-     * record = store.addRecord(stream);
+     *     record = store.addRecord(stream);
      * } finally {
-     * stream.close();
+     *     stream.close();
      * }
-    </pre> *
+     * ```
      *
      * @param stream binary stream
      * @return data record that contains the given stream

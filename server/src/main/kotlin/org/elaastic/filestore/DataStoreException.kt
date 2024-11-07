@@ -16,48 +16,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.attachment.datastore
-
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
+package org.elaastic.filestore
 
 /**
- * Data record that is based on a normal file.
+ * Exception thrown by the Data Store module.
  */
-class FileDataRecord(
-        identifier: DataIdentifier,
-        private val file: File
-) : AbstractDataRecord(identifier) {
+class DataStoreException : Exception {
 
     /**
-     * {@inheritDoc}
+     * Constructs a new instance of this class with the specified detail
+     * message.
+     *
+     * @param message the detailed message.
      */
-    override val length: Long
-        get() = file.length()
+    constructor(message: String) : super(message) {}
 
     /**
-     * {@inheritDoc}
+     * Constructs a new instance of this class with the specified detail
+     * message and root cause.
+     *
+     * @param message the detailed message.
+     * @param cause   root failure cause
      */
-    override val stream: InputStream
-        @Throws(DataStoreException::class)
-        get() {
-            try {
-                return LazyFileInputStream(file)
-            } catch (e: IOException) {
-                throw DataStoreException("Error opening input stream of " + file.absolutePath, e)
-            }
-
-        }
+    constructor(message: String, cause: Throwable) : super(message, cause) {}
 
     /**
-     * {@inheritDoc}
+     * Constructs a new instance of this class with the specified root cause.
+     *
+     * @param rootCause root failure cause
      */
-    override val lastModified: Long
-        get() = file.lastModified()
+    constructor(rootCause: Throwable) : super(rootCause) {}
 
-    init {
-        assert(file.isFile)
-    }
 }
-
