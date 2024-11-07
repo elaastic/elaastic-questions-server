@@ -1,6 +1,6 @@
 package org.elaastic.sequence.phase.evaluation.all_at_once
 
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhase

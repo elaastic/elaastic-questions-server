@@ -20,10 +20,10 @@ package org.elaastic.questions.test
 
 import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.sequence.*
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.InteractionRepository
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserRepository

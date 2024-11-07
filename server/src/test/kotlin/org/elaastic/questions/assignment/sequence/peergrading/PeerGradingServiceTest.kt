@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
-import org.elaastic.questions.assignment.sequence.interaction.InteractionService
+import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService

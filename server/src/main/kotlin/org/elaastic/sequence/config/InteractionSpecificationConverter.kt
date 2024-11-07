@@ -3,7 +3,7 @@ package org.elaastic.sequence.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.sequence.interaction.InteractionType
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 

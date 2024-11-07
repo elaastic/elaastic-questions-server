@@ -22,8 +22,8 @@ package org.elaastic.questions.player.components.dashboard
 
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.InteractionType
+import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.elaastic.questions.player.components.steps.StepsModelFactory

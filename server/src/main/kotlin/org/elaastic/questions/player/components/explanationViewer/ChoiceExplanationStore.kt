@@ -20,7 +20,7 @@ package org.elaastic.questions.player.components.explanationViewer
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
 
 class ChoiceExplanationStore(choiceSpecification: ChoiceSpecification) : ExplanationStore,
     HashMap<ResponseData, MutableList<ExplanationData>>() {

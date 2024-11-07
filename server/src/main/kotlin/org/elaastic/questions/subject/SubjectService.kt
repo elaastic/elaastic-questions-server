@@ -23,7 +23,7 @@ import org.elaastic.questions.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.directory.User

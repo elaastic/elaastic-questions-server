@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction
+package org.elaastic.sequence.interaction
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistribution
+import org.elaastic.sequence.interaction.results.ResponsesDistribution
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 

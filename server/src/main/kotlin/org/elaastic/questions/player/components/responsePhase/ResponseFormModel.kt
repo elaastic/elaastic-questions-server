@@ -18,7 +18,7 @@
 package org.elaastic.questions.player.components.responsePhase
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.sequence.interaction.results.AttemptNum
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 
 data class ResponseFormModel(

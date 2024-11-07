@@ -2,7 +2,7 @@ package org.elaastic.questions.player.components.studentResults
 
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.questions.player.components.explanationViewer.ExplanationDataFactory
 import org.elaastic.questions.subject.statement.Statement
 
@@ -20,8 +20,8 @@ object LearnerResultsModelFactory {
 
     fun buildMultipleChoiceResult(responseFirstTry: Response?,
                                   responseSecondTry: Response?,
-                        responseFirstTryHasChatGPTEvaluation: Boolean,
-                        responseSecondTryHasChatGPTEvaluation: Boolean,
+                                  responseFirstTryHasChatGPTEvaluation: Boolean,
+                                  responseSecondTryHasChatGPTEvaluation: Boolean,
                                   statement: Statement) : LearnerMultipleChoiceResults =
             LearnerMultipleChoiceResults(
                     explanationFirstTry = if(responseFirstTry != null) ExplanationDataFactory.create(responseFirstTry, responseFirstTryHasChatGPTEvaluation) else null,
@@ -38,8 +38,8 @@ object LearnerResultsModelFactory {
 
     fun buildExclusiveChoiceResult(responseFirstTry: Response?,
                                    responseSecondTry: Response?,
-                        responseFirstTryHasChatGPTEvaluation: Boolean,
-                        responseSecondTryHasChatGPTEvaluation: Boolean,
+                                   responseFirstTryHasChatGPTEvaluation: Boolean,
+                                   responseSecondTryHasChatGPTEvaluation: Boolean,
                                    statement: Statement) : LearnerExclusiveChoiceResults =
             LearnerExclusiveChoiceResults(
                     explanationFirstTry = if(responseFirstTry != null) ExplanationDataFactory.create(responseFirstTry, responseFirstTryHasChatGPTEvaluation) else null,

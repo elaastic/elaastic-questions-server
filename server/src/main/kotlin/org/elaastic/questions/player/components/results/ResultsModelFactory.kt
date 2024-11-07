@@ -20,10 +20,10 @@ package org.elaastic.questions.player.components.results
 import ConfidenceDistributionChartModel
 import EvaluationDistributionChartModel
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
-import org.elaastic.questions.assignment.sequence.interaction.results.ConfidenceDistributionFactory
-import org.elaastic.questions.assignment.sequence.interaction.results.GradingDistributionFactory
-import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistributionFactory
+import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.sequence.interaction.results.ConfidenceDistributionFactory
+import org.elaastic.sequence.interaction.results.GradingDistributionFactory
+import org.elaastic.sequence.interaction.results.ResponsesDistributionFactory
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.common.abtesting.ElaasticFeatures

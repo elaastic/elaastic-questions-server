@@ -17,11 +17,11 @@
  */
 package org.elaastic.questions.player.components.recommendation
 
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
 import org.junit.jupiter.api.Test
 import com.nhaarman.mockitokotlin2.*
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
+import org.elaastic.sequence.interaction.response.ResponseSet
 import java.math.BigDecimal
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.hamcrest.CoreMatchers.`is`

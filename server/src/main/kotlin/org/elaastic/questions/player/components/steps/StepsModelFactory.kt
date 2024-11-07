@@ -20,8 +20,8 @@ package org.elaastic.questions.player.components.steps
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.InteractionType
 
 object StepsModelFactory {
 

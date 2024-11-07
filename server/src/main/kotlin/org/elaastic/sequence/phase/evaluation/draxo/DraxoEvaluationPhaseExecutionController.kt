@@ -4,9 +4,9 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController

@@ -1,8 +1,8 @@
 package org.elaastic.sequence.phase.evaluation
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.phase.LearnerPhaseExecution
 
 abstract class AbstractLearnerEvaluationPhaseExecution(

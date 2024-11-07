@@ -25,8 +25,8 @@ import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.ResponseSet
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.common.web.MessageBuilder

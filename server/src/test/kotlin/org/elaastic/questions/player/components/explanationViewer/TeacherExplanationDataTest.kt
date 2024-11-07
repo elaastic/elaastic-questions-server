@@ -18,9 +18,6 @@
 
 package org.elaastic.questions.player.components.explanationViewer
 
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.UserService
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.test.IntegrationTestingService

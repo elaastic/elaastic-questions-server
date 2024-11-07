@@ -1,6 +1,6 @@
 package org.elaastic.questions.test.interpreter.command
 
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
 import java.math.BigDecimal
 import kotlin.random.Random
 

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction
+package org.elaastic.sequence.interaction
 
 
 typealias ResponseId = Long

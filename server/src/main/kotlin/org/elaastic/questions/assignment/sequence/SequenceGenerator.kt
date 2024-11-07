@@ -20,8 +20,8 @@ package org.elaastic.questions.assignment.sequence
 
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.questions.directory.User
 
 object SequenceGenerator {
@@ -104,10 +104,10 @@ object SequenceGenerator {
 
 
     data class SequenceInfoSetup(
-            val executionContext: ExecutionContext,
-            val sequenceState: State,
-            val resultsArePublished: Boolean = false,
-            val interactionType: InteractionType? = null,
-            val interactionState: State? = null
+        val executionContext: ExecutionContext,
+        val sequenceState: State,
+        val resultsArePublished: Boolean = false,
+        val interactionType: InteractionType? = null,
+        val interactionState: State? = null
     )
 }

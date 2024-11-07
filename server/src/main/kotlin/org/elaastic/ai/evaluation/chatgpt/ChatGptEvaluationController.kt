@@ -4,7 +4,7 @@ import org.elaastic.common.util.requireAccessThrowDenied
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingController.ResponseSubmissionAsynchronous
 import org.elaastic.questions.directory.User

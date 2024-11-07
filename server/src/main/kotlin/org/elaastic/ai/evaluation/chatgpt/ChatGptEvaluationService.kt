@@ -10,10 +10,10 @@ import org.elaastic.common.util.requireAccess
 import org.elaastic.moderation.ReportCandidateService
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder

@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.response
+package org.elaastic.sequence.interaction.response
 
-import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.sequence.interaction.results.AttemptNum
 
 class ResponseSet(responses: List<Response>) {
 

@@ -25,10 +25,11 @@ import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired

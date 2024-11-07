@@ -31,7 +31,6 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceGenerator
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
-import org.elaastic.questions.assignment.sequence.interaction.results.*
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
@@ -66,6 +65,7 @@ import org.elaastic.questions.player.components.studentResults.LearnerExclusiveC
 import org.elaastic.questions.player.components.studentResults.LearnerMultipleChoiceResults
 import org.elaastic.questions.player.components.studentResults.LearnerOpenResults
 import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
+import org.elaastic.sequence.interaction.results.*
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
 import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase

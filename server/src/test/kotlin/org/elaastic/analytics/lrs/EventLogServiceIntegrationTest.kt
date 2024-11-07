@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.LearnerSequence
-import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.questions.directory.Role
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen

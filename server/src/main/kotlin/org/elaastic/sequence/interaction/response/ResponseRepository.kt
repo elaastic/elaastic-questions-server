@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.response
+package org.elaastic.sequence.interaction.response
 
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.jpa.repository.JpaRepository
@@ -43,10 +43,12 @@ interface ResponseRepository : JpaRepository<Response, Long> {
 
     fun countByLearnerAndInteractionAndAttempt(learner: User,
                                                interaction: Interaction,
-                                               attempt: AttemptNum): Int
+                                               attempt: AttemptNum
+    ): Int
 
     fun countByInteractionAndAttemptAndFakeIsFalse(interaction: Interaction,
-                                                   attempt: AttemptNum): Int
+                                                   attempt: AttemptNum
+    ): Int
 
     fun countByStatement(statement: Statement): Int
 

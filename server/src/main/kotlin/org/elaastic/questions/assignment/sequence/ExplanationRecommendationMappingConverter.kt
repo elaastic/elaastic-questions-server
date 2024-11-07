@@ -21,7 +21,7 @@ package org.elaastic.questions.assignment.sequence
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.elaastic.questions.assignment.sequence.interaction.ExplanationRecommendationMapping
+import org.elaastic.sequence.interaction.ExplanationRecommendationMapping
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 

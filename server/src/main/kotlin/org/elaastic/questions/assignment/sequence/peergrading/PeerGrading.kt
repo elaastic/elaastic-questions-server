@@ -18,10 +18,8 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
+import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.common.persistence.AbstractJpaPersistable
-import org.elaastic.moderation.ReportCandidate
-import org.elaastic.moderation.UtilityGrade
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.directory.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate

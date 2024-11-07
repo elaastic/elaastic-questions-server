@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction
+package org.elaastic.sequence.interaction
 
-import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistribution
-import org.elaastic.questions.assignment.sequence.interaction.results.ResponsesDistributionOnAttempt
+import org.elaastic.sequence.interaction.results.ResponsesDistribution
+import org.elaastic.sequence.interaction.results.ResponsesDistributionOnAttempt
 import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*

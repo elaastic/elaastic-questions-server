@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.results
+package org.elaastic.sequence.interaction.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import java.math.BigDecimal
 
 class GradingDistributionOnResponse(
-        var nbGrade: Int = 0,
-        var nbResponsesByEvaluation: Array<NbVote> = Array(5) { 0 },
-        var nbNoItem: Int = 0
+    var nbGrade: Int = 0,
+    var nbResponsesByEvaluation: Array<NbVote> = Array(5) { 0 },
+    var nbNoItem: Int = 0
 ) {
 
     constructor(peerGradings: List<PeerGrading>, choice: Int) : this() {

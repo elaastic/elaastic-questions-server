@@ -16,25 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.results
+package org.elaastic.sequence.interaction.results
 
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
-import java.math.BigDecimal
+import org.elaastic.sequence.interaction.response.ResponseSet
 
-object GradingDistributionFactory {
+object ConfidenceDistributionFactory {
 
     fun build(choiceSpecification: ChoiceSpecification,
-              peerGradings: List<PeerGrading>?): GradingDistribution{
-        val gradingDistributionList = mutableListOf<GradingDistributionOnResponse>()
-        if(peerGradings != null){
-            for(choiceIndex in 1..choiceSpecification.nbCandidateItem){
-                gradingDistributionList.add(GradingDistributionOnResponse(
-                        peerGradings.filter{pg -> pg.grade?.compareTo(BigDecimal(-1)) != 0 },
-                        choiceIndex
-                ))
-            }
+              responseSet: ResponseSet
+    ): ConfidenceDistribution {
+        val confidenceDistributionList = mutableListOf<ConfidenceDistributionOnResponse>()
+        for(choiceIndex in 1..choiceSpecification.nbCandidateItem){
+            confidenceDistributionList.add(
+                ConfidenceDistributionOnResponse(
+                    responseSet.getWithoutFake(1),
+                    choiceIndex
+            )
+            )
         }
-        return GradingDistribution(gradingDistributionList)
+        return ConfidenceDistribution(confidenceDistributionList)
     }
 }

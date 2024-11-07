@@ -1,6 +1,6 @@
 package org.elaastic.questions.assignment.ia
 
-import org.elaastic.questions.assignment.sequence.interaction.ResponseId
+import org.elaastic.sequence.interaction.ResponseId
 import java.util.*
 
 class RecommendationResponsePool(responseList: List<ResponseInfo>,

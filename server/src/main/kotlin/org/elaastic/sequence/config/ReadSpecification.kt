@@ -1,6 +1,6 @@
 package org.elaastic.sequence.config
 
-import org.elaastic.questions.assignment.sequence.interaction.InteractionType
+import org.elaastic.sequence.interaction.InteractionType
 
 /**
  * ReadSpecification is a class that represents the specification of the

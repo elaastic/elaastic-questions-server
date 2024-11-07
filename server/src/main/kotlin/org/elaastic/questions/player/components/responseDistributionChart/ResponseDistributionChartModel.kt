@@ -18,9 +18,9 @@
 
 package org.elaastic.questions.player.components.responseDistributionChart
 
-import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
-import org.elaastic.questions.assignment.sequence.interaction.results.ItemIndex
-import org.elaastic.questions.assignment.sequence.interaction.results.ResponsePercentage
+import org.elaastic.sequence.interaction.results.AttemptNum
+import org.elaastic.sequence.interaction.results.ItemIndex
+import org.elaastic.sequence.interaction.results.ResponsePercentage
 
 data class ResponseDistributionChartModel(
         val interactionId: Long,

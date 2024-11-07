@@ -18,8 +18,8 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
-import org.elaastic.moderation.ReportCandidateRepository
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.directory.User
 import org.springframework.data.jpa.repository.JpaRepository
 

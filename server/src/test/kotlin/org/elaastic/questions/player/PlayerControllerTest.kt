@@ -36,10 +36,10 @@ import org.elaastic.questions.assignment.sequence.LearnerSequence
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.InteractionService
-import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.InteractionService
+import org.elaastic.sequence.interaction.InteractionType
+import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService

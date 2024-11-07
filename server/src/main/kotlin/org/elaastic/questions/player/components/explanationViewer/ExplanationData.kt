@@ -20,7 +20,7 @@ package org.elaastic.questions.player.components.explanationViewer
 
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
 import java.math.BigDecimal
 import java.math.RoundingMode
 

@@ -17,7 +17,7 @@
  */
 package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria

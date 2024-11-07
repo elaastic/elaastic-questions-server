@@ -17,11 +17,11 @@
  */
 package org.elaastic.questions.assignment.ia
 
-import org.elaastic.questions.assignment.sequence.interaction.ExplanationRecommendationMapping
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.sequence.interaction.ExplanationRecommendationMapping
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.directory.User
 import org.springframework.stereotype.Service
 import java.math.BigInteger
@@ -78,7 +78,8 @@ class ResponseRecommendationService(
      */
     private fun computeRecommandations(forResponseList: List<ResponseInfo>,
                                        responsePool: RecommendationResponsePool,
-                                       recommendationsMapping: ExplanationRecommendationMapping) {
+                                       recommendationsMapping: ExplanationRecommendationMapping
+    ) {
         forResponseList.forEach { forResponse ->
             var except = ArrayList<Long>(recommendationsMapping[forResponse.id])
             if (!except.contains(forResponse.id)) { // to avoid self-evaluation

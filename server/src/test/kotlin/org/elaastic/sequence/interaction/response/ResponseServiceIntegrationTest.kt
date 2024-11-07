@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.response
+package org.elaastic.sequence.interaction.response
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
@@ -27,8 +27,6 @@ import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.*
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService

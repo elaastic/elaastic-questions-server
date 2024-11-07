@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.sequence.phase.LearnerPhase

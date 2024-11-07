@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.response
+package org.elaastic.sequence.interaction.response
 
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.LearnerAssignmentService
@@ -28,8 +28,8 @@ import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.subject.statement.StatementService
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
 import org.springframework.beans.factory.annotation.Autowired

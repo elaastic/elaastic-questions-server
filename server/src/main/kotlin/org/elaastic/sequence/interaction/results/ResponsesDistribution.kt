@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.results
+package org.elaastic.sequence.interaction.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.lang.IllegalArgumentException
@@ -25,8 +25,8 @@ typealias AttemptNum = Int
 typealias ResponsePercentage = Float
 
 data class ResponsesDistribution(
-        val resultForAttempt1: ResponsesDistributionOnAttempt,
-        val resultForAttempt2: ResponsesDistributionOnAttempt? = null
+    val resultForAttempt1: ResponsesDistributionOnAttempt,
+    val resultForAttempt2: ResponsesDistributionOnAttempt? = null
 ) {
     init {
         require(

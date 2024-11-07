@@ -7,7 +7,7 @@ import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.RevisionMode
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.response.ResponseService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime

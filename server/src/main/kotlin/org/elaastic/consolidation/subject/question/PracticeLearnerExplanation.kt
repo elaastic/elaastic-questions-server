@@ -2,7 +2,7 @@ package org.elaastic.consolidation.subject.question
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
 import java.util.UUID
 
 /**

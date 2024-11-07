@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.player.components.explanationViewer
 
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.Response
 
 object ExplanationDataFactory {
 

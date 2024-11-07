@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction
+package org.elaastic.sequence.interaction
 
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.ia.ResponseRecommendationService
@@ -24,9 +24,9 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.analytics.lrs.EventLogService
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.interaction.results.ResultsService
+import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.sequence.interaction.results.ResultsService
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.InteractionSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification

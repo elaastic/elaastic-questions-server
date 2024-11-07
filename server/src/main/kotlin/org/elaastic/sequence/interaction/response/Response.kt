@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.response
+package org.elaastic.sequence.interaction.response
 
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
@@ -24,8 +24,7 @@ import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoiceConverter
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.moderation.ModerationCandidate
+import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.questions.directory.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.statement.Statement

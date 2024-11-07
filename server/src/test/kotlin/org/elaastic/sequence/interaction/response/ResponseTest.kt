@@ -16,12 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.interaction.response
+package org.elaastic.sequence.interaction.response
 
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.sequence.interaction.response.Response
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -43,11 +44,11 @@ class ResponseTest {
         val learnerChoiceMixNegative = LearnerChoice(listOf(1, 2, 4))
         val learnerChoiceAllSelected = LearnerChoice(listOf(1, 2, 3, 4, 5))
         // Expected correct comput of scores
-        assertEquals(BigDecimal(100),Response.computeScore(learnerChoiceAllGood, multipleChoiceSpecification))
-        assertEquals(BigDecimal(0),Response.computeScore(learnerChoiceAllBad, multipleChoiceSpecification))
-        assertEquals(BigDecimal(0),Response.computeScore(learnerChoiceMixNegative, multipleChoiceSpecification))
-        assertEquals(BigDecimal(17),Response.computeScore(learnerChoiceMixPositive, multipleChoiceSpecification))
-        assertEquals(BigDecimal(0),Response.computeScore(learnerChoiceAllSelected, multipleChoiceSpecification))
+        assertEquals(BigDecimal(100), Response.computeScore(learnerChoiceAllGood, multipleChoiceSpecification))
+        assertEquals(BigDecimal(0), Response.computeScore(learnerChoiceAllBad, multipleChoiceSpecification))
+        assertEquals(BigDecimal(0), Response.computeScore(learnerChoiceMixNegative, multipleChoiceSpecification))
+        assertEquals(BigDecimal(17), Response.computeScore(learnerChoiceMixPositive, multipleChoiceSpecification))
+        assertEquals(BigDecimal(0), Response.computeScore(learnerChoiceAllSelected, multipleChoiceSpecification))
     }
 
     @Test
@@ -63,8 +64,8 @@ class ResponseTest {
         val learnerChoiceAllGood = LearnerChoice(listOf(1, 2, 3))
         val learnerChoiceMixPositive = LearnerChoice(listOf(1, 2))
         // Expected correct comput of scores
-        assertEquals(BigDecimal(100),Response.computeScore(learnerChoiceAllGood, multipleChoiceSpecification))
-        assertEquals(BigDecimal(67),Response.computeScore(learnerChoiceMixPositive, multipleChoiceSpecification))
+        assertEquals(BigDecimal(100), Response.computeScore(learnerChoiceAllGood, multipleChoiceSpecification))
+        assertEquals(BigDecimal(67), Response.computeScore(learnerChoiceMixPositive, multipleChoiceSpecification))
     }
 
     @Test
@@ -90,8 +91,8 @@ class ResponseTest {
         val learnerChoiceBad = LearnerChoice(listOf(1))
         val learnerChoiceEmpty = LearnerChoice(listOf())
         // Expected correct comput of scores
-        assertEquals(BigDecimal(100),Response.computeScore(learnerChoiceGood, exclusiveChoiceSpecification))
-        assertEquals(BigDecimal(0),Response.computeScore(learnerChoiceBad, exclusiveChoiceSpecification))
-        assertEquals(BigDecimal(0),Response.computeScore(learnerChoiceEmpty, exclusiveChoiceSpecification))
+        assertEquals(BigDecimal(100), Response.computeScore(learnerChoiceGood, exclusiveChoiceSpecification))
+        assertEquals(BigDecimal(0), Response.computeScore(learnerChoiceBad, exclusiveChoiceSpecification))
+        assertEquals(BigDecimal(0), Response.computeScore(learnerChoiceEmpty, exclusiveChoiceSpecification))
     }
 }

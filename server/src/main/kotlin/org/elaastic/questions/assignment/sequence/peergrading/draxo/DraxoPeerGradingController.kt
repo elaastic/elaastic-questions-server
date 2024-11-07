@@ -20,7 +20,7 @@ package org.elaastic.questions.assignment.sequence.peergrading.draxo
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.player.components.evaluation.EvaluationModel

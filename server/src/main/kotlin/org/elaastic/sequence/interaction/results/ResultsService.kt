@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.elaastic.questions.assignment.sequence.interaction.results
+package org.elaastic.sequence.interaction.results
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.InteractionRepository
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseSet
+import org.elaastic.sequence.interaction.InteractionRepository
+import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.sequence.interaction.response.ResponseSet
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -30,9 +30,9 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class ResultsService(
-        @Autowired val responseService: ResponseService,
-        @Autowired val interactionRepository: InteractionRepository,
-        @Autowired val assignmentService: AssignmentService
+    @Autowired val responseService: ResponseService,
+    @Autowired val interactionRepository: InteractionRepository,
+    @Autowired val assignmentService: AssignmentService
         ) {
 
     fun canUpdateResults(user: User, sequence: Sequence): Boolean =
@@ -76,11 +76,12 @@ class ResultsService(
     }
 
     private fun updateResponsesDistribution(sequence: Sequence,
-                                            responseSet: ResponseSet) {
+                                            responseSet: ResponseSet
+    ) {
         sequence.getResponseSubmissionInteraction().let {
             it.results = ResponsesDistributionFactory.build(
-                    it.sequence.statement.choiceSpecification!!,
-                    responseSet
+                it.sequence.statement.choiceSpecification!!,
+                responseSet
             )
             interactionRepository.save(it)
         }
