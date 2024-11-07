@@ -1,7 +1,7 @@
-package org.elaastic.questions.player.components.studentResults
+package org.elaastic.player.results.learner
 
-import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.player.explanations.ExplanationData
+import org.elaastic.questions.assignment.QuestionType
 
 class LearnerOpenResults(
     override val explanationFirstTry: ExplanationData?,

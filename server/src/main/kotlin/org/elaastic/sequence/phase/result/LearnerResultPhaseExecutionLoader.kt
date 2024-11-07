@@ -6,7 +6,7 @@ import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.sequence.interaction.response.ResponseService
 import org.elaastic.sequence.interaction.results.ResultsService
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
-import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
+import org.elaastic.player.results.learner.LearnerResultsModelFactory
 import org.elaastic.sequence.phase.LearnerPhase
 import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhaseExecutionLoader

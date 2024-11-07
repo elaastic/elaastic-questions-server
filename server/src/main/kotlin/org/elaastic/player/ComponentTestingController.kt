@@ -60,10 +60,10 @@ import org.elaastic.questions.player.components.statement.StatementInfo
 import org.elaastic.questions.player.components.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModel
-import org.elaastic.questions.player.components.studentResults.LearnerExclusiveChoiceResults
-import org.elaastic.questions.player.components.studentResults.LearnerMultipleChoiceResults
-import org.elaastic.questions.player.components.studentResults.LearnerOpenResults
-import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
+import org.elaastic.player.results.learner.LearnerExclusiveChoiceResults
+import org.elaastic.player.results.learner.LearnerMultipleChoiceResults
+import org.elaastic.player.results.learner.LearnerOpenResults
+import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.sequence.interaction.results.*
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel

@@ -1,9 +1,9 @@
-package org.elaastic.questions.player.components.studentResults
+package org.elaastic.player.results.learner
 
+import org.elaastic.player.explanations.ExplanationData
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.player.explanations.ExplanationData
 
 class LearnerMultipleChoiceResults(
     override val explanationFirstTry: ExplanationData?,
@@ -13,7 +13,7 @@ class LearnerMultipleChoiceResults(
     val scoreFirstTry: Int?,
     val scoreSecondTry: Int?,
     val expectedChoice: MultipleChoiceSpecification,
-    ) : LearnerResultsModel{
+    ) : LearnerResultsModel {
 
     override fun getQuestionType() = QuestionType.MultipleChoice
 

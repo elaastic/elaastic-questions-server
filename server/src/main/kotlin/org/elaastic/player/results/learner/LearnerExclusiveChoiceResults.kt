@@ -1,9 +1,9 @@
-package org.elaastic.questions.player.components.studentResults
+package org.elaastic.player.results.learner
 
+import org.elaastic.player.explanations.ExplanationData
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.player.explanations.ExplanationData
 
 class LearnerExclusiveChoiceResults(
     override val explanationFirstTry: ExplanationData?,
@@ -13,7 +13,7 @@ class LearnerExclusiveChoiceResults(
     val scoreFirstTry: Int?,
     val scoreSecondTry: Int?,
     val expectedChoice: ExclusiveChoiceSpecification,
-    ) : LearnerResultsModel{
+    ) : LearnerResultsModel {
 
     override fun getQuestionType() = QuestionType.ExclusiveChoice
 

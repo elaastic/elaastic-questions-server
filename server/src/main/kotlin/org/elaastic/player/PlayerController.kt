@@ -43,8 +43,8 @@ import org.elaastic.player.dashboard.DashboardModel
 import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
-import org.elaastic.questions.player.components.studentResults.LearnerResultsModel
-import org.elaastic.questions.player.components.studentResults.LearnerResultsModelFactory
+import org.elaastic.player.results.learner.LearnerResultsModel
+import org.elaastic.player.results.learner.LearnerResultsModelFactory
 import org.elaastic.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.phase.LearnerPhaseService
