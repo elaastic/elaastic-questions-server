@@ -16,10 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.statement
+package org.elaastic.player.statement
 
-data class StatementPanelModel(
-        val panelClosed: Boolean = false,
-        val hideQuestionType: Boolean = false,
-        val hideStatement: Boolean = false
-)
+import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.questions.attachment.Attachment
+
+data class StatementInfo(
+        val title: String,
+        val questionType: QuestionType,
+        val content: String,
+        val attachment: Attachment? = null
+) {
+    constructor(statement: Statement) :
+            this(
+                    statement.title,
+                    statement.questionType,
+                    statement.content,
+                    statement.attachment
+            )
+}

@@ -27,8 +27,8 @@ import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory
 import org.elaastic.player.command.CommandModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.player.sequence.status.SequenceInfoResolver
-import org.elaastic.questions.player.components.statement.StatementInfo
-import org.elaastic.questions.player.components.statement.StatementPanelModel
+import org.elaastic.player.statement.StatementInfo
+import org.elaastic.player.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModelFactory
 

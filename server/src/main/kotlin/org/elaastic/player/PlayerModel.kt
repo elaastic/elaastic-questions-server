@@ -22,8 +22,8 @@ import org.elaastic.player.assignmentview.AssignmentOverviewModel
 import org.elaastic.player.command.CommandModel
 import org.elaastic.player.results.ResultsModel
 import org.elaastic.player.sequence.status.SequenceInfoModel
-import org.elaastic.questions.player.components.statement.StatementInfo
-import org.elaastic.questions.player.components.statement.StatementPanelModel
+import org.elaastic.player.statement.StatementInfo
+import org.elaastic.player.statement.StatementPanelModel
 import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.questions.player.components.steps.StepsModel
 import org.elaastic.sequence.phase.LearnerPhase
