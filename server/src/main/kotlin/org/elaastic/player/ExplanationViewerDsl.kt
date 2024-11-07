@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player
+package org.elaastic.player
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.player.components.explanationViewer.*
@@ -26,10 +26,10 @@ import java.math.BigDecimal
 annotation class ExplanationViewerDsl
 
 object ExplanationViewerCmd {
-    fun openQuestionSituation(block: OpenExplanationViewerSituationBuilder.() -> Unit): TestingPlayerController.ExplanationViewerSituation =
+    fun openQuestionSituation(block: OpenExplanationViewerSituationBuilder.() -> Unit): ComponentTestingController.ExplanationViewerSituation =
         OpenExplanationViewerSituationBuilder().apply(block).build()
 
-    fun choiceQuestionSituation(block: ChoiceExplanationViewerSituationBuilder.() -> Unit): TestingPlayerController.ExplanationViewerSituation =
+    fun choiceQuestionSituation(block: ChoiceExplanationViewerSituationBuilder.() -> Unit): ComponentTestingController.ExplanationViewerSituation =
         ChoiceExplanationViewerSituationBuilder().apply(block).build()
 }
 
@@ -44,7 +44,7 @@ class OpenExplanationViewerSituationBuilder {
         explanations.addAll(Explanations().apply(block))
     }
 
-    fun build() = TestingPlayerController.ExplanationViewerSituation(
+    fun build() = ComponentTestingController.ExplanationViewerSituation(
         sequenceId = sequenceId!!,
         description = description,
         explanationViewerModel =
@@ -63,7 +63,7 @@ class ChoiceExplanationViewerSituationBuilder {
         explanationsByResponse.putAll(ExplanationsByResponse().apply(block))
     }
 
-    fun build() = TestingPlayerController.ExplanationViewerSituation(
+    fun build() = ComponentTestingController.ExplanationViewerSituation(
         sequenceId = sequenceId!!,
         description = description,
         explanationViewerModel =

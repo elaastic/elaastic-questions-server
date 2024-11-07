@@ -16,7 +16,7 @@ import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
 import org.elaastic.user.User
 import org.elaastic.user.UserRepository
-import org.elaastic.questions.player.PlayerController
+import org.elaastic.player.PlayerController
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement

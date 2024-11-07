@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player
+package org.elaastic.player
 
 import ConfidenceDistributionChartModel
 import EvaluationDistributionChartModel
@@ -90,7 +90,7 @@ import kotlin.random.Random
 @Controller
 @RequestMapping("/player/test")
 @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('FUNCTIONAL_TESTING'))")
-class TestingPlayerController(
+class ComponentTestingController(
     @Autowired
     val messageBuilder: MessageBuilder,
 

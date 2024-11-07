@@ -29,6 +29,9 @@ import io.mockk.unmockkAll
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.common.web.MessageBuilder
+import org.elaastic.player.LearnerPlayerModel
+import org.elaastic.player.PlayerController
+import org.elaastic.player.PlayerModelFactory
 import org.elaastic.questions.assignment.Assignment
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
