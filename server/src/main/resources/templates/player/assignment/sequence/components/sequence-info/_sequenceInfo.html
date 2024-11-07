@@ -34,14 +34,18 @@
     </div>
 
     <!--/* Reported evaluation message */-->
-    <div class="ui label red basic large"
+    <div class="ui label basic large"
          style="background-color: transparent !important; border: none"
+         th:classappend="${sequenceInfoModel.nbReportToModerate > 0 ? 'red' : 'blue'}"
          th:if="${sequenceInfoModel.nbReportTotal > 0}">
         <!--/*To apply the red color from semantic to the text,
         the best option I found is to use a label and remove the border and the background-color */-->
         <!--/* The label from semantic makes the text a little bit smaller, so I use a large label. */-->
 
-        <i class="red exclamation triangle icon"></i>
+        <i class="exclamation triangle icon"></i>
+
+        <span th:if="${sequenceInfoModel.nbReportToModerate == 0}"
+              th:text="#{assignment.sequence.haveBeenModerated(${sequenceInfoModel.nbReportTotal})}"></span>
         <span th:if="${sequenceInfoModel.nbReportToModerate == 1}"
               th:text="#{sequence.info.nbReportToModerate.one(${sequenceInfoModel.nbReportToModerate})}"></span>
         <span th:if="${sequenceInfoModel.nbReportToModerate > 1}"
