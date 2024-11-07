@@ -25,7 +25,7 @@ import org.elaastic.user.UserService
 import org.elaastic.user.controller.command.PasswordData
 import org.elaastic.user.controller.command.UserData
 import org.elaastic.common.onboarding.OnboardingChapter
-import org.elaastic.questions.terms.TermsService
+import org.elaastic.user.legal.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource

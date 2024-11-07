@@ -20,7 +20,7 @@ package org.elaastic.user
 
 import org.apache.commons.lang3.time.DateUtils
 import org.elaastic.common.onboarding.OnboardingChapter
-import org.elaastic.questions.terms.TermsService
+import org.elaastic.user.legal.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.crypto.password.PasswordEncoder

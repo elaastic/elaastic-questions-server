@@ -19,7 +19,7 @@
 package org.elaastic.user
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
-import org.elaastic.questions.terms.Terms
+import org.elaastic.user.legal.Terms
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank

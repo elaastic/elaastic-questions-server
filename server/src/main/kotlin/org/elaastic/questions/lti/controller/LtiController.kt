@@ -24,7 +24,7 @@ import org.elaastic.questions.lti.LmsService
 import org.elaastic.questions.lti.LmsUser
 import org.elaastic.questions.lti.LtiConsumerService
 import org.elaastic.questions.lti.oauth.OauthService
-import org.elaastic.questions.terms.TermsService
+import org.elaastic.user.legal.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
