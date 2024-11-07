@@ -29,8 +29,8 @@ import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.player.sequence.status.SequenceInfoResolver
 import org.elaastic.player.statement.StatementInfo
 import org.elaastic.player.statement.StatementPanelModel
-import org.elaastic.questions.player.components.steps.SequenceStatistics
-import org.elaastic.questions.player.components.steps.StepsModelFactory
+import org.elaastic.player.steps.SequenceStatistics
+import org.elaastic.player.steps.StepsModelFactory
 
 object PlayerModelFactory {
 

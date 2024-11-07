@@ -58,8 +58,8 @@ import org.elaastic.player.sequence.status.SequenceInfoModel
 import org.elaastic.player.sequence.status.SequenceInfoResolver
 import org.elaastic.player.statement.StatementInfo
 import org.elaastic.player.statement.StatementPanelModel
-import org.elaastic.questions.player.components.steps.SequenceStatistics
-import org.elaastic.questions.player.components.steps.StepsModel
+import org.elaastic.player.steps.SequenceStatistics
+import org.elaastic.player.steps.StepsModel
 import org.elaastic.player.results.learner.LearnerExclusiveChoiceResults
 import org.elaastic.player.results.learner.LearnerMultipleChoiceResults
 import org.elaastic.player.results.learner.LearnerOpenResults

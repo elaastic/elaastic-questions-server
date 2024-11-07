@@ -25,8 +25,8 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.config.EvaluationSpecification
-import org.elaastic.questions.player.components.steps.StepsModel
-import org.elaastic.questions.player.components.steps.StepsModelFactory
+import org.elaastic.player.steps.StepsModel
+import org.elaastic.player.steps.StepsModelFactory
 import org.springframework.stereotype.Service
 
 /**

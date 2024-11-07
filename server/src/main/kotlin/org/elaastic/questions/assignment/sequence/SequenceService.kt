@@ -37,8 +37,8 @@ import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.user.User
 import org.elaastic.player.PlayerController
+import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.questions.player.components.steps.SequenceStatistics
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
