@@ -18,8 +18,8 @@
 
 package org.elaastic.player
 
-import ConfidenceDistributionChartModel
-import EvaluationDistributionChartModel
+import org.elaastic.player.chart.confidence.ConfidenceDistributionChartModel
+import org.elaastic.player.chart.evaluation.EvaluationDistributionChartModel
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceItem
@@ -49,8 +49,8 @@ import org.elaastic.questions.player.components.evaluation.chatgpt.ChatGptEvalua
 import org.elaastic.questions.player.components.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.recommendation.*
-import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
-import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
+import org.elaastic.player.chart.response.ChoiceSpecificationData
+import org.elaastic.player.chart.response.ResponseDistributionChartModel
 import org.elaastic.questions.player.components.results.ChoiceResultsModel
 import org.elaastic.questions.player.components.results.OpenResultsModel
 import org.elaastic.questions.player.components.results.ResultsModel

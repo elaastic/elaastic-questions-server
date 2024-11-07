@@ -17,8 +17,8 @@
  */
 package org.elaastic.questions.player.components.results
 
-import ConfidenceDistributionChartModel
-import EvaluationDistributionChartModel
+import org.elaastic.player.chart.confidence.ConfidenceDistributionChartModel
+import org.elaastic.player.chart.evaluation.EvaluationDistributionChartModel
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.response.ResponseSet
 import org.elaastic.sequence.interaction.results.ConfidenceDistributionFactory
@@ -29,8 +29,8 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.questions.player.components.explanationViewer.*
 import org.elaastic.questions.player.components.recommendation.RecommendationResolver
-import org.elaastic.questions.player.components.responseDistributionChart.ChoiceSpecificationData
-import org.elaastic.questions.player.components.responseDistributionChart.ResponseDistributionChartModel
+import org.elaastic.player.chart.response.ChoiceSpecificationData
+import org.elaastic.player.chart.response.ResponseDistributionChartModel
 import org.togglz.core.manager.FeatureManager
 import org.togglz.core.Feature
 
