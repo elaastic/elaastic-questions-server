@@ -3,7 +3,7 @@ package org.elaastic.assignment
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.security.TestSecurityConfig
+import org.elaastic.security.TestSecurityConfig
 import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.user.OnboardingState
 import org.elaastic.user.User

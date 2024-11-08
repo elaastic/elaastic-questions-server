@@ -11,7 +11,7 @@ import org.elaastic.consolidation.subject.question.specification.MultipleChoiceQ
 import org.elaastic.consolidation.subject.question.specification.OpenQuestionSpecification
 import org.elaastic.material.instructional.question.attachment.Attachment
 import org.elaastic.material.instructional.question.attachment.AttachmentService
-import org.elaastic.questions.security.TestSecurityConfig
+import org.elaastic.security.TestSecurityConfig
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

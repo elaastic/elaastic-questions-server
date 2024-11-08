@@ -1,4 +1,4 @@
-package org.elaastic.questions.test.util
+package org.elaastic.test.util
 
 import org.elaastic.common.util.requireAccess
 import org.elaastic.common.util.requireAccessThrowDenied

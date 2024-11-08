@@ -7,7 +7,7 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.course.CourseService
 import org.elaastic.material.instructional.statement.StatementService
-import org.elaastic.questions.security.TestSecurityConfig
+import org.elaastic.security.TestSecurityConfig
 import org.elaastic.user.OnboardingState
 import org.elaastic.user.User
 import org.junit.jupiter.api.Test

@@ -28,7 +28,7 @@ import org.elaastic.material.instructional.course.CourseController
 import org.elaastic.material.instructional.course.CourseService
 import org.elaastic.user.OnboardingState
 import org.elaastic.user.User
-import org.elaastic.questions.security.TestSecurityConfig
+import org.elaastic.security.TestSecurityConfig
 import org.elaastic.material.instructional.subject.SubjectService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

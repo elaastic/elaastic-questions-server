@@ -1,4 +1,4 @@
-package org.elaastic.questions.test
+package org.elaastic.test
 
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.test.interpreter.command.NextPhase

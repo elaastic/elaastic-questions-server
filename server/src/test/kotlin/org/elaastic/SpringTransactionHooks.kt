@@ -1,4 +1,4 @@
-package io.cucumber.examples.spring.application
+package org.elaastic
 
 import io.cucumber.java.After
 import io.cucumber.java.Before

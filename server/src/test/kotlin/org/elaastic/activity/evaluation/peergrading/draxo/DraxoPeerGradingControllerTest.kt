@@ -18,7 +18,7 @@
 
 package org.elaastic.activity.evaluation.peergrading.draxo
 
-import org.elaastic.questions.security.TestSecurityConfig
+import org.elaastic.security.TestSecurityConfig
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.security.test.context.support.WithUserDetails

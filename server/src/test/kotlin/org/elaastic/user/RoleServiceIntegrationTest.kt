@@ -16,10 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.directory
+package org.elaastic.user
 
-import org.elaastic.user.Role
-import org.elaastic.user.RoleService
 import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*

@@ -16,16 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.directory
+package org.elaastic.user
 
 
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
-import org.elaastic.user.User
-import org.elaastic.user.UserRepository
-import org.elaastic.user.UserService
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat

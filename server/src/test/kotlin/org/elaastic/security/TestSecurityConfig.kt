@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.security
+package org.elaastic.security
 
 import org.elaastic.security.RestSecurityConfig
 import org.elaastic.user.Role

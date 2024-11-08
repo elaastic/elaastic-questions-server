@@ -16,11 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.directory
+package org.elaastic.user
 
 import org.elaastic.test.IntegrationTestingService
-import org.elaastic.user.Settings
-import org.elaastic.user.SettingsRepository
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

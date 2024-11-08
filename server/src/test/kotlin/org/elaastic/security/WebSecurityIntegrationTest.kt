@@ -1,4 +1,4 @@
-package org.elaastic.questions.security
+package org.elaastic.security
 
 import org.elaastic.consolidation.subject.RestPracticeSubjectController
 import org.jsoup.Jsoup

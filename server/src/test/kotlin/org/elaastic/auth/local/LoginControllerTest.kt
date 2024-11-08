@@ -1,6 +1,5 @@
-package org.elaastic.questions.security
+package org.elaastic.auth.local
 
-import org.elaastic.auth.local.LoginController
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*

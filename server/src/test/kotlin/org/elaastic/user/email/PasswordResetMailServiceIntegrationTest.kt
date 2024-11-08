@@ -16,33 +16,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.email
+package org.elaastic.user.email
 
+import org.apache.commons.lang3.time.DateUtils
 import org.elaastic.bootstrap.BootstrapService
-import org.elaastic.user.ActivationKeyRepository
+import org.elaastic.user.PasswordResetKeyRepository
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
-import org.elaastic.user.email.MailCheckingMailService
+import org.elaastic.user.email.PasswordResetMailService
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.BufferedReader
+import java.util.*
 import java.util.logging.Logger
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-internal class MailCheckingMailServiceIntegrationTest(
-    @Autowired val activationKeyRepository: ActivationKeyRepository,
+internal class PasswordResetMailServiceIntegrationTest(
+    @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
     @Autowired val userService: UserService,
-    @Autowired val mailCheckingMailService: MailCheckingMailService,
+    @Autowired val passwordResetMailService: PasswordResetMailService,
     @Autowired val roleService: RoleService,
     @Autowired val entityManager: EntityManager,
     @Autowired val bootstrapService: BootstrapService
@@ -52,12 +53,12 @@ internal class MailCheckingMailServiceIntegrationTest(
     lateinit var claraLuciani: User
     lateinit var bobDeniro: User
 
-    val logger = Logger.getLogger(MailCheckingMailServiceIntegrationTest::class.java.name)
+    val logger: Logger = Logger.getLogger(PasswordResetMailServiceIntegrationTest::class.java.name)
     val smtpServer = bootstrapService.mailServer!!
 
     @BeforeEach
     fun initUsersWithEmailCheckingNeeded() {
-        // given exactly 3 users needed email checking
+        // given exactly 3 users with generated password reset key
         //
         alPacino = User(
                 firstName = "Al",
@@ -67,6 +68,8 @@ internal class MailCheckingMailServiceIntegrationTest(
                 email = "alpacino@elaastic.org"
         ).addRole(roleService.roleStudent()).let {
             userService.addUser(it, "fr", true)
+            userService.generatePasswordResetKeyForUser(it)
+            it
         }
         claraLuciani = User(
                 firstName = "Clara",
@@ -76,6 +79,8 @@ internal class MailCheckingMailServiceIntegrationTest(
                 email = "claraluciani@elaastic.org"
         ).addRole(roleService.roleStudent()).let {
             userService.addUser(it, "en", true)
+            userService.generatePasswordResetKeyForUser(it)
+            it
         }
         bobDeniro = User(
                 firstName = "Bob",
@@ -85,21 +90,22 @@ internal class MailCheckingMailServiceIntegrationTest(
                 email = "bobdeniro@elaastic.org"
         ).addRole(roleService.roleStudent()).let {
             userService.addUser(it, "fr", true)
+            userService.generatePasswordResetKeyForUser(it)
+            it
         }
 
     }
 
     @Test
     fun `test email sending`() {
-        // given: the list of activation keys to update
-        val actKeys = listOf(alPacino, claraLuciani, bobDeniro).map {
-            activationKeyRepository.findByUser(it)!!
-        }
+        // given: the list of password reset keys to update
+        val expirationDate = DateUtils.addHours(Date(), -1)
+        val keys = passwordResetKeyRepository.findAllPasswordResetKeys(expirationDate)
         smtpServer.purgeEmailFromAllMailboxes()
-        // when:  triggering emails sending to check validity
-        mailCheckingMailService.sendEmailsToAccountActivation()
+        // when:  triggering emails sending to send password keys
+        passwordResetMailService.sendPasswordResetKeyEmails()
         // then: 3 messages have been received
-        if(smtpServer.waitForIncomingEmail(1000, 3)) {
+        if(smtpServer.waitForIncomingEmail(2000, 3)) {
             assertThat(smtpServer.receivedMessages.size, equalTo(3))
         }
         else {
@@ -113,56 +119,11 @@ internal class MailCheckingMailServiceIntegrationTest(
             """.trimIndent())
         }
 
-        // and: activation key are updated
-        actKeys.forEach {
+        // and: password reset keys are updated
+        keys.forEach {
             entityManager.refresh(it)
-            assertTrue(it.activationEmailSent)
+            assertTrue(it.passwordResetEmailSent)
         }
     }
 
-
-    @Test
-    fun `test find All Notification Recipients`() {
-        // when: asking the mail checking service to find mail notification recipients
-        //
-        val notificationRecipients = mailCheckingMailService.findAllNotificationRecipients()
-        // then: 3 notification recipients are found by the mail checking service
-        //
-        assertThat(
-                notificationRecipients.size,
-                equalTo(3)
-        )
-        // and: the map contains the 3 expected recipients
-        //
-        assertThat(
-                notificationRecipients[activationKeyRepository.findByUser(alPacino)?.activationKey]?.hashCode(),
-                equalTo(mapOf("user_id" to alPacino.id, "first_name" to alPacino.firstName, "email" to alPacino.email, "language" to "fr").hashCode())
-        )
-        assertThat(
-                notificationRecipients[activationKeyRepository.findByUser(claraLuciani)?.activationKey],
-                notNullValue()
-        )
-        assertThat(
-                notificationRecipients[activationKeyRepository.findByUser(bobDeniro)?.activationKey],
-                notNullValue()
-        )
-    }
-
-    @Test
-    fun `test update activation status`() {
-        // given: the list of activation keys to update
-        val actKeys = listOf(alPacino, claraLuciani, bobDeniro).map {
-            activationKeyRepository.findByUser(it)!!
-        }
-        actKeys.forEach {
-            assertFalse(it.activationEmailSent)
-        }
-        // when: asking mail checking service to update status
-        mailCheckingMailService.updateEmailSentStatusForAllNotifications(actKeys.map { it.activationKey })
-        // then: activation key are updated
-        actKeys.forEach {
-            entityManager.refresh(it)
-            assertTrue(it.activationEmailSent)
-        }
-    }
 }

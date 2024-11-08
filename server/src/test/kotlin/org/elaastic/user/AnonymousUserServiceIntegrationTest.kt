@@ -16,14 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.directory
+package org.elaastic.user
 
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
-import org.elaastic.user.AnonymousUserService
-import org.elaastic.user.RoleService
-import org.elaastic.user.User
-import org.elaastic.user.UserService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

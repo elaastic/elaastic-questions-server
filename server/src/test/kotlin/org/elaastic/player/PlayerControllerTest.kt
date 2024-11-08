@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player
+package org.elaastic.player
 
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.eq
@@ -36,11 +36,8 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.subject.Subject
-import org.elaastic.player.LearnerPlayerModel
-import org.elaastic.player.PlayerController
-import org.elaastic.player.PlayerModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
-import org.elaastic.questions.security.TestSecurityConfig
+import org.elaastic.security.TestSecurityConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.sequence.LearnerSequence

@@ -1,7 +1,4 @@
-package io.cucumber.examples.spring.application
-
-import io.cucumber.core.options.Constants
-import org.junit.platform.suite.api.ConfigurationParameter
+package org.elaastic
 
 import org.junit.platform.suite.api.IncludeEngines
 import org.junit.platform.suite.api.SelectClasspathResource
