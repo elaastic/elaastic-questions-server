@@ -1,6 +1,6 @@
 package org.elaastic.player.dashboard
 
-import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.phase.LearnerPhaseType
 
 /**

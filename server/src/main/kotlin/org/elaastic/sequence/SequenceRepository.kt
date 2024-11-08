@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.sequence
 
 import org.elaastic.assignment.Assignment
 import org.elaastic.questions.subject.statement.Statement
@@ -40,7 +40,7 @@ interface SequenceRepository : JpaRepository<Sequence, Long> {
 
     fun countAllByAssignment(assignment: Assignment) : Int
 
-    fun findAllByStatementAndStateNot(statement: Statement, state:State) : List<Sequence>
+    fun findAllByStatementAndStateNot(statement: Statement, state: State) : List<Sequence>
 
     fun findAllByStatement(statement: Statement) : List<Sequence>
 

@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.sequence
 
-import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
@@ -34,37 +33,36 @@ import javax.persistence.EntityManager
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-internal class SequenceRepositoryIntegrationTest(
-    @Autowired val sequenceRepository: SequenceRepository,
+internal class LearnerSequenceRepositoryIntegrationTest(
+    @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val entityManager: EntityManager
 ) {
 
     @Test
-    fun `save a valid sequence`() {
-        val owner = integrationTestingService.getAnyUser()
-        val assignment = integrationTestingService.getAnyAssignment()
-        val statement = integrationTestingService.getAnyStatement()
-        Sequence(
-                rank = 1,
-                owner = owner,
-                assignment = assignment,
-                statement = statement,
-                executionContext = ExecutionContext.Blended
-        ).tWhen {
-            sequenceRepository.saveAndFlush(it)
-            entityManager.refresh(it)
-            it
-        }.tThen {
-            assertThat(it.id, notNullValue())
-            assertThat(it.version, equalTo(0L))
-            assertThat(it.dateCreated, notNullValue())
-            assertThat(it.lastUpdated, notNullValue())
-            assertThat(it.rank, equalTo(1))
-            assertThat(it.owner, equalTo(owner))
-            assertThat(it.assignment, equalTo(assignment))
-            assertThat(it.statement, equalTo(statement))
-            assertThat(it.state, equalTo(State.beforeStart))
-        }
+    fun `save a valid learner sequence`() {
+        val learner = integrationTestingService.getAnyUser()
+        val sequence = integrationTestingService.getAnySequence()
+        val interaction = integrationTestingService.getAnyInteraction()
+        LearnerSequence(
+                learner = learner,
+                sequence = sequence,
+                activeInteraction = interaction
+        )
+                .tWhen {
+                    learnerSequenceRepository.saveAndFlush(it)
+                    entityManager.refresh(it)
+                    it
+                }
+                .tThen {
+                    assertThat(it.id, notNullValue())
+                    assertThat(it.version, equalTo(0L))
+                    assertThat(it.dateCreated, notNullValue())
+                    assertThat(it.lastUpdated, notNullValue())
+                    assertThat(it.learner, equalTo(learner))
+                    assertThat(it.sequence, equalTo(sequence))
+                    assertThat(it.activeInteraction, equalTo(interaction))
+                }
     }
+
 }

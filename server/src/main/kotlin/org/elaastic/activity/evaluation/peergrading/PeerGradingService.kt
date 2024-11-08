@@ -23,7 +23,7 @@ import org.elaastic.moderation.ReportReason
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.assignment.LearnerAssignmentService
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository

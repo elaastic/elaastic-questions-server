@@ -6,7 +6,7 @@ import org.elaastic.consolidation.subject.question.specification.MultipleChoiceQ
 import org.elaastic.consolidation.subject.question.specification.OpenQuestionSpecification
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 
 object PracticeQuestionFactory {
 

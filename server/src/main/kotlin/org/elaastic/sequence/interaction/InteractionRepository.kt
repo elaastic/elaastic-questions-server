@@ -18,7 +18,7 @@
 
 package org.elaastic.sequence.interaction
 
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import org.elaastic.activity.response.Response
 import org.elaastic.user.User
 import org.springframework.data.jpa.repository.JpaRepository
@@ -45,5 +45,6 @@ interface InteractionRepository : JpaRepository<Interaction, Long> {
            "AND i.sequence = :sequence " +
            "AND i.interactionType = 'ResponseSubmission'")
     fun findResponseByOwnerAndSequenceAndType(owner: User,
-                                              sequence: Sequence): Response?
+                                              sequence: Sequence
+    ): Response?
 }

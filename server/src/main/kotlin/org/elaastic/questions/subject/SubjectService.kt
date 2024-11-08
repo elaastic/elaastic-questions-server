@@ -21,8 +21,8 @@ package org.elaastic.questions.subject
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentRepository
 import org.elaastic.assignment.AssignmentService
-import org.elaastic.questions.assignment.sequence.FakeExplanationData
-import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.sequence.FakeExplanationData
+import org.elaastic.sequence.SequenceService
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.questions.attachment.Attachment
 import org.elaastic.questions.attachment.AttachmentService

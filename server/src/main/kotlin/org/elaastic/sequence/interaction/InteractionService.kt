@@ -20,9 +20,9 @@ package org.elaastic.sequence.interaction
 
 import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.activity.evaluation.peergrading.ResponseRecommendationService
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceRepository
+import org.elaastic.sequence.State
 import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository

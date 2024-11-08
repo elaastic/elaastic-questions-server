@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.sequence
 
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User

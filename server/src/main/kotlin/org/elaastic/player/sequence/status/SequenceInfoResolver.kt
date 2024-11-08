@@ -1,9 +1,9 @@
 package org.elaastic.player.sequence.status
 
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.ExecutionContext
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.State
 import org.elaastic.sequence.interaction.InteractionType
 
 object SequenceInfoResolver {

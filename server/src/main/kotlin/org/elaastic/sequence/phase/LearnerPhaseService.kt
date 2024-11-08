@@ -1,8 +1,8 @@
 package org.elaastic.sequence.phase
 
-import org.elaastic.questions.assignment.sequence.ILearnerSequence
-import org.elaastic.questions.assignment.sequence.LearnerSequenceService
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.ILearnerSequence
+import org.elaastic.sequence.LearnerSequenceService
+import org.elaastic.sequence.State
 import org.elaastic.sequence.phase.descriptor.PhaseDescriptor
 import org.elaastic.sequence.phase.descriptor.SequenceDescriptor
 import org.springframework.beans.factory.annotation.Autowired

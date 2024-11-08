@@ -21,7 +21,7 @@ package org.elaastic.player.recommendation
 import org.elaastic.activity.evaluation.peergrading.PeerGrading
 import org.elaastic.activity.response.ResponseSet
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import java.math.BigDecimal
 
 object RecommendationResolver {

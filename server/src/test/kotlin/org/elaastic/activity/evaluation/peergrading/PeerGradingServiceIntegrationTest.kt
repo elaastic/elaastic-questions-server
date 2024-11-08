@@ -10,7 +10,7 @@ import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.player.dashboard.DashboardModelFactory
-import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.subject.SubjectRepository

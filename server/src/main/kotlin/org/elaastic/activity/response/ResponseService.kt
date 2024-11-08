@@ -1,14 +1,14 @@
 package org.elaastic.activity.response
 
 import org.elaastic.activity.results.AttemptNum
-import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.activity.evaluation.peergrading.ResponseRecommendationService
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.State
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User

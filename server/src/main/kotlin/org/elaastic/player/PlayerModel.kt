@@ -17,7 +17,7 @@
  */
 package org.elaastic.player
 
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import org.elaastic.player.assignmentview.AssignmentOverviewModel
 import org.elaastic.player.command.CommandModel
 import org.elaastic.player.results.ResultsModel

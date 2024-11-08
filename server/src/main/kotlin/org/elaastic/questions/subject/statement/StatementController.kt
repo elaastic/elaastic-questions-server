@@ -21,7 +21,7 @@ package org.elaastic.questions.subject.statement
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.*
-import org.elaastic.questions.assignment.sequence.FakeExplanationData
+import org.elaastic.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
 import org.elaastic.questions.attachment.*

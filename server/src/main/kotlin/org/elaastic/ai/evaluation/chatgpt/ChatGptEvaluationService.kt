@@ -7,9 +7,9 @@ import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
 import org.elaastic.common.util.requireAccess
-import org.elaastic.moderation.ReportCandidateService
+import org.elaastic.sequence.Sequence
 import org.elaastic.moderation.UtilityGrade
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.moderation.ReportCandidateService
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.activity.response.ResponseService

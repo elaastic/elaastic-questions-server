@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.sequence
 
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
@@ -26,7 +26,6 @@ import org.elaastic.activity.results.ResultsService
 import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.player.PlayerController
 import org.elaastic.player.steps.SequenceStatistics
-import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository

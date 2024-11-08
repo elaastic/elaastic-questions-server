@@ -1,6 +1,6 @@
 package org.elaastic.sequence.phase.evaluation
 
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.State
 import org.elaastic.sequence.phase.PhaseViewModel
 import org.elaastic.sequence.phase.response.LearnerResponseFormViewModel
 

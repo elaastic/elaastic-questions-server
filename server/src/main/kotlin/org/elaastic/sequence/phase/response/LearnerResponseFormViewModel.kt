@@ -18,7 +18,7 @@
 package org.elaastic.sequence.phase.response
 
 import org.elaastic.activity.response.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.ILearnerSequence
+import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.results.AttemptNum
 import org.elaastic.sequence.config.ResponseSubmissionSpecification

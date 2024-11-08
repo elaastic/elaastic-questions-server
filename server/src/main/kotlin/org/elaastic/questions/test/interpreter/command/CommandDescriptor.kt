@@ -1,6 +1,6 @@
 package org.elaastic.questions.test.interpreter.command
 
-import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.activity.response.ConfidenceDegree
 
 enum class CommandDescriptor(

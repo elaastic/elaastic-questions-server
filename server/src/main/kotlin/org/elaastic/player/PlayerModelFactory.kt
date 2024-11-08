@@ -17,10 +17,9 @@
  */
 package org.elaastic.player
 
-import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.assignment.sequence.ILearnerSequence
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.ILearnerSequence
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.State
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User
 import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory

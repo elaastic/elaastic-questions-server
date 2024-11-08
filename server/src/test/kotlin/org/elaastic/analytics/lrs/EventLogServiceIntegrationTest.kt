@@ -4,12 +4,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import org.elaastic.analytics.lrs.Action
-import org.elaastic.analytics.lrs.EventLogRepository
-import org.elaastic.analytics.lrs.EventLogService
-import org.elaastic.analytics.lrs.ObjectOfAction
-import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.sequence.LearnerSequence
+import org.elaastic.sequence.ExecutionContext
+import org.elaastic.sequence.LearnerSequence
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.user.Role
 import org.elaastic.questions.test.IntegrationTestingService

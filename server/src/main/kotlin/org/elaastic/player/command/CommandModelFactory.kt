@@ -18,8 +18,8 @@
 
 package org.elaastic.player.command
 
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.State
 import org.elaastic.user.User
 import java.lang.IllegalStateException
 

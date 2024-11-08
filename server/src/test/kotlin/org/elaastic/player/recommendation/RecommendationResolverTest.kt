@@ -10,8 +10,8 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ChoiceType
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.State
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.hamcrest.CoreMatchers

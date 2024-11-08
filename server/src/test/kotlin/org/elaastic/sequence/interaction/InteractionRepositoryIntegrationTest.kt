@@ -19,7 +19,7 @@
 package org.elaastic.sequence.interaction
 
 import org.elaastic.activity.evaluation.PeerEvaluationMapping
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.State
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.questions.test.IntegrationTestingService

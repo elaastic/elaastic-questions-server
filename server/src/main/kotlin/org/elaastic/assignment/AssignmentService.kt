@@ -2,8 +2,8 @@ package org.elaastic.assignment
 
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.common.util.toDate
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceRepository
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.subject.Subject

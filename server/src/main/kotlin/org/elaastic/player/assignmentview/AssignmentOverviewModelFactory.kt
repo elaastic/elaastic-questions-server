@@ -20,8 +20,8 @@ package org.elaastic.player.assignmentview
 
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.ReadyForConsolidation
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.State
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
 

@@ -18,8 +18,6 @@
 
 package org.elaastic.questions.test
 
-import org.elaastic.questions.assignment.*
-import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.activity.response.Response
@@ -36,6 +34,8 @@ import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectRepository
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.IllegalStateException

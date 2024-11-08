@@ -1,6 +1,6 @@
 package org.elaastic.questions.test
 
-import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.questions.test.interpreter.command.NextPhase
 import org.elaastic.questions.test.interpreter.command.PublishResults
 import org.elaastic.questions.test.interpreter.command.StartSequence

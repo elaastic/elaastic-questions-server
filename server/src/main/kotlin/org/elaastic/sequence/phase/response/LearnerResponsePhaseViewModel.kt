@@ -17,7 +17,7 @@
  */
 package org.elaastic.sequence.phase.response
 
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.State
 import org.elaastic.sequence.phase.PhaseViewModel
 
 data class LearnerResponsePhaseViewModel(

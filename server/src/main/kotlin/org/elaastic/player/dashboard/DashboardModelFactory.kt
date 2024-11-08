@@ -21,7 +21,7 @@
 package org.elaastic.player.dashboard
 
 import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.activity.response.Response
 import org.elaastic.sequence.config.EvaluationSpecification

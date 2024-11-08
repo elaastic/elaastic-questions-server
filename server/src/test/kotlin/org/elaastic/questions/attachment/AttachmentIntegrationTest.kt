@@ -22,7 +22,7 @@ import org.elaastic.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
-import org.elaastic.questions.assignment.sequence.LearnerSequenceRepository
+import org.elaastic.sequence.LearnerSequenceRepository
 import org.elaastic.filestore.DataIdentifier
 import org.elaastic.filestore.FileDataStore
 import org.elaastic.questions.test.IntegrationTestingService

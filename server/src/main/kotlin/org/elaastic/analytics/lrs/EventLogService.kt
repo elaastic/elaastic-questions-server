@@ -1,7 +1,7 @@
 package org.elaastic.analytics.lrs
 
-import org.elaastic.questions.assignment.sequence.ILearnerSequence
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.ILearnerSequence
+import org.elaastic.sequence.Sequence
 import org.elaastic.user.Role
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired

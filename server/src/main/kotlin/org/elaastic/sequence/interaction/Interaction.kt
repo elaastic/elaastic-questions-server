@@ -20,10 +20,10 @@ package org.elaastic.sequence.interaction
 
 import org.elaastic.activity.evaluation.PeerEvaluationMapping
 import org.elaastic.activity.results.ResponseDistributionConverter
-import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.activity.evaluation.PeerEvaluationMappingConverter
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.State
 import org.elaastic.activity.results.ResponsesDistribution
 import org.elaastic.sequence.config.InteractionSpecification
 import org.elaastic.sequence.config.InteractionSpecificationConverter

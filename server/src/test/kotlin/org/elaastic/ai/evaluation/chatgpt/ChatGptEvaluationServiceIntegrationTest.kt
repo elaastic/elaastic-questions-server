@@ -1,9 +1,9 @@
 package org.elaastic.ai.evaluation.chatgpt
 
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.moderation.ReportReason
 import org.elaastic.moderation.UtilityGrade
-import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.user.User

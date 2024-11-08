@@ -1,7 +1,7 @@
 package org.elaastic.sequence.phase.result
 
-import org.elaastic.questions.assignment.sequence.ILearnerSequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.ILearnerSequence
+import org.elaastic.sequence.State
 import org.elaastic.player.results.ResultsModelFactory
 import org.elaastic.sequence.phase.LearnerPhase
 import org.elaastic.sequence.phase.LearnerPhaseExecution

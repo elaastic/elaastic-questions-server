@@ -1,7 +1,7 @@
 package org.elaastic.sequence.phase
 
-import org.elaastic.questions.assignment.sequence.ILearnerSequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.ILearnerSequence
+import org.elaastic.sequence.State
 import org.elaastic.sequence.phase.descriptor.PhaseDescriptor
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase

@@ -38,10 +38,10 @@ import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.LearnerSequence
-import org.elaastic.questions.assignment.sequence.LearnerSequenceService
-import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.LearnerSequence
+import org.elaastic.sequence.LearnerSequenceService
+import org.elaastic.sequence.SequenceService
+import org.elaastic.sequence.State
 import org.elaastic.questions.security.TestSecurityConfig
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
@@ -145,7 +145,7 @@ internal class PlayerControllerTest(
             audience = "Any",
             acceptAnonymousUsers = true
         )
-        val sequence = org.elaastic.questions.assignment.sequence.Sequence(
+        val sequence = org.elaastic.sequence.Sequence(
             owner = teacher,
             assignment = assignment,
             statement = Statement(teacher, "Title", "content", questionType = QuestionType.OpenEnded),

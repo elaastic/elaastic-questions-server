@@ -1,6 +1,6 @@
 package org.elaastic.analytics.lrs
 
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface EventLogRepository : JpaRepository<EventLog, Long> {

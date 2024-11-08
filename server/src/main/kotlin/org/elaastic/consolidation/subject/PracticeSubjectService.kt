@@ -5,8 +5,8 @@ import org.elaastic.consolidation.subject.question.PracticeQuestionFactory
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.ReadyForConsolidation
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceService
 import org.elaastic.activity.response.ResponseService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

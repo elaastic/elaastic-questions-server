@@ -19,9 +19,9 @@
 package org.elaastic.questions.subject.statement
 
 import org.elaastic.assignment.Assignment
-import org.elaastic.questions.assignment.sequence.FakeExplanationData
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.sequence.FakeExplanationData
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceRepository
 import org.elaastic.analytics.lrs.EventLogRepository
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
@@ -67,7 +67,8 @@ class StatementService(
     }
 
     fun addFakeExplanation(statement: Statement,
-                           fakeExplanationData: FakeExplanationData): FakeExplanation {
+                           fakeExplanationData: FakeExplanationData
+    ): FakeExplanation {
         require(fakeExplanationData.content != null) {
             "The content of the fake explanation must not be null"
         }

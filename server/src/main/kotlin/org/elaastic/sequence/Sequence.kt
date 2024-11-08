@@ -16,10 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.sequence
 
 import org.elaastic.assignment.Assignment
-import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType

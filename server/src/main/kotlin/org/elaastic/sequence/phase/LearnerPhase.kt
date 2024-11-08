@@ -1,7 +1,7 @@
 package org.elaastic.sequence.phase
 
-import org.elaastic.questions.assignment.sequence.ILearnerSequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.ILearnerSequence
+import org.elaastic.sequence.State
 
 /**
  * The phase of a sequence for a learner.

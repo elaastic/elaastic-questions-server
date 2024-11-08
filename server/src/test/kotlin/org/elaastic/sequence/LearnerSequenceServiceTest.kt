@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.sequence
 
 import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
@@ -26,7 +26,6 @@ import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
 import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.ResponseRepository
-import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService

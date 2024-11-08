@@ -20,7 +20,7 @@
 
 package org.elaastic.player.dashboard
 
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 
 class DashboardModel(
     val sequence: Sequence,

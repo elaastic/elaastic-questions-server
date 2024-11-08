@@ -1,7 +1,7 @@
 package org.elaastic.sequence.phase.response
 
-import org.elaastic.questions.assignment.sequence.ILearnerSequence
-import org.elaastic.questions.assignment.sequence.State
+import org.elaastic.sequence.ILearnerSequence
+import org.elaastic.sequence.State
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.sequence.phase.*
 

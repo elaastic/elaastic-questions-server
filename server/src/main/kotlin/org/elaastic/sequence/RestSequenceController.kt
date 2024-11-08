@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.sequence
 
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.attachment.AttachmentService
@@ -34,8 +34,8 @@ import javax.transaction.Transactional
 @RequestMapping("/api/assignment/{assignmentId}/sequence")
 @Transactional
 class RestSequenceController(
-        @Autowired val sequenceService: SequenceService,
-        @Autowired val attachmentService: AttachmentService
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val attachmentService: AttachmentService
 ) {
 
     val logger:Logger = Logger.getLogger(RestSequenceController::class.java.name)

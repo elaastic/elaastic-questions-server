@@ -31,7 +31,7 @@ import org.elaastic.player.chart.response.ResponseDistributionChartModel
 import org.elaastic.player.explanations.ExplanationData
 import org.elaastic.player.explanations.ExplanationViewerModelFactory
 import org.elaastic.player.recommendation.RecommendationResolver
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import org.togglz.core.Feature
 import org.togglz.core.manager.FeatureManager
 

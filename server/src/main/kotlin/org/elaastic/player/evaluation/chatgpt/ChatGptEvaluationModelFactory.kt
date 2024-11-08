@@ -1,7 +1,7 @@
 package org.elaastic.player.evaluation.chatgpt
 
+import org.elaastic.sequence.Sequence
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
-import org.elaastic.questions.assignment.sequence.Sequence
 
 object ChatGptEvaluationModelFactory {
 

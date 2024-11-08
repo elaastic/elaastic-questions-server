@@ -2,8 +2,8 @@ package org.elaastic.sequence.phase.evaluation
 
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.activity.response.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.SequenceService
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceService
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService

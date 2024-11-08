@@ -1,6 +1,6 @@
 package org.elaastic.questions.test.interpreter
 
-import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.test.interpreter.command.*
 

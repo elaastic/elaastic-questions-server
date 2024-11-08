@@ -1,7 +1,7 @@
 package org.elaastic.assignment
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.user.User

@@ -1,7 +1,7 @@
 package org.elaastic.analytics.lrs
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
-import org.elaastic.questions.assignment.sequence.Sequence
+import org.elaastic.sequence.Sequence
 import org.elaastic.user.Role
 import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
