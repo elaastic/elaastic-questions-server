@@ -2,6 +2,7 @@ package org.elaastic.ai.evaluation.chatgpt
 
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
 import org.elaastic.moderation.ReportReason
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository

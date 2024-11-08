@@ -4,12 +4,12 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.common.util.requireAccess
-import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.moderation.ReportCandidate
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 import org.elaastic.questions.directory.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
