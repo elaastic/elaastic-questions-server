@@ -27,8 +27,8 @@ import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.player.PlayerController
 import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.material.instructional.question.legacy.LearnerChoice
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
+import org.elaastic.material.instructional.question.explanation.FakeExplanation
+import org.elaastic.material.instructional.question.explanation.FakeExplanationRepository
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ReadSpecification

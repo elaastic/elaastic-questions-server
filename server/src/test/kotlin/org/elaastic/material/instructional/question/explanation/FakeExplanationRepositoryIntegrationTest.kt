@@ -16,10 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.material.instructional.question.explanation
 
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
 import org.elaastic.questions.test.directive.*
 import org.elaastic.questions.test.IntegrationTestingService
 import org.springframework.boot.test.context.SpringBootTest

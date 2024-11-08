@@ -16,15 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.explanation
+package org.elaastic.material.instructional.question.explanation
 
-import org.elaastic.material.instructional.statement.Statement
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.validation.annotation.Validated
+import javax.validation.constraints.NotBlank
 
 
-interface FakeExplanationRepository : JpaRepository<FakeExplanation, Long> {
-
-    fun findAllByStatement(statement: Statement): List<FakeExplanation>
-
-    fun deleteAllByStatement(statement: Statement): Long
-}
+@Validated
+data class TeacherExplanation(  // Rename of "ExplanationChoice"
+        var choiceItemIndex: Int, // Rename of "item"
+        @field:NotBlank var explanation: String,
+        var score: Float? = null
+)

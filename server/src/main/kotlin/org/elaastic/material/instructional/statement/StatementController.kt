@@ -4,8 +4,8 @@ import org.elaastic.assignment.AssignmentService
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.question.*
 import org.elaastic.material.instructional.subject.SubjectService
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationService
+import org.elaastic.material.instructional.question.explanation.FakeExplanation
+import org.elaastic.material.instructional.question.explanation.FakeExplanationService
 import org.elaastic.material.instructional.attachment.Attachment
 import org.elaastic.material.instructional.attachment.AttachmentService
 import org.elaastic.material.instructional.attachment.MimeType

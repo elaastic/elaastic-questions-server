@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment.sequence.bdd;
+package org.elaastic.material.instructional.question.explanation.bdd;
 
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given

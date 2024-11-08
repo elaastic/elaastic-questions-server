@@ -18,7 +18,7 @@
 
 package org.elaastic.material.instructional.question
 
-import org.elaastic.questions.assignment.sequence.TeacherExplanation
+import org.elaastic.material.instructional.question.explanation.TeacherExplanation
 import javax.validation.constraints.Max
 import javax.validation.constraints.NotEmpty
 

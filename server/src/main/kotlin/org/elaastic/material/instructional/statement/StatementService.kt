@@ -4,8 +4,8 @@ import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.analytics.lrs.EventLogRepository
 import org.elaastic.assignment.Assignment
 import org.elaastic.material.instructional.subject.Subject
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
+import org.elaastic.material.instructional.question.explanation.FakeExplanation
+import org.elaastic.material.instructional.question.explanation.FakeExplanationRepository
 import org.elaastic.material.instructional.attachment.AttachmentService
 import org.elaastic.sequence.FakeExplanationData
 import org.elaastic.sequence.Sequence

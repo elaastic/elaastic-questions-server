@@ -3,7 +3,7 @@ package org.elaastic.material.instructional.subject
 import org.elaastic.material.instructional.question.ChoiceSpecification
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.StatementService
-import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
+import org.elaastic.material.instructional.question.explanation.FakeExplanation
 import org.elaastic.material.instructional.attachment.Attachment
 import org.elaastic.material.instructional.attachment.MimeType
 import java.io.File

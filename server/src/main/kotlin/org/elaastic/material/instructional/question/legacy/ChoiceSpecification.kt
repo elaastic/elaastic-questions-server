@@ -19,7 +19,7 @@
 package org.elaastic.material.instructional.question.legacy
 
 import org.elaastic.material.instructional.question.ChoiceItem
-import org.elaastic.questions.assignment.sequence.TeacherExplanation
+import org.elaastic.material.instructional.question.explanation.TeacherExplanation
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 

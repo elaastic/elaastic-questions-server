@@ -4,7 +4,7 @@ import org.elaastic.material.instructional.question.ChoiceItem
 import org.elaastic.material.instructional.question.ChoiceSpecification
 import org.elaastic.material.instructional.question.MultipleChoiceSpecification
 import org.elaastic.material.instructional.question.QuestionType
-import org.elaastic.questions.assignment.sequence.TeacherExplanation
+import org.elaastic.material.instructional.question.explanation.TeacherExplanation
 import org.elaastic.questions.test.IntegrationTestingService
 import org.exparity.hamcrest.date.DateMatchers
 import org.hamcrest.CoreMatchers

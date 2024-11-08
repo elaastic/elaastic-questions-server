@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.explanation
+package org.elaastic.material.instructional.question.explanation
 
 import org.elaastic.material.instructional.statement.Statement
 import org.springframework.beans.factory.annotation.Autowired
