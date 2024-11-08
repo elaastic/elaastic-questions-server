@@ -1,15 +1,15 @@
 package org.elaastic.ai.evaluation.chatgpt
 
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGradingController.ResponseSubmissionAsynchronous
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.common.util.requireAccessThrowDenied
+import org.elaastic.player.evaluation.EvaluationModel
+import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.activity.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingController.ResponseSubmissionAsynchronous
 import org.elaastic.user.User
-import org.elaastic.player.evaluation.EvaluationModel
-import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder

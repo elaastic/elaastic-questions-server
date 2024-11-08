@@ -2,8 +2,8 @@ package org.elaastic.player.recommendation
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import org.elaastic.activity.evaluation.peergrading.PeerGrading
 import org.elaastic.activity.response.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseSet
 import org.hamcrest.CoreMatchers
@@ -437,18 +437,18 @@ internal class IndicatorCalculatorTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(1, correctResponse1),
-                createMockPeerGrading(2, correctResponse1),
-                createMockPeerGrading(1, correctResponse2),
-                createMockPeerGrading(3, correctResponse1),
-                createMockPeerGrading(4, correctResponse2),
-                createMockPeerGrading(5, incorrectResponse2),
-                createMockPeerGrading(4, incorrectResponse2),
-                createMockPeerGrading(5, incorrectResponse3),
-                createMockPeerGrading(5, incorrectResponse3),
-                createMockPeerGrading(4, incorrectResponse4),
-                createMockPeerGrading(2, incorrectResponse4),
-                createMockPeerGrading(3, incorrectResponse5)
+            createMockPeerGrading(1, correctResponse1),
+            createMockPeerGrading(2, correctResponse1),
+            createMockPeerGrading(1, correctResponse2),
+            createMockPeerGrading(3, correctResponse1),
+            createMockPeerGrading(4, correctResponse2),
+            createMockPeerGrading(5, incorrectResponse2),
+            createMockPeerGrading(4, incorrectResponse2),
+            createMockPeerGrading(5, incorrectResponse3),
+            createMockPeerGrading(5, incorrectResponse3),
+            createMockPeerGrading(4, incorrectResponse4),
+            createMockPeerGrading(2, incorrectResponse4),
+            createMockPeerGrading(3, incorrectResponse5)
         )
 
         val result = IndicatorCalculator.computePPeer(mockPeerGradings)
@@ -475,16 +475,16 @@ internal class IndicatorCalculatorTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(3, correctResponse1),
-                createMockPeerGrading(2, correctResponse1),
-                createMockPeerGrading(1, correctResponse2),
-                createMockPeerGrading(4, correctResponse1),
-                createMockPeerGrading(3, correctResponse2),
-                createMockPeerGrading(3, incorrectResponse2),
-                createMockPeerGrading(2, incorrectResponse2),
-                createMockPeerGrading(1, incorrectResponse3),
-                createMockPeerGrading(4, incorrectResponse3),
-                createMockPeerGrading(3, incorrectResponse4)
+            createMockPeerGrading(3, correctResponse1),
+            createMockPeerGrading(2, correctResponse1),
+            createMockPeerGrading(1, correctResponse2),
+            createMockPeerGrading(4, correctResponse1),
+            createMockPeerGrading(3, correctResponse2),
+            createMockPeerGrading(3, incorrectResponse2),
+            createMockPeerGrading(2, incorrectResponse2),
+            createMockPeerGrading(1, incorrectResponse3),
+            createMockPeerGrading(4, incorrectResponse3),
+            createMockPeerGrading(3, incorrectResponse4)
         )
 
         val result = IndicatorCalculator.computePPeer(mockPeerGradings)
@@ -511,16 +511,16 @@ internal class IndicatorCalculatorTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(3, correctResponse1),
-                createMockPeerGrading(5, correctResponse1),
-                createMockPeerGrading(5, correctResponse2),
-                createMockPeerGrading(4, correctResponse1),
-                createMockPeerGrading(3, correctResponse2),
-                createMockPeerGrading(1, incorrectResponse2),
-                createMockPeerGrading(2, incorrectResponse2),
-                createMockPeerGrading(1, incorrectResponse3),
-                createMockPeerGrading(1, incorrectResponse3),
-                createMockPeerGrading(3, incorrectResponse1)
+            createMockPeerGrading(3, correctResponse1),
+            createMockPeerGrading(5, correctResponse1),
+            createMockPeerGrading(5, correctResponse2),
+            createMockPeerGrading(4, correctResponse1),
+            createMockPeerGrading(3, correctResponse2),
+            createMockPeerGrading(1, incorrectResponse2),
+            createMockPeerGrading(2, incorrectResponse2),
+            createMockPeerGrading(1, incorrectResponse3),
+            createMockPeerGrading(1, incorrectResponse3),
+            createMockPeerGrading(3, incorrectResponse1)
         )
 
         val result = IndicatorCalculator.computePPeer(mockPeerGradings)
@@ -538,11 +538,11 @@ internal class IndicatorCalculatorTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(3, correctResponse1),
-                createMockPeerGrading(2, correctResponse1),
-                createMockPeerGrading(1, correctResponse2),
-                createMockPeerGrading(4, correctResponse1),
-                createMockPeerGrading(3, correctResponse2)
+            createMockPeerGrading(3, correctResponse1),
+            createMockPeerGrading(2, correctResponse1),
+            createMockPeerGrading(1, correctResponse2),
+            createMockPeerGrading(4, correctResponse1),
+            createMockPeerGrading(3, correctResponse2)
         )
 
         val result = IndicatorCalculator.computePPeer(mockPeerGradings)
@@ -560,11 +560,11 @@ internal class IndicatorCalculatorTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(3, incorrectResponse1),
-                createMockPeerGrading(2, incorrectResponse1),
-                createMockPeerGrading(1, incorrectResponse2),
-                createMockPeerGrading(4, incorrectResponse1),
-                createMockPeerGrading(3, incorrectResponse2)
+            createMockPeerGrading(3, incorrectResponse1),
+            createMockPeerGrading(2, incorrectResponse1),
+            createMockPeerGrading(1, incorrectResponse2),
+            createMockPeerGrading(4, incorrectResponse1),
+            createMockPeerGrading(3, incorrectResponse2)
         )
 
         val result = IndicatorCalculator.computePPeer(mockPeerGradings)
@@ -599,13 +599,13 @@ internal class IndicatorCalculatorTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(3, incorrectResponse1),
-                createMockPeerGrading(2, incorrectResponse1),
-                createMockPeerGrading(1, incorrectResponse2),
-                createMockPeerGrading(4, incorrectResponse1),
-                createMockPeerGrading(1, correctResponse3),
-                createMockPeerGrading(4, correctResponse3),
-                createMockPeerGrading(3, incorrectResponse2)
+            createMockPeerGrading(3, incorrectResponse1),
+            createMockPeerGrading(2, incorrectResponse1),
+            createMockPeerGrading(1, incorrectResponse2),
+            createMockPeerGrading(4, incorrectResponse1),
+            createMockPeerGrading(1, correctResponse3),
+            createMockPeerGrading(4, correctResponse3),
+            createMockPeerGrading(3, incorrectResponse2)
         )
         val result = IndicatorCalculator.computePPeer(mockPeerGradings)
         print(result)

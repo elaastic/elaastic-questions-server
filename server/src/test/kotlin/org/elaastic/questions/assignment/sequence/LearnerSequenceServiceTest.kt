@@ -18,24 +18,24 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
+import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.sequence.interaction.InteractionService
-import org.elaastic.activity.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.elaastic.questions.test.interpreter.command.Phase
-import org.junit.jupiter.api.Assertions.*
+import org.elaastic.sequence.interaction.InteractionService
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -67,7 +67,11 @@ internal class LearnerSequenceServiceTest(
         functionalTestingService.addQuestion(subject, QuestionType.OpenEnded)
         val assignement = functionalTestingService.createAssignment(subject)
         val sequence = assignement.sequences.first()
-        assertEquals(0, learnerSequenceService.countReportMade(reporter, sequence), "The report count should be 0 as the sequence has not started yet")
+        assertEquals(
+            0,
+            learnerSequenceService.countReportMade(reporter, sequence),
+            "The report count should be 0 as the sequence has not started yet"
+        )
         functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace) // Phase 1 (Start)
         val response = functionalTestingService.submitResponse(
             Phase.PHASE_1,

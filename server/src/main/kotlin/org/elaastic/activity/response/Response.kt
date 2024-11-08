@@ -166,7 +166,7 @@ class Response(
          * @param choiceSpecification the specification of the choice
          * @return the score of the learner choice
          * @exception IllegalStateException if the choice is not an exclusive or
-         *     multiple choice
+         *    multiple choice
          * @see ExclusiveChoiceSpecification
          * @see MultipleChoiceSpecification
          * @see LearnerChoice

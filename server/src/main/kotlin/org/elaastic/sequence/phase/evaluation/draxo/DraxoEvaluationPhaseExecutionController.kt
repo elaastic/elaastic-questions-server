@@ -1,15 +1,15 @@
 package org.elaastic.sequence.phase.evaluation.draxo
 
-import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ItemIndex
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.user.User
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.questions.assignment.Assignment
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller

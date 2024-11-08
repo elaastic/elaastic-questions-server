@@ -18,6 +18,10 @@
 
 package org.elaastic.player
 
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.AttemptNum
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.analytics.lrs.EventLogService
@@ -31,16 +35,12 @@ import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.results.learner.LearnerResultsModelFactory
 import org.elaastic.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.assignment.*
-import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.interaction.InteractionService
-import org.elaastic.activity.response.Response
-import org.elaastic.activity.response.ResponseService
 import org.elaastic.sequence.phase.LearnerPhaseService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService

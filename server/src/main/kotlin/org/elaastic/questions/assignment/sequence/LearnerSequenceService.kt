@@ -18,9 +18,9 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

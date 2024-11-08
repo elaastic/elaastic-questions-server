@@ -1,17 +1,17 @@
 package org.elaastic.player.evaluation.draxo
 
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
+import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.moderation.UtilityGrade
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.user.UserService
 import org.elaastic.player.evaluation.draxo.DraxoEvaluationModel
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.user.UserService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,5 +1,12 @@
 package org.elaastic.activity.response
 
+import org.elaastic.activity.evaluation.peergrading.LikertPeerGrading
+import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
+import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
@@ -10,13 +17,6 @@ import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementService

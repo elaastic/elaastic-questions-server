@@ -24,7 +24,7 @@
     <h4 th:text="#{draxo.evaluationGrid}">Evaluation grid</h4>
     <div class="DRAXO-grid">
         <th:block
-                th:each="criteria : ${T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria).values()}"
+                th:each="criteria : ${T(org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria).values()}"
                 th:with="optionType = ${criteria.getOptionType(draxoEvaluationModel.draxoEvaluation.get(criteria))}">
 
             <div class="custom-step"
@@ -32,7 +32,7 @@
 
                 <div class="custom-step-content">
                     <span class="capital-letter" th:text="${criteria}">R</span>
-                    <span th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">...</span>
+                    <span th:text="#{${criteria.getMessageI18nKey(T(org.elaastic.activity.evaluation.peergrading.draxo.criteria.CriteriaMessageKey).Header)}}">...</span>
 
                     <i class="check icon" th:if="${optionType?.name == 'POSITIVE'}"></i>
                     <i class="x icon" th:if="${optionType?.name == 'NEGATIVE'}"></i>
@@ -45,7 +45,7 @@
     <th:block th:with="rejectedCriteria = ${draxoEvaluationModel.draxoEvaluation.getRejectedCriteria()}">
         <div class="comment-area" th:if="${rejectedCriteria}">
             <div class="comment-header">
-                <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+'&ensp;:'">
+                <h4 th:text="#{${rejectedCriteria.getMessageI18nKey(T(org.elaastic.activity.evaluation.peergrading.draxo.criteria.CriteriaMessageKey).Question)}}+'&ensp;:'">
                     The answer is readable :</h4>
                 <div class="ui label"
                      th:text="#{${draxoEvaluationModel.draxoEvaluation.get(rejectedCriteria).codeI18n}}">

@@ -2,18 +2,18 @@ package org.elaastic.player.recommendation
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import org.elaastic.activity.evaluation.peergrading.PeerGrading
+import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseSet
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ChoiceType
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
-import org.elaastic.activity.response.Response
-import org.elaastic.activity.response.ResponseSet
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
@@ -367,18 +367,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when p1 greater than 80 percent and pconf lower than 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf1,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockCorrectResponseConf1,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf2
+            mockCorrectResponseConf1,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockCorrectResponseConf1,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf2
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -399,18 +399,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when p1 greater than 80 percent and pconf greater than 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf0,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf0
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf0,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf0
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -431,18 +431,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when p1 lower than 20 percent and pconf lower than 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf1,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockCorrectResponseConf1,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2
+            mockCorrectResponseConf1,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockCorrectResponseConf1,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -464,18 +464,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when p1 lower than 20 percent and pconf greater than 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockCorrectResponseConf3,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf0,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf0,
-                mockIncorrectResponseConf1
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockCorrectResponseConf3,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf0,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf0,
+            mockIncorrectResponseConf1
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -497,18 +497,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when p1 lower than 20 percent and pconf equal to 0`() {
 
         val mockResponses = mutableListOf(
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockCorrectResponseConf3,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf3,
-                mockIncorrectResponseConf3,
-                mockIncorrectResponseConf3,
-                mockIncorrectResponseConf3,
-                mockIncorrectResponseConf3
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockCorrectResponseConf3,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf3,
+            mockIncorrectResponseConf3,
+            mockIncorrectResponseConf3,
+            mockIncorrectResponseConf3,
+            mockIncorrectResponseConf3
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -536,16 +536,16 @@ internal class RecommendationResolverTest {
                 on { confidenceDegree }.doReturn(null)
                 on { explanation }.doReturn("Hello World, and Universe")
             },
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -579,8 +579,8 @@ internal class RecommendationResolverTest {
                 on { confidenceDegree }.doReturn(ConfidenceDegree.NOT_REALLY_CONFIDENT)
                 on { explanation }.doReturn("")
             },
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
             mock<Response> {
                 on { score }.doReturn(BigDecimal(0))
                 on { fake }.doReturn(false)
@@ -605,8 +605,8 @@ internal class RecommendationResolverTest {
                 on { confidenceDegree }.doReturn(ConfidenceDegree.NOT_REALLY_CONFIDENT)
                 on { explanation }.doReturn("")
             },
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
             mock<Response> {
                 on { score }.doReturn(BigDecimal(0))
                 on { fake }.doReturn(false)
@@ -639,18 +639,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when phase 2 skipped and p1 greater than 80 percent and pconf lower than 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf1,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf3,
-                mockCorrectResponseConf1,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf3
+            mockCorrectResponseConf1,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf3,
+            mockCorrectResponseConf1,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf3
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -673,18 +673,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when phase 2 skipped and p1 greater than 80 percent and pconf greater than 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf0,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf0
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf0,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf0
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -707,18 +707,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when phase 2 skipped and p1 greater than 80 percent and pconf equal to 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf2
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf2
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -741,16 +741,16 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when phase 2 skipped and p1 greater than 80 percent and pconf is null`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf0,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf2,
-                mockCorrectResponseConf1,
-                mockCorrectResponseConf3,
-                mockCorrectResponseConf1,
-                mockCorrectResponseConf1,
-                mockCorrectResponseConf3
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf0,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf2,
+            mockCorrectResponseConf1,
+            mockCorrectResponseConf3,
+            mockCorrectResponseConf1,
+            mockCorrectResponseConf1,
+            mockCorrectResponseConf3
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -772,18 +772,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when phase 2 skipped and p1 lower than 20 percent and pconf lower than 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf1,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockCorrectResponseConf1,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2
+            mockCorrectResponseConf1,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockCorrectResponseConf1,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -806,18 +806,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when phase 2 skipped and p1 lower than 20 percent and pconf greater than 0`() {
 
         val mockResponses = mutableListOf(
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -840,18 +840,18 @@ internal class RecommendationResolverTest {
     fun `Test recommendation when phase 2 skipped p1 lower than 20 percent and pconf equal to 0`() {
 
         val mockResponses = mutableListOf(
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockIncorrectResponseConf2,
-                mockCorrectResponseConf3,
-                mockCorrectResponseConf2,
-                mockIncorrectResponseConf3,
-                mockIncorrectResponseConf3,
-                mockIncorrectResponseConf3,
-                mockIncorrectResponseConf3,
-                mockIncorrectResponseConf3
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockIncorrectResponseConf2,
+            mockCorrectResponseConf3,
+            mockCorrectResponseConf2,
+            mockIncorrectResponseConf3,
+            mockIncorrectResponseConf3,
+            mockIncorrectResponseConf3,
+            mockIncorrectResponseConf3,
+            mockIncorrectResponseConf3
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -880,16 +880,16 @@ internal class RecommendationResolverTest {
                 on { confidenceDegree }.doReturn(null)
                 on { explanation }.doReturn("Hello World, and Universe")
             },
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1,
-                mockIncorrectResponseConf1
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1,
+            mockIncorrectResponseConf1
         )
 
         val mockResponseSet = mock<ResponseSet> {
@@ -962,18 +962,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(5, mockCorrectResponseConf2),
-                createMockPeerGrading(3, mockCorrectResponseConf2),
-                createMockPeerGrading(4, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(5, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(3, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2)
+            createMockPeerGrading(5, mockCorrectResponseConf2),
+            createMockPeerGrading(3, mockCorrectResponseConf2),
+            createMockPeerGrading(4, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(5, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(3, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2)
         )
 
         val actual = RecommendationResolver.resolve(
@@ -1031,18 +1031,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(5, mockCorrectResponseConf2),
-                createMockPeerGrading(3, mockCorrectResponseConf2),
-                createMockPeerGrading(4, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(5, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(3, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2)
+            createMockPeerGrading(5, mockCorrectResponseConf2),
+            createMockPeerGrading(3, mockCorrectResponseConf2),
+            createMockPeerGrading(4, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(5, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(3, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2)
         )
 
         val actual = RecommendationResolver.resolve(
@@ -1100,18 +1100,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(5, mockCorrectResponseConf2),
-                createMockPeerGrading(3, mockCorrectResponseConf2),
-                createMockPeerGrading(4, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(5, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(3, mockIncorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf2)
+            createMockPeerGrading(5, mockCorrectResponseConf2),
+            createMockPeerGrading(3, mockCorrectResponseConf2),
+            createMockPeerGrading(4, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(5, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(3, mockIncorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf2)
         )
 
         val actual = RecommendationResolver.resolve(
@@ -1169,18 +1169,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockCorrectResponseConf2),
-                createMockPeerGrading(5, mockIncorrectResponseConf1),
-                createMockPeerGrading(3, mockCorrectResponseConf1),
-                createMockPeerGrading(4, mockCorrectResponseConf1),
-                createMockPeerGrading(2, mockCorrectResponseConf1),
-                createMockPeerGrading(5, mockCorrectResponseConf1),
-                createMockPeerGrading(2, mockCorrectResponseConf1),
-                createMockPeerGrading(2, mockCorrectResponseConf1),
-                createMockPeerGrading(3, mockCorrectResponseConf1),
-                createMockPeerGrading(2, mockCorrectResponseConf1),
-                createMockPeerGrading(3, mockCorrectResponseConf1)
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockCorrectResponseConf2),
+            createMockPeerGrading(5, mockIncorrectResponseConf1),
+            createMockPeerGrading(3, mockCorrectResponseConf1),
+            createMockPeerGrading(4, mockCorrectResponseConf1),
+            createMockPeerGrading(2, mockCorrectResponseConf1),
+            createMockPeerGrading(5, mockCorrectResponseConf1),
+            createMockPeerGrading(2, mockCorrectResponseConf1),
+            createMockPeerGrading(2, mockCorrectResponseConf1),
+            createMockPeerGrading(3, mockCorrectResponseConf1),
+            createMockPeerGrading(2, mockCorrectResponseConf1),
+            createMockPeerGrading(3, mockCorrectResponseConf1)
         )
 
         val actual = RecommendationResolver.resolve(
@@ -1238,18 +1238,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockCorrectResponseConf2),
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(3, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(5, mockIncorrectResponseConf1),
-                createMockPeerGrading(4, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(3, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(4, mockIncorrectResponseConf1)
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockCorrectResponseConf2),
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(3, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(5, mockIncorrectResponseConf1),
+            createMockPeerGrading(4, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(3, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(4, mockIncorrectResponseConf1)
         )
 
         val actual = RecommendationResolver.resolve(
@@ -1307,18 +1307,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockCorrectResponseConf2),
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(3, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(5, mockIncorrectResponseConf1),
-                createMockPeerGrading(4, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(3, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(4, mockIncorrectResponseConf1)
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockCorrectResponseConf2),
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(3, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(5, mockIncorrectResponseConf1),
+            createMockPeerGrading(4, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(3, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(4, mockIncorrectResponseConf1)
         )
 
         val actual = RecommendationResolver.resolve(
@@ -1376,18 +1376,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(4, mockCorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(3, mockIncorrectResponseConf1),
-                createMockPeerGrading(4, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1)
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(4, mockCorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(3, mockIncorrectResponseConf1),
+            createMockPeerGrading(4, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1)
         )
 
         val actual = RecommendationResolver.resolve(
@@ -1445,18 +1445,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockCorrectResponseConf2),
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(3, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1)
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockCorrectResponseConf2),
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(3, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1)
         )
 
         val actual = RecommendationResolver.resolve(
@@ -1514,18 +1514,18 @@ internal class RecommendationResolverTest {
         }
 
         val mockPeerGradings = listOf(
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(2, mockCorrectResponseConf2),
-                createMockPeerGrading(1, mockCorrectResponseConf2),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(1, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1),
-                createMockPeerGrading(2, mockIncorrectResponseConf1)
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(2, mockCorrectResponseConf2),
+            createMockPeerGrading(1, mockCorrectResponseConf2),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(1, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1),
+            createMockPeerGrading(2, mockIncorrectResponseConf1)
         )
 
         val actual = RecommendationResolver.resolve(

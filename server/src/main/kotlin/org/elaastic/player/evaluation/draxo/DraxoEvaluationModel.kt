@@ -17,12 +17,12 @@
  */
 package org.elaastic.player.evaluation.draxo
 
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoGrading
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
+import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.moderation.UtilityGrade
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoGrading
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
 import java.math.BigDecimal
 
 data class DraxoEvaluationModel(
@@ -72,7 +72,7 @@ data class DraxoEvaluationModel(
      * Check if the student has reported this peer grading
      *
      * @return true if the student has reported this peer grading, false
-     *     otherwise
+     *    otherwise
      */
     fun isReported() = draxoPeerGrading?.reportReasons.isNullOrBlank().not()
 
@@ -85,7 +85,7 @@ data class DraxoEvaluationModel(
      * - the selected option different from DONT_KNOW and NO_OPINION
      *
      * @return true if the student can react to this peer grading, false
-     *     otherwise
+     *    otherwise
      */
     fun canBeReacted(): Boolean {
         // We want to check if the last-evaluated critéria is not `DONT_KNOW` or `NO_OPINION`
@@ -97,9 +97,7 @@ data class DraxoEvaluationModel(
         return !this.hiddenByTeacher && !this.isReported() && (optionIdSelected != OptionId.DONT_KNOW && optionIdSelected != OptionId.NO_OPINION)
     }
 
-    /**
-     * @return the score in a printable format
-     */
+    /** @return the score in a printable format */
     fun prettyScore(): String {
         return (score?.stripTrailingZeros() ?: "-").toString()
     }

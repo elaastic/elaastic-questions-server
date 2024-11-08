@@ -6,7 +6,7 @@ import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.assignment.ia.ResponseRecommendationService
+import org.elaastic.activity.evaluation.peergrading.ResponseRecommendationService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.subject.statement.StatementService

@@ -1,20 +1,14 @@
 package org.elaastic.sequence.phase.evaluation.draxo
 
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
+import org.elaastic.activity.evaluation.peergrading.draxo.criteria.CriteriaEvaluation
 import org.elaastic.activity.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.user.User
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.CriteriaEvaluation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/player/sequence/{sequenceId}/phase/evaluation/draxo/response/{responseId}")

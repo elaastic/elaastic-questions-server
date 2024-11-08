@@ -18,22 +18,24 @@
 
 package org.elaastic.activity.results
 
+import org.elaastic.activity.evaluation.peergrading.PeerGrading
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import java.math.BigDecimal
 
 object GradingDistributionFactory {
 
-    fun build(choiceSpecification: ChoiceSpecification,
-              peerGradings: List<PeerGrading>?): GradingDistribution {
+    fun build(
+        choiceSpecification: ChoiceSpecification,
+        peerGradings: List<PeerGrading>?
+    ): GradingDistribution {
         val gradingDistributionList = mutableListOf<GradingDistributionOnResponse>()
-        if(peerGradings != null){
-            for(choiceIndex in 1..choiceSpecification.nbCandidateItem){
+        if (peerGradings != null) {
+            for (choiceIndex in 1..choiceSpecification.nbCandidateItem) {
                 gradingDistributionList.add(
                     GradingDistributionOnResponse(
-                        peerGradings.filter{pg -> pg.grade?.compareTo(BigDecimal(-1)) != 0 },
+                        peerGradings.filter { pg -> pg.grade?.compareTo(BigDecimal(-1)) != 0 },
                         choiceIndex
-                )
+                    )
                 )
             }
         }

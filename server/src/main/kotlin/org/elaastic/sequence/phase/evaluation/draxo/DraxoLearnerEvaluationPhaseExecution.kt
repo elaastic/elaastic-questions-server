@@ -1,9 +1,9 @@
 package org.elaastic.sequence.phase.evaluation.draxo
 
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
+import org.elaastic.activity.response.Response
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.activity.response.Response
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.sequence.phase.evaluation.AbstractLearnerEvaluationPhaseExecution
 import org.elaastic.sequence.phase.evaluation.ResponseData
 

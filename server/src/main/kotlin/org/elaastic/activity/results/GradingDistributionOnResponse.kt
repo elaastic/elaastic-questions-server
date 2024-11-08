@@ -19,7 +19,7 @@
 package org.elaastic.activity.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
+import org.elaastic.activity.evaluation.peergrading.PeerGrading
 import java.math.BigDecimal
 
 class GradingDistributionOnResponse(
@@ -29,7 +29,8 @@ class GradingDistributionOnResponse(
 ) {
 
     constructor(peerGradings: List<PeerGrading>, choice: Int) : this() {
-        val pg = peerGradings.filter { pg -> pg.response.learnerChoice != null && pg.response.learnerChoice!!.contains(choice)}
+        val pg =
+            peerGradings.filter { pg -> pg.response.learnerChoice != null && pg.response.learnerChoice!!.contains(choice) }
         pg.forEach { add(it) }
     }
 

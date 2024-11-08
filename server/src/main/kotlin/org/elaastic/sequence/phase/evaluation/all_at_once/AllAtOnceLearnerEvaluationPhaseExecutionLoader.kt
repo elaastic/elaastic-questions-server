@@ -1,9 +1,9 @@
 package org.elaastic.sequence.phase.evaluation.all_at_once
 
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhase
+import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.evaluation.AbstractLearnerEvaluationPhaseExecutionLoader
 import org.elaastic.sequence.phase.evaluation.ResponseData
 import org.springframework.beans.factory.annotation.Autowired
