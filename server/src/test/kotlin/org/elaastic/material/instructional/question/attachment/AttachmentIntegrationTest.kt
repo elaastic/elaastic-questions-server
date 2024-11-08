@@ -16,12 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.material.instructional.attachment
+package org.elaastic.material.instructional.question.attachment
 
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.filestore.DataIdentifier
 import org.elaastic.filestore.FileDataStore
 import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.question.attachment.*
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementRepository
 import org.elaastic.test.IntegrationTestingService

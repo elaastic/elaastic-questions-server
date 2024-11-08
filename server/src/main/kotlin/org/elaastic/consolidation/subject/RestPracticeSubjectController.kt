@@ -1,7 +1,7 @@
 package org.elaastic.consolidation.subject
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiModelBuilder.jsonApiModel
-import org.elaastic.material.instructional.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource
 import org.springframework.core.io.Resource

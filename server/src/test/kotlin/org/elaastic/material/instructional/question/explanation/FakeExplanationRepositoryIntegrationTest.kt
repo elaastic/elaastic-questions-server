@@ -18,19 +18,18 @@
 
 package org.elaastic.material.instructional.question.explanation
 
-import org.elaastic.questions.test.directive.*
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tNoProblem
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
-import org.springframework.boot.test.context.SpringBootTest
-import javax.transaction.Transactional
-import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import javax.persistence.EntityManager
+import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
 
 
@@ -48,23 +47,23 @@ internal class FakeExplanationRepositoryIntegrationTest(
         val author = integrationTestingService.getAnyUser()
         val statement = integrationTestingService.getAnyStatement()
         FakeExplanation(
-                content = "My fake explanation",
-                author = author,
-                correspondingItem = 3,
-                statement = statement
+            content = "My fake explanation",
+            author = author,
+            correspondingItem = 3,
+            statement = statement
         )
-                // When saving the fake explanation
-                .tWhen {
-                    fakeExplanationRepository.saveAndFlush(it)
-                    entityManager.refresh(it)
-                    it
-                }
-                // Then the fake explanation should to be properly saved
-                .tThen {
-                    assertThat(it.id, not(nullValue()))
-                    assertThat(it.author, equalTo(author))
-                    assertThat(it.statement, equalTo(statement))
-                }
+            // When saving the fake explanation
+            .tWhen {
+                fakeExplanationRepository.saveAndFlush(it)
+                entityManager.refresh(it)
+                it
+            }
+            // Then the fake explanation should to be properly saved
+            .tThen {
+                assertThat(it.id, not(nullValue()))
+                assertThat(it.author, equalTo(author))
+                assertThat(it.statement, equalTo(statement))
+            }
 
     }
 
@@ -72,30 +71,30 @@ internal class FakeExplanationRepositoryIntegrationTest(
     fun `save a valid fake explanation - without corresponding item`() {
         // Expect a fake explanation without corresponding item to be saved without error
         FakeExplanation(
-                content = "My fake explanation",
-                author = integrationTestingService.getAnyUser(),
-                statement = integrationTestingService.getAnyStatement()
+            content = "My fake explanation",
+            author = integrationTestingService.getAnyUser(),
+            statement = integrationTestingService.getAnyStatement()
         )
-                .tWhen {
-                    fakeExplanationRepository.saveAndFlush(it)
-                }
-                .tNoProblem()
+            .tWhen {
+                fakeExplanationRepository.saveAndFlush(it)
+            }
+            .tNoProblem()
     }
 
     @Test
     fun `the content must be not blank`() {
         // Expect an error to be thrown when trying to save a fake explanation with blank content
         FakeExplanation(
-                content = "",
-                author = integrationTestingService.getAnyUser(),
-                statement = integrationTestingService.getAnyStatement()
+            content = "",
+            author = integrationTestingService.getAnyUser(),
+            statement = integrationTestingService.getAnyStatement()
         )
-                .tThen {
-                    Assertions.assertThrows(ConstraintViolationException::class.java) {
-                        fakeExplanationRepository.saveAndFlush(it)
-                    }
-
+            .tThen {
+                Assertions.assertThrows(ConstraintViolationException::class.java) {
+                    fakeExplanationRepository.saveAndFlush(it)
                 }
+
+            }
 
     }
 }

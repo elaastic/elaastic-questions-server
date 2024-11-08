@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.material.instructional.attachment
+package org.elaastic.material.instructional.question.attachment
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.InputStreamResource

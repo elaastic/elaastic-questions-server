@@ -6,7 +6,7 @@ import org.elaastic.assignment.Assignment
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.material.instructional.question.explanation.FakeExplanation
 import org.elaastic.material.instructional.question.explanation.FakeExplanationRepository
-import org.elaastic.material.instructional.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.sequence.FakeExplanationData
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceRepository

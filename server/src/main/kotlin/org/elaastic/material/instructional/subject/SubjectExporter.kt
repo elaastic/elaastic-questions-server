@@ -2,7 +2,7 @@ package org.elaastic.material.instructional.subject
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.elaastic.common.util.ZipService
-import org.elaastic.material.instructional.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.statement.StatementService
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired

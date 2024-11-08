@@ -1,8 +1,8 @@
 package org.elaastic.material.instructional.subject
 
-import org.elaastic.material.instructional.attachment.Attachment
-import org.elaastic.material.instructional.attachment.AttachmentRepository
-import org.elaastic.material.instructional.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.Attachment
+import org.elaastic.material.instructional.question.attachment.AttachmentRepository
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.test.IntegrationTestingService
 import org.hamcrest.CoreMatchers

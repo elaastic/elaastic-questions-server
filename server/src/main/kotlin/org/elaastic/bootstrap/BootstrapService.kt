@@ -38,9 +38,9 @@ import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementService
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.material.instructional.subject.SubjectService
-import org.elaastic.material.instructional.attachment.Attachment
-import org.elaastic.material.instructional.attachment.AttachmentService
-import org.elaastic.material.instructional.attachment.MimeType
+import org.elaastic.material.instructional.question.attachment.Attachment
+import org.elaastic.material.instructional.question.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.MimeType
 import org.elaastic.auth.lti.LtiConsumer
 import org.elaastic.auth.lti.LtiConsumerRepository
 import org.elaastic.sequence.ExecutionContext

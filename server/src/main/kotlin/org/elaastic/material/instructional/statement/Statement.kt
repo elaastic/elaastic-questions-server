@@ -3,7 +3,7 @@ package org.elaastic.material.instructional.statement
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.material.instructional.question.*
 import org.elaastic.material.instructional.subject.Subject
-import org.elaastic.material.instructional.attachment.Attachment
+import org.elaastic.material.instructional.question.attachment.Attachment
 import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate

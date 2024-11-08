@@ -4,8 +4,8 @@ import org.elaastic.activity.response.ResponseService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentRepository
 import org.elaastic.assignment.AssignmentService
-import org.elaastic.material.instructional.attachment.Attachment
-import org.elaastic.material.instructional.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.Attachment
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementRepository
 import org.elaastic.material.instructional.statement.StatementService

@@ -16,8 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.material.instructional.attachment
+package org.elaastic.material.instructional.question.attachment
 
+import org.elaastic.material.instructional.question.attachment.Attachment
+import org.elaastic.material.instructional.question.attachment.Dimension
+import org.elaastic.material.instructional.question.attachment.MimeType
+import org.elaastic.material.instructional.question.attachment.MimeTypesOfDisplayableImage
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.BeforeEach

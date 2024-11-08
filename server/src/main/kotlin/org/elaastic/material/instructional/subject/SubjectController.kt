@@ -7,7 +7,7 @@ import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.material.instructional.course.CourseService
-import org.elaastic.material.instructional.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementController
 import org.elaastic.material.instructional.statement.StatementService

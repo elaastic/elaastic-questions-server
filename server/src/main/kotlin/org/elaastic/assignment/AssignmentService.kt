@@ -4,7 +4,7 @@ import org.elaastic.activity.response.ResponseService
 import org.elaastic.common.util.toDate
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceRepository
-import org.elaastic.material.instructional.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.material.instructional.statement.Statement
