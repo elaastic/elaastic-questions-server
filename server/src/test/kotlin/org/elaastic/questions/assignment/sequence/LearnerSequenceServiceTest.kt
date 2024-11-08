@@ -18,10 +18,11 @@
 
 package org.elaastic.questions.assignment.sequence
 
+import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.sequence.interaction.InteractionService
-import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation

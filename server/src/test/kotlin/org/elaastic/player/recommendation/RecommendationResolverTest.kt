@@ -6,14 +6,14 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ChoiceType
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseSet
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers

@@ -28,8 +28,8 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ResultsService
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ReadSpecification

@@ -3,7 +3,7 @@ package org.elaastic.sequence.phase.result
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ResultsService
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.player.results.learner.LearnerResultsModelFactory

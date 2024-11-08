@@ -1,8 +1,8 @@
 package org.elaastic.ai.evaluation.chatgpt
 
+import org.elaastic.activity.response.Response
 import org.elaastic.moderation.ReportCandidateRepository
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.response.Response
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 

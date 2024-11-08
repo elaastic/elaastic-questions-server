@@ -19,14 +19,14 @@
 package org.elaastic.questions.assignment
 
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseRepository
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseRepository
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.user.User
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement

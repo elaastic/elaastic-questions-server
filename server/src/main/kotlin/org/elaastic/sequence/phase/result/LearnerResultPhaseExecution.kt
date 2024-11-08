@@ -1,6 +1,6 @@
 package org.elaastic.sequence.phase.result
 
-import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.activity.response.ResponseSet
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModel
 import org.elaastic.player.results.learner.LearnerResultsModel

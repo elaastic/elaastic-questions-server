@@ -26,9 +26,9 @@ import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseRepository
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseRepository
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.user.User

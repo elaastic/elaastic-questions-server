@@ -1,6 +1,6 @@
 package org.elaastic.player.response
 
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.activity.results.AttemptNum
 

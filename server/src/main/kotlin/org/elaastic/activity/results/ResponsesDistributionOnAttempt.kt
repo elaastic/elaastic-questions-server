@@ -19,7 +19,7 @@
 package org.elaastic.activity.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 
 
 typealias ItemIndex = Int

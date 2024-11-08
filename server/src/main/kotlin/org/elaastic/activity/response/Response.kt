@@ -1,34 +1,17 @@
-/*
- * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+package org.elaastic.activity.response
 
-package org.elaastic.sequence.interaction.response
-
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoiceConverter
+import org.elaastic.moderation.ModerationCandidate
+import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User
-import org.elaastic..moderation.ModerationCandidate
-import org.elaastic.common.persistence.AbstractJpaPersistable
-import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -37,7 +20,6 @@ import java.math.RoundingMode
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
-
 
 /**
  * A response to a sequence

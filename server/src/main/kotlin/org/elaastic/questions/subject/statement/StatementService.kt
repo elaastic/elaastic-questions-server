@@ -25,7 +25,7 @@ import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.analytics.lrs.EventLogRepository
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
-import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.user.User
 import org.elaastic.questions.subject.Subject

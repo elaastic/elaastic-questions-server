@@ -19,8 +19,7 @@
 package org.elaastic.player
 
 import org.elaastic.player.explanations.*
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.player.components.explanationViewer.*
+import org.elaastic.activity.response.ConfidenceDegree
 import java.math.BigDecimal
 
 @DslMarker

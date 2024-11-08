@@ -19,8 +19,8 @@ package org.elaastic.questions.assignment.ia
 
 import org.elaastic.sequence.interaction.ExplanationRecommendationMapping
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.activity.results.AttemptNum
 import org.elaastic.user.User
 import org.springframework.stereotype.Service

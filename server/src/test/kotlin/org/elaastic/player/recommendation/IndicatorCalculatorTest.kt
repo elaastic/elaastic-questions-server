@@ -2,10 +2,10 @@ package org.elaastic.player.recommendation
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseSet
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers

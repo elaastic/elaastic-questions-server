@@ -1,6 +1,6 @@
 package org.elaastic.questions.test.interpreter.command
 
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 
 class SubmitResponse(
     val phase: Phase,

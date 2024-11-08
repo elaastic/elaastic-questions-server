@@ -18,7 +18,7 @@
 
 package org.elaastic.activity.results
 
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 
 typealias NumberOfOccurence = Int
 

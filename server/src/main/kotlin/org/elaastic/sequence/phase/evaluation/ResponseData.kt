@@ -18,7 +18,7 @@
 
 package org.elaastic.sequence.phase.evaluation
 
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 
 data class ResponseData(
         val id: Long,

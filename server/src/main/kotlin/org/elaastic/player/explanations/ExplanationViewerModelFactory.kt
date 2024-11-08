@@ -1,7 +1,7 @@
 package org.elaastic.player.explanations
 
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 
 object ExplanationViewerModelFactory {
 

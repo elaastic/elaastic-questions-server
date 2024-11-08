@@ -22,8 +22,8 @@ import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.sequence.*
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionRepository
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserRepository

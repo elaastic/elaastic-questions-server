@@ -1,6 +1,6 @@
 package org.elaastic.player.explanations
 
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 
 object ExplanationDataFactory {
 

@@ -1,6 +1,6 @@
 package org.elaastic.questions.assignment.ia
 
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 import java.math.BigDecimal
 
 class ResponseInfo(

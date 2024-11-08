@@ -20,8 +20,8 @@ package org.elaastic.activity.results
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.InteractionRepository
-import org.elaastic.sequence.interaction.response.ResponseService
-import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.activity.response.ResponseService
+import org.elaastic.activity.response.ResponseSet
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

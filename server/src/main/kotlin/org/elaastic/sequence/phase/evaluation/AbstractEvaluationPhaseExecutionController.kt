@@ -1,12 +1,12 @@
 package org.elaastic.sequence.phase.evaluation
 
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ItemIndex
 import org.elaastic.user.User
 import java.util.Locale

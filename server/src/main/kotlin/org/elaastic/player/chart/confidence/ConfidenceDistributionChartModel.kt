@@ -1,6 +1,6 @@
 package org.elaastic.player.chart.confidence
 
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.player.chart.response.ChoiceSpecificationData
 import org.elaastic.activity.results.ItemIndex
 

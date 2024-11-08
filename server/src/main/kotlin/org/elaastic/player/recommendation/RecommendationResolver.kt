@@ -19,7 +19,7 @@
 package org.elaastic.player.recommendation
 
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.activity.response.ResponseSet
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.common.web.MessageBuilder
 import java.math.BigDecimal

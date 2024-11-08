@@ -1,32 +1,15 @@
-/*
- * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-package org.elaastic.sequence.interaction.response
+package org.elaastic.activity.response
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.assignment.sequence.*
+import org.elaastic.questions.assignment.sequence.FakeExplanationData
+import org.elaastic.questions.assignment.sequence.SequenceRepository
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.assignment.sequence.peergrading.LikertPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
@@ -34,8 +17,8 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluat
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.user.UserService
 import org.elaastic.questions.subject.SubjectService
+import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
@@ -43,9 +26,10 @@ import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
 import org.elaastic.questions.test.interpreter.command.Phase
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.Assertions.*
+import org.elaastic.user.UserService
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -110,7 +94,7 @@ internal class ResponseServiceIntegrationTest(
                 teacher = sequence.owner
             )
         }.tThen { response ->
-            assertThat(response, nullValue())
+            MatcherAssert.assertThat(response, Matchers.nullValue())
         }
     }
 
@@ -153,7 +137,7 @@ internal class ResponseServiceIntegrationTest(
                 teacher = sequence.owner
             )
         }.tThen { response ->
-            assertThat(response, nullValue())
+            MatcherAssert.assertThat(response, Matchers.nullValue())
         }
     }
 
@@ -196,13 +180,19 @@ internal class ResponseServiceIntegrationTest(
                 teacher = sequence.owner
             )
         }.tThen { response ->
-            assertThat(response!!.id, notNullValue())
-            assertThat(response.learner, equalTo(integrationTestingService.getAnyAssignment().owner))
-            assertThat(response.score, nullValue())
-            assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
-            assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
-            assertThat(response.attempt, equalTo(2))
-            assertTrue(response.fake)
+            MatcherAssert.assertThat(response!!.id, Matchers.notNullValue())
+            MatcherAssert.assertThat(
+                response.learner,
+                Matchers.equalTo(integrationTestingService.getAnyAssignment().owner)
+            )
+            MatcherAssert.assertThat(response.score, Matchers.nullValue())
+            MatcherAssert.assertThat(response.confidenceDegree, Matchers.equalTo(ConfidenceDegree.CONFIDENT))
+            MatcherAssert.assertThat(
+                response.explanation,
+                Matchers.equalTo(response.interaction.sequence.statement.expectedExplanation)
+            )
+            MatcherAssert.assertThat(response.attempt, Matchers.equalTo(2))
+            Assertions.assertTrue(response.fake)
         }
     }
 
@@ -249,14 +239,20 @@ internal class ResponseServiceIntegrationTest(
                 teacher = sequence.owner
             )
         }.tThen { response ->
-            assertThat(response!!.id, notNullValue())
-            assertThat(response.learner, equalTo(integrationTestingService.getAnyAssignment().owner))
-            assertThat(response.score, equalTo(BigDecimal(100)))
-            assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
-            assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
-            assertThat(response.attempt, equalTo(2))
-            assertTrue(response.fake)
-            assertThat(response.learnerChoice, equalTo(LearnerChoice(listOf(2))))
+            MatcherAssert.assertThat(response!!.id, Matchers.notNullValue())
+            MatcherAssert.assertThat(
+                response.learner,
+                Matchers.equalTo(integrationTestingService.getAnyAssignment().owner)
+            )
+            MatcherAssert.assertThat(response.score, Matchers.equalTo(BigDecimal(100)))
+            MatcherAssert.assertThat(response.confidenceDegree, Matchers.equalTo(ConfidenceDegree.CONFIDENT))
+            MatcherAssert.assertThat(
+                response.explanation,
+                Matchers.equalTo(response.interaction.sequence.statement.expectedExplanation)
+            )
+            MatcherAssert.assertThat(response.attempt, Matchers.equalTo(2))
+            Assertions.assertTrue(response.fake)
+            MatcherAssert.assertThat(response.learnerChoice, Matchers.equalTo(LearnerChoice(listOf(2))))
         }
     }
 
@@ -306,14 +302,20 @@ internal class ResponseServiceIntegrationTest(
                 teacher = sequence.owner
             )
         }.tThen { response ->
-            assertThat(response!!.id, notNullValue())
-            assertThat(response.learner, equalTo(integrationTestingService.getAnyAssignment().owner))
-            assertThat(response.score, equalTo(BigDecimal(100)))
-            assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
-            assertThat(response.explanation, equalTo(response.interaction.sequence.statement.expectedExplanation))
-            assertThat(response.attempt, equalTo(1))
-            assertTrue(response.fake)
-            assertThat(response.learnerChoice, equalTo(LearnerChoice(listOf(4, 2))))
+            MatcherAssert.assertThat(response!!.id, Matchers.notNullValue())
+            MatcherAssert.assertThat(
+                response.learner,
+                Matchers.equalTo(integrationTestingService.getAnyAssignment().owner)
+            )
+            MatcherAssert.assertThat(response.score, Matchers.equalTo(BigDecimal(100)))
+            MatcherAssert.assertThat(response.confidenceDegree, Matchers.equalTo(ConfidenceDegree.CONFIDENT))
+            MatcherAssert.assertThat(
+                response.explanation,
+                Matchers.equalTo(response.interaction.sequence.statement.expectedExplanation)
+            )
+            MatcherAssert.assertThat(response.attempt, Matchers.equalTo(1))
+            Assertions.assertTrue(response.fake)
+            MatcherAssert.assertThat(response.learnerChoice, Matchers.equalTo(LearnerChoice(listOf(4, 2))))
         }
     }
 
@@ -367,15 +369,15 @@ internal class ResponseServiceIntegrationTest(
                 sequence = sequence
             )
         }.tThen { responseList ->
-            assertThat(responseList.size, equalTo(2))
+            MatcherAssert.assertThat(responseList.size, Matchers.equalTo(2))
             responseList.forEachIndexed { index, response ->
-                assertThat(response.id, notNullValue())
-                assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
-                assertThat(response.score, nullValue())
-                assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
-                assertThat(response.explanation, equalTo(fakeExplanations[index].content))
-                assertThat(response.attempt, equalTo(2))
-                assertTrue(response.fake)
+                MatcherAssert.assertThat(response.id, Matchers.notNullValue())
+                MatcherAssert.assertThat(response.learner, Matchers.equalTo(userService.fakeUserList!![index]))
+                MatcherAssert.assertThat(response.score, Matchers.nullValue())
+                MatcherAssert.assertThat(response.confidenceDegree, Matchers.equalTo(ConfidenceDegree.CONFIDENT))
+                MatcherAssert.assertThat(response.explanation, Matchers.equalTo(fakeExplanations[index].content))
+                MatcherAssert.assertThat(response.attempt, Matchers.equalTo(2))
+                Assertions.assertTrue(response.fake)
             }
         }
     }
@@ -438,15 +440,18 @@ internal class ResponseServiceIntegrationTest(
                 sequence = sequence
             )
         }.tThen { responseList ->
-            assertThat(responseList.size, equalTo(3))
+            MatcherAssert.assertThat(responseList.size, Matchers.equalTo(3))
             responseList.forEachIndexed { index, response ->
-                assertThat(response.id, notNullValue())
-                assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
-                assertThat(response.score, equalTo(if (index == 1) BigDecimal(100) else BigDecimal.ZERO))
-                assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
-                assertThat(response.explanation, equalTo(fakeExplanations[index].content))
-                assertThat(response.attempt, equalTo(2))
-                assertTrue(response.fake)
+                MatcherAssert.assertThat(response.id, Matchers.notNullValue())
+                MatcherAssert.assertThat(response.learner, Matchers.equalTo(userService.fakeUserList!![index]))
+                MatcherAssert.assertThat(
+                    response.score,
+                    Matchers.equalTo(if (index == 1) BigDecimal(100) else BigDecimal.ZERO)
+                )
+                MatcherAssert.assertThat(response.confidenceDegree, Matchers.equalTo(ConfidenceDegree.CONFIDENT))
+                MatcherAssert.assertThat(response.explanation, Matchers.equalTo(fakeExplanations[index].content))
+                MatcherAssert.assertThat(response.attempt, Matchers.equalTo(2))
+                Assertions.assertTrue(response.fake)
             }
         }
     }
@@ -511,15 +516,18 @@ internal class ResponseServiceIntegrationTest(
                 sequence = sequence
             )
         }.tThen { responseList ->
-            assertThat(responseList.size, equalTo(3))
+            MatcherAssert.assertThat(responseList.size, Matchers.equalTo(3))
             responseList.forEachIndexed { index, response ->
-                assertThat(response.id, notNullValue())
-                assertThat(response.learner, equalTo(userService.fakeUserList!![index]))
-                assertThat(response.score, equalTo(if (index == 1) BigDecimal(50) else BigDecimal.ZERO))
-                assertThat(response.confidenceDegree, equalTo(ConfidenceDegree.CONFIDENT))
-                assertThat(response.explanation, equalTo(fakeExplanations[index].content))
-                assertThat(response.attempt, equalTo(1))
-                assertTrue(response.fake)
+                MatcherAssert.assertThat(response.id, Matchers.notNullValue())
+                MatcherAssert.assertThat(response.learner, Matchers.equalTo(userService.fakeUserList!![index]))
+                MatcherAssert.assertThat(
+                    response.score,
+                    Matchers.equalTo(if (index == 1) BigDecimal(50) else BigDecimal.ZERO)
+                )
+                MatcherAssert.assertThat(response.confidenceDegree, Matchers.equalTo(ConfidenceDegree.CONFIDENT))
+                MatcherAssert.assertThat(response.explanation, Matchers.equalTo(fakeExplanations[index].content))
+                MatcherAssert.assertThat(response.attempt, Matchers.equalTo(1))
+                Assertions.assertTrue(response.fake)
             }
         }
     }
@@ -585,8 +593,8 @@ internal class ResponseServiceIntegrationTest(
             }.tWhen("update mean grade and evaluation count") { peerGradingList ->
                 responseService.updateMeanGradeAndEvaluationCount(response = peerGradingList[0].response)
             }.tThen { response ->
-                assertThat(response.evaluationCount, equalTo(3))
-                assertThat(response.meanGrade!!, equalTo(BigDecimal("1.33")))
+                MatcherAssert.assertThat(response.evaluationCount, Matchers.equalTo(3))
+                MatcherAssert.assertThat(response.meanGrade!!, Matchers.equalTo(BigDecimal("1.33")))
             }
         }
     }
@@ -633,8 +641,8 @@ internal class ResponseServiceIntegrationTest(
         }.tWhen("update mean grade and evaluation count") { response ->
             responseService.updateMeanGradeAndEvaluationCount(response = response!!)
         }.tThen { response ->
-            assertThat(response.evaluationCount, equalTo(0))
-            assertThat(response.meanGrade, nullValue())
+            MatcherAssert.assertThat(response.evaluationCount, Matchers.equalTo(0))
+            MatcherAssert.assertThat(response.meanGrade, Matchers.nullValue())
         }
     }
 
@@ -678,7 +686,7 @@ internal class ResponseServiceIntegrationTest(
         }.tWhen("we mark this response as recommended by the teacher") { response ->
             responseService.addRecommendedByTeacher(integrationTestingService.getTestTeacher(), response!!)
         }.tThen { response ->
-            assertThat(response.recommendedByTeacher, equalTo(true))
+            MatcherAssert.assertThat(response.recommendedByTeacher, Matchers.equalTo(true))
         }
     }
 
@@ -702,16 +710,19 @@ internal class ResponseServiceIntegrationTest(
                     it
                 }
         }.tThen("The teacher can hide the feedback") { peerGrading ->
-            assertEquals(teacher, assignement.owner)
-            assertTrue(peerGradingService.canHidePeerGrading(teacher, peerGrading), "The teacher can hide the feedback")
-            assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must be 0")
+            Assertions.assertEquals(teacher, assignement.owner)
+            Assertions.assertTrue(
+                peerGradingService.canHidePeerGrading(teacher, peerGrading),
+                "The teacher can hide the feedback"
+            )
+            Assertions.assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must be 0")
             peerGrading
         }.tWhen("the teacher hide the peerGrading") { peerGrading ->
             peerGradingService.markAsHidden(teacher, peerGrading)
             peerGrading
         }.tThen("the peerGrading is hidden") { peerGrading ->
-            assertTrue(peerGrading.hiddenByTeacher, "The feedback is hidden")
-            assertEquals(
+            Assertions.assertTrue(peerGrading.hiddenByTeacher, "The feedback is hidden")
+            Assertions.assertEquals(
                 1,
                 responseRepository.findById(response.id!!).get().draxoEvaluationHiddenCount,
                 "The hidden count must be 1"
@@ -739,7 +750,7 @@ internal class ResponseServiceIntegrationTest(
                     it
                 }
         }.tThen("The student can't hide the feedback") { peerGrading ->
-            assertFalse(
+            Assertions.assertFalse(
                 peerGradingService.canHidePeerGrading(student, peerGrading),
                 "The student can't hide a peergrading"
             )
@@ -747,11 +758,15 @@ internal class ResponseServiceIntegrationTest(
         }.tWhen("the student try hidding the peerGrading") { peerGrading ->
             peerGrading
         }.tThen("an excetion is thrown despite owning the response") { peerGrading ->
-            assertThrows(
+            Assertions.assertThrows(
                 IllegalAccessException::class.java
             ) { peerGradingService.markAsHidden(student, peerGrading) }
-            assertEquals(student, peerGrading.response.learner, "The student own the response")
-            assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must not have changed")
+            Assertions.assertEquals(student, peerGrading.response.learner, "The student own the response")
+            Assertions.assertEquals(
+                0,
+                peerGrading.response.draxoEvaluationHiddenCount,
+                "The hidden count must not have changed"
+            )
         }
     }
 
@@ -764,18 +779,18 @@ internal class ResponseServiceIntegrationTest(
             response.learner = student
 
         }.tThen("Then the student can moderate the feedback of the answer") {
-            assertTrue(
+            Assertions.assertTrue(
                 responseService.canReactOnFeedbackOfResponse(student, response),
                 "A student can moderate his own response"
             )
 
         }.tThen("Another studnet can't moderate the answer") {
             val anotherStudent = integrationTestingService.getNLearners(1).first()
-            assertFalse(
+            Assertions.assertFalse(
                 responseService.canReactOnFeedbackOfResponse(anotherStudent, response),
                 "Another student can't moderate the response"
             )
-            assertNotEquals(student, anotherStudent, "The two students must be different")
+            Assertions.assertNotEquals(student, anotherStudent, "The two students must be different")
         }
     }
 
@@ -800,17 +815,25 @@ internal class ResponseServiceIntegrationTest(
             peerGradingService.markAsHidden(teacher, peerGrading)
             peerGrading
         }.tThen("the peerGrading is hidden") { peerGrading ->
-            assertTrue(peerGrading.hiddenByTeacher, "The feedback is hidden")
-            assertInstanceOf(DraxoPeerGrading::class.java, peerGrading, "The peerGrading is a DraxoPeerGrading")
-            assertEquals(1, response.draxoEvaluationHiddenCount, "The hidden count must be 1")
+            Assertions.assertTrue(peerGrading.hiddenByTeacher, "The feedback is hidden")
+            Assertions.assertInstanceOf(
+                DraxoPeerGrading::class.java,
+                peerGrading,
+                "The peerGrading is a DraxoPeerGrading"
+            )
+            Assertions.assertEquals(1, response.draxoEvaluationHiddenCount, "The hidden count must be 1")
             peerGrading
         }.tWhen("the teacher unhide the peerGrading") { peerGrading ->
             peerGradingService.markAsShow(teacher, peerGrading)
             peerGrading
         }.tThen("the peerGrading is unhidden") { peerGrading ->
-            assertFalse(peerGrading.hiddenByTeacher, "The feedback is unhidden")
-            assertInstanceOf(DraxoPeerGrading::class.java, peerGrading, "The peerGrading is a DraxoPeerGrading")
-            assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must be 0")
+            Assertions.assertFalse(peerGrading.hiddenByTeacher, "The feedback is unhidden")
+            Assertions.assertInstanceOf(
+                DraxoPeerGrading::class.java,
+                peerGrading,
+                "The peerGrading is a DraxoPeerGrading"
+            )
+            Assertions.assertEquals(0, peerGrading.response.draxoEvaluationHiddenCount, "The hidden count must be 0")
         }
     }
 
@@ -838,8 +861,8 @@ internal class ResponseServiceIntegrationTest(
         val two = BigDecimal(2).setScale(2, RoundingMode.HALF_UP)
 
         responseService.updateMeanGradeAndEvaluationCount(response)
-        assertEquals(0, response.evaluationCount, "The response doesn't have any peergrading")
-        assertNull(response.meanGrade, "The mean grade is null")
+        Assertions.assertEquals(0, response.evaluationCount, "The response doesn't have any peergrading")
+        Assertions.assertNull(response.meanGrade, "The mean grade is null")
 
         tGiven("An assignement own by the teacher and a peerGrading of the response") {
             DraxoPeerGrading(
@@ -859,18 +882,18 @@ internal class ResponseServiceIntegrationTest(
                 }
         }.tThen("The compute mean grade is 2") { peerGrading ->
             responseService.updateMeanGradeAndEvaluationCount(response)
-            assertEquals(two, response.meanGrade, "The mean grade is 2")
+            Assertions.assertEquals(two, response.meanGrade, "The mean grade is 2")
             peerGrading
         }.tWhen("the teacher hide the peerGrading") { peerGrading ->
             peerGradingService.markAsHidden(teacher, peerGrading)
             peerGrading
         }.tThen("The compute mean grade is 0") { peerGrading ->
-            assertNull(response.meanGrade, "The mean grade is null")
+            Assertions.assertNull(response.meanGrade, "The mean grade is null")
             peerGrading
         }.tWhen("the teacher unhide the peerGrading") { peerGrading ->
             peerGradingService.markAsShow(teacher, peerGrading)
         }.tThen("The compute mean grade is 2") {
-            assertEquals(two, response.meanGrade, "The mean grade is 2")
+            Assertions.assertEquals(two, response.meanGrade, "The mean grade is 2")
         }
     }
 
@@ -898,7 +921,7 @@ internal class ResponseServiceIntegrationTest(
             )
 
         }.tThen("we get the response for the first attempt") {
-            assertEquals(responseAttenmpt1, responseService.findByIdLastAttempt(responseAttenmpt1.id!!))
+            Assertions.assertEquals(responseAttenmpt1, responseService.findByIdLastAttempt(responseAttenmpt1.id!!))
         }.tWhen("The student change is response") {
             functionalTestingService.nextPhase(sequence) // Evaluation Phase
             functionalTestingService.submitResponse(
@@ -910,7 +933,7 @@ internal class ResponseServiceIntegrationTest(
                 learners.getDisplayName() + " 2",
             )
         }.tThen("We get the response for the second attempt with the id of the first attempt") {
-            assertEquals(it, responseService.findByIdLastAttempt(responseAttenmpt1.id!!))
+            Assertions.assertEquals(it, responseService.findByIdLastAttempt(responseAttenmpt1.id!!))
         }
     }
 
@@ -938,7 +961,10 @@ internal class ResponseServiceIntegrationTest(
             )
 
         }.tThen("we get the response for the first attempt") {
-            assertEquals(responseAttenmpt1, responseService.findResponseByResponseAndAttempt(responseAttenmpt1, 1))
+            Assertions.assertEquals(
+                responseAttenmpt1,
+                responseService.findResponseByResponseAndAttempt(responseAttenmpt1, 1)
+            )
         }.tWhen("The student change is response") {
             functionalTestingService.nextPhase(sequence) // Evaluation Phase
             functionalTestingService.submitResponse(
@@ -950,7 +976,7 @@ internal class ResponseServiceIntegrationTest(
                 learners.getDisplayName() + " 2",
             )
         }.tThen("We get the response for the second attempt with the id of the first attempt") {
-            assertEquals(it, responseService.findResponseByResponseAndAttempt(responseAttenmpt1, 2))
+            Assertions.assertEquals(it, responseService.findResponseByResponseAndAttempt(responseAttenmpt1, 2))
         }
     }
 }

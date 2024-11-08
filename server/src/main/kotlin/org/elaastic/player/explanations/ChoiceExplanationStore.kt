@@ -3,7 +3,7 @@ package org.elaastic.player.explanations
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 
 class ChoiceExplanationStore(choiceSpecification: ChoiceSpecification) : ExplanationStore,
     HashMap<ResponseData, MutableList<ExplanationData>>() {

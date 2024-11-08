@@ -1,7 +1,7 @@
 package org.elaastic.player.recommendation
 
 import org.elaastic.player.explanations.ExplanationData
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 

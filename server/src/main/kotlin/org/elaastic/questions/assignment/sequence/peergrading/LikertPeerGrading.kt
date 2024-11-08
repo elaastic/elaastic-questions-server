@@ -1,6 +1,6 @@
 package org.elaastic.questions.assignment.sequence.peergrading
 
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 import org.elaastic.user.User
 import java.math.BigDecimal
 import javax.persistence.DiscriminatorValue

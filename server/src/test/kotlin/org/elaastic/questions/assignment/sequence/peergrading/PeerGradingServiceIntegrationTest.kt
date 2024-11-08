@@ -5,10 +5,10 @@ import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
+import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.sequence.interaction.InteractionService
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService

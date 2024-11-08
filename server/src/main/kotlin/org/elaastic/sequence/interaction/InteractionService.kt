@@ -24,8 +24,8 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.analytics.lrs.EventLogService
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.activity.results.ResultsService
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.InteractionSpecification

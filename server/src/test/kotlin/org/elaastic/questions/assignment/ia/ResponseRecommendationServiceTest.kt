@@ -17,11 +17,11 @@
  */
 package org.elaastic.questions.assignment.ia
 
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 import org.junit.jupiter.api.Test
 import com.nhaarman.mockitokotlin2.*
 import org.elaastic.sequence.interaction.ResponseId
-import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.activity.response.ResponseRepository
 import java.math.BigDecimal
 import javax.persistence.EntityManager
 

@@ -18,7 +18,8 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.user.User
 import org.elaastic.moderation.ReportCandidate
 import org.elaastic.common.persistence.AbstractJpaPersistable

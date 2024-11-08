@@ -19,9 +19,9 @@
 package org.elaastic.sequence.interaction
 
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseRepository
+import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen

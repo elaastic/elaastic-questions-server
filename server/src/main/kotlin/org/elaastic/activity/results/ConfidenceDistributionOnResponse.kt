@@ -19,8 +19,8 @@
 package org.elaastic.activity.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.activity.response.Response
 
 class ConfidenceDistributionOnResponse(
     var nbResponse: Int = 0,

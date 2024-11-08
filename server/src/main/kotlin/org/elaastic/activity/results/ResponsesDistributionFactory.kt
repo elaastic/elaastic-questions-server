@@ -19,7 +19,7 @@
 package org.elaastic.activity.results
 
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.activity.response.ResponseSet
 
 object ResponsesDistributionFactory {
 

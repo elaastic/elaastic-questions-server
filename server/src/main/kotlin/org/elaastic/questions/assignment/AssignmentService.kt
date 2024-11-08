@@ -20,7 +20,7 @@ package org.elaastic.questions.assignment
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.course.Course

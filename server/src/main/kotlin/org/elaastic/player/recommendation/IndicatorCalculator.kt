@@ -18,8 +18,8 @@
 
 package org.elaastic.player.recommendation
 
-import org.elaastic.sequence.interaction.response.Response
-import org.elaastic.sequence.interaction.response.ResponseSet
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseSet
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import kotlin.math.ln
 

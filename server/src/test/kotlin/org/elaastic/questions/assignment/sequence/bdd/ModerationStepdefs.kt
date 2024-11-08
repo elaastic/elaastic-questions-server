@@ -5,7 +5,7 @@ import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation

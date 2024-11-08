@@ -2,7 +2,7 @@ package org.elaastic.player.results
 
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
-import org.elaastic.sequence.interaction.response.ResponseService
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.common.web.MessageBuilder
 import org.springframework.beans.factory.annotation.Autowired

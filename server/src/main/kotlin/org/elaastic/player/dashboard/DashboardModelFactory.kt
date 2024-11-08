@@ -23,7 +23,7 @@ package org.elaastic.player.dashboard
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.sequence.interaction.response.Response
+import org.elaastic.activity.response.Response
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.player.steps.StepsModel
 import org.elaastic.player.steps.StepsModelFactory
