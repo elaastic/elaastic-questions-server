@@ -1,4 +1,4 @@
-package org.elaastic.questions.test.interpreter.command
+package org.elaastic.test.interpreter.command
 
 /**
  * Command corresponding to a teacher closing the current phase (interaction) & starting the next

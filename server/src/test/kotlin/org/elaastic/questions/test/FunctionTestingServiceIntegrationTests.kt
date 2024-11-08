@@ -1,10 +1,11 @@
 package org.elaastic.questions.test
 
 import org.elaastic.sequence.ExecutionContext
-import org.elaastic.questions.test.interpreter.command.NextPhase
-import org.elaastic.questions.test.interpreter.command.PublishResults
-import org.elaastic.questions.test.interpreter.command.StartSequence
-import org.elaastic.questions.test.interpreter.command.StopSequence
+import org.elaastic.test.interpreter.command.NextPhase
+import org.elaastic.test.interpreter.command.PublishResults
+import org.elaastic.test.interpreter.command.StartSequence
+import org.elaastic.test.interpreter.command.StopSequence
+import org.elaastic.test.*
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.*
 import org.junit.jupiter.api.Test

@@ -18,8 +18,8 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.elaastic.user.AnonymousUserService
 import org.elaastic.user.RoleService
 import org.elaastic.user.User

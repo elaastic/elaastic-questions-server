@@ -1,4 +1,4 @@
-package org.elaastic.questions.test
+package org.elaastic.test
 
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ConfidenceDegree
@@ -20,6 +20,7 @@ import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.test.interpreter.command.*
 import org.elaastic.user.User
 import org.elaastic.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired

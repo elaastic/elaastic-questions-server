@@ -1,10 +1,10 @@
 package org.elaastic.player.explanations
 
 import org.elaastic.material.instructional.subject.SubjectService
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tGiven
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tGiven
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.elaastic.user.UserService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

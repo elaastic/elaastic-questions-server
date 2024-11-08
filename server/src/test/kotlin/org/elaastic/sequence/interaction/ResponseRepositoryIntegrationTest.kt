@@ -22,9 +22,9 @@ import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

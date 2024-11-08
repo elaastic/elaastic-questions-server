@@ -24,10 +24,10 @@ import org.elaastic.filestore.FileDataStore
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementRepository
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tGiven
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tGiven
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.elaastic.sequence.LearnerSequenceRepository
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat

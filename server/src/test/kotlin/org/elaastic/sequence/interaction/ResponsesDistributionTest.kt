@@ -20,7 +20,7 @@ package org.elaastic.sequence.interaction
 
 import org.elaastic.activity.results.ResponsesDistribution
 import org.elaastic.activity.results.ResponsesDistributionOnAttempt
-import org.elaastic.questions.test.directive.tNoProblem
+import org.elaastic.test.directive.tNoProblem
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

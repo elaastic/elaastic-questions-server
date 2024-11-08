@@ -18,9 +18,9 @@
 
 package org.elaastic.activity.evaluation.peergrading
 
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat

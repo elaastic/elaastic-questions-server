@@ -1,6 +1,6 @@
-package org.elaastic.questions.test.interpreter
+package org.elaastic.test.interpreter
 
-import org.elaastic.questions.test.interpreter.command.Command
+import org.elaastic.test.interpreter.command.Command
 
 abstract class Interpreter {
 

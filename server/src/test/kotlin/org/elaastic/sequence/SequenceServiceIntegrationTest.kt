@@ -18,7 +18,7 @@
 
 package org.elaastic.sequence
 
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

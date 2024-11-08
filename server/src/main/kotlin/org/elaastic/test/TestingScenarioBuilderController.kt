@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.test
+package org.elaastic.test
 
 import org.elaastic.user.User
-import org.elaastic.questions.test.interpreter.FunctionalTestInterpreter
+import org.elaastic.test.interpreter.FunctionalTestInterpreter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication

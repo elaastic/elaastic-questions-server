@@ -12,11 +12,11 @@ import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.sequence.Sequence
 import org.elaastic.material.instructional.subject.Subject
-import org.elaastic.questions.test.FunctionalTestingService
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.getAnyAssignment
-import org.elaastic.questions.test.getAnySequence
-import org.elaastic.questions.test.interpreter.command.Phase
+import org.elaastic.test.FunctionalTestingService
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.getAnyAssignment
+import org.elaastic.test.getAnySequence
+import org.elaastic.test.interpreter.command.Phase
 import org.elaastic.user.User
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired

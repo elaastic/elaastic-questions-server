@@ -18,9 +18,9 @@
 
 package org.elaastic.sequence
 
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat

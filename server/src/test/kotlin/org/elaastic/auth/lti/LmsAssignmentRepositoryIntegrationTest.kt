@@ -20,10 +20,10 @@ package org.elaastic.auth.lti
 
 import org.elaastic.auth.lti.LmsAssignment
 import org.elaastic.auth.lti.LmsAssignmentRepository
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tGiven
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tGiven
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.jupiter.api.Test

@@ -1,9 +1,9 @@
 package org.elaastic.user.legal
 
-import org.elaastic.questions.test.directive.tExpect
-import org.elaastic.questions.test.directive.tGiven
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.directive.tExpect
+import org.elaastic.test.directive.tGiven
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Assertions

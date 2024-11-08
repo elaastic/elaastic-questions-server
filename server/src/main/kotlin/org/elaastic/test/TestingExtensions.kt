@@ -1,4 +1,4 @@
-package org.elaastic.questions.test
+package org.elaastic.test
 
 import org.elaastic.assignment.Assignment
 import org.elaastic.material.instructional.subject.Subject

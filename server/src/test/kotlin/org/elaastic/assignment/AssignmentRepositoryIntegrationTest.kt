@@ -1,6 +1,6 @@
 package org.elaastic.assignment
 
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Test

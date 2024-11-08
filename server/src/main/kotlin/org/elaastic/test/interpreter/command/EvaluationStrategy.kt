@@ -1,4 +1,4 @@
-package org.elaastic.questions.test.interpreter.command
+package org.elaastic.test.interpreter.command
 
 import org.elaastic.activity.response.Response
 import java.math.BigDecimal

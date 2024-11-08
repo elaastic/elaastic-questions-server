@@ -4,7 +4,7 @@ import org.elaastic.assignment.AssignmentRepository
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementRepository
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Test

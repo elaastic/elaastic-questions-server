@@ -1,9 +1,9 @@
 package org.elaastic.material.instructional.statement
 
 import org.elaastic.material.instructional.subject.SubjectService
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.elaastic.user.User
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert

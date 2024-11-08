@@ -19,11 +19,11 @@
 package org.elaastic.questions.directory
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tExpect
-import org.elaastic.questions.test.directive.tGiven
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tExpect
+import org.elaastic.test.directive.tGiven
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.elaastic.user.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

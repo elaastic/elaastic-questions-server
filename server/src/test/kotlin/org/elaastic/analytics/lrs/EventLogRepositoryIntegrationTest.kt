@@ -23,7 +23,7 @@ import org.elaastic.analytics.lrs.EventLog
 import org.elaastic.analytics.lrs.EventLogRepository
 import org.elaastic.analytics.lrs.ObjectOfAction
 import org.elaastic.user.Role
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test

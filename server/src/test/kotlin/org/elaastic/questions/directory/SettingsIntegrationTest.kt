@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.Settings
 import org.elaastic.user.SettingsRepository
 

@@ -1,4 +1,4 @@
-package org.elaastic.questions.test.interpreter.command
+package org.elaastic.test.interpreter.command
 
 enum class Phase(val index: Int) {
     PHASE_1(1),

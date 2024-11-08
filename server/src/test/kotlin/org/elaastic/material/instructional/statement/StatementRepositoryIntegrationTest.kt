@@ -5,7 +5,7 @@ import org.elaastic.material.instructional.question.ChoiceSpecification
 import org.elaastic.material.instructional.question.MultipleChoiceSpecification
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.question.explanation.TeacherExplanation
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.exparity.hamcrest.date.DateMatchers
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert

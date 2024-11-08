@@ -2,6 +2,9 @@ package org.elaastic.player.dashboard
 
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.questions.test.directive.*
+import org.elaastic.test.directive.tGiven
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

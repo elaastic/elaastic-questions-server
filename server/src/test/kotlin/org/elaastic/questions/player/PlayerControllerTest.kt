@@ -41,8 +41,8 @@ import org.elaastic.player.PlayerController
 import org.elaastic.player.PlayerModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.questions.security.TestSecurityConfig
-import org.elaastic.questions.test.FunctionalTestingService
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.FunctionalTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.elaastic.sequence.LearnerSequence
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.SequenceService

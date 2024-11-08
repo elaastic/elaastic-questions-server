@@ -3,10 +3,10 @@ package org.elaastic.consolidation.subject
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.subject.SubjectService
-import org.elaastic.questions.test.FunctionalTestingService
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tExpect
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.FunctionalTestingService
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tExpect
+import org.elaastic.test.directive.tWhen
 import org.elaastic.user.User
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue

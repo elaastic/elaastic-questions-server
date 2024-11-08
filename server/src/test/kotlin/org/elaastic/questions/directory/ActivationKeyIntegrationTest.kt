@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.directory
 
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.ActivationKey
 import org.elaastic.user.ActivationKeyRepository
 

@@ -11,10 +11,10 @@ import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementRepository
 import org.elaastic.material.instructional.statement.StatementService
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tExpect
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tExpect
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType

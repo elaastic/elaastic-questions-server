@@ -1,8 +1,9 @@
-package org.elaastic.questions.test.interpreter
+package org.elaastic.test.interpreter
 
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.questions.test.interpreter.command.*
+import org.elaastic.test.interpreter.command.*
 
 class FunctionalTestInterpreter : Interpreter() {
 

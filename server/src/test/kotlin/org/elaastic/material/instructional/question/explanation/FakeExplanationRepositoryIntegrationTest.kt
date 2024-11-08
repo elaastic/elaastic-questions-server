@@ -19,7 +19,10 @@
 package org.elaastic.material.instructional.question.explanation
 
 import org.elaastic.questions.test.directive.*
-import org.elaastic.questions.test.IntegrationTestingService
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tNoProblem
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
 import org.hamcrest.MatcherAssert.assertThat
