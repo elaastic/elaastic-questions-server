@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence.explanation
 
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.material.instructional.statement.Statement
 import org.springframework.data.jpa.repository.JpaRepository
 
 

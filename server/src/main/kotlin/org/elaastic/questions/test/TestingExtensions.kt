@@ -1,7 +1,7 @@
 package org.elaastic.questions.test
 
 import org.elaastic.assignment.Assignment
-import org.elaastic.questions.subject.Subject
+import org.elaastic.material.instructional.subject.Subject
 
 fun Subject.getAnyAssignment() =
     if (this.assignments.isEmpty()) {

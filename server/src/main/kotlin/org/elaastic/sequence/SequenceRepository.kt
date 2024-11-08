@@ -19,7 +19,7 @@
 package org.elaastic.sequence
 
 import org.elaastic.assignment.Assignment
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.material.instructional.statement.Statement
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository

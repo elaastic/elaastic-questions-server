@@ -2,10 +2,10 @@ package org.elaastic.assignment
 
 import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.subject.Subject
-import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.subject.statement.StatementController
+import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.material.instructional.statement.StatementController
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest

@@ -18,7 +18,7 @@
 
 package org.elaastic.sequence
 
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.user.User

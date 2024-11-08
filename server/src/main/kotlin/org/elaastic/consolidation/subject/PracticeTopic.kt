@@ -2,7 +2,7 @@ package org.elaastic.consolidation.subject
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
-import org.elaastic.questions.course.Course
+import org.elaastic.material.instructional.course.Course
 import java.util.UUID
 
 /**

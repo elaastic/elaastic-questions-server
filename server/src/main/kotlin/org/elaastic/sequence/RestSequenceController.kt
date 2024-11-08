@@ -19,7 +19,7 @@
 package org.elaastic.sequence
 
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
-import org.elaastic.questions.attachment.AttachmentService
+import org.elaastic.material.instructional.attachment.AttachmentService
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication

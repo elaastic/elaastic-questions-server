@@ -26,10 +26,10 @@ import org.elaastic.activity.results.ResultsService
 import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.player.PlayerController
 import org.elaastic.player.steps.SequenceStatistics
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanation
 import org.elaastic.questions.assignment.sequence.explanation.FakeExplanationRepository
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ReadSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification

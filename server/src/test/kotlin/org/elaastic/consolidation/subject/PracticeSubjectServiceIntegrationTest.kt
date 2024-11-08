@@ -1,24 +1,25 @@
 package org.elaastic.consolidation.subject
 
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.user.User
-import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tWhen
-import org.hamcrest.CoreMatchers.*
+import org.elaastic.user.User
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.collection.IsEmptyCollection
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Profile
 import java.time.LocalDateTime
-import javax.transaction.Transactional
-import org.hamcrest.MatcherAssert.*
-import org.hamcrest.collection.IsEmptyCollection
-import org.junit.jupiter.api.assertThrows
 import javax.persistence.EntityManager
+import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
@@ -268,7 +269,7 @@ internal class PracticeSubjectServiceIntegrationTest(
 
             val assignment = createSubject(teacher, course)
                 .also { subject -> addQuestion(subject, QuestionType.MultipleChoice) }
-                .let { subject -> createAssignmentReadyToPractice(subject)  }
+                .let { subject -> createAssignmentReadyToPractice(subject) }
                 .also(curriedRandomlyPlayAllSequences(learners))
 
             val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.globalId)
@@ -286,7 +287,7 @@ internal class PracticeSubjectServiceIntegrationTest(
         with(functionalTestingService) {
             val assignment = createSubject(teacher)
                 .also { subject -> addQuestion(subject, QuestionType.MultipleChoice) }
-                .let { subject -> createAssignmentReadyToPractice(subject)  }
+                .let { subject -> createAssignmentReadyToPractice(subject) }
                 .also(curriedRandomlyPlayAllSequences(learners))
 
             val practiceSubject = practiceSubjectService.getPracticeSubject(assignment.globalId)
@@ -310,8 +311,8 @@ internal class PracticeSubjectServiceIntegrationTest(
                     addQuestion(subject, QuestionType.ExclusiveChoice)
                     addQuestion(subject, QuestionType.OpenEnded)
                 }
-                .let { subject -> createAssignmentReadyToPractice(subject)  }
-                .also {assignment ->
+                .let { subject -> createAssignmentReadyToPractice(subject) }
+                .also { assignment ->
                     randomlyPlaySequence(learners, assignment.sequences[0])
                     randomlyPlaySequence(learners, assignment.sequences[2])
                 }

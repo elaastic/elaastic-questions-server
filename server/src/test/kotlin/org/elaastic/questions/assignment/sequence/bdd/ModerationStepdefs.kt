@@ -11,7 +11,7 @@ import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
 import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.sequence.Sequence
-import org.elaastic.questions.subject.Subject
+import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.getAnyAssignment

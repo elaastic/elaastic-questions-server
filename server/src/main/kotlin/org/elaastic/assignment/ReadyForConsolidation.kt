@@ -7,9 +7,9 @@ package org.elaastic.assignment
  *
  * @property NotAtAll The assignment is not meant to be revised.
  * @property AfterTeachings The assignment is meant to be revised after
- *     teachings.
+ *    teachings.
  * @property Immediately The assignment is meant to be revised immediately
- *     after answering.
+ *    after answering.
  */
 enum class ReadyForConsolidation {
     /** The assignment is not meant to be revised. */

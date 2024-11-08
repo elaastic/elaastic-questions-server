@@ -18,21 +18,21 @@
 
 package org.elaastic.player.statement
 
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.attachment.Attachment
+import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.material.instructional.attachment.Attachment
 
 data class StatementInfo(
-        val title: String,
-        val questionType: QuestionType,
-        val content: String,
-        val attachment: Attachment? = null
+    val title: String,
+    val questionType: QuestionType,
+    val content: String,
+    val attachment: Attachment? = null
 ) {
     constructor(statement: Statement) :
             this(
-                    statement.title,
-                    statement.questionType,
-                    statement.content,
-                    statement.attachment
+                statement.title,
+                statement.questionType,
+                statement.content,
+                statement.attachment
             )
 }

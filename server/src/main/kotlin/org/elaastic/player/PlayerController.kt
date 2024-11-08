@@ -30,6 +30,9 @@ import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
+import org.elaastic.material.instructional.course.Course
+import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.player.dashboard.DashboardModel
 import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
@@ -37,13 +40,10 @@ import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.results.learner.LearnerResultsModelFactory
 import org.elaastic.player.websocket.AutoReloadSessionHandler
-import org.elaastic.questions.assignment.*
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService
-import org.elaastic.questions.course.Course
-import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.LearnerPhaseService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig

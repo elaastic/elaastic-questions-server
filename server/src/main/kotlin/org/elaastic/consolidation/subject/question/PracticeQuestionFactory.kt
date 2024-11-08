@@ -4,8 +4,10 @@ import org.elaastic.consolidation.subject.question.attachment.PracticeAttachment
 import org.elaastic.consolidation.subject.question.specification.ExclusiveChoiceQuestionSpecification
 import org.elaastic.consolidation.subject.question.specification.MultipleChoiceQuestionSpecification
 import org.elaastic.consolidation.subject.question.specification.OpenQuestionSpecification
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.material.instructional.question.ChoiceSpecification
+import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
+import org.elaastic.material.instructional.question.MultipleChoiceSpecification
+import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.sequence.Sequence
 
 object PracticeQuestionFactory {
@@ -28,7 +30,7 @@ object PracticeQuestionFactory {
 
     private fun parseMultipleChoiceSpecification(choiceSpecification: ChoiceSpecification?) =
         when (choiceSpecification) {
-            is org.elaastic.questions.assignment.choice.MultipleChoiceSpecification ->
+            is MultipleChoiceSpecification ->
                 MultipleChoiceQuestionSpecification(
                     nbCandidateItem = choiceSpecification.nbCandidateItem,
                     expectedChoiceIndexList = choiceSpecification.expectedChoiceList.map { it.index }
@@ -39,7 +41,7 @@ object PracticeQuestionFactory {
 
     private fun parseExclusiveChoiceSpecification(choiceSpecification: ChoiceSpecification?) =
         when (choiceSpecification) {
-            is org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification ->
+            is ExclusiveChoiceSpecification ->
                 ExclusiveChoiceQuestionSpecification(
                     nbCandidateItem = choiceSpecification.nbCandidateItem,
                     expectedChoiceIndex = choiceSpecification.expectedChoice.index

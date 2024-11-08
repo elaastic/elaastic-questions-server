@@ -1,9 +1,9 @@
 package org.elaastic.player.results.learner
 
 import org.elaastic.player.explanations.ExplanationDataFactory
-import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
+import org.elaastic.material.instructional.question.MultipleChoiceSpecification
+import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.activity.response.Response
 
 object LearnerResultsModelFactory {

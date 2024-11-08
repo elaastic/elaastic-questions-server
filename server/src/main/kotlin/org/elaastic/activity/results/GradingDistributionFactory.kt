@@ -19,7 +19,7 @@
 package org.elaastic.activity.results
 
 import org.elaastic.activity.evaluation.peergrading.PeerGrading
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.material.instructional.question.ChoiceSpecification
 import java.math.BigDecimal
 
 object GradingDistributionFactory {

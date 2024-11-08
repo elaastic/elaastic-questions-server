@@ -18,7 +18,7 @@
 
 package org.elaastic.activity.evaluation.peergrading
 
-import org.elaastic.questions.subject.SubjectService
+import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.sequence.interaction.InteractionService

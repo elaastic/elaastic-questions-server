@@ -1,9 +1,9 @@
 package org.elaastic.player.results.learner
 
+import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
+import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.player.explanations.ExplanationData
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 
 class LearnerExclusiveChoiceResults(
     override val explanationFirstTry: ExplanationData?,
@@ -13,7 +13,7 @@ class LearnerExclusiveChoiceResults(
     val scoreFirstTry: Int?,
     val scoreSecondTry: Int?,
     val expectedChoice: ExclusiveChoiceSpecification,
-    ) : LearnerResultsModel {
+) : LearnerResultsModel {
 
     override fun getQuestionType() = QuestionType.ExclusiveChoice
 
@@ -24,14 +24,14 @@ class LearnerExclusiveChoiceResults(
         choiceFirstTry == choiceSecondTry
 
     override fun areBothExplanationsEqual(): Boolean =
-            (explanationFirstTry?.content == explanationSecondTry?.content)
+        (explanationFirstTry?.content == explanationSecondTry?.content)
 
-    fun isCorrectAnswer(itemId : Int) : Boolean =
-            itemId == expectedChoice.expectedChoice.index
+    fun isCorrectAnswer(itemId: Int): Boolean =
+        itemId == expectedChoice.expectedChoice.index
 
-    fun isFirstChoiceEmpty() : Boolean =
-            choiceFirstTry == null
+    fun isFirstChoiceEmpty(): Boolean =
+        choiceFirstTry == null
 
-    fun isSecondChoiceEmpty() : Boolean =
-            choiceSecondTry == null
+    fun isSecondChoiceEmpty(): Boolean =
+        choiceSecondTry == null
 }

@@ -9,7 +9,7 @@ import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
 import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
-import org.elaastic.questions.subject.SubjectService
+import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen

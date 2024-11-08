@@ -18,7 +18,7 @@
 
 package org.elaastic.sequence.interaction
 
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository

@@ -27,6 +27,11 @@ import org.elaastic.activity.results.*
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
 import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.common.web.MessageBuilder
+import org.elaastic.material.instructional.question.ChoiceItem
+import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
+import org.elaastic.material.instructional.question.MultipleChoiceSpecification
+import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.player.chart.confidence.ConfidenceDistributionChartModel
 import org.elaastic.player.chart.evaluation.EvaluationDistributionChartModel
 import org.elaastic.player.chart.response.ChoiceSpecificationData
@@ -56,11 +61,6 @@ import org.elaastic.player.statement.StatementPanelModel
 import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.player.steps.StepsModel
 import org.elaastic.sequence.ExecutionContext
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.choice.ChoiceItem
-import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceGenerator
 import org.elaastic.sequence.State

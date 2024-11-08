@@ -9,8 +9,8 @@ import org.elaastic.consolidation.subject.question.attachment.PracticeAttachment
 import org.elaastic.consolidation.subject.question.specification.ExclusiveChoiceQuestionSpecification
 import org.elaastic.consolidation.subject.question.specification.MultipleChoiceQuestionSpecification
 import org.elaastic.consolidation.subject.question.specification.OpenQuestionSpecification
-import org.elaastic.questions.attachment.Attachment
-import org.elaastic.questions.attachment.AttachmentService
+import org.elaastic.material.instructional.attachment.Attachment
+import org.elaastic.material.instructional.attachment.AttachmentService
 import org.elaastic.questions.security.TestSecurityConfig
 import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Assertions

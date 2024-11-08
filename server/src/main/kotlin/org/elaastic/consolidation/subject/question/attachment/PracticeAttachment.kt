@@ -2,8 +2,8 @@ package org.elaastic.consolidation.subject.question.attachment
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
-import org.elaastic.questions.attachment.Attachment
-import org.elaastic.questions.attachment.Dimension
+import org.elaastic.material.instructional.attachment.Attachment
+import org.elaastic.material.instructional.attachment.Dimension
 import java.util.UUID
 
 /**

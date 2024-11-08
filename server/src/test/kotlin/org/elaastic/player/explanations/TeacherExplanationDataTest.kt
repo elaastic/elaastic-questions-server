@@ -1,6 +1,6 @@
 package org.elaastic.player.explanations
 
-import org.elaastic.questions.subject.SubjectService
+import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen

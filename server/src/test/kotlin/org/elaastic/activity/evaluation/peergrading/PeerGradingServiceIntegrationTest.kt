@@ -9,13 +9,12 @@ import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
-import org.elaastic.player.dashboard.DashboardModelFactory
-import org.elaastic.sequence.ExecutionContext
 import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.subject.SubjectRepository
-import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.StatementRepository
+import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.statement.StatementRepository
+import org.elaastic.material.instructional.subject.SubjectRepository
+import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.questions.test.FunctionalTestingService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
@@ -24,6 +23,7 @@ import org.elaastic.questions.test.directive.tWhen
 import org.elaastic.questions.test.getAnyAssignment
 import org.elaastic.questions.test.getAnySequence
 import org.elaastic.questions.test.interpreter.command.Phase
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.user.RoleService
 import org.hamcrest.CoreMatchers.*

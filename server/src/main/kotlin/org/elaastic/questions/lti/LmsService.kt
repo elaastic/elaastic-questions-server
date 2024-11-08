@@ -21,12 +21,12 @@ package org.elaastic.questions.lti
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentRepository
 import org.elaastic.assignment.AssignmentService
-import org.elaastic.questions.course.CourseService
+import org.elaastic.material.instructional.course.CourseService
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
-import org.elaastic.questions.subject.Subject
-import org.elaastic.questions.subject.SubjectService
+import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.material.instructional.subject.SubjectService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID

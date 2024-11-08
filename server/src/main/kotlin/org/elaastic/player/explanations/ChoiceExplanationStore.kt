@@ -1,8 +1,8 @@
 package org.elaastic.player.explanations
 
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
+import org.elaastic.material.instructional.question.ChoiceSpecification
+import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
+import org.elaastic.material.instructional.question.MultipleChoiceSpecification
 import org.elaastic.activity.response.Response
 
 class ChoiceExplanationStore(choiceSpecification: ChoiceSpecification) : ExplanationStore,

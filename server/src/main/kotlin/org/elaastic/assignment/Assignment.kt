@@ -2,8 +2,8 @@ package org.elaastic.assignment
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.sequence.Sequence
-import org.elaastic.questions.subject.Subject
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.user.User
 import org.hibernate.annotations.SortNatural
 import org.springframework.data.annotation.CreatedDate

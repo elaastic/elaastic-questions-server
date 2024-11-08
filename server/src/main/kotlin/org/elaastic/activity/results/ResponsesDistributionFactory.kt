@@ -18,7 +18,7 @@
 
 package org.elaastic.activity.results
 
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.material.instructional.question.ChoiceSpecification
 import org.elaastic.activity.response.ResponseSet
 
 object ResponsesDistributionFactory {

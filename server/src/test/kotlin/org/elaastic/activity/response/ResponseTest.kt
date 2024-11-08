@@ -1,9 +1,9 @@
 package org.elaastic.activity.response
 
-import org.elaastic.questions.assignment.choice.ChoiceItem
-import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.material.instructional.question.ChoiceItem
+import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
+import org.elaastic.material.instructional.question.MultipleChoiceSpecification
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

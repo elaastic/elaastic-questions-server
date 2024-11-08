@@ -1,7 +1,7 @@
 package org.elaastic.activity.response
 
 import org.elaastic.activity.results.AttemptNum
-import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User
 import org.springframework.data.jpa.repository.JpaRepository

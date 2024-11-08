@@ -30,10 +30,10 @@ import org.elaastic.user.User
 import org.elaastic.user.UserRepository
 import org.elaastic.questions.lti.*
 import org.elaastic.questions.lti.controller.LtiLaunchData
-import org.elaastic.questions.subject.Subject
-import org.elaastic.questions.subject.SubjectRepository
-import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.subject.statement.StatementRepository
+import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.material.instructional.subject.SubjectRepository
+import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.material.instructional.statement.StatementRepository
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceRepository
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,6 +1,6 @@
 package org.elaastic.consolidation.subject.question.specification
 
-import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.material.instructional.question.QuestionType
 
 class MultipleChoiceQuestionSpecification(
     val nbCandidateItem: Int,

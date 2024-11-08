@@ -36,8 +36,8 @@
                 <div class="ui tiny header" th:text="#{sequence.phase.1}">Phase 1</div>
 
                 <!--/* Display the choice of the student for a ExclusiveChoice or MultipleChoice question */-->
-                <div th:if="${studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
-                              studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
+                <div th:if="${studentResultsModel.questionType == T(org.elaastic.material.instructional.question.QuestionType).ExclusiveChoice or
+                              studentResultsModel.questionType == T(org.elaastic.material.instructional.question.QuestionType).MultipleChoice and
                               !studentResultsModel.isFirstChoiceEmpty()}">
 
                     <div th:replace="|player/assignment/sequence/components/my-results/_student-results-choice.html|
@@ -62,8 +62,8 @@
                 <div class="ui tiny header" th:text="#{sequence.phase.2}">Phase 2</div>
 
                 <!--/* Display the choice of the student for a ExclusiveChoice or MultipleChoice question */-->
-                <div th:if="${studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).ExclusiveChoice or
-                              studentResultsModel.questionType == T(org.elaastic.questions.assignment.QuestionType).MultipleChoice and
+                <div th:if="${studentResultsModel.questionType == T(org.elaastic.material.instructional.question.QuestionType).ExclusiveChoice or
+                              studentResultsModel.questionType == T(org.elaastic.material.instructional.question.QuestionType).MultipleChoice and
                               !studentResultsModel.isSecondChoiceEmpty()}">
 
                     <div th:replace="|player/assignment/sequence/components/my-results/_student-results-choice.html|

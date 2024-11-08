@@ -1,7 +1,7 @@
 package org.elaastic.player.results.learner
 
+import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.player.explanations.ExplanationData
-import org.elaastic.questions.assignment.QuestionType
 
 interface LearnerResultsModel {
     val explanationFirstTry: ExplanationData?

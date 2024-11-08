@@ -18,7 +18,7 @@
 
 package org.elaastic.player.command
 
-import org.elaastic.questions.assignment.QuestionType
+import org.elaastic.material.instructional.question.QuestionType
 
 data class CommandModel(
     val sequenceId: Long,

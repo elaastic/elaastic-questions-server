@@ -5,12 +5,12 @@ import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.sequence.ExecutionContext
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.sequence.SequenceService
-import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.subject.statement.StatementRepository
-import org.elaastic.questions.subject.statement.StatementService
+import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.material.instructional.statement.StatementRepository
+import org.elaastic.material.instructional.statement.StatementService
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tThen
