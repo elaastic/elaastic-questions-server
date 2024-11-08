@@ -1,33 +1,12 @@
-/*
- * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+package org.elaastic.assignment
 
-package org.elaastic.questions.assignment
-
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
 import org.elaastic.activity.response.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.InteractionService
-import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.activity.response.ResponseService
-import org.elaastic.user.User
+import org.elaastic.questions.assignment.ExecutionContext
+import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
+import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.questions.subject.SubjectService
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository
@@ -36,8 +15,12 @@ import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tExpect
 import org.elaastic.questions.test.directive.tThen
 import org.elaastic.questions.test.directive.tWhen
-import org.hamcrest.CoreMatchers.*
-import org.hamcrest.MatcherAssert.assertThat
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.InteractionService
+import org.elaastic.sequence.interaction.InteractionType
+import org.elaastic.user.User
+import org.hamcrest.CoreMatchers
+import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,7 +35,6 @@ import javax.persistence.EntityNotFoundException
 import javax.persistence.PersistenceUnitUtil
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
@@ -80,8 +62,8 @@ internal class AssignmentServiceIntegrationTest(
 
         assignmentService.findAllByOwner(teacher)
             .tExpect {
-                assertThat(it.totalElements, equalTo(0L))
-                assertThat(it.totalPages, equalTo(0))
+                MatcherAssert.assertThat(it.totalElements, CoreMatchers.equalTo(0L))
+                MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(0))
             }
     }
 
@@ -92,13 +74,13 @@ internal class AssignmentServiceIntegrationTest(
 
         assignmentService.findAllByOwner(teacher)
             .tExpect {
-                assertThat(it.totalElements, equalTo(10L))
-                assertThat(it.totalPages, equalTo(1))
+                MatcherAssert.assertThat(it.totalElements, CoreMatchers.equalTo(10L))
+                MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(1))
             }
 
         assignmentService.findAllByOwner(teacher, PageRequest.of(0, 5))
             .tExpect {
-                assertThat(it.totalPages, equalTo(2))
+                MatcherAssert.assertThat(it.totalPages, CoreMatchers.equalTo(2))
             }
     }
 
@@ -113,11 +95,11 @@ internal class AssignmentServiceIntegrationTest(
         entityManager.clear()
 
         assignmentService.get(assignmentId).let {
-            assertThat(it.id, equalTo(assignmentId))
-            assertThat(it.title, equalTo(assignmentTitle))
-            assertThat(
+            MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(assignmentId))
+            MatcherAssert.assertThat(it.title, CoreMatchers.equalTo(assignmentTitle))
+            MatcherAssert.assertThat(
                 persistentUnitUtil.isLoaded(it, "sequences"),
-                equalTo(false)
+                CoreMatchers.equalTo(false)
             )
         }
     }
@@ -133,11 +115,11 @@ internal class AssignmentServiceIntegrationTest(
         entityManager.clear()
 
         assignmentService.get(assignmentId, true).let {
-            assertThat(it.id, equalTo(assignmentId))
-            assertThat(it.title, equalTo(assignmentTitle))
-            assertThat(
+            MatcherAssert.assertThat(it.id, CoreMatchers.equalTo(assignmentId))
+            MatcherAssert.assertThat(it.title, CoreMatchers.equalTo(assignmentTitle))
+            MatcherAssert.assertThat(
                 persistentUnitUtil.isLoaded(it, "sequences"),
-                equalTo(true)
+                CoreMatchers.equalTo(true)
             )
         }
     }
@@ -152,7 +134,7 @@ internal class AssignmentServiceIntegrationTest(
 
         entityManager.clear()
 
-        assertThat(assignmentService.get(teacher, assignmentId).id, equalTo(assignmentId))
+        MatcherAssert.assertThat(assignmentService.get(teacher, assignmentId).id, CoreMatchers.equalTo(assignmentId))
     }
 
     @Test
@@ -182,11 +164,11 @@ internal class AssignmentServiceIntegrationTest(
         val assignment = Assignment("title", integrationTestingService.getTestTeacher())
         tWhen { assignmentService.save(assignment) }
             .tThen {
-                assertThat(it.id, notNullValue())
-                assertThat(it.version, equalTo(0L))
-                assertThat(it.globalId, notNullValue())
-                assertThat(it.sequences.size, equalTo(0))
-                assertThat(it.owner, equalTo(integrationTestingService.getTestTeacher()))
+                MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
+                MatcherAssert.assertThat(it.version, CoreMatchers.equalTo(0L))
+                MatcherAssert.assertThat(it.globalId, CoreMatchers.notNullValue())
+                MatcherAssert.assertThat(it.sequences.size, CoreMatchers.equalTo(0))
+                MatcherAssert.assertThat(it.owner, CoreMatchers.equalTo(integrationTestingService.getTestTeacher()))
             }
     }
 
@@ -196,10 +178,10 @@ internal class AssignmentServiceIntegrationTest(
             assignmentService.save(Assignment("", integrationTestingService.getTestTeacher()))
         }
 
-        assertThat(exception.constraintViolations.size, equalTo(1))
-        assertThat(
+        MatcherAssert.assertThat(exception.constraintViolations.size, CoreMatchers.equalTo(1))
+        MatcherAssert.assertThat(
             exception.constraintViolations.elementAt(0).propertyPath.toString(),
-            equalTo("title")
+            CoreMatchers.equalTo("title")
         )
     }
 
@@ -254,9 +236,15 @@ internal class AssignmentServiceIntegrationTest(
         tWhen {
             subjectService.removeAssignment(subject.owner, assignment)
         }.tThen {
-            assertThat(assignmentService.count(), equalTo(initialNbAssignment))
-            assertThat(subjectService.countAllStatement(subject), equalTo((initialNbStatement)))
-            assertThat(responseService.count(assignment.sequences.first(), 1), equalTo(initialNbResponse))
+            MatcherAssert.assertThat(assignmentService.count(), CoreMatchers.equalTo(initialNbAssignment))
+            MatcherAssert.assertThat(
+                subjectService.countAllStatement(subject),
+                CoreMatchers.equalTo((initialNbStatement))
+            )
+            MatcherAssert.assertThat(
+                responseService.count(assignment.sequences.first(), 1),
+                CoreMatchers.equalTo(initialNbResponse)
+            )
         }
     }
 
@@ -278,8 +266,11 @@ internal class AssignmentServiceIntegrationTest(
         tWhen {
             subjectService.removeAssignment(teacher, assignment)
         }.tThen {
-            assertThat(assignmentService.count(), equalTo(initialNbAssignment))
-            assertThat(subjectService.countAllStatement(subject), equalTo((initialNbStatement)))
+            MatcherAssert.assertThat(assignmentService.count(), CoreMatchers.equalTo(initialNbAssignment))
+            MatcherAssert.assertThat(
+                subjectService.countAllStatement(subject),
+                CoreMatchers.equalTo((initialNbStatement))
+            )
         }
     }
 
@@ -302,19 +293,19 @@ internal class AssignmentServiceIntegrationTest(
             Assignment(title = "An assignment", owner = teacher)
         )
 
-        assertThat(
+        MatcherAssert.assertThat(
             assignmentService.countAllSequence(assignment),
-            equalTo(0)
+            CoreMatchers.equalTo(0)
         )
     }
 
     @Test
     fun `count sequences of the provided test assignment`() {
-        assertThat(
+        MatcherAssert.assertThat(
             assignmentService.countAllSequence(
                 assignmentService.get(382)
             ),
-            equalTo(2)
+            CoreMatchers.equalTo(2)
         )
     }
 
@@ -329,14 +320,14 @@ internal class AssignmentServiceIntegrationTest(
                 Assignment(title = "An assignment", owner = subject.owner, subject = subject)
             )
         }.tThen {
-            assertThat(it.id, notNullValue())
-            assertThat(
+            MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
+            MatcherAssert.assertThat(
                 assignmentService.countAllSequence(it),
-                equalTo(initialCount)
+                CoreMatchers.equalTo(initialCount)
             )
-            assertThat(
+            MatcherAssert.assertThat(
                 subjectService.countAllStatement(subject),
-                equalTo(initialCount)
+                CoreMatchers.equalTo(initialCount)
             ) // Should not add statement to subject
         }
     }
@@ -355,18 +346,18 @@ internal class AssignmentServiceIntegrationTest(
             subjectService.addStatement(
                 subject,
                 Statement.createDefaultStatement(subject.owner)
-                    .title("Sequence nÂ°1")
+                    .title("Sequence n°1")
                     .content("Content 1")
             )
         }.tThen {
-            assertThat(it.id, notNullValue())
-            assertThat(
+            MatcherAssert.assertThat(it.id, CoreMatchers.notNullValue())
+            MatcherAssert.assertThat(
                 assignmentService.countAllSequence(assignment),
-                equalTo(initialCount + 1)
+                CoreMatchers.equalTo(initialCount + 1)
             )
-            assertThat(
+            MatcherAssert.assertThat(
                 subjectService.countAllStatement(subject),
-                equalTo(initialCount + 1)
+                CoreMatchers.equalTo(initialCount + 1)
             )
         }
     }
@@ -378,7 +369,7 @@ internal class AssignmentServiceIntegrationTest(
         val statement1 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(subject.owner)
-                .title("Sequence nÂ°1")
+                .title("Sequence n°1")
                 .content("Content 1")
         )
         val assignment = subjectService.addAssignment(
@@ -390,15 +381,15 @@ internal class AssignmentServiceIntegrationTest(
         tWhen {
             subjectService.removeStatement(subject.owner, statement1)
         }.tThen {
-            assertThat(
+            MatcherAssert.assertThat(
                 "1er",
                 subjectService.countAllStatement(subject),
-                equalTo(initialCount - 1)
+                CoreMatchers.equalTo(initialCount - 1)
             )
-            assertThat(
+            MatcherAssert.assertThat(
                 "2eme",
                 assignmentService.countAllSequence(assignment),
-                equalTo(initialCount - 1)
+                CoreMatchers.equalTo(initialCount - 1)
             )
 
         }
@@ -416,23 +407,23 @@ internal class AssignmentServiceIntegrationTest(
         val stmtId = statement1.id!!
 
         tWhen {
-            assertThat(
+            MatcherAssert.assertThat(
                 " Before ",
                 assignmentService.countAllSequence(assignment),
-                equalTo(initialCount)
+                CoreMatchers.equalTo(initialCount)
             )
             subjectService.removeStatement(subject.owner, statement1)
         }.tThen {
-            assertThat(statementRepository.existsById(stmtId), equalTo(true))
-            assertThat(
+            MatcherAssert.assertThat(statementRepository.existsById(stmtId), CoreMatchers.equalTo(true))
+            MatcherAssert.assertThat(
                 " First ",
                 assignmentService.countAllSequence(assignment),
-                equalTo(initialCount)
+                CoreMatchers.equalTo(initialCount)
             ) // The sequence must be kept
-            assertThat(
+            MatcherAssert.assertThat(
                 " Second ",
                 subjectService.countAllStatement(subject),
-                equalTo(initialCountStatements - 1)
+                CoreMatchers.equalTo(initialCountStatements - 1)
             )
         }
     }
@@ -440,9 +431,9 @@ internal class AssignmentServiceIntegrationTest(
 
     @Test
     fun `findByGlobalId - not existing value`() {
-        assertThat(
+        MatcherAssert.assertThat(
             assignmentService.findByGlobalId(UUID.randomUUID()),
-            nullValue()
+            CoreMatchers.nullValue()
         )
     }
 
@@ -455,9 +446,9 @@ internal class AssignmentServiceIntegrationTest(
                 owner = teacher
             )
         ).tExpect {
-            assertThat(
+            MatcherAssert.assertThat(
                 assignmentService.findByGlobalId(it.globalId),
-                equalTo(it)
+                CoreMatchers.equalTo(it)
             )
         }
     }
@@ -477,14 +468,14 @@ internal class AssignmentServiceIntegrationTest(
         tWhen {
             assignmentService.findAllAssignmentsForLearner(student)
         }.tExpect {
-            assertThat(it.isEmpty(), equalTo(true))
+            MatcherAssert.assertThat(it.isEmpty(), CoreMatchers.equalTo(true))
         }
 
         tWhen {
             assignmentService.registerUser(student, assignment)
             assignmentService.findAllAssignmentsForLearner(student)
         }.tExpect {
-            assertThat(it, equalTo(listOf(assignment)))
+            MatcherAssert.assertThat(it, CoreMatchers.equalTo(listOf(assignment)))
         }
 
     }
@@ -493,7 +484,7 @@ internal class AssignmentServiceIntegrationTest(
         (1..n).forEach {
             assignmentService.save(
                 Assignment(
-                    title = "Assignment nÂ°$it",
+                    title = "Assignment n°$it",
                     owner = owner
                 )
             )

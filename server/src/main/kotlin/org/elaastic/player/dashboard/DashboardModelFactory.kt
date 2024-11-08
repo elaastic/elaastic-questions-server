@@ -20,7 +20,7 @@
 
 package org.elaastic.player.dashboard
 
-import org.elaastic.questions.assignment.LearnerAssignment
+import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.activity.response.Response

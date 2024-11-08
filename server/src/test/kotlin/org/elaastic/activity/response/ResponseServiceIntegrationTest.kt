@@ -7,7 +7,7 @@ import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
 import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
 import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
-import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.assignment.AssignmentService
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.choice.ChoiceItem

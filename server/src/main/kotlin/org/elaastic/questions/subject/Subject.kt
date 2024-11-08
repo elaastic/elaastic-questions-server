@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.subject
 
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import org.elaastic.questions.course.Course
 import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable

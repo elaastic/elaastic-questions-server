@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.subject.statement
 
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.FakeExplanationData
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository

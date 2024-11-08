@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.lti
 
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import javax.persistence.Column
 import javax.persistence.Entity

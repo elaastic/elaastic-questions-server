@@ -1,6 +1,6 @@
 package org.elaastic.questions.test
 
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import org.elaastic.questions.subject.Subject
 
 fun Subject.getAnyAssignment() =

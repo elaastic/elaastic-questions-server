@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment
+package org.elaastic.assignment
 
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired

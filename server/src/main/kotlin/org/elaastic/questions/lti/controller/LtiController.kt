@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.lti.controller
 
-import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.assignment.AssignmentService
 import org.elaastic.user.RoleService
 import org.elaastic.questions.lti.LmsService
 import org.elaastic.questions.lti.LmsUser

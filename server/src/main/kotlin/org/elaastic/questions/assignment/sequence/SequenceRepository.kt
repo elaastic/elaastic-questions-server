@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import org.elaastic.questions.subject.statement.Statement
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph

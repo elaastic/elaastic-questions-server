@@ -19,7 +19,7 @@
 package org.elaastic.questions.subject
 
 
-import org.elaastic.questions.assignment.AssignmentRepository
+import org.elaastic.assignment.AssignmentRepository
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.subject.statement.Statement
 import org.elaastic.questions.subject.statement.StatementRepository

@@ -2,7 +2,7 @@ package org.elaastic.consolidation.subject
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import java.util.UUID
 
 open class SummaryPracticeSubject(

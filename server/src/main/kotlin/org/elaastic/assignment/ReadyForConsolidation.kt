@@ -1,4 +1,4 @@
-package org.elaastic.questions.assignment
+package org.elaastic.assignment
 
 /**
  * The revision mode of an assignment.
@@ -11,7 +11,7 @@ package org.elaastic.questions.assignment
  * @property Immediately The assignment is meant to be revised immediately
  *     after answering.
  */
-enum class RevisionMode {
+enum class ReadyForConsolidation {
     /** The assignment is not meant to be revised. */
     NotAtAll,
 

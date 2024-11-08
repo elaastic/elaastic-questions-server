@@ -18,7 +18,7 @@
 
 package org.elaastic.sequence.interaction
 
-import org.elaastic.questions.assignment.LearnerAssignment
+import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.activity.evaluation.peergrading.ResponseRecommendationService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository

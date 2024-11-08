@@ -24,7 +24,7 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.player.evaluation.EvaluationModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.player.evaluation.draxo.DraxoEvaluationModel
-import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.assignment.AssignmentService
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource

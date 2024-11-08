@@ -18,7 +18,7 @@ package org.elaastic.questions.subject
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.course.CourseService
 import org.elaastic.user.User

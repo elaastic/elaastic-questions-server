@@ -1,7 +1,7 @@
 package org.elaastic.analytics.lrs
 
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired

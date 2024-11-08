@@ -18,7 +18,7 @@
 
 package org.elaastic.user
 
-import org.elaastic.questions.assignment.LearnerAssignment
+import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.user.cas.CasUser
 import org.elaastic.user.validation.PlainTextPasswordIsTooShort
 import org.elaastic.user.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource

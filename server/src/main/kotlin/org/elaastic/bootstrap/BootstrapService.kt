@@ -24,6 +24,9 @@ import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
+import org.elaastic.assignment.Assignment
+import org.elaastic.assignment.AssignmentService
+import org.elaastic.assignment.ReadyForConsolidation
 import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.choice.ChoiceItem
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
@@ -381,28 +384,28 @@ class BootstrapService(
                 title = subject.title + " - Face à face - Finished",
                 description = "Exercice en classe",
                 audience = "groupe A1",
-                revisionMode = RevisionMode.NotAtAll
+                revisionMode = ReadyForConsolidation.NotAtAll
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Face à face",
                 description = "Exercice en classe",
                 audience = "groupe A2",
-                revisionMode = RevisionMode.AfterTeachings
+                revisionMode = ReadyForConsolidation.AfterTeachings
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Distant",
                 description = "Exercice en classe",
                 audience = "groupe C",
-                revisionMode = RevisionMode.Immediately
+                revisionMode = ReadyForConsolidation.Immediately
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Blended",
                 description = "Exercice en classe",
                 audience = "groupe G",
-                revisionMode = RevisionMode.AfterTeachings
+                revisionMode = ReadyForConsolidation.AfterTeachings
             )
         )
 

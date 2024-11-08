@@ -6,7 +6,7 @@ import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ItemIndex
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController
 import org.elaastic.user.User

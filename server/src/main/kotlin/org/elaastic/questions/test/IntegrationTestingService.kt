@@ -24,6 +24,9 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
+import org.elaastic.assignment.Assignment
+import org.elaastic.assignment.AssignmentRepository
+import org.elaastic.assignment.AssignmentService
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserRepository

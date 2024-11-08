@@ -17,7 +17,7 @@
  */
 package org.elaastic.activity.results
 
-import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.activity.response.ResponseService

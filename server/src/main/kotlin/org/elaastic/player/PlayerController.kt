@@ -25,6 +25,9 @@ import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.AttemptNum
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.analytics.lrs.EventLogService
+import org.elaastic.assignment.Assignment
+import org.elaastic.assignment.AssignmentService
+import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.player.dashboard.DashboardModel

@@ -35,8 +35,8 @@ import org.elaastic.player.LearnerPlayerModel
 import org.elaastic.player.PlayerController
 import org.elaastic.player.PlayerModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
-import org.elaastic.questions.assignment.Assignment
-import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.assignment.Assignment
+import org.elaastic.assignment.AssignmentService
 import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.LearnerSequence
 import org.elaastic.questions.assignment.sequence.LearnerSequenceService

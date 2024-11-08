@@ -1,33 +1,15 @@
-/*
- * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+package org.elaastic.assignment
 
-package org.elaastic.questions.assignment
-
+import org.elaastic.activity.response.ResponseService
+import org.elaastic.common.util.toDate
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceRepository
-import org.elaastic.activity.response.ResponseService
-import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.questions.course.Course
-import org.elaastic.user.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.common.util.toDate
+import org.elaastic.questions.subject.statement.StatementService
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -40,7 +22,6 @@ import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
-
 
 @Service
 @Transactional

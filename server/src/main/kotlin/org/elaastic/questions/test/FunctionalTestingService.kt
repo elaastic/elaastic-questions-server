@@ -4,6 +4,9 @@ import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
+import org.elaastic.assignment.Assignment
+import org.elaastic.assignment.AssignmentService
+import org.elaastic.assignment.ReadyForConsolidation
 import org.elaastic.player.PlayerController
 import org.elaastic.questions.assignment.*
 import org.elaastic.questions.assignment.choice.ChoiceItem
@@ -76,7 +79,7 @@ class FunctionalTestingService(
             Assignment(
                 owner = subject.owner,
                 title = title,
-                revisionMode = RevisionMode.AfterTeachings
+                revisionMode = ReadyForConsolidation.AfterTeachings
             )
         )
 
@@ -86,7 +89,7 @@ class FunctionalTestingService(
             Assignment(
                 owner = subject.owner,
                 title = title,
-                revisionMode = RevisionMode.Immediately
+                revisionMode = ReadyForConsolidation.Immediately
             )
         )
 

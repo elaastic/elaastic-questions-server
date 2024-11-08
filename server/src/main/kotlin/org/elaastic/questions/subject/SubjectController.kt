@@ -18,8 +18,8 @@
 
 package org.elaastic.questions.subject
 
-import org.elaastic.questions.assignment.AssignmentController
-import org.elaastic.questions.assignment.AssignmentService
+import org.elaastic.assignment.AssignmentController
+import org.elaastic.assignment.AssignmentService
 import org.elaastic.questions.attachment.AttachmentService
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder

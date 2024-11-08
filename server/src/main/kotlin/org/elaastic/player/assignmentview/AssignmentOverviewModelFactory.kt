@@ -18,8 +18,8 @@
 
 package org.elaastic.player.assignmentview
 
-import org.elaastic.questions.assignment.Assignment
-import org.elaastic.questions.assignment.RevisionMode
+import org.elaastic.assignment.Assignment
+import org.elaastic.assignment.ReadyForConsolidation
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.sequence.interaction.Interaction
@@ -73,7 +73,7 @@ object AssignmentOverviewModelFactory {
             )
         },
         selectedSequenceId = selectedSequenceId,
-        isRevisionMode = assignment.revisionMode != RevisionMode.NotAtAll,
+        isRevisionMode = assignment.revisionMode != ReadyForConsolidation.NotAtAll
         indexOfSelectedSequence = assignment.sequences.indexOfFirst { it.id == selectedSequenceId }
     )
 
@@ -114,11 +114,11 @@ object AssignmentOverviewModelFactory {
 
     private fun resolveRevisionTag(
         sequence: Sequence,
-        revisionMode: RevisionMode
-    ): Boolean = when (revisionMode) {
-        RevisionMode.NotAtAll -> false
-        RevisionMode.Immediately -> true
-        RevisionMode.AfterTeachings -> sequence.resultsArePublished && (sequence.executionIsFaceToFace() || sequence.isStopped())
+        readyForConsolidation: ReadyForConsolidation
+    ): Boolean = when (readyForConsolidation){
+        ReadyForConsolidation.NotAtAll -> false
+        ReadyForConsolidation.Immediately -> true
+        ReadyForConsolidation.AfterTeachings -> sequence.resultsArePublished && (sequence.executionIsFaceToFace() || sequence.isStopped())
     }
 
     /** Build a [AssignmentOverviewModel] for only one [Sequence]. */

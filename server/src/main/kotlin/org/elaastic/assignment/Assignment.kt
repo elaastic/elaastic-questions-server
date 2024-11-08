@@ -1,28 +1,10 @@
-/*
- * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-package org.elaastic.questions.assignment
+package org.elaastic.assignment
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.user.User
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
+import org.elaastic.user.User
 import org.hibernate.annotations.SortNatural
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -99,12 +81,11 @@ class Assignment(
      * The revision mode of the assignment.
      *
      * This revision mode is for the **Konsolidation** app.
-     *
-     * @see RevisionMode
+     * @see ReadyForConsolidation
      */
     @Column(name = "revision_mode")
     @Enumerated(EnumType.STRING)
-    var revisionMode: RevisionMode = RevisionMode.NotAtAll
+    var revisionMode: ReadyForConsolidation = ReadyForConsolidation.NotAtAll
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 

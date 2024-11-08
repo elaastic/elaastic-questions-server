@@ -2,7 +2,7 @@ package org.elaastic.activity.response
 
 import org.elaastic.activity.results.AttemptNum
 import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.LearnerAssignmentService
+import org.elaastic.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
 import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
 import org.elaastic.questions.assignment.choice.legacy.LearnerChoice

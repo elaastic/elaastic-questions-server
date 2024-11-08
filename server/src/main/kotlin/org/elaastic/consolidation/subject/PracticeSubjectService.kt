@@ -2,9 +2,9 @@ package org.elaastic.consolidation.subject
 
 import org.elaastic.consolidation.subject.question.PracticeLearnerExplanation
 import org.elaastic.consolidation.subject.question.PracticeQuestionFactory
-import org.elaastic.questions.assignment.Assignment
-import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.RevisionMode
+import org.elaastic.assignment.Assignment
+import org.elaastic.assignment.AssignmentService
+import org.elaastic.assignment.ReadyForConsolidation
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.activity.response.ResponseService
@@ -59,7 +59,7 @@ class PracticeSubjectService(
                         .map { sequence ->
                             PracticeQuestionFactory.buildQuestion(
                                 sequence,
-                                if (assignment.revisionMode.equals(RevisionMode.Immediately))
+                                if (assignment.revisionMode.equals(ReadyForConsolidation.Immediately))
                                    emptyList()
                                 else findBestExplanations(sequence)
                             )
@@ -70,8 +70,8 @@ class PracticeSubjectService(
             }
 
     fun isSequenceReadyToPractice(sequence: Sequence) =
-        sequence.assignment?.revisionMode == RevisionMode.Immediately ||
-            sequence.assignment?.revisionMode == RevisionMode.AfterTeachings
+        sequence.assignment?.revisionMode == ReadyForConsolidation.Immediately ||
+            sequence.assignment?.revisionMode == ReadyForConsolidation.AfterTeachings
             && sequence.resultsArePublished
             && (sequence.executionIsFaceToFace() || sequence.isStopped())
 

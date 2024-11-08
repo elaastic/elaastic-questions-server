@@ -18,12 +18,11 @@
 
 package org.elaastic.activity.evaluation.peergrading
 
-import org.elaastic.common.util.requireAccess
 import org.elaastic.moderation.ReportCandidateService
 import org.elaastic.moderation.ReportReason
 import org.elaastic.moderation.UtilityGrade
-import org.elaastic.questions.assignment.LearnerAssignment
-import org.elaastic.questions.assignment.LearnerAssignmentService
+import org.elaastic.assignment.LearnerAssignment
+import org.elaastic.assignment.LearnerAssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.activity.response.Response

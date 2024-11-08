@@ -18,7 +18,7 @@
 
 package org.elaastic.questions.assignment.sequence
 
-import org.elaastic.questions.assignment.Assignment
+import org.elaastic.assignment.Assignment
 import org.elaastic.questions.test.IntegrationTestingService
 import org.elaastic.questions.test.directive.tGiven
 import org.elaastic.questions.test.directive.tThen
