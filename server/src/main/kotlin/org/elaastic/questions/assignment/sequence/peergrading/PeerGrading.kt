@@ -106,6 +106,7 @@ class PeerGrading(
     override var reportReasons: String? = null,
     override var reportComment: String? = null,
     override var utilityGrade: UtilityGrade? = null,
+    override var teacherUtilityGrade: UtilityGrade? = null,
 ) : AbstractJpaPersistable<Long>(), ReportCandidate {
 
     @Version

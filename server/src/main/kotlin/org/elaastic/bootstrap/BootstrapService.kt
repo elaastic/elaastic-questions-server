@@ -40,7 +40,8 @@ import org.elaastic.questions.course.CourseService
 import org.elaastic.questions.directory.RoleService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
-import org.elaastic.questions.lti.*
+import org.elaastic.questions.lti.LtiConsumer
+import org.elaastic.questions.lti.LtiConsumerRepository
 import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.SubjectService
@@ -56,18 +57,18 @@ import javax.transaction.Transactional
 
 @Service
 class BootstrapService(
-        @Autowired val userService: UserService,
-        @Autowired val roleService: RoleService,
-        @Autowired val ltiConsumerRepository: LtiConsumerRepository,
-        @Autowired val subjectService: SubjectService,
-        @Autowired val courseService: CourseService,
-        @Autowired val statementService: StatementService,
-        @Autowired val attachmentService: AttachmentService,
-        @Autowired val assignmentService: AssignmentService,
-        @Autowired val sequenceService: SequenceService,
-        @Autowired val responseService: ResponseService,
-        @Autowired val interactionService: InteractionService,
-        @Autowired val peerGradingService: PeerGradingService
+    @Autowired val userService: UserService,
+    @Autowired val roleService: RoleService,
+    @Autowired val ltiConsumerRepository: LtiConsumerRepository,
+    @Autowired val subjectService: SubjectService,
+    @Autowired val courseService: CourseService,
+    @Autowired val statementService: StatementService,
+    @Autowired val attachmentService: AttachmentService,
+    @Autowired val assignmentService: AssignmentService,
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val responseService: ResponseService,
+    @Autowired val interactionService: InteractionService,
+    @Autowired val peerGradingService: PeerGradingService
 ) {
 
     var mailServer: GreenMail? = null
@@ -75,55 +76,62 @@ class BootstrapService(
     @Transactional
     fun initializeDevUsers() {
         listOf(
-                User(
-                        firstName = "Franck",
-                        lastName = "Sil",
-                        username = "fsil",
-                        plainTextPassword = "1234",
-                        email = "fsil@elaastic.org"
-                ).addRole(roleService.roleTeacher()),
-                User(
-                        firstName = "Rialy",
-                        lastName = "Andria",
-                        username = "rand",
-                        plainTextPassword = "1234",
-                        email = "rand@elaastic.org"
-                ).addRole(roleService.roleTeacher()),
-                User(
-                        firstName = "Albert",
-                        lastName = "Ein",
-                        username = "aein",
-                        plainTextPassword = "1234",
-                        email = "aein@elaastic.org"
-                ).addRole(roleService.roleTeacher()),
-                User(
-                        firstName = "Mary",
-                        lastName = "Sil",
-                        username = "msil",
-                        plainTextPassword = "1234",
-                        email = "msil@elaastic.org"
-                ).addRole(roleService.roleStudent()),
-                User(
-                        firstName = "Thom",
-                        lastName = "Sil",
-                        username = "tsil",
-                        plainTextPassword = "1234",
-                        email = "tsil@elaastic.org"
-                ).addRole(roleService.roleStudent()),
-                User(
-                        firstName = "John",
-                        lastName = "Tra",
-                        username = "jtra",
-                        plainTextPassword = "1234",
-                        email = "jtra@elaastic.org"
-                ).addRole(roleService.roleStudent()),
-                User(
-                        firstName = "Erik",
-                        lastName = "Erik",
-                        username = "erik",
-                        plainTextPassword = "1234",
-                        email = "erik@elaastic.org"
-                ).addRole(roleService.roleStudent())
+            User(
+                firstName = "Franck",
+                lastName = "Sil",
+                username = "fsil",
+                plainTextPassword = "1234",
+                email = "fsil@elaastic.org"
+            ).addRole(roleService.roleTeacher()),
+            User(
+                firstName = "Rialy",
+                lastName = "Andria",
+                username = "rand",
+                plainTextPassword = "1234",
+                email = "rand@elaastic.org"
+            ).addRole(roleService.roleTeacher()),
+            User(
+                firstName = "Albert",
+                lastName = "Ein",
+                username = "aein",
+                plainTextPassword = "1234",
+                email = "aein@elaastic.org"
+            ).addRole(roleService.roleTeacher()),
+            User(
+                firstName = "Mary",
+                lastName = "Sil",
+                username = "msil",
+                plainTextPassword = "1234",
+                email = "msil@elaastic.org"
+            ).addRole(roleService.roleStudent()),
+            User(
+                firstName = "Thom",
+                lastName = "Sil",
+                username = "tsil",
+                plainTextPassword = "1234",
+                email = "tsil@elaastic.org"
+            ).addRole(roleService.roleStudent()),
+            User(
+                firstName = "John",
+                lastName = "Tra",
+                username = "jtra",
+                plainTextPassword = "1234",
+                email = "jtra@elaastic.org"
+            ).addRole(roleService.roleStudent()),
+            User(
+                firstName = "Erik",
+                lastName = "Erik",
+                username = "erik",
+                plainTextPassword = "1234",
+                email = "erik@elaastic.org"
+            ).addRole(roleService.roleStudent()),
+            User(
+                firstName = "admin",
+                lastName = "root",
+                username = "rootadmin",
+                plainTextPassword = "1234",
+                email = "admin@elaastic.org"
+            ).addRole(roleService.roleAdmin())
         ).map {
             userService.findByUsername(it.username) ?: userService.addUser(it)
         }
@@ -150,9 +158,10 @@ class BootstrapService(
     fun initializeDevLtiObjects() {
 
         LtiConsumer( // a lti consumer aka an LMS
-                consumerName = "Moodle",
-                secret = "secret pass",
-                key = "abcd1234").let {
+            consumerName = "Moodle",
+            secret = "secret pass",
+            key = "abcd1234"
+        ).let {
             it.enableFrom = Date()
             if (!ltiConsumerRepository.existsById(it.key)) {
                 ltiConsumerRepository.saveAndFlush(it)
@@ -170,7 +179,7 @@ class BootstrapService(
     fun initializeDemoContent() {
         val demoUser = userService.findByUsername("aein")!!
         if (courseService.findAllByOwner(demoUser).isEmpty()) {
-        // if (courseService.count() == 0L) {
+            // if (courseService.count() == 0L) {
             initializeStepByStep()
         }
     }
@@ -179,23 +188,36 @@ class BootstrapService(
     private fun initializeStepByStep() {
         // Initialize courses - Step 1
         val demo = courseService.save(
-                Course(title = "Demo",
-                        owner = userService.findByUsername("aein")!!))
+            Course(
+                title = "Demo",
+                owner = userService.findByUsername("aein")!!
+            )
+        )
 
         val maths = courseService.save(
-            Course( title = "Maths 6e",
-                    owner = userService.findByUsername("aein")!!))
+            Course(
+                title = "Maths 6e",
+                owner = userService.findByUsername("aein")!!
+            )
+        )
 
         val francais = courseService.save(
-            Course( title = "Français 5e",
-            owner = userService.findByUsername("fsil")!!))
+            Course(
+                title = "Français 5e",
+                owner = userService.findByUsername("fsil")!!
+            )
+        )
 
         val histoire = courseService.save(
-            Course( title = "Histoire 4e",
-            owner = userService.findByUsername("rand")!!))
+            Course(
+                title = "Histoire 4e",
+                owner = userService.findByUsername("rand")!!
+            )
+        )
 
         // Initialize empty subjects - Step 2
-        listOf(Subject(
+        listOf(
+            Subject(
                 title = "Nombres décimaux",
                 course = maths,
                 owner = userService.findByUsername("aein")!!
@@ -294,7 +316,7 @@ class BootstrapService(
                 questionType = QuestionType.MultipleChoice,
                 choiceSpecification = MultipleChoiceSpecification(
                     nbCandidateItem = 3,
-                    expectedChoiceList = listOf( ChoiceItem(1, 1f), ChoiceItem(3, 1f) )
+                    expectedChoiceList = listOf(ChoiceItem(1, 1f), ChoiceItem(3, 1f))
                 ),
                 content = "<p>Quel(s) symbole(s) repr&eacute;sente(nt) l&#39;inconnue dans l&#39;&eacute;quation suivante ? Expliquez ce que signifie r&eacute;soudre l&#39;&eacute;quation.</p>\n" +
                         "\n" +
@@ -337,8 +359,8 @@ class BootstrapService(
         // Add attachment to the second statement
         val file = ResourceUtils.getFile("classpath:static/images/demonstrationContent/CreateQuestion.png");
         val graphMaths = Attachment(
-            name= "fileToAttached",
-            originalFileName= "CreateQuestion.png",
+            name = "fileToAttached",
+            originalFileName = "CreateQuestion.png",
             size = file.length(),
             mimeType = MimeType("image/png"),
         )
@@ -352,33 +374,33 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun initializeAssignment(subject: Subject){
+    private fun initializeAssignment(subject: Subject) {
         var assignments = listOf(
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Face à face - Finished",
-                description= "Exercice en classe",
+                description = "Exercice en classe",
                 audience = "groupe A1",
                 revisionMode = RevisionMode.NotAtAll
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Face à face",
-                description= "Exercice en classe",
+                description = "Exercice en classe",
                 audience = "groupe A2",
                 revisionMode = RevisionMode.AfterTeachings
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Distant",
-                description= "Exercice en classe",
+                description = "Exercice en classe",
                 audience = "groupe C",
                 revisionMode = RevisionMode.Immediately
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Blended",
-                description= "Exercice en classe",
+                description = "Exercice en classe",
                 audience = "groupe G",
                 revisionMode = RevisionMode.AfterTeachings
             )
@@ -421,7 +443,7 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun onlyStartSequences(assignment: Assignment, mode: ExecutionContext){
+    private fun onlyStartSequences(assignment: Assignment, mode: ExecutionContext) {
         registerLearners(assignment)
         startSequences(assignment, mode)
     }
@@ -443,7 +465,7 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun startSequences(assignment: Assignment, mode: ExecutionContext){
+    private fun startSequences(assignment: Assignment, mode: ExecutionContext) {
         assignment.sequences.forEach {
             sequenceService.start(
                 assignment.owner,
@@ -462,8 +484,7 @@ class BootstrapService(
 
         // Learner 0
 
-        val choiceListSpecification0: LearnerChoice? = when(sequence.statement.questionType)
-        {
+        val choiceListSpecification0: LearnerChoice? = when (sequence.statement.questionType) {
             QuestionType.ExclusiveChoice -> LearnerChoice(listOf(1))
             QuestionType.MultipleChoice -> LearnerChoice(listOf(2))
             QuestionType.OpenEnded -> null
@@ -496,8 +517,7 @@ class BootstrapService(
 
         /// Learner 1
 
-        val choiceListSpecification1: LearnerChoice? = when(sequence.statement.questionType)
-        {
+        val choiceListSpecification1: LearnerChoice? = when (sequence.statement.questionType) {
             QuestionType.ExclusiveChoice -> LearnerChoice(listOf(1))
             QuestionType.MultipleChoice -> LearnerChoice(listOf(2))
             QuestionType.OpenEnded -> null
@@ -530,10 +550,9 @@ class BootstrapService(
 
         // Learner 2
 
-        val choiceListSpecification2: LearnerChoice? = when(sequence.statement.questionType)
-        {
+        val choiceListSpecification2: LearnerChoice? = when (sequence.statement.questionType) {
             QuestionType.ExclusiveChoice -> LearnerChoice(listOf(2))
-            QuestionType.MultipleChoice -> LearnerChoice(listOf(1,3))
+            QuestionType.MultipleChoice -> LearnerChoice(listOf(1, 3))
             QuestionType.OpenEnded -> null
         }
 
@@ -565,10 +584,9 @@ class BootstrapService(
 
         // Learner 3
 
-        val choiceListSpecification3: LearnerChoice? = when(sequence.statement.questionType)
-        {
+        val choiceListSpecification3: LearnerChoice? = when (sequence.statement.questionType) {
             QuestionType.ExclusiveChoice -> LearnerChoice(listOf(2))
-            QuestionType.MultipleChoice -> LearnerChoice(listOf(1,3))
+            QuestionType.MultipleChoice -> LearnerChoice(listOf(1, 3))
             QuestionType.OpenEnded -> null
         }
 
@@ -600,7 +618,7 @@ class BootstrapService(
         return listOf(response0, response1, response2, response3)
     }
 
-    private fun feedbacksPhase2forSequence(sequence: Sequence, learners: List<User>, responses: List<Response>){
+    private fun feedbacksPhase2forSequence(sequence: Sequence, learners: List<User>, responses: List<Response>) {
 
         var learner0Eval = peerGradingService.createOrUpdateLikert(
             learners.get(0),

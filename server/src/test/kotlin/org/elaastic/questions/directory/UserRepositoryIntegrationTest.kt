@@ -47,7 +47,7 @@ class UserRepositoryIntegrationTest(
 
     @Test
     fun `check test data`() {
-        assertEquals(19, userRepository.findAll().count())
+        assertEquals(20, userRepository.findAll().count())
     }
 
     @Test
@@ -65,7 +65,7 @@ class UserRepositoryIntegrationTest(
                 }
         )
 
-        assertEquals(20, userRepository.count())
+        assertEquals(21, userRepository.count())
     }
 
     @Test
@@ -83,7 +83,7 @@ class UserRepositoryIntegrationTest(
                 }
         )
 
-        assertEquals(20, userRepository.count())
+        assertEquals(21, userRepository.count())
     }
 
     @Test

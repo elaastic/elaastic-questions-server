@@ -26,7 +26,12 @@ interface ReportCandidate {
     var reportComment: String?
 
     /**
-     * The utility grade of the candidate.
+     * The utility grade of the candidate given by the learner.
      */
     var utilityGrade: UtilityGrade?
+
+    /**
+     * Teacher's Utility Grade
+     */
+    var teacherUtilityGrade: UtilityGrade?
 }

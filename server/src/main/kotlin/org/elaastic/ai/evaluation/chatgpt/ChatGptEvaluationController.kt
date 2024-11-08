@@ -170,21 +170,31 @@ class ChatGptEvaluationController(
         return "player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList"
     }
 
-    @PostMapping("sequence/{id}/submit-utility-grade")
+    @PostMapping("sequence/{sequenceId}/submit-utility-grade")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun submitChatGptEvaluationUtilityGrade(
         authentication: Authentication,
         model: Model,
         @RequestParam(required = true) evaluationId: Long,
         @RequestParam(required = true) utilityGrade: UtilityGrade,
-        @PathVariable id: Long
+        @RequestParam(required = false) isTeacher: Boolean = false,
+        @PathVariable sequenceId: Long
     ): String {
         val user: User = authentication.principal as User
-        val sequence = sequenceService.get(id, true)
+        val sequence = sequenceService.get(sequenceId, true)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
 
+        //Check consistency
+        check((user == sequence.assignment!!.owner) == isTeacher) {
+            messageSource.getMessage(
+                "chatGPT.error.updateUtilityGrade.consistency",
+                null,
+                LocaleContextHolder.getLocale()
+            )
+        }
+
         // Check authorizations
-        requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner) {
+        requireAccessThrowDenied(user == chatGptEvaluation!!.response.learner || isTeacher) {
             messageSource.getMessage(
                 "evaluation.chatGPT.error.access.utilityGrade",
                 null,
@@ -192,8 +202,8 @@ class ChatGptEvaluationController(
             )
         }
 
-        chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation, utilityGrade)
-        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
+        chatGptEvaluationService.changeUtilityGrade(chatGptEvaluation, utilityGrade, isTeacher)
+        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${sequenceId}"
     }
 
     /**
