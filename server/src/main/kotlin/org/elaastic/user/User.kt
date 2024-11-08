@@ -19,7 +19,7 @@
 package org.elaastic.user
 
 import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.user.cas.CasUser
+import org.elaastic.auth.cas.CasUser
 import org.elaastic.user.validation.PlainTextPasswordIsTooShort
 import org.elaastic.user.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
 import org.elaastic.common.persistence.AbstractJpaPersistable

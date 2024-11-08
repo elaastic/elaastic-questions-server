@@ -41,8 +41,8 @@ import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.material.instructional.attachment.Attachment
 import org.elaastic.material.instructional.attachment.AttachmentService
 import org.elaastic.material.instructional.attachment.MimeType
-import org.elaastic.questions.lti.LtiConsumer
-import org.elaastic.questions.lti.LtiConsumerRepository
+import org.elaastic.auth.lti.LtiConsumer
+import org.elaastic.auth.lti.LtiConsumerRepository
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService

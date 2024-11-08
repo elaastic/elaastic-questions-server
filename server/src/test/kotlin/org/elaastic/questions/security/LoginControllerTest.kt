@@ -1,9 +1,9 @@
 package org.elaastic.questions.security
 
+import org.elaastic.auth.local.LoginController
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
-import java.net.URLEncoder
 
 class LoginControllerTest {
 
