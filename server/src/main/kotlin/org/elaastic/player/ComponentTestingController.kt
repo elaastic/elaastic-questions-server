@@ -18,6 +18,7 @@
 
 package org.elaastic.player
 
+import org.elaastic.activity.results.*
 import org.elaastic.player.chart.confidence.ConfidenceDistributionChartModel
 import org.elaastic.player.chart.evaluation.EvaluationDistributionChartModel
 import org.elaastic.questions.assignment.ExecutionContext
@@ -64,7 +65,6 @@ import org.elaastic.player.results.learner.LearnerExclusiveChoiceResults
 import org.elaastic.player.results.learner.LearnerMultipleChoiceResults
 import org.elaastic.player.results.learner.LearnerOpenResults
 import org.elaastic.player.results.learner.LearnerResultsModel
-import org.elaastic.sequence.interaction.results.*
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
 import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase

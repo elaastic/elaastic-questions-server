@@ -18,11 +18,12 @@
 
 package org.elaastic.sequence.interaction
 
+import org.elaastic.activity.results.ResponseDistributionConverter
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ExplanationRecommendationMappingConverter
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
-import org.elaastic.sequence.interaction.results.ResponsesDistribution
+import org.elaastic.activity.results.ResponsesDistribution
 import org.elaastic.sequence.config.InteractionSpecification
 import org.elaastic.sequence.config.InteractionSpecificationConverter
 import org.elaastic.user.User

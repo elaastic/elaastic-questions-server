@@ -1,7 +1,7 @@
 package org.elaastic.player.chart.evaluation
 
 import org.elaastic.player.chart.response.ChoiceSpecificationData
-import org.elaastic.sequence.interaction.results.ItemIndex
+import org.elaastic.activity.results.ItemIndex
 import java.math.BigDecimal
 
 data class EvaluationDistributionChartModel(

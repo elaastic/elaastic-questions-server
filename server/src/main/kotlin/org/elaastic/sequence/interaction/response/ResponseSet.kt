@@ -18,7 +18,7 @@
 
 package org.elaastic.sequence.interaction.response
 
-import org.elaastic.sequence.interaction.results.AttemptNum
+import org.elaastic.activity.results.AttemptNum
 
 class ResponseSet(responses: List<Response>) {
 

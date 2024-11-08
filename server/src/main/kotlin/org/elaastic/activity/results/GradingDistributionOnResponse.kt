@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.interaction.results
+package org.elaastic.activity.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading

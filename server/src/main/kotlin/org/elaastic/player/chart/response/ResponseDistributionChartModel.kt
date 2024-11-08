@@ -1,8 +1,8 @@
 package org.elaastic.player.chart.response
 
-import org.elaastic.sequence.interaction.results.AttemptNum
-import org.elaastic.sequence.interaction.results.ItemIndex
-import org.elaastic.sequence.interaction.results.ResponsePercentage
+import org.elaastic.activity.results.AttemptNum
+import org.elaastic.activity.results.ItemIndex
+import org.elaastic.activity.results.ResponsePercentage
 
 data class ResponseDistributionChartModel(
     val interactionId: Long,

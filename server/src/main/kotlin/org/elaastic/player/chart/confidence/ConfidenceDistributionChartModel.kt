@@ -2,7 +2,7 @@ package org.elaastic.player.chart.confidence
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.player.chart.response.ChoiceSpecificationData
-import org.elaastic.sequence.interaction.results.ItemIndex
+import org.elaastic.activity.results.ItemIndex
 
 data class ConfidenceDistributionChartModel(
     val interactionId: Long,

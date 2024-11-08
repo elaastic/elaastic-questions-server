@@ -16,25 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.interaction.results
+package org.elaastic.activity.results
 
 import org.elaastic.questions.assignment.choice.ChoiceSpecification
 import org.elaastic.sequence.interaction.response.ResponseSet
 
-object ConfidenceDistributionFactory {
+object ResponsesDistributionFactory {
 
     fun build(choiceSpecification: ChoiceSpecification,
               responseSet: ResponseSet
-    ): ConfidenceDistribution {
-        val confidenceDistributionList = mutableListOf<ConfidenceDistributionOnResponse>()
-        for(choiceIndex in 1..choiceSpecification.nbCandidateItem){
-            confidenceDistributionList.add(
-                ConfidenceDistributionOnResponse(
-                    responseSet.getWithoutFake(1),
-                    choiceIndex
+    )  =
+            ResponsesDistribution(
+                    ResponsesDistributionOnAttempt(
+                            choiceSpecification.nbCandidateItem,
+                            responseSet.getWithoutFake(1)
+                    ),
+                    if (responseSet[2].isNotEmpty()) {
+                        ResponsesDistributionOnAttempt(
+                                choiceSpecification.nbCandidateItem,
+                                responseSet.getWithoutFake(2)
+                        )
+                    } else null
             )
-            )
-        }
-        return ConfidenceDistribution(confidenceDistributionList)
-    }
 }

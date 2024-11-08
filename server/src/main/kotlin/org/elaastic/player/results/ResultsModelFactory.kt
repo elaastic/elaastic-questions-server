@@ -29,9 +29,9 @@ import org.elaastic.player.recommendation.RecommendationResolver
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import org.elaastic.sequence.interaction.response.ResponseSet
-import org.elaastic.sequence.interaction.results.ConfidenceDistributionFactory
-import org.elaastic.sequence.interaction.results.GradingDistributionFactory
-import org.elaastic.sequence.interaction.results.ResponsesDistributionFactory
+import org.elaastic.activity.results.ConfidenceDistributionFactory
+import org.elaastic.activity.results.GradingDistributionFactory
+import org.elaastic.activity.results.ResponsesDistributionFactory
 import org.togglz.core.Feature
 import org.togglz.core.manager.FeatureManager
 

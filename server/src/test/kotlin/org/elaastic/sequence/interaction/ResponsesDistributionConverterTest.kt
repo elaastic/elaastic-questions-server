@@ -18,8 +18,9 @@
 
 package org.elaastic.sequence.interaction
 
-import org.elaastic.sequence.interaction.results.ResponsesDistribution
-import org.elaastic.sequence.interaction.results.ResponsesDistributionOnAttempt
+import org.elaastic.activity.results.ResponseDistributionConverter
+import org.elaastic.activity.results.ResponsesDistribution
+import org.elaastic.activity.results.ResponsesDistributionOnAttempt
 import org.junit.jupiter.api.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.*

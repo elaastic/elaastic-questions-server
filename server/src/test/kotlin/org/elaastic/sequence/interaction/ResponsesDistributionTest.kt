@@ -18,8 +18,8 @@
 
 package org.elaastic.sequence.interaction
 
-import org.elaastic.sequence.interaction.results.ResponsesDistribution
-import org.elaastic.sequence.interaction.results.ResponsesDistributionOnAttempt
+import org.elaastic.activity.results.ResponsesDistribution
+import org.elaastic.activity.results.ResponsesDistributionOnAttempt
 import org.elaastic.questions.test.directive.tNoProblem
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

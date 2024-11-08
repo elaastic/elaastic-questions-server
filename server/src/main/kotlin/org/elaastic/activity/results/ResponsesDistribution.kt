@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.interaction.results
+package org.elaastic.activity.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.lang.IllegalArgumentException
@@ -44,7 +44,7 @@ data class ResponsesDistribution(
                 1 -> resultForAttempt1
                 2 -> resultForAttempt2 ?: throw IllegalArgumentException("This interaction result has only one attempt")
                 else -> throw IllegalArgumentException("$n is not a valid number of attempt")
-            } 
+            }
 
     @JsonIgnore
     fun hasAnyResult() =

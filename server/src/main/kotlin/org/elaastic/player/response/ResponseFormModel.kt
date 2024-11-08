@@ -2,7 +2,7 @@ package org.elaastic.player.response
 
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
-import org.elaastic.sequence.interaction.results.AttemptNum
+import org.elaastic.activity.results.AttemptNum
 
 data class ResponseFormModel(
     val interactionId: Long,

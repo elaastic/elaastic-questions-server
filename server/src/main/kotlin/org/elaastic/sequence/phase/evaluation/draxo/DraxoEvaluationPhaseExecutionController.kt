@@ -6,7 +6,7 @@ import org.elaastic.questions.assignment.sequence.ConfidenceDegree
 import org.elaastic.questions.assignment.sequence.SequenceService
 import org.elaastic.sequence.interaction.response.Response
 import org.elaastic.sequence.interaction.response.ResponseService
-import org.elaastic.sequence.interaction.results.ItemIndex
+import org.elaastic.activity.results.ItemIndex
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.user.User
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController

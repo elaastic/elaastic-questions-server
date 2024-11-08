@@ -16,26 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.interaction.results
+package org.elaastic.activity.results
 
-import java.math.BigDecimal
+import org.elaastic.questions.assignment.choice.ChoiceSpecification
+import org.elaastic.sequence.interaction.response.ResponseSet
 
+object ConfidenceDistributionFactory {
 
-data class GradingDistribution(
-        val evaluationPerChoice: List<GradingDistributionOnResponse>
-) {
-    fun toLegacyFormat(): Map<ItemIndex, Map<BigDecimal, NumberOfOccurence>> {
-        val data = mutableMapOf<ItemIndex, Map<BigDecimal, NumberOfOccurence>>()
-
-        for (i in 0..evaluationPerChoice.size - 1) {
-            val currentChoice = evaluationPerChoice[i]
-            val dataResponse = mutableMapOf<BigDecimal, NumberOfOccurence>()
-            for (currentEvaluation in 0..4) {
-                dataResponse[currentEvaluation.toBigDecimal()] = currentChoice.nbResponsesByEvaluation[currentEvaluation]
-            }
-            data[i] = dataResponse
+    fun build(choiceSpecification: ChoiceSpecification,
+              responseSet: ResponseSet
+    ): ConfidenceDistribution {
+        val confidenceDistributionList = mutableListOf<ConfidenceDistributionOnResponse>()
+        for(choiceIndex in 1..choiceSpecification.nbCandidateItem){
+            confidenceDistributionList.add(
+                ConfidenceDistributionOnResponse(
+                    responseSet.getWithoutFake(1),
+                    choiceIndex
+            )
+            )
         }
-
-        return data
+        return ConfidenceDistribution(confidenceDistributionList)
     }
 }

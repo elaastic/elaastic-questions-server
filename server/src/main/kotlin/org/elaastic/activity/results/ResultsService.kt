@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package org.elaastic.sequence.interaction.results
+package org.elaastic.activity.results
 
 import org.elaastic.questions.assignment.AssignmentService
 import org.elaastic.questions.assignment.sequence.Sequence

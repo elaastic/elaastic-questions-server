@@ -29,7 +29,7 @@ import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.subject.statement.StatementService
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.results.AttemptNum
+import org.elaastic.activity.results.AttemptNum
 import org.elaastic.user.User
 import org.elaastic.user.UserService
 import org.springframework.beans.factory.annotation.Autowired

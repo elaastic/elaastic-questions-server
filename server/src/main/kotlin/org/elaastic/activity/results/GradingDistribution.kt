@@ -16,27 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.interaction.results
+package org.elaastic.activity.results
 
-import org.elaastic.questions.assignment.choice.ChoiceSpecification
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
 import java.math.BigDecimal
 
-object GradingDistributionFactory {
 
-    fun build(choiceSpecification: ChoiceSpecification,
-              peerGradings: List<PeerGrading>?): GradingDistribution {
-        val gradingDistributionList = mutableListOf<GradingDistributionOnResponse>()
-        if(peerGradings != null){
-            for(choiceIndex in 1..choiceSpecification.nbCandidateItem){
-                gradingDistributionList.add(
-                    GradingDistributionOnResponse(
-                        peerGradings.filter{pg -> pg.grade?.compareTo(BigDecimal(-1)) != 0 },
-                        choiceIndex
-                )
-                )
+data class GradingDistribution(
+        val evaluationPerChoice: List<GradingDistributionOnResponse>
+) {
+    fun toLegacyFormat(): Map<ItemIndex, Map<BigDecimal, NumberOfOccurence>> {
+        val data = mutableMapOf<ItemIndex, Map<BigDecimal, NumberOfOccurence>>()
+
+        for (i in 0..evaluationPerChoice.size - 1) {
+            val currentChoice = evaluationPerChoice[i]
+            val dataResponse = mutableMapOf<BigDecimal, NumberOfOccurence>()
+            for (currentEvaluation in 0..4) {
+                dataResponse[currentEvaluation.toBigDecimal()] = currentChoice.nbResponsesByEvaluation[currentEvaluation]
             }
+            data[i] = dataResponse
         }
-        return GradingDistribution(gradingDistributionList)
+
+        return data
     }
 }
