@@ -54,6 +54,7 @@ class TeacherPlayerModel(
     statement: StatementInfo,
     val showResults: Boolean,
     val resultsModel: ResultsModel?,
+    val assignmentOverviewModelOneSequence: AssignmentOverviewModel,
 ) : PlayerModel(
     sequence = sequence,
     userRole = UserRole.Teacher, // TODO Check if we need it

@@ -32,6 +32,7 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.common.web.MessageBuilder
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.directory.AnonymousUserService
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.directory.UserService
@@ -114,6 +115,9 @@ internal class PlayerControllerTest(
 
     @MockBean
     lateinit var functionalTestingService: FunctionalTestingService
+
+    @MockBean
+    lateinit var draxoPeerGradingService: DraxoPeerGradingService
 
     @Test
     fun `consultPlayer is called whenever a student accesses to the player`() {

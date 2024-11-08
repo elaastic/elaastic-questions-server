@@ -18,11 +18,11 @@
 
 package org.elaastic.questions.player.components.sequenceInfo
 
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.questions.assignment.sequence.interaction.InteractionType
-import org.elaastic.common.web.MessageBuilder
 
 object SequenceInfoResolver {
 
@@ -30,7 +30,7 @@ object SequenceInfoResolver {
         isTeacher: Boolean,
         sequence: Sequence,
         messageBuilder: MessageBuilder,
-        nbReportedEvaluation: Int = 0
+        nbReportedEvaluation: Pair<Int, Int> = 0 to 0,
     ): SequenceInfoModel = when (sequence.state) {
         State.beforeStart -> SequenceInfoModel(
             messageBuilder.message(
@@ -52,7 +52,8 @@ object SequenceInfoResolver {
                     ),
                     color = "blue",
                     refreshable = true,
-                    nbEvaluationReported = nbReportedEvaluation
+                    nbReportTotal = nbReportedEvaluation.first,
+                    nbReportToModerate = nbReportedEvaluation.second,
                 )
             } else {
                 when (sequence.activeInteraction?.interactionType) {
@@ -91,7 +92,11 @@ object SequenceInfoResolver {
                     }
 
                     // Read interaction
-                    else -> getSequenceInfoModelWhenReadInteraction(sequence, messageBuilder, nbReportedEvaluation)
+                    else -> getSequenceInfoModelWhenReadInteraction(
+                        sequence,
+                        messageBuilder,
+                        nbReportedEvaluation,
+                    )
                 }
             }
     }
@@ -106,14 +111,15 @@ object SequenceInfoResolver {
     private fun getSequenceInfoModelWhenReadInteraction(
         sequence: Sequence,
         messageBuilder: MessageBuilder,
-        nbReportedEvaluation: Int = 0,
+        nbReportedEvaluation: Pair<Int, Int>,
     ) = if (sequence.resultsArePublished) {
         SequenceInfoModel(
             messageBuilder.message(
                 "player.sequence.interaction.read.teacher.show.message"
             ),
             color = "blue",
-            nbEvaluationReported = nbReportedEvaluation,
+            nbReportTotal = nbReportedEvaluation.first,
+            nbReportToModerate = nbReportedEvaluation.second,
         )
     } else if (sequence.state == State.show) {
         SequenceInfoModel(
@@ -123,7 +129,8 @@ object SequenceInfoResolver {
             ),
             color = "blue",
             refreshable = true,
-            nbEvaluationReported = nbReportedEvaluation,
+            nbReportTotal = nbReportedEvaluation.first,
+            nbReportToModerate = nbReportedEvaluation.second,
         )
     } else {
         SequenceInfoModel(
@@ -131,7 +138,8 @@ object SequenceInfoResolver {
                 "player.sequence.readinteraction.not.published"
             ),
             refreshable = true,
-            nbEvaluationReported = nbReportedEvaluation,
+            nbReportTotal = nbReportedEvaluation.first,
+            nbReportToModerate = nbReportedEvaluation.second,
         )
     }
 }

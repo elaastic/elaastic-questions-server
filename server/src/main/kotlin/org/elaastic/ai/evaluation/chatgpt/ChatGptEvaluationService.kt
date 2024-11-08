@@ -7,12 +7,13 @@ import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
 import org.elaastic.common.util.requireAccess
+import org.elaastic.moderation.ReportCandidateService
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.directory.User
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -36,8 +37,9 @@ class ChatGptEvaluationService(
     val logger = Logger.getLogger(ChatGptEvaluationService::class.java.name)
 
     /**
-     * Create a ChatGPT evaluation for a response.
-     * The evaluation is created asynchronously.
+     * Create a ChatGPT evaluation for a response. The evaluation is created
+     * asynchronously.
+     *
      * @param response the response to evaluate
      * @param language the language of the evaluation
      * @param chatGptExistingEvaluation the existing evaluation if it exists
@@ -86,10 +88,10 @@ class ChatGptEvaluationService(
 
 
     fun findEvaluationByResponse(response: Response): ChatGptEvaluation? =
-        chatGptEvaluationRepository.findByResponse(response)
+        chatGptEvaluationRepository.findByResponse(response).takeIf { it?.removedByTeacher == false }
 
     fun findEvaluationById(id: Long): ChatGptEvaluation? {
-        return chatGptEvaluationRepository.findById(id).get()
+        return chatGptEvaluationRepository.findById(id).get().takeIf { !it.removedByTeacher }
     }
 
 
@@ -107,7 +109,11 @@ class ChatGptEvaluationService(
      *
      * @param chatGptEvaluation the chatGPT evaluation to remove.
      */
-    fun markAsRemoved(chatGptEvaluation: ChatGptEvaluation) {
+    fun markAsRemoved(user: User, chatGptEvaluation: ChatGptEvaluation) {
+        requireAccess(user == chatGptEvaluation.response.interaction.owner) {
+            "You don't have the permission to remove this evaluation"
+        }
+
         reportCandidateService.markAsRemoved(chatGptEvaluation, chatGptEvaluationRepository)
     }
 
@@ -156,9 +162,9 @@ class ChatGptEvaluationService(
      *
      * @param chatGptEvaluation the chatGPT evaluation to check.
      * @param user the user who wants to update the visibility of the
-     *     evaluation.
+     *    evaluation.
      * @return true if the visibility of the chatGPT evaluation can be changed,
-     *     false otherwise.
+     *    false otherwise.
      */
     fun canUpdateVisibilityEvaluation(chatGptEvaluation: ChatGptEvaluation, user: User): Boolean {
         return responseService.canHidePeerGrading(
@@ -176,7 +182,7 @@ class ChatGptEvaluationService(
      * @param chatGptEvaluation the chatGPT evaluation to hide.
      * @param user the user who wants to hide the evaluation.
      * @throws IllegalAccessException if the user doesn't have the permission
-     *     to hide the evaluation.
+     *    to hide the evaluation.
      */
     @Throws(IllegalAccessException::class)
     fun markAsHidden(chatGptEvaluation: ChatGptEvaluation, user: User) {
@@ -198,7 +204,7 @@ class ChatGptEvaluationService(
      * @param chatGPTEvaluation the chatGPT evaluation to unhide
      * @param user the user who wants to unhide the evaluation.
      * @throws IllegalAccessException if the user doesn't have the permission
-     *     to unhide the evaluation.
+     *    to unhide the evaluation.
      */
     @Throws(IllegalAccessException::class)
     fun markAsShown(chatGPTEvaluation: ChatGptEvaluation, user: User) {
@@ -212,8 +218,10 @@ class ChatGptEvaluationService(
     }
 
     /**
-     * With the given list of response ids, if the response has been evaluated by ChatGPT, associate the evaluation to true.
-     * If the response has not been evaluated by ChatGPT, associate the evaluation to false.
+     * With the given list of response ids, if the response has been evaluated
+     * by ChatGPT, associate the evaluation to true. If the response has
+     * not been evaluated by ChatGPT, associate the evaluation to false.
+     *
      * @param listIdResponse the list of response ids to evaluate
      * @return a map with the response id as key and a boolean as value
      */
@@ -234,9 +242,10 @@ class ChatGptEvaluationService(
     }
 
     /**
-     * Find all the evaluations made on a sequence.
-     * We retrieve all the responses of the sequence, and then we retrieve all the
-     * peer grading that have been made on these responses.
+     * Find all the evaluations made on a sequence. We retrieve all the
+     * responses of the sequence, and then we retrieve all the peer grading
+     * that have been made on these responses.
+     *
      * @param sequence the sequence.
      * @return the list of peer grading.
      */
@@ -245,17 +254,59 @@ class ChatGptEvaluationService(
             responseRepository.findAllByInteraction(
                 sequence.getResponseSubmissionInteraction(),
             )
-        )
+        ).filter { !it.removedByTeacher }
 
     /**
-     * Find all the evaluations made on a sequence that have been reported and not hidden.
+     * Find all the evaluations made on a sequence that have been reported and
+     * not removed.
+     *
      * @param sequence the sequence.
-     * @return the list of peer grading.
+     * @return the list of ChatGPTEvaluation.
      */
-    fun findAllReportedNotHidden(sequence: Sequence): List<ChatGptEvaluation> {
-        return findAllBySequence(sequence)
-            .filter { !it.hiddenByTeacher }
-            .filter { it.reportReasons?.isNotEmpty() == true }
+    fun findAllReportedNotRemoved(sequence: Sequence): List<ChatGptEvaluation> {
+        return findAllReported(sequence, removed = false)
+    }
+
+    /**
+     * @see countAllReportedNotRemoved(Interaction)
+     */
+    fun countAllReportedNotRemoved(sequence: Sequence): Int {
+        return countAllReportedNotRemoved(
+            sequence.getResponseSubmissionInteraction(),
+        )
+    }
+
+    /**
+     * Count all the evaluations made on a sequence that have been reported and
+     * not hidden.
+     *
+     * @param interaction the interaction.
+     * @return the number of peer grading.
+     */
+    fun countAllReportedNotRemoved(interaction: Interaction): Int {
+        return countAllReported(interaction, removed = false)
+    }
+
+    fun countAllReported(sequence: Sequence, removed: Boolean): Int {
+        return countAllReported(sequence.getResponseSubmissionInteraction(), removed)
+    }
+
+    fun countAllReported(interction: Interaction, removed: Boolean): Int {
+        return chatGptEvaluationRepository.countAllReported(
+            interction,
+            removed
+        )
+    }
+
+    fun findAllReportedRemoved(sequence: Sequence): List<ChatGptEvaluation> {
+        return findAllReported(sequence, removed = true)
+    }
+
+    fun findAllReported(sequence: Sequence, removed: Boolean): List<ChatGptEvaluation> {
+        return chatGptEvaluationRepository.findAllReported(
+            sequence.getResponseSubmissionInteraction(),
+            removed = removed
+        )
     }
 
     private fun buildThePrompt(
@@ -284,6 +335,47 @@ class ChatGptEvaluationService(
         val jsonObject = objectMapper.writeValueAsString(promptData)
 
         return chatGptPrompt.content + "\n" + jsonObject
+    }
+
+    /**
+     * Remove the report associated with a ChatGPT evaluation.
+     *
+     * @param user the user who wants to remove the report.
+     * @param chatGptEvaluation the ChatGPT evaluation to update.
+     * @throws IllegalAccessException if the user doesn't have the permission
+     *    to remove the report.
+     */
+    fun removeReport(
+        user: User,
+        chatGptEvaluation: ChatGptEvaluation
+    ) {
+        requireAccess(user == chatGptEvaluation.response.interaction.owner) {
+            "You don't have the permission to remove the report"
+        }
+
+        chatGptEvaluation.reportReasons = null
+        chatGptEvaluation.reportComment = null
+
+        chatGptEvaluationRepository.save(chatGptEvaluation)
+    }
+
+    fun removeReport(user: User, id: Long) {
+        val chatGptEvaluation = chatGptEvaluationRepository.findById(id).orElseThrow()
+        removeReport(user, chatGptEvaluation)
+    }
+
+    fun markAsRestored(user: User, chatGptEvaluation: ChatGptEvaluation) {
+        requireAccess(user == chatGptEvaluation.response.interaction.owner) {
+            "You don't have the permission to restore this evaluation"
+        }
+        reportCandidateService.markAsRestored(chatGptEvaluation, chatGptEvaluationRepository)
+    }
+
+    /**
+     * Return the name of the IA use to generate the evaluation.
+     */
+    fun getAINameProvider(): String {
+        return "ChatGPT"
     }
 }
 

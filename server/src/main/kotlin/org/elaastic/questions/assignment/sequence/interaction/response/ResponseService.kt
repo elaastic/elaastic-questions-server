@@ -207,7 +207,7 @@ class ResponseService(
         val meangrade = entityManager.createQuery(
             "SELECT AVG(pg.grade) " +
                     "FROM PeerGrading pg " +
-                    "WHERE pg.response = :response AND pg.hiddenByTeacher = false"
+                    "WHERE pg.response = :response AND pg.hiddenByTeacher = false AND pg.removedByTeacher = false"
         )
             .setParameter("response", response)
             .singleResult as Double?

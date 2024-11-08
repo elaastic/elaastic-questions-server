@@ -18,9 +18,9 @@
 
 package org.elaastic.questions.assignment
 
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.directory.User
-import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.questions.subject.Subject
 import org.elaastic.questions.subject.statement.Statement
 import org.hibernate.annotations.SortNatural
@@ -33,7 +33,6 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
-import kotlin.collections.ArrayList
 
 /**
  * An assignment is a set of sequences that are meant to be answered by a
@@ -100,6 +99,7 @@ class Assignment(
      * The revision mode of the assignment.
      *
      * This revision mode is for the **Konsolidation** app.
+     *
      * @see RevisionMode
      */
     @Column(name = "revision_mode")
@@ -160,6 +160,7 @@ class Assignment(
      * Adds a sequence to the assignment.
      *
      * The sequence must have the same owner as the assignment.
+     *
      * @param sequence The sequence to add.
      * @return The added sequence.
      */

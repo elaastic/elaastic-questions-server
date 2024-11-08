@@ -18,20 +18,19 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading
 
+import org.elaastic.common.util.requireAccess
+import org.elaastic.moderation.ReportCandidateService
+import org.elaastic.moderation.ReportReason
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.LearnerAssignment
 import org.elaastic.questions.assignment.LearnerAssignmentService
-import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.Interaction
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoEvaluation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.assignment.sequence.report.ReportCandidateService
 import org.elaastic.questions.directory.User
-import org.elaastic.common.util.requireAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.stereotype.Service
@@ -43,16 +42,16 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class PeerGradingService(
-    @Autowired val peerGradingRepository: PeerGradingRepository,
-    @Autowired val responseRepository: ResponseRepository,
-    @Autowired val responseService: ResponseService,
-    @Autowired val learnerAssignmentService: LearnerAssignmentService,
     @Autowired val reportCandidateService: ReportCandidateService,
-    @Autowired val entityManager: EntityManager
+    @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val responseService: ResponseService,
+    @Autowired val responseRepository: ResponseRepository,
+    @Autowired val learnerAssignmentService: LearnerAssignmentService,
+    @Autowired val entityManager: EntityManager,
 ) {
 
     fun createOrUpdateLikert(grader: User, response: Response, grade: BigDecimal): LikertPeerGrading {
-        require(isGraderRegisteredOnAssignment(grader, response)) {
+        require(learnerAssignmentService.isGraderRegisteredOnAssignment(grader, response)) {
             "You must be registered on the assignment to provide evaluations"
         }
 
@@ -69,44 +68,6 @@ class PeerGradingService(
 
         return savedPeerGrade
     }
-
-    fun createOrUpdateDraxo(
-        grader: User,
-        response: Response,
-        evaluation: DraxoEvaluation,
-        lastSequencePeerGrading: Boolean
-    ): DraxoPeerGrading {
-        require(isGraderRegisteredOnAssignment(grader, response)) {
-            "You must be registered on the assignment to provide evaluations"
-        }
-
-        val peerGrade = peerGradingRepository.findByGraderAndResponse(grader, response)
-            ?: DraxoPeerGrading(grader, response, evaluation, lastSequencePeerGrading)
-
-        require(peerGrade is DraxoPeerGrading) {
-            "It already exist a peer grading for this response & this grader but it is not a DRAXO evaluation"
-        }
-
-        peerGrade.updateFrom(evaluation)
-
-        val savedPeerGrade = peerGradingRepository.save(peerGrade)
-        responseService.updateMeanGradeAndEvaluationCount(response)
-
-        return savedPeerGrade
-    }
-
-    fun findAllDraxo(response: Response): List<DraxoPeerGrading> =
-        peerGradingRepository.findAllByResponseAndType(response, PeerGradingType.DRAXO)
-
-    fun findAllDraxo(sequence: Sequence): List<DraxoPeerGrading> =
-        findAll(sequence)
-            .filterIsInstance<DraxoPeerGrading>()
-
-    fun isGraderRegisteredOnAssignment(grader: User, response: Response) =
-        learnerAssignmentService.isRegistered(
-            grader,
-            response.interaction.sequence.assignment ?: error("The response is not bound to an assignment")
-        )
 
     fun userHasPerformedEvaluation(user: User, sequence: Sequence) =
         entityManager.createQuery(
@@ -254,7 +215,7 @@ class PeerGradingService(
             throw IllegalAccessException("Only the teacher who own the sequence can hide a peer grading")
         }
         reportCandidateService.markAsHidden(peerGrading, peerGradingRepository)
-        peerGrading.response.draxoEvaluationHiddenCount++
+        if (peerGrading is DraxoPeerGrading) peerGrading.response.draxoEvaluationHiddenCount++
         responseService.updateMeanGradeAndEvaluationCount(peerGrading.response)
     }
 
@@ -265,7 +226,7 @@ class PeerGradingService(
      * @param peerGrading the peer grading to remove.
      */
     fun markAsRemoved(teacher: User, peerGrading: PeerGrading) {
-        require(teacher == peerGrading.response.interaction.sequence.owner) {
+        requireAccess(teacher == peerGrading.response.interaction.sequence.owner) {
             "Only the teacher who own the sequence can remove a peer grading"
         }
         reportCandidateService.markAsRemoved(peerGrading, peerGradingRepository)
@@ -297,18 +258,6 @@ class PeerGradingService(
 
         reportCandidateService.updateReport(peerGrading, reportReasons, reportComment, peerGradingRepository)
     }
-
-    /**
-     * Find a Draxo peer grading by its id.
-     *
-     * @param id the id of the peer grading.
-     * @return the Draxo peer grading.
-     * @throws IllegalArgumentException if no Draxo peer grading is found with
-     *    the given id.
-     */
-    fun getDraxoPeerGrading(id: Long): DraxoPeerGrading =
-        peerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
-            ?: error("No Draxo peer grading found with id $id")
 
     /**
      * Update the utility grade of a peer grading.
@@ -404,14 +353,35 @@ class PeerGradingService(
     }
 
     /**
-     * Return the list of all the DRAXO peer grading that have been reported
-     * and are not hidden by the teacher.
+     * Remove the report of a peer grading.
      *
-     * @param sequence the sequence
-     * @return the list of DRAXO peer grading
+     * @param user the user who wants to remove the report
+     * @param peerGrading the peer grading to update
+     * @throws IllegalArgumentException if the user is not the owner of the response
      */
-    fun findAllDraxoPeerGradingReportedNotHidden(sequence: Sequence): List<DraxoPeerGrading> =
-        findAllDraxo(sequence)
-            .filter { it.reportReasons?.isNotEmpty() == true }
-            .filter { !it.hiddenByTeacher }
+    fun removeReport(
+        user: User,
+        peerGrading: PeerGrading
+    ) {
+        requireAccess(user == peerGrading.response.interaction.owner) {
+            "Only the teacher who own the sequence can remove a report"
+        }
+
+        peerGrading.reportReasons = null
+        peerGrading.reportComment = null
+
+        peerGradingRepository.save(peerGrading)
+    }
+
+    fun removeReport(user: User, id: Long) {
+        val peerGrading = peerGradingRepository.findById(id).orElseThrow()
+        removeReport(user, peerGrading)
+    }
+
+    fun markAsRestored(user: User, peerGrading: PeerGrading) {
+        requireAccess(user == peerGrading.response.interaction.owner) {
+            "Only the teacher who own the sequence can restore a peer grading"
+        }
+        reportCandidateService.markAsRestored(peerGrading, peerGradingRepository)
+    }
 }

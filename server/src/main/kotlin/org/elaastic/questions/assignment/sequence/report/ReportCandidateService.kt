@@ -16,23 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence.report;
+package org.elaastic.moderation
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.elaastic.questions.assignment.sequence.UtilityGrade
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
-/**
- * Service for moderation management
- */
+/** Service for moderation management */
 @Service
 @Transactional
-public class ReportCandidateService {
+class ReportCandidateService {
 
-    /**
-     * Hide a ReportCandidate.
-     */
+    /** Hide a ReportCandidate. */
     fun markAsHidden(
         reportCandidate: ReportCandidate,
         repository: ReportCandidateRepository,
@@ -41,9 +36,7 @@ public class ReportCandidateService {
         repository.save(reportCandidate)
     }
 
-    /**
-     * Remove a ModerationCandidate.
-     */
+    /** Remove a ModerationCandidate. */
     fun markAsRemoved(
         reportCandidate: ReportCandidate,
         repository: ReportCandidateRepository
@@ -89,14 +82,20 @@ public class ReportCandidateService {
         repository.save(utilityGradeCandidate)
     }
 
-    /**
-     * Unhide a ReportCandidate.
-     */
+    /** Unhide a ReportCandidate. */
     fun markAsShown(
         reportCandidate: ReportCandidate,
         repository: ReportCandidateRepository,
     ) {
         reportCandidate.hiddenByTeacher = false
+        repository.save(reportCandidate)
+    }
+
+    fun markAsRestored(
+        reportCandidate: ReportCandidate,
+        repository: ReportCandidateRepository
+    ) {
+        reportCandidate.removedByTeacher = false
         repository.save(reportCandidate)
     }
 }

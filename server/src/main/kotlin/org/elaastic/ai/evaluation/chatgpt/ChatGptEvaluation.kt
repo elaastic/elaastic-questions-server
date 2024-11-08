@@ -20,9 +20,9 @@ package org.elaastic.ai.evaluation.chatgpt
 
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.common.persistence.AbstractJpaPersistable
-import org.elaastic.questions.assignment.sequence.UtilityGrade
+import org.elaastic.moderation.ReportCandidate
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.report.ReportCandidate
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -75,13 +75,14 @@ class ChatGptEvaluation(
     var response: Response,
 
     /**
-     *  The prompt used to generate the evaluation
-     *  @see ChatGptPrompt
+     * The prompt used to generate the evaluation
+     *
+     * @see ChatGptPrompt
      */
     @field:ManyToOne
     var prompt: ChatGptPrompt? = null,
 
-) : AbstractJpaPersistable<Long>(), ReportCandidate {
+    ) : AbstractJpaPersistable<Long>(), ReportCandidate {
 
 
     @CreatedDate
@@ -89,5 +90,4 @@ class ChatGptEvaluation(
 
     @LastModifiedDate
     var lastUpdated: Date? = null
-
 }

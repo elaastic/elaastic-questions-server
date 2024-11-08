@@ -39,7 +39,7 @@
                 <div class="field">
                     <label th:text="#{player.sequence.chatGptEvaluation.reportModal.reportReason}"></label>
                     <div class="grouped fields">
-                        <div th:each="reportReason : ${T(org.elaastic.questions.assignment.sequence.ReportReason).values()}"
+                        <div th:each="reportReason : ${T(org.elaastic.moderation.ReportReason).values()}"
                              class="field">
                             <div class="ui checkbox">
                                 <!--/* To distinguish between the different checkboxes, we add the ID of the evaluation to their current ID, so that each checkbox has a unique ID */-->

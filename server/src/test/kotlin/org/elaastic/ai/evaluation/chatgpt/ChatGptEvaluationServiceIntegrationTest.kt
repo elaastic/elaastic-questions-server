@@ -1,9 +1,9 @@
 package org.elaastic.ai.evaluation.chatgpt
 
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
+import org.elaastic.moderation.ReportReason
 import org.elaastic.questions.assignment.ExecutionContext
 import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.ReportReason
 import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
 import org.elaastic.questions.directory.User
 import org.elaastic.questions.test.FunctionalTestingService
@@ -63,7 +63,8 @@ internal class ChatGptEvaluationServiceIntegrationTest(
     fun `get a chatgpt evaluation - valid`() {
 
         val response = integrationTestingService.getAnyResponse()
-        response.explanation = "Git est le meilleur système de gestion de version, il coche donc toutes les bonnes options."
+        response.explanation =
+            "Git est le meilleur système de gestion de version, il coche donc toutes les bonnes options."
         val promptFr = chatGptPromptService.getPrompt("fr")
 
         tWhen {
@@ -419,8 +420,8 @@ internal class ChatGptEvaluationServiceIntegrationTest(
             }
         }.tThen("The evaluation exist but it's not reported") {
             assertEquals(
-                emptyList<ChatGptEvaluation>(),
-                chatGptEvaluationService.findAllReportedNotHidden(response.interaction.sequence)
+                0,
+                chatGptEvaluationService.countAllReportedNotRemoved(response.interaction.sequence)
             )
             assertEquals(
                 listOf(it),
@@ -432,10 +433,121 @@ internal class ChatGptEvaluationServiceIntegrationTest(
             it
         }.tThen("The evaluation is reported") {
             assertEquals(
-                listOf(it),
-                chatGptEvaluationService.findAllReportedNotHidden(response.interaction.sequence)
+                listOf(it).size,
+                chatGptEvaluationService.countAllReportedNotRemoved(response.interaction.sequence)
             )
             it
+        }
+    }
+
+    @Test
+    fun `test of removeReport`() {
+        // Given
+        val sequence = integrationTestingService.getAnySequence()
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+
+        val learner = integrationTestingService.getNLearners(3).shuffled().first()
+
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "explanation",
+        )
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("a learner report it") {
+            chatGptEvaluationService.reportEvaluation(it, listOf(ReportReason.INCOHERENCE.name))
+            it
+        }.tThen("The evaluation is reported") {
+            assertNotNull(it.reportReasons)
+            it
+        }.tWhen("The teacher remove the report") {
+            assertThrows(IllegalAccessException::class.java, {
+                chatGptEvaluationService.removeReport(learner, it.id!!)
+            }, "The learner should not be able to remove the report")
+            assertDoesNotThrow({
+                chatGptEvaluationService.removeReport(sequence.owner, it)
+            }, "The teacher should be able to remove the report")
+
+            it
+        }.tThen("The evaluation is not reported") {
+            assertEquals(
+                0,
+                chatGptEvaluationService.countAllReportedNotRemoved(response.interaction.sequence)
+            )
+        }
+    }
+
+    @Test
+    fun `test of markAsRemoved and markAsRestored`() {
+        // Given
+        val sequence = integrationTestingService.getAnySequence()
+        functionalTestingService.startSequence(sequence, ExecutionContext.FaceToFace)
+
+        val learner = integrationTestingService.getNLearners(3).shuffled().first()
+
+        val response = functionalTestingService.submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            true,
+            ConfidenceDegree.CONFIDENT,
+            "explanation",
+        )
+
+        tGiven("A chatGPT evaluation") {
+            ChatGptEvaluation(
+                response = response,
+                annotation = "annotation",
+                grade = null,
+                status = ChatGptEvaluationStatus.DONE.name,
+                reportReasons = null,
+                reportComment = null,
+                utilityGrade = null,
+                hiddenByTeacher = false,
+                removedByTeacher = false,
+            ).tWhen {
+                chatGptEvaluationRepository.save(it)
+                it
+            }
+        }.tWhen("The teacher remove the evaluation") {
+            assertThrows(IllegalAccessException::class.java, {
+                chatGptEvaluationService.markAsRemoved(learner, it)
+            }, "The learner should not be able to remove the evaluation")
+            assertDoesNotThrow({
+                chatGptEvaluationService.markAsRemoved(sequence.owner, it)
+            }, "The teacher should be able to remove the evaluation")
+            it
+        }.tThen("The evaluation is removed") {
+            assertTrue(it.removedByTeacher)
+            it
+        }.tWhen("The teacher restore it") {
+            assertThrows(IllegalAccessException::class.java, {
+                chatGptEvaluationService.markAsRestored(learner, it)
+            }, "The learner should not be able to restore the evaluation")
+            assertDoesNotThrow({
+                chatGptEvaluationService.markAsRestored(sequence.owner, it)
+            }, "The teacher should be able to restore the evaluation")
+            it
+        }.tThen {
+            assertFalse(it.removedByTeacher)
         }
     }
 }

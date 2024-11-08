@@ -1,0 +1,51 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.moderation.ReportedCandidateModel"*/-->
+<div th:fragment="reportedElement(reportedCandidateModel, isRemoved)"
+     xmlns="http://www.w3.org/1999/html"
+     xmlns:th="http://www.thymeleaf.org"
+     class="ui card"
+     style="width: auto; cursor: pointer"
+     th:id="${'reportedCandidate-' + reportedCandidateModel.id}"
+     th:id-reported-Candidate="${reportedCandidateModel.id}"
+     th:reported-candidate-type="${reportedCandidateModel.type}"
+     th:data-is-removed="${isRemoved}"
+>
+
+
+    <div class="content">
+        <div class="description reported-content" th:text="${reportedCandidateModel.contentReported}">
+            I am content that has been reported, and therefore I appear in this component.
+            The exact reason for my report is written below.
+            But to have all the context and remaining details, click on me.
+        </div>
+    </div>
+    <div class="extra content">
+        <!--/*@thymesVar id="reason" type="org.elaastic.moderation.ReportReason"*/-->
+        <th:block th:each="reason: ${reportedCandidateModel.reasons}">
+            <div class="ui label"
+                 th:text="#{|reportManager.reportReason.${reason.name()}|}"
+                 th:data-tooltip="#{|player.sequence.chatGptEvaluation.reportReason.${reason.name()}|}"
+                 data-position="top left">
+
+                Reason for report
+            </div>
+        </th:block>
+    </div>
+</div>

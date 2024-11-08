@@ -16,143 +16,205 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div
-  th:fragment="assignmentOverview(model, context)"
-  th:remove="tag"
-  xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<div th:fragment="assignmentOverview(assignmentOverviewModel, context, linkClickable)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
+    <!--/*@thymesVar id="assignmentOverviewModel" type="org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModel"*/-->
+    <!--/*@thymesVar id="linkClikable" type="java.lang.Boolean"
+    comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
 
-  <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
-    <div class="floating ui grey label"
-         style="left: 3em;"
-         th-attr="data-tooltip=#{player.assignment.registeredUserCount2}"
-         data-inverted=""
-         data-position="bottom left">
-      <i class="users icon"></i> <span th:text="${model.nbRegisteredUser}"></span>
+    <script th:if="${context == 'aside' && assignmentOverviewModel.selectedSequenceId != null}" th:inline="javascript">
+        (function () {
+            var container = $('#layout-aside')
+            var target = $('#' + [[${context}]] + '-[[${assignmentOverviewModel.selectedSequenceId}]]')
+
+            if (!elaastic.util.isVisible(target, container, 50)) {
+                elaastic.util.ensureIsVisible(target, container)
+            }
+        })()
+
+    </script>
+
+    <style>
+        .ui.selected.segment {
+            background-color: #fffaf3;
+            color: #573a08;
+        }
+
+        .ui.selected.segment .elaastic-phase.icon {
+            display: none !important;
+        }
+    </style>
+
+    <!--/* Header with title and number of students */-->
+    <h3 class="ui top attached block header" style="position: relative; padding-top: 1em;">
+        <!--/* Number of students */-->
+        <div class="floating ui grey label"
+             style="left: 3em;"
+             th-attr="data-tooltip=#{player.assignment.registeredUserCount2}"
+             data-inverted=""
+             data-position="bottom left">
+            <i class="users icon"></i> <span th:text="${assignmentOverviewModel.nbRegisteredUser}"></span>
+        </div>
+
+        <!--/* Title */-->
+        <i class="file alternate outline icon"></i>
+        <div class="content" th:text="${assignmentOverviewModel.assignmentTitle}"></div>
+    </h3>
+
+    <!--/* The breadcrumb */-->
+    <div class="ui segment attached" th:if="${assignmentOverviewModel.teacher}">
+        <div class="ui breadcrumb">
+            <!--/* Course */-->
+            <th:block th:if="${not #strings.isEmpty(assignmentOverviewModel.courseTitle)}">
+                <span class="section">
+                    <i class="folder icon"></i>
+
+                    <!--/* The course link if linkClickable is true */-->
+                    <a th:if="${linkClickable}" class="section"
+                       th:href="@{/course/{id}(id=${assignmentOverviewModel.courseId})}"
+                       th:text="${assignmentOverviewModel.courseTitle}"></a>
+
+                    <!--/* The course title if linkClickable is false */-->
+                    <span class="section" th:unless="${linkClickable}"
+                          th:text="${assignmentOverviewModel.courseTitle}"></span>
+                </span>
+                <div class="divider"> /</div>
+            </th:block>
+
+            <!--/* Subject link */-->
+            <th:block th:if="${assignmentOverviewModel.subjectTitle != null}">
+                <span class="active section">
+                    <i class="book icon"></i>
+
+                    <!--/* The subject link if linkClickable is true */-->
+                    <a th:if="${linkClickable}" th:href="@{/subject/{id}(id=${assignmentOverviewModel.subjectId})}"
+                       th:text="${assignmentOverviewModel.subjectTitle}">Subject link</a>
+
+                    <!--/* The subject title if linkClickable is false */-->
+                    <span th:unless="${linkClickable}"
+                          th:text="${assignmentOverviewModel.subjectTitle}">Subject title</span>
+                </span>
+                <div class="divider"> /</div>
+            </th:block>
+
+            <!--/* Diffusion link */-->
+            <th:block th:if="${!#strings.isEmpty(assignmentOverviewModel.audience)}">
+                <span class="section">
+                    <i class="podcast icon"></i>
+
+                    <!--/* The diffusion audience if linkClickable is true */-->
+                    <a th:if="${linkClickable}"
+                       th:href="@{/subject/{subjectId}(subjectId=${assignmentOverviewModel.subjectId}, activeTab='assignments')}"
+                       th:text="${assignmentOverviewModel.audience}"
+                       th:attr="data-tooltip=#{subject.assignment.change.action}"
+                       data-tooltip="Change assignment"
+                       data-inverted="">The audience</a>
+
+                    <!--/* Edit diffusion link if linkClickable is true */-->
+                    <th:block th:if="${linkClickable}">
+                        [<a th:href="@{/assignment/{id}/edit(id=${assignmentOverviewModel.assignmentId})}"
+                            href="subject/123/edit"
+                            th:attr="data-tooltip=#{subject.propertiesEdition.label}"
+                            data-tooltip="Modify subject"
+                            data-inverted="">
+                          <i class="edit outline icon" style="margin: 0;"></i>
+                        </a>]
+                    </th:block>
+
+                    <!--/* The diffusion audience if linkClickable is false */-->
+                    <span th:unless="${linkClickable}"
+                          th:text="${assignmentOverviewModel.audience}"></span>
+
+                    <div th:if="${assignmentOverviewModel.isSingleSequence}" class="divider"> /</div>
+                </span>
+            </th:block>
+
+            <!--/* The sequence link */-->
+            <th:block th:if="${assignmentOverviewModel.isSingleSequence}">
+                <span class="section">
+                    <a th:if="${linkClickable}"
+                       th:text="${assignmentOverviewModel.sequences.get(0).title}"
+                       th:href="@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${assignmentOverviewModel.assignmentId}, sequenceId=${assignmentOverviewModel.selectedSequenceId})}"></a>
+
+                    <span th:unless="${linkClickable}"
+                          th:text="${assignmentOverviewModel.sequences.get(0).title}"></span>
+                </span>
+            </th:block>
+        </div>
     </div>
-    <i class="file alternate outline icon"></i>
 
-    <div class="content" th:text="${model.assignmentTitle}"></div>
-  </h3>
-
-  <div class="ui segment attached" th:if="${model.teacher}">
-    <div class="ui breadcrumb">
-
-      <th:block th:if="${not #strings.isEmpty(model.courseTitle)}">
-        <span class="section">
-        <i class="folder icon"></i> <a class="section"
-                                       th:href="@{/course/{id}(id=${model.courseId})}"
-                                       th:text="${model.courseTitle}"></a>
-          </span>
-        <div class="divider"> /</div>
-      </th:block>
-
-      <th:block th:if="${model.subjectTitle != null}">
-        <span class="active section">
-        <i class="book icon"></i>
-        <a th:href="@{/subject/{id}(id=${model.subjectId})}" th:text="${model.subjectTitle}">Subject
-          link</a>
-        </span>
-        <div class="divider"> /</div>
-      </th:block>
-
-      <th:block th:if="${!#strings.isEmpty(model.audience)}">
-        <span class="section">
-        <i class="podcast icon"></i>
-        <a th:href="@{/subject/{subjectId}(subjectId=${model.subjectId}, activeTab='assignments')}"
-           th:text="${model.audience}"
-           th:attr="data-tooltip=#{subject.assignment.change.action}"
-           data-tooltip="Change assignment"
-           data-inverted="">The audience</a>
-        [
-        <a th:href="@{/assignment/{id}/edit(id=${model.assignmentId})}"
-           href="subject/123/edit"
-           th:attr="data-tooltip=#{subject.propertiesEdition.label}"
-           data-tooltip="Modify subject"
-           data-inverted="">
-          <i class="edit outline icon" style="margin: 0;"></i>
-        </a>
-        ]
-          </span>
-      </th:block>
+    <!--/* If the assignement does not have any sequence */-->
+    <div class="ui segment attached"
+         th:if="${#lists.isEmpty(assignmentOverviewModel.sequences)}"
+         th:text="#{assignment.empty}">
+        This assignment is empty.
     </div>
-  </div>
 
-  <div class="ui segment attached"
-       th:if="${#lists.isEmpty(model.sequences)}"
-       th:text="#{assignment.empty}">
-    This assignment is empty.
-  </div>
+    <!--/* The sequences */-->
+    <div th:each="sequenceInfo, i : ${assignmentOverviewModel.sequences}"
+         class="ui clearing attached segment"
+         th:classappend="|${sequenceInfo.id == assignmentOverviewModel.selectedSequenceId ? 'selected' : ''}|"
+         th:id="|${context}-${sequenceInfo.id}|"
+         style="padding-bottom: 1em;"
+         th:styleappend="${linkClickable ? 'cursor: pointer;' : ''}"
+         th:attr="onclick=${linkClickable} ? 'window.location.href=\'/player/assignment/' + ${assignmentOverviewModel.assignmentId} + '/play/sequence/' + ${sequenceInfo.id} + '\';' : ''">
 
-  <div th:each="sequence, i : ${model.sequences}"
-       class="ui clearing attached segment"
-       th:classappend="|${sequence.id == model.selectedSequenceId ? 'selected' : ''}|"
-       th:id="|${context}-${sequence.id}|"
-       style="padding-bottom: 1em; cursor: pointer; "
-       th:onclick="|window.location = '@{/player/assignment/{assignmentId}/play/sequence/{sequenceId}(assignmentId=${model.assignmentId}, sequenceId=${sequence.id})}'|">
+        <!--/* A sequence */-->
+        <div class="ui grid">
+            <!--/* The sequence title and content */-->
+            <div class="ten wide column">
+                <div style="overflow: hidden; height: 100%; padding-top: 2px;">
+                    <!--/* The sequence title */-->
+                    <h4 class="ui header">
+                        <!--/* Index of the sequence in the assignment */-->
+                        <div class="ui tiny circular label"
+                             style="margin-right: 1em;"
+                             th:text="|${assignmentOverviewModel.isSingleSequence ? assignmentOverviewModel.indexOfSelectedSequence + 1 : i.index + 1}.|">
+                        </div>
 
-    <div class="ui grid">
-      <div class="twelve wide column">
-        <div style="overflow: hidden; height: 100%; padding-top: 2px;">
-          <h4 class="ui header">
-            <div class="ui tiny circular label"
-                 style="margin-right: 1em;"
-                 th:text="|${i.index+1}.|">
+                        <!--/* The sequence title */-->
+                        <span th:utext="${sequenceInfo.title}"></span>
+                    </h4>
+
+                    <!--/* The sequence content */-->
+                    <div style="height: 4em; overflow: hidden;"
+                         th:unless="${sequenceInfo.hideStatementContent}"
+                         th:utext="${sequenceInfo.content}">
+                    </div>
+
+                </div>
             </div>
-            <span th:utext="${sequence.title}"></span>
-          </h4>
 
-          <div style="height: 4em; overflow: hidden;"
-               th:unless="${sequence.hideStatementContent}"
-               th:utext="${sequence.content}">
-          </div>
+            <!--/* The sequence icons */-->
+            <div class="six wide column" style="text-align: center;">
+                <!--/* Tag */-->
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px; justify-content: end">
+                    <!--/* The Revision tag */-->
+                    <h4 class="ui header circular small basic blue label"
+                        style="height: 0.6em !important; padding-top: 2px; width: fit-content;"
+                        th:if="${sequenceInfo.revisionTag}"
+                        th:title="#{assignment.overview.revisionAvailability}"
+                        th:text="#{assignment.overview.revisionTag}">
+                        Revisions
+                    </h4>
 
-        </div>
-      </div>
+                    <!--/* The nb report tag */-->
+                    <th:block th:replace="moderation/components/label-nb-report-item.html ::
+                    nbReportLabel(${sequenceInfo.id}, ${sequenceInfo.nbReportTotal}, ${sequenceInfo.nbReportToModerate})"></th:block>
+                </div>
 
-      <div class="four wide column" style="text-align: center;">
-        <div>
-          <h4 class="ui header circular small basic blue label" style="height: 0.6em !important; padding-top: 2px;"
-          th:if="${sequence.revisionTag}"
-          th:title="#{assignment.overview.revisionAvailability}"
-          th:text="#{assignment.overview.revisionTag}">
-            Revisions
-          </h4>
+                <!--/* The sequence icons */-->
+                <div style="height: 80%; display:flex">
+                    <i th:each="icon : ${sequenceInfo.icons}"
+                       class="elaastic-phase icon"
+                       style="margin: auto"
+                       th:classappend="${icon.icon}"
+                       th:title="#{${icon.title}}"
+                    ></i>
+                </div>
+            </div>
         </div>
-        <div style="height: 80%; display:flex">
-          <i th:each="icon : ${sequence.icons}"
-             class="elaastic-phase icon"
-             style="margin: auto"
-             th:classappend="${icon.icon}"
-             th:title="#{${icon.title}}"
-          ></i>
-        </div>
-      </div>
     </div>
-
-  </div>
-
-  <script th:if="${context == 'aside' && model.selectedSequenceId != null}" th:inline="javascript">
-    (function () {
-      var container = $('#layout-aside')
-      var target = $('#' + [[${context}]] + '-[[${model.selectedSequenceId}]]')
-
-      if (!elaastic.util.isVisible(target, container, 50)) {
-        elaastic.util.ensureIsVisible(target, container)
-      }
-    })()
-
-  </script>
-
-
-  <style>
-      .ui.selected.segment {
-          background-color: #fffaf3;
-          color: #573a08;
-      }
-
-      .ui.selected.segment .elaastic-phase.icon {
-          display: none !important;
-      }
-  </style>
 </div>

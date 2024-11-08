@@ -32,6 +32,7 @@ import org.elaastic.questions.assignment.sequence.interaction.results.AttemptNum
 import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.questions.course.Course
 import org.elaastic.questions.directory.AnonymousUserService
 import org.elaastic.questions.directory.User
@@ -66,20 +67,21 @@ import javax.transaction.Transactional
 @Controller
 @RequestMapping("/player", "/elaastic-questions/player")
 class PlayerController(
-    @Autowired val assignmentService: AssignmentService,
-    @Autowired val sequenceService: SequenceService,
-    @Autowired val learnerSequenceService: LearnerSequenceService,
-    @Autowired val interactionService: InteractionService,
-    @Autowired val responseService: ResponseService,
-    @Autowired val messageBuilder: MessageBuilder,
     @Autowired val anonymousUserService: AnonymousUserService,
-    @Autowired val learnerPhaseService: LearnerPhaseService,
-    @Autowired val userService: UserService,
-    @Autowired val featureManager: FeatureManager,
-    @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
+    @Autowired val assignmentService: AssignmentService,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
+    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
     @Autowired val eventLogService: EventLogService,
+    @Autowired val interactionService: InteractionService,
+    @Autowired val learnerPhaseService: LearnerPhaseService,
+    @Autowired val learnerSequenceService: LearnerSequenceService,
     @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val responseService: ResponseService,
+    @Autowired val sequenceService: SequenceService,
+    @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
+    @Autowired val userService: UserService,
+    @Autowired val messageBuilder: MessageBuilder,
+    @Autowired val featureManager: FeatureManager,
     @Autowired val messageSource: MessageSource,
 ) {
 
@@ -249,30 +251,29 @@ class PlayerController(
     private fun playAssignmentForTeacher(
         user: User,
         model: Model,
-        sequence: Sequence,
+        selectedSequence: Sequence,
         openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
-
-        val assignment: Assignment = sequence.assignment!!
-        val previousSequence: Sequence? = sequenceService.findPreviousSequence(sequence)
-        val nextSequence: Sequence? = sequenceService.findNextSequence(sequence)
+        val assignment: Assignment = selectedSequence.assignment!!
+        val previousSequence: Sequence? = sequenceService.findPreviousSequence(selectedSequence)
+        val nextSequence: Sequence? = sequenceService.findNextSequence(selectedSequence)
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
         val nbRegisteredUsers = registeredUsers.size
-        val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(sequence)
+        val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(selectedSequence)
 
         // Associate each learner with the number of evaluations he made
-        val evaluationCountByUser = peerGradingService.countEvaluationsMadeByUsers(registeredUsers, sequence)
+        val evaluationCountByUser = peerGradingService.countEvaluationsMadeByUsers(registeredUsers, selectedSequence)
         // Associate each learner with a boolean indicating if he answered the question
         val reponseAvailable = try {
-            peerGradingService.learnerToIfTheyAnswer(registeredUsers, sequence)
+            peerGradingService.learnerToIfTheyAnswer(registeredUsers, selectedSequence)
         } catch (_: IllegalStateException) {
             registeredUsers.associateWith { false }
         }
         // Count the number of responses gradable
         val countResponseGradable: Long = try {
-            val responseStudent = responseService.findAllByAttemptNotFake(1, sequence).size.toLong()
-            val responseFake = responseService.findAllFakeResponses(sequence).size.toLong()
+            val responseStudent = responseService.findAllByAttemptNotFake(1, selectedSequence).size.toLong()
+            val responseFake = responseService.findAllFakeResponses(selectedSequence).size.toLong()
             responseStudent + responseFake
         } catch (_: IllegalStateException) {
             0
@@ -281,7 +282,7 @@ class PlayerController(
 
         val dashboardModel: DashboardModel =
             DashboardModelFactory.build(
-                sequence,
+                selectedSequence,
                 previousSequence,
                 nextSequence,
                 registeredUsers,
@@ -297,14 +298,14 @@ class PlayerController(
             "playerModel",
             PlayerModelFactory.buildForTeacher(
                 user = user,
-                sequence = sequence,
+                sequence = selectedSequence,
                 serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
                 nbRegisteredUsers = nbRegisteredUsers,
                 sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
                 messageBuilder = messageBuilder,
-                sequenceStatistics = sequenceService.getStatistics(sequence),
+                sequenceStatistics = sequenceService.getStatistics(selectedSequence),
                 teacherResultDashboardService = teacherResultDashboardService,
-                nbReportedEvaluation = getReportedEvaluation(sequence, true),
+                nbReportBySequence = sequenceService.getNbReportBySequence(assignment.sequences, true),
             )
         )
 
@@ -781,30 +782,4 @@ class PlayerController(
         }
         return learnerResultsModel
     }
-
-    /**
-     * @param sequence [Sequence] to get the information
-     * @param teacher [Boolean] to know if the user is a teacher
-     * @return [Int] for the reported evaluation
-     */
-    private fun getReportedEvaluation(sequence: Sequence, teacher: Boolean): Int {
-        if (!teacher) {
-            return 0
-        }
-
-        val nbDRAXOEvaluationReported: Int = if (sequence.evaluationPhaseConfig == EvaluationPhaseConfig.DRAXO) {
-            peerGradingService.findAllDraxoPeerGradingReportedNotHidden(sequence).count()
-        } else {
-            0
-        }
-
-        val nbChatGPTEvaluationReported: Int = if (sequence.chatGptEvaluationEnabled) {
-            chatGptEvaluationService.findAllReportedNotHidden(sequence).count()
-        } else {
-            0
-        }
-
-        return nbDRAXOEvaluationReported + nbChatGPTEvaluationReported
-    }
-
 }

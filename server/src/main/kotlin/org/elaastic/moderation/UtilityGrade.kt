@@ -16,16 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.player.components.sequenceInfo
+package org.elaastic.moderation
 
-/**
- * Model use to display information about the selected sequence in player.
- * Use by the sequenceInfo component in `_sequenceInfo.html`
- */
-data class SequenceInfoModel(
-        val message: String,
-        val color: String? = null,
-        val refreshable: Boolean = false,
-        val nbReportTotal: Int = 0,
-        val nbReportToModerate: Int = 0,
-)
+enum class UtilityGrade {
+    STRONGLY_DISAGREE,
+    DISAGREE,
+    AGREE,
+    STRONGLY_AGREE
+}

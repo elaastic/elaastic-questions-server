@@ -1,0 +1,462 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="layout/3columns :: 3columns(title=~{::title}, pageSpecificMenu=~{::#pageSpecificMenu}, aside=~{::aside#layout-aside}, modalAside=~{::#modal-aside}, content=~{::section},extraHeader=~{::head/script})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta name="layout" content="left_menu-elaastic">
+        <title th:text="|elaastic: #{reportManager.title}|">elaastic: Report Manager</title>
+    </head>
+
+    <body>
+
+    <!--/*@thymesVar id="reportedCandidateModel" type="org.elaastic.questions.moderation.ReportedCandidateModel"*/-->
+    <aside id="layout-aside">
+
+        <!--/* Title and description of the page */-->
+        <div class="ui steps one top">
+            <div class="step">
+                <i class="icons icon">
+                    <i class="flag icon"></i>
+                    <i class="corner warning sign icon"></i>
+                </i>
+                <div class="content">
+                    <div class="title" th:text="#{reportManager.title}">Report Manager</div>
+                    <div class="description" th:text="#{reportManager.description}">This page allows you to manage the
+                        reports made by students.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--/* Assignment overview */-->
+        <div th:replace="|player/assignment/sequence/components/_assignment-overview.html| :: assignmentOverview(${assignmentOverviewModel}, aside, false)"></div>
+
+        <!--/* Reported items */-->
+        <div class="ui segment attached" id="reported-item-container">
+            <div class="ui header" th:text="#{reportManager.itemContainer.title}"></div>
+            <th:block th:each="reportedCandidateModel: ${allReportedCandidateModel}">
+                <th:block
+                        th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel}, false)"></th:block>
+            </th:block>
+
+            <div class="ui message info"
+                 id="no-reported-item-message"
+                 th:styleappend="${allReportedCandidateModel.isEmpty()} ? '' : 'display: none;'">
+                <div class="header" th:text="#{reportManager.noReportedItem}">No reported item</div>
+                <div th:text="#{reportManager.noReportedItem.description}">There are no reported items to display.
+                </div>
+            </div>
+        </div>
+
+        <!--/* Reported items removed */-->
+        <div class="ui segment attached"
+             th:styleappend="${allReportedCandidateModelRemoved.isEmpty()} ? 'display: none;' : ''"
+             id="reported-item-removed-container">
+            <div class="ui header" th:text="#{reportManager.itemRemovedContainer.title}"></div>
+            <th:block th:each="reportedCandidateModel: ${allReportedCandidateModelRemoved}">
+                <th:block
+                        th:replace="moderation/components/_reported-element-item :: reportedElement(${reportedCandidateModel}, true)"></th:block>
+            </th:block>
+        </div>
+
+        <style>
+            .ui.selected.card {
+                background-color: #fff4e6;
+                color: #573a08;
+            }
+        </style>
+
+        <script>
+
+            $(function () {
+                const $infoReportManagerContainer = $('#info-report-manager-container');
+                const $detailReportCandidate = $('#detail-report-candidate');
+                const $contextReportCandidate = $('#context-report-candidate');
+                const $errorDetailReportCandidate = $('#error-detail-report-candidate');
+                const $errorContextReportCandidate = $('#error-context-report-candidate');
+                const $reportedItemRemovedContainer = $('#reported-item-removed-container');
+                const $actionButtons = $('#action-buttons');
+
+                const sequenceId = [[${assignmentOverviewModel.selectedSequenceId}]];
+
+                $infoReportManagerContainer.hide();
+                $infoReportManagerContainer.removeClass("loading");
+                $detailReportCandidate.hide();
+                $contextReportCandidate.hide();
+                $contextReportCandidate.removeClass("loading");
+
+                $errorDetailReportCandidate.hide();
+                $errorContextReportCandidate.hide();
+
+                /**
+                 * Update the container and the message according to the number of reported items in each container.
+                 */
+                function handleReportedItemRemovedFromList() {
+                    $('#no-selected-item').slideDown();
+                    $actionButtons.slideUp();
+                    $detailReportCandidate.slideUp();
+                    $contextReportCandidate.slideUp();
+                    if ($('#reported-item-container').find('.ui.card').length === 0) {
+                        $('#no-reported-item-message').slideDown();
+                    }
+                    if ($reportedItemRemovedContainer.find('.ui.card').length === 0) {
+                        $reportedItemRemovedContainer.slideUp();
+                    }
+                }
+
+                /**
+                 * Get the context of the reported candidate.
+                 * The contexte is the response and the evaluation.
+                 * @param sequenceId {number} The id of the sequence.
+                 * @param userId {number} The id of the user who answer.
+                 * @param container The container where the context will be displayed.
+                 */
+                function getContextOfReportedCandidate(sequenceId, userId, container) {
+                    container.addClass("loading");
+                    $contextReportCandidate.slideDown();
+
+                    $.get('/player/' + sequenceId + '/result/' + userId)
+                            .done(function (data) {
+                                const content = $(data).find(".active.content");
+                                container.children("#content").html(content);
+                                container.slideDown();
+                            })
+                            .fail(function () {
+                                $errorContextReportCandidate.slideDown();
+                                container.slideUp();
+                            }).always(function () {
+                                container.removeClass("loading");
+                            }
+                    );
+                }
+
+                /**
+                 * Update the action buttons with the details of the selected item.
+                 * @param idReportCandidate {number} The id of the selected item.
+                 * @param reportedCandidate {HTMLElement} The selected item.
+                 * @param isSelected {boolean} true if the item is selected false otherwise.
+                 * @param isRemoved {boolean} true if the item is removed false otherwise.
+                 */
+                function updateActionButtons(idReportCandidate, reportedCandidate, isSelected, isRemoved) {
+                    // Remove the previous event listener
+                    $actionButtons.children('#remove-report-action').off();
+                    $actionButtons.children('#hide-action').off();
+                    $actionButtons.children('#restore-reported-item').off();
+
+                    $actionButtons.children('#remove-report-action').hide();
+                    $actionButtons.children('#hide-action').hide();
+                    $actionButtons.children('#restore-reported-item').hide();
+
+                    if (!isSelected) {
+                        $actionButtons.slideUp();
+                    } else if (isRemoved) {
+                        $actionButtons.children('#restore-reported-item').click(function () {
+                            $.get('/report-manager/restore-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                    .done(function () {
+                                        $(reportedCandidate).remove();
+                                        handleReportedItemRemovedFromList()
+                                    })
+                                    .fail(function () {
+                                        alert('An error occurred while restoring the report.');
+                                    });
+                        });
+
+                        $actionButtons.children('#restore-reported-item').show();
+                    } else {
+                        $actionButtons.children('#remove-report-action').click(function () {
+                            $('#confirmation-modal-remove-report')
+                                    .modal({
+                                        closable: false,
+                                        onDeny: function () {
+                                            console.log('cancel remove report');
+                                        },
+                                        onApprove: function () {
+                                            $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                                    .done(function (data) {
+                                                        console.log(data)
+                                                        $(reportedCandidate).remove();
+                                                        handleReportedItemRemovedFromList()
+                                                    })
+                                                    .fail(function () {
+                                                        alert('An error occurred while removing the report.');
+                                                    });
+                                        }
+                                    })
+                                    .modal('show')
+                            ;
+                        });
+                        $actionButtons.children('#hide-action').click(function () {
+                            $.get('/report-manager/remove-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                    .done(function () {
+                                        $(reportedCandidate).remove();
+                                        handleReportedItemRemovedFromList()
+                                    })
+                                    .fail(function () {
+                                        alert('An error occurred while hiding the report.');
+                                    });
+                        });
+
+                        $actionButtons.children('#remove-report-action').show();
+                        $actionButtons.children('#hide-action').show();
+                    }
+                }
+
+                /**
+                 * Update the container with the details of the selected item.
+                 * @param idReportCandidate {number} The id of the selected item.
+                 * @param reportedCandidate {HTMLElement} The selected item.
+                 * @param isSelected {boolean} true if the item is selected false otherwise.
+                 * @param isRemoved {boolean} true if the item is removed false otherwise.
+                 */
+                function updateSelectedItem(idReportCandidate, reportedCandidate, isSelected, isRemoved) {
+                    $errorDetailReportCandidate.hide();
+                    $errorContextReportCandidate.hide();
+
+                    $actionButtons.hide();
+                    $infoReportManagerContainer.slideUp();
+                    $detailReportCandidate.slideUp();
+                    $contextReportCandidate.slideUp();
+
+                    updateActionButtons(idReportCandidate, reportedCandidate, isSelected, isRemoved);
+
+                    if (!isSelected) {
+                        $('#no-selected-item').slideDown();
+                    } else {
+                        $('#no-selected-item').hide();
+                        $infoReportManagerContainer.addClass("loading");
+                        $infoReportManagerContainer.slideDown();
+
+
+                        $.get('/report-manager/detail/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
+                                .done(function (data) {
+                                    $actionButtons.slideDown();
+                                    $detailReportCandidate.slideDown();
+                                    getContextOfReportedCandidate(sequenceId, data.reporterId, $contextReportCandidate);
+
+                                    $('#reported-content').html(data.contentReported);
+
+                                    $('#report-reasons').empty();
+                                    data.reportReasonsI18N.forEach(function (reason) {
+                                        $('#report-reasons').append('<li>' + reason + '</li>');
+                                    });
+
+                                    if (data.reportComment == null) {
+                                        $('#report-comment-parent').hide()
+                                    } else {
+                                        $('#report-comment-parent').show()
+                                        $('#report-comment').html(data.reportComment);
+                                    }
+                                    $('#reporter').text(data.reporter);
+                                    $('#graderThatHaveBeenReported').text(data.graderThatHaveBeenReported);
+                                    if (data.type === "PEER_GRADING") {
+                                        $('#user-icon').show();
+                                        $('#laptop-icon').hide();
+                                    } else {
+                                        $('#user-icon').hide();
+                                        $('#laptop-icon').show();
+                                    }
+
+                                    $('#numberOfReport').text(data.numberOfReport);
+                                })
+                                .fail(function () {
+                                    $('#error-detail-report-candidate').slideDown();
+                                    $detailReportCandidate.slideUp();
+                                    $actionButtons.slideUp();
+                                })
+                                .always(function () {
+                                    $infoReportManagerContainer.removeClass("loading");
+                                });
+                    }
+                }
+
+                $('.ui.card').click(function () {
+                    let wasSelected = $(this).hasClass('selected');
+
+                    $('.ui.card').removeClass('selected');
+
+                    if (!wasSelected) {
+                        $(this).addClass('selected');
+                    }
+                    updateSelectedItem($(this).attr('id-reported-Candidate'), $(this), !wasSelected, $(this).data('is-removed'));
+                });
+            })
+        </script>
+    </aside>
+
+    <section>
+        <script>
+            $(function () {
+                $('.ui.accordion').accordion();
+            })
+        </script>
+
+        <!--/* Information abour the page */-->
+        <div class="ui message info" id="no-selected-item">
+            <div class="header" th:text="#{reportManager.title}">No item selected</div>
+            <div th:utext="#{reportManager.noItemSelected.description}">Please select an item to see its details.</div>
+        </div>
+
+        <!--/* Container of the details of the selected item */-->
+        <div id="info-report-manager-container" class="ui segment vertical">
+
+            <!--/* Title */-->
+            <h1><span th:text="#{reportManager.detail.title}"></span></h1>
+
+            <!--/* Error message */-->
+            <div class="ui message error" id="error-context-report-candidate" style="display:none;">
+                <div class="header" th:text="#{reportManager.error.context.title}"></div>
+                <p th:text="#{reportManager.error.context.description}"></p>
+            </div>
+            <!--/* Context of the evaluation */-->
+            <div class="ui segment styled fluid accordion" id="context-report-candidate" style="display: none;">
+                <!--/* Title of the accordion */-->
+                <div class="title">
+                    <h2><i class="dropdown icon"></i><span th:text="#{reportManager.context.title}"></span></h2>
+                </div>
+                <!--/* Content of the accordion */-->
+                <div class="content" id="content">
+                </div>
+            </div>
+
+            <!--/* Error message */-->
+            <div class="ui error message" id="error-detail-report-candidate" style="display:none;">
+                <div class="header" th:text="#{reportManager.error.detail.title}"></div>
+                <p th:text="#{reportManager.error.detail.description}"></p>
+            </div>
+            <!--/* Detail of the selected item */-->
+            <div id="detail-report-candidate"
+                 style="display: none;">
+
+                <!--/* Content */-->
+                <div style="display: flex;flex-direction: column;gap: 10px;">
+
+                    <!--/* Content reported */-->
+                    <div class="ui segment vertical">
+                        <h2 th:text="#{reportManager.detail.reportedContent.title}"></h2>
+                        <div class="ui segment" id="reported-content">
+                            Reported Content
+                        </div>
+                    </div>
+
+                    <!--/* Reasons of the report */-->
+                    <div class="ui segment vertical">
+                        <h2 th:text="#{reportManager.detail.reportReasons.title}"></h2>
+                        <ul id="report-reasons" class="ui list">
+                        </ul>
+                    </div>
+
+                    <!--/* Comment of the report */-->
+                    <div id="report-comment-parent" class="ui segment vertical">
+                        <h2 th:text="#{reportManager.detail.comment.title}"></h2>
+                        <div class="ui segment" id="report-comment">
+                            Comment
+                        </div>
+                    </div>
+
+                    <div class="ui segment vertical">
+                        <div class="ui two column very relaxed grid">
+                            <!--/* Author of the report */-->
+                            <div class="column">
+                                <h2 th:text="#{reportManager.detail.reporter.title}"></h2>
+                                <div class="ui compact segment">
+                                    <div style="display: flex; flex-direction: row">
+                                        <i class="user circle icon"></i>
+                                        <div id="reporter">Student</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--/* Author of the evaluation */-->
+                            <div class="column">
+                                <h2 th:text="#{reportManager.detail.studentReported.title}"></h2>
+                                <div class="ui compact segment">
+                                    <div style="display: flex; flex-direction: row">
+                                        <i class="user circle icon" id="user-icon"></i>
+                                        <i class="laptop icon" id="laptop-icon"></i>
+                                        <div id="graderThatHaveBeenReported">Student</div>
+                                    </div>
+                                </div>
+                                <span th:text="#{reportManager.detail.numberOfReport.title}"></span>
+                                <span class="ui label" id="numberOfReport">3</span>
+                            </div>
+                        </div>
+                        <style>
+                            .ui.vertical.divider.without-text::after,
+                            .ui.vertical.divider.without-text::before {
+                                height: 100%;
+                            }
+                        </style>
+                        <div class="ui vertical divider without-text"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--/* Action buttons group */-->
+        <div id="action-buttons" style="display: none; margin: 30px 0;">
+            <button class="ui button primary"
+                    id="hide-action"
+                    th:text="#{reportManager.button.hide}"
+                    th:data-tooltip="#{reportManager.button.hide.detail}"
+                    data-position="top left">
+                Hide for everyone
+            </button>
+            <button class="ui button negative"
+                    style="text-transform: inherit;"
+                    id="remove-report-action"
+                    th:text="#{reportManager.button.remove-report}"
+                    th:data-tooltip="#{reportManager.button.remove-report.detail}"
+                    data-position="top left">
+                Remove report
+            </button>
+            <button class="ui button primary"
+                    style="text-transform: inherit;"
+                    id="restore-reported-item"
+                    th:text="#{reportManager.button.unremove}"
+                    th:data-tooltip="#{reportManager.button.unremove.detail}"
+                    data-position="top left">
+                Restore evaluation
+            </button>
+        </div>
+
+        <!--/* Confirmation modal */-->
+        <div class="ui modal" id="confirmation-modal-remove-report">
+            <div class="header" th:text="#{reportManager.confirmation.remove-report.title}">Remove the report?</div>
+            <div class="content" th:utext="#{reportManager.confirmation.remove-report.description}">
+                Are you sure you want to remove this report?
+            </div>
+            <div class="actions">
+                <div class="ui cancel button">
+                    <span th:text="#{common.cancel}">Cancel</span>
+                </div>
+                <div class="ui primary ok button">
+                    <span th:text="#{reportManager.confirmation.remove-report.confirm}">Yes remove the report</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="modal-aside">
+
+    </div>
+
+    </body>
+</html>
