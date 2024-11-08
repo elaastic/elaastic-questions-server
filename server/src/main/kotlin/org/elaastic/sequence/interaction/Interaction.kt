@@ -18,9 +18,10 @@
 
 package org.elaastic.sequence.interaction
 
+import org.elaastic.activity.evaluation.PeerEvaluationMapping
 import org.elaastic.activity.results.ResponseDistributionConverter
 import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.sequence.ExplanationRecommendationMappingConverter
+import org.elaastic.activity.evaluation.PeerEvaluationMappingConverter
 import org.elaastic.questions.assignment.sequence.Sequence
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.activity.results.ResponsesDistribution
@@ -97,8 +98,8 @@ class Interaction(
     @Convert(converter = ResponseDistributionConverter::class)
     var results: ResponsesDistribution? = null
 
-    @Convert(converter = ExplanationRecommendationMappingConverter::class)
-    var explanationRecommendationMapping: ExplanationRecommendationMapping? = null
+    @Convert(converter = PeerEvaluationMappingConverter::class)
+    var explanationRecommendationMapping: PeerEvaluationMapping? = null
 
     @Transient
     fun hasAnyResult(): Boolean =

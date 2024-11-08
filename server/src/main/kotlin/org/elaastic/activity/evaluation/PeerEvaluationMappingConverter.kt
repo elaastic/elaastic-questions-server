@@ -16,19 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.questions.assignment.sequence
+package org.elaastic.activity.evaluation
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.elaastic.sequence.interaction.ExplanationRecommendationMapping
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 
 
 @Converter
-class ExplanationRecommendationMappingConverter :
-        AttributeConverter<ExplanationRecommendationMapping?, String?> {
+class PeerEvaluationMappingConverter :
+        AttributeConverter<PeerEvaluationMapping?, String?> {
 
     private val mapper: ObjectMapper = ObjectMapper().registerModule(
         KotlinModule.Builder()
@@ -41,17 +40,17 @@ class ExplanationRecommendationMappingConverter :
             .build()
     )
 
-    override fun convertToDatabaseColumn(attribute: ExplanationRecommendationMapping?): String? {
+    override fun convertToDatabaseColumn(attribute: PeerEvaluationMapping?): String? {
         return when(attribute) {
             null -> null
             else -> mapper.writeValueAsString(attribute)
         }
     }
 
-    override fun convertToEntityAttribute(dbData: String?): ExplanationRecommendationMapping? {
+    override fun convertToEntityAttribute(dbData: String?): PeerEvaluationMapping? {
         return when(dbData) {
             null -> null
-            else -> mapper.readValue(dbData, ExplanationRecommendationMapping::class.java)
+            else -> mapper.readValue(dbData, PeerEvaluationMapping::class.java)
         }
     }
 }

@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.interaction
+package org.elaastic.activity.evaluation
 
 
 typealias ResponseId = Long
 
-class ExplanationRecommendationMapping(val recommendationMap: Map<ResponseId, MutableList<ResponseId>>) {
+class PeerEvaluationMapping(val recommendationMap: Map<ResponseId, MutableList<ResponseId>>) {
 
     constructor(responses: List<ResponseId>) : this(
         responses.associate { it to mutableListOf<ResponseId>() }

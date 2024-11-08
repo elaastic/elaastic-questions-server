@@ -17,7 +17,7 @@
  */
 package org.elaastic.questions.assignment.ia
 
-import org.elaastic.sequence.interaction.ExplanationRecommendationMapping
+import org.elaastic.activity.evaluation.PeerEvaluationMapping
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
@@ -37,9 +37,9 @@ class ResponseRecommendationService(
 ) {
 
     fun computeRecommendations(responseList: List<Response>,
-                               nbEvaluation: Int): ExplanationRecommendationMapping {
+                               nbEvaluation: Int): PeerEvaluationMapping {
         responseList.map { ResponseInfo(it) }.let { allResponse ->
-            ExplanationRecommendationMapping(allResponse.map { it.id }).let { recommendationsMapping ->
+            PeerEvaluationMapping(allResponse.map { it.id }).let { recommendationsMapping ->
                 RecommendationResponsePool(
                         allResponse.filter { it.evaluable },
                         INCORRECT_RESPONSE_FIRST
@@ -78,7 +78,7 @@ class ResponseRecommendationService(
      */
     private fun computeRecommandations(forResponseList: List<ResponseInfo>,
                                        responsePool: RecommendationResponsePool,
-                                       recommendationsMapping: ExplanationRecommendationMapping
+                                       recommendationsMapping: PeerEvaluationMapping
     ) {
         forResponseList.forEach { forResponse ->
             var except = ArrayList<Long>(recommendationsMapping[forResponse.id])

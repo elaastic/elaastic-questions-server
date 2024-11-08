@@ -18,6 +18,7 @@
 
 package org.elaastic.sequence.interaction
 
+import org.elaastic.activity.evaluation.PeerEvaluationMapping
 import org.elaastic.questions.assignment.sequence.State
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
@@ -125,8 +126,8 @@ internal class InteractionRepositoryIntegrationTest(
     @Test
     fun `check ExplanationRecommendationMapping persistence`() {
         // Given :
-        val explanationRecommendationMapping =
-                ExplanationRecommendationMapping(
+        val peerEvaluationMapping =
+                PeerEvaluationMapping(
                         mapOf(
                                 1L to mutableListOf(1L,2L,3L,5L),
                                 3L to mutableListOf(4L, 128L)
@@ -141,13 +142,13 @@ internal class InteractionRepositoryIntegrationTest(
                 sequence = sequence
         )
                 .tWhen {
-                    it.explanationRecommendationMapping = explanationRecommendationMapping
+                    it.explanationRecommendationMapping = peerEvaluationMapping
                     interactionRepository.saveAndFlush(it)
                     entityManager.refresh(it)
                     it
                 }
                 .tThen {
-                    assertThat(it.explanationRecommendationMapping, equalTo(explanationRecommendationMapping))
+                    assertThat(it.explanationRecommendationMapping, equalTo(peerEvaluationMapping))
                 }
     }
 }
