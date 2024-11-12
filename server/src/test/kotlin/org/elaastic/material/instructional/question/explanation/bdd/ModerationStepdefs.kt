@@ -10,8 +10,9 @@ import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
 import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
 import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ResponseService
-import org.elaastic.sequence.Sequence
 import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
+import org.elaastic.sequence.Sequence
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.getAnyAssignment

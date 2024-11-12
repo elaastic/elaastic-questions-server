@@ -1,26 +1,22 @@
-package org.elaastic.questions.assignment.sequence.peergrading.draxo
+package org.elaastic.activity.evaluation.peergrading.draxo
 
+import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
+import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
+import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.assignment.LearnerAssignment
+import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.moderation.ReportReason
-import org.elaastic.questions.assignment.ExecutionContext
-import org.elaastic.questions.assignment.LearnerAssignment
-import org.elaastic.questions.assignment.QuestionType
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.interaction.InteractionService
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.criteria.Criteria
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.option.OptionId
-import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.subject.SubjectRepository
-import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.StatementRepository
-import org.elaastic.questions.test.FunctionalTestingService
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tGiven
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
-import org.elaastic.questions.test.interpreter.command.Phase
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
+import org.elaastic.sequence.ExecutionContext
+import org.elaastic.test.FunctionalTestingService
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tGiven
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
+import org.elaastic.test.interpreter.command.Phase
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -56,7 +52,10 @@ internal class DraxoPeerGradingServiceIntegrationTest(
 
             assertEquals(
                 0,
-                draxoPeerGradingService.countAllReportedNotHiddenForGrader(sequence.getResponseSubmissionInteraction(), grader),
+                draxoPeerGradingService.countAllReportedNotHiddenForGrader(
+                    sequence.getResponseSubmissionInteraction(),
+                    grader
+                ),
                 "No peerGrading reported for the grader"
             )
             learnersAssignementList
@@ -85,12 +84,18 @@ internal class DraxoPeerGradingServiceIntegrationTest(
         }.tThen("the two learner who answer, are mark as so") {
             assertEquals(
                 1,
-                draxoPeerGradingService.countAllReportedNotHiddenForGrader(sequence.getResponseSubmissionInteraction(), grader),
+                draxoPeerGradingService.countAllReportedNotHiddenForGrader(
+                    sequence.getResponseSubmissionInteraction(),
+                    grader
+                ),
                 "One peerGrading reported for the grader"
             )
             assertEquals(
                 0,
-                draxoPeerGradingService.countAllReportedNotHiddenForGrader(sequence.getResponseSubmissionInteraction(), learners[0]),
+                draxoPeerGradingService.countAllReportedNotHiddenForGrader(
+                    sequence.getResponseSubmissionInteraction(),
+                    learners[0]
+                ),
                 "One peerGrading reported for the grader"
             )
         }

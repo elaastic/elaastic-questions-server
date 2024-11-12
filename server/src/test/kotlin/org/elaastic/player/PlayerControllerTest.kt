@@ -37,6 +37,7 @@ import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.player.results.TeacherResultDashboardService
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.security.TestSecurityConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService

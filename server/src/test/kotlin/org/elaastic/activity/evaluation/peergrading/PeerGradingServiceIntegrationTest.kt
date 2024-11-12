@@ -1,7 +1,5 @@
 package org.elaastic.activity.evaluation.peergrading
 
-import org.elaastic.moderation.ReportReason
-import org.elaastic.moderation.UtilityGrade
 import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
 import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
@@ -14,7 +12,12 @@ import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.StatementRepository
 import org.elaastic.material.instructional.subject.SubjectRepository
 import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.moderation.ReportReason
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.player.dashboard.DashboardModelFactory
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
+import org.elaastic.sequence.ExecutionContext
+import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tGiven
@@ -23,8 +26,6 @@ import org.elaastic.test.directive.tWhen
 import org.elaastic.test.getAnyAssignment
 import org.elaastic.test.getAnySequence
 import org.elaastic.test.interpreter.command.Phase
-import org.elaastic.sequence.ExecutionContext
-import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.user.RoleService
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
@@ -666,7 +667,10 @@ class PeerGradingServiceIntegrationTest(
             assertEquals(learners[1], peerGradingReportedNotHidden.first().grader)
             assertEquals(learners[0], peerGradingReportedNotHidden.first().response.learner)
 
-            assertEquals(peerGradingReportedNotHidden.size, draxoPeerGradingService.countAllDraxoPeerGradingReported(sequence, false))
+            assertEquals(
+                peerGradingReportedNotHidden.size,
+                draxoPeerGradingService.countAllDraxoPeerGradingReported(sequence, false)
+            )
         }
     }
 
