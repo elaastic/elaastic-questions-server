@@ -20,6 +20,7 @@ package org.elaastic.player.assignmentview
 
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.ReadyForConsolidation
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State
 import org.elaastic.sequence.interaction.Interaction
@@ -82,32 +83,45 @@ object AssignmentOverviewModelFactory {
         sequence: Sequence,
         userActiveInteraction: Interaction?
     ): List<AssignmentOverviewModel.PhaseIcon> =
-        if (sequence.executionIsFaceToFace() || !teacher) {
-            when {
-                sequence.isStopped() ->
-                    if (sequence.resultsArePublished)
-                        listOf(chartIcon)
-                    else
-                        listOf(lockIcon)
+        resolveIcons(
+            teacher,
+            sequence.executionContext,
+            sequence.state,
+            sequence.resultsArePublished,
+            userActiveInteraction?.interactionType
+        )
 
-                else -> when (userActiveInteraction?.interactionType) {
+    fun resolveIcons(
+        teacher: Boolean,
+        executionContext: ExecutionContext,
+        state: State,
+        resultsArePublished: Boolean,
+        activeInteractionType: InteractionType?,
+    ): List<AssignmentOverviewModel.PhaseIcon> =
+        if (executionContext == ExecutionContext.FaceToFace || !teacher) {
+            if (state == State.afterStop) {
+                if (resultsArePublished) {
+                    listOf(chartIcon)
+                } else {
+                    listOf(lockIcon)
+                }
+            } else {
+                when (activeInteractionType) {
                     null -> listOf(minusIcon)
                     InteractionType.ResponseSubmission -> listOf(commentIcon)
                     InteractionType.Evaluation -> listOf(commentsIcon)
                     InteractionType.Read -> listOf(chartIcon)
                 }
-
             }
-
         } else { // Distance & blended for teacher
-            when (sequence.state) {
+            when (state) {
                 State.beforeStart -> listOf(minusIcon)
                 State.afterStop ->
-                    if (sequence.resultsArePublished) listOf(chartIcon)
+                    if (resultsArePublished) listOf(chartIcon)
                     else listOf(lockIcon)
 
                 else ->
-                    if (sequence.resultsArePublished) listOf(commentIcon, commentsIcon, chartIcon)
+                    if (resultsArePublished) listOf(commentIcon, commentsIcon, chartIcon)
                     else listOf(commentIcon, commentsIcon)
             }
         }
