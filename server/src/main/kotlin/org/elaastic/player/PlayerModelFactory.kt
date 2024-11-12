@@ -17,6 +17,7 @@
  */
 package org.elaastic.player
 
+import org.elaastic.common.web.MessageBuilder
 import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State

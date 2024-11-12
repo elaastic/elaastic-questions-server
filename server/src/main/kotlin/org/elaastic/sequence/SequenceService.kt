@@ -18,18 +18,19 @@
 
 package org.elaastic.sequence
 
-import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ResultsService
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.analytics.lrs.EventLogService
-import org.elaastic.player.PlayerController
-import org.elaastic.player.steps.SequenceStatistics
-import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.material.instructional.question.explanation.FakeExplanation
 import org.elaastic.material.instructional.question.explanation.FakeExplanationRepository
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.player.PlayerController
+import org.elaastic.player.steps.SequenceStatistics
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ReadSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
@@ -37,7 +38,6 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -369,8 +369,7 @@ class SequenceService(
     /**
      * @param sequence [Sequence] to get the information
      * @param teacher [Boolean] to know if the user is a teacher
-     * @param isRemoved [Boolean] false if we want the reported evaluation to
-     *    moderate and false otherwise
+     * @param isRemoved [Boolean] false if we want the reported evaluation to moderate and false otherwise
      * @return [Int] for the reported evaluation
      * @throws IllegalStateException if the evaluation phase is not initialized
      */

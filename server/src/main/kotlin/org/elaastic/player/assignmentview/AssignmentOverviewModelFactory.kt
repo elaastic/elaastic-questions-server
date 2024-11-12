@@ -67,13 +67,13 @@ object AssignmentOverviewModelFactory {
                     it,
                     sequenceToUserActiveInteraction[it]
                 ),
-                revisionTag = resolveRevisionTag(it, assignment.readyForConsolidation)
+                revisionTag = resolveRevisionTag(it, assignment.readyForConsolidation),
                 nbReportTotal = nbReportBySequence[it]?.first ?: 0,
                 nbReportToModerate = nbReportBySequence[it]?.second ?: 0
             )
         },
         selectedSequenceId = selectedSequenceId,
-        isRevisionMode = assignment.revisionMode != ReadyForConsolidation.NotAtAll
+        isRevisionMode = assignment.readyForConsolidation != ReadyForConsolidation.NotAtAll,
         indexOfSelectedSequence = assignment.sequences.indexOfFirst { it.id == selectedSequenceId }
     )
 
@@ -115,7 +115,7 @@ object AssignmentOverviewModelFactory {
     private fun resolveRevisionTag(
         sequence: Sequence,
         readyForConsolidation: ReadyForConsolidation
-    ): Boolean = when (readyForConsolidation){
+    ): Boolean = when (readyForConsolidation) {
         ReadyForConsolidation.NotAtAll -> false
         ReadyForConsolidation.Immediately -> true
         ReadyForConsolidation.AfterTeachings -> sequence.resultsArePublished && (sequence.executionIsFaceToFace() || sequence.isStopped())
@@ -154,11 +154,11 @@ object AssignmentOverviewModelFactory {
                     selectedSequence,
                     userActiveInteraction
                 ),
-                revisionTag = resolveRevisionTag(selectedSequence, assignment.revisionMode)
+                revisionTag = resolveRevisionTag(selectedSequence, assignment.readyForConsolidation)
             )
         ),
         selectedSequenceId = selectedSequence.id,
-        isRevisionMode = assignment.revisionMode != RevisionMode.NotAtAll,
+        isRevisionMode = assignment.readyForConsolidation != ReadyForConsolidation.NotAtAll,
         indexOfSelectedSequence = assignment.sequences.indexOfFirst { it.id == selectedSequence.id }
     )
 }

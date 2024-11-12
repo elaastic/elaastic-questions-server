@@ -17,14 +17,15 @@
  */
 package org.elaastic.activity.evaluation.peergrading.draxo
 
-import org.elaastic.moderation.UtilityGrade
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.assignment.AssignmentService
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.player.evaluation.EvaluationModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.player.evaluation.draxo.DraxoEvaluationModel
-import org.elaastic.assignment.AssignmentService
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
@@ -125,15 +126,13 @@ class DraxoPeerGradingController(
 
 
     /**
-     * Handle the submission of a DRAXO evaluation utility grade through
-     * asynchronous request
+     * Handle the submission of a DRAXO evaluation utility grade through asynchronous request
      *
      * @param authentication the current user authentication
      * @param model the model
      * @param evaluationId the id of the evaluation to update
      * @param utilityGrade the utility grade to set
-     * @return [ResponseSubmissionAsynchronous] the response of the submission
-     *    in JSON format
+     * @return [ResponseSubmissionAsynchronous] the response of the submission in JSON format
      * @see ResponseSubmissionAsynchronous
      */
     @ResponseBody
@@ -171,16 +170,14 @@ class DraxoPeerGradingController(
 
 
     /**
-     * Handle the submission of a DRAXO evaluation report through asynchronous
-     * request
+     * Handle the submission of a DRAXO evaluation report through asynchronous request
      *
      * @param authentication the current user authentication
      * @param model the model
      * @param evaluationId the id of the evaluation to update
      * @param reasons the reasons to report the evaluation
      * @param otherReasonComment the comment of the other reason
-     * @return [ResponseSubmissionAsynchronous] the response of the submission
-     *    in JSON format
+     * @return [ResponseSubmissionAsynchronous] the response of the submission in JSON format
      */
     @ResponseBody
     @PostMapping("/report-draxo-evaluation")
@@ -218,14 +215,12 @@ class DraxoPeerGradingController(
     }
 
     /**
-     * Handle the submission of a hiding request for a DRAXO evaluation through
-     * asynchronous request
+     * Handle the submission of a hiding request for a DRAXO evaluation through asynchronous request
      *
      * @param authentication the current user authentication
      * @param model the model
      * @param id the id of the evaluation to hide
-     * @return [ResponseSubmissionAsynchronous] the response of the submission
-     *    in JSON format
+     * @return [ResponseSubmissionAsynchronous] the response of the submission in JSON format
      * @see ResponseSubmissionAsynchronous
      */
     @ResponseBody
@@ -271,14 +266,12 @@ class DraxoPeerGradingController(
     }
 
     /**
-     * Handle the submission of an unhiding request for a DRAXO evaluation
-     * through asynchronous request
+     * Handle the submission of an unhiding request for a DRAXO evaluation through asynchronous request
      *
      * @param authentication the current user authentication
      * @param model the model
      * @param id the id of the evaluation to unhide
-     * @return [ResponseSubmissionAsynchronous] the response of the submission
-     *    in JSON format
+     * @return [ResponseSubmissionAsynchronous] the response of the submission in JSON format
      * @see ResponseSubmissionAsynchronous
      */
     @ResponseBody
@@ -328,10 +321,8 @@ class DraxoPeerGradingController(
      * Response for submission through asynchronous request
      *
      * @param success true if the submission was successful, false otherwise
-     * @param header the header of the response (Meant to be used in a
-     *    semantic-ui message)
-     * @param content the content of the response (Meant to be used in a
-     *    semantic-ui message)
+     * @param header the header of the response (Meant to be used in a semantic-ui message)
+     * @param content the content of the response (Meant to be used in a semantic-ui message)
      */
     data class ResponseSubmissionAsynchronous(val success: Boolean, val header: String, val content: String)
 }

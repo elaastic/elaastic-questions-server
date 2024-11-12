@@ -1,14 +1,14 @@
 package org.elaastic.moderation
 
+import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
-import org.elaastic.questions.assignment.AssignmentService
-import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
+import org.elaastic.assignment.AssignmentService
+import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.player.components.assignmentOverview.AssignmentOverviewModelFactory
+import org.elaastic.sequence.SequenceService
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.http.ResponseEntity

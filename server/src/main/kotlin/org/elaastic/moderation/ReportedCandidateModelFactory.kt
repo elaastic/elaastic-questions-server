@@ -18,8 +18,8 @@
 
 package org.elaastic.moderation
 
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
 
 object ReportedCandidateModelFactory {
 

@@ -18,7 +18,6 @@
 
 package org.elaastic.player.assignmentview
 
-import org.elaastic.questions.assignment.sequence.Sequence
 
 /**
  * Model for the assignment overview page.
@@ -58,9 +57,8 @@ data class AssignmentOverviewModel(
     val isSingleSequence: Boolean = sequences.size == 1
 
     /**
-     * Information about a sequence.
-     * Use to display information about a sequence in the list of sequences in the assignment overview page.
-     * Use by the assignmentOverview component in `_assignment-overview.html`
+     * Information about a sequence. Use to display information about a sequence in the list of sequences in the
+     * assignment overview page. Use by the assignmentOverview component in `_assignment-overview.html`
      */
     data class SequenceInfo(
         val id: Long,

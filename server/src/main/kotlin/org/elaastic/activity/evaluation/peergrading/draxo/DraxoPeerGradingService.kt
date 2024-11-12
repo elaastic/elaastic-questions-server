@@ -18,14 +18,17 @@
 
 package org.elaastic.questions.assignment.sequence.peergrading.draxo
 
-import org.elaastic.questions.assignment.LearnerAssignmentService
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.interaction.Interaction
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseRepository
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
-import org.elaastic.questions.directory.User
+
+import org.elaastic.activity.evaluation.peergrading.PeerGradingType
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseRepository
+import org.elaastic.activity.response.ResponseService
+import org.elaastic.assignment.LearnerAssignmentService
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -82,16 +85,14 @@ class DraxoPeerGradingService(
      *
      * @param id the id of the peer grading.
      * @return the Draxo peer grading.
-     * @throws IllegalArgumentException if no Draxo peer grading is found with
-     *    the given id.
+     * @throws IllegalArgumentException if no Draxo peer grading is found with the given id.
      */
     fun getDraxoPeerGrading(id: Long): DraxoPeerGrading =
         draxoPeerGradingRepository.findByIdAndType(id, PeerGradingType.DRAXO)
             ?: error("No Draxo peer grading found with id $id")
 
     /**
-     * Return the list of all the DRAXO peer grading that have been reported
-     * and are not hidden by the teacher.
+     * Return the list of all the DRAXO peer grading that have been reported and are not hidden by the teacher.
      *
      * @param sequence the sequence
      * @return the list of DRAXO peer grading
@@ -104,8 +105,7 @@ class DraxoPeerGradingService(
 
     /**
      * @param sequence the sequence
-     * @return the number of DRAXO peer grading that have been reported and are
-     *    not hidden by the teacher
+     * @return the number of DRAXO peer grading that have been reported and are not hidden by the teacher
      */
     fun countAllDraxoPeerGradingReported(sequence: Sequence, removed: Boolean): Int =
         draxoPeerGradingRepository.countAllReported(

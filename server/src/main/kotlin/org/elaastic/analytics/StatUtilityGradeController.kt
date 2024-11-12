@@ -1,16 +1,16 @@
 package org.elaastic.analytics
 
+import org.elaastic.activity.evaluation.peergrading.PeerGrading
+import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
+import org.elaastic.activity.evaluation.peergrading.PeerGradingType
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.common.util.requireAccess
 import org.elaastic.moderation.ReportCandidate
 import org.elaastic.moderation.UtilityGrade
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGrading
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingRepository
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingType
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
