@@ -92,8 +92,15 @@ class Sequence(
     @field:Enumerated(EnumType.STRING)
     var evaluationPhaseConfig: EvaluationPhaseConfig = EvaluationPhaseConfig.ALL_AT_ONCE,
 
-    @field:OneToOne
-    var activeInteraction: Interaction? = null,
+    activeInteraction: Interaction? = null,
+
+    /**
+     * The type of the [activeInteraction]
+     *
+     * @see InteractionType
+     */
+    @field:Enumerated(EnumType.STRING)
+    var activeInteractionType: InteractionType? = activeInteraction?.interactionType,
 
     /**
      * The current state of the [activeInteraction]
@@ -116,6 +123,15 @@ class Sequence(
 
 ) : AbstractJpaPersistable<Long>(),
     Comparable<Sequence>, SequenceProgress {
+
+    @field:OneToOne
+    var activeInteraction = activeInteraction
+        set(value) {
+            field = value
+            value?.let {
+                activeInteractionType = it.interactionType
+            }
+        }
 
     @Version
     var version: Long? = null
