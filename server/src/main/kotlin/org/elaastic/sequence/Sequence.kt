@@ -19,26 +19,25 @@
 package org.elaastic.sequence
 
 import org.elaastic.assignment.Assignment
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.material.instructional.statement.Statement
-import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.InteractionType
+import org.elaastic.sequence.State.*
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
-import org.elaastic.user.User
-import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.lang.IllegalStateException
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 
 /**
- * The sequence entity manages the step of submission, evaluation and read
- * of a statement.
+ * The sequence entity manages the step of submission, evaluation and read of a statement.
  *
  * A sequence uses a statement and is contained in an assignment.
  *
@@ -70,8 +69,8 @@ class Sequence(
     var rank: Int = 0,
 
     /**
-     * Flag that indicates if phase 2 is skipped. Sometime, depending on the
-     * student-first submission, phase 2 can be skipped.
+     * Flag that indicates if phase 2 is skipped. Sometime, depending on the student-first submission, phase 2 can be
+     * skipped.
      */
     @Column(name = "phase_2_skipped")
     var phase2Skipped: Boolean = false,
@@ -96,17 +95,21 @@ class Sequence(
     @field:OneToOne
     var activeInteraction: Interaction? = null,
 
+    /**
+     * The current state of the [activeInteraction]
+     *
+     * @see State
+     */
     @field:Enumerated(EnumType.STRING)
     var state: State = State.beforeStart,
 
     var resultsArePublished: Boolean = false,
 
     /**
-     * Flag that indicates if the ChatGPT evaluation is enabled. If true,
-     * ChatGPT will submit an evaluation for each student response.
+     * Flag that indicates if the ChatGPT evaluation is enabled. If true, ChatGPT will submit an evaluation for each
+     * student response.
      *
-     * @see
-     *     org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
+     * @see org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
      */
     var chatGptEvaluationEnabled: Boolean = false
 
