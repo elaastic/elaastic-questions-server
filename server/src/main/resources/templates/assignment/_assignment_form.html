@@ -85,7 +85,7 @@
            togglz:active="'REVISION_ASSIGNMENT'">
         <label th:text="#{assignment.autorize.readyForConsolidation}">Ce sujet peut servir aux révisions</label>
         <div class="field ui buttons">
-            <input type="hidden" name="readyForConsolidation" id="hiddenRevisionMode" th:field="*{revisionMode}"/>
+            <input type="hidden" name="readyForConsolidation" id="hiddenRevisionMode" th:field="*{readyForConsolidation}"/>
             <span>
                 <input type="radio" name="readyForConsolidation" hidden id="revisionModeBtn1"
                        onchange="updateRevisionMode('NotAtAll')" value="NotAtAll" required="true" checked="true">
