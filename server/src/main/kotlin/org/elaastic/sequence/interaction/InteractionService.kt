@@ -105,7 +105,7 @@ class InteractionService(
                         interaction,
                         1
                     ).let { responses ->
-                        interaction.explanationRecommendationMapping =
+                        interaction.peerEvaluationMapping =
                             responseRecommendationService.computeRecommendations(
                                 responses,
                                 (interaction.sequence.getEvaluationInteraction().specification as EvaluationSpecification)

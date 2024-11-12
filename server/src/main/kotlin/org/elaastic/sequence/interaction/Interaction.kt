@@ -99,7 +99,8 @@ class Interaction(
     var results: ResponsesDistribution? = null
 
     @Convert(converter = PeerEvaluationMappingConverter::class)
-    var explanationRecommendationMapping: PeerEvaluationMapping? = null
+    @Column(name = "explanation_recommendation_mapping")
+    var peerEvaluationMapping: PeerEvaluationMapping? = null
 
     @Transient
     fun hasAnyResult(): Boolean =

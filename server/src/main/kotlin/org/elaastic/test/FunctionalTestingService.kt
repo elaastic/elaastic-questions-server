@@ -14,7 +14,6 @@ import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.player.PlayerController
-import org.elaastic.questions.test.interpreter.command.*
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService
@@ -77,7 +76,7 @@ class FunctionalTestingService(
             Assignment(
                 owner = subject.owner,
                 title = title,
-                revisionMode = ReadyForConsolidation.AfterTeachings
+                readyForConsolidation = ReadyForConsolidation.AfterTeachings
             )
         )
 
@@ -87,7 +86,7 @@ class FunctionalTestingService(
             Assignment(
                 owner = subject.owner,
                 title = title,
-                revisionMode = ReadyForConsolidation.Immediately
+                readyForConsolidation = ReadyForConsolidation.Immediately
             )
         )
 

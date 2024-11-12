@@ -85,7 +85,7 @@ class Assignment(
      */
     @Column(name = "revision_mode")
     @Enumerated(EnumType.STRING)
-    var revisionMode: ReadyForConsolidation = ReadyForConsolidation.NotAtAll
+    var readyForConsolidation: ReadyForConsolidation = ReadyForConsolidation.NotAtAll
 
 ) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
 
@@ -134,7 +134,7 @@ class Assignment(
         this.scholarYear = otherAssignment.scholarYear
         this.description = otherAssignment.description
         this.acceptAnonymousUsers = otherAssignment.acceptAnonymousUsers
-        this.revisionMode = otherAssignment.revisionMode
+        this.readyForConsolidation = otherAssignment.readyForConsolidation
     }
 
     /**

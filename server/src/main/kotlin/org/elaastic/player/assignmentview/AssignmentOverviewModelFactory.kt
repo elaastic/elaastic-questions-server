@@ -67,7 +67,7 @@ object AssignmentOverviewModelFactory {
                     it,
                     sequenceToUserActiveInteraction[it]
                 ),
-                revisionTag = resolveRevisionTag(it, assignment.revisionMode),
+                revisionTag = resolveRevisionTag(it, assignment.readyForConsolidation)
                 nbReportTotal = nbReportBySequence[it]?.first ?: 0,
                 nbReportToModerate = nbReportBySequence[it]?.second ?: 0
             )

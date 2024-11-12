@@ -136,7 +136,7 @@ class AssignmentController(
             if (!model.containsAttribute("assignment")) {
                 model.addAttribute(
                     "assignment",
-                    AssignmentData(owner = user, subject = assignment.subject!!, readyForConsolidation = assignment.revisionMode)
+                    AssignmentData(owner = user, subject = assignment.subject!!, readyForConsolidation = assignment.readyForConsolidation)
                 )
             }
             return "assignment/create"
@@ -263,7 +263,7 @@ class AssignmentController(
                 scholarYear = scholarYear,
                 audience = audience,
                 acceptAnonymousUsers = acceptAnonymousUsers,
-                revisionMode = readyForConsolidation,
+                readyForConsolidation = readyForConsolidation,
             ).let {
                 it.id = id
                 it.version = version

@@ -385,28 +385,28 @@ class BootstrapService(
                 title = subject.title + " - Face à face - Finished",
                 description = "Exercice en classe",
                 audience = "groupe A1",
-                revisionMode = ReadyForConsolidation.NotAtAll
+                readyForConsolidation = ReadyForConsolidation.NotAtAll
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Face à face",
                 description = "Exercice en classe",
                 audience = "groupe A2",
-                revisionMode = ReadyForConsolidation.AfterTeachings
+                readyForConsolidation = ReadyForConsolidation.AfterTeachings
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Distant",
                 description = "Exercice en classe",
                 audience = "groupe C",
-                revisionMode = ReadyForConsolidation.Immediately
+                readyForConsolidation = ReadyForConsolidation.Immediately
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Blended",
                 description = "Exercice en classe",
                 audience = "groupe G",
-                revisionMode = ReadyForConsolidation.AfterTeachings
+                readyForConsolidation = ReadyForConsolidation.AfterTeachings
             )
         )
 

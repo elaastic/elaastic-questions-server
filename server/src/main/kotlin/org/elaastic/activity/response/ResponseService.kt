@@ -93,7 +93,7 @@ class ResponseService(
                 1,
                 user
             )?.let { userResponse ->
-                sequence.getResponseSubmissionInteraction().explanationRecommendationMapping?.getRecommandation(
+                sequence.getResponseSubmissionInteraction().peerEvaluationMapping?.getRecommandation(
                     userResponse.id!!
                 )?.let { responseRepository.getAllByIdIn(it) }
             } ?: listOf()
@@ -117,7 +117,7 @@ class ResponseService(
                 1,
                 user
             )?.let { userResponse ->
-                sequence.getResponseSubmissionInteraction().explanationRecommendationMapping?.getRecommandation(
+                sequence.getResponseSubmissionInteraction().peerEvaluationMapping?.getRecommandation(
                     userResponse.id!!
                 )?.let { responseRepository.getAllByIdIn(it) }
             } ?: listOf()

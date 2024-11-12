@@ -142,13 +142,13 @@ internal class InteractionRepositoryIntegrationTest(
                 sequence = sequence
         )
                 .tWhen {
-                    it.explanationRecommendationMapping = peerEvaluationMapping
+                    it.peerEvaluationMapping = peerEvaluationMapping
                     interactionRepository.saveAndFlush(it)
                     entityManager.refresh(it)
                     it
                 }
                 .tThen {
-                    assertThat(it.explanationRecommendationMapping, equalTo(peerEvaluationMapping))
+                    assertThat(it.peerEvaluationMapping, equalTo(peerEvaluationMapping))
                 }
     }
 }

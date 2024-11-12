@@ -59,7 +59,7 @@ class PracticeSubjectService(
                         .map { sequence ->
                             PracticeQuestionFactory.buildQuestion(
                                 sequence,
-                                if (assignment.revisionMode.equals(ReadyForConsolidation.Immediately))
+                                if (assignment.readyForConsolidation.equals(ReadyForConsolidation.Immediately))
                                    emptyList()
                                 else findBestExplanations(sequence)
                             )
@@ -70,8 +70,8 @@ class PracticeSubjectService(
             }
 
     fun isSequenceReadyToPractice(sequence: Sequence) =
-        sequence.assignment?.revisionMode == ReadyForConsolidation.Immediately ||
-            sequence.assignment?.revisionMode == ReadyForConsolidation.AfterTeachings
+        sequence.assignment?.readyForConsolidation == ReadyForConsolidation.Immediately ||
+            sequence.assignment?.readyForConsolidation == ReadyForConsolidation.AfterTeachings
             && sequence.resultsArePublished
             && (sequence.executionIsFaceToFace() || sequence.isStopped())
 
