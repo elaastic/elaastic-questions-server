@@ -81,14 +81,14 @@ object AssignmentOverviewModelFactory {
     private fun resolveIcons(
         teacher: Boolean,
         sequence: Sequence,
-        userActiveInteraction: Interaction?
+        interaction: Interaction?
     ): List<AssignmentOverviewModel.PhaseIcon> =
         resolveIcons(
             teacher,
             sequence.executionContext,
             sequence.state,
             sequence.resultsArePublished,
-            userActiveInteraction?.interactionType
+            interaction?.interactionType
         )
 
     fun resolveIcons(
