@@ -39,7 +39,6 @@ object AssignmentOverviewModelFactory {
         teacher: Boolean,
         assignment: Assignment,
         nbRegisteredUser: Int,
-        sequenceToUserActiveInteraction: Map<Sequence, Interaction?>,
         selectedSequenceId: Long? = null,
         nbReportBySequence: Map<Sequence, Pair<Int, Int>> = emptyMap(),
     ): AssignmentOverviewModel = AssignmentOverviewModel(
@@ -126,7 +125,6 @@ object AssignmentOverviewModelFactory {
         teacher: Boolean,
         assignment: Assignment,
         nbRegisteredUser: Int,
-        userActiveInteraction: Interaction?,
         selectedSequence: Sequence
     ): AssignmentOverviewModel = AssignmentOverviewModel(
         teacher = teacher,

@@ -58,7 +58,6 @@ object PlayerModelFactory {
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
                 assignment = assignment,
-                sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
                 teacher = true,
                 nbReportBySequence = nbReportBySequence,
@@ -85,7 +84,6 @@ object PlayerModelFactory {
                 teacher = true,
                 assignment = assignment,
                 nbRegisteredUser = nbRegisteredUsers,
-                userActiveInteraction = sequenceToUserActiveInteraction[sequence],
                 selectedSequence = sequence,
             )
         )
@@ -108,7 +106,6 @@ object PlayerModelFactory {
             assignmentOverviewModel = AssignmentOverviewModelFactory.build(
                 nbRegisteredUser = nbRegisteredUsers,
                 assignment = assignment,
-                sequenceToUserActiveInteraction = sequenceToUserActiveInteraction,
                 selectedSequenceId = sequence.id,
                 teacher = false,
             ),
