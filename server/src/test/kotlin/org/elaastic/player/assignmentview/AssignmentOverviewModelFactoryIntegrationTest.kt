@@ -144,4 +144,113 @@ class AssignmentOverviewModelFactoryIntegrationTest(
         }
     }
 
+    @Test
+    fun `test resolveIcons with sequence and Interaction in Distance context`() {
+        val executionContext = ExecutionContext.Distance
+
+        lateinit var sequence: Sequence
+        tGiven("a sequence") {
+            val teacher = integrationTestingService.getTestTeacher()
+            sequence = functionalTestingService.generateSequence(teacher)
+
+            assertEquals(sequence.state, State.beforeStart, "A sequence who is not started, should have a state beforeStart")
+            assertNull(sequence.activeInteraction, "A sequence who is not started, should not have an active interaction")
+            assertNull(sequence.activeInteractionType, "A sequence who is not started, should not have an active interaction type")
+
+            testResolveIcons(listOf(minus), true, sequence, message = "A sequence who is not started, should have a minus icon")
+        }.tWhen ("The sequence is start with Distance context") {
+            functionalTestingService.startSequence(sequence, executionContext)
+        }.tThen ("Then all interactions are in show state, the active interaction is not null and is a Read and the result are not published") {
+            assertEquals(sequence.state, State.show, "A sequence who is started, should have the `show` state")
+            assertNotNull(sequence.activeInteraction, "A sequence who is started, should have an active interaction")
+            sequence.interactions.values.forEach {
+                assertEquals(it.state, State.show, "All interactions should be in the `show` state")
+            }
+            assertEquals(sequence.activeInteraction?.state, State.show, "The active interaction should be in the `show` state")
+            assertNotNull(sequence.activeInteractionType, "A sequence who is started, should have an active interaction type")
+            assertEquals(sequence.activeInteractionType, sequence.activeInteraction?.interactionType, "The active interaction type should be the same as the active interaction")
+            assertEquals(sequence.activeInteractionType, InteractionType.Read, "A sequence who is started, should have an active interaction type of Read")
+
+            assertTrue(sequence.resultsArePublished, "The results should be published")
+
+            testResolveIcons(listOf(comment, comments, chart), true, sequence, message = "A sequence who is just started in Distance context, should have a comment icon")
+        }.tWhen("We unpublished the result") {
+            functionalTestingService.unpublishResults(sequence)
+        }.tThen("The icons are comment, comments") {
+            assertFalse(sequence.resultsArePublished, "The results shouldn't be published")
+
+            testResolveIcons(listOf(comment, comments), true, sequence, message = "A sequence who is started in Distance context and the result are published, should have a comment, comments and chart icon")
+        }.tWhen("We stop the sequence") {
+            functionalTestingService.stopSequence(sequence)
+        }.tThen("The icon is lock") {
+            assertFalse(sequence.resultsArePublished, "The results should not be published")
+
+            testResolveIcons(listOf(lock), true, sequence, message = "A sequence who is stopped and the result are not published should have a lock icon")
+        }.tWhen("We published the result") {
+            functionalTestingService.publishResults(sequence)
+        }.tThen("The icon is chart") {
+            assertEquals(sequence.state, State.afterStop, "A sequence who is stopped, should have the `afterStop` state")
+            assertTrue(sequence.resultsArePublished, "The results should be published")
+
+            testResolveIcons(listOf(chart), true, sequence, message = "A sequence who is stopped and the result are published should have a chart icon")
+        }
+    }
+
+    @Test
+    fun `test resolveIcons with sequence and Interaction in Blended context`() {
+        val executionContext = ExecutionContext.Blended
+
+        lateinit var sequence: Sequence
+        tGiven("a sequence") {
+            val teacher = integrationTestingService.getTestTeacher()
+            sequence = functionalTestingService.generateSequence(teacher)
+
+            assertEquals(sequence.state, State.beforeStart, "A sequence who is not started, should have a state beforeStart")
+            assertNull(sequence.activeInteraction, "A sequence who is not started, should not have an active interaction")
+            assertNull(sequence.activeInteractionType, "A sequence who is not started, should not have an active interaction type")
+
+            testResolveIcons(listOf(minus), true, sequence, message = "A sequence who is not started, should have a minus icon")
+        }.tWhen ("The sequence is start with Distance context") {
+            functionalTestingService.startSequence(sequence, executionContext)
+        }.tThen ("Then all interactions are in show state (except the Read interaction), the active interaction is not null and is a Read and the result are not published") {
+            assertEquals(sequence.state, State.show, "A sequence who is started, should have the `show` state")
+            assertNotNull(sequence.activeInteraction, "A sequence who is started, should have an active interaction")
+            sequence.interactions.values.forEach {
+                if (it.interactionType != InteractionType.Read) {
+                    assertEquals(it.state, State.show, "The ${it.interactionType} interaction should be in the `show` state")
+                } else {
+                    assertEquals(it.state, State.beforeStart, "The ${it.interactionType} interaction should be in the `beforeStart` state")
+                }
+            }
+
+            assertEquals(sequence.activeInteraction?.state, State.beforeStart, "The active interaction (Read) should be in the `show` state")
+            assertNotNull(sequence.activeInteractionType, "A sequence who is started, should have an active interaction type")
+            assertEquals(sequence.activeInteractionType, sequence.activeInteraction?.interactionType, "The active interaction type should be the same as the active interaction")
+            assertEquals(sequence.activeInteractionType, InteractionType.Read, "A sequence who is started, should have an active interaction type of Read")
+
+            assertFalse(sequence.resultsArePublished, "The results shouldn't be published")
+
+            testResolveIcons(listOf(comment, comments), true, sequence, message = "A sequence who is just started in Distance context, should have a comment and a comments icon")
+        }.tWhen("We published the result") {
+            functionalTestingService.publishResults(sequence)
+        }.tThen("The icons are comment, comments, chart") {
+            assertTrue(sequence.resultsArePublished, "The results should be published")
+
+            testResolveIcons(listOf(comment, comments, chart), true, sequence, message = "A sequence who is started in Distance context and the result are published, should have a comment, comments and chart icon")
+        }.tWhen("We stop the sequence") {
+            functionalTestingService.stopSequence(sequence)
+        }.tThen("The icon is chart") {
+            assertEquals(sequence.state, State.afterStop, "A sequence who is stopped, should have the `afterStop` state")
+            assertTrue(sequence.resultsArePublished, "The results should be published")
+
+            testResolveIcons(listOf(chart), true, sequence, message = "A sequence who is stopped and the result are published should have a chart icon")
+        }.tWhen("We unpublished the result") {
+            functionalTestingService.unpublishResults(sequence)
+        }.tThen("The icon is lock") {
+            assertFalse(sequence.resultsArePublished, "The results should not be published")
+
+            testResolveIcons(listOf(lock), true, sequence, message = "A sequence who is stopped and the result are not published should have a lock icon")
+        }
+    }
+
 }
