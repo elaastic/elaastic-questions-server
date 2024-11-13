@@ -166,6 +166,22 @@ class FunctionalTestingService(
                 }
             }
 
+    /**
+     * Generate an Assignment ready to use
+     */
+    fun generateAssignement(user: User): Assignment {
+        val subject = generateSubjectWithQuestionsAndAssignments(user)
+        return subject.assignments.first()
+    }
+
+    /**
+     * Generate a sequence ready to use
+     */
+    fun generateSequence(user: User): Sequence {
+        val assignment = generateAssignement(user)
+        return assignment.sequences.first()
+    }
+
     fun startSequence(
         sequence: Sequence,
         executionContext: ExecutionContext = ExecutionContext.FaceToFace,
