@@ -5,7 +5,6 @@ import org.elaastic.test.interpreter.command.NextPhase
 import org.elaastic.test.interpreter.command.PublishResults
 import org.elaastic.test.interpreter.command.StartSequence
 import org.elaastic.test.interpreter.command.StopSequence
-import org.elaastic.test.*
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.*
 import org.junit.jupiter.api.Test
@@ -24,7 +23,7 @@ internal class FunctionTestingServiceIntegrationTests(
     @Test
     fun `3 sequences should be started`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignmentsReadyToPratice(teacher)
 
         val sequences = subject.getAnyAssignment().getAnyNSequences(3)
 
@@ -45,7 +44,7 @@ internal class FunctionTestingServiceIntegrationTests(
     @Test
     fun `publish the results of a sequence`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignmentsReadyToPratice(teacher)
         val sequence = subject.getAnyAssignment().getAnySequence()
 
         assertThat(sequence.resultsArePublished, equalTo(false))
@@ -64,7 +63,7 @@ internal class FunctionTestingServiceIntegrationTests(
     @Test
     fun `stop a sequence`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignmentsReadyToPratice(teacher)
         val sequence = subject.getAnyAssignment().getAnySequence()
 
         assertThat(sequence.isNotStarted(), equalTo(true))
@@ -84,7 +83,7 @@ internal class FunctionTestingServiceIntegrationTests(
     @Test
     fun `start the next phase`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignmentsReadyToPratice(teacher)
         val sequence = subject.getAnyAssignment().getAnySequence()
 
         assertThat(sequence.activeInteraction, equalTo(null))

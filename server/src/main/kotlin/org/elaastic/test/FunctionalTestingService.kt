@@ -140,7 +140,10 @@ class FunctionalTestingService(
         )
     }
 
-    fun generateSubjectWithQuestionsAndAssignments(user: User) =
+    /**
+     * Generate a subject with questions and assignments ready to practice
+     */
+    fun generateSubjectWithQuestionsAndAssignmentsReadyToPratice(user: User) =
         createSubject(user, "Test subject ${LocalDate.now()}")
             // Questions
             .also { subject ->

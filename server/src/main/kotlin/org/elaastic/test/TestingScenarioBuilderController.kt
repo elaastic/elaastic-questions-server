@@ -46,7 +46,7 @@ class TestingScenarioBuilderController(
     ): String {
 
         val user: User = authentication.principal as User
-        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(user)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignmentsReadyToPratice(user)
 
 
 
