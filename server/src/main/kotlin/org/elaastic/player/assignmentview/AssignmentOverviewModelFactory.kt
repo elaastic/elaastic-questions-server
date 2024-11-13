@@ -50,27 +50,15 @@ object AssignmentOverviewModelFactory {
         courseId = if (teacher) assignment.subject?.course?.id else null,
         subjectTitle = if (teacher) assignment.subject!!.title else null,
         subjectId = if (teacher) assignment.subject!!.id else null,
-        audience = if (teacher) {
-            assignment.audience +
-                    if (assignment.scholarYear != null) {
-                        " (${assignment.scholarYear})"
-                    } else ""
-        } else null,
+        audience = if (teacher) getAudience(assignment) else null,
         assignmentId = assignment.id!!,
         sequences = assignment.sequences.map {
-            AssignmentOverviewModel.SequenceInfo(
-                id = it.id!!,
-                title = it.statement.title,
-                content = it.statement.content,
-                hideStatementContent = !teacher && it.state == State.beforeStart,
-                icons = resolveIcons(
-                    teacher,
-                    it,
-                    sequenceToUserActiveInteraction[it]
-                ),
-                revisionTag = resolveRevisionTag(it, assignment.readyForConsolidation),
-                nbReportTotal = nbReportBySequence[it]?.first ?: 0,
-                nbReportToModerate = nbReportBySequence[it]?.second ?: 0
+            getSequenceInfo(
+                it,
+                teacher,
+                sequenceToUserActiveInteraction[it],
+                assignment,
+                nbReportBySequence[it] ?: Pair(0, 0)
             )
         },
         selectedSequenceId = selectedSequenceId,
@@ -150,29 +138,55 @@ object AssignmentOverviewModelFactory {
         courseId = if (teacher) assignment.subject?.course?.id else null,
         subjectTitle = if (teacher) assignment.subject!!.title else null,
         subjectId = if (teacher) assignment.subject!!.id else null,
-        audience = if (teacher) {
-            assignment.audience +
-                    if (assignment.scholarYear != null) {
-                        " (${assignment.scholarYear})"
-                    } else ""
-        } else null,
+        audience = if (teacher) getAudience(assignment) else null,
         assignmentId = assignment.id!!,
         sequences = listOf(
-            AssignmentOverviewModel.SequenceInfo(
-                id = selectedSequence.id!!,
-                title = selectedSequence.statement.title,
-                content = selectedSequence.statement.content,
-                hideStatementContent = !teacher && selectedSequence.state == State.beforeStart,
-                icons = resolveIcons(
-                    teacher,
-                    selectedSequence,
-                    userActiveInteraction
-                ),
-                revisionTag = resolveRevisionTag(selectedSequence, assignment.readyForConsolidation)
+            getSequenceInfo(
+                selectedSequence,
+                teacher,
+                userActiveInteraction,
+                assignment,
+                Pair(0, 0)
             )
         ),
         selectedSequenceId = selectedSequence.id,
         isRevisionMode = assignment.readyForConsolidation != ReadyForConsolidation.NotAtAll,
         indexOfSelectedSequence = assignment.sequences.indexOfFirst { it.id == selectedSequence.id }
+    )
+
+    /**
+     * Get the audience of an [Assignment] with the scholar year if it is not
+     * null.
+     */
+    private fun getAudience(assignment: Assignment): String {
+        val scholarYear = if (assignment.scholarYear != null) " (${assignment.scholarYear})" else ""
+        return "${assignment.audience}$scholarYear"
+    }
+
+    /**
+     * Get the [AssignmentOverviewModel.SequenceInfo] for a [Sequence].
+     *
+     * @param sequence the [Sequence] to get the info from.
+     * @param isTeacher true if the user is a teacher and false otherwise.
+     * @param activeInteraction the active [Interaction] of the [Sequence].
+     * @param assignment the [Assignment] of the [Sequence].
+     * @param nbReport the number of reports for the [Sequence]. (total, to
+     *    moderate)
+     */
+    private fun getSequenceInfo(
+        sequence: Sequence,
+        isTeacher: Boolean,
+        activeInteraction: Interaction?,
+        assignment: Assignment,
+        nbReport: Pair<Int, Int>
+    ) = AssignmentOverviewModel.SequenceInfo(
+        id = sequence.id!!,
+        title = sequence.statement.title,
+        content = sequence.statement.content,
+        hideStatementContent = !isTeacher && sequence.state == State.beforeStart,
+        icons = resolveIcons(isTeacher, sequence, activeInteraction),
+        revisionTag = resolveRevisionTag(sequence, assignment.readyForConsolidation),
+        nbReportTotal = nbReport.first,
+        nbReportToModerate = nbReport.second
     )
 }
