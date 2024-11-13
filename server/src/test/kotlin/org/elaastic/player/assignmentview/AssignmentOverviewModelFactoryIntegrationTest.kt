@@ -54,16 +54,8 @@ class AssignmentOverviewModelFactoryIntegrationTest(
         isTeacher: Boolean,
         sequence: Sequence,
         message: String = "",
-    ) = testResolveIcons(expectedIcons, isTeacher, sequence, sequence.activeInteraction, message)
-
-    fun testResolveIcons(
-        expectedIcons: List<AssignmentOverviewModel.PhaseIcon>,
-        isTeacher: Boolean,
-        sequence: Sequence,
-        interaction: Interaction?,
-        message: String = "",
     ) {
-        val actualIcons = AssignmentOverviewModelFactory.resolveIcons(isTeacher, sequence, interaction)
+        val actualIcons = AssignmentOverviewModelFactory.resolveIcons(isTeacher, sequence)
         assertEquals(expectedIcons, actualIcons, message)
     }
 

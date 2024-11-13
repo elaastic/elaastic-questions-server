@@ -56,7 +56,6 @@ object AssignmentOverviewModelFactory {
             getSequenceInfo(
                 it,
                 teacher,
-                sequenceToUserActiveInteraction[it],
                 assignment,
                 nbReportBySequence[it] ?: Pair(0, 0)
             )
@@ -66,17 +65,16 @@ object AssignmentOverviewModelFactory {
         indexOfSelectedSequence = assignment.sequences.indexOfFirst { it.id == selectedSequenceId }
     )
 
-    private fun resolveIcons(
+    fun resolveIcons(
         teacher: Boolean,
         sequence: Sequence,
-        interaction: Interaction?
     ): List<AssignmentOverviewModel.PhaseIcon> =
         resolveIcons(
             teacher,
             sequence.executionContext,
             sequence.state,
             sequence.resultsArePublished,
-            interaction?.interactionType
+            sequence.activeInteractionType,
         )
 
     fun resolveIcons(
@@ -144,7 +142,6 @@ object AssignmentOverviewModelFactory {
             getSequenceInfo(
                 selectedSequence,
                 teacher,
-                userActiveInteraction,
                 assignment,
                 Pair(0, 0)
             )
@@ -176,7 +173,6 @@ object AssignmentOverviewModelFactory {
     private fun getSequenceInfo(
         sequence: Sequence,
         isTeacher: Boolean,
-        activeInteraction: Interaction?,
         assignment: Assignment,
         nbReport: Pair<Int, Int>
     ) = AssignmentOverviewModel.SequenceInfo(
@@ -184,7 +180,7 @@ object AssignmentOverviewModelFactory {
         title = sequence.statement.title,
         content = sequence.statement.content,
         hideStatementContent = !isTeacher && sequence.state == State.beforeStart,
-        icons = resolveIcons(isTeacher, sequence, activeInteraction),
+        icons = resolveIcons(isTeacher, sequence),
         revisionTag = resolveRevisionTag(sequence, assignment.readyForConsolidation),
         nbReportTotal = nbReport.first,
         nbReportToModerate = nbReport.second
