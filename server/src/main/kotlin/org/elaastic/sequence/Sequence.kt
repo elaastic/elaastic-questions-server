@@ -103,9 +103,7 @@ class Sequence(
     var activeInteractionType: InteractionType? = activeInteraction?.interactionType,
 
     /**
-     * The current state of the [activeInteraction]
-     *
-     * @see State
+     * The state of the sequence.
      */
     @field:Enumerated(EnumType.STRING)
     var state: State = State.beforeStart,
