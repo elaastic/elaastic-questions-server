@@ -18,7 +18,7 @@
 
 package org.elaastic
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping

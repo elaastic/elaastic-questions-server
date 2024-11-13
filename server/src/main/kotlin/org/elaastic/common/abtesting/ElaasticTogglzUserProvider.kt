@@ -1,6 +1,6 @@
 package org.elaastic.common.abtesting
 
-import org.elaastic.questions.directory.User
+import org.elaastic.user.User
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder

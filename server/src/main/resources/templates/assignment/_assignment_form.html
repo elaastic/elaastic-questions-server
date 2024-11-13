@@ -1,26 +1,26 @@
-    <!--
-      ~ Elaastic - formative assessment system
-      ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
-      ~
-      ~ This program is free software: you can redistribute it and/or modify
-      ~ it under the terms of the GNU Affero General Public License as
-      ~ published by the Free Software Foundation, either version 3 of the
-      ~ License, or (at your option) any later version.
-      ~
-      ~ This program is distributed in the hope that it will be useful,
-      ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-      ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-      ~ GNU Affero General Public License for more details.
-      ~
-      ~ You should have received a copy of the GNU Affero General Public License
-      ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-      -->
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
 
-    <span th:fragment="assignmentForm(assignment)"
-         th:remove="tag"
-         xmlns:th="http://www.thymeleaf.org"
-         xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
-         xmlns="http://www.w3.org/1999/html">
+<span th:fragment="assignmentForm(assignment)"
+      th:remove="tag"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
+      xmlns="http://www.w3.org/1999/html">
 
       <div class="ui error message"></div>
 
@@ -76,28 +76,29 @@
           <input type="checkbox"
                  name="acceptAnonymousUsers"
                  th:field="*{acceptAnonymousUsers}"
-                 th:checked="${assignment.acceptAnonymousUsers}" />
+                 th:checked="${assignment.acceptAnonymousUsers}"/>
         </div>
       </div>
 
 
       <div class="field"
-       togglz:active="'REVISION_ASSIGNMENT'">
-        <label th:text="#{assignment.autorize.revisionMode}" >Ce sujet peut servir aux révisions</label>
+           togglz:active="'REVISION_ASSIGNMENT'">
+        <label th:text="#{assignment.autorize.readyForConsolidation}">Ce sujet peut servir aux révisions</label>
         <div class="field ui buttons">
-            <input type="hidden" name="revisionMode" id="hiddenRevisionMode" th:field="*{revisionMode}" />
+            <input type="hidden" name="readyForConsolidation" id="hiddenRevisionMode" th:field="*{readyForConsolidation}"/>
             <span>
-                <input type="radio" name="revisionMode" hidden id="revisionModeBtn1"
+                <input type="radio" name="readyForConsolidation" hidden id="revisionModeBtn1"
                        onchange="updateRevisionMode('NotAtAll')" value="NotAtAll" required="true" checked="true">
-                <label class="ui button" th:text="#{assignment.autorize.notAtAll}" for="revisionModeBtn1">Pas du tout </label>
+                <label class="ui button" th:text="#{assignment.autorize.notAtAll}"
+                       for="revisionModeBtn1">Pas du tout </label>
             </span>
             <span>
-                <input type="radio" name="revisionMode" hidden id="revisionModeBtn2"
+                <input type="radio" name="readyForConsolidation" hidden id="revisionModeBtn2"
                        onchange="updateRevisionMode('AfterTeachings')" value="AfterTeachings">
                 <label class="ui button" th:text="#{assignment.autorize.afterTeachings}" for="revisionModeBtn2">Après travail avec enseignant </label>
             </span>
             <span>
-                <input type="radio" name="revisionMode" hidden id="revisionModeBtn3"
+                <input type="radio" name="readyForConsolidation" hidden id="revisionModeBtn3"
                        onchange="updateRevisionMode('Immediately')" value="Immediately">
                 <label class="ui button" th:text="#{assignment.autorize.immediately}" for="revisionModeBtn3">Immédiatement </label>
             </span>
@@ -106,37 +107,37 @@
 
       <script th:inline="javascript">
         $(document)
-          .ready(function () {
-            $('.ui.form')
-              .form({
-                fields: {
-                  title: {
-                    identifier: 'title',
-                    rules: [
-                      {
-                        type: 'empty',
-                        prompt: /*[[#{assignment.title.mandatory}]]*/ ''
-                      }
-                    ]
-                  },
-                  scholarYear: {
-                    identifier: 'scholarYear',
-                    rules: [
-                      {
-                        type: 'regExp',
-                        value: '^$|([2][0-9]{3}[ ][-][ ][2][0-9]{3})',
-                        prompt: /*[[#{assignment.scholarYear.mandatory}]]*/ ''
-                      }
-                    ]
-                  }
-                }
-              })
-          });
+            .ready(function () {
+                $('.ui.form')
+                    .form({
+                        fields: {
+                            title: {
+                                identifier: 'title',
+                                rules: [
+                                    {
+                                        type: 'empty',
+                                        prompt: /*[[#{assignment.title.mandatory}]]*/ ''
+                                    }
+                                ]
+                            },
+                            scholarYear: {
+                                identifier: 'scholarYear',
+                                rules: [
+                                    {
+                                        type: 'regExp',
+                                        value: '^$|([2][0-9]{3}[ ][-][ ][2][0-9]{3})',
+                                        prompt: /*[[#{assignment.scholarYear.mandatory}]]*/ ''
+                                    }
+                                ]
+                            }
+                        }
+                    })
+            });
         $('.ui.checkbox').checkbox();
 
-        function initializeRevisionMode(){
-            var revisionMode = document.getElementById('hiddenRevisionMode').value;
-            updateRevisionMode(revisionMode)
+        function initializeRevisionMode() {
+            var readyForConsolidation = document.getElementById('hiddenRevisionMode').value;
+            updateRevisionMode(readyForConsolidation)
         }
 
         function updateRevisionMode(value) {
@@ -145,7 +146,7 @@
             document.getElementById('revisionModeBtn2').nextElementSibling.classList.remove('active');
             document.getElementById('revisionModeBtn3').nextElementSibling.classList.remove('active');
 
-            switch(value.toString()){
+            switch (value.toString()) {
                 case 'NotAtAll':
                     document.getElementById('revisionModeBtn1').nextElementSibling.classList.add('active');
                     break;

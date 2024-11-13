@@ -1,8 +1,8 @@
 package org.elaastic.ai.evaluation.chatgpt
 
-import org.elaastic.questions.test.IntegrationTestingService
-import org.elaastic.questions.test.directive.tThen
-import org.elaastic.questions.test.directive.tWhen
+import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.MatcherAssert.assertThat

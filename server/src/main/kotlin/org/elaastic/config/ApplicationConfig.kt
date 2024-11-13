@@ -18,9 +18,9 @@
 
 package org.elaastic.config
 
-import org.elaastic.questions.player.phase.LearnerPhaseType
-import org.elaastic.questions.player.phase.descriptor.PhaseDescriptor
-import org.elaastic.questions.player.phase.descriptor.SequenceDescriptor
+import org.elaastic.sequence.phase.LearnerPhaseType
+import org.elaastic.sequence.phase.descriptor.PhaseDescriptor
+import org.elaastic.sequence.phase.descriptor.SequenceDescriptor
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

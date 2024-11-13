@@ -20,33 +20,37 @@ package org.elaastic.bootstrap
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
-import org.elaastic.questions.assignment.*
-import org.elaastic.questions.assignment.choice.ChoiceItem
-import org.elaastic.questions.assignment.choice.ExclusiveChoiceSpecification
-import org.elaastic.questions.assignment.choice.MultipleChoiceSpecification
-import org.elaastic.questions.assignment.choice.legacy.LearnerChoice
-import org.elaastic.questions.assignment.sequence.ConfidenceDegree
-import org.elaastic.questions.assignment.sequence.Sequence
-import org.elaastic.questions.assignment.sequence.SequenceService
-import org.elaastic.questions.assignment.sequence.interaction.InteractionService
-import org.elaastic.questions.assignment.sequence.interaction.response.Response
-import org.elaastic.questions.assignment.sequence.interaction.response.ResponseService
-import org.elaastic.questions.assignment.sequence.peergrading.PeerGradingService
-import org.elaastic.questions.attachment.Attachment
-import org.elaastic.questions.attachment.AttachmentService
-import org.elaastic.questions.attachment.MimeType
-import org.elaastic.questions.course.Course
-import org.elaastic.questions.course.CourseService
-import org.elaastic.questions.directory.RoleService
-import org.elaastic.questions.directory.User
-import org.elaastic.questions.directory.UserService
-import org.elaastic.questions.lti.LtiConsumer
-import org.elaastic.questions.lti.LtiConsumerRepository
-import org.elaastic.questions.player.phase.evaluation.EvaluationPhaseConfig
-import org.elaastic.questions.subject.Subject
-import org.elaastic.questions.subject.SubjectService
-import org.elaastic.questions.subject.statement.Statement
-import org.elaastic.questions.subject.statement.StatementService
+import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseService
+import org.elaastic.assignment.Assignment
+import org.elaastic.assignment.AssignmentService
+import org.elaastic.assignment.ReadyForConsolidation
+import org.elaastic.material.instructional.course.Course
+import org.elaastic.material.instructional.course.CourseService
+import org.elaastic.material.instructional.question.ChoiceItem
+import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
+import org.elaastic.material.instructional.question.MultipleChoiceSpecification
+import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
+import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.material.instructional.statement.StatementService
+import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.material.instructional.question.attachment.Attachment
+import org.elaastic.material.instructional.question.attachment.AttachmentService
+import org.elaastic.material.instructional.question.attachment.MimeType
+import org.elaastic.auth.lti.LtiConsumer
+import org.elaastic.auth.lti.LtiConsumerRepository
+import org.elaastic.sequence.ExecutionContext
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceService
+import org.elaastic.sequence.interaction.InteractionService
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.user.RoleService
+import org.elaastic.user.User
+import org.elaastic.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.util.ResourceUtils
@@ -381,28 +385,28 @@ class BootstrapService(
                 title = subject.title + " - Face à face - Finished",
                 description = "Exercice en classe",
                 audience = "groupe A1",
-                revisionMode = RevisionMode.NotAtAll
+                readyForConsolidation = ReadyForConsolidation.NotAtAll
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Face à face",
                 description = "Exercice en classe",
                 audience = "groupe A2",
-                revisionMode = RevisionMode.AfterTeachings
+                readyForConsolidation = ReadyForConsolidation.AfterTeachings
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Distant",
                 description = "Exercice en classe",
                 audience = "groupe C",
-                revisionMode = RevisionMode.Immediately
+                readyForConsolidation = ReadyForConsolidation.Immediately
             ),
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Blended",
                 description = "Exercice en classe",
                 audience = "groupe G",
-                revisionMode = RevisionMode.AfterTeachings
+                readyForConsolidation = ReadyForConsolidation.AfterTeachings
             )
         )
 
