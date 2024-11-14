@@ -38,7 +38,7 @@ object SequenceInfoResolver {
                     nbReportToModerate = nbReportedEvaluation.second,
                 )
             } else {
-                when (sequence.activeInteraction?.interactionType) {
+                when (sequence.activeInteractionType) {
                     InteractionType.ResponseSubmission,
                     InteractionType.Evaluation
                         -> {
