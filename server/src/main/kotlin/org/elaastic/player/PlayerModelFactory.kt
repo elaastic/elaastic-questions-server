@@ -92,7 +92,6 @@ object PlayerModelFactory {
     fun buildForLearner(
         sequence: Sequence,
         nbRegisteredUsers: Int,
-        openedPane: String,
         messageBuilder: MessageBuilder,
         activeInteraction: Interaction?,
         learnerSequence: ILearnerSequence,

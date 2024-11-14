@@ -214,7 +214,7 @@ class PlayerController(
         model: Model,
         @PathVariable assignmentId: Long,
         @PathVariable sequenceId: Long?,
-        @RequestParam("currentPane", required = false) openedPane: String?,
+        @RequestParam("currentPane", required = false) openedPane: String = "assignments",
     ): String {
 
         val user: User = authentication.principal as User
@@ -233,21 +233,9 @@ class PlayerController(
             val teacher = user == sequence.owner
 
             return if (teacher)
-                playAssignmentForTeacher(
-                    user,
-                    model,
-                    sequence,
-                    openedPane ?: "assignments",
-                    httpServletRequest
-                )
+                playAssignmentForTeacher(user, model, sequence, openedPane, httpServletRequest)
             else
-                playAssignmentForLearner(
-                    user,
-                    model,
-                    sequence,
-                    openedPane ?: "assignments",
-                    httpServletRequest
-                )
+                playAssignmentForLearner(user, model, sequence, httpServletRequest)
         }
 
     }
@@ -316,7 +304,6 @@ class PlayerController(
         user: User,
         model: Model,
         sequence: Sequence,
-        openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
 
@@ -331,7 +318,6 @@ class PlayerController(
             PlayerModelFactory.buildForLearner(
                 sequence = sequence,
                 nbRegisteredUsers = nbRegisteredUsers,
-                openedPane = openedPane,
                 messageBuilder = messageBuilder,
                 activeInteraction = learnerSequenceService.getActiveInteractionForLearner(
                     user,
