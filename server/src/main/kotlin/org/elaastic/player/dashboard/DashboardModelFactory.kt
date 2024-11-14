@@ -43,7 +43,6 @@ object DashboardModelFactory {
         nextSequence: Sequence?,
         attendees: List<LearnerAssignment>,
         responses: List<Response>,
-        openedPane: String,
         evaluationCountByUser: Map<LearnerAssignment, Long>,
         learnerToIfTheyAnswer: Map<LearnerAssignment, Boolean>,
         countResponseGradable: Long,
@@ -83,7 +82,6 @@ object DashboardModelFactory {
 
         return DashboardModel(
             sequence,
-            openedPane,
             previousSequence?.id,
             nextSequence?.id,
             sequenceMonitoringModel

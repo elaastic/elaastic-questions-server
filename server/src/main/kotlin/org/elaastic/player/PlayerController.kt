@@ -208,7 +208,6 @@ class PlayerController(
         model: Model,
         @PathVariable assignmentId: Long,
         @PathVariable sequenceId: Long?,
-        @RequestParam("currentPane", required = false) openedPane: String = "assignments",
     ): String {
 
         val user: User = authentication.principal as User
@@ -227,7 +226,7 @@ class PlayerController(
             val teacher = user == sequence.owner
 
             return if (teacher)
-                playAssignmentForTeacher(user, model, sequence, openedPane, httpServletRequest)
+                playAssignmentForTeacher(user, model, sequence, httpServletRequest)
             else
                 playAssignmentForLearner(user, model, sequence, httpServletRequest)
         }
@@ -238,7 +237,6 @@ class PlayerController(
         user: User,
         model: Model,
         selectedSequence: Sequence,
-        openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
         val assignment: Assignment = selectedSequence.assignment!!
@@ -271,7 +269,6 @@ class PlayerController(
             nextSequence,
             registeredUsers,
             responses,
-            openedPane,
             evaluationCountByUser,
             reponseAvailable,
             countResponseGradable,
