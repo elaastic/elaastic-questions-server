@@ -29,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import kotlin.random.Random
 
+
+private const val THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION = "The sequence has no active interaction"
+
 @Service
 @Transactional
 class FunctionalTestingService(
@@ -317,7 +320,7 @@ class FunctionalTestingService(
 
     fun nextPhase(sequence: Sequence) =
         sequence.activeInteraction.let { activeInteraction ->
-            checkNotNull(activeInteraction) { "The sequence has no active interaction" }
+            checkNotNull(activeInteraction) { THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION }
             check(activeInteraction.rank != sequence.interactions.size) { "The active interaction is the last one" }
 
             interactionService.stop(sequence.owner, activeInteraction)
@@ -329,7 +332,7 @@ class FunctionalTestingService(
      */
     fun stopPhase(sequence: Sequence) =
         sequence.activeInteraction.let { activeInteraction ->
-            checkNotNull(activeInteraction) { "The sequence has no active interaction" }
+            checkNotNull(activeInteraction) { THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION }
             interactionService.stop(sequence.owner, activeInteraction)
         }
 
@@ -339,7 +342,7 @@ class FunctionalTestingService(
      */
     fun startNextPhase(sequence: Sequence) =
         sequence.activeInteraction.let { activeInteraction ->
-            checkNotNull(activeInteraction) { "The sequence has no active interaction" }
+            checkNotNull(activeInteraction) { THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION }
             check(activeInteraction.rank != sequence.interactions.size) { "The active interaction is the last one" }
             check(activeInteraction.state == State.afterStop) { "The active interaction is not stopped" }
 
