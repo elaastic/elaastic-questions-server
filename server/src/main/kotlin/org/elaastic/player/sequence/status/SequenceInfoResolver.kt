@@ -39,37 +39,38 @@ object SequenceInfoResolver {
                 )
             } else {
                 when (sequence.activeInteractionType) {
-                    InteractionType.ResponseSubmission,
-                    InteractionType.Evaluation
-                        -> {
+                    InteractionType.ResponseSubmission, InteractionType.Evaluation -> {
                         when (sequence.activeInteraction?.state) {
                             null -> throw IllegalStateException()
-                            State.beforeStart -> SequenceInfoModel(
-                                messageBuilder.message(
-                                    "player.sequence.interaction.beforeStart.message",
-                                    sequence.activeInteraction?.rank?.toString() ?: ""
-                                ),
-                                color = "blue",
-                                refreshable = !isTeacher
-                            )
+                            State.beforeStart ->
+                                SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.interaction.beforeStart.message",
+                                        sequence.activeInteraction?.rank?.toString() ?: ""
+                                    ),
+                                    color = "blue",
+                                    refreshable = !isTeacher
+                                )
 
-                            State.show -> SequenceInfoModel(
-                                messageBuilder.message(
-                                    "player.sequence.interaction.inprogress",
-                                    sequence.activeInteraction?.rank?.toString() ?: ""
-                                ),
-                                color = "blue",
-                                refreshable = true
-                            )
+                            State.show ->
+                                SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.interaction.inprogress",
+                                        sequence.activeInteraction?.rank?.toString() ?: ""
+                                    ),
+                                    color = "blue",
+                                    refreshable = true
+                                )
 
-                            State.afterStop -> SequenceInfoModel(
-                                messageBuilder.message(
-                                    "player.sequence.interaction.closed.forTeacher",
-                                    sequence.activeInteraction?.rank?.toString() ?: ""
-                                ),
-                                color = "blue",
-                                refreshable = !isTeacher
-                            )
+                            State.afterStop ->
+                                SequenceInfoModel(
+                                    messageBuilder.message(
+                                        "player.sequence.interaction.closed.forTeacher",
+                                        sequence.activeInteraction?.rank?.toString() ?: ""
+                                    ),
+                                    color = "blue",
+                                    refreshable = !isTeacher
+                                )
                         }
                     }
 
@@ -85,10 +86,8 @@ object SequenceInfoResolver {
 
     /**
      * @param sequence [Sequence] to get the information
-     * @param messageBuilder [MessageBuilder] to get the message from the
-     *    properties
-     * @return [SequenceInfoModel] for read interaction and the execution
-     *    context is Blended or Distance
+     * @param messageBuilder [MessageBuilder] to get the message from the properties
+     * @return [SequenceInfoModel] for read interaction and the execution context is Blended or Distance
      */
     private fun getSequenceInfoModelWhenReadInteraction(
         sequence: Sequence,
