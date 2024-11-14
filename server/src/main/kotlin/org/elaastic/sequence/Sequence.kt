@@ -123,12 +123,11 @@ class Sequence(
     Comparable<Sequence>, SequenceProgress {
 
     @field:OneToOne
-    var activeInteraction = activeInteraction
+    @Access(AccessType.PROPERTY)
+    var activeInteraction: Interaction? = activeInteraction
         set(value) {
             field = value
-            value?.let {
-                activeInteractionType = it.interactionType
-            }
+            activeInteractionType = value?.interactionType
         }
 
     @Version
