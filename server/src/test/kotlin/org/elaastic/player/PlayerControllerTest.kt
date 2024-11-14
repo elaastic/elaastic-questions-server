@@ -18,10 +18,7 @@
 
 package org.elaastic.player
 
-import com.nhaarman.mockitokotlin2.atLeastOnce
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import io.mockk.every
 import io.mockk.mockkClass
 import io.mockk.mockkObject
@@ -167,7 +164,7 @@ internal class PlayerControllerTest(
         whenever(learnerSequenceService.getLearnerSequence(user, sequence)).thenReturn(learnerSequence)
 
         mockkObject(PlayerModelFactory)                                             // Dernier any() ajouté
-        every { PlayerModelFactory.buildForLearner(any(), any(), any(), any(), any(), any(), any()) } returns
+        every { PlayerModelFactory.buildForLearner(any(), any(), any(), any(), any()) } returns
                 mockkClass(LearnerPlayerModel::class, relaxed = true)
 
         mockMvc.perform(
