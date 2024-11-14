@@ -298,19 +298,15 @@ class PlayerController(
             )
         model["dashboardModel"] = dashboardModel
 
-        model.addAttribute(
-            "playerModel",
-            PlayerModelFactory.buildForTeacher(
-                user = user,
-                sequence = selectedSequence,
-                serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
-                nbRegisteredUsers = nbRegisteredUsers,
-                sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
-                messageBuilder = messageBuilder,
-                sequenceStatistics = sequenceService.getStatistics(selectedSequence),
-                teacherResultDashboardService = teacherResultDashboardService,
-                nbReportBySequence = sequenceService.getNbReportBySequence(assignment.sequences, true),
-            )
+        model["playerModel"] = PlayerModelFactory.buildForTeacher(
+            user = user,
+            sequence = selectedSequence,
+            serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
+            nbRegisteredUsers = nbRegisteredUsers,
+            messageBuilder = messageBuilder,
+            sequenceStatistics = sequenceService.getStatistics(selectedSequence),
+            teacherResultDashboardService = teacherResultDashboardService,
+            nbReportBySequence = sequenceService.getNbReportBySequence(assignment.sequences, true),
         )
 
         return "player/assignment/sequence/play-teacher"
@@ -336,11 +332,6 @@ class PlayerController(
                 sequence = sequence,
                 nbRegisteredUsers = nbRegisteredUsers,
                 openedPane = openedPane,
-                sequenceToUserActiveInteraction = assignment.sequences.associateWith {
-                    if (it.executionIsFaceToFace())
-                        it.activeInteraction
-                    else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
-                },
                 messageBuilder = messageBuilder,
                 activeInteraction = learnerSequenceService.getActiveInteractionForLearner(
                     user,
