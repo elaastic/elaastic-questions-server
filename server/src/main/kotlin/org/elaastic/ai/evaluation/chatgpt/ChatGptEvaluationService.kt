@@ -2,20 +2,20 @@ package org.elaastic.ai.evaluation.chatgpt
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseRepository
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.ai.evaluation.chatgpt.api.ChatGptApiMessageData
 import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
 import org.elaastic.common.util.requireAccess
-import org.elaastic.sequence.Sequence
-import org.elaastic.moderation.UtilityGrade
 import org.elaastic.moderation.ReportCandidateService
-import org.elaastic.activity.response.Response
-import org.elaastic.activity.response.ResponseRepository
-import org.elaastic.activity.response.ResponseService
+import org.elaastic.moderation.UtilityGrade
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User
 import org.springframework.context.MessageSource
-import org.elaastic.sequence.interaction.Interaction
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 import java.util.*
+import java.util.logging.Level
 import java.util.logging.Logger
 import javax.persistence.EntityManager
 
@@ -86,7 +87,7 @@ class ChatGptEvaluationService(
             chatGptEvaluation.annotation = chatGptEvaluationData.annotation
         } catch (e: Exception) {
             chatGptEvaluation.status = ChatGptEvaluationStatus.ERROR.name
-            logger.severe("Error while evaluating response with ChatGPT: ${e.message}")
+            logger.log(Level.SEVERE, "Error while evaluating response with ChatGPT: ${e.message}",e)
         }
         return chatGptEvaluationRepository.save(chatGptEvaluation)
     }
