@@ -44,7 +44,6 @@ const explanationLabel = computed(() => props.choices ? 'Explanation' : 'Answer'
 <template>
   <v-card
     class="fill-height mx-auto border-bottom d-flex flex-column"
-    min-width="400"
   >
     <v-card-item class="bg-surface-light">
       <div class="d-flex justify-space-between w-100 align-center">
