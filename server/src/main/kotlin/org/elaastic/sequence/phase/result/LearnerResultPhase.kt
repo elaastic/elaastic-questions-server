@@ -34,12 +34,22 @@ class LearnerResultPhase(
 
     override fun getViewModel(): LearnerResultPhaseViewModel {
 
-        //TODO Fill explanationHasChatGPTEvaluationMap with the real data
+        val idFirstResponse = try {
+            learnerPhaseExecution?.responseSet?.get(1)?.first()?.id
+        } catch (e: Exception) {
+            null
+        }
+        val idSecondResponse = try {
+            learnerPhaseExecution?.responseSet?.get(2)?.first()?.id
+        } catch (e: Exception) {
+            null
+        }
+
         val explanationHasChatGPTEvaluationMap: Map<Long, Boolean> =
-            listOfNotNull(
-                learnerPhaseExecution?.responseSet?.get(1)?.first()?.id,
-                learnerPhaseExecution?.responseSet?.get(2)?.first()?.id
-            ).associate { (it to false) }
+            listOfNotNull(idFirstResponse, idSecondResponse)
+                //TODO Fill explanationHasChatGPTEvaluationMap with the real data
+                .associate { (it to false) }
+
 
         return LearnerResultPhaseViewModel(
             learnerSequence.sequence.resultsArePublished,
