@@ -1,8 +1,8 @@
 package org.elaastic.sequence.phase.result
 
+import org.elaastic.player.results.ResultsModelFactory
 import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.State
-import org.elaastic.player.results.ResultsModelFactory
 import org.elaastic.sequence.phase.LearnerPhase
 import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhaseType
@@ -36,8 +36,10 @@ class LearnerResultPhase(
 
         //TODO Fill explanationHasChatGPTEvaluationMap with the real data
         val explanationHasChatGPTEvaluationMap: Map<Long, Boolean> =
-            (learnerPhaseExecution!!.responseSet[1] + learnerPhaseExecution!!.responseSet[2])
-                .associate { (it.id!! to true) }
+            listOfNotNull(
+                learnerPhaseExecution?.responseSet?.get(1)?.first()?.id,
+                learnerPhaseExecution?.responseSet?.get(2)?.first()?.id
+            ).associate { (it to false) }
 
         return LearnerResultPhaseViewModel(
             learnerSequence.sequence.resultsArePublished,
