@@ -651,16 +651,16 @@ class PlayerController(
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
 
-    @GetMapping("/sequence/{id}/regenerate-chat-gpt-evaluation")
+    @GetMapping("/sequence/{sequenceId}/regenerate-chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun refreshChatGptEvaluation(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long,
+        @PathVariable sequenceId: Long,
         locale: Locale
     ): String {
         val user: User = authentication.principal as User
-        val sequence = sequenceService.get(id, true)
+        val sequence = sequenceService.get(sequenceId, true)
 
         val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
         if (response != null) {
@@ -668,7 +668,7 @@ class PlayerController(
             chatGptEvaluationService.createEvaluation(response, locale.language, chatGptEvaluation)
         }
 
-        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
+        return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${sequenceId}"
     }
 
     @GetMapping("sequence/{responseId}/chat-gpt-evaluation")
