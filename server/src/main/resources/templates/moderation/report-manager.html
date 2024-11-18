@@ -172,7 +172,7 @@
                             $.get('/report-manager/restore-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
                                     .done(function () {
                                         $(reportedCandidate).remove();
-                                        handleReportedItemRemovedFromList()
+                                        window.location.reload();
                                     })
                                     .fail(function () {
                                         alert('An error occurred while restoring the report.');
@@ -191,7 +191,6 @@
                                         onApprove: function () {
                                             $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
                                                     .done(function (data) {
-                                                        console.log(data)
                                                         $(reportedCandidate).remove();
                                                         handleReportedItemRemovedFromList()
                                                     })
@@ -207,7 +206,7 @@
                             $.get('/report-manager/remove-reported-evaluation/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)
                                     .done(function () {
                                         $(reportedCandidate).remove();
-                                        handleReportedItemRemovedFromList()
+                                        window.location.reload();
                                     })
                                     .fail(function () {
                                         alert('An error occurred while hiding the report.');
