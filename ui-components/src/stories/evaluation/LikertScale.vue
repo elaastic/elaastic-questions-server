@@ -4,7 +4,7 @@ import { useDisplay } from 'vuetify'
 import { min } from 'rxjs'
 import type { LikertValue } from '@/stories/evaluation/Likert'
 
-interface LikertScaleProps {
+export interface LikertScaleProps {
   /**
    * The selected value on the Likert scale
    */
@@ -29,7 +29,7 @@ interface LikertScaleProps {
   color?: string;
 }
 
-interface LikertScaleEvents {
+export interface LikertScaleEvents {
   /** Fired when the selected value changes */
   (event: 'update:modelValue', value: LikertValue): void;
 }

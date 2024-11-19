@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 import ConfrontingViewpoint from '@/stories/evaluation/ConfrontingViewpoint.vue'
-import type { ExclusiveChoiceResponse, MultipleChoiceResponse, OpenEndedResponse } from '@/models/Response'
 
 const meta = {
   title: 'Evaluation/ConfrontingViewpoints',

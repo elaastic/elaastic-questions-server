@@ -5,7 +5,7 @@ import { computed } from 'vue'
 import type { LikertValue } from '@/stories/evaluation/Likert'
 import { type AnyResponse, getChoices } from '@/models/Response'
 
-interface EvaluationCardProps {
+export interface EvaluationCardProps {
   /**
    * The evaluation value of this card
    */

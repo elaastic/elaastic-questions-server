@@ -7,7 +7,7 @@ import type { LikertValue } from '@/stories/evaluation/Likert'
 
 type ResponseId = number
 
-interface ConfrontingViewpointProps {
+export interface ConfrontingViewpointProps {
   responses: AnyResponse[]
 }
 
