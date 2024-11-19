@@ -1,7 +1,11 @@
 <script setup lang="ts">
 
 import EvaluationCard from '@/stories/evaluation/EvaluationCard.vue'
-import { computed, reactive, ref } from 'vue'
+import { reactive } from 'vue'
+import type { Response } from '@/models/Response'
+
+type ResponseId = number
+type LikertValue = number | null
 
 interface ConfrontingViewpointProps {
   responses: Response[]
@@ -10,7 +14,7 @@ interface ConfrontingViewpointProps {
 const props = defineProps<ConfrontingViewpointProps>()
 
 const evaluations = reactive(
-  props.responses.reduce((acc, response) => {
+  props.responses.reduce((acc: { [key: ResponseId]: LikertValue }, response: Response) => {
     acc[response.id] = null;
     return acc;
   }, {})

@@ -1,7 +1,5 @@
-import App from '@/App.vue'
-import LikertScale from '@/stories/evaluation/LikerScale.vue'
+import ConfrontingViewpoint from '@/stories/evaluation/ConfrontingViewpoint.vue'
 
 export {
-  LikertScale,
-  App,
+  ConfrontingViewpoint,
 }

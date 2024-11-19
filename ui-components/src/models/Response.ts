@@ -1,4 +1,4 @@
-export abstract interface Response {
+export interface Response {
   id: number
   explanation: string
 }
