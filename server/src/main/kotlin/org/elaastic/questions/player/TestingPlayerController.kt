@@ -2594,16 +2594,20 @@ class TestingPlayerController(
                 choices = true,
                 userHasCompletedPhase2 = false,
                 responsesToGrade = listOf(
-                    org.elaastic.questions.player.phase.evaluation.ResponseData(
+                    org.elaastic.questions.player.phase.evaluation.ExclusiveChoiceResponseData(
                         id = 1,
-                        choiceList = listOf(1),
+                        choice = 1,
                         explanation = "1st explanation"
                     ),
-                    org.elaastic.questions.player.phase.evaluation.ResponseData(
+                    org.elaastic.questions.player.phase.evaluation.MultipleChoiceResponseData(
                         id = 2,
-                        choiceList = listOf(2),
+                        choices = listOf(2, 3),
                         explanation = "2nd explanation"
-                    )
+                    ),
+                    org.elaastic.questions.player.phase.evaluation.OpenEndedResponseData(
+                        id = 4,
+                        explanation = "3rd explanation"
+                    ),
                 ),
                 secondAttemptAllowed = true,
                 secondAttemptAlreadySubmitted = false,
@@ -2647,9 +2651,9 @@ class TestingPlayerController(
                 choices = true,
                 userHasCompletedPhase2 = false,
                 nextResponseToGrade =
-                org.elaastic.questions.player.phase.evaluation.ResponseData(
+                org.elaastic.questions.player.phase.evaluation.ExclusiveChoiceResponseData(
                     id = 1,
-                    choiceList = listOf(1),
+                    choice = 1,
                     explanation = "1st explanation"
                 ),
                 lastResponseToGrade = false,

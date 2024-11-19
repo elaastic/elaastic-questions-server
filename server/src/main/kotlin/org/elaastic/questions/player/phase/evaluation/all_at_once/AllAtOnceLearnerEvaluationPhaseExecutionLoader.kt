@@ -6,6 +6,7 @@ import org.elaastic.questions.player.phase.LearnerPhaseExecution
 import org.elaastic.questions.player.phase.LearnerPhase
 import org.elaastic.questions.player.phase.evaluation.AbstractLearnerEvaluationPhaseExecutionLoader
 import org.elaastic.questions.player.phase.evaluation.ResponseData
+import org.elaastic.questions.player.phase.evaluation.ResponseDataFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -32,7 +33,7 @@ class AllAtOnceLearnerEvaluationPhaseExecutionLoader(
                 sequence = sequence,
                 attempt = sequence.whichAttemptEvaluate(),
                 user = learner
-            ).map { ResponseData(it) }
+            ).map { ResponseDataFactory.build(it) }
         else listOf()
 
         AllAtOnceLearnerEvaluationPhaseExecution(

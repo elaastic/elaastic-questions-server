@@ -28,10 +28,10 @@
       }
   </style>
 
-  <div class="ui segment">
-    <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
-      Comparing viewpoints
-    </div>
+<!--  <div class="ui segment">-->
+<!--    <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">-->
+<!--      Comparing viewpoints-->
+<!--    </div>-->
 
     <style>
 
@@ -47,38 +47,47 @@
           method="post">
       <input type="hidden" name="id" th:value="${model.interactionId}" />
       <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
-        <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.intro}">
-          Here are presented one or several alternative responses. Please indicate how much you agree with these
-          answers.
-        </div>
+<!--        <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.intro}">-->
+<!--          Here are presented one or several alternative responses. Please indicate how much you agree with these-->
+<!--          answers.-->
+<!--        </div>-->
+
+        <iframe id="iframe" th:src="@{/player/confronting-viewpoint}" width="100%"></iframe>
 
 
-        <div th:each="currentResponse : ${model.responsesToGrade}" class="ui attached large segment">
+<!--        <div th:each="currentResponse : ${model.responsesToGrade}" class="ui attached large segment">-->
 
-          <div th:if="${model.choices}">
-            <h5 class="ui header" style="display: inline; margin-bottom: 0;"
-                th:text="#{player.sequence.interaction.choice.label}+' :'">
-              Choice</h5>
-            <a th:each="choice : ${currentResponse.choiceList}" class="ui blue circular label"
-               th:text="${choice}"></a>
-          </div>
+<!--          <div th:if="${model.choices}">-->
+<!--            <h5 class="ui header" style="display: inline; margin-bottom: 0;"-->
+<!--                th:text="#{player.sequence.interaction.choice.label}+' :'">-->
+<!--              Choice</h5>-->
+<!--            <a th:each="choice : ${currentResponse.choiceList}" class="ui blue circular label"-->
+<!--               th:text="${choice}"></a>-->
+<!--          </div>-->
 
-          <h5 class="ui header" style="margin-top: 0; margin-bottom: 0;" th:if="${model.choices}"
-              th:text="#{common.explanation}"></h5>
-          <p th:utext="${currentResponse.explanation}"></p>
+<!--          <h5 class="ui header" style="margin-top: 0; margin-bottom: 0;" th:if="${model.choices}"-->
+<!--              th:text="#{common.explanation}"></h5>-->
+<!--          <p th:utext="${currentResponse.explanation}"></p>-->
 
 
-          <iframe th:src="@{/player/likert-scale}" width="100%"></iframe>
-        </div>
+<!--          <iframe th:src="@{/player/likert-scale}" width="100%"></iframe>-->
+<!--        </div>-->
 
         <div class="ui hidden divider"></div>
 
-        <script>
+        <script th:inline="javascript">
+          const responses = /*[[${model.responsesToGrade}]]*/ ""
+          const iframe = document.getElementById("iframe")
+          iframe.onload = () => {
+            iframe.contentWindow.elaastic.initializeConfrontingViewpoint(responses);
+          };
+
           iframeResize({
             license: 'GPLv3',
             waitForLoad: true
           })
         </script>
+
       </th:block>
 
 
@@ -119,4 +128,4 @@
 
   </div>
 
-</div>
+<!--</div>-->

@@ -33,10 +33,23 @@
 <body>
 <div id="phase2-evaluation-app" style="width: 100%"></div>
 <script>
-  const { createVuetify } = Vuetify
-  const vuetify = createVuetify()
+  window.elaastic = {
+    initializeConfrontingViewpoint: (responses) => {
 
-  Vue.createApp(ElaasticVueComponents.LikertRating).use(vuetify).mount(`#phase2-evaluation-app`)
+      const { createVuetify } = Vuetify
+      const vuetify = createVuetify()
+
+      Vue.createApp(
+        ElaasticVueComponents.ConfrontingViewpoint,
+        {
+          responses,
+          onEvaluationChanged(responseId, value) {
+            console.info({ responseId, value })
+          }
+        }
+      ).use(vuetify).mount(`#phase2-evaluation-app`)
+    }
+  }
 </script>
 </body>
 </html>
