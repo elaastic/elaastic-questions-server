@@ -22,7 +22,9 @@ export const ExclusiveChoice: Story = {
       return { ...args, evaluationValue }
     },
     template: `
-      <evaluation-card v-model="evaluationValue" :evaluation-num="evaluationNum" :choices="choices"
+      <evaluation-card v-model="evaluationValue"
+                       :evaluation-num="evaluationNum"
+                       :choices="choices"
                        :response="response" />
     `
   }),
