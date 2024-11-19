@@ -3,6 +3,7 @@ import ChoiceChip from '@/stories/response/ChoiceChip.vue'
 import LikertScale from '@/stories/evaluation/LikertScale.vue'
 import { computed } from 'vue'
 import type { LikertValue } from '@/stories/evaluation/Likert'
+import { type AnyResponse, getChoices } from '@/models/Response'
 
 interface EvaluationCardProps {
   /**
@@ -14,14 +15,9 @@ interface EvaluationCardProps {
    */
   evaluationNum?: number | null,
   /**
-   * The choice or choices of a peer alternative answer
-   * Can be undefined for open-ended question.
+   * The alternative response to evaluate
    */
-  choices?: number[],
-  /**
-   * The explanation for this choice(s) provided by the pear
-   */
-  explanation: string,
+  response: AnyResponse
 }
 
 const props = withDefaults(defineProps<EvaluationCardProps>(), {
@@ -39,7 +35,9 @@ const evaluationValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 })
-const explanationLabel = computed(() => props.choices ? 'Explanation' : 'Answer')
+const explanationLabel = computed(() => props.response.questionType == 'OpenEnded' ? 'Answer' : 'Explanation')
+const explanation = props.response.explanation
+const choices = getChoices(props.response)
 </script>
 
 <template>

@@ -2,19 +2,19 @@
 
 import EvaluationCard from '@/stories/evaluation/EvaluationCard.vue'
 import { reactive } from 'vue'
-import type { Response } from '@/models/Response'
+import type { AnyResponse } from '@/models/Response'
 import type { LikertValue } from '@/stories/evaluation/Likert'
 
 type ResponseId = number
 
 interface ConfrontingViewpointProps {
-  responses: Response[]
+  responses: AnyResponse[]
 }
 
 const props = defineProps<ConfrontingViewpointProps>()
 
 const evaluations = reactive(
-  props.responses.reduce((acc: { [key: ResponseId]: LikertValue }, response: Response) => {
+  props.responses.reduce((acc: { [key: ResponseId]: LikertValue }, response: AnyResponse) => {
     acc[response.id] = null;
     return acc;
   }, {})
@@ -51,7 +51,7 @@ const evaluations = reactive(
       >
         <evaluation-card :evaluation-num="index+1"
                          v-model="evaluations[response.id]"
-                         v-bind="response.choices || response.choice ? { choices: response.choices || [response.choice] } : {}"
+                         :response="response"
                          :explanation="response.explanation" />
       </v-col>
     </v-row>
