@@ -9,7 +9,7 @@ const meta = {
   component: LikertScale,
   tags: ['autodocs'],
   argTypes: {
-    color: "string",
+    color: { control: 'text' },
   },
   decorators: [
     (story) => ({
@@ -36,7 +36,7 @@ export const Default: Story = {
   args: {
     modelValue: null,
     nbValues: 5,
-    minLabel: "Strongly disagree !",
+    minLabel: "Strongly disagree",
     maxLabel: "Strongly agree",
     color: "primary",
   },
