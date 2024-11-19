@@ -2,12 +2,13 @@
 import { computed, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { min } from 'rxjs'
+import type { LikertValue } from '@/stories/evaluation/Likert'
 
 interface LikertScaleProps {
   /**
    * The selected value on the Likert scale
    */
-  modelValue: number | null,
+  modelValue: LikertValue,
   /**
    * The number of value of the scale
    * @default 5
@@ -30,7 +31,7 @@ interface LikertScaleProps {
 
 interface LikertScaleEvents {
   /** Fired when the selected value changes */
-  (event: 'update:modelValue', value: number | null): void;
+  (event: 'update:modelValue', value: LikertValue): void;
 }
 
 const props = withDefaults(defineProps<LikertScaleProps>(), {

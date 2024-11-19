@@ -3,9 +3,9 @@
 import EvaluationCard from '@/stories/evaluation/EvaluationCard.vue'
 import { reactive } from 'vue'
 import type { Response } from '@/models/Response'
+import type { LikertValue } from '@/stories/evaluation/Likert'
 
 type ResponseId = number
-type LikertValue = number | null
 
 interface ConfrontingViewpointProps {
   responses: Response[]

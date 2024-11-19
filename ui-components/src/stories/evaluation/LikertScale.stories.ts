@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 
 import LikertScale from '@/stories/evaluation/LikertScale.vue'
 import { ref } from 'vue'
+import type { LikertValue } from '@/stories/evaluation/Likert'
 
 const meta = {
   title: 'Evaluation/Likert',
@@ -25,7 +26,7 @@ export const Default: Story = {
   render: (args) => ({
     components: { LikertScale },
     setup() {
-      const value = ref(null);
+      const value = ref<LikertValue>(args.modelValue || null);
       return { ...args, value };
     },
     template: `
@@ -33,8 +34,9 @@ export const Default: Story = {
     `,
   }),
   args: {
+    modelValue: null,
     nbValues: 5,
-    minLabel: "Strongly disagree",
+    minLabel: "Strongly disagree !",
     maxLabel: "Strongly agree",
     color: "primary",
   },

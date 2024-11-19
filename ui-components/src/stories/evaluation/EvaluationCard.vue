@@ -2,12 +2,13 @@
 import ChoiceChip from '@/stories/response/ChoiceChip.vue'
 import LikertScale from '@/stories/evaluation/LikertScale.vue'
 import { computed } from 'vue'
+import type { LikertValue } from '@/stories/evaluation/Likert'
 
 interface EvaluationCardProps {
   /**
    * The evaluation value of this card
    */
-  modelValue: number | null,
+  modelValue: LikertValue,
   /**
    * Evaluation number in the list of evaluations
    */
@@ -29,7 +30,7 @@ const props = withDefaults(defineProps<EvaluationCardProps>(), {
 
 interface EvaluationCartEvents {
   /** Fires when the user changes its evaluation of this response */
-  (event: 'update:modelValue', value: number | null): void;
+  (event: 'update:modelValue', value: LikertValue): void;
 }
 
 const emit = defineEmits<EvaluationCartEvents>()
