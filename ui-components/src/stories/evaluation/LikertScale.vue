@@ -26,7 +26,7 @@ interface LikertScaleProps {
    * Component color
    * @default 'default'
    */
-  color: string;
+  color?: string;
 }
 
 interface LikertScaleEvents {
