@@ -154,7 +154,7 @@ object AssignmentOverviewModelFactory {
      * null.
      */
     private fun getAudience(assignment: Assignment): String {
-        val scholarYear = if (assignment.scholarYear != null) " (${assignment.scholarYear})" else ""
+        val scholarYear = assignment.scholarYear?.let { " ($it)" } ?: ""
         return "${assignment.audience}$scholarYear"
     }
 
