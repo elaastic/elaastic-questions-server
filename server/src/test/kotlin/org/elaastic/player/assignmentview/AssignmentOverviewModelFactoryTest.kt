@@ -13,292 +13,331 @@ class AssignmentOverviewModelFactoryTest {
     val minus = AssignmentOverviewModelFactory.minusIcon
     val comment = AssignmentOverviewModelFactory.commentIcon
     val comments = AssignmentOverviewModelFactory.commentsIcon
-    
-    fun testOfResolveIcons(
-        expectedIcons: List<AssignmentOverviewModel.PhaseIcon>,
-        isTeacher: Boolean,
-        executionContext: ExecutionContext,
-        state: State,
-        resultsArePublished: Boolean,
-        activeInteractionType: InteractionType?
-    ) {
-        val actualIcons = AssignmentOverviewModelFactory.resolveIcons(
-            isTeacher,
-            executionContext,
-            state,
-            resultsArePublished,
-            activeInteractionType
-        )
-        assertEquals(actualIcons, expectedIcons)
-    }
 
     @Test
     fun `test resolveIcons when FaceToFace, stopped, result aren't publish and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(lock),
-            true,
-            ExecutionContext.FaceToFace,
-            State.afterStop,
-            resultsArePublished = false,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.afterStop,
+                resultsArePublished = false,
+                null
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when FaceToFace, stopped, result are publish and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(chart),
-            true,
-            ExecutionContext.FaceToFace,
-            State.afterStop,
-            resultsArePublished = true,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.afterStop,
+                resultsArePublished = true,
+                null
+            )
         )
+
     }
 
     @Test
     fun `test resolveIcons when FaceToFace, not stopped, interaction is ResponsSubmission and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment),
-            true,
-            ExecutionContext.FaceToFace,
-            State.beforeStart,
-            resultsArePublished = false,
-            InteractionType.ResponseSubmission
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.beforeStart,
+                resultsArePublished = false,
+                InteractionType.ResponseSubmission
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment),
-            true,
-            ExecutionContext.FaceToFace,
-            State.show,
-            resultsArePublished = false,
-            InteractionType.ResponseSubmission
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.show,
+                resultsArePublished = false,
+                InteractionType.ResponseSubmission
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when FaceToFace, not stopped, interaction is Evaluation and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(comments),
-            true,
-            ExecutionContext.FaceToFace,
-            State.beforeStart,
-            resultsArePublished = false,
-            InteractionType.Evaluation
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.beforeStart,
+                resultsArePublished = false,
+                InteractionType.Evaluation
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(comments),
-            true,
-            ExecutionContext.FaceToFace,
-            State.show,
-            resultsArePublished = false,
-            InteractionType.Evaluation
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.show,
+                resultsArePublished = false,
+                InteractionType.Evaluation
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when FaceToFace, not stopped, interaction is Read and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(chart),
-            true,
-            ExecutionContext.FaceToFace,
-            State.beforeStart,
-            resultsArePublished = false,
-            InteractionType.Read
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.beforeStart,
+                resultsArePublished = false,
+                InteractionType.Read
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(chart),
-            true,
-            ExecutionContext.FaceToFace,
-            State.show,
-            resultsArePublished = false,
-            InteractionType.Read
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.show,
+                resultsArePublished = false,
+                InteractionType.Read
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when FaceToFace, not stopped, interaction is null and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.FaceToFace,
-            State.beforeStart,
-            resultsArePublished = false,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.beforeStart,
+                resultsArePublished = false,
+                null
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.FaceToFace,
-            State.show,
-            resultsArePublished = false,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.FaceToFace,
+                State.show,
+                resultsArePublished = false,
+                null
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when Distance, stopped, result aren't publish and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(lock),
-            true,
-            ExecutionContext.Distance,
-            State.afterStop,
-            resultsArePublished = false,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.afterStop,
+                resultsArePublished = false,
+                null
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when Distance, stopped, result are publish and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(chart),
-            true,
-            ExecutionContext.Distance,
-            State.afterStop,
-            resultsArePublished = true,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.afterStop,
+                resultsArePublished = true,
+                null
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when Distance, beforeStart, result aren't publish and is teacher`() {
         // resultArePublished = false
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.Distance,
-            State.beforeStart,
-            resultsArePublished = false,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.beforeStart,
+                resultsArePublished = false,
+                null
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.Distance,
-            State.beforeStart,
-            resultsArePublished = false,
-            InteractionType.ResponseSubmission
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.beforeStart,
+                resultsArePublished = false,
+                InteractionType.ResponseSubmission
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.Distance,
-            State.beforeStart,
-            resultsArePublished = false,
-            InteractionType.Evaluation
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.beforeStart,
+                resultsArePublished = false,
+                InteractionType.Evaluation
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.Distance,
-            State.beforeStart,
-            resultsArePublished = false,
-            InteractionType.Read
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.beforeStart,
+                resultsArePublished = false,
+                InteractionType.Read
+            )
         )
         // resultArePublished = true
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.Distance,
-            State.beforeStart,
-            resultsArePublished = true,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.beforeStart,
+                resultsArePublished = true,
+                null
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.Distance,
-            State.beforeStart,
-            resultsArePublished = true,
-            InteractionType.ResponseSubmission
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.beforeStart,
+                resultsArePublished = true,
+                InteractionType.ResponseSubmission
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.Distance,
-            State.beforeStart,
-            resultsArePublished = true,
-            InteractionType.Evaluation
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.beforeStart,
+                resultsArePublished = true,
+                InteractionType.Evaluation
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(minus),
-            true,
-            ExecutionContext.Distance,
-            State.beforeStart,
-            resultsArePublished = true,
-            InteractionType.Read
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.beforeStart,
+                resultsArePublished = true,
+                InteractionType.Read
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when Distance, show, result aren't publish and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment, comments),
-            true,
-            ExecutionContext.Distance,
-            State.show,
-            resultsArePublished = false,
-            InteractionType.ResponseSubmission
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.show,
+                resultsArePublished = false,
+                InteractionType.ResponseSubmission
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment, comments),
-            true,
-            ExecutionContext.Distance,
-            State.show,
-            resultsArePublished = false,
-            InteractionType.Evaluation
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.show,
+                resultsArePublished = false,
+                InteractionType.Evaluation
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment, comments),
-            true,
-            ExecutionContext.Distance,
-            State.show,
-            resultsArePublished = false,
-            InteractionType.Read
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.show,
+                resultsArePublished = false,
+                InteractionType.Read
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment, comments),
-            true,
-            ExecutionContext.Distance,
-            State.show,
-            resultsArePublished = false,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.show,
+                resultsArePublished = false,
+                null
+            )
         )
     }
 
     @Test
     fun `test resolveIcons when Distance, show, result are publish and is teacher`() {
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment, comments, chart),
-            true,
-            ExecutionContext.Distance,
-            State.show,
-            resultsArePublished = true,
-            InteractionType.ResponseSubmission
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.show,
+                resultsArePublished = true,
+                InteractionType.ResponseSubmission
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment, comments, chart),
-            true,
-            ExecutionContext.Distance,
-            State.show,
-            resultsArePublished = true,
-            InteractionType.Evaluation
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.show,
+                resultsArePublished = true,
+                InteractionType.Evaluation
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment, comments, chart),
-            true,
-            ExecutionContext.Distance,
-            State.show,
-            resultsArePublished = true,
-            InteractionType.Read
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.show,
+                resultsArePublished = true,
+                InteractionType.Read
+            )
         )
-        testOfResolveIcons(
+        assertEquals(
             listOf(comment, comments, chart),
-            true,
-            ExecutionContext.Distance,
-            State.show,
-            resultsArePublished = true,
-            null
+            AssignmentOverviewModelFactory.resolveIcons(
+                true,
+                ExecutionContext.Distance,
+                State.show,
+                resultsArePublished = true,
+                null
+            )
         )
     }
 }
