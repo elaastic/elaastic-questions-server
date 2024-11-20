@@ -1,8 +1,8 @@
 package org.elaastic.sequence.phase.result
 
+import org.elaastic.player.results.ResultsModelFactory
 import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.State
-import org.elaastic.player.results.ResultsModelFactory
 import org.elaastic.sequence.phase.LearnerPhase
 import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhaseType
@@ -34,10 +34,22 @@ class LearnerResultPhase(
 
     override fun getViewModel(): LearnerResultPhaseViewModel {
 
-        //TODO Fill explanationHasChatGPTEvaluationMap with the real data
+        val idFirstResponse = try {
+            learnerPhaseExecution?.responseSet?.get(1)?.first()?.id
+        } catch (e: Exception) {
+            null
+        }
+        val idSecondResponse = try {
+            learnerPhaseExecution?.responseSet?.get(2)?.first()?.id
+        } catch (e: Exception) {
+            null
+        }
+
         val explanationHasChatGPTEvaluationMap: Map<Long, Boolean> =
-            (learnerPhaseExecution!!.responseSet[1] + learnerPhaseExecution!!.responseSet[2])
-                .associate { (it.id!! to true) }
+            listOfNotNull(idFirstResponse, idSecondResponse)
+                //TODO Fill explanationHasChatGPTEvaluationMap with the real data
+                .associate { (it to false) }
+
 
         return LearnerResultPhaseViewModel(
             learnerSequence.sequence.resultsArePublished,

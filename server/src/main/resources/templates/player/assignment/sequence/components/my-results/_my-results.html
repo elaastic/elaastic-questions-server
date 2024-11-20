@@ -16,10 +16,10 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div th:fragment="myResults(resultId,studentResultsModel, seenByTeacher, seenByOwner)"
+<div th:fragment="myResults(accordionId,studentResultsModel, seenByTeacher, seenByOwner)"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <div class="ui accordion segment" th:id="|my-results-accordion-${resultId}|" style="padding-bottom: 0;">
+    <div class="ui accordion segment" th:id="|my-results-accordion-${accordionId}|" style="padding-bottom: 0;">
 
         <!--/* Title of the accordion */-->
         <div class="ui active title header">
@@ -97,7 +97,7 @@
     <script>
         /*<![CDATA[*/
         $(function () {
-            const myResponseContainer = $('#my-results-accordion-[[${resultId}]]');
+            const myResponseContainer = $('#my-results-accordion-[[${accordionId}]]');
             myResponseContainer.accordion()
             myResponseContainer.find('.see-review').click()
         })

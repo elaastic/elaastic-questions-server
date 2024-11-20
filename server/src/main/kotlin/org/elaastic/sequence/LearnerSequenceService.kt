@@ -65,12 +65,13 @@ class LearnerSequenceService(
             learner,
             sequence
         ).let {
+            // If the learnerSequence does not exist, we create it
             it ?: LearnerSequence(learner, sequence)
                 .let { learnerSequenceRepository.save(it) }
         }.let {
             if (it.activeInteraction == null && sequence.activeInteraction != null) {
                 it.activeInteraction =
-                    sequence.interactions[InteractionType.ResponseSubmission]
+                    sequence.getResponseSubmissionInteraction()
                 learnerSequenceRepository.save(it)
                 it
             } else it

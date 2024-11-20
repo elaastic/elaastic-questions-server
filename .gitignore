@@ -113,3 +113,13 @@ gradle-app.setting
 
 # Jekyll
 .jekyll-cache
+
+# Spring boot
+config
+elaastic
+
+# Mac OS
+.DS_Store
+
+# Misc
+paper.pdf

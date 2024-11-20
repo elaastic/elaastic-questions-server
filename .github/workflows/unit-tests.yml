@@ -33,7 +33,7 @@ jobs:
         run: docker compose up -d  elaastic-questions-db-test-8
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./server/gradlew build
 
       - name: Copying test reports
         if: success() || failure()    # run this step even if previous step failed

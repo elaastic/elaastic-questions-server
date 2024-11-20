@@ -24,16 +24,22 @@
           style="align-items: end;"
           th:action="@{/chatGptEvaluation/sequence/{sequenceId}/submit-utility-grade(sequenceId=${chatGptEvaluationModel.sequenceId})}"
           method="post">
-        <input type="hidden" name="isTeacher" th:value="${chatGptEvaluationModel.viewedByTeacher}"><!--/* TODO use a correct data */-->
+        <!--/* TODO use a correct data */-->
+        <input type="hidden" name="isTeacher" th:value="${chatGptEvaluationModel.viewedByTeacher}">
+
         <input type="hidden" name="evaluationId" th:value="${chatGptEvaluationModel.evaluationId}">
         <div class="ui grid stackable" style="align-items: end; margin-bottom: 1em;">
 
+            <!--/* Utility grade selection */-->
             <div class="field twelve wide column utilitySelectionApp"
                  th:id="'utilitySelectionApp-' + ${chatGptEvaluationModel.evaluationId}"
-                 style="flex-grow: 4;">
+                 style="margin-bottom: 0">
+
                 <!--/* Utility grade label */-->
-                <label th:if="${chatGptEvaluationModel.viewedByTeacher}" th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label.teacher}"></label>
-                <label th:unless="${chatGptEvaluationModel.viewedByTeacher}" th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label}"></label>
+                <label th:if="${chatGptEvaluationModel.viewedByTeacher}"
+                       th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label.teacher}"></label>
+                <label th:unless="${chatGptEvaluationModel.viewedByTeacher}"
+                       th:text="#{player.sequence.chatGptEvaluation.utilityGrade.label}"></label>
                 <input type="hidden" name="utilityGrade" v-model="selectedUtilityGrade"/>
 
                 <!--/* Utility grade selection */-->
@@ -44,8 +50,10 @@
                     </a>
                 </div>
             </div>
+
             <!--/* Report button only visible for the student */-->
-            <div th:unless="${chatGptEvaluationModel.viewedByTeacher}" class="field four wide column" id="reportSelectionApp" style="flex-grow: 1;">
+            <div th:unless="${chatGptEvaluationModel.viewedByTeacher}" class="field four wide column"
+                 id="reportSelectionApp">
                 <div class="ui menu pagination" style="width: 100%;">
                     <a class="item" style="color: #b03060; width: 100%;"
                        th:onclick="|$('#reportModal_${chatGptEvaluationModel.sequenceId}').modal('show');|">

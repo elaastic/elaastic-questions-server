@@ -69,6 +69,7 @@ class DraxoPeerGradingController(
 
         val response = responseService.findById(responseId)
         val assignment = response.interaction.sequence.assignment
+        val chatGptEvaluationEnabled = response.interaction.sequence.chatGptEvaluationEnabled
 
         // Check authorizations
         if (
@@ -77,31 +78,30 @@ class DraxoPeerGradingController(
         ) {
             throw AccessDeniedException("You are not authorized to access to those feedbacks")
         }
+        val teacher = assignment.owner
+        val isTeacher = user == teacher
+        val isResponseAuthor = user == response.learner
+        val isTeacherResponseAuthor = isTeacher && isResponseAuthor
 
         var draxoPeerGradingList = draxoPeerGradingService.findAllDraxo(response)
 
         // The student can't see the hidden feedbacks
-        if (user != assignment.owner) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
+        if (!isTeacher) draxoPeerGradingList = draxoPeerGradingList.filter { !it.hiddenByTeacher }
 
         val draxoEvaluationModels = draxoPeerGradingList.mapIndexed { index, draxoPeerGrading ->
             DraxoEvaluationModel(
                 index,
                 draxoPeerGrading,
-                user == assignment.owner,
+                isTeacher,
                 responseService.canReactOnFeedbackOfResponse(user, response),
                 responseService.canHidePeerGrading(user, response)
             )
         }
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
+        val evaluationIsHidden = chatGptEvaluation?.hiddenByTeacher == true
+
         val chatGptEvaluationModel =
-        // If it isn't the teacher, we check if the ChatGPT evaluation is hidden by the teacher.
-        // eq. If it's a student, we check if the ChatGPT evaluation is hidden by the teacher.
-            // If it's hidden, we give a null value to the model.
-            if (response.interaction.sequence.chatGptEvaluationEnabled
-                && !(user != assignment.owner && chatGptEvaluation?.hiddenByTeacher == true)
-                && assignment.owner != response.learner // We don't need a ChatGPT evaluation for the teacher
-            ) {
-                // If the ChatGPT evaluation is enabled, we add it to the model
+            if (chatGptEvaluationEnabled && (isTeacher || !evaluationIsHidden) && !isTeacherResponseAuthor && chatGptEvaluation != null) {
                 ChatGptEvaluationModelFactory.build(
                     evaluation = chatGptEvaluation,
                     sequence = response.interaction.sequence,
@@ -114,8 +114,8 @@ class DraxoPeerGradingController(
             draxoEvaluationModels,
             chatGptEvaluationModel,
             hideName ?: false,
-            canSeeChatGPTEvaluation = user == assignment.owner || user == response.learner, // Only the teacher and the learner of the question can see the ChatGPT evaluation
-            isTeacher = user == assignment.owner
+            canSeeChatGPTEvaluation = isTeacher || isResponseAuthor, // Only the teacher and the learner of the question can see the ChatGPT evaluation
+            isTeacher = isTeacher
         )
 
         model["user"] = user
