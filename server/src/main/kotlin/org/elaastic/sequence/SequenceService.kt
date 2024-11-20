@@ -28,6 +28,7 @@ import org.elaastic.material.instructional.question.explanation.FakeExplanation
 import org.elaastic.material.instructional.question.explanation.FakeExplanationRepository
 import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.moderation.ReportInformation
 import org.elaastic.player.PlayerController
 import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
@@ -393,7 +394,7 @@ class SequenceService(
         return nbDRAXOEvaluationReported + nbChatGPTEvaluationReported
     }
 
-    fun getNbReportBySequence(sequences: List<Sequence>, isTeacher: Boolean): Map<Sequence, Pair<Int, Int>> {
+    fun getNbReportBySequence(sequences: List<Sequence>, isTeacher: Boolean): Map<Sequence, ReportInformation> {
         return sequences.associateWith { sequence ->
             // Load interactions if not already loaded
             val sequenceInteractionsFetched = if (sequence.interactions.isEmpty()) {
@@ -403,9 +404,9 @@ class SequenceService(
             }
             val nbRemovedReport = getReportedEvaluation(sequenceInteractionsFetched, isTeacher, true)
             val nbNotRemovedReport = getReportedEvaluation(sequenceInteractionsFetched, isTeacher, false)
-            Pair(
-                nbRemovedReport + nbNotRemovedReport,
-                nbNotRemovedReport
+            ReportInformation(
+                nbReportTotal = nbRemovedReport + nbNotRemovedReport,
+                nbReportToModerate = nbNotRemovedReport
             )
         }
     }

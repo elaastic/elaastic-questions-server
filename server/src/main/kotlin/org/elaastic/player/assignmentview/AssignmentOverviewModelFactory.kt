@@ -20,6 +20,7 @@ package org.elaastic.player.assignmentview
 
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.ReadyForConsolidation
+import org.elaastic.moderation.ReportInformation
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State
@@ -40,7 +41,7 @@ object AssignmentOverviewModelFactory {
         assignment: Assignment,
         nbRegisteredUser: Int,
         selectedSequenceId: Long? = null,
-        nbReportBySequence: Map<Sequence, Pair<Int, Int>> = emptyMap(),
+        nbReportBySequence: Map<Sequence, ReportInformation> = emptyMap(),
     ): AssignmentOverviewModel = AssignmentOverviewModel(
         teacher = teacher,
         nbRegisteredUser = nbRegisteredUser,
@@ -56,7 +57,7 @@ object AssignmentOverviewModelFactory {
                 it,
                 teacher,
                 assignment,
-                nbReportBySequence[it] ?: Pair(0, 0)
+                nbReportBySequence[it] ?: ReportInformation.empty
             )
         },
         selectedSequenceId = selectedSequenceId,
@@ -141,7 +142,7 @@ object AssignmentOverviewModelFactory {
                 selectedSequence,
                 teacher,
                 assignment,
-                Pair(0, 0)
+                ReportInformation.empty
             )
         ),
         selectedSequenceId = selectedSequence.id,
@@ -172,7 +173,7 @@ object AssignmentOverviewModelFactory {
         sequence: Sequence,
         isTeacher: Boolean,
         assignment: Assignment,
-        nbReport: Pair<Int, Int>
+        nbReport: ReportInformation
     ) = AssignmentOverviewModel.SequenceInfo(
         id = sequence.id!!,
         title = sequence.statement.title,
@@ -180,7 +181,7 @@ object AssignmentOverviewModelFactory {
         hideStatementContent = !isTeacher && sequence.state == State.beforeStart,
         icons = resolveIcons(isTeacher, sequence),
         revisionTag = resolveRevisionTag(sequence, assignment.readyForConsolidation),
-        nbReportTotal = nbReport.first,
-        nbReportToModerate = nbReport.second
+        nbReportTotal = nbReport.nbReportTotal,
+        nbReportToModerate = nbReport.nbReportToModerate
     )
 }

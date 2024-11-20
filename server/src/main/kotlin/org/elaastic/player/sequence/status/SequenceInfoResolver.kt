@@ -1,6 +1,7 @@
 package org.elaastic.player.sequence.status
 
 import org.elaastic.common.web.MessageBuilder
+import org.elaastic.moderation.ReportInformation
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State
@@ -12,7 +13,7 @@ object SequenceInfoResolver {
         isTeacher: Boolean,
         sequence: Sequence,
         messageBuilder: MessageBuilder,
-        nbReportedEvaluation: Pair<Int, Int> = 0 to 0,
+        nbReportedEvaluation: ReportInformation = ReportInformation.empty,
     ): SequenceInfoModel = when (sequence.state) {
         State.beforeStart -> SequenceInfoModel(
             messageBuilder.message(
@@ -34,8 +35,8 @@ object SequenceInfoResolver {
                     ),
                     color = "blue",
                     refreshable = true,
-                    nbReportTotal = nbReportedEvaluation.first,
-                    nbReportToModerate = nbReportedEvaluation.second,
+                    nbReportTotal = nbReportedEvaluation.nbReportTotal,
+                    nbReportToModerate = nbReportedEvaluation.nbReportToModerate,
                 )
             } else {
                 when (sequence.activeInteractionType) {
@@ -92,15 +93,15 @@ object SequenceInfoResolver {
     private fun getSequenceInfoModelWhenReadInteraction(
         sequence: Sequence,
         messageBuilder: MessageBuilder,
-        nbReportedEvaluation: Pair<Int, Int>,
+        nbReportedEvaluation: ReportInformation,
     ) = if (sequence.resultsArePublished) {
         SequenceInfoModel(
             messageBuilder.message(
                 "player.sequence.interaction.read.teacher.show.message"
             ),
             color = "blue",
-            nbReportTotal = nbReportedEvaluation.first,
-            nbReportToModerate = nbReportedEvaluation.second,
+            nbReportTotal = nbReportedEvaluation.nbReportTotal,
+            nbReportToModerate = nbReportedEvaluation.nbReportToModerate,
         )
     } else if (sequence.state == State.show) {
         SequenceInfoModel(
@@ -110,8 +111,8 @@ object SequenceInfoResolver {
             ),
             color = "blue",
             refreshable = true,
-            nbReportTotal = nbReportedEvaluation.first,
-            nbReportToModerate = nbReportedEvaluation.second,
+            nbReportTotal = nbReportedEvaluation.nbReportTotal,
+            nbReportToModerate = nbReportedEvaluation.nbReportToModerate,
         )
     } else {
         SequenceInfoModel(
@@ -119,8 +120,8 @@ object SequenceInfoResolver {
                 "player.sequence.readinteraction.not.published"
             ),
             refreshable = true,
-            nbReportTotal = nbReportedEvaluation.first,
-            nbReportToModerate = nbReportedEvaluation.second,
+            nbReportTotal = nbReportedEvaluation.nbReportTotal,
+            nbReportToModerate = nbReportedEvaluation.nbReportToModerate,
         )
     }
 }

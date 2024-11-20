@@ -18,6 +18,7 @@
 package org.elaastic.player
 
 import org.elaastic.common.web.MessageBuilder
+import org.elaastic.moderation.ReportInformation
 import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State
@@ -46,7 +47,7 @@ object PlayerModelFactory {
         messageBuilder: MessageBuilder,
         sequenceStatistics: SequenceStatistics,
         teacherResultDashboardService: TeacherResultDashboardService,
-        nbReportBySequence: Map<Sequence, Pair<Int, Int>>,
+        nbReportBySequence: Map<Sequence, ReportInformation>,
     ): TeacherPlayerModel {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
         val showResults = sequence.state != State.beforeStart
@@ -68,7 +69,7 @@ object PlayerModelFactory {
                 true,
                 sequence,
                 messageBuilder,
-                nbReportBySequence[sequence] ?: (0 to 0)
+                nbReportBySequence[sequence] ?: ReportInformation.empty
             ),
             statementPanelModel = StatementPanelModel(
                 hideStatement = false,
