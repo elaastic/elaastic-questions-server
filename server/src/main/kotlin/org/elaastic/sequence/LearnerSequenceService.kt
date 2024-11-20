@@ -31,7 +31,6 @@ import javax.transaction.Transactional
 class LearnerSequenceService(
     @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
     @Autowired val peerGradingService: PeerGradingService,
-    private val sequenceService: SequenceService
 ) {
 
     fun getActiveInteractionForLearner(learnerSequence: ILearnerSequence) =
