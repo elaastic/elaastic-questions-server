@@ -15,7 +15,7 @@ class AssignmentOverviewModelFactoryTest {
     val comments = AssignmentOverviewModelFactory.commentsIcon
     
     fun testOfResolveIcons(
-        excepectedIcons: List<AssignmentOverviewModel.PhaseIcon>,
+        expectedIcons: List<AssignmentOverviewModel.PhaseIcon>,
         isTeacher: Boolean,
         executionContext: ExecutionContext,
         state: State,
@@ -29,7 +29,7 @@ class AssignmentOverviewModelFactoryTest {
             resultsArePublished,
             activeInteractionType
         )
-        assertEquals(actualIcons, excepectedIcons)
+        assertEquals(actualIcons, expectedIcons)
     }
 
     @Test
