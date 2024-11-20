@@ -116,7 +116,7 @@ gradle-app.setting
 
 # Spring boot
 config
-elaastic
+./elaastic
 
 # Mac OS
 .DS_Store
