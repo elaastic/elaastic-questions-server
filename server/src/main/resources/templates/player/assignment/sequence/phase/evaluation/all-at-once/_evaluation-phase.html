@@ -78,9 +78,8 @@
         <script th:inline="javascript">
           const data = /*[[${model.responsesToGrade}]]*/ ""
           const iframe = document.getElementById("iframe")
-          console.info(iframe)
           iframe.onload = () => {
-            iframe.contentWindow.loadData(data);
+            iframe.contentWindow.elaastic.initializeConfrontingViewpoint(data);
           };
 
           iframeResize({

@@ -33,19 +33,21 @@
 <body>
 <div id="phase2-evaluation-app" style="width: 100%"></div>
 <script>
-  window.loadData = (data) => {
-    const { createVuetify } = Vuetify
-    const vuetify = createVuetify()
+  window.elaastic = {
+    initializeConfrontingViewpoint: (data) => {
+      const { createVuetify } = Vuetify
+      const vuetify = createVuetify()
 
-    Vue.createApp(ElaasticVueComponents.ConfrontingViewpoint, {
-      responses: data.map(response => ({
-          id: response.id,
-          questionType: 'MultipleChoice',
-          choices: response.choiceList,
-          explanation: response.explanation
-        })
-      )
-    }).use(vuetify).mount(`#phase2-evaluation-app`)
+      Vue.createApp(ElaasticVueComponents.ConfrontingViewpoint, {
+        responses: data.map(response => ({
+            id: response.id,
+            questionType: 'MultipleChoice',
+            choices: response.choiceList,
+            explanation: response.explanation
+          })
+        )
+      }).use(vuetify).mount(`#phase2-evaluation-app`)
+    }
   }
 </script>
 </body>
