@@ -8,10 +8,24 @@ import type { LikertValue } from '@/stories/evaluation/Likert'
 type ResponseId = number
 
 export interface ConfrontingViewpointProps {
+  /**
+   * The responses to evaluate in this viewpoints confrontation
+   */
   responses: AnyResponse[]
 }
 
+export interface ConfrontingViewpointEvents {
+  /**
+   * Fired when the user changes its evaluation of an alternative response
+   * @param event
+   * @param responseId
+   * @param value the evaluation value
+   */
+  (event: 'evaluation-changed', responseId: number, value: LikertValue)
+}
+
 const props = defineProps<ConfrontingViewpointProps>()
+const emit = defineEmits<ConfrontingViewpointEvents>()
 
 const evaluations = reactive(
   props.responses.reduce((acc: { [key: ResponseId]: LikertValue }, response: AnyResponse) => {
@@ -19,6 +33,13 @@ const evaluations = reactive(
     return acc;
   }, {})
 );
+
+const onEvaluationChange = (responseId: number) => (
+  (value: LikertValue) => {
+    console.log(`*** evaluation-changed(${responseId}, ${value})`)
+    emit('evaluation-changed', responseId, value)
+  }
+)
 
 </script>
 
@@ -51,6 +72,7 @@ const evaluations = reactive(
       >
         <evaluation-card :evaluation-num="index+1"
                          v-model="evaluations[response.id]"
+                         @update:model-value="onEvaluationChange(response.id)($event)"
                          :response="response"
                          :explanation="response.explanation" />
       </v-col>
