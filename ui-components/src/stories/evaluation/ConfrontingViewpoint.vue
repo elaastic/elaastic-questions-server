@@ -21,7 +21,7 @@ export interface ConfrontingViewpointEvents {
    * @param responseId
    * @param value the evaluation value
    */
-  (event: 'evaluation-changed', responseId: number, value: LikertValue)
+  (event: 'evaluation-changed', responseId: number, value: LikertValue): void
 }
 
 const props = defineProps<ConfrontingViewpointProps>()
@@ -34,7 +34,7 @@ const evaluations = reactive(
   }, {})
 )
 
-const onEvaluationChange = (responseId: number, value: LikertValue) =>
+const onEvaluationChange = (responseId: number, value: LikertValue): void =>
   emit('evaluation-changed', responseId, value)
 
 
