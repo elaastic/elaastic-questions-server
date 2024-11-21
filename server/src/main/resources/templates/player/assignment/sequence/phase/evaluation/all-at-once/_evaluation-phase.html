@@ -52,7 +52,7 @@
 <!--          answers.-->
 <!--        </div>-->
 
-        <iframe th:src="@{/player/confronting-viewpoint}" width="100%"></iframe>
+        <iframe id="iframe" th:src="@{/player/confronting-viewpoint}" width="100%"></iframe>
 
 
 <!--        <div th:each="currentResponse : ${model.responsesToGrade}" class="ui attached large segment">-->
@@ -76,6 +76,13 @@
         <div class="ui hidden divider"></div>
 
         <script>
+          const data = "Hello World !"
+          const iframe = document.getElementById("iframe")
+          console.info(iframe)
+          iframe.onload = () => {
+            iframe.contentWindow.loadData(data);
+          };
+
           iframeResize({
             license: 'GPLv3',
             waitForLoad: true
