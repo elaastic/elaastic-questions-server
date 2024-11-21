@@ -34,15 +34,15 @@
 <div id="phase2-evaluation-app" style="width: 100%"></div>
 <script>
   window.elaastic = {
-    initializeConfrontingViewpoint: (data) => {
-      console.info(data)
+    initializeConfrontingViewpoint: (responses) => {
 
       const { createVuetify } = Vuetify
       const vuetify = createVuetify()
 
-      Vue.createApp(ElaasticVueComponents.ConfrontingViewpoint, {
-        responses: data
-      }).use(vuetify).mount(`#phase2-evaluation-app`)
+      Vue.createApp(
+        ElaasticVueComponents.ConfrontingViewpoint,
+        { responses }
+      ).use(vuetify).mount(`#phase2-evaluation-app`)
     }
   }
 </script>
