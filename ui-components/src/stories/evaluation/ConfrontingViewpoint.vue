@@ -29,17 +29,14 @@ const emit = defineEmits<ConfrontingViewpointEvents>()
 
 const evaluations = reactive(
   props.responses.reduce((acc: { [key: ResponseId]: LikertValue }, response: AnyResponse) => {
-    acc[response.id] = null;
-    return acc;
+    acc[response.id] = null
+    return acc
   }, {})
-);
-
-const onEvaluationChange = (responseId: number) => (
-  (value: LikertValue) => {
-    console.log(`*** evaluation-changed(${responseId}, ${value})`)
-    emit('evaluation-changed', responseId, value)
-  }
 )
+
+const onEvaluationChange = (responseId: number, value: LikertValue) =>
+  emit('evaluation-changed', responseId, value)
+
 
 </script>
 
@@ -72,7 +69,7 @@ const onEvaluationChange = (responseId: number) => (
       >
         <evaluation-card :evaluation-num="index+1"
                          v-model="evaluations[response.id]"
-                         @update:model-value="onEvaluationChange(response.id)($event)"
+                         @update:model-value="onEvaluationChange(response.id, $event)"
                          :response="response"
                          :explanation="response.explanation" />
       </v-col>
