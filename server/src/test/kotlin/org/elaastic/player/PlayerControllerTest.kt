@@ -18,7 +18,10 @@
 
 package org.elaastic.player
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.atLeastOnce
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import io.mockk.every
 import io.mockk.mockkClass
 import io.mockk.mockkObject
@@ -34,10 +37,9 @@ import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.player.results.TeacherResultDashboardService
+import org.elaastic.player.sequence.SequenceModelFactory
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.security.TestSecurityConfig
-import org.elaastic.test.FunctionalTestingService
-import org.elaastic.test.IntegrationTestingService
 import org.elaastic.sequence.LearnerSequence
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.SequenceService
@@ -46,6 +48,8 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.LearnerPhaseService
+import org.elaastic.test.FunctionalTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.AnonymousUserService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
@@ -124,6 +128,10 @@ internal class PlayerControllerTest(
 
     @MockBean
     lateinit var draxoPeerGradingService: DraxoPeerGradingService
+
+    @MockBean
+    lateinit var sequenceModelFactory: SequenceModelFactory
+
 
     @Test
     fun `consultPlayer is called whenever a student accesses to the player`() {

@@ -56,8 +56,7 @@ import org.elaastic.player.results.learner.LearnerOpenResults
 import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.sequence.status.SequenceInfoModel
 import org.elaastic.player.sequence.status.SequenceInfoResolver
-import org.elaastic.player.statement.StatementInfo
-import org.elaastic.player.statement.StatementPanelModel
+import org.elaastic.player.statement.StatementInfoPanelModel
 import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.player.steps.StepsModel
 import org.elaastic.sequence.ExecutionContext
@@ -613,19 +612,14 @@ class ComponentTestingController(
 
         model.addAttribute("user", user)
         model.addAttribute(
-            "statementPanelModel",
-            StatementPanelModel(
+            "statementInfoPanelModel",
+            StatementInfoPanelModel(
+                title = "Énoncé de test",
+                questionType = QuestionType.ExclusiveChoice,
+                content = "Le <strong>contenu</strong> de cet énoncé de test.",
                 panelClosed = panelClosed ?: false,
                 hideQuestionType = hideQuestionType ?: false,
                 hideStatement = hideStatement ?: false
-            )
-        )
-        model.addAttribute(
-            "statement",
-            StatementInfo(
-                "Énoncé de test",
-                QuestionType.ExclusiveChoice,
-                "Le <strong>contenu</strong> de cet énoncé de test."
             )
         )
 
