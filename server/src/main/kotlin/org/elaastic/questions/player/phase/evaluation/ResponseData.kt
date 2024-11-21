@@ -18,16 +18,62 @@
 
 package org.elaastic.questions.player.phase.evaluation
 
+import org.elaastic.questions.assignment.QuestionType
 import org.elaastic.questions.assignment.sequence.interaction.response.Response
 
-data class ResponseData(
-        val id: Long,
-        val choiceList: List<Int> = listOf(),
-        val explanation: String
-) {
+interface ResponseData {
+    val id: Long
+    val explanation: String
+    val questionType: QuestionType
+    fun getChoiceList() = listOf<Int>()
+}
+
+data class OpenEndedResponseData(
+    override val id: Long,
+    override val explanation: String
+) : ResponseData {
+    override val questionType = QuestionType.OpenEnded
+
     constructor(response: Response): this(
-            id = response.id ?: error("Response has no ID"),
-            choiceList = response.learnerChoice ?: listOf<Int>(),
-            explanation = response.explanation ?:""
+        id = response.id ?: error("Response has no ID"),
+        explanation = response.explanation ?: "",
     )
+}
+
+data class ExclusiveChoiceResponseData(
+    override val id: Long,
+    override val explanation: String,
+    val choice: Int?
+) : ResponseData {
+    override val questionType = QuestionType.ExclusiveChoice
+    override fun getChoiceList() = choice?.let { listOf(choice) } ?: listOf()
+
+    constructor(response: Response): this(
+        id = response.id ?: error("Response has no ID"),
+        explanation = response.explanation ?: "",
+        choice = response.learnerChoice?.firstOrNull()
+    )
+}
+
+data class MultipleChoiceResponseData(
+    override val id: Long,
+    override val explanation: String,
+    val choices: List<Int>
+) : ResponseData {
+    override val questionType = QuestionType.MultipleChoice
+    override fun getChoiceList() = choices
+
+    constructor(response: Response): this(
+        id = response.id ?: error("Response has no ID"),
+        explanation = response.explanation ?: "",
+        choices = response.learnerChoice ?: listOf()
+    )
+}
+
+object ResponseDataFactory {
+    fun build(response: Response) = when (response.statement.questionType) {
+        QuestionType.OpenEnded -> OpenEndedResponseData(response)
+        QuestionType.ExclusiveChoice -> ExclusiveChoiceResponseData(response)
+        QuestionType.MultipleChoice -> MultipleChoiceResponseData(response)
+    }
 }

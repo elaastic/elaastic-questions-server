@@ -35,17 +35,13 @@
 <script>
   window.elaastic = {
     initializeConfrontingViewpoint: (data) => {
+      console.info(data)
+
       const { createVuetify } = Vuetify
       const vuetify = createVuetify()
 
       Vue.createApp(ElaasticVueComponents.ConfrontingViewpoint, {
-        responses: data.map(response => ({
-            id: response.id,
-            questionType: 'MultipleChoice',
-            choices: response.choiceList,
-            explanation: response.explanation
-          })
-        )
+        responses: data
       }).use(vuetify).mount(`#phase2-evaluation-app`)
     }
   }
