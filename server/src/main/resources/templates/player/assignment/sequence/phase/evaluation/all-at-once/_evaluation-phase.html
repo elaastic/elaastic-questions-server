@@ -76,10 +76,10 @@
         <div class="ui hidden divider"></div>
 
         <script th:inline="javascript">
-          const data = /*[[${model.responsesToGrade}]]*/ ""
+          const responses = /*[[${model.responsesToGrade}]]*/ ""
           const iframe = document.getElementById("iframe")
           iframe.onload = () => {
-            iframe.contentWindow.elaastic.initializeConfrontingViewpoint(data);
+            iframe.contentWindow.elaastic.initializeConfrontingViewpoint(responses);
           };
 
           iframeResize({
@@ -87,6 +87,7 @@
             waitForLoad: true
           })
         </script>
+
       </th:block>
 
 
