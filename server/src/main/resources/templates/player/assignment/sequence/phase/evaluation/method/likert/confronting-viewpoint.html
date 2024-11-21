@@ -44,7 +44,7 @@
         {
           responses,
           onEvaluationChanged(responseId, value) {
-            console.info({ responseId, value })
+            window.parent.postMessage({ command: "evaluation-changed", responseId, value })
           }
         }
       ).use(vuetify).mount(`#phase2-evaluation-app`)
