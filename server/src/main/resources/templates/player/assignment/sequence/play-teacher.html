@@ -44,10 +44,6 @@
 
     <body>
 
-    <div id="data"
-         style="display: none;"
-         th:data-opened-aside-pane="${playerModel.openedPane}"></div>
-
     <div id="pageSpecificMenu">
         <a class="item"
            th:href="@{/subject/{subjectId}(subjectId=${playerModel.assignment.subject.id}, activeTab='questions')}"

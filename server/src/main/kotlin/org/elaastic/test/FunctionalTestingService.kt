@@ -17,6 +17,7 @@ import org.elaastic.player.PlayerController
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService
+import org.elaastic.sequence.State
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.interpreter.command.*
@@ -27,6 +28,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import kotlin.random.Random
+
+
+private const val THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION = "The sequence has no active interaction"
 
 @Service
 @Transactional
@@ -140,7 +144,13 @@ class FunctionalTestingService(
         )
     }
 
-    fun generateSubjectWithQuestionsAndAssignments(user: User) =
+    /**
+     * Generate a subject with questions and assignments ready to practice
+     */
+    fun generateSubjectWithQuestionsAndAssignmentsReadyToPratice(user: User) =
+        generateSubjectWithQuestionsAndAssignments(user, ReadyForConsolidation.AfterTeachings)
+
+    fun generateSubjectWithQuestionsAndAssignments(user: User, praticeStatus: ReadyForConsolidation = ReadyForConsolidation.NotAtAll) =
         createSubject(user, "Test subject ${LocalDate.now()}")
             // Questions
             .also { subject ->
@@ -151,10 +161,29 @@ class FunctionalTestingService(
             // Assignments
             .also { subject ->
                 listOf("Face-to-face", "Blended", "Distant").forEach {
-                    createAssignmentReadyToPractice(subject, "$it Test Assignment")
+                    when (praticeStatus) {
+                        ReadyForConsolidation.NotAtAll -> createAssignment(subject, "$it Test Assignment")
+                        ReadyForConsolidation.Immediately -> createAssignmentReadyImmediatelyForPractice(subject, "$it Test Assignment")
+                        ReadyForConsolidation.AfterTeachings -> createAssignmentReadyToPractice(subject, "$it Test Assignment")
+                    }
                 }
             }
 
+    /**
+     * Generate an Assignment ready to use
+     */
+    fun generateAssignement(user: User): Assignment {
+        val subject = generateSubjectWithQuestionsAndAssignments(user)
+        return subject.assignments.first()
+    }
+
+    /**
+     * Generate a sequence ready to use
+     */
+    fun generateSequence(user: User): Sequence {
+        val assignment = generateAssignement(user)
+        return assignment.sequences.first()
+    }
 
     fun startSequence(
         sequence: Sequence,
@@ -291,10 +320,32 @@ class FunctionalTestingService(
 
     fun nextPhase(sequence: Sequence) =
         sequence.activeInteraction.let { activeInteraction ->
-            checkNotNull(activeInteraction) { "The sequence has no active interaction" }
+            checkNotNull(activeInteraction) { THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION }
             check(activeInteraction.rank != sequence.interactions.size) { "The active interaction is the last one" }
 
             interactionService.stop(sequence.owner, activeInteraction)
+            interactionService.startNext(sequence.owner, activeInteraction)
+        }
+
+    /**
+     * Stop the active interaction of the sequence
+     */
+    fun stopPhase(sequence: Sequence) =
+        sequence.activeInteraction.let { activeInteraction ->
+            checkNotNull(activeInteraction) { THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION }
+            interactionService.stop(sequence.owner, activeInteraction)
+        }
+
+    /**
+     * Start the next interaction of the sequence
+     * The active interaction must be stopped
+     */
+    fun startNextPhase(sequence: Sequence) =
+        sequence.activeInteraction.let { activeInteraction ->
+            checkNotNull(activeInteraction) { THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION }
+            check(activeInteraction.rank != sequence.interactions.size) { "The active interaction is the last one" }
+            check(activeInteraction.state == State.afterStop) { "The active interaction is not stopped" }
+
             interactionService.startNext(sequence.owner, activeInteraction)
         }
 
@@ -417,5 +468,9 @@ class FunctionalTestingService(
         if (!assignmentService.userIsRegisteredInAssignment(user, assignment)) {
             assignmentService.registerUser(user, assignment)
         }
+    }
+
+    fun unpublishResults(sequence: Sequence) {
+        sequenceService.unpublishResults(sequence.owner, sequence)
     }
 }

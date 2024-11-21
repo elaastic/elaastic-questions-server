@@ -58,7 +58,7 @@ class PeerGradingServiceIntegrationTest(
     @Test
     fun `save a DRAXO Peer Grading`() {
         val teacher = integrationTestingService.getTestTeacher()
-        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
+        val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignmentsReadyToPratice(teacher)
         val sequence = subject.getAnyAssignment().getAnySequence()
 
         val learners = integrationTestingService.getNLearners(3)

@@ -33,13 +33,13 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
-import org.elaastic.player.dashboard.DashboardModel
 import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.results.learner.LearnerResultsModelFactory
 import org.elaastic.player.websocket.AutoReloadSessionHandler
+import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.Sequence
@@ -47,7 +47,6 @@ import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.LearnerPhaseService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.user.AnonymousUserService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
@@ -144,10 +143,7 @@ class PlayerController(
         }
     }
 
-    /**
-     * Register action for authenticated users (this URL is not accessible to
-     * anonymous users)
-     */
+    /** Register action for authenticated users (this URL is not accessible to anonymous users) */
     @GetMapping("/authenticated-register")
     fun authenticatedOnlyRegister(
         authentication: Authentication,
@@ -163,10 +159,8 @@ class PlayerController(
      * Start an anonymous session for a student :
      * - the user is only identified by a nickname
      * - a user entity will be created (with isAnonymous flag)
-     * - the user won't be able to log anymore for this user ; it may just use
-     *   the service during the session lifetime
-     * - the session start by registering the on the assignment identified by
-     *   globalId
+     * - the user won't be able to log anymore for this user ; it may just use the service during the session lifetime
+     * - the session start by registering the on the assignment identified by globalId
      */
     @GetMapping("/start-anonymous-session")
     @Transactional
@@ -214,7 +208,6 @@ class PlayerController(
         model: Model,
         @PathVariable assignmentId: Long,
         @PathVariable sequenceId: Long?,
-        @RequestParam("currentPane", required = false) openedPane: String?,
     ): String {
 
         val user: User = authentication.principal as User
@@ -233,21 +226,9 @@ class PlayerController(
             val teacher = user == sequence.owner
 
             return if (teacher)
-                playAssignmentForTeacher(
-                    user,
-                    model,
-                    sequence,
-                    openedPane ?: "assignments",
-                    httpServletRequest
-                )
+                playAssignmentForTeacher(user, model, sequence, httpServletRequest)
             else
-                playAssignmentForLearner(
-                    user,
-                    model,
-                    sequence,
-                    openedPane ?: "assignments",
-                    httpServletRequest
-                )
+                playAssignmentForLearner(user, model, sequence, httpServletRequest)
         }
 
     }
@@ -256,7 +237,6 @@ class PlayerController(
         user: User,
         model: Model,
         selectedSequence: Sequence,
-        openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
         val assignment: Assignment = selectedSequence.assignment!!
@@ -283,34 +263,26 @@ class PlayerController(
             0
         }
 
+        model["dashboardModel"] = DashboardModelFactory.build(
+            selectedSequence,
+            previousSequence,
+            nextSequence,
+            registeredUsers,
+            responses,
+            evaluationCountByUser,
+            reponseAvailable,
+            countResponseGradable,
+        )
 
-        val dashboardModel: DashboardModel =
-            DashboardModelFactory.build(
-                selectedSequence,
-                previousSequence,
-                nextSequence,
-                registeredUsers,
-                responses,
-                openedPane,
-                evaluationCountByUser,
-                reponseAvailable,
-                countResponseGradable,
-            )
-        model["dashboardModel"] = dashboardModel
-
-        model.addAttribute(
-            "playerModel",
-            PlayerModelFactory.buildForTeacher(
-                user = user,
-                sequence = selectedSequence,
-                serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
-                nbRegisteredUsers = nbRegisteredUsers,
-                sequenceToUserActiveInteraction = assignment.sequences.associateWith { it.activeInteraction },
-                messageBuilder = messageBuilder,
-                sequenceStatistics = sequenceService.getStatistics(selectedSequence),
-                teacherResultDashboardService = teacherResultDashboardService,
-                nbReportBySequence = sequenceService.getNbReportBySequence(assignment.sequences, true),
-            )
+        model["playerModel"] = PlayerModelFactory.buildForTeacher(
+            user = user,
+            sequence = selectedSequence,
+            serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
+            nbRegisteredUsers = nbRegisteredUsers,
+            messageBuilder = messageBuilder,
+            sequenceStatistics = sequenceService.getStatistics(selectedSequence),
+            teacherResultDashboardService = teacherResultDashboardService,
+            nbReportBySequence = sequenceService.getNbReportBySequence(assignment.sequences, true),
         )
 
         return "player/assignment/sequence/play-teacher"
@@ -320,7 +292,6 @@ class PlayerController(
         user: User,
         model: Model,
         sequence: Sequence,
-        openedPane: String,
         httpServletRequest: HttpServletRequest,
     ): String {
 
@@ -335,12 +306,6 @@ class PlayerController(
             PlayerModelFactory.buildForLearner(
                 sequence = sequence,
                 nbRegisteredUsers = nbRegisteredUsers,
-                openedPane = openedPane,
-                sequenceToUserActiveInteraction = assignment.sequences.associateWith {
-                    if (it.executionIsFaceToFace())
-                        it.activeInteraction
-                    else learnerSequenceService.findOrCreateLearnerSequence(user, it).activeInteraction
-                },
                 messageBuilder = messageBuilder,
                 activeInteraction = learnerSequenceService.getActiveInteractionForLearner(
                     user,
@@ -746,10 +711,8 @@ class PlayerController(
     /**
      * Get the LearnerResultsModel for the given responses and statement
      *
-     * @param responseFirstAttempt the response of the learner for the first
-     *    attempt
-     * @param responseSecondAttempt the response of the learner for the second
-     *    attempt
+     * @param responseFirstAttempt the response of the learner for the first attempt
+     * @param responseSecondAttempt the response of the learner for the second attempt
      * @param statement the statement of the sequence
      */
     private fun builtLearnerResultsModel(

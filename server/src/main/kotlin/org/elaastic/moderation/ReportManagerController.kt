@@ -62,7 +62,6 @@ class ReportManagerController(
             true,
             sequence.assignment!!,
             nbRegisteredUser = registeredUsers,
-            userActiveInteraction = sequence.activeInteraction,
             selectedSequence = sequence,
         )
 

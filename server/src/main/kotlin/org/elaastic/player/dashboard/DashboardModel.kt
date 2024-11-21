@@ -24,7 +24,6 @@ import org.elaastic.sequence.Sequence
 
 class DashboardModel(
     val sequence: Sequence,
-    val openedPane: String,
     val previousSequence: Long?,
     val nextSequence: Long?,
     val sequenceMonitoringModel: SequenceMonitoringModel,

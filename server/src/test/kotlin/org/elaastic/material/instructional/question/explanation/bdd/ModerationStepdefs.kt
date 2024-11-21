@@ -42,7 +42,7 @@ class ModerationStepdefs(
     fun aPeerGrading() {
 
         teacher = integrationTestingService.getTestTeacher()
-        subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(teacher)
+        subject = functionalTestingService.generateSubjectWithQuestionsAndAssignmentsReadyToPratice(teacher)
         sequence = subject.getAnyAssignment().getAnySequence()
 
         val learners = integrationTestingService.getNLearners(3)
