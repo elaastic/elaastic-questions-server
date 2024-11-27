@@ -17,21 +17,16 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en" th:replace="layout/vuejs-app :: vueJsAooLayout(title=~{::title}, content=~{::body}, style=~{::style})"
+<html lang="en" th:replace="layout/vuejs-app :: vueJsAooLayout(title=~{::title}, content=~{::body}, style=~{})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
   <meta charset="UTF-8">
   <title>Likert scale input</title>
-  <style>
-    html {
-        overflow: hidden;
-    }
-  </style>
 </head>
 
 <body>
-<div id="phase2-evaluation-app" style="width: 100%">
+<div id="phase2-evaluation-app" style="width: 100%; padding: 1px;">
   LOADING <!-- TODO: Add a loader here -->
 </div>
 <script>
