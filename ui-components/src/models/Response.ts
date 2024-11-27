@@ -1,3 +1,9 @@
+/**
+ * This file defines the types relates to responses (provided by a
+ * learner to a question)
+ * @author John Tranier
+ */
+
 type QuestionType = 'OpenEnded' | 'ExclusiveChoice' | 'MultipleChoice'
 
 export interface Response {
