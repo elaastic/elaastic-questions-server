@@ -22,15 +22,3 @@ export interface OpenEndedResponse extends Response {
 
 export type AnyResponse = OpenEndedResponse | MultipleChoiceResponse | ExclusiveChoiceResponse
 
-export const getChoices = (response: AnyResponse) => {
-  switch (response.questionType) {
-    case 'ExclusiveChoice':
-      return [response.choice]
-
-    case 'MultipleChoice':
-      return response.choices
-
-    case 'OpenEnded':
-      return undefined
-  }
-}

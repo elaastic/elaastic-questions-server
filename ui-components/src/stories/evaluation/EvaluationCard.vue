@@ -3,7 +3,7 @@ import ChoiceChip from '@/stories/response/ChoiceChip.vue'
 import LikertScale from '@/stories/evaluation/LikertScale.vue'
 import { computed } from 'vue'
 import type { LikertValue } from '@/stories/evaluation/Likert'
-import { type AnyResponse, getChoices } from '@/models/Response'
+import { type AnyResponse } from '@/models/Response'
 
 export interface EvaluationCardProps {
   /**
@@ -37,6 +37,19 @@ const evaluationValue = computed({
 })
 const explanationLabel = computed(() => props.response.questionType == 'OpenEnded' ? 'Answer' : 'Explanation')
 const explanation = props.response.explanation
+
+const getChoices = (response: AnyResponse) => {
+  switch (response.questionType) {
+    case 'ExclusiveChoice':
+      return [response.choice]
+
+    case 'MultipleChoice':
+      return response.choices
+
+    case 'OpenEnded':
+      return undefined
+  }
+}
 const choices = getChoices(props.response)
 </script>
 
