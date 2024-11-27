@@ -26,25 +26,36 @@
     <input type="hidden" name="id" th:value="${model.interactionId}" />
     <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
 
+      <!--/* iframe allowing to load the <confronting-viewpoint> app in a isolated context */-->
       <iframe id="confronting-viewpoints-app" class="transparent-iframe" th:src="@{/player/confronting-viewpoint}" width="100%"></iframe>
+
+      <!--/* script for activating @iframe-resizer that allow us to smoothly integrate the previous iframe within the page layout */-->
+      <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
+
       <div class="ui hidden divider"></div>
 
-      <!--  Create form fiels for storing evaluation per response    -->
+      <!--/*  Create form fields for storing evaluation per response */-->
       <input type="hidden" th:each="currentResponse : ${model.responsesToGrade}" th:id="|grades[${currentResponse.id}]|" th:name="|grades[${currentResponse.id}]|" />
 
-      <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
+
+      <!--/* Initialise the <confronting-viewpoint app & interact with it */-->
       <script th:inline="javascript">
+        /*[- Expose server model as JSON -]*/
         const responses = /*[[${model.responsesToGrade}]]*/ ''
+
+        /*[- Trigger the app init function on iframe loading -]*/
         const iframe = document.getElementById('confronting-viewpoints-app')
         iframe.onload = () => {
           iframe.contentWindow.elaastic.initializeConfrontingViewpoint(responses)
         }
 
+        /*[- Init iframe resize -]*/
         iframeResize({
           license: 'GPLv3',
           waitForLoad: true
-        })
+        }, '#confronting-viewpoints-app')
 
+        /*[-  Observe messages sent by the iframe to keep the form input synchronized -]*/
         window.addEventListener('message', (event) => {
           document.getElementById(`grades[${event.data.responseId}]`).value = event.data.value || -1
         })
