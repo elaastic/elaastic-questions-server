@@ -19,15 +19,6 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
-  <style>
-      iframe {
-          border: none;
-          box-shadow: none;
-          overflow: hidden;
-      }
-  </style>
-
   <style>
 
       .ui.pagination.menu .active.item {
@@ -43,15 +34,16 @@
     <input type="hidden" name="id" th:value="${model.interactionId}" />
     <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
 
-      <iframe id="iframe" th:src="@{/player/confronting-viewpoint}" width="100%"></iframe>
+      <iframe id="confronting-viewpoints-app" class="transparent-iframe" th:src="@{/player/confronting-viewpoint}" width="100%"></iframe>
       <div class="ui hidden divider"></div>
 
       <!--  Create form fiels for storing evaluation per response    -->
       <input type="hidden" th:each="currentResponse : ${model.responsesToGrade}" th:id="|grades[${currentResponse.id}]|" th:name="|grades[${currentResponse.id}]|" />
 
+      <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
       <script th:inline="javascript">
         const responses = /*[[${model.responsesToGrade}]]*/ ''
-        const iframe = document.getElementById('iframe')
+        const iframe = document.getElementById('confronting-viewpoints-app')
         iframe.onload = () => {
           iframe.contentWindow.elaastic.initializeConfrontingViewpoint(responses)
         }
@@ -62,7 +54,6 @@
         })
 
         window.addEventListener('message', (event) => {
-          console.log(`document.getElementById(\`grade[${event.data.responseId}]\`).value = ${event.data.value}`)
           document.getElementById(`grades[${event.data.responseId}]`).value = event.data.value || -1
         })
       </script>
@@ -106,5 +97,3 @@
 
 
 </div>
-
-<!--</div>-->
