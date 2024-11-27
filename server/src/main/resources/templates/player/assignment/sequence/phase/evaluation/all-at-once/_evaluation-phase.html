@@ -19,14 +19,6 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <style>
-
-      .ui.pagination.menu .active.item {
-          background-color: #dff0ff;
-          color: #0e6eb8;
-      }
-  </style>
-
   <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
         th:action="@{/player/sequence/{sequenceId}/phase/evaluation/all-at-once/submit-evaluation(sequenceId=${model.sequenceId})}"
         class="ui form"
