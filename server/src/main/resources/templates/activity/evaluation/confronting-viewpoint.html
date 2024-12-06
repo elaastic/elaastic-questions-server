@@ -17,22 +17,38 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en"
+<html lang="en" th:replace="layout/vuejs-app :: vueJsAppLayout(title=~{::title}, content=~{::body}, style=~{})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
 <head>
   <meta charset="UTF-8">
-  <title>Test UI components</title>
-  <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js"></script>
-  <script th:src="@{/vue-components/elaastic-vue-components.umd.js}"></script>
-  <link th:href="@{/vue-components/style.css}" type="text/css" rel="stylesheet" media="screen, projection">
+  <title>Likert scale input</title>
 </head>
+
 <body>
-<section style="margin: 10em;">
-  <div id="demo"></div>
-  <script>
-    Vue.createApp(ElaasticVueComponents.App).mount("#demo")
-  </script>
-</section>
+<div id="phase2-evaluation-app" class="ui-app">
+  LOADING <!-- TODO: Add a loader here -->
+</div>
+<script>
+  window.elaastic = {
+    initializeConfrontingViewpoint: (responses) => {
+
+      const { createVuetify } = Vuetify
+      const vuetify = createVuetify()
+      const { useI18n, createI18n } = VueI18n
+      const i18n = createI18n()
+
+      Vue.createApp(
+        ElaasticVueComponents.ConfrontingViewpoint,
+        {
+          responses,
+          onEvaluationChanged(responseId, value) {
+            window.parent.postMessage({ command: "evaluation-changed", responseId, value })
+          }
+        }
+      ).use(vuetify).use(i18n).mount(`#phase2-evaluation-app`)
+    }
+  }
+</script>
 </body>
 </html>
