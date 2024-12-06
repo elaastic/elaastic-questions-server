@@ -35,6 +35,8 @@
 
       const { createVuetify } = Vuetify
       const vuetify = createVuetify()
+      const { useI18n, createI18n } = VueI18n
+      const i18n = createI18n()
 
       Vue.createApp(
         ElaasticVueComponents.ConfrontingViewpoint,
@@ -44,7 +46,7 @@
             window.parent.postMessage({ command: "evaluation-changed", responseId, value })
           }
         }
-      ).use(vuetify).mount(`#phase2-evaluation-app`)
+      ).use(vuetify).use(i18n).mount(`#phase2-evaluation-app`)
     }
   }
 </script>
