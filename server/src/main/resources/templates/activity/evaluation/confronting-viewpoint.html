@@ -20,33 +20,33 @@
 <html lang="en" th:replace="layout/vuejs-app :: vueJsAppLayout(title=~{::title}, content=~{::body}, style=~{})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-<head>
-  <meta charset="UTF-8">
-  <title>Likert scale input</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Likert scale input</title>
+    </head>
 
-<body>
-<div id="phase2-evaluation-app" class="ui-app">
-  LOADING <!-- TODO: Add a loader here -->
-</div>
-<script>
-  window.elaastic = {
-    initializeConfrontingViewpoint: (responses) => {
+    <body>
+    <div id="phase2-evaluation-app" class="ui-app">
+        LOADING <!-- TODO: Add a loader here -->
+    </div>
+    <script>
+        window.elaastic = {
+            initializeConfrontingViewpoint: (responses) => {
 
-      const { createVuetify } = Vuetify
-      const vuetify = createVuetify()
+                const app = Vue.createApp(
+                        ElaasticVueComponents.ConfrontingViewpoint,
+                        {
+                            responses,
+                            onEvaluationChanged(responseId, value) {
+                                window.parent.postMessage({ command: 'evaluation-changed', responseId, value })
+                            }
+                        }
+                )
 
-      Vue.createApp(
-        ElaasticVueComponents.ConfrontingViewpoint,
-        {
-          responses,
-          onEvaluationChanged(responseId, value) {
-            window.parent.postMessage({ command: "evaluation-changed", responseId, value })
-          }
+                ElaasticVueComponents.registerPlugins(app)
+                app.mount(`#phase2-evaluation-app`)
+            }
         }
-      ).use(vuetify).mount(`#phase2-evaluation-app`)
-    }
-  }
-</script>
-</body>
+    </script>
+    </body>
 </html>

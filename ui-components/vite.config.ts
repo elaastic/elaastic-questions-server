@@ -23,12 +23,14 @@ export default defineConfig({
       formats: ['umd']
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'vuetify', 'vue-i18n'],
       output: {
         entryFileNames: `${libraryFileName}-v${version}.umd.min.js`,
         assetFileNames: `[name]-v${version}.[ext]`,
         globals: {
-          vue: 'Vue'
+          vue: 'Vue',
+          vuetify: "Vuetify",
+          "vue-i18n": 'VueI18n',
         }
       }
     }
