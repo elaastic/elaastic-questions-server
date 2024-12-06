@@ -109,6 +109,7 @@ class WebSecurityConfig(
             authorizeRequests {
                 authorize("/", permitAll)
                 authorize("/demo", permitAll)
+                authorize("/ui/**", permitAll)
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
                 authorize(LOGIN_URL, permitAll)

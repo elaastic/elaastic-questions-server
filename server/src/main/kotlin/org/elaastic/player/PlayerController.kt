@@ -708,12 +708,6 @@ class PlayerController(
         return "player/assignment/sequence/components/my-results/_my-results::myResults"
     }
 
-    @GetMapping("/likert-scale")
-    fun likertScale() = "player/assignment/sequence/phase/evaluation/method/likert/likert-scale-input"
-
-    @GetMapping("/confronting-viewpoint")
-    fun confrontingViewpoint() = "player/assignment/sequence/phase/evaluation/method/likert/confronting-viewpoint"
-
     /**
      * Get the LearnerResultsModel for the given responses and statement
      *
