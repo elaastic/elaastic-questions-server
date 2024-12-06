@@ -16,18 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.phase.evaluation
+package org.elaastic.activity.response
 
-import org.elaastic.activity.response.Response
+import org.elaastic.material.instructional.question.QuestionType
 
-data class ResponseData(
-        val id: Long,
-        val choiceList: List<Int> = listOf(),
-        val explanation: String
-) {
+/**
+ * @author John Tranier
+ */
+data class OpenEndedResponseData(
+    override val id: Long,
+    override val explanation: String
+) : ResponseData {
+    override val questionType = QuestionType.OpenEnded
+
     constructor(response: Response): this(
-            id = response.id ?: error("Response has no ID"),
-            choiceList = response.learnerChoice ?: listOf<Int>(),
-            explanation = response.explanation ?:""
+        id = response.id ?: error("Response has no ID"),
+        explanation = response.explanation ?: "",
     )
 }
