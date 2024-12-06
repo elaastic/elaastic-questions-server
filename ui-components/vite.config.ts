@@ -1,10 +1,12 @@
 import { fileURLToPath, URL } from 'node:url'
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { version } from './package.json'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+
 
 const libraryFileName = 'elaastic-vue-components'
 
@@ -33,7 +35,12 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    vueDevTools()
+    vueDevTools(),
+    VueI18nPlugin({
+      /* options */
+      // locale messages resource pre-compile option
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
+    }),
   ],
   resolve: {
     alias: {

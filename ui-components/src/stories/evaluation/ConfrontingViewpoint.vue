@@ -4,6 +4,7 @@ import EvaluationCard from '@/stories/evaluation/EvaluationCard.vue'
 import { reactive } from 'vue'
 import type { AnyResponse } from '@/models/Response'
 import type { LikertValue } from '@/stories/evaluation/Likert'
+import { useI18n } from 'vue-i18n'
 
 type ResponseId = number
 
@@ -37,17 +38,18 @@ const evaluations = reactive(
 const onEvaluationChange = (responseId: number, value: LikertValue): void =>
   emit('evaluation-changed', responseId, value)
 
+const { t } = useI18n()
 
 </script>
 
 <template>
-  <div class="text-h5">Confronting viewpoints</div>
+  <div class="text-h5">{{ t('title') }}</div>
   <v-divider color="primary" class="my-4"></v-divider>
 
   <template v-if="!responses.length">
     <v-alert
       class="mb-4"
-      text="There is no alternative answer to evaluate."
+      :text="t('notice.no-alternative')"
       type="error"
       variant="tonal"
     />
@@ -55,7 +57,7 @@ const onEvaluationChange = (responseId: number, value: LikertValue): void =>
   <template v-else>
     <v-alert
       class="mb-4"
-      text="Here are presented one or several alternative responses. Please indicate how much you agree with these answers."
+      :text="t('notice.standard')"
       type="info"
       variant="tonal"
     />
@@ -81,3 +83,22 @@ const onEvaluationChange = (responseId: number, value: LikertValue): void =>
 <style scoped>
 
 </style>
+
+<i18n>
+{
+  "en": {
+    "title": "Confronting viewpoints",
+    "notice": {
+      "standard": "Here are presented one or several alternative responses. Please indicate how much you agree with these answers.",
+      "no-alternative": "There is no alternative answer to evaluate.",
+    }
+  },
+  "fr": {
+    "title": "Confrontation de points de vue",
+    "notice": {
+      "standard": "Voici une ou plusieurs réponses alternatives. Veuillez indiquer dans quelle mesure vous êtes d'accord avec ces réponses.",
+      "no-alternative": "Il n'y a aucune réponse alternative à évaluer."
+    }
+  }
+}
+</i18n>

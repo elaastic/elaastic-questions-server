@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import type { LikertValue } from '@/stories/evaluation/Likert'
+import { useI18n } from 'vue-i18n'
 
 export interface LikertScaleProps {
   /**
@@ -46,6 +47,7 @@ const value = computed({
   set: newValue => emit('update:modelValue', newValue)
 })
 const { xs } = useDisplay()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -66,7 +68,7 @@ const { xs } = useDisplay()
            :class="{'hidden': !value}"
            @click="value = null"
            class="align-self-end mt-2 mr-12">
-      Clear selection
+      {{ t('clear-selection') }}
     </v-btn>
   </v-radio-group>
 </template>
@@ -76,3 +78,14 @@ const { xs } = useDisplay()
   visibility: hidden;
 }
 </style>
+
+<i18n>
+{
+  "en": {
+    "clear-selection": "Clear selection"
+  },
+  "fr": {
+    "clear-selection": "Effacer la sélection"
+  }
+}
+</i18n>

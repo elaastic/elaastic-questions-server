@@ -4,6 +4,7 @@ import LikertScale from '@/stories/evaluation/LikertScale.vue'
 import { computed } from 'vue'
 import type { LikertValue } from '@/stories/evaluation/Likert'
 import { type AnyResponse } from '@/models/Response'
+import { useI18n } from 'vue-i18n'
 
 export interface EvaluationCardProps {
   /**
@@ -30,12 +31,13 @@ interface EvaluationCartEvents {
 }
 
 const emit = defineEmits<EvaluationCartEvents>()
+const { t } = useI18n()
 
 const evaluationValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 })
-const explanationLabel = computed(() => props.response.questionType == 'OpenEnded' ? 'Answer' : 'Explanation')
+const explanationLabel = computed(() => props.response.questionType == 'OpenEnded' ? t('answer') : t('explanation'))
 const explanation = props.response.explanation
 
 const getChoices = (response: AnyResponse) => {
@@ -60,9 +62,9 @@ const choices = getChoices(props.response)
     <v-card-item class="bg-surface-light">
       <div class="d-flex justify-space-between w-100 align-center">
         <div class="text-overline mb-1">
-          Alternative answer <span v-if="evaluationNum">#{{ evaluationNum }}</span>
+          {{ t('alternative-answer') }} <span v-if="evaluationNum">#{{ evaluationNum }}</span>
         </div>
-        <v-chip v-if="!evaluationValue" class="ml-auto" color="red">Require evaluation</v-chip>
+        <v-chip v-if="!evaluationValue" class="ml-auto" color="red">{{ t('require-evaluation') }}</v-chip>
         <v-icon v-else class="ml-auto" color="green">mdi-checkbox-marked</v-icon>
       </div>
 
@@ -70,7 +72,7 @@ const choices = getChoices(props.response)
 
     <v-card-item>
       <v-container>
-        <v-text-field v-if="choices" label="Choix" model-value=" " readonly variant="plain">
+        <v-text-field v-if="choices" :label="t('choices')" model-value=" " readonly variant="plain">
           <choice-chip v-for="choice in choices" :key="choice" :value="choice" color="grey" />
         </v-text-field>
 
@@ -83,12 +85,12 @@ const choices = getChoices(props.response)
     <v-spacer></v-spacer>
     <v-divider />
     <v-card-item>
-      <v-label class="mb-2">To what extent do you agree with the explanation given?</v-label>
+      <v-label class="mb-2">{{ t('notice') }}</v-label>
       <div class="d-flex justify-center">
         <div>
           <likert-scale v-model="evaluationValue"
-                        min-label="Strongly disagree"
-                        max-label="Strongly agree"
+                        :min-label="t('min-label')"
+                        :max-label="t('max-label')"
                         color="primary" />
         </div>
       </div>
@@ -99,3 +101,28 @@ const choices = getChoices(props.response)
 <style scoped>
 
 </style>
+
+<i18n>
+{
+  "en": {
+    "alternative-answer": "Alternative answer",
+    "require-evaluation": "Require evaluation",
+    "choices": "Choices",
+    "explanation": "Explanation",
+    "answer": "Answer",
+    "notice": "To what extent do you agree with the explanation given?",
+    "min-label": "Strongly disagree",
+    "max-label": "Strongly agree"
+  },
+  "fr": {
+    "alternative-answer": "Réponse alternative",
+    "require-evaluation": "Évaluation requise",
+    "choices": "Choix",
+    "explanation": "Explication",
+    "answer": "Réponse",
+    "notice": "A quel point êtes-vous d'accord avec l'explication proposée ?",
+    "min-label": "Pas du tout d'accord",
+    "max-label": "Totalement d'accord"
+  }
+}
+</i18n>
