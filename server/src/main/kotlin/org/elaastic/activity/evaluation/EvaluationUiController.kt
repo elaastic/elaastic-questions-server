@@ -16,19 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.activity.evaluation.peergrading
+package org.elaastic.activity.evaluation
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
 
 /**
  * Exposes VueJS UI components for the confronting viewpoint interaction
  * @author John Tranier
  */
 @Controller
-class UiConfrontingViewpointController {
+class EvaluationUiController {
 
     @GetMapping("/ui/confronting-viewpoint")
-    fun confrontingViewpoint() = "player/assignment/sequence/phase/evaluation/method/likert/confronting-viewpoint"
+    fun confrontingViewpoint() = "activity/evaluation/confronting-viewpoint"
 }
