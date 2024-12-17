@@ -1,24 +1,26 @@
 package org.elaastic.player.dashboard
 
+import org.elaastic.player.dashboard.DashboardPhaseState.*
+import org.elaastic.player.dashboard.LearnerMonitoringModel.StateCell.*
+import org.elaastic.player.dashboard.LearnerStateOnPhase.*
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.phase.LearnerPhaseType
 
 /**
  * Model for the learners monitoring dashboard.
  *
- * The model is used to display the state of the learners in the dashboard.
- * It contains the following information:
+ * The model is used to display the state of the learners in the dashboard. It contains the following information:
  * - The execution context of the sequence
  * - The state of phase 1
  * - The state of phase 2
  * - The list of [LearnerMonitoringModel]
  *
- * @see DashboardPhaseState
  * @property executionContext Sequence execution context type
  * @property phase1State the state of phase 1
  * @property phase2State the state of phase 2
  * @property learners the learners' states on each phase
  * @property sequenceId the id of the sequence
+ * @see DashboardPhaseState
  */
 class SequenceMonitoringModel(
     val executionContext: ExecutionContext,
@@ -53,13 +55,12 @@ class SequenceMonitoringModel(
      */
     fun setLearners(newLearnersList: MutableList<LearnerMonitoringModel>) {
         learners.clear()
-
-        val newLearnersListSorted: MutableList<LearnerMonitoringModel> = when (this.executionContext) {
-            ExecutionContext.FaceToFace -> this.sortWithFaceToFaceBehavior(newLearnersList)
-            else -> this.sortWithBlendedOrRemoteBehavior(newLearnersList)
-        }
-
-        learners.addAll(newLearnersListSorted)
+        learners.addAll(
+            when (this.executionContext) {
+                ExecutionContext.FaceToFace -> this.sortWithFaceToFaceBehavior(newLearnersList)
+                else -> this.sortWithBlendedOrRemoteBehavior(newLearnersList)
+            }
+        )
     }
 
     /**
@@ -116,8 +117,7 @@ class SequenceMonitoringModel(
 /**
  * Model for a learner's state on each phase.
  *
- * Represents a learner's state in each phase, a line in the table.
- * The model contains the following information:
+ * Represents a learner's state in each phase, a line in the table. The model contains the following information:
  * - The id of the learner
  * - The name of the learner
  * - The [LearnerStateOnPhase] of the learner on phase 1
