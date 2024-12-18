@@ -18,92 +18,137 @@
 <div th:fragment="evaluationPhase(model)"
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-  <div class="ui segment">
-    <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
-      Comparing viewpoints
-    </div>
 
-    <style>
-
-        .ui.pagination.menu .active.item {
-            background-color: #dff0ff;
-            color: #0e6eb8;
-        }
-    </style>
-
-    <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
-          th:action="@{/player/sequence/{sequenceId}/phase/evaluation/all-at-once/submit-evaluation(sequenceId=${model.sequenceId})}"
-          class="ui form"
-          method="post">
-      <input type="hidden" name="id" th:value="${model.interactionId}"/>
-      <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
-        <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.intro}">
-          Here are presented one or several alternative responses. Please indicate how much you agree with these
-          answers.
+    <div class="ui segment">
+        <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
+            Comparing viewpoints
         </div>
 
-        <div id="phase2-evaluation-app">
-          <div th:each="currentResponse : ${model.responsesToGrade}" class="ui attached large segment">
+        <style>
+            .ui.pagination.menu .active.item {
+                background-color: #dff0ff;
+                color: #0e6eb8;
+            }
+        </style>
 
-            <div th:if="${model.choices}">
-              <h5 class="ui header" style="display: inline; margin-bottom: 0;" th:text="#{player.sequence.interaction.choice.label}+' :'">
-                Choice</h5>
-              <a th:each="choice : ${currentResponse.choiceList}" class="ui blue circular label"
-                 th:text="${choice}"></a>
-            </div>
+        <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
+              th:action="@{/player/sequence/{sequenceId}/phase/evaluation/all-at-once/submit-evaluation(sequenceId=${model.sequenceId})}"
+              class="ui form"
+              method="post"
+              id="evaluationForm"
+        >
+            <input type="hidden" name="id" th:value="${model.interactionId}"/>
 
-            <h5 class="ui header" style="margin-top: 0; margin-bottom: 0;" th:if="${model.choices}" th:text="#{common.explanation}"></h5>
-            <p th:utext="${currentResponse.explanation}"></p>
+            <!--/* If the user has not performed the evaluation yet and there are responses to grade */-->
+            <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
 
-            <likert-scale-input th:attr="current-response-id=${currentResponse.id}"
-                                value="-1"></likert-scale-input>
+                <!--/* Message to introduce to the user the evaluation phase */-->
+                <div class="ui blue message" th:text="#{player.sequence.interaction.evaluation.intro}">
+                    Here are presented one or several alternative responses.
+                    Please indicate how much you agree with these answers.
+                </div>
 
-          </div>
-        </div>
+                <div id="phase2-evaluation-app">
+                    <div th:each="currentResponse : ${model.responsesToGrade}" class="ui attached large segment">
+                        <!--/* Response content */-->
 
-        <div class="ui hidden divider"></div>
+                        <!--/* Display the choice if the response has one */-->
+                        <div th:if="${model.choices}">
+                            <h5 class="ui header" style="display: inline; margin-bottom: 0;"
+                                th:text="#{player.sequence.interaction.choice.label}+' :'">
+                                Choice</h5>
+                            <a th:each="choice : ${currentResponse.choiceList}" class="ui blue circular label"
+                               th:text="${choice}"></a>
+                        </div>
+                        <!--/* If the response has choice, display a header to introduce the explanation */-->
+                        <h5 class="ui header"
+                            style="margin-top: 0; margin-bottom: 0;"
+                            th:if="${model.choices}"
+                            th:text="#{common.explanation}">
+                        </h5>
 
-      </th:block>
+                        <!--/* Display the response content */-->
+                        <p th:utext="${currentResponse.explanation}"></p>
 
+                        <!--/* Likert scale input */-->
+                        <likert-scale-input th:attr="current-response-id=${currentResponse.id}"
+                                            value="-1"></likert-scale-input>
+                    </div>
+                </div>
 
-      <th:block th:if="${model.secondAttemptAllowed}">
-        <div th:if="${model.secondAttemptAlreadySubmitted}"
+                <div class="ui hidden divider"></div>
+            </th:block>
+
+            <!--/* Second attempt */-->
+            <th:block th:if="${model.secondAttemptAllowed}">
+                <!--/* Message when the second attempt has been submitted */-->
+                <div th:if="${model.secondAttemptAlreadySubmitted}"
+                     class="ui blue message"
+                     th:text="#{player.sequence.interaction.secondAttemptSubmitted}">
+                    Your second response has been registered.
+                </div>
+
+                <!--/* Second attempt form */-->
+                <th:block th:unless="${model.secondAttemptAlreadySubmitted}">
+                    <div class="ui blue message"
+                         th:text="#{player.sequence.interaction.secondAttemptSubmittable}">
+                        Take a second chance to change or improve your answer.
+                    </div>
+
+                    <div class="ui basic segment">
+                        <div th:replace="player/assignment/sequence/phase/response/_response-form.html ::
+                             responseForm(${model.responseFormModel})">
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+
+            <!--/* Submit button */-->
+            <input type="submit"
+                   class="ui primary button"
+                   onclick="onSubmitResponse()"
+                   th:value="#{player.sequence.interaction.submitResponse}"/>
+        </form>
+
+        <div th:if="${model.userHasCompletedPhase2}"
              class="ui blue message"
-             th:text="#{player.sequence.interaction.secondAttemptSubmitted}">
-          Your second response has been registered.
+             th:text="#{player.sequence.phase.completedByUser(${2})}">
         </div>
-        <th:block th:unless="${model.secondAttemptAlreadySubmitted}">
-          <div class="ui blue message"
-               th:text="#{player.sequence.interaction.secondAttemptSubmittable}">
-            Take a second chance to change or improve your answer.
-          </div>
 
-          <div class="ui basic segment">
-            <div
-              th:replace="player/assignment/sequence/phase/response/_response-form.html :: responseForm(${model.responseFormModel})"></div>
-          </div>
-        </th:block>
-      </th:block>
-      <input type="submit"
-             class="ui primary button"
-             onclick="onSubmitResponse()"
-             th:value="#{player.sequence.interaction.submitResponse}"/>
-    </form>
+        <div th:if="${!model.userHasCompletedPhase2 && model.phaseState.name() == 'afterStop'}"
+             class="ui blue message"
+             th:text="#{player.sequence.interaction.evaluation.tooLate}">
+        </div>
 
-    <div th:if="${model.userHasCompletedPhase2}"
-         class="ui blue message"
-         th:text="#{player.sequence.phase.completedByUser(${2})}">
+        <script th:inline="javascript">
+            $(function () {
+                let $evaluationForm = $("#evaluationForm");
+
+                if ($evaluationForm.length) {
+                    // If the form exists
+                    $evaluationForm.on('submit', function (event) {
+                        event.preventDefault();
+                        let $form = $(this);
+                        let $submitButton = $form.find('input[type="submit"]');
+
+                        $submitButton.addClass('loading disabled');
+
+                        $.post($form.attr('action'), $form.serialize())
+                                .done(function () {
+                                    $submitButton.removeClass('loading disabled');
+                                    window.location.reload();
+                                })
+                                .fail(function () {
+                                    $submitButton.removeClass('loading disabled');
+                                    console.log('Error while submitting the response');
+                                });
+                    });
+                }
+            });
+        </script>
+
     </div>
 
-    <div th:if="${!model.userHasCompletedPhase2 && model.phaseState.name() == 'afterStop'}"
-         class="ui blue message"
-         th:text="#{player.sequence.interaction.evaluation.tooLate}">
-    </div>
-
-
-  </div>
-
-
-  <div th:replace="player/assignment/sequence/phase/evaluation/method/likert/_likert_scale_input"></div>
+    <div th:replace="player/assignment/sequence/phase/evaluation/method/likert/_likert_scale_input"></div>
 
 </div>
