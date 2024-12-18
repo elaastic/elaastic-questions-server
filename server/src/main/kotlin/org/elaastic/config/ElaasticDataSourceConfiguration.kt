@@ -31,10 +31,6 @@ class ElaasticDataSourceConfiguration {
     @ConfigurationProperties("spring.datasource.elaastic")
     fun elaasticDataSourceProperties() = DataSourceProperties()
 
-    @Bean
-    @ConfigurationProperties(prefix = "spring.jpa.elaastic")
-    fun elaasticJpaProperties() = JpaProperties()
-
     @Primary
     @Bean
     @ConfigurationProperties("spring.datasource.elaastic.hikari")
@@ -51,13 +47,15 @@ class ElaasticDataSourceConfiguration {
     @Bean
     fun elaasticEntityManagerFactory(
         @Qualifier("elaasticDataSource") dataSource: DataSource,
+        jpaProperties: JpaProperties,
         builder: EntityManagerFactoryBuilder
-    ) =
-        builder.dataSource(dataSource)
+    ): LocalContainerEntityManagerFactoryBean  {
+        return builder.dataSource(dataSource)
             .packages("org.elaastic")
             .persistenceUnit("elaastic")
-            .properties(elaasticJpaProperties().properties)
+            .properties(jpaProperties.properties)
             .build()
+    }
 
     @Bean
     fun elaasticTransactionManager(
