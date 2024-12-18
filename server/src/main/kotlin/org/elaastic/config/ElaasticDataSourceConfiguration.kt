@@ -4,6 +4,7 @@ import org.flywaydb.core.Flyway
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder
 import org.springframework.context.annotation.Bean
@@ -30,6 +31,10 @@ class ElaasticDataSourceConfiguration {
     @ConfigurationProperties("spring.datasource.elaastic")
     fun elaasticDataSourceProperties() = DataSourceProperties()
 
+    @Bean
+    @ConfigurationProperties(prefix = "spring.jpa.elaastic")
+    fun elaasticJpaProperties() = JpaProperties()
+
     @Primary
     @Bean
     @ConfigurationProperties("spring.datasource.elaastic.hikari")
@@ -42,6 +47,7 @@ class ElaasticDataSourceConfiguration {
     fun elaasticJdbcTemplate(@Qualifier("elaasticDataSource") dataSource: DataSource) =
         JdbcTemplate(dataSource)
 
+
     @Bean
     fun elaasticEntityManagerFactory(
         @Qualifier("elaasticDataSource") dataSource: DataSource,
@@ -49,6 +55,8 @@ class ElaasticDataSourceConfiguration {
     ) =
         builder.dataSource(dataSource)
             .packages("org.elaastic")
+            .persistenceUnit("elaastic")
+            .properties(elaasticJpaProperties().properties)
             .build()
 
     @Bean
