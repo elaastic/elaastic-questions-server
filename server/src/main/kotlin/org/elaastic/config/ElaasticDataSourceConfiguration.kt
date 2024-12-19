@@ -21,7 +21,24 @@ import javax.sql.DataSource
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-    basePackages = ["org.elaastic"], // TODO add an exclude filter
+    basePackages = [
+        "org.elaastic.activity",
+        "org.elaastic.ai",
+        "org.elaastic.analytics",
+        "org.elaastic.assignment",
+        "org.elaastic.auth",
+        "org.elaastic.bootstrap",
+        "org.elaastic.common",
+        "org.elaastic.config",
+        "org.elaastic.consolidation",
+        "org.elaastic.filestore",
+        "org.elaastic.moderation",
+        "org.elaastic.player",
+        "org.elaastic.security",
+        "org.elaastic.sequence",
+        "org.elaastic.test",
+        "org.elaastic.user",
+    ],
     entityManagerFactoryRef = "elaasticEntityManagerFactory",
     transactionManagerRef = "elaasticTransactionManager"
 )
@@ -49,7 +66,7 @@ class ElaasticDataSourceConfiguration {
         @Qualifier("elaasticDataSource") dataSource: DataSource,
         jpaProperties: JpaProperties,
         builder: EntityManagerFactoryBuilder
-    ): LocalContainerEntityManagerFactoryBean  {
+    ): LocalContainerEntityManagerFactoryBean {
         return builder.dataSource(dataSource)
             .packages("org.elaastic")
             .persistenceUnit("elaastic")
