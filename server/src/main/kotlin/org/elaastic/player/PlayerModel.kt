@@ -22,8 +22,7 @@ import org.elaastic.player.assignmentview.AssignmentOverviewModel
 import org.elaastic.player.command.CommandModel
 import org.elaastic.player.results.ResultsModel
 import org.elaastic.player.sequence.status.SequenceInfoModel
-import org.elaastic.player.statement.StatementInfo
-import org.elaastic.player.statement.StatementPanelModel
+import org.elaastic.player.statement.StatementInfoPanelModel
 import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.player.steps.StepsModel
 import org.elaastic.sequence.phase.LearnerPhase
@@ -34,8 +33,7 @@ abstract class PlayerModel(
     val assignmentOverviewModel: AssignmentOverviewModel,
     val stepsModel: StepsModel,
     val sequenceInfoModel: SequenceInfoModel,
-    val statementPanelModel: StatementPanelModel,
-    val statement: StatementInfo,
+    val statementInfoPanelModel: StatementInfoPanelModel,
 ) {
     fun getAssignment() = sequence.assignment
 
@@ -50,8 +48,7 @@ class TeacherPlayerModel(
     val sequenceStatistics: SequenceStatistics,
     val commandModel: CommandModel,
     sequenceInfoModel: SequenceInfoModel,
-    statementPanelModel: StatementPanelModel,
-    statement: StatementInfo,
+    statementInfoPanelModel: StatementInfoPanelModel,
     val showResults: Boolean,
     val resultsModel: ResultsModel?,
     val assignmentOverviewModelOneSequence: AssignmentOverviewModel,
@@ -61,8 +58,7 @@ class TeacherPlayerModel(
     assignmentOverviewModel = assignmentOverviewModel,
     stepsModel = stepsModel,
     sequenceInfoModel = sequenceInfoModel,
-    statementPanelModel = statementPanelModel, // TODO Perhaps we merge this one with the following
-    statement = statement,
+    statementInfoPanelModel = statementInfoPanelModel,
 ) {
     override fun isTeacher() = true
 }
@@ -72,8 +68,7 @@ class LearnerPlayerModel(
     assignmentOverviewModel: AssignmentOverviewModel,
     stepsModel: StepsModel,
     sequenceInfoModel: SequenceInfoModel,
-    statementPanelModel: StatementPanelModel,
-    statement: StatementInfo,
+    statementInfoPanelModel: StatementInfoPanelModel,
     val phaseList: List<LearnerPhase>
 ) : PlayerModel(
     sequence = sequence,
@@ -81,8 +76,7 @@ class LearnerPlayerModel(
     assignmentOverviewModel = assignmentOverviewModel,
     stepsModel = stepsModel,
     sequenceInfoModel = sequenceInfoModel,
-    statementPanelModel = statementPanelModel, // TODO Perhaps we merge this one with the following
-    statement = statement,
+    statementInfoPanelModel = statementInfoPanelModel,
 ) {
     override fun isTeacher() = false
 }
