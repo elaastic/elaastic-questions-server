@@ -20,7 +20,6 @@ package org.elaastic.player
 
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ConfidenceDegree
-import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.AttemptNum
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
@@ -31,13 +30,15 @@ import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
-import org.elaastic.material.instructional.question.QuestionType
-import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.player.dashboard.DashboardModelFactory
+import org.elaastic.player.dashboard.SequenceMonitoringModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.results.learner.LearnerResultsModelFactory
+import org.elaastic.player.sequence.SequenceModelFactory
+import org.elaastic.player.steps.StepsModel
+import org.elaastic.player.steps.StepsModelFactory
 import org.elaastic.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.sequence.ExecutionContext
@@ -50,6 +51,7 @@ import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.user.AnonymousUserService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.security.access.prepost.PreAuthorize
@@ -86,9 +88,13 @@ class PlayerController(
     @Autowired val messageBuilder: MessageBuilder,
     @Autowired val featureManager: FeatureManager,
     @Autowired val messageSource: MessageSource,
+    @Autowired val sequenceModelFactory: SequenceModelFactory,
+    @Autowired val dashboardModelFactory: DashboardModelFactory,
 ) {
 
     private val autoReloadSessionHandler = AutoReloadSessionHandler
+
+    private val logger = LoggerFactory.getLogger(PlayerController::class.java)
 
     @GetMapping(value = ["", "/", "/index"])
     fun index(
@@ -240,45 +246,14 @@ class PlayerController(
         httpServletRequest: HttpServletRequest,
     ): String {
         val assignment: Assignment = selectedSequence.assignment!!
-        val previousSequence: Sequence? = sequenceService.findPreviousSequence(selectedSequence)
-        val nextSequence: Sequence? = sequenceService.findNextSequence(selectedSequence)
         val registeredUsers: List<LearnerAssignment> = assignmentService.getRegisteredUsers(assignment)
-        val nbRegisteredUsers = registeredUsers.size
-        val responses: List<Response> = interactionService.findAllResponsesBySequenceOrderById(selectedSequence)
 
-        // Associate each learner with the number of evaluations he made
-        val evaluationCountByUser = peerGradingService.countEvaluationsMadeByUsers(registeredUsers, selectedSequence)
-        // Associate each learner with a boolean indicating if he answered the question
-        val reponseAvailable = try {
-            peerGradingService.learnerToIfTheyAnswer(registeredUsers, selectedSequence)
-        } catch (_: IllegalStateException) {
-            registeredUsers.associateWith { false }
-        }
-        // Count the number of responses gradable
-        val countResponseGradable: Long = try {
-            val responseStudent = responseService.findAllByAttemptNotFake(1, selectedSequence).size.toLong()
-            val responseFake = responseService.findAllFakeResponses(selectedSequence).size.toLong()
-            responseStudent + responseFake
-        } catch (_: IllegalStateException) {
-            0
-        }
-
-        model["dashboardModel"] = DashboardModelFactory.build(
-            selectedSequence,
-            previousSequence,
-            nextSequence,
-            registeredUsers,
-            responses,
-            evaluationCountByUser,
-            reponseAvailable,
-            countResponseGradable,
-        )
-
+        model["dashboardModel"] = dashboardModelFactory.build(selectedSequence)
         model["playerModel"] = PlayerModelFactory.buildForTeacher(
             user = user,
             sequence = selectedSequence,
             serverBaseUrl = ControllerUtil.getServerBaseUrl(httpServletRequest),
-            nbRegisteredUsers = nbRegisteredUsers,
+            nbRegisteredUsers = registeredUsers.size,
             messageBuilder = messageBuilder,
             sequenceStatistics = sequenceService.getStatistics(selectedSequence),
             teacherResultDashboardService = teacherResultDashboardService,
@@ -327,21 +302,73 @@ class PlayerController(
         return assignmentService.getNbRegisteredUsers(id)
     }
 
-    @GetMapping("/sequence/{id}/start")
+    /**
+     * Get the sequence view for the given user
+     *
+     * @param authentication the current authentication
+     * @param model the model
+     * @param sequenceId the id of the sequence to get the view
+     */
+    @GetMapping("/sequence/{sequenceId}")
+    fun sequence(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable sequenceId: Long
+    ): String {
+        val user: User = authentication.principal as User
+        val sequence = sequenceService.get(sequenceId, true)
+        val isTeacher = user == sequence.owner
+
+        return if (isTeacher) {
+            sequenceAsTeacher(user, sequence, model)
+        } else {
+            sequenceAsLearner(user, sequence, model)
+        }
+    }
+
+    private fun sequenceAsTeacher(
+        user: User,
+        sequence: Sequence,
+        model: Model,
+    ): String {
+        val sequenceModel = sequenceModelFactory.buildForTeacher(user, sequence)
+
+        model["sequenceModel"] = sequenceModel
+
+        return "player/assignment/sequence/play-sequence-teacher"
+    }
+
+    private fun sequenceAsLearner(
+        user: User,
+        sequence: Sequence,
+        model: Model,
+    ): String {
+        val learnerSequence = learnerSequenceService.getLearnerSequence(user, sequence)
+        learnerPhaseService.loadPhaseList(learnerSequence)
+
+        val sequenceModel =
+            sequenceModelFactory.buildForLearner(user, learnerSequence, learnerSequence.activeInteraction)
+        model["sequenceModel"] = sequenceModel
+
+        return "player/assignment/sequence/play-sequence-learner"
+    }
+
+
+    @ResponseBody
+    @GetMapping("/sequence/{sequenceId}/start")
     fun startSequence(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long,
+        @PathVariable sequenceId: Long,
         @RequestParam executionContext: ExecutionContext,
         @RequestParam studentsProvideExplanation: Boolean?,
         @RequestParam responseToEvaluateCount: Int?,
         @RequestParam chatGptEvaluation: Boolean?,
         @RequestParam evaluationPhaseConfig: EvaluationPhaseConfig?,
-    ): String {
+    ) {
         val user: User = authentication.principal as User
-        var assignment: Assignment?
 
-        sequenceService.get(user, id, true)
+        sequenceService.get(user, sequenceId, true)
             .let {
                 sequenceService.start(
                     user,
@@ -353,172 +380,154 @@ class PlayerController(
                     chatGptEvaluation ?: false && studentsProvideExplanation ?: false
                 )
                 userService.updateUserActiveSince(user)
-                autoReloadSessionHandler.broadcastReload(id)
-                assignment = it.assignment!!
+                autoReloadSessionHandler.broadcastReload(sequenceId)
             }
-
-        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
-    @GetMapping("/interaction/{id}/restart")
+    @ResponseBody
+    @GetMapping("/interaction/{interactionId}/restart")
     fun restartInteraction(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable interactionId: Long
+    ) {
         val user: User = authentication.principal as User
-        val interaction = interactionService.restart(user, id)
+        val interaction = interactionService.restart(user, interactionId)
         autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
-        return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
     }
 
+    @ResponseBody
     @GetMapping("/interaction/{id}/start")
     fun startInteraction(
         authentication: Authentication,
         model: Model,
         @PathVariable id: Long
-    ): String {
+    ) {
         val user: User = authentication.principal as User
         val interaction = interactionService.start(user, id)
         autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
-        return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
     }
 
-    @GetMapping("/interaction/{id}/startNext")
+    @ResponseBody
+    @GetMapping("/interaction/{interactionId}/startNext")
     fun startNextInteraction(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable interactionId: Long
+    ) {
         val user: User = authentication.principal as User
 
-        interactionService.findById(id).let {
+        interactionService.findById(interactionId).let {
             sequenceService.loadInteractions(it.sequence)
             val interaction = interactionService.startNext(user, it)
             autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
-            return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
         }
     }
 
-    @GetMapping("/interaction/{id}/skipNext")
+    @ResponseBody
+    @GetMapping("/interaction/{interactionId}/skipNext")
     fun skipNextInteraction(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable interactionId: Long
+    ) {
         val user: User = authentication.principal as User
 
-        interactionService.findById(id).let {
+        interactionService.findById(interactionId).let {
             sequenceService.loadInteractions(it.sequence)
             val interaction = interactionService.skipNext(user, it)
             autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
-            return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
         }
     }
 
-    @GetMapping("/interaction/{id}/stop")
+    @ResponseBody
+    @GetMapping("/interaction/{interactionId}/stop")
     fun stopInteraction(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable interactionId: Long
+    ) {
         val user: User = authentication.principal as User
 
-        interactionService.findById(id).let {
+        interactionService.findById(interactionId).let {
             sequenceService.loadInteractions(it.sequence)
-            interactionService.stop(user, id)
+            interactionService.stop(user, interactionId)
             autoReloadSessionHandler.broadcastReload(it.sequence.id!!)
-            return "redirect:/player/assignment/${it.sequence.assignment!!.id}/play/sequence/${it.sequence.id}"
         }
     }
 
-    @GetMapping("/sequence/{id}/stop")
+    @ResponseBody
+    @GetMapping("/sequence/{sequenceId}/stop")
     fun stopSequence(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable sequenceId: Long
+    ) {
         val user: User = authentication.principal as User
-        var assignment: Assignment?
 
-        sequenceService.get(user, id).let {
+        sequenceService.get(user, sequenceId).let {
             sequenceService.stop(user, it)
-            autoReloadSessionHandler.broadcastReload(id)
-            assignment = it.assignment!!
+            autoReloadSessionHandler.broadcastReload(sequenceId)
         }
-
-        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
-    @GetMapping("/sequence/{id}/reopen")
+    @ResponseBody
+    @GetMapping("/sequence/{sequenceId}/reopen")
     fun reopenSequence(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable sequenceId: Long
+    ) {
         val user: User = authentication.principal as User
-        var assignment: Assignment?
 
-        sequenceService.get(user, id).let {
+        sequenceService.get(user, sequenceId).let {
             sequenceService.reopen(user, it)
-            autoReloadSessionHandler.broadcastReload(id)
-            assignment = it.assignment!!
+            autoReloadSessionHandler.broadcastReload(sequenceId)
         }
-
-        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
-    @GetMapping("/sequence/{id}/publish-results")
+    @ResponseBody
+    @GetMapping("/sequence/{sequenceId}/publish-results")
     fun publishResults(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable sequenceId: Long
+    ) {
         val user: User = authentication.principal as User
-        var assignment: Assignment?
 
-        sequenceService.get(user, id, true).let {
+        sequenceService.get(user, sequenceId, true).let {
             sequenceService.publishResults(user, it)
-            autoReloadSessionHandler.broadcastReload(id)
-            assignment = it.assignment!!
+            autoReloadSessionHandler.broadcastReload(sequenceId)
         }
-
-        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
-    @GetMapping("/sequence/{id}/refresh-results")
+    @ResponseBody
+    @GetMapping("/sequence/{sequenceId}/refresh-results")
     fun refreshResults(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable sequenceId: Long
+    ) {
         val user: User = authentication.principal as User
-        var assignment: Assignment?
 
-        sequenceService.get(id, true).let {
+        sequenceService.get(sequenceId, true).let {
             sequenceService.refreshResults(user, it)
-            assignment = it.assignment!!
         }
-
-        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
-    @GetMapping("/sequence/{id}/unpublish-results")
+    @ResponseBody
+    @GetMapping("/sequence/{sequenceId}/unpublish-results")
     fun unpublishResults(
         authentication: Authentication,
         model: Model,
-        @PathVariable id: Long
-    ): String {
+        @PathVariable sequenceId: Long
+    ) {
         val user: User = authentication.principal as User
-        var assignment: Assignment?
 
-        sequenceService.get(user, id, true).let {
+        sequenceService.get(user, sequenceId, true).let {
             sequenceService.unpublishResults(user, it)
-            autoReloadSessionHandler.broadcastReload(id)
-            assignment = it.assignment!!
+            autoReloadSessionHandler.broadcastReload(sequenceId)
         }
-
-        return "redirect:/player/assignment/${assignment!!.id}/play/sequence/${id}"
     }
 
     data class ResponseSubmissionData(
@@ -556,13 +565,13 @@ class PlayerController(
     ): String {
         val user: User = authentication.principal as User
 
-        // Get response from database
+        // Get response from the database
         var response = responseService.findById(responseId)
 
-        println(response)
         // Update response visibility
         response = responseService.hideResponse(user, response)
-        println("Response hidden by teacher: ${response.hiddenByTeacher}")
+
+        logger.debug("Response hidden by teacher: ${response.hiddenByTeacher}")
 
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
@@ -575,11 +584,13 @@ class PlayerController(
     ): String {
         val user: User = authentication.principal as User
 
-        // Get response from database
+        // Get response from the database
         var response = responseService.findById(responseId)
+
         // Update response visibility
         response = responseService.unhideResponse(user, response)
-        println("Response hidden by teacher: ${response.hiddenByTeacher}")
+
+        logger.debug("Response unhidden by teacher: ${response.hiddenByTeacher}")
 
         return "redirect:/player/assignment/${response.interaction.sequence.assignment!!.id}/play/sequence/${response.interaction.sequence.id}"
     }
@@ -592,7 +603,7 @@ class PlayerController(
     ): String {
         val user: User = authentication.principal as User
 
-        // Get response from database
+        // Get response from the database
         var response = responseService.findById(responseId)
         // Update response favourite
         response = responseService.addRecommendedByTeacher(user, response)
@@ -608,7 +619,7 @@ class PlayerController(
     ): String {
         val user: User = authentication.principal as User
 
-        // Get response from database
+        // Get response from the database
         var response = responseService.findById(responseId)
         // Update response not favourite
         response = responseService.removeRecommendedByTeacher(user, response)
@@ -679,26 +690,7 @@ class PlayerController(
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
 
-        val responseFirstTry = responseService.find(learner, sequence, 1)
-        val responseSecondTry = responseService.find(learner, sequence, 2)
-
-        val longBooleanMap = chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(
-            listOf(
-                responseFirstTry?.id,
-                responseSecondTry?.id
-            )
-        )
-
-        val responseFirstTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseFirstTry?.id] == true
-        val responseSecondTryHasChatGPTEvaluation: Boolean = longBooleanMap[responseSecondTry?.id] == true
-
-        model["studentResultsModel"] = builtLearnerResultsModel(
-            responseFirstTry,
-            responseSecondTry,
-            responseFirstTryHasChatGPTEvaluation,
-            responseSecondTryHasChatGPTEvaluation,
-            sequence.statement
-        )
+        model["studentResultsModel"] = getLearnerResultsModel(learner, sequence)
         // The resultId is used to initialize the accordion in the view.
         // So to discriminate between all accordions in the page, we use the learnerId
         model["resultId"] = userId
@@ -709,44 +701,95 @@ class PlayerController(
     }
 
     /**
-     * Get the LearnerResultsModel for the given responses and statement
+     * Get the result modal for the given learner
      *
-     * @param responseFirstAttempt the response of the learner for the first attempt
-     * @param responseSecondAttempt the response of the learner for the second attempt
-     * @param statement the statement of the sequence
+     * @param authentication the current authentication
+     * @param model the model
+     * @param sequenceId the id of the sequence to get the result modal
+     * @param userId the id of the learner to get the result modal
+     * @return the result modal for the given learner
      */
-    private fun builtLearnerResultsModel(
-        responseFirstAttempt: Response?,
-        responseSecondAttempt: Response?,
-        responseFirstTryHasChatGPTEvaluation: Boolean,
-        responseSecondTryHasChatGPTEvaluation: Boolean,
-        statement: Statement
-    ): LearnerResultsModel {
+    @GetMapping("/{sequenceId}/result/{userId}/modal")
+    fun resultModal(
+        authentication: Authentication,
+        model: Model,
+        @PathVariable sequenceId: Long,
+        @PathVariable userId: Long
+    ): String {
+        val user: User = authentication.principal as User
 
-        val learnerResultsModel = when (statement.questionType) {
-            QuestionType.ExclusiveChoice -> LearnerResultsModelFactory.buildExclusiveChoiceResult(
-                responseFirstAttempt,
-                responseSecondAttempt,
-                responseFirstTryHasChatGPTEvaluation,
-                responseSecondTryHasChatGPTEvaluation,
-                statement
-            )
+        val sequence = sequenceService.get(sequenceId, true)
+        val learner = userService.findById(userId)
+        val isTeacher = user == sequence.owner
+        val isOwnerOfResponse = user == learner
 
-            QuestionType.MultipleChoice -> LearnerResultsModelFactory.buildMultipleChoiceResult(
-                responseFirstAttempt,
-                responseSecondAttempt,
-                responseFirstTryHasChatGPTEvaluation,
-                responseSecondTryHasChatGPTEvaluation,
-                statement
-            )
+        val learnerStepsModel: StepsModel = StepsModelFactory.buildForTeacher(sequence)
 
-            QuestionType.OpenEnded -> LearnerResultsModelFactory.buildOpenResult(
-                responseFirstAttempt,
-                responseSecondAttempt,
-                responseFirstTryHasChatGPTEvaluation,
-                responseSecondTryHasChatGPTEvaluation,
+        val sequenceMonitoringModel = SequenceMonitoringModel(
+            sequence.executionContext,
+            learnerStepsModel.responseSubmissionState.getDashboardState(),
+            learnerStepsModel.evaluationState.getDashboardState(),
+            sequenceId = sequence.id
+        )
+
+        val learnerAssignment: LearnerAssignment? = assignmentService.getRegisteredUser(sequence.assignment!!, learner)
+
+        // If the learner a fake one, the learnerAssignment will be null.
+        // Monitoring what the fake learner has done is not relevant.
+        // So we don't display the monitoring model.
+        if (learnerAssignment != null) {
+            model["learnerMonitoringModel"] = dashboardModelFactory.buildLearnerMonitoringModel(
+                learnerAssignment,
+                (responseService.find(learner, sequence) ?: responseService.find(learner, sequence, 2)) != null,
+                sequenceMonitoringModel,
+                sequence,
+                peerGradingService.countEvaluationsMadeByUsers(listOf(learnerAssignment), sequence)[learnerAssignment]
+                    ?: 0,
+                dashboardModelFactory.getCountResponseGradable(sequence)
             )
         }
-        return learnerResultsModel
+        val learnerResultsModel = getLearnerResultsModel(learner, sequence)
+        model["learnerResultsModel"] = learnerResultsModel
+        // The accordionId is used to initialize the accordion in the view.
+        // So to discriminate between all accordions in the page, we use the learnerId
+        model["userId"] = userId
+        model["seenByTeacher"] = isTeacher
+        model["seenByOwner"] = isOwnerOfResponse
+        model["learnerHasAnswered"] = learnerResultsModel.hasAnsweredPhase1() || learnerResultsModel.hasAnsweredPhase2()
+
+        return "player/assignment/sequence/components/my-results/_my-results-modal.html :: myResultsModal"
+    }
+
+    /** Get the [LearnerResultsModel] for the given learner and sequence */
+    private fun getLearnerResultsModel(
+        learner: User,
+        sequence: Sequence
+    ): LearnerResultsModel {
+        val responseFirstTry = responseService.find(learner, sequence, 1)
+        val responseSecondTry = responseService.find(learner, sequence, 2)
+
+        var responseFirstTryHasChatGPTEvaluation: Boolean = false
+        var responseSecondTryHasChatGPTEvaluation: Boolean = false
+
+        if (sequence.chatGptEvaluationEnabled) {
+            val responseToIsChatGPTExist = chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(
+                listOf(
+                    responseFirstTry?.id,
+                    responseSecondTry?.id
+                )
+            )
+
+            responseFirstTryHasChatGPTEvaluation = responseToIsChatGPTExist[responseFirstTry?.id] == true
+            responseSecondTryHasChatGPTEvaluation  = responseToIsChatGPTExist[responseSecondTry?.id] == true
+        }
+
+
+        return LearnerResultsModelFactory.builtLearnerResultsModel(
+            responseFirstTry,
+            responseSecondTry,
+            responseFirstTryHasChatGPTEvaluation,
+            responseSecondTryHasChatGPTEvaluation,
+            sequence.statement
+        )
     }
 }
