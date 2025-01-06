@@ -26,11 +26,12 @@
 
     <script th:if="${context == 'aside' && assignmentOverviewModel.selectedSequenceId != null}" th:inline="javascript">
         $(function () {
-            let container = $('#layout-aside')
-            let target = $('#' + [[${context}]] + '-[[${assignmentOverviewModel.selectedSequenceId}]]')
+            const $container = $('#layout-aside');
+            const targetName = '#' + [[${context}]] + '-' + [[${assignmentOverviewModel.selectedSequenceId}]];
+            const $target = $(targetName);
 
-            if (!elaastic.util.isVisible(target, container, 50)) {
-                elaastic.util.ensureIsVisible(target, container)
+            if (!elaastic.util.isVisible($target, $container, 50)) {
+                elaastic.util.ensureIsVisible($target, $container);
             }
         });
 
