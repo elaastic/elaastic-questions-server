@@ -11,7 +11,7 @@ object ExplanationViewerModelFactory {
         chatGptEvaluationResponseStore: ChatGptEvaluationResponseStore
     ) =
         OpenExplanationViewerModel(
-            responseList.map { ExplanationDataFactory.create(it, chatGptEvaluationResponseStore.responseHasBeenEvaluatedByChatGpt(it.id)) },
+            responseList.map { ExplanationDataFactory.create(it, chatGptEvaluationResponseStore.responseHasBeenEvaluatedByChatGpt(it.id!!)) },
             true,
             studentsIdentitiesAreDisplayable = teacher
         )
