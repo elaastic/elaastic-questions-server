@@ -32,13 +32,20 @@
 
         const iframe = document.getElementById('utiltiy-grade-app')
         const iframeWithDefault = document.getElementById('utiltiy-grade-app-with-default')
+        const evaluationId = 1;
 
         /*[- Trigger the app init function on iframe loading -]*/
         iframe.onload = () => {
-            iframe.contentWindow.elaastic.initializeUtilityGrade(false, false, null, 1)
+            const isChatGPT = false;
+            const isTeacher = false;
+            const selectedGrade = null;
+            iframe.contentWindow.elaastic.initializeUtilityGrade(isChatGPT, isTeacher, selectedGrade, evaluationId)
         }
         iframeWithDefault.onload = () => {
-            iframeWithDefault.contentWindow.elaastic.initializeUtilityGrade(false, false, "AGREE", 1)
+            const isChatGPT = false;
+            const isTeacher = false;
+            const selectedGrade = "AGREE";
+            iframeWithDefault.contentWindow.elaastic.initializeUtilityGrade(isChatGPT, isTeacher, selectedGrade, evaluationId)
         }
         window.addEventListener('message', (event) => {
             if (event.data.command === 'grade-submitted_1') {
