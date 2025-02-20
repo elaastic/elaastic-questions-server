@@ -8,27 +8,27 @@ import {Option} from "@/components/evaluation/draxo/Option";
 
 const {t} = useI18n();
 
-interface DraxoGridProps {
+export interface DraxoGridProps {
   /**
    * The value of the criteria D
    */
-  criteriaD: OptionType | null,
+  criteriaD: Option | null,
   /**
    * The value of the criteria R
    */
-  criteriaR: OptionType | null,
+  criteriaR: Option | null,
   /**
    * The value of the criteria A
    */
-  criteriaA: OptionType | null,
+  criteriaA: Option | null,
   /**
    * The value of the criteria X
    */
-  criteriaX: OptionType | null,
+  criteriaX: Option | null,
   /**
    * The value of the criteria O
    */
-  criteriaO: OptionType | null
+  criteriaO: Option | null
 }
 
 const props = defineProps<DraxoGridProps>()
@@ -37,11 +37,11 @@ const props = defineProps<DraxoGridProps>()
 const criteriaOptions = new Map<Criteria, Option | null>();
 
 const updateCriteriaOptions = () => {
-  criteriaOptions.set(Criteria.D, Option.get(props.criteriaD));
-  criteriaOptions.set(Criteria.R, Option.get(props.criteriaR));
-  criteriaOptions.set(Criteria.A, Option.get(props.criteriaA));
-  criteriaOptions.set(Criteria.X, Option.get(props.criteriaX));
-  criteriaOptions.set(Criteria.O, Option.get(props.criteriaO));
+  criteriaOptions.set(Criteria.D, props.criteriaD);
+  criteriaOptions.set(Criteria.R, props.criteriaR);
+  criteriaOptions.set(Criteria.A, props.criteriaA);
+  criteriaOptions.set(Criteria.X, props.criteriaX);
+  criteriaOptions.set(Criteria.O, props.criteriaO);
 };
 
 // Initialize the map
@@ -70,7 +70,8 @@ watch(() => props, updateCriteriaOptions, {deep: true});
     <div class="custom-step" :class="criteriaOptions.get(criteria)?.cssClass" v-for="criteria in Criteria.values()"
          :key="criteria.capitalLetter">
       <div class="custom-step-content">
-        <span class="capital-letter">{{ t(criteria.capitalLetter) }}</span>
+        <span class="capital-letter">{{ criteria.capitalLetter }}</span>
+        <span class="criteria-header">{{ t(criteria.header()) }}</span>
       </div>
     </div>
   </div>
@@ -200,13 +201,27 @@ watch(() => props, updateCriteriaOptions, {deep: true});
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   #expanded {
     display: none;
   }
 
   #collasped {
     display: flex;
+
+    .capital-letter {
+      display: none;
+    }
+  }
+}
+@media (max-width: 600px) {
+  #collasped {
+    .criteria-header {
+      display: none;
+    }
+    .capital-letter {
+      display: block;
+    }
   }
 }
 </style>

@@ -2,11 +2,8 @@ import type {Meta, StoryObj} from '@storybook/vue3';
 import DraxoGrid from "@/components/evaluation/draxo/DraxoGrid.vue";
 import {OptionType} from "@/components/evaluation/draxo/OptionType";
 
-const getOptionsType = () => {
-  return [null, ...Object.values(OptionType)];
-}
-function getCriteriaControl(): any {
-  return {options: getOptionsType(), control: {type: 'select'}};
+function optionTypeControl(): any {
+  return {options: [null, ...Object.values(OptionType)], control: {type: 'select'}};
 }
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
@@ -21,11 +18,11 @@ const meta: any = {
     criteriaO: null,
   },
   argTypes: {
-    criteriaD: getCriteriaControl(),
-    criteriaR: getCriteriaControl(),
-    criteriaA: getCriteriaControl(),
-    criteriaX: getCriteriaControl(),
-    criteriaO: getCriteriaControl(),
+    criteriaD: optionTypeControl(),
+    criteriaR: optionTypeControl(),
+    criteriaA: optionTypeControl(),
+    criteriaX: optionTypeControl(),
+    criteriaO: optionTypeControl(),
   },
   tags: ['autodocs'],
   parameters: {

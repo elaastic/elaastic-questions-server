@@ -25,4 +25,13 @@ export class Criteria {
       Criteria.O
     ];
   }
+
+  public equals(other: any): boolean {
+    if (this === other) return true;
+    if (other === null || other === undefined) return false;
+    if (this.constructor !== other.constructor) return false;
+
+    const otherCriteria = other as Criteria;
+    return this.i18nCode === otherCriteria.i18nCode;
+  }
 }
