@@ -31,7 +31,7 @@ const meta: any = {
   parameters: {
     docs: {
       description: {
-        story: 'TODO'
+        story: 'A DRAXO grid.'
       }
     }
   }
@@ -41,11 +41,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 
-export const Primary: Story = {
+export const NotComplete: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'TODO'
+        story: 'A DRAXO grid, where the grader think the response isn\'t complete'
       }
     }
   },

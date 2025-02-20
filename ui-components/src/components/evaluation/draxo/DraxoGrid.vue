@@ -2,17 +2,18 @@
 
 import {useI18n} from "vue-i18n";
 import {OptionType} from "@/components/evaluation/draxo/OptionType";
+import {watch} from "vue";
 
 const {t} = useI18n()
 
 class Option {
-  static YES = new Option("yes");
-  static NO = new Option("no");
-  static PARTIALLY = new Option("partially");
-  static DONT_KNOW = new Option("dontKnow");
-  static NO_OPINION = new Option("noOpinion");
+  static YES = new Option("yes", "positive");
+  static NO = new Option("no", "negative");
+  static PARTIALLY = new Option("partially", "negative");
+  static DONT_KNOW = new Option("dontKnow", "unknown");
+  static NO_OPINION = new Option("noOpinion", "unknown");
 
-  private constructor(private readonly i18nCode: string) {
+  private constructor(private readonly i18nCode: string, public readonly cssClass: string) {
   }
 
   public label(): string {
@@ -36,20 +37,6 @@ class Option {
     }
 
     return null;
-  }
-
-  public getCssClass(): string {
-    switch (this) {
-      case Option.YES:
-        return "positive";
-      case Option.PARTIALLY:
-      case Option.NO:
-        return "negative";
-      case Option.DONT_KNOW:
-      case Option.NO_OPINION:
-      default:
-        return "unknown";
-    }
   }
 
   public static values(): Option[] {
@@ -118,37 +105,40 @@ interface DraxoGridProps {
 const props = defineProps<DraxoGridProps>()
 
 
-// map from criteria to a random Option
-const criteriaOptions = new Map<Criteria, Option | null>()
-criteriaOptions.set(Criteria.D, Option.get(props.criteriaD))
-criteriaOptions.set(Criteria.R, Option.get(props.criteriaR))
-criteriaOptions.set(Criteria.A, Option.get(props.criteriaA))
-criteriaOptions.set(Criteria.X, Option.get(props.criteriaX))
-criteriaOptions.set(Criteria.O, Option.get(props.criteriaO))
-// criteriaOptions.set(Criteria.D, Option.YES)
-// criteriaOptions.set(Criteria.R, Option.YES)
-// criteriaOptions.set(Criteria.A, Option.NO)
-// criteriaOptions.set(Criteria.X, Option.DONT_KNOW)
-// criteriaOptions.set(Criteria.O, null)
+const criteriaOptions = new Map<Criteria, Option | null>();
+
+const updateCriteriaOptions = () => {
+  criteriaOptions.set(Criteria.D, Option.get(props.criteriaD));
+  criteriaOptions.set(Criteria.R, Option.get(props.criteriaR));
+  criteriaOptions.set(Criteria.A, Option.get(props.criteriaA));
+  criteriaOptions.set(Criteria.X, Option.get(props.criteriaX));
+  criteriaOptions.set(Criteria.O, Option.get(props.criteriaO));
+};
+
+// Initialize the map
+updateCriteriaOptions();
+
+// Watch for changes in props and update the map
+watch(() => props, updateCriteriaOptions, { deep: true });
 
 
 </script>
 
 <template>
   <div class="DRAXO-grid" id="expanded">
-    <div class="custom-step" :class="criteriaOptions.get(criteria)?.getCssClass()" v-for="criteria in Criteria.values()"
+    <div class="custom-step" :class="criteriaOptions.get(criteria)?.cssClass" v-for="criteria in Criteria.values()"
          :key="criteria.capitalLetter">
       <div class="custom-step-content">
         <span>{{ criteria.header() }}</span>
 
-        <v-icon v-if="criteriaOptions.get(criteria)?.getCssClass() === 'positive'" icon="mdi-check-bold"></v-icon>
-        <v-icon v-else-if="criteriaOptions.get(criteria)?.getCssClass() === 'negative'" icon="mdi-close"></v-icon>
-        <v-icon v-else-if="criteriaOptions.get(criteria)?.getCssClass() === 'unknown'" icon="mdi-help"></v-icon>
+        <v-icon v-if="criteriaOptions.get(criteria)?.cssClass === 'positive'" icon="mdi-check-bold"></v-icon>
+        <v-icon v-else-if="criteriaOptions.get(criteria)?.cssClass === 'negative'" icon="mdi-close"></v-icon>
+        <v-icon v-else-if="criteriaOptions.get(criteria)?.cssClass === 'unknown'" icon="mdi-help"></v-icon>
       </div>
     </div>
   </div>
   <div class="DRAXO-grid" id="collasped">
-    <div class="custom-step" :class="criteriaOptions.get(criteria)?.getCssClass()" v-for="criteria in Criteria.values()"
+    <div class="custom-step" :class="criteriaOptions.get(criteria)?.cssClass" v-for="criteria in Criteria.values()"
          :key="criteria.capitalLetter">
       <div class="custom-step-content">
         <span class="capital-letter">{{ criteria.capitalLetter }}</span>
