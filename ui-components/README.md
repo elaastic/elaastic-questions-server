@@ -54,7 +54,7 @@ export {
 
 Then go to the `build.gradle.kts`, located in `server/build.gradle.kts`, update the version number:
 
-```koltin
+```kotlin
 //[...]
 // You can find it at the top of the file
 var uiComponentsVersion = "0.0.20" // Update the version number
@@ -64,7 +64,7 @@ var uiComponentsVersion = "0.0.20" // Update the version number
 Reload the project and run the following command in the terminal at the root of the project:
 
 ```shell
-./gradlew updateVueComponents
+cd .. && ./gradlew updateVueComponents
 ```
 
 Then you can update the version number of the `application.properties`.
