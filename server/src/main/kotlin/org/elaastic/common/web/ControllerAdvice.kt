@@ -18,33 +18,34 @@
 
 package org.elaastic.common.web
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.info.BuildProperties
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.servlet.ModelAndView
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpServletRequest
 import org.springframework.web.multipart.MaxUploadSizeExceededException
+import org.springframework.web.servlet.ModelAndView
 import javax.persistence.EntityNotFoundException
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+
 
 /**
  * Controller advice to add common attributes to all views.
  */
 @ControllerAdvice
-class ControllerAdvice {
-
-    @Value("\${elaastic.questions.version}")
-    private lateinit var applicationVersion: String
-
-    @Value("\${ui.components.version}")
-    private lateinit var uiComponentsVersion: String
+class ControllerAdvice(
+    @Autowired val buildProperties: BuildProperties
+) {
+    val uiComponentsVersion: String
+        get() = buildProperties.get("ui.components.version")
 
     @ModelAttribute("applicationVersion")
     fun getApplicationVersion(): String {
-        return applicationVersion
+        return buildProperties.version
     }
 
     @ModelAttribute("uiComponentsVersion")
