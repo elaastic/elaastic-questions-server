@@ -79,13 +79,11 @@
             window.addEventListener('message', (event) => {
                 if (event.data.command === 'grade-submitted_' + evaluationId) {
                     const gradeSubmitted = event.data.grade;
-                    console.log(event.data.command, gradeSubmitted)
 
                     submitUtilityGrade(evaluationId, gradeSubmitted)
                 } else if (event.data.command === 'report-submitted_' + evaluationId) {
                     const reportReason = event.data.reportReason;
                     const reportDetail = event.data.reportDetail;
-                    console.log(event.data.command, reportReason, reportDetail)
 
                     reportEvaluation(evaluationId, reportReason, reportDetail)
                 }
@@ -120,12 +118,8 @@
             form.children('input[name="reason"]').val(reasons);
             form.children('input[name="other-reason-comment"]').val(otherReasonComment);
 
-            console.log(form);
-
             const url = form.attr('action');
             const data = form.serialize();
-
-            console.log(url, data);
 
             $.post(url, data, (response) => {
                 window.location.reload()

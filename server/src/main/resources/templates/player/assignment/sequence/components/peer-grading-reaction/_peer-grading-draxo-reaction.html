@@ -80,13 +80,11 @@
             window.addEventListener('message', (event) => {
                 if (event.data.command === 'grade-submitted_' + evaluationId) {
                     const gradeSubmitted = event.data.grade;
-                    console.log(event.data.command, gradeSubmitted)
 
                     submitUtilityGrade(evaluationId, gradeSubmitted)
                 } else if (event.data.command === 'report-submitted_' + evaluationId) {
                     const reportReason = event.data.reportReason;
                     const reportDetail = event.data.reportDetail;
-                    console.log(event.data.command, reportReason, reportDetail)
 
                     reportEvaluation(evaluationId, reportReason, reportDetail)
                 }
