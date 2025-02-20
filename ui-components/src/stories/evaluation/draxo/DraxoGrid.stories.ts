@@ -5,7 +5,7 @@ import {OptionType} from "@/components/evaluation/draxo/OptionType";
 const getOptionsType = () => {
   return [null, ...Object.values(OptionType)];
 }
-function getCriteriaControl() {
+function getCriteriaControl(): any {
   return {options: getOptionsType(), control: {type: 'select'}};
 }
 

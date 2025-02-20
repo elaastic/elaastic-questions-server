@@ -1,83 +1,12 @@
 <script setup lang="ts">
 
-import {useI18n} from "vue-i18n";
 import {OptionType} from "@/components/evaluation/draxo/OptionType";
 import {watch} from "vue";
+import {useI18n} from "vue-i18n";
+import {Criteria} from "@/components/evaluation/draxo/Criteria";
+import {Option} from "@/components/evaluation/draxo/Option";
 
-const {t} = useI18n()
-
-class Option {
-  static YES = new Option("yes", "positive");
-  static NO = new Option("no", "negative");
-  static PARTIALLY = new Option("partially", "negative");
-  static DONT_KNOW = new Option("dontKnow", "unknown");
-  static NO_OPINION = new Option("noOpinion", "unknown");
-
-  private constructor(private readonly i18nCode: string, public readonly cssClass: string) {
-  }
-
-  public label(): string {
-    return t(`option.${this.i18nCode}`)
-  }
-
-  public static get(type: OptionType | null): Option | null {
-    if (type != null) {
-      switch (type) {
-        case OptionType.YES:
-          return Option.YES;
-        case OptionType.NO:
-          return Option.NO;
-        case OptionType.PARTIALLY:
-          return Option.PARTIALLY;
-        case OptionType.DONT_KNOW:
-          return Option.DONT_KNOW;
-        case OptionType.NO_OPINION:
-          return Option.NO_OPINION;
-      }
-    }
-
-    return null;
-  }
-
-  public static values(): Option[] {
-    return [
-      Option.YES,
-      Option.NO,
-      Option.PARTIALLY,
-      Option.DONT_KNOW,
-      Option.NO_OPINION
-    ];
-  }
-}
-
-class Criteria {
-  static D = new Criteria("understandable", "D");
-  static R = new Criteria("relevant", "R");
-  static A = new Criteria("agreed", "A");
-  static X = new Criteria("exhaustive", "X");
-  static O = new Criteria("optimal", "O");
-
-  constructor(public readonly i18nCode: string, public readonly capitalLetter: string) {
-  }
-
-  public header(): string {
-    return t(`criteria.${this.i18nCode}.header`)
-  }
-
-  public question(): string {
-    return t(`criteria.${this.i18nCode}.question`)
-  }
-
-  public static values(): Criteria[] {
-    return [
-      Criteria.D,
-      Criteria.R,
-      Criteria.A,
-      Criteria.X,
-      Criteria.O
-    ];
-  }
-}
+const {t} = useI18n();
 
 interface DraxoGridProps {
   /**
@@ -119,7 +48,7 @@ const updateCriteriaOptions = () => {
 updateCriteriaOptions();
 
 // Watch for changes in props and update the map
-watch(() => props, updateCriteriaOptions, { deep: true });
+watch(() => props, updateCriteriaOptions, {deep: true});
 
 
 </script>
@@ -129,7 +58,7 @@ watch(() => props, updateCriteriaOptions, { deep: true });
     <div class="custom-step" :class="criteriaOptions.get(criteria)?.cssClass" v-for="criteria in Criteria.values()"
          :key="criteria.capitalLetter">
       <div class="custom-step-content">
-        <span>{{ criteria.header() }}</span>
+        <span>{{ t(criteria.header()) }}</span>
 
         <v-icon v-if="criteriaOptions.get(criteria)?.cssClass === 'positive'" icon="mdi-check-bold"></v-icon>
         <v-icon v-else-if="criteriaOptions.get(criteria)?.cssClass === 'negative'" icon="mdi-close"></v-icon>
@@ -141,7 +70,7 @@ watch(() => props, updateCriteriaOptions, { deep: true });
     <div class="custom-step" :class="criteriaOptions.get(criteria)?.cssClass" v-for="criteria in Criteria.values()"
          :key="criteria.capitalLetter">
       <div class="custom-step-content">
-        <span class="capital-letter">{{ criteria.capitalLetter }}</span>
+        <span class="capital-letter">{{ t(criteria.capitalLetter) }}</span>
       </div>
     </div>
   </div>
