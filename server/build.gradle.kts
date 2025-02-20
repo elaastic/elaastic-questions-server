@@ -15,7 +15,7 @@ plugins {
 
 group = "org.elaastic.questions"
 version = "6.3.7"
-var uiComponentsVersion = "0.0.20"
+var uiComponentsVersion = "1.0.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
