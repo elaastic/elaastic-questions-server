@@ -57,3 +57,33 @@ export const NotComplete: Story = {
     criteriaO: null,
   }
 };
+
+export const NotUnderstandable: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'A DRAXO grid, where the grader think the response isn\'t understandable'
+      }
+    }
+  },
+  args: {
+    criteriaD: OptionType.NO
+  }
+};
+
+export const Perfect: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'A DRAXO grid, where the grader doesn\'t see any issue with the response'
+      }
+    }
+  },
+  args: {
+    criteriaD: OptionType.YES,
+    criteriaR: OptionType.YES,
+    criteriaA: OptionType.YES,
+    criteriaX: OptionType.YES,
+    criteriaO: OptionType.YES,
+  }
+};
