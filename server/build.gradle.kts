@@ -17,6 +17,22 @@ group = "org.elaastic.questions"
 version = "6.3.7"
 var uiComponentsVersion = "1.0.0"
 
+// Add uiComponentsVersion to the properties of the project
+project.extra["uiComponentsVersion"] = uiComponentsVersion
+
+tasks.processResources {
+    // To force the task to run every time, so the application.properties is always updated with the new version
+    outputs.upToDateWhen { false }
+
+    filesMatching("application.properties") {
+        expand(
+            "uiComponentsVersion" to uiComponentsVersion,
+            "version" to project.version
+        )
+    }
+}
+
+
 java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
