@@ -34,8 +34,6 @@ const emit = defineEmits<SelectorResponsivEmit>()
 const getSelectedFromProps = (): Selection | null => {
   const selected = props.selected
 
-  console.log(selected)
-
   if (selected == null) {
     return null
   }
