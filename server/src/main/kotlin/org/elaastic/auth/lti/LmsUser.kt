@@ -18,8 +18,8 @@
 
 package org.elaastic.auth.lti
 
-import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.user.User
 import javax.persistence.*
 
 @Entity

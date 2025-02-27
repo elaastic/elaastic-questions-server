@@ -19,12 +19,12 @@
 package org.elaastic.user.controller
 
 
+import org.elaastic.common.onboarding.OnboardingChapter
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
 import org.elaastic.user.controller.command.PasswordData
 import org.elaastic.user.controller.command.UserData
-import org.elaastic.common.onboarding.OnboardingChapter
 import org.elaastic.user.legal.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -37,11 +37,10 @@ import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import java.lang.IllegalStateException
 import java.util.*
 import java.util.logging.Logger
 import javax.servlet.http.HttpServletResponse
-import javax.validation.*
+import javax.validation.Valid
 
 
 @Controller

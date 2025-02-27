@@ -18,15 +18,13 @@
 
 package org.elaastic.auth.lti
 
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVPrinter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.InputStreamReader
-import java.util.*
-import kotlin.collections.ArrayList
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVPrinter
 import java.io.OutputStreamWriter
-import java.lang.Exception
+import java.util.*
 import java.util.logging.Logger
 
 @Service

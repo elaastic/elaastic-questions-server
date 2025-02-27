@@ -13,7 +13,6 @@ import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
-import kotlin.collections.ArrayList
 
 /**
  * A subject is a container for statements and assignments.

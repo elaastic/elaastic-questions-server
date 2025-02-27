@@ -21,7 +21,8 @@ package org.elaastic.user
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.user.legal.Terms
 import java.util.*
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.ManyToOne
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 

@@ -20,9 +20,9 @@ package org.elaastic.player.results
 
 import org.elaastic.player.chart.confidence.ConfidenceDistributionChartModel
 import org.elaastic.player.chart.evaluation.EvaluationDistributionChartModel
+import org.elaastic.player.chart.response.ResponseDistributionChartModel
 import org.elaastic.player.explanations.ExplanationViewerModel
 import org.elaastic.player.recommendation.RecommendationModel
-import org.elaastic.player.chart.response.ResponseDistributionChartModel
 
 data class ChoiceResultsModel(
     override val sequenceIsStopped: Boolean,

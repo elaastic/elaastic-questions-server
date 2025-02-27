@@ -1,7 +1,7 @@
 package org.elaastic.test.interpreter.command
 
-import org.elaastic.sequence.ExecutionContext
 import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.sequence.ExecutionContext
 
 enum class CommandDescriptor(
     val command: String,

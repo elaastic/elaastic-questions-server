@@ -19,10 +19,10 @@
 package org.elaastic.activity.evaluation.peergrading
 
 import org.elaastic.activity.response.Response
+import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.moderation.ReportCandidate
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.user.User
-import org.elaastic.moderation.ReportCandidate
-import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

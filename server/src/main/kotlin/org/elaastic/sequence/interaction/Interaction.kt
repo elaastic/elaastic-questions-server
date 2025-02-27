@@ -19,16 +19,16 @@
 package org.elaastic.sequence.interaction
 
 import org.elaastic.activity.evaluation.PeerEvaluationMapping
-import org.elaastic.activity.results.ResponseDistributionConverter
-import org.elaastic.sequence.ExecutionContext
 import org.elaastic.activity.evaluation.PeerEvaluationMappingConverter
+import org.elaastic.activity.results.ResponseDistributionConverter
+import org.elaastic.activity.results.ResponsesDistribution
+import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State
-import org.elaastic.activity.results.ResponsesDistribution
 import org.elaastic.sequence.config.InteractionSpecification
 import org.elaastic.sequence.config.InteractionSpecificationConverter
 import org.elaastic.user.User
-import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

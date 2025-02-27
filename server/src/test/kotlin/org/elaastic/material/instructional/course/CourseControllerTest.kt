@@ -33,8 +33,10 @@ import org.elaastic.material.instructional.subject.SubjectService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.Import
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.MediaType
@@ -48,6 +50,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @ExtendWith(SpringExtension::class)
+@Import(ProjectInfoAutoConfiguration::class) // For loading the bean BuildProperties
 @WebMvcTest(CourseController::class)
 @ContextConfiguration(classes = [TestSecurityConfig::class])
 @WithUserDetails("teacher")

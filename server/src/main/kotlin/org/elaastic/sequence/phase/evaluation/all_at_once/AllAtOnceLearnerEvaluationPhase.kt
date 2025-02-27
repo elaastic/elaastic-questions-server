@@ -4,9 +4,6 @@ import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.State
 import org.elaastic.sequence.phase.*
 import org.elaastic.sequence.phase.response.LearnerResponseFormViewModelFactory
-import org.elaastic.sequence.phase.LearnerPhaseExecution
-import org.elaastic.sequence.phase.LearnerPhaseType
-import org.elaastic.sequence.phase.PhaseTemplate
 
 class AllAtOnceLearnerEvaluationPhase(
     learnerSequence: ILearnerSequence,

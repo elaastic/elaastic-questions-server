@@ -53,8 +53,10 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.Import
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
@@ -66,6 +68,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.togglz.core.manager.FeatureManager
 
 @ExtendWith(SpringExtension::class)
+@Import(ProjectInfoAutoConfiguration::class) // For loading the bean BuildProperties
 @WebMvcTest(PlayerController::class)
 @ContextConfiguration(classes = [TestSecurityConfig::class])
 @WithUserDetails("teacher")

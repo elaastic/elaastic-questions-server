@@ -18,8 +18,8 @@
 
 package org.elaastic.sequence.interaction
 
-import org.elaastic.sequence.Sequence
 import org.elaastic.activity.response.Response
+import org.elaastic.sequence.Sequence
 import org.elaastic.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

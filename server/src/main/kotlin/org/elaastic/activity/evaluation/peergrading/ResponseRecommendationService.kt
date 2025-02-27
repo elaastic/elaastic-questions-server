@@ -18,17 +18,15 @@
 package org.elaastic.activity.evaluation.peergrading
 
 import org.elaastic.activity.evaluation.PeerEvaluationMapping
-import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.activity.results.AttemptNum
+import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User
 import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.util.*
 import javax.persistence.EntityManager
-import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 @Service
 class ResponseRecommendationService(

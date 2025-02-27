@@ -18,9 +18,9 @@
 
 package org.elaastic.material.instructional.question.attachment
 
-import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.filestore.DataIdentifier
 import org.elaastic.filestore.FileDataStore
+import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException

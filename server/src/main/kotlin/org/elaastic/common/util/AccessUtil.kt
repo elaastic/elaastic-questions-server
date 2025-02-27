@@ -1,7 +1,6 @@
 package org.elaastic.common.util
 
 import org.springframework.security.access.AccessDeniedException
-import kotlin.jvm.Throws
 
 /**
  * Throws an IllegalAccessException with the result of calling lazyMessage if the condition is false

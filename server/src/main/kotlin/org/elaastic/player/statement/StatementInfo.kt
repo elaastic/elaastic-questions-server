@@ -19,8 +19,8 @@
 package org.elaastic.player.statement
 
 import org.elaastic.material.instructional.question.QuestionType
-import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.question.attachment.Attachment
+import org.elaastic.material.instructional.statement.Statement
 
 data class StatementInfo(
     val title: String,

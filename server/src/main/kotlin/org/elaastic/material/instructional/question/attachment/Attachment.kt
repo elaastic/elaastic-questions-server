@@ -18,14 +18,13 @@
 
 package org.elaastic.material.instructional.question.attachment
 
-import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.material.instructional.statement.Statement
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Size
-import javax.persistence.AttributeConverter
 import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 import kotlin.math.roundToInt
 
 

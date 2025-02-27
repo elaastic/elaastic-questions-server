@@ -19,11 +19,11 @@
 package org.elaastic.auth.lti.controller
 
 import org.elaastic.assignment.AssignmentService
-import org.elaastic.user.RoleService
 import org.elaastic.auth.lti.LmsService
 import org.elaastic.auth.lti.LmsUser
 import org.elaastic.auth.lti.LtiConsumerService
 import org.elaastic.auth.lti.oauth.OauthService
+import org.elaastic.user.RoleService
 import org.elaastic.user.legal.TermsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

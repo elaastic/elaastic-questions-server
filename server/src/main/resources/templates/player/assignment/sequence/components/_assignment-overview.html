@@ -25,14 +25,14 @@
     comment="Use to determine if the breadcrumb and the sequence are clickable"*/-->
 
     <script th:if="${context == 'aside' && assignmentOverviewModel.selectedSequenceId != null}" th:inline="javascript">
-        (function () {
-            var container = $('#layout-aside')
-            var target = $('#' + [[${context}]] + '-[[${assignmentOverviewModel.selectedSequenceId}]]')
+        $(function () {
+            let container = $('#layout-aside')
+            let target = $('#' + [[${context}]] + '-[[${assignmentOverviewModel.selectedSequenceId}]]')
 
             if (!elaastic.util.isVisible(target, container, 50)) {
                 elaastic.util.ensureIsVisible(target, container)
             }
-        })()
+        });
 
     </script>
 

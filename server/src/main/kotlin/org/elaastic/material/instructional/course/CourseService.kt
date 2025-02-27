@@ -18,9 +18,9 @@
 
 package org.elaastic.material.instructional.course
 
-import org.elaastic.user.User
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

@@ -94,7 +94,7 @@
             .catch(error => {
               this.loading = false
               this.showGenericError = true
-              console.info(error)
+              console.error(error)
             })
 
         },

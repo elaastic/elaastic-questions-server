@@ -1,6 +1,8 @@
 package org.elaastic.sequence.phase.evaluation
 
 import org.elaastic.sequence.phase.descriptor.PhaseConfig
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig.ALL_AT_ONCE
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig.DRAXO
 
 /**
  * Enumeration of the different configuration for the evaluation phase.

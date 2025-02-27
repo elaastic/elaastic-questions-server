@@ -1,11 +1,11 @@
 package org.elaastic.sequence.phase.evaluation.all_at_once
 
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.response.ResponseDataFactory
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.sequence.phase.LearnerPhase
 import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.evaluation.AbstractLearnerEvaluationPhaseExecutionLoader
-import org.elaastic.activity.response.ResponseDataFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

@@ -18,8 +18,8 @@
 
 package org.elaastic.activity.results
 
-import org.elaastic.material.instructional.question.ChoiceSpecification
 import org.elaastic.activity.response.ResponseSet
+import org.elaastic.material.instructional.question.ChoiceSpecification
 
 object ConfidenceDistributionFactory {
 

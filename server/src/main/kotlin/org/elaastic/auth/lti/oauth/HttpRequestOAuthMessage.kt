@@ -22,7 +22,6 @@ import net.oauth.OAuth
 import net.oauth.OAuthMessage
 import java.io.IOException
 import java.io.InputStream
-import java.util.ArrayList
 import javax.servlet.http.HttpServletRequest
 
 class HttpRequestOAuthMessage(

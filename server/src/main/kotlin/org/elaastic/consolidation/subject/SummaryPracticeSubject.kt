@@ -3,7 +3,7 @@ package org.elaastic.consolidation.subject
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.assignment.Assignment
-import java.util.UUID
+import java.util.*
 
 open class SummaryPracticeSubject(
     @JsonApiId

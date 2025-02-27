@@ -17,9 +17,11 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Import
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
@@ -34,6 +36,7 @@ import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
 @ExtendWith(SpringExtension::class)
+@Import(ProjectInfoAutoConfiguration::class) // For loading the bean BuildProperties
 @WebMvcTest(RestPracticeSubjectController::class)
 @ComponentScan("com.toedter.spring.hateoas.jsonapi")
 @ContextConfiguration(classes = [TestSecurityConfig::class])

@@ -2,10 +2,10 @@ package org.elaastic.sequence.phase.evaluation.draxo
 
 import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
 import org.elaastic.activity.response.Response
+import org.elaastic.activity.response.ResponseData
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.phase.evaluation.AbstractLearnerEvaluationPhaseExecution
-import org.elaastic.activity.response.ResponseData
 
 class DraxoLearnerEvaluationPhaseExecution(
     userHasCompletedPhase2: Boolean,

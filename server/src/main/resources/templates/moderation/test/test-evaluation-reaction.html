@@ -1,0 +1,84 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<div th:fragment="utilityGradeVue"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <!--/* script for activating @iframe-resizer that allow us to smoothly integrate the previous iframe within the page layout */-->
+    <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
+
+    <!--/* iframe allowing to load the <utility-grade> app in a isolated context */-->
+    <iframe id="evaluation-reaction-app" class="transparent-iframe" th:src="@{/ui/moderation/evaluation-reaction}"
+            width="100%"></iframe>
+    <iframe id="evaluation-reaction-app-teacher" class="transparent-iframe"
+            th:src="@{/ui/moderation/evaluation-reaction}"
+            width="100%"></iframe>
+    <iframe id="evaluation-reaction-app-dialog" class="transparent-iframe"
+            th:src="@{/ui/moderation/evaluation-reaction}"
+            width="100%"></iframe>
+
+    <!--/* Initialize the <confronting-viewpoint app & interact with it */-->
+    <script th:inline="javascript">
+        const iframe = document.getElementById('evaluation-reaction-app');
+        const iframeTeacher = document.getElementById('evaluation-reaction-app-teacher');
+        const iframeDialog = document.getElementById('evaluation-reaction-app-dialog');
+
+        const evaluationId = 1;
+
+        /*[- Trigger the app init function on iframe loading -]*/
+        iframe.onload = () => {
+            const isChatGPT = false;
+            const isTeacher = false;
+            const selectedGrade = null;
+            const beADialog = false;
+            iframe.contentWindow.elaastic.initializeEvaluationReaction(isChatGPT, isTeacher, selectedGrade, "Content to report", beADialog, evaluationId)
+        }
+        iframeTeacher.onload = () => {
+            const isChatGPT = true;
+            const isTeacher = true;
+            const selectedGrade = null;
+            const beADialog = false;
+            iframeTeacher.contentWindow.elaastic.initializeEvaluationReaction(isChatGPT, isTeacher, selectedGrade, "", beADialog, evaluationId)
+        }
+        iframeDialog.onload = () => {
+            const isChatGPT = false;
+            const isTeacher = false;
+            const selectedGrade = null;
+            const beADialog = true;
+            iframeDialog.contentWindow.elaastic.initializeEvaluationReaction(isChatGPT, isTeacher, selectedGrade, "This is a content to report", beADialog, evaluationId)
+        }
+        window.addEventListener('message', (event) => {
+            if (event.data.command === 'grade-submitted_' + evaluationId) {
+                const gradeSubmitted = event.data.grade;
+                console.log(gradeSubmitted)
+            } else if (event.data.command === 'report-submitted_' + evaluationId) {
+                const reportReason = event.data.reportReason;
+                const reportDetail = event.data.reportDetail;
+                console.log(reportReason)
+                console.log(reportDetail)
+            }
+        })
+
+        const optionIframeResiser = {
+            license: 'GPLv3',
+            waitForLoad: true
+        };
+        /*[- Init iframe resize. AS we didn't specify one iframe, it will select all -]*/
+        iframeResize(optionIframeResiser)
+    </script>
+</div>

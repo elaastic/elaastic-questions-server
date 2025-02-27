@@ -37,8 +37,6 @@ var elaastic = elaastic || {};
                 findElmExplanationContainer(elmBtnLoadReviews)
             )
 
-            console.log(event.target)
-
             const hideReviewLink = $(elmBtnLoadReviews).find('.hide-review')
             const seeReviewLink = $(elmBtnLoadReviews).find('.see-review')
 
@@ -98,7 +96,6 @@ var elaastic = elaastic || {};
             let target = findElmReviewsContainer(
                 findElmExplanationContainer(elmBtnLoadReviews)
             )
-            console.log(event.target)
 
             const hideReviewLink = $(elmBtnLoadReviews).find('.hide-review')
             const seeReviewLink = $(elmBtnLoadReviews).find('.see-review')

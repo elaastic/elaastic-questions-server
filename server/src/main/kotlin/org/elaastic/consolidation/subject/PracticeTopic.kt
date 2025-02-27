@@ -3,7 +3,7 @@ package org.elaastic.consolidation.subject
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.material.instructional.course.Course
-import java.util.UUID
+import java.util.*
 
 /**
  * A practice topic is a folder of practice subjects allowing to organize

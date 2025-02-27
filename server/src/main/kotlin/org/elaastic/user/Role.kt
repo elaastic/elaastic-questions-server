@@ -19,13 +19,14 @@
 package org.elaastic.user
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.user.Role.RoleId.*
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.security.core.GrantedAuthority
 import java.io.Serializable
-import javax.persistence.*
-
+import javax.persistence.Column
+import javax.persistence.Entity
 
 
 /**

@@ -1,15 +1,15 @@
 package org.elaastic.sequence.phase.evaluation
 
-import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.activity.response.ConfidenceDegree
-import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.SequenceService
-import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ItemIndex
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceService
 import org.elaastic.user.User
-import java.util.Locale
+import java.util.*
 
 abstract class AbstractEvaluationPhaseExecutionController(
     open val sequenceService: SequenceService,

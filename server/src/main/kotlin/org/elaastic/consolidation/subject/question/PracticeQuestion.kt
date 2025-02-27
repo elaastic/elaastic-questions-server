@@ -5,7 +5,7 @@ import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.consolidation.subject.question.attachment.PracticeAttachment
 import org.elaastic.consolidation.subject.question.specification.QuestionSpecification
-import java.util.UUID
+import java.util.*
 
 /**
  * Represents a question of a practice subject

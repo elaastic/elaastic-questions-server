@@ -18,10 +18,10 @@
 
 package org.elaastic.auth.lti.controller
 
-import org.elaastic.user.Role
-import org.elaastic.user.RoleService
 import org.elaastic.auth.lti.LtiActivity
 import org.elaastic.auth.lti.LtiUser
+import org.elaastic.user.Role
+import org.elaastic.user.RoleService
 import java.net.URLEncoder
 import java.nio.charset.Charset
 

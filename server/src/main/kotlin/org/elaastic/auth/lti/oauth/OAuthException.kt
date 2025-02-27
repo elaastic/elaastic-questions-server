@@ -18,6 +18,4 @@
 
 package org.elaastic.auth.lti.oauth
 
-import java.lang.Exception
-
 class OAuthException(message:String): Exception(message)

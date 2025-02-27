@@ -20,9 +20,9 @@ package org.elaastic.user
 
 import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.auth.cas.CasUser
+import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.user.validation.PlainTextPasswordIsTooShort
 import org.elaastic.user.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
-import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
@@ -30,7 +30,6 @@ import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.*
-import kotlin.collections.HashSet
 import kotlin.jvm.Transient
 
 /**

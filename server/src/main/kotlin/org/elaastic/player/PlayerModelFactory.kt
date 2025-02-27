@@ -19,11 +19,6 @@ package org.elaastic.player
 
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.moderation.ReportInformation
-import org.elaastic.sequence.ILearnerSequence
-import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.State
-import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.user.User
 import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory
 import org.elaastic.player.command.CommandModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
@@ -32,6 +27,11 @@ import org.elaastic.player.statement.StatementInfo
 import org.elaastic.player.statement.StatementPanelModel
 import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.player.steps.StepsModelFactory
+import org.elaastic.sequence.ILearnerSequence
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.State
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.user.User
 
 object PlayerModelFactory {
 

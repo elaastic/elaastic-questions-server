@@ -1,13 +1,13 @@
 package org.elaastic.consolidation.subject
 
-import org.elaastic.consolidation.subject.question.PracticeLearnerExplanation
-import org.elaastic.consolidation.subject.question.PracticeQuestionFactory
+import org.elaastic.activity.response.ResponseService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.ReadyForConsolidation
+import org.elaastic.consolidation.subject.question.PracticeLearnerExplanation
+import org.elaastic.consolidation.subject.question.PracticeQuestionFactory
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService
-import org.elaastic.activity.response.ResponseService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime

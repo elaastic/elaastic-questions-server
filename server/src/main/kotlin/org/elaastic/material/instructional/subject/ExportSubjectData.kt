@@ -2,10 +2,10 @@ package org.elaastic.material.instructional.subject
 
 import org.elaastic.material.instructional.question.ChoiceSpecification
 import org.elaastic.material.instructional.question.QuestionType
-import org.elaastic.material.instructional.statement.StatementService
-import org.elaastic.material.instructional.question.explanation.FakeExplanation
 import org.elaastic.material.instructional.question.attachment.Attachment
 import org.elaastic.material.instructional.question.attachment.MimeType
+import org.elaastic.material.instructional.question.explanation.FakeExplanation
+import org.elaastic.material.instructional.statement.StatementService
 import java.io.File
 import java.time.LocalDate
 import java.util.*
