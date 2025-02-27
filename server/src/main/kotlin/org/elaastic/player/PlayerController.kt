@@ -542,6 +542,7 @@ class PlayerController(
         val sequence = sequenceService.get(id, true)
         val response = sequenceService.submitResponse(user, sequence, responseSubmissionData)
         if (sequence.chatGptEvaluationEnabled && !sequence.isSecondAttemptAllowed()) {
+            // Dead branch. `isSecondAttemptAllowed` is always true, so the whole condition is always false.
             chatGptEvaluationService.createEvaluation(response, locale.language)
         }
 
