@@ -38,7 +38,7 @@ class ControllerAdvice(
     @Autowired val buildProperties: BuildProperties
 ) {
     val uiComponentsVersion: String
-        get() = buildProperties.get("ui.components.version")
+        get() = buildProperties["ui.components.version"]
 
     @ModelAttribute("applicationVersion")
     fun getApplicationVersion(): String {
