@@ -21,7 +21,7 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-    <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}"
+    <div class="review" th:with="explanation = ${draxoEvaluationModel.draxoEvaluation.getExplanation()}, isTeacher = ${draxoEvaluationModel.canHidePeerGrading}"
          th:classappend="${draxoEvaluationModel.hiddenByTeacher || draxoEvaluationModel.isReported()} ? 'hidden' : ''">
 
         <!--/* PeerGrading header */-->
@@ -111,7 +111,7 @@
         */-->
         <div class="draxo-content" th:id="draxoContent"
              th:attr="evaluation-id=${draxoEvaluationModel.draxoPeerGradingId}"
-             th:if="${(draxoEvaluationModel.hiddenByTeacher || draxoEvaluationModel.isReported()) && draxoEvaluationModel.canHidePeerGrading}">
+             th:if="${(draxoEvaluationModel.hiddenByTeacher || draxoEvaluationModel.isReported()) && isTeacher}">
             <th:block
                     th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-content.html :: draxoPeerGradingContent(${draxoEvaluationModel})"></th:block>
         </div>
@@ -119,7 +119,7 @@
 
         <!--/* Reaction for the DraxoPeerGrading */-->
         <div class="review-border"
-             th:if="${draxoEvaluationModel.canReactOnPeerGrading && draxoEvaluationModel.canBeReacted()}">
+             th:if="${draxoEvaluationModel.canReactOnPeerGrading && draxoEvaluationModel.canBeReacted() && !isTeacher}">
             <th:block
                     th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction.html :: peerGradingEvaluationCommand(${draxoEvaluationModel})">
             </th:block>

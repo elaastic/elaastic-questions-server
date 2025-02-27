@@ -58,9 +58,8 @@
             const selectedGrade = /*[[${draxoEvaluationModel.utilityGrade}]]*/ null;
             const contentToReport = /*[[${draxoEvaluationModel.draxoEvaluation.getExplanation()}]]*/'';
 
-            const isTeacher = false; /*[- Only the learner can access this page -]*/
-            const isChatGPT = false; /*[- This is not a ChatGPT evaluation -]*/
-            const beADialog = false; /*[- For now, we don't want a dialog as it's broken due to the iframe -]*/
+            const viewByTeacher = false; /*[- Only the learner can access this page -]*/
+            const evaluationFromChatGpt = false; /*[- This is not a ChatGPT evaluation -]*/
 
             const iframeSelector = 'evaluation-reaction-app_' + evaluationId;
             const iframe = document.getElementById(iframeSelector);
@@ -68,11 +67,10 @@
             /*[- Trigger the app init function on iframe loading -]*/
             iframe.onload = () => {
                 iframe.contentWindow.elaastic.initializeEvaluationReaction(
-                        isChatGPT,
-                        isTeacher,
+                        evaluationFromChatGpt,
+                        viewByTeacher,
                         selectedGrade,
                         contentToReport,
-                        beADialog,
                         evaluationId
                 )
             }
