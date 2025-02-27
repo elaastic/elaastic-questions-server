@@ -10,11 +10,11 @@ export interface EvaluationReactionProps {
   /**
    * Wether the evaluation has been done by ChatGPT or not
    */
-  isChatGPT: boolean
+  evaluationFromChatGpt: boolean
   /**
    * Whether the user is a teacher or not
    */
-  isTeacher: boolean,
+  viewByTeacher: boolean,
   /**
    * The selected grade if any
    */
@@ -23,10 +23,6 @@ export interface EvaluationReactionProps {
    * The content to report
    */
   contentToReport: string
-  /**
-   * Wether the form should be a dialog or not
-   */
-  beADialog: boolean
 }
 
 export interface EvaluationReactionEvents {
@@ -51,11 +47,11 @@ function submitReport(reportReason: string[], reportDetail: string) {
 <template>
   <v-row id="evaluation-reaction-container">
     <v-col>
-      <UtilityGrade :is-chat-g-p-t="props.isChatGPT" :is-teacher="props.isTeacher" :selected-grade="props.selectedGrade"
+      <UtilityGrade :evaluation-from-chat-gpt="props.evaluationFromChatGpt" :view-by-teacher="props.viewByTeacher" :selected-grade="props.selectedGrade"
                     @submitUtilityGrade="submitUtilityGrade"/>
     </v-col>
-    <v-col v-if="!props.isTeacher">
-      <ReportModal :content-to-report="contentToReport" :be-a-dialog="beADialog" @submitReport="submitReport"/>
+    <v-col v-if="!props.viewByTeacher">
+      <ReportModal :content-to-report="contentToReport" :display-as-dialog="false" @submitReport="submitReport"/>
     </v-col>
   </v-row>
 </template>

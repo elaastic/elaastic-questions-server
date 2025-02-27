@@ -13,7 +13,7 @@ export interface ReportModalProps {
   /**
    * Wether the form should be a dialog or not
    */
-  beADialog: boolean
+  displayAsDialog: boolean
 }
 
 export interface ReportModalEvents {
@@ -50,7 +50,7 @@ onUnmounted(() => {
 
 <template>
   <!-- Dialog -->
-  <v-dialog v-model="showForm" max-width="600" :fullscreen="isSmallScreen" v-if="props.beADialog">
+  <v-dialog v-model="showForm" max-width="600" :fullscreen="isSmallScreen" v-if="props.displayAsDialog">
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn class="text-none" variant="outlined" color="#b7446f" prepend-icon="mdi-alert" id="report-btn"
              v-bind="activatorProps">

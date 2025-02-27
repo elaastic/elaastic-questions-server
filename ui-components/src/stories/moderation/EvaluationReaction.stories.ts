@@ -27,16 +27,16 @@ type Story = StoryObj<typeof meta>
 
 export const Primary: Story = {
   args: {
-    isChatGPT: false,
-    isTeacher: false,
+    evaluationFromChatGpt: false,
+    viewByTeacher: false,
     contentToReport: 'Content to report.',
   },
 }
 
 export const TeacherReact: Story = {
   args: {
-    isChatGPT: true,
-    isTeacher: true,
+    evaluationFromChatGpt: true,
+    viewByTeacher: true,
     contentToReport: 'Content to report.',
   },
   parameters: {

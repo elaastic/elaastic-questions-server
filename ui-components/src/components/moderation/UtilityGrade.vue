@@ -23,11 +23,11 @@ export interface UtilityGradeProps {
   /**
    * Wether the evaluation has been done by ChatGPT or not
    */
-  isChatGPT: boolean
+  evaluationFromChatGpt: boolean
   /**
    * Whether the user is a teacher or not
    */
-  isTeacher: boolean,
+  viewByTeacher: boolean,
   /**
    * The selected grade if any
    */
@@ -70,9 +70,9 @@ const submitUtilityGrade = () => {
   <!-- Grade buttons -->
   <v-row>
     <v-col>
-      <div v-if="!props.isChatGPT && !props.isTeacher" readonly>{{ t('peer-review-label') }}</div>
-      <div v-if=" props.isChatGPT && !props.isTeacher" readonly>{{ t('chatGPT-review-student-label') }}</div>
-      <div v-if=" props.isChatGPT &&  props.isTeacher" readonly>{{ t('chatGPT-review-teacher-label') }}</div>
+      <div v-if="!props.evaluationFromChatGpt && !props.viewByTeacher" readonly>{{ t('peer-review-label') }}</div>
+      <div v-if=" props.evaluationFromChatGpt && !props.viewByTeacher" readonly>{{ t('chatGPT-review-student-label') }}</div>
+      <div v-if=" props.evaluationFromChatGpt &&  props.viewByTeacher" readonly>{{ t('chatGPT-review-teacher-label') }}</div>
 
       <SelectorResponsive :selections="possibleGrade" :selected="props.selectedGrade"
                          @changeSelection="setSelectedUtilityGrade"/>

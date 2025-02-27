@@ -8,8 +8,8 @@ const meta: any = {
   title: 'Moderation/UtilityGrade',
   component: UtilityGrade,
   args: {
-    isChatGPT: false,
-    isTeacher: false,
+    evaluationFromChatGpt: false,
+    viewByTeacher: false,
     // Has to have the name of the event with `on` in front and in camelCase
     onSubmitUtilityGrade: fn(),
   },
@@ -81,7 +81,7 @@ export const DraxoByLearnerWithSelectedGrade: Story = {
 
 export const ChatGPTByLearner: Story = {
   args: {
-    isChatGPT: true
+    evaluationFromChatGpt: true
   },
   parameters: {
     docs: {
@@ -94,8 +94,8 @@ export const ChatGPTByLearner: Story = {
 
 export const ChatGPTByTeacher: Story = {
   args: {
-    isChatGPT: true,
-    isTeacher: true
+    evaluationFromChatGpt: true,
+    viewByTeacher: true
   },
   parameters: {
     docs: {

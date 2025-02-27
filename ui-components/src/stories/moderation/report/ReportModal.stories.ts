@@ -29,13 +29,13 @@ type Story = StoryObj<typeof meta>
 export const Primary: Story = {
   args: {
     contentToReport: 'This is the content to report. ' + lorem,
-    beADialog: true,
+    displayAsDialog: true,
   },
 }
 
 export const PrimaryNotADialog: Story = {
   args: {
     contentToReport: 'This is the content to report. ' + lorem,
-    beADialog: false,
+    displayAsDialog: false,
   },
 }
