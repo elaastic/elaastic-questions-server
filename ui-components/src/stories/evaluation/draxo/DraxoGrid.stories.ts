@@ -1,9 +1,14 @@
 import type {Meta, StoryObj} from '@storybook/vue3';
 import DraxoGrid from "@/components/evaluation/draxo/DraxoGrid.vue";
 import {OptionType} from "@/components/evaluation/draxo/OptionType";
+import {Option} from "@/components/evaluation/draxo/Option";
 
 function optionTypeControl(): any {
-  return {options: [null, ...Object.values(OptionType)], control: {type: 'select'}};
+  return {
+    options: [Option.YES.cssClass, Option.NO.cssClass, Option.DONT_KNOW.cssClass, null],
+    mapping: [Option.YES, Option.NO, Option.DONT_KNOW, null],
+    control: {type: 'select'}
+  };
 }
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
@@ -47,11 +52,10 @@ export const NotComplete: Story = {
     }
   },
   args: {
-    criteriaD: OptionType.YES,
-    criteriaR: OptionType.YES,
-    criteriaA: OptionType.YES,
-    criteriaX: OptionType.NO,
-    criteriaO: null,
+    criteriaD: Option.YES,
+    criteriaR: Option.YES,
+    criteriaA: Option.YES,
+    criteriaX: Option.NO,
   }
 };
 
@@ -64,7 +68,7 @@ export const NotUnderstandable: Story = {
     }
   },
   args: {
-    criteriaD: OptionType.NO
+    criteriaD: Option.NO
   }
 };
 
@@ -77,10 +81,10 @@ export const Perfect: Story = {
     }
   },
   args: {
-    criteriaD: OptionType.YES,
-    criteriaR: OptionType.YES,
-    criteriaA: OptionType.YES,
-    criteriaX: OptionType.YES,
-    criteriaO: OptionType.YES,
+    criteriaD: Option.YES,
+    criteriaR: Option.YES,
+    criteriaA: Option.YES,
+    criteriaX: Option.YES,
+    criteriaO: Option.YES,
   }
 };
