@@ -23,6 +23,9 @@ import org.elaastic.activity.evaluation.peergrading.draxo.DraxoGrading
 import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
 import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.activity.response.ExclusiveChoiceResponseData
+import org.elaastic.activity.response.MultipleChoiceResponseData
+import org.elaastic.activity.response.OpenEndedResponseData
 import org.elaastic.activity.results.*
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
 import org.elaastic.common.abtesting.ElaasticFeatures
@@ -65,9 +68,6 @@ import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceGenerator
 import org.elaastic.sequence.State
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
-import org.elaastic.activity.response.ExclusiveChoiceResponseData
-import org.elaastic.activity.response.MultipleChoiceResponseData
-import org.elaastic.activity.response.OpenEndedResponseData
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhaseViewModel
 import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase

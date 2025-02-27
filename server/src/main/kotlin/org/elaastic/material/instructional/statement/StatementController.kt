@@ -3,12 +3,12 @@ package org.elaastic.material.instructional.statement
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.question.*
-import org.elaastic.material.instructional.subject.SubjectService
-import org.elaastic.material.instructional.question.explanation.FakeExplanation
-import org.elaastic.material.instructional.question.explanation.FakeExplanationService
 import org.elaastic.material.instructional.question.attachment.Attachment
 import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.question.attachment.MimeType
+import org.elaastic.material.instructional.question.explanation.FakeExplanation
+import org.elaastic.material.instructional.question.explanation.FakeExplanationService
+import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.sequence.FakeExplanationData
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired

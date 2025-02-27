@@ -1,7 +1,7 @@
 package org.elaastic.auth.cas
 
-import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.user.User
 import java.time.LocalDate
 import javax.persistence.*
 

@@ -1,8 +1,8 @@
 package org.elaastic.consolidation.subject
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.elaastic.consolidation.subject.question.PracticeQuestion
 import org.elaastic.assignment.Assignment
+import org.elaastic.consolidation.subject.question.PracticeQuestion
 import java.util.*
 
 /**

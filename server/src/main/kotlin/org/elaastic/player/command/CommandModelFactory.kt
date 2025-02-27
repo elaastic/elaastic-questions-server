@@ -21,7 +21,6 @@ package org.elaastic.player.command
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State
 import org.elaastic.user.User
-import java.lang.IllegalStateException
 
 object CommandModelFactory {
 

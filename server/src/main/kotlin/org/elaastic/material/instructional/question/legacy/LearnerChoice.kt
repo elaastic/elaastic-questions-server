@@ -18,7 +18,5 @@
 
 package org.elaastic.material.instructional.question.legacy
 
-import java.util.ArrayList
-
 
 class LearnerChoice(values: List<Int>) : ArrayList<Int>(values)

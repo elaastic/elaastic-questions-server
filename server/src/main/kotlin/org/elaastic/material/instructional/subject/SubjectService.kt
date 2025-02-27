@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.lang.IllegalStateException
 import java.util.*
 import java.util.logging.Logger
 import javax.persistence.EntityManager

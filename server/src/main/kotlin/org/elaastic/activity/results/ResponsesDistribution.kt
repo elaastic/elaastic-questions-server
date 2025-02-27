@@ -19,7 +19,6 @@
 package org.elaastic.activity.results
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import java.lang.IllegalArgumentException
 
 typealias AttemptNum = Int
 typealias ResponsePercentage = Float

@@ -20,13 +20,13 @@
 
 package org.elaastic.player.dashboard
 
-import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.activity.response.Response
-import org.elaastic.sequence.config.EvaluationSpecification
+import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.player.steps.StepsModel
 import org.elaastic.player.steps.StepsModelFactory
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.config.EvaluationSpecification
+import org.elaastic.sequence.interaction.InteractionType
 import org.springframework.stereotype.Service
 
 /**

@@ -18,8 +18,6 @@
 
 package org.elaastic.test
 
-import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.assignment.Assignment
@@ -27,19 +25,20 @@ import org.elaastic.assignment.AssignmentRepository
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.auth.lti.LtiConsumer
 import org.elaastic.auth.lti.LtiConsumerRepository
+import org.elaastic.auth.lti.controller.LtiLaunchData
+import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.material.instructional.statement.StatementRepository
+import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.material.instructional.subject.SubjectRepository
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceRepository
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserRepository
-import org.elaastic.auth.lti.controller.LtiLaunchData
-import org.elaastic.material.instructional.subject.Subject
-import org.elaastic.material.instructional.subject.SubjectRepository
-import org.elaastic.material.instructional.statement.Statement
-import org.elaastic.material.instructional.statement.StatementRepository
-import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.SequenceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.lang.IllegalStateException
 
 @Service
 class IntegrationTestingService(

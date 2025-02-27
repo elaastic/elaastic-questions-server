@@ -18,20 +18,19 @@
 
 package org.elaastic.activity.evaluation.peergrading
 
-import org.elaastic.moderation.ReportCandidateService
-import org.elaastic.moderation.ReportReason
-import org.elaastic.moderation.UtilityGrade
-import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.assignment.LearnerAssignmentService
-import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.activity.response.ResponseService
-import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
-import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
-import org.elaastic.user.User
+import org.elaastic.assignment.LearnerAssignment
+import org.elaastic.assignment.LearnerAssignmentService
 import org.elaastic.common.util.requireAccess
+import org.elaastic.moderation.ReportCandidateService
+import org.elaastic.moderation.ReportReason
+import org.elaastic.moderation.UtilityGrade
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.interaction.Interaction
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.stereotype.Service

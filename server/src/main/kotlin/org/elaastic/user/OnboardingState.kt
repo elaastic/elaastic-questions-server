@@ -22,7 +22,10 @@ import org.elaastic.common.onboarding.OnboardingChapter
 import org.elaastic.common.onboarding.OnboardingChapterConverter
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import javax.persistence.*
+import javax.persistence.Convert
+import javax.persistence.Entity
+import javax.persistence.EntityListeners
+import javax.persistence.OneToOne
 import javax.validation.constraints.NotNull
 
 @Entity

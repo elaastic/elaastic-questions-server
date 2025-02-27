@@ -2,13 +2,13 @@ package org.elaastic.assignment
 
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.common.util.toDate
-import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.SequenceRepository
-import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.course.Course
-import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementService
+import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceRepository
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page

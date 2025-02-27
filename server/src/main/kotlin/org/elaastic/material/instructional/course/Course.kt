@@ -1,8 +1,8 @@
 package org.elaastic.material.instructional.course
 
-import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

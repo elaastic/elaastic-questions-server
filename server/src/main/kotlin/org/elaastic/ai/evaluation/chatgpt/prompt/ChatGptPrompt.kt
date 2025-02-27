@@ -2,8 +2,8 @@ package org.elaastic.ai.evaluation.chatgpt.prompt
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import java.util.*
-import javax.persistence.*
-
+import javax.persistence.Entity
+import javax.persistence.Version
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 

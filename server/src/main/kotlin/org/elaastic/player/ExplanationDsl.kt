@@ -18,8 +18,8 @@
 
 package org.elaastic.player
 
-import org.elaastic.player.explanations.*
 import org.elaastic.activity.response.ConfidenceDegree
+import org.elaastic.player.explanations.*
 import java.math.BigDecimal
 
 @DslMarker

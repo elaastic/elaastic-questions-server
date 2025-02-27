@@ -19,7 +19,6 @@
 package org.elaastic.common.web
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.info.BuildProperties
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -33,9 +32,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-/**
- * Controller advice to add common attributes to all views.
- */
+/** Controller advice to add common attributes to all views. */
 @ControllerAdvice
 class ControllerAdvice(
     @Autowired val buildProperties: BuildProperties

@@ -1,9 +1,8 @@
 package org.elaastic.sequence
 
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.user.User
 import org.elaastic.sequence.phase.LearnerPhase
-import java.lang.IllegalStateException
+import org.elaastic.user.User
 
 class TransientLearnerSequence(
     override val learner: User,

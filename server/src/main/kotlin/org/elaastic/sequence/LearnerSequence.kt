@@ -18,10 +18,10 @@
 
 package org.elaastic.sequence
 
-import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.user.User
 import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.phase.LearnerPhase
+import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

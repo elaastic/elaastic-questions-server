@@ -4,7 +4,7 @@ import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.material.instructional.question.attachment.Attachment
 import org.elaastic.material.instructional.question.attachment.Dimension
-import java.util.UUID
+import java.util.*
 
 /**
  * Represent an Attachment bound to a PracticeQuestion

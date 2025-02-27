@@ -1,10 +1,10 @@
 package org.elaastic.player.results.learner
 
-import org.elaastic.player.explanations.ExplanationDataFactory
+import org.elaastic.activity.response.Response
 import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
 import org.elaastic.material.instructional.question.MultipleChoiceSpecification
 import org.elaastic.material.instructional.statement.Statement
-import org.elaastic.activity.response.Response
+import org.elaastic.player.explanations.ExplanationDataFactory
 
 object LearnerResultsModelFactory {
 

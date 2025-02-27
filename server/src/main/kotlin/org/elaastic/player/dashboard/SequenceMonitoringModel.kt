@@ -35,9 +35,8 @@ class SequenceMonitoringModel(
     /**
      * With the given list of learners, set the list of learners in the model.
      *
-     * Replace the current list of learners with the new list. Before setting
-     * the new list, sort the learners according to the execution context and
-     * the current phase.
+     * Replace the current list of learners with the new list. Before setting the new list, sort the learners according
+     * to the execution context and the current phase.
      *
      * @param newLearnersList the new list of learners
      * @see ExecutionContext
@@ -58,14 +57,12 @@ class SequenceMonitoringModel(
     /**
      * Sort the learner when the sequence is in FaceToFace execution context
      *
-     * If the Phase 1 is active, then we want the learner still writing their
-     * answer at the top.
+     * If the Phase 1 is active, then we want the learner still writing their answer at the top.
      *
-     * If the Phase 2 is active, then we want the learner still evaluating at
-     * first and more than the learner who didn't answer the question.
+     * If the Phase 2 is active, then we want the learner still evaluating at first and more than the learner who didn't
+     * answer the question.
      *
-     * If the Phase 3 is active, then we want the learner who didn't answer and
-     * evaluate at first.
+     * If the Phase 3 is active, then we want the learner who didn't answer and evaluate at first.
      */
     private fun sortWithFaceToFaceBehavior(
         newLearnersList: MutableList<LearnerMonitoringModel>
@@ -90,11 +87,9 @@ class SequenceMonitoringModel(
     }
 
     /**
-     * Sort the learners when the sequence has Blended or Remote execution
-     * context.
+     * Sort the learners when the sequence has Blended or Remote execution context.
      *
-     * Sort the learners alphabetically and by their "In Progress..." states
-     * count.
+     * Sort the learners alphabetically and by their "In Progress..." states count.
      *
      * @param newLearnersList the list of learners to sort
      */
@@ -267,16 +262,16 @@ enum class DashboardPhaseState {
     /**
      * The phase has not started
      *
-     * Applicable to all phases. During phase 3 (evaluation), the phase is not
-     * started when the results are not displayed yet
+     * Applicable to all phases. During phase 3 (evaluation), the phase is not started when the results are not
+     * displayed yet
      */
     NOT_STARTED,
 
     /**
      * The phase is in progress
      *
-     * Applicable to all phases. During phase 3 (evaluation), the phase is in
-     * progress when the results are being displayed
+     * Applicable to all phases. During phase 3 (evaluation), the phase is in progress when the results are being
+     * displayed
      */
     IN_PROGRESS,
 
@@ -298,8 +293,7 @@ enum class DashboardPhaseState {
 /**
  * Enum defining states of a learner on a phase
  *
- * @property ACTIVITY_NOT_TERMINATED the learner has not terminated the
- *     activity
+ * @property ACTIVITY_NOT_TERMINATED the learner has not terminated the activity
  * @property ACTIVITY_TERMINATED the learner has terminated the activity
  * @property WAITING the learner is waiting for the next phase
  */

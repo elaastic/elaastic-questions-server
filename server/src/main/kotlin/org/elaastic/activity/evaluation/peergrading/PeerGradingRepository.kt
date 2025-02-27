@@ -20,7 +20,6 @@ package org.elaastic.activity.evaluation.peergrading
 
 import org.elaastic.activity.response.Response
 import org.elaastic.moderation.ReportCandidateRepository
-import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
 import org.elaastic.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 

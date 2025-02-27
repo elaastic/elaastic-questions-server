@@ -17,11 +17,11 @@
  */
 package org.elaastic.activity.results
 
+import org.elaastic.activity.response.ResponseService
+import org.elaastic.activity.response.ResponseSet
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.interaction.InteractionRepository
-import org.elaastic.activity.response.ResponseService
-import org.elaastic.activity.response.ResponseSet
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

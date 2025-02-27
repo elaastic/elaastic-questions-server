@@ -3,10 +3,10 @@ package org.elaastic.material.instructional.statement
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.analytics.lrs.EventLogRepository
 import org.elaastic.assignment.Assignment
-import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.question.explanation.FakeExplanation
 import org.elaastic.material.instructional.question.explanation.FakeExplanationRepository
-import org.elaastic.material.instructional.question.attachment.AttachmentService
+import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.sequence.FakeExplanationData
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceRepository

@@ -20,7 +20,6 @@ package org.elaastic.sequence
 
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

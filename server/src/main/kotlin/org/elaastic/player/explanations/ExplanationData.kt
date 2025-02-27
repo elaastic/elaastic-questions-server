@@ -1,8 +1,8 @@
 package org.elaastic.player.explanations
 
-import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import java.math.BigDecimal
 import java.math.RoundingMode
 

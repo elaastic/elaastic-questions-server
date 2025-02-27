@@ -18,12 +18,12 @@
 
 package org.elaastic.auth.lti.controller
 
-import org.elaastic.common.web.MessageBuilder
-import org.elaastic.user.User
 import org.elaastic.auth.lti.LtiConsumer
 import org.elaastic.auth.lti.LtiConsumerRepository
 import org.elaastic.auth.lti.LtiConsumerService
 import org.elaastic.common.persistence.pagination.PaginationUtil
+import org.elaastic.common.web.MessageBuilder
+import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -33,15 +33,15 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import javax.servlet.http.HttpServletResponse
 import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
-import org.springframework.web.multipart.MultipartFile
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 
 
 @Controller

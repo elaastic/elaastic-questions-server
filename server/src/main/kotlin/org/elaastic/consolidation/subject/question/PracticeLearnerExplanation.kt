@@ -3,7 +3,7 @@ package org.elaastic.consolidation.subject.question
 import com.toedter.spring.hateoas.jsonapi.JsonApiId
 import com.toedter.spring.hateoas.jsonapi.JsonApiType
 import org.elaastic.activity.response.Response
-import java.util.UUID
+import java.util.*
 
 /**
  * Represent an explanation of an answer to a question provided by a learner.

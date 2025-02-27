@@ -1,7 +1,7 @@
 package org.elaastic.player.explanations
 
-import org.elaastic.material.instructional.question.ChoiceSpecification
 import org.elaastic.activity.response.Response
+import org.elaastic.material.instructional.question.ChoiceSpecification
 
 object ExplanationViewerModelFactory {
 

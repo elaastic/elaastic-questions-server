@@ -18,15 +18,15 @@
 
 package org.elaastic.sequence.interaction
 
-import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.activity.evaluation.peergrading.ResponseRecommendationService
-import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.SequenceRepository
-import org.elaastic.sequence.State
-import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
 import org.elaastic.activity.results.ResultsService
+import org.elaastic.analytics.lrs.EventLogService
+import org.elaastic.assignment.LearnerAssignment
+import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceRepository
+import org.elaastic.sequence.State
 import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.InteractionSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification

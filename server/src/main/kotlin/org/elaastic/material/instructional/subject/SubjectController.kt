@@ -37,7 +37,6 @@ import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
-import kotlin.collections.ArrayList
 
 @Controller
 @RequestMapping("/subject", "/elaastic-questions/subject")
