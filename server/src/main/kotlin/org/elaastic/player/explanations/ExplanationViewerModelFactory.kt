@@ -2,6 +2,7 @@ package org.elaastic.player.explanations
 
 import org.elaastic.activity.response.Response
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationResponseStore
+import org.elaastic.material.instructional.question.ChoiceSpecification
 
 object ExplanationViewerModelFactory {
 
