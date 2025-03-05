@@ -23,7 +23,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.mockk.every
-import io.mockk.mockkClass
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
@@ -41,10 +40,7 @@ import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.player.sequence.SequenceModelFactory
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.security.TestSecurityConfig
-import org.elaastic.sequence.LearnerSequence
-import org.elaastic.sequence.LearnerSequenceService
-import org.elaastic.sequence.SequenceService
-import org.elaastic.sequence.State
+import org.elaastic.sequence.*
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
@@ -155,7 +151,8 @@ internal class PlayerControllerTest(
             audience = "Any",
             acceptAnonymousUsers = true
         )
-        val sequence = org.elaastic.sequence.Sequence(
+        assignment.id = fakeAssignmentId
+        val sequence = Sequence(
             owner = teacher,
             assignment = assignment,
             statement = Statement(teacher, "Title", "content", questionType = QuestionType.OpenEnded),
@@ -175,12 +172,12 @@ internal class PlayerControllerTest(
         sequence.activeInteraction = interaction
 
         whenever(assignmentService.get(fakeAssignmentId, true)).thenReturn(assignment)
-        whenever(sequenceService.get(sequence.id!!, fetchInteractions = true)).thenReturn(sequence)
+        whenever(sequenceService.loadInteractions(sequence)).thenReturn(sequence)
         whenever(learnerSequenceService.getLearnerSequence(user, sequence)).thenReturn(learnerSequence)
 
+        val learnerPlayerModel = PlayerModelFactory.buildForLearner(sequence, 1)
         mockkObject(PlayerModelFactory)
-        every { PlayerModelFactory.buildForLearner(any(), any()) } returns
-                mockkClass(LearnerPlayerModel::class, relaxed = true)
+        every { PlayerModelFactory.buildForLearner(any(), any()) } returns learnerPlayerModel
 
         mockMvc.perform(
             MockMvcRequestBuilders.get("/player/assignment/{fakeAssignmentId}/play", fakeAssignmentId)
