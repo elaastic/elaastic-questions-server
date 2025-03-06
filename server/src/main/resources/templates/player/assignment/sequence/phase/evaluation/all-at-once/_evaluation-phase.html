@@ -19,85 +19,86 @@
      th:remove="tag"
      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
-        th:action="@{/player/sequence/{sequenceId}/phase/evaluation/all-at-once/submit-evaluation(sequenceId=${model.sequenceId})}"
-        class="ui form"
-        method="post">
-    <input type="hidden" name="id" th:value="${model.interactionId}" />
-    <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
+    <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
+          th:action="@{/player/sequence/{sequenceId}/phase/evaluation/all-at-once/submit-evaluation(sequenceId=${model.sequenceId})}"
+          class="ui form"
+          method="post">
+        <input type="hidden" name="id" th:value="${model.interactionId}"/>
+        <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
 
-      <!--/* iframe allowing to load the <confronting-viewpoint> app in a isolated context */-->
-      <iframe id="confronting-viewpoints-app" class="transparent-iframe" th:src="@{/ui/confronting-viewpoint}" width="100%"></iframe>
+            <!--/* iframe allowing to load the <confronting-viewpoint> app in a isolated context */-->
+            <iframe id="confronting-viewpoints-app" class="transparent-iframe" th:src="@{/ui/confronting-viewpoint}"
+                    width="100%"></iframe>
 
-      <!--/* script for activating @iframe-resizer that allow us to smoothly integrate the previous iframe within the page layout */-->
-      <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
+            <!--/* script for activating @iframe-resizer that allow us to smoothly integrate the previous iframe within the page layout */-->
+            <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
 
-      <div class="ui hidden divider"></div>
+            <div class="ui hidden divider"></div>
 
-      <!--/*  Create form fields for storing evaluation per response */-->
-      <input type="hidden" th:each="currentResponse : ${model.responsesToGrade}" th:id="|grades[${currentResponse.id}]|" th:name="|grades[${currentResponse.id}]|" />
-
-
-      <!--/* Initialise the <confronting-viewpoint app & interact with it */-->
-      <script th:inline="javascript">
-        /*[- Expose server model as JSON -]*/
-        const responses = /*[[${model.responsesToGrade}]]*/ ''
-
-        /*[- Trigger the app init function on iframe loading -]*/
-        const iframe = document.getElementById('confronting-viewpoints-app')
-        iframe.onload = () => {
-          iframe.contentWindow.elaastic.initializeConfrontingViewpoint(responses)
-        }
-
-        /*[- Init iframe resize -]*/
-        iframeResize({
-          license: 'GPLv3',
-          waitForLoad: true
-        }, '#confronting-viewpoints-app')
-
-        /*[-  Observe messages sent by the iframe to keep the form input synchronized -]*/
-        window.addEventListener('message', (event) => {
-          document.getElementById(`grades[${event.data.responseId}]`).value = event.data.value || -1
-        })
-      </script>
-
-    </th:block>
+            <!--/*  Create form fields for storing evaluation per response */-->
+            <input type="hidden" th:each="currentResponse : ${model.responsesToGrade}"
+                   th:id="|grades[${currentResponse.id}]|" th:name="|grades[${currentResponse.id}]|"/>
 
 
-    <th:block th:if="${model.secondAttemptAllowed}">
-      <div th:if="${model.secondAttemptAlreadySubmitted}"
-           class="ui blue message"
-           th:text="#{player.sequence.interaction.secondAttemptSubmitted}">
-        Your second response has been registered.
-      </div>
-      <th:block th:unless="${model.secondAttemptAlreadySubmitted}">
-        <div class="ui blue message"
-             th:text="#{player.sequence.interaction.secondAttemptSubmittable}">
-          Take a second chance to change or improve your answer.
-        </div>
+            <!--/* Initialise the <confronting-viewpoint app & interact with it */-->
+            <script th:inline="javascript">
+                /*[- Expose server model as JSON -]*/
+                const responses = /*[[${model.responsesToGrade}]]*/ ''
 
-        <div class="ui basic segment">
-          <div
-            th:replace="player/assignment/sequence/phase/response/_response-form.html :: responseForm(${model.responseFormModel})"></div>
-        </div>
-      </th:block>
-    </th:block>
-    <input type="submit"
-           class="ui primary button"
-           onclick="onSubmitResponse()"
-           th:value="#{player.sequence.interaction.submitResponse}" />
-  </form>
+                /*[- Trigger the app init function on iframe loading -]*/
+                const iframe = document.getElementById('confronting-viewpoints-app')
+                iframe.onload = () => {
+                    iframe.contentWindow.elaastic.initializeConfrontingViewpoint(responses)
+                }
 
-  <div th:if="${model.userHasCompletedPhase2}"
-       class="ui blue message"
-       th:text="#{player.sequence.phase.completedByUser(${2})}">
-  </div>
+                /*[- Init iframe resize -]*/
+                iframeResize({
+                    license: 'GPLv3',
+                    waitForLoad: true
+                }, '#confronting-viewpoints-app')
 
-  <div th:if="${!model.userHasCompletedPhase2 && model.phaseState.name() == 'afterStop'}"
-       class="ui blue message"
-       th:text="#{player.sequence.interaction.evaluation.tooLate}">
-  </div>
+                /*[-  Observe messages sent by the iframe to keep the form input synchronized -]*/
+                window.addEventListener('message', (event) => {
+                    document.getElementById(`grades[${event.data.responseId}]`).value = event.data.value || -1
+                })
+            </script>
 
+        </th:block>
+
+
+        <th:block th:if="${model.secondAttemptAllowed}">
+            <div th:if="${model.secondAttemptAlreadySubmitted}"
+                 class="ui blue message"
+                 th:text="#{player.sequence.interaction.secondAttemptSubmitted}">
+                Your second response has been registered.
+            </div>
+            <th:block th:unless="${model.secondAttemptAlreadySubmitted}">
+                <div class="ui blue message"
+                     th:text="#{player.sequence.interaction.secondAttemptSubmittable}">
+                    Take a second chance to change or improve your answer.
+                </div>
+
+                <div class="ui basic segment">
+                    <div
+                            th:replace="player/assignment/sequence/phase/response/_response-form.html :: responseForm(${model.responseFormModel})"></div>
+                </div>
+            </th:block>
+        </th:block>
+        <input type="submit"
+               class="ui primary button"
+               onclick="onSubmitResponse()"
+               th:value="#{player.sequence.interaction.submitResponse}"/>
+    </form>
+
+    <div th:if="${model.userHasCompletedPhase2}"
+         class="ui blue message"
+         th:text="#{player.sequence.phase.completedByUser(${2})}">
     </div>
+
+    <div th:if="${!model.userHasCompletedPhase2 && model.phaseState.name() == 'afterStop'}"
+         class="ui blue message"
+         th:text="#{player.sequence.interaction.evaluation.tooLate}">
+    </div>
+
 
 </div>
