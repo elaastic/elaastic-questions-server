@@ -40,7 +40,7 @@
              * @param sequenceId The id of the sequence
              * @returns {string}
              */
-            const completeUrlOfPlayer = (assignmentId, sequenceId) => {
+            const buildPlayerUrl = (assignmentId, sequenceId) => {
                 return '/player/assignment/' + assignmentId + '/play/sequence/' + sequenceId;
             };
             const linkClickable = [[${linkClickable}]];
@@ -55,7 +55,7 @@
                     const sequenceId = $(this).data('sequence-id');
 
                     // Update the URL
-                    window.history.pushState(null, '', completeUrlOfPlayer(assignmentId, sequenceId));
+                    window.history.pushState(null, '', buildPlayerUrl(assignmentId, sequenceId));
 
                     if (isTeacher) {
                         /*
