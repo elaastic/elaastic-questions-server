@@ -18,14 +18,7 @@
 package org.elaastic.player
 
 import org.elaastic.player.assignmentview.AssignmentOverviewModel
-import org.elaastic.player.command.CommandModel
-import org.elaastic.player.results.ResultsModel
-import org.elaastic.player.sequence.status.SequenceInfoModel
-import org.elaastic.player.statement.StatementInfoPanelModel
-import org.elaastic.player.steps.SequenceStatistics
-import org.elaastic.player.steps.StepsModel
 import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.phase.LearnerPhase
 
 abstract class PlayerModel(
     val sequence: Sequence,
