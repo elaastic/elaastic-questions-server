@@ -109,10 +109,10 @@ class PlayerController(
         val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
         val mapCourseAssignments: Map<Course, List<Assignment>> = assignmentService.getCoursesAssignmentsMap(assignments)
         val assignmentsWithoutCourse: List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
-        
-        model.addAttribute("user", user)
-        model.addAttribute("mapCourseAssignments", mapCourseAssignments)
-        model.addAttribute("assignmentsWithoutCourse", assignmentsWithoutCourse)
+
+        model["user"] = user
+        model["mapCourseAssignments"] = mapCourseAssignments
+        model["assignmentsWithoutCourse"] = assignmentsWithoutCourse
 
         return "player/index"
     }
