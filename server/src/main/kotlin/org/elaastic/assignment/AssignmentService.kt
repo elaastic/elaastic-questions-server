@@ -240,6 +240,10 @@ class AssignmentService(
             .mapValues { it.value.toMutableList() }
             .toMutableMap()
 
+    /**
+     * @return all the assignment that have been updated after the given date
+     * @see AssignmentRepository.findAllAssignmentUpdatedSince
+     */
     fun findAllAssignmentUpdatedSince(since: LocalDateTime): List<Assignment> =
         assignmentRepository.findAllAssignmentUpdatedSince(since.toDate())
 
