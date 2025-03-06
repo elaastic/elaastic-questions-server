@@ -107,10 +107,9 @@ class PlayerController(
 
         // TODO N+1 SELECT (Assignment => Course)
         val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
-        val mapCourseAssignments: Map<Course, MutableList<Assignment>> =
-            assignmentService.getCoursesAssignmentsMap(assignments)
-        val assignmentsWithoutCourse: List<Assignment> =
-            assignments.filter { assignment -> assignment.subject?.course == null }
+        val mapCourseAssignments: Map<Course, List<Assignment>> = assignmentService.getCoursesAssignmentsMap(assignments)
+        val assignmentsWithoutCourse: List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
+        
         model.addAttribute("user", user)
         model.addAttribute("mapCourseAssignments", mapCourseAssignments)
         model.addAttribute("assignmentsWithoutCourse", assignmentsWithoutCourse)

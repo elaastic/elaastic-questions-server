@@ -233,12 +233,11 @@ class AssignmentService(
      * @param assignments list of assignments
      * @return a map who associates courses in key and a list of their assignments in value
      */
-    fun getCoursesAssignmentsMap(assignments: List<Assignment>): MutableMap<Course, MutableList<Assignment>> =
+    fun getCoursesAssignmentsMap(assignments: List<Assignment>): Map<Course, List<Assignment>> =
         assignments
             .filter { it.subject?.course != null } // filter out assignments without course
             .groupBy { it.subject!!.course!! }
-            .mapValues { it.value.toMutableList() }
-            .toMutableMap()
+            .mapValues { it.value }
 
     /**
      * @return all the assignment that have been updated after the given date
