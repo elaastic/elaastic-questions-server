@@ -235,7 +235,7 @@ internal class AssignmentServiceIntegrationTest(
 
         val initialNbResponse = responseService.count(assignment.sequences.first(), 1)
 
-        val choiceListSpecification = LearnerChoice(listOf<Int>(1, 3))
+        val choiceListSpecification = LearnerChoice(listOf(1, 3))
         val response = Response(
             learner = student,
             interaction = interaction,
