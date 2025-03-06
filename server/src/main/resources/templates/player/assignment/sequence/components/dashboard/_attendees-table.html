@@ -34,7 +34,7 @@
             <!--/* Name of the learner */-->
             <td style="display: flex; align-items: center; justify-content: space-between" class="learner-name">
                 <div class="learnerName" th:text="${learner.learnerName}"></div>
-                <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.userId}">
+                <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.userId}" th:classappend="${sequenceMonitoringModel.isSequenceStarted() ? '' : 'disabled'}">
                     <span class="content" th:text="#{attendee.details}">Details</span>
                 </button>
             </td>

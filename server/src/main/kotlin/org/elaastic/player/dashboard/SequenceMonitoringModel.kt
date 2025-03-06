@@ -1,8 +1,5 @@
 package org.elaastic.player.dashboard
 
-import org.elaastic.player.dashboard.DashboardPhaseState.*
-import org.elaastic.player.dashboard.LearnerMonitoringModel.StateCell.*
-import org.elaastic.player.dashboard.LearnerStateOnPhase.*
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.phase.LearnerPhaseType
 
@@ -40,6 +37,10 @@ class SequenceMonitoringModel(
 
             else -> require(phase1State == phase2State) { "In Remote mode phase 1 and 2 must have the same state" }
         }
+    }
+
+    fun isSequenceStarted(): Boolean {
+        return phase1State != DashboardPhaseState.NOT_STARTED
     }
 
     /**
