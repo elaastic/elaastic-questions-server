@@ -762,7 +762,7 @@ class PlayerController(
         }
 
 
-        return LearnerResultsModelFactory.builtLearnerResultsModel(
+        return LearnerResultsModelFactory.buildLearnerResultsModel(
             LearnerSequenceResponses(
                 responseFirstTry,
                 responseSecondTry,

@@ -35,7 +35,7 @@ object LearnerResultsModelFactory {
      * @param responseSecondAttempt the response of the learner for the second attempt
      * @param statement the statement of the sequence
      */
-    fun builtLearnerResultsModel(
+    fun buildLearnerResultsModel(
         learnerSequenceResponses: LearnerSequenceResponses,
         statement: Statement
     ): LearnerResultsModel {
