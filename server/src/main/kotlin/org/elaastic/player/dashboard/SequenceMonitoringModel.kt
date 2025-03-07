@@ -63,7 +63,7 @@ class SequenceMonitoringModel(
      * @see sortWithFaceToFaceBehavior
      * @see sortWithBlendedOrRemoteBehavior
      */
-    fun setLearners(newLearnersList: MutableList<LearnerMonitoringModel>) {
+    fun setLearners(newLearnersList: List<LearnerMonitoringModel>) {
         learners.clear()
         learners.addAll(
             when (this.executionContext) {
@@ -84,7 +84,7 @@ class SequenceMonitoringModel(
      * If the Phase 3 is active, then we want the learner who didn't answer and evaluate at first.
      */
     private fun sortWithFaceToFaceBehavior(
-        newLearnersList: MutableList<LearnerMonitoringModel>
+        newLearnersList: List<LearnerMonitoringModel>
     ): List<LearnerMonitoringModel> {
         val comparator = when {
             this.phase1State == Dashboard_State_IN_PROGRESS -> {
@@ -118,7 +118,7 @@ class SequenceMonitoringModel(
      * @param newLearnersList the list of learners to sort
      */
     private fun sortWithBlendedOrRemoteBehavior(
-        newLearnersList: MutableList<LearnerMonitoringModel>
+        newLearnersList: List<LearnerMonitoringModel>
     ): List<LearnerMonitoringModel> {
         return newLearnersList.sortedWith(
             compareByDescending<LearnerMonitoringModel> {
