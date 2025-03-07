@@ -62,11 +62,12 @@
         </div>
 
         <!--/* The learner answered */-->
-        <div th:if="${learnerHasAnswered}"
-             th:with="accordionId=${userId}"
-             th:replace="/player/assignment/sequence/components/my-results/_my-results.html ::
+        <th:block th:if="${learnerHasAnswered}">
+            <div th:with="accordionId=${userId}"
+                 th:replace="/player/assignment/sequence/components/my-results/_my-results.html ::
                     myResults(${accordionId}, ${learnerResultsModel}, ${seenByTeacher}, ${seenByOwner})">
-        </div>
+            </div>
+        </th:block>
 
         <!--/* The learner didn't answer yet */-->
         <th:block th:unless="${learnerHasAnswered}">
