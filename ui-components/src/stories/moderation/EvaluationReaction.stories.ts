@@ -66,3 +66,18 @@ export const TeacherReact: Story = {
     })
   }
 }
+
+export const NoContentToReport: Story = {
+  args: {
+    evaluationFromChatGpt: false,
+    viewByTeacher: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'When there is no content to report, the report button should be hidden.',
+      },
+    },
+  }
+}
