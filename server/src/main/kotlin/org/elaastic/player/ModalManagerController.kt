@@ -1,10 +1,8 @@
 package org.elaastic.player
 
-import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.common.util.requireAccessThrowDenied
 import org.elaastic.player.command.CommandModelFactory
 import org.elaastic.player.sequence.SequenceModelFactory
-import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.phase.LearnerPhaseService
@@ -23,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/modal-manager")
 class ModalManagerController(
-    private val draxoPeerGradingService: DraxoPeerGradingService,
-    private val chatGptEvaluationService: ChatGptEvaluationService,
     private val sequenceService: SequenceService,
     private val sequenceModelFactory: SequenceModelFactory,
     private val learnerSequenceService: LearnerSequenceService,
