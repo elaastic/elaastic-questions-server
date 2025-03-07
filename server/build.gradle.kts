@@ -191,8 +191,5 @@ tasks.register<Exec>("updateVueComponents") {
         } else {
             commandLine("./update-bundle.sh", version)
         }
-
-        // Warn the user to update the application.properties with the new version
-        println("Please update the application.properties with the new version: $version")
     }
 }
