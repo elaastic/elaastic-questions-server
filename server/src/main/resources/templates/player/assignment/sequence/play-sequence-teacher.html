@@ -29,6 +29,9 @@
     </head>
 
     <body th:with="sequenceProgressionModel=${sequenceModel.sequenceProgressionModel}, activeInteractionModel=${sequenceModel.activeInteractionModel}">
+    <script th:inline="javascript">
+        elaastic.draxo.initialize(/*[[@{/peer-grading/draxo}]]*/);
+    </script>
     <!--/* The sequence's interactions as steps */-->
     <div th:replace="player/assignment/sequence/components/steps/_steps.html :: steps(${sequenceProgressionModel.stepsModel}, ${sequenceProgressionModel.sequenceStatistics})"></div>
 

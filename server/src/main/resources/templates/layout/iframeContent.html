@@ -57,8 +57,6 @@
                 id="MathJax-script" async>
         </script>
         <script th:inline="javascript">
-            elaastic.draxo.initialize(/*[[@{/peer-grading/draxo}]]*/);
-
             $(function () {
                 $('.message .close').on('click', function () {
                     $(this).closest('.message').transition('fade')
