@@ -2793,13 +2793,22 @@ class ComponentTestingController(
                 EvaluationModel(
                     listOf(
                         DraxoEvaluationModel(
-                            (i + 1).toString(),
+                            "${ i + 1 }",
                             (i + 1),
                             DraxoGrading.computeGrade(draxoEvaluation),
                             draxoEvaluation,
                             canReactOnPeerGrading = true,
                             canHidePeerGrading = true,
                             draxoPeerGradingId = (i + 100000L),
+                        ),
+                        DraxoEvaluationModel(
+                            "${ i + 1 }",
+                            (i + 1),
+                            DraxoGrading.computeGrade(draxoEvaluation),
+                            draxoEvaluation,
+                            canReactOnPeerGrading = true,
+                            canHidePeerGrading = false,
+                            draxoPeerGradingId = (i + 200000L),
                         )
                     ),
                     null,

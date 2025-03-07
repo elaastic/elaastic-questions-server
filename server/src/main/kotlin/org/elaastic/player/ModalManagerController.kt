@@ -32,51 +32,6 @@ class ModalManagerController(
     private val sequenceDescriptor: SequenceDescriptor
 ) {
 
-    /**
-     * Get the report modal for a DRAXO evaluation
-     *
-     * @param authentication the current user authentication
-     * @param model the model to add the report content
-     * @param draxoEvaluationId the id of the DRAXO evaluation
-     * @return the report modal
-     */
-    @GetMapping("/report/draxo/{draxoEvaluationId}")
-    fun reportDRAXOEvaluation(
-        authentication: Authentication,
-        model: Model,
-        @PathVariable draxoEvaluationId: Long,
-    ): String {
-        val draxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(draxoEvaluationId)
-
-        model["reportContent"] = draxoPeerGrading.annotation!!
-        model["evaluationId"] = draxoPeerGrading.id!!
-        model["responseId"] = draxoPeerGrading.response.id!!
-        return "player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction-report-modal.html :: reportModal"
-    }
-
-
-    /**
-     * Get the report modal for a ChatGPT evaluation
-     *
-     * @param authentication the current user authentication
-     * @param model the model to add the report content
-     * @param iaEvaluationId the id of the ChatGPT evaluation
-     * @return the report modal
-     */
-    @GetMapping("/report/ia/{iaEvaluationId}")
-    fun reportIAEvaluation(
-        authentication: Authentication,
-        model: Model,
-        @PathVariable iaEvaluationId: Long,
-    ): String {
-        val iaEvaluation = chatGptEvaluationService.findEvaluationById(iaEvaluationId)!!
-
-        model["sequenceId"] = iaEvaluation.response.interaction.sequence.id!!
-        model["reportContent"] = iaEvaluation.annotation!!
-        model["evaluationId"] = iaEvaluation.id!!
-        return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-report-modal.html :: reportModal"
-    }
-
     @GetMapping("/config-sequence/{sequenceId}")
     fun configSequence(
         authentication: Authentication,

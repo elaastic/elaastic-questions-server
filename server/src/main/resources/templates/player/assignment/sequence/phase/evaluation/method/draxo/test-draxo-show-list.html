@@ -25,6 +25,7 @@
         <meta charset="UTF-8">
         <title>Test Show a list of DRAXO Evaluations</title>
         <script type="text/javascript" th:src="@{/ckeditor/ckeditor.js}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
     </head>
     <body>
     <section>
@@ -34,29 +35,5 @@
             <div th:replace="player/assignment/sequence/phase/evaluation/method/draxo/_draxo-show-list::draxoShowList(${model})"></div>
         </th:block>
     </section>
-    <!--/*
-    As we use fake data for this page, we can't rely on the existing modal manager,
-    because it will search in the database for the data.
-    So we need to create a new modal manager for this page.
-    */-->
-    <!--/* To simplify the processus, every draxo evaluation will show the same report modal */-->
-    <div th:replace="player/assignment/sequence/components/peer-grading-reaction/_peer-grading-draxo-reaction-report-modal.html :: reportModal(('reportContent', 1, 1))">
-    </div>
-    <script type="text/javascript">
-        $(function () {
-            const reportModal = 'show-report-modal';
-
-            window.addEventListener('message', (event) => {
-                if (event.data.command === reportModal) {
-                    console.log('Details modal');
-                    console.log(event.data);
-                    $('#reportDRAXOModal_1').modal('show');
-                } else {
-                    console.log('Unknown command: ' + event.data.command);
-                    console.log(event.data);
-                }
-            })
-        });
-    </script>
     </body>
 </html>

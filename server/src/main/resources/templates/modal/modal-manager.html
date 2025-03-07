@@ -27,7 +27,6 @@
         $(function () {
             const loader = $('#loading_modal');
             const DETAILS_MODAL = 'show-details-modal';
-            const REPORT_MODAL = 'show-report-modal';
             const CONFIG_SEQUENCE_MODAL = 'show-config-sequence-modal';
             const ALL_EXPLANATIONS_MODAL = 'show-all-explanations-modal';
             const RECOMMENDATION_MODAL = 'show-recommendation-modal';
@@ -40,10 +39,6 @@
                                 "#myResultsModal_" + event.data.userId,
                                 '/player/' + event.data.sequenceId + '/result/' + event.data.userId + '/modal'
                         );
-                        break;
-                    case REPORT_MODAL:
-                        console.log('Report modal');
-                        showReport(event.data.evaluationId, event.data.evaluationType);
                         break;
                     case CONFIG_SEQUENCE_MODAL:
                         console.log('Config sequence modal');
@@ -146,29 +141,6 @@
                             })
                 }
             }
-
-            /**
-             * Show the report modal for a given evaluation
-             * <p>
-             *     The modal is fetched from the server if it doesn't exist yet
-             *     As a DRAXO and an AI evaluation can have the same ID, we need to specify the type of the evaluation
-             * @param evaluationId The ID of the evaluation
-             * @param evaluationType The type of the evaluation (IA or DRAXO)
-             */
-            function showReport(evaluationId, evaluationType) {
-                let reportModalToFind;
-                let urlModal = "/modal-manager/report/";
-                if (evaluationType === 'IA') {
-                    reportModalToFind = '#reportIAModal_' + evaluationId;
-                    urlModal += 'ia/' + evaluationId;
-                } else {
-                    reportModalToFind = '#reportDRAXOModal_' + evaluationId;
-                    urlModal += 'draxo/' + evaluationId;
-                }
-
-                showOrFetchModal(reportModalToFind, urlModal);
-            }
-
         });
     </script>
 </div>
