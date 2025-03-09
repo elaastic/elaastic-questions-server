@@ -74,7 +74,7 @@ class User(
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     val casUser: CasUser? = null
 
-) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource {
+) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource, PrincipalUserResolver {
 
     @Version
     var version: Long? = null
@@ -227,6 +227,13 @@ class User(
     override fun isAccountNonLocked(): Boolean {
         return !accountLocked
     }
+
+    /**
+     * This method implements how to get an Elaastic User from a Principal.
+     * When the Principal is an instance of User, it just returns itself.
+     */
+    override val elaasticUser: User
+        get() = this
 
     override fun toString(): String {
         return username
