@@ -19,6 +19,7 @@
 package org.elaastic.security
 
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
+import org.elaastic.auth.oauth.ElaasticOidcUserService
 import org.elaastic.user.Role
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -52,6 +53,7 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val encoder: PasswordEncoder,
+    @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
     @Value("\${elaastic.questions.url}") val elaasticUrl: String,
 ) {
 
@@ -98,6 +100,9 @@ class WebSecurityConfig(
 
             oauth2Login {
                 Customizer.withDefaults<OAuth2LoginConfigurer<HttpSecurity>>()
+                userInfoEndpoint {
+                    oidcUserService = elaasticOidcUserService
+                }
             }
 
             logout {
