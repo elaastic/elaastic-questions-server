@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.elaastic.user.PrincipalUserResolver
 
 /** Controller for stat of utility grade */
 @RequestMapping("stat/utility-grade")
@@ -66,7 +67,7 @@ class StatUtilityGradeController(
         @RequestParam("type") type: EvaluationType? = null,
         @RequestParam("noNull") noNull: Boolean = false,
     ): List<UtilityGradeStat> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         requireAccess(user.isAdmin()) {
             "Only admin can access this endpoint"
@@ -129,7 +130,7 @@ class StatUtilityGradeController(
     fun getMean(
         authentication: Authentication,
     ): List<MeanUtilityGradeStat> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         requireAccess(user.isAdmin()) {
             "Only admin can access this endpoint"

@@ -28,6 +28,7 @@ import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.LearnerAssignment
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
@@ -95,7 +96,7 @@ class PlayerController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // TODO N+1 SELECT (Assignment => Course)
         val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
@@ -210,7 +211,7 @@ class PlayerController(
         @PathVariable sequenceId: Long?,
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val assignment: Assignment = assignmentService.get(assignmentId, true)
         model.addAttribute("user", user)
 
@@ -338,7 +339,7 @@ class PlayerController(
         @RequestParam chatGptEvaluation: Boolean?,
         @RequestParam evaluationPhaseConfig: EvaluationPhaseConfig?,
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment?
 
         sequenceService.get(user, id, true)
@@ -366,7 +367,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val interaction = interactionService.restart(user, id)
         autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
         return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
@@ -378,7 +379,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val interaction = interactionService.start(user, id)
         autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
         return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
@@ -390,7 +391,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         interactionService.findById(id).let {
             sequenceService.loadInteractions(it.sequence)
@@ -406,7 +407,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         interactionService.findById(id).let {
             sequenceService.loadInteractions(it.sequence)
@@ -422,7 +423,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         interactionService.findById(id).let {
             sequenceService.loadInteractions(it.sequence)
@@ -438,7 +439,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment?
 
         sequenceService.get(user, id).let {
@@ -456,7 +457,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment?
 
         sequenceService.get(user, id).let {
@@ -474,7 +475,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment?
 
         sequenceService.get(user, id, true).let {
@@ -492,7 +493,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment?
 
         sequenceService.get(id, true).let {
@@ -509,7 +510,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment?
 
         sequenceService.get(user, id, true).let {
@@ -537,7 +538,7 @@ class PlayerController(
         @PathVariable id: Long,
         locale: Locale
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(id, true)
         val response = sequenceService.submitResponse(user, sequence, responseSubmissionData)
@@ -555,7 +556,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // Get response from database
         var response = responseService.findById(responseId)
@@ -574,7 +575,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // Get response from database
         var response = responseService.findById(responseId)
@@ -591,7 +592,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // Get response from database
         var response = responseService.findById(responseId)
@@ -607,7 +608,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // Get response from database
         var response = responseService.findById(responseId)
@@ -625,7 +626,7 @@ class PlayerController(
         @PathVariable sequenceId: Long,
         locale: Locale
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId, true)
 
         val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
@@ -675,7 +676,7 @@ class PlayerController(
         @PathVariable sequenceId: Long,
         @PathVariable userId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
