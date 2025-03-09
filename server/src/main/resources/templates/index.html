@@ -169,7 +169,7 @@
               </div>
 
               <div class="ui dropdown item" sec:authorize="isAuthenticated()">
-                <i class="user icon"></i> <span sec:authentication="name"></span>
+                <i class="user icon"></i> <span sec:authentication="principal.fullname"></span>
 
                 <i class="dropdown icon"></i>
 
