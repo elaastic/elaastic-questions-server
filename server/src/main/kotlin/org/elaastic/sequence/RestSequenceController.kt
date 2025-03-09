@@ -18,6 +18,7 @@
 
 package org.elaastic.sequence
 
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.question.explanation.FakeExplanation
 import org.elaastic.user.User
@@ -43,7 +44,7 @@ class RestSequenceController(
     @GetMapping("{id}/findAllFakeExplanation")
     fun findAllFakeExplanation(authentication: Authentication,
                                @PathVariable id: Long): List<FakeExplanationData> {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         return sequenceService.findAllFakeExplanation(user, id).map {
             FakeExplanationData(it.correspondingItem ?: 1, it.content)
@@ -53,7 +54,7 @@ class RestSequenceController(
     @GetMapping("{id}/removeAttachment")
     fun removeAttachment(authentication: Authentication,
                          @PathVariable id: Long) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         sequenceService.get(user, id).let {
             attachmentService.detachAttachmentFromStatement(user, it.statement)
         }

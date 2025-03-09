@@ -18,6 +18,7 @@
 
 package org.elaastic
 
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.User
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -34,7 +35,7 @@ class HomeController {
 
     @GetMapping("/home", "/elaastic-questions/home")
     fun home(authentication: Authentication): ModelAndView {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         return ModelAndView(
                 when {
