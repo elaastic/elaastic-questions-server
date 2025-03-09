@@ -4,6 +4,7 @@ import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
 import org.elaastic.activity.evaluation.peergrading.draxo.criteria.CriteriaEvaluation
 import org.elaastic.activity.response.ResponseService
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,7 +28,7 @@ class DraxoController(
         @RequestParam lastResponseToGrade: Boolean,
         @RequestBody criteriaEvaluationList: List<CriteriaEvaluation>,
     ): ResponseEntity<DraxoEvaluation> {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val evaluation = DraxoEvaluation().addEvaluationList(criteriaEvaluationList)
         val response = responseService.getReferenceById(responseId)
