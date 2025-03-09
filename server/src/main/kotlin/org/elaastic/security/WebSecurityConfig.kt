@@ -30,10 +30,12 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
+import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -47,7 +49,6 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-@Order(2)
 class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val encoder: PasswordEncoder,
@@ -91,8 +92,13 @@ class WebSecurityConfig(
     }
 
     @Bean
+    @Order(3)
     fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
+
+            oauth2Login {
+                Customizer.withDefaults<OAuth2LoginConfigurer<HttpSecurity>>()
+            }
 
             logout {
                 logoutRequestMatcher = AntPathRequestMatcher("/logout")
@@ -104,6 +110,7 @@ class WebSecurityConfig(
                 clearAuthentication = true
                 deleteCookies("JSESSIONID")
                 invalidateHttpSession = true
+                // TODO JT: Handle OAuth2 logout
             }
 
             authorizeRequests {
