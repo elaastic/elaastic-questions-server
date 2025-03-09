@@ -699,7 +699,7 @@ class PlayerController(
         @PathVariable sequenceId: Long,
         @PathVariable userId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
