@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.elaastic.user.PrincipalUserResolver
 
 @Controller
 @RequestMapping("/report-manager")
@@ -40,7 +41,7 @@ class ReportManagerController(
         model: Model,
         @PathVariable idSequence: Long
     ): String {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(user, idSequence, true)
 
@@ -154,7 +155,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {
@@ -175,7 +176,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {
@@ -198,7 +199,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {

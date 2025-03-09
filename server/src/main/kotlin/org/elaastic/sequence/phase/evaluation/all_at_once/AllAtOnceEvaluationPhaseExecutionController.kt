@@ -7,6 +7,7 @@ import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ItemIndex
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.assignment.Assignment
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController
 import org.elaastic.user.User
@@ -41,7 +42,7 @@ class AllAtOnceEvaluationPhaseExecutionController(
         @ModelAttribute evaluationData: EvaluationData,
         locale: Locale
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment
 
         sequenceService.get(sequenceId, true).let { sequence ->
