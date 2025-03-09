@@ -1,5 +1,6 @@
 package org.elaastic.assignment
 
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.statement.Statement
@@ -39,7 +40,7 @@ class AssignmentController(
         @RequestParam("page") page: Int?,
         @RequestParam("size") size: Int?
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         assignmentService.findAllByOwner(
             user,
@@ -62,7 +63,7 @@ class AssignmentController(
 
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(authentication: Authentication, model: Model, @PathVariable id: Long): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         assignmentService.get(user, id, fetchSequences = true).let {
             model.addAttribute("user", user)
@@ -81,7 +82,7 @@ class AssignmentController(
         response: HttpServletResponse,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val subject: Subject = subjectService.get(assignmentData.subject.id!!)
 
         return if (result.hasErrors()) {
@@ -104,7 +105,7 @@ class AssignmentController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         assignmentService.get(user, id).let {
             model.addAttribute("user", user)
@@ -126,7 +127,7 @@ class AssignmentController(
         redirectAttributes: RedirectAttributes
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val assignment: Assignment = assignmentService.get(id)
 
         return if (result.hasErrors()) {
@@ -168,7 +169,7 @@ class AssignmentController(
         @PathVariable id: Long,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val assignment = assignmentService.get(user, id)
         subjectService.removeAssignment(user, assignment)
@@ -194,7 +195,7 @@ class AssignmentController(
         model: Model,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val assignment = assignmentService.get(user, id)
         val nbSequence = assignmentService.countAllSequence(assignment)
@@ -219,7 +220,7 @@ class AssignmentController(
         @PathVariable id: Long,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveUpAssignment(subject, id)
@@ -234,7 +235,7 @@ class AssignmentController(
         @PathVariable id: Long,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveDownAssignment(subject, id)
