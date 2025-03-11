@@ -1,6 +1,5 @@
 package org.elaastic.player
 
-import org.elaastic.player.command.CommandModelFactory
 import org.elaastic.player.sequence.SequenceModelFactory
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.SequenceService
@@ -26,25 +25,6 @@ class ModalManagerController(
     private val learnerPhaseService: LearnerPhaseService,
     private val sequenceDescriptor: SequenceDescriptor
 ) {
-
-    @GetMapping("/config-sequence/{sequenceId}")
-    fun configSequence(
-        authentication: Authentication,
-        model: Model,
-        @PathVariable sequenceId: Long,
-    ): String {
-        val user = authentication.principal as User
-        val sequence = sequenceService.get(sequenceId)
-
-        val commandModel = CommandModelFactory.build(user, sequence)
-
-        model["sequenceId"] = commandModel.sequenceId
-        model["statementId"] = commandModel.statementId
-        model["questionType"] = commandModel.questionType
-        model["hasExpectedExplanation"] = commandModel.hasExpectedExplanation
-        return "player/assignment/sequence/components/command/_config-sequence.html :: configSequence"
-    }
-
     @GetMapping("/all-explanations/{sequenceId}")
     fun allExplanations(
         authentication: Authentication,
@@ -71,7 +51,6 @@ class ModalManagerController(
             ).getViewModel() as LearnerResultPhaseViewModel).sequenceResultsModel.explanationViewerModel
         }
 
-        //sequenceId,explanationViewerModel, isTeacher
         model["sequenceId"] = sequenceId
         model["explanationViewerModel"] = explanationViewerModel!!
         model["isTeacher"] = isTeacher
