@@ -52,7 +52,7 @@
                         console.log('All explanations modal');
                         showOrFetchModal(
                                 '#all_explanations_for_' + event.data.sequenceId,
-                                '/modal-manager/all-explanations/' + event.data.sequenceId,
+                                '/all-explanations/' + event.data.sequenceId + '/modal',
                                 () => saveAction(event.data.sequenceId, 'open', 'rationales_popup'),
                                 () => saveAction(event.data.sequenceId, 'close', 'rationales_popup')
                         );

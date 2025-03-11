@@ -1,4 +1,4 @@
-package org.elaastic.player
+package org.elaastic.player.explanations
 
 import org.elaastic.player.sequence.SequenceModelFactory
 import org.elaastic.sequence.LearnerSequenceService
@@ -14,18 +14,16 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("/modal-manager")
-class ModalManagerController(
+class ExplanationController(
     private val sequenceService: SequenceService,
     private val sequenceModelFactory: SequenceModelFactory,
     private val learnerSequenceService: LearnerSequenceService,
     private val learnerPhaseService: LearnerPhaseService,
     private val sequenceDescriptor: SequenceDescriptor
 ) {
-    @GetMapping("/all-explanations/{sequenceId}")
+    @GetMapping("/all-explanations/{sequenceId}/modal")
     fun allExplanations(
         authentication: Authentication,
         model: Model,
