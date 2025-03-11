@@ -61,7 +61,7 @@
                         console.log('Recommendation modal');
                         showOrFetchModal(
                                 '#recommendation_explanation_for_' + event.data.sequenceId,
-                                '/modal-manager/recommendation/' + event.data.sequenceId,
+                                '/recommendation/' + event.data.sequenceId + '/modal',
                                 () => saveAction(event.data.sequenceId, 'open', 'explanation_popup'),
                                 () => saveAction(event.data.sequenceId, 'close', 'explanation_popup')
                         );
