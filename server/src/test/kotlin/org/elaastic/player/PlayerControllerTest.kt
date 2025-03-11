@@ -109,9 +109,6 @@ internal class PlayerControllerTest(
     lateinit var featureManager: FeatureManager
 
     @MockBean
-    lateinit var teacherResultDashboardService: TeacherResultDashboardService
-
-    @MockBean
     lateinit var chatGptEvaluationService: ChatGptEvaluationService
 
     @MockBean

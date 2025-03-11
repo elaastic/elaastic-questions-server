@@ -85,7 +85,6 @@ class PlayerController(
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val responseService: ResponseService,
     @Autowired val sequenceService: SequenceService,
-    @Autowired val teacherResultDashboardService: TeacherResultDashboardService,
     @Autowired val userService: UserService,
     @Autowired val messageBuilder: MessageBuilder,
     @Autowired val featureManager: FeatureManager,
