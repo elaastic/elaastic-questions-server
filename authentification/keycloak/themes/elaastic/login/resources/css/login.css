@@ -1,0 +1,62 @@
+body {
+    background-image: url("../img/elaastic_background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Parent of .login-container */
+body > div:has(.login-container) {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    padding-top: 8em;
+
+    width: 100%;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    max-width: 480px;
+    padding: 1%;
+
+    background: #fff;
+    border-radius: 8px;
+}
+
+.login-container .logo {
+    width: 150px;
+    height: auto;
+    font-size: .92857143rem;
+    margin-bottom: 1em;
+}
+
+.login-pf-settings {
+    display: flex;
+    justify-content: space-between;
+    align-content: start;
+    align-items: center;
+}
+
+.pf-c-button[type=submit] {
+    background-color: #95c155;
+    color: #ffffff;
+    border: 1px solid #95c155;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.info {
+    background-color: #f5f5f5;
+    border-left: 3px solid #95c155;
+    padding: 1em;
+    margin-top: 1em;
+}
+
+.required {
+    color: #a30000;
+}
