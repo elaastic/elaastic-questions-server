@@ -1460,6 +1460,10 @@
         "strictTransportSecurity": "max-age=31536000; includeSubDomains"
     },
     "smtpServer": {},
+    "loginTheme": "elaastic",
+    "accountTheme": "",
+    "adminTheme": "",
+    "emailTheme": "",
     "eventsEnabled": true,
     "eventsExpiration": 3600,
     "eventsListeners": [
