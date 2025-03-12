@@ -125,4 +125,5 @@ config
 paper.pdf
 ui-components/chromatic.config.json
 
+# Environment file
 .env
