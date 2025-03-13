@@ -93,14 +93,11 @@ import kotlin.random.Random
 @RequestMapping("/player/test")
 @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('FUNCTIONAL_TESTING'))")
 class ComponentTestingController(
-    @Autowired
-    val messageBuilder: MessageBuilder,
-
-    @Autowired
-    val featureManager: FeatureManager,
+    @Autowired val messageBuilder: MessageBuilder,
+    @Autowired val featureManager: FeatureManager,
     private val userService: UserService,
-    private val userRepository: UserRepository
-
+    private val userRepository: UserRepository,
+    private val roleService: RoleService
 ) {
 
     private val TEACHER_S_EXPLANATION = "teacher's explanation"
@@ -3351,7 +3348,7 @@ class ComponentTestingController(
                         source = UserSource.ELAASTIC,
                     )
 
-                    newUser.addRole(Role("STUDENT_ROLE"))
+                    newUser.addRole(roleService.roleStudent())
                     userService.addUser((newUser))
                     newUsers.add(newUser)
                 }
