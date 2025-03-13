@@ -16,9 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.user
+package org.elaastic.common.onboarding
 
 
+import org.elaastic.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface OnboardingStateRepository : JpaRepository<OnboardingState, Long> {
