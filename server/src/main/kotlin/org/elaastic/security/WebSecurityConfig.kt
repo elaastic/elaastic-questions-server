@@ -50,6 +50,7 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@Order(3)
 class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val encoder: PasswordEncoder,
@@ -94,7 +95,6 @@ class WebSecurityConfig(
     }
 
     @Bean
-    @Order(3)
     fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
 
