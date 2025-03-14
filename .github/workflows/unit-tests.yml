@@ -6,7 +6,7 @@ on:
   push:
     branches: [ github-actions, develop ]
   pull_request:
-    branches: [ github-actions, develop, feature/oidc-elaastic-poc/1 ]
+    branches: [ github-actions, develop, feature/oidc-mvp/1 ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
