@@ -2,6 +2,11 @@
 
 This folder contains the configuration files for the Keycloak server.
 
+## Setup environment
+You must set the Keycloak admin password using the environment variable `KEYCLOAK_ADMIN_PASSWORD`.
+This can be achieved by defining your own `.env` file at the project root (it will be used by docker-compose).
+See `.env.template`.
+
 ## `/realms`
 
 This folder contains the configuration files for the realms in Keycloak.
