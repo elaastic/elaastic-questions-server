@@ -31,7 +31,7 @@ services:
     build: docker-resources/cas
     ports:
       - "8444:8443"
-  keycloak:
+  authentification:
       container_name: elaastic-keycloak.openid-provider
       image: quay.io/keycloak/keycloak:25.0.1
       command:

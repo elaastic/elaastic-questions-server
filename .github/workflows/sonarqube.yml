@@ -22,7 +22,7 @@ jobs:
           distribution: 'zulu' # Alternative distribution options are available
 
       - name: Setup test environment
-        run: docker compose up -d  elaastic-questions-db-test-8 keycloak
+        run: docker compose up -d  elaastic-questions-db-test-8 authentification
 
       - name: Build and analyze
         env:
