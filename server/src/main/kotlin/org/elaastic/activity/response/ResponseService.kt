@@ -35,16 +35,15 @@ class ResponseService(
     fun getReferenceById(id: Long) = responseRepository.getReferenceById(id)
 
     /**
-     * It will immediately throw an exception if it does not exists (while
-     * getReferenceById will delay the query and so the eventual exception)
+     * It will immediately throw an exception if it does not exists (while getReferenceById will delay the query and so
+     * the eventual exception)
      */
     fun findById(id: Long): Response = responseRepository.findById(id).orElseThrow {
         EntityNotFoundException("There is no response with id='$id'")
     }
 
     /**
-     * Return the response with the given id. It will return the last attempt
-     * if it's exist
+     * Return the response with the given id. It will return the last attempt if it's exist
      *
      * @param id the id of the response to find
      * @return the response with the given id, or the last attempt if it exists
@@ -80,7 +79,8 @@ class ResponseService(
     /**
      * @param interaction
      * @param attempt
-     * @return the number of response made in an [Interaction] and it's not [Response.fake] with the given [Response.attempt]
+     * @return the number of response made in an [Interaction] and it's not [Response.fake] with the given
+     *    [Response.attempt]
      */
     fun count(interaction: Interaction, attempt: AttemptNum) =
         responseRepository.countByInteractionAndAttemptAndFakeIsFalse(interaction, attempt)
@@ -145,10 +145,7 @@ class ResponseService(
         )
 
 
-    /**
-     * Update the mean grade and nb of evaluations for every responses bound
-     * the provided interaction
-     */
+    /** Update the mean grade and nb of evaluations for every responses bound the provided interaction */
     fun updateGradings(sequence: Sequence) {
         // TODO Attempt to deactivate this global stat update in favor of micro update a each peer grading deposit ; this code is kept in comment the time to check everything is working properly
 //        entityManager.createNativeQuery(
@@ -177,21 +174,29 @@ class ResponseService(
 
     fun updateMeanGradeAndEvaluationCount(response: Response): Response {
         // TODO Update the stats in one single query
-        val res =
-            entityManager.createQuery("select count(pg.id) as evaluationCount, sum(CASE WHEN pg.type = 'DRAXO' THEN 1 ELSE 0 END) from PeerGrading pg where pg.response = :response")
-                .setParameter("response", response)
-                .singleResult as Array<Any?>
-
-        response.evaluationCount = res[0]?.let { (it as Long).toInt() } ?: 0
-        response.draxoEvaluationCount = res[1]?.let { (it as Long).toInt() } ?: 0
-
-        val meangrade = entityManager.createQuery(
-            "SELECT AVG(pg.grade) " +
-                    "FROM PeerGrading pg " +
-                    "WHERE pg.response = :response AND pg.hiddenByTeacher = false AND pg.removedByTeacher = false"
-        )
+        val res = entityManager
+            .createQuery("""
+                select count(pg.id) as evaluationCount, sum(CASE WHEN pg.type = 'DRAXO' THEN 1 ELSE 0 END) 
+                from PeerGrading pg 
+                where pg.response = :response
+                """.trimIndent(),
+                Array<Any?>::class.java
+            )
             .setParameter("response", response)
-            .singleResult as Double?
+            .singleResult
+
+        val meangrade = entityManager
+            .createQuery("""
+                SELECT AVG(pg.grade) 
+                FROM PeerGrading pg 
+                WHERE pg.response = :response AND pg.hiddenByTeacher = false AND pg.removedByTeacher = false
+                """.trimIndent()
+            )
+            .setParameter("response", response)
+            .singleResult as? Double
+
+        response.evaluationCount = res[0]?.let {( it as Long).toInt()} ?: 0
+        response.draxoEvaluationCount = res[1]?.let {( it as Long).toInt()} ?: 0
         response.meanGrade = meangrade?.let { BigDecimal(it).setScale(2, RoundingMode.HALF_UP) }
 
         return responseRepository.save(response)
@@ -372,7 +377,7 @@ class ResponseService(
     fun addRecommendedByTeacher(user: User, response: Response): Response {
         // Only a teacher can add a response as favourite
         require(user.isTeacher()) {
-            "Only a teacher can unhide a response"
+            "Only a teacher can add a response as favourite"
         }
 
         if (!response.recommendedByTeacher && !response.hiddenByTeacher) {
@@ -391,7 +396,7 @@ class ResponseService(
     fun removeRecommendedByTeacher(user: User, response: Response): Response {
         // Only a teacher can remove a response as favourite
         require(user.isTeacher()) {
-            "Only a teacher can unhide a response"
+            "Only a teacher can remove a response as favourite"
         }
 
         if (response.recommendedByTeacher) {
@@ -402,8 +407,8 @@ class ResponseService(
     }
 
     /**
-     * Return true if the user can hide the peer grading of a response An user
-     * can hide the peer grading if he is the owner of the assigment
+     * Return true if the user can hide the peer grading of a response An user can hide the peer grading if he is the
+     * owner of the assigment
      *
      * @param teacher the user who want to hide the peer grading
      * @param response the response where the peer grading to hide is
@@ -415,8 +420,8 @@ class ResponseService(
 
 
     /**
-     * Return true if the user can moderate the feedback of the response An
-     * user can moderate the feedback if he is the owner of the sequence
+     * Return true if the user can moderate the feedback of the response An user can moderate the feedback if he is the
+     * owner of the sequence
      *
      * @param user the user who want to moderate the feedback
      * @param response the response to moderate
@@ -426,15 +431,13 @@ class ResponseService(
     }
 
     /**
-     * Return all the responses of the sequence that are not fake for the given
-     * attempt
+     * Return all the responses of the sequence that are not fake for the given attempt
      *
      * The teacher created fake Response to simulate a learner's response
      *
      * @param attempt the attempt of the sequence
      * @param sequence the sequence
-     * @return All the responses of the sequence that are not fake for the
-     *    given attempt
+     * @return All the responses of the sequence that are not fake for the given attempt
      * @see Response.fake
      */
     fun findAllByAttemptNotFake(attempt: Int, sequence: Sequence): List<Response> {
@@ -445,8 +448,7 @@ class ResponseService(
     /**
      * Return all the fake responses of the sequence
      *
-     * The attempt for a fake response depends on the execution context of the
-     * sequence
+     * The attempt for a fake response depends on the execution context of the sequence
      *
      * @param sequence the sequence
      * @return All the fake responses of the sequence
