@@ -15,8 +15,8 @@ For now the single configuration file is `baeldung-keycloak-realm.json`.
 
 It describes the realm `baeldung-keycloak` with the following configuration:
 - Two users:
-  - username: `brice` | password: | role: `NICE`
-  - username: `igor` | password:
+  - username: `brice` | password: `secret` | role: `NICE`
+  - username: `igor` | password: `secret`
 - A client : 
   - name: `baeldung-keycloak-confidential`
 
