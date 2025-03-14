@@ -30,7 +30,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Setup test environment
-        run: docker compose up -d  elaastic-questions-db-test-8 keycloak
+        run: docker compose up -d  elaastic-questions-db-test-8 authentification
 
       - name: Build with Gradle
         run: ./server/gradlew build
