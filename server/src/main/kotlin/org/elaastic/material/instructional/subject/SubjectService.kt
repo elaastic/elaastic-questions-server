@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.logging.Logger
 import javax.persistence.EntityManager
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
@@ -38,10 +37,7 @@ class SubjectService(
     @Autowired val responseService: ResponseService,
     @Autowired val sharedSubjectRepository: SharedSubjectRepository,
     @Autowired val attachmentService: AttachmentService,
-
-    ) {
-
-    val LOG: Logger = Logger.getLogger(SubjectService::class.toString())
+) {
 
     fun get(id: Long, fetchStatementsAndAssignments: Boolean = false): Subject {
         // TODO (+) i18n error message
@@ -132,16 +128,14 @@ class SubjectService(
     fun findAllByOwner(
         owner: User,
         pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
-    )
-            : Page<Subject> {
+    ): Page<Subject> {
         return subjectRepository.findAllByOwner(owner, pageable)
     }
 
     fun findAllWithoutCourseByOwner(
         owner: User,
         pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
-    )
-            : Page<Subject> {
+    ): Page<Subject> {
         return subjectRepository.findAllByOwnerAndCourseIsNull(owner, pageable)
     }
 
@@ -227,18 +221,22 @@ class SubjectService(
         val idsArray = subject.statements.map { it.id }.toTypedArray()
         val pos = idsArray.indexOf(statementId)
 
-        if (pos == -1)
-            throw IllegalStateException("This statement $statementId does not belong to subject ${subject.id}")
-        if (pos == 0)
-            return  // Nothing to do
+        check(pos != -1) {
+            "This statement $statementId does not belong to subject ${subject.id}"
+        }
 
-        entityManager.createNativeQuery(
-            "UPDATE statement SET `rank` = CASE " +
-                    "WHEN id=${statementId} THEN ${pos} " +
-                    "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
-                    " END " +
-                    "WHERE id in (${idsArray[pos - 1]}, ${statementId})"
-        ).executeUpdate()
+        if (pos != 0) {
+            entityManager.createNativeQuery(
+                """
+                UPDATE statement 
+                SET `rank` = CASE 
+                WHEN id=${statementId} THEN ${pos} 
+                WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} 
+                END 
+                WHERE id in (${idsArray[pos - 1]}, ${statementId})
+                """.trimIndent()
+            ).executeUpdate()
+        }
     }
 
     fun moveDownStatement(subject: Subject, statementId: Long) {
@@ -246,35 +244,41 @@ class SubjectService(
         val pos = idsArray.indexOf(statementId)
         val posValue = pos + 1
 
-        if (pos == -1)
-            throw IllegalStateException("This statement $statementId does not belong to subject ${subject.id}")
-        if (pos == subject.statements.size - 1)
-            return  // Nothing to do
+        check(pos != -1) {
+            "This statement $statementId does not belong to subject ${subject.id}"
+        }
 
-        entityManager.createNativeQuery(
-            "UPDATE statement SET `rank` = CASE " +
-                    "WHEN id=${statementId} THEN ${posValue + 1} " +
-                    "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
-                    " END " +
-                    "WHERE id in (${idsArray[pos + 1]}, ${statementId})"
-        ).executeUpdate()
+        if (pos != subject.statements.size - 1) {
+            entityManager.createNativeQuery(
+                """
+                UPDATE statement 
+                SET `rank` = CASE 
+                WHEN id=${statementId} THEN ${posValue + 1} 
+                WHEN id=${idsArray[pos + 1]} THEN ${posValue} 
+                END 
+                WHERE id in (${idsArray[pos + 1]}, ${statementId})
+                """.trimIndent()
+            ).executeUpdate()
+        }
     }
 
 
     fun updateAllStatementRank(subject: Subject) {
         val statementIds = subject.statements.map { it.id }
-        if (statementIds.isEmpty()) return // Nothing to do
 
-        entityManager.createNativeQuery(
-            "UPDATE statement SET `rank` = CASE " +
-                    statementIds.mapIndexed { index, id ->
-                        "WHEN id=$id THEN $index"
-                    }.joinToString(" ") +
-                    " END " +
-                    "WHERE id in (${statementIds.joinToString(",")})"
-        ).executeUpdate()
+        if (statementIds.isNotEmpty()) {
+            entityManager.createNativeQuery(
+                """
+                UPDATE statement 
+                SET `rank` = CASE 
+                ${statementIds.mapIndexed { index, id -> "WHEN id=$id THEN $index" }.joinToString(" ")}  
+                END 
+                WHERE id in (${statementIds.joinToString(",")})
+                """.trimIndent()
+            ).executeUpdate()
 
-        subject.statements.mapIndexed { index, statement -> statement.rank = index + 1 }
+            subject.statements.mapIndexed { index, statement -> statement.rank = index + 1 }
+        }
     }
 
     fun addAssignment(subject: Subject, assignment: Assignment): Assignment {
@@ -284,6 +288,7 @@ class SubjectService(
         assignmentService.buildFromSubject(assignment, subject)
         subject.assignments.add(assignment)
         touch(subject)
+
         return assignment
     }
 
@@ -291,18 +296,22 @@ class SubjectService(
         val idsArray = subject.assignments.map { it.id }.toTypedArray()
         val pos = idsArray.indexOf(assignmentId)
 
-        if (pos == -1)
-            throw IllegalStateException("This assignment $assignmentId does not belong to subject ${subject.id}")
-        if (pos == 0)
-            return  // Nothing to do
+        check(pos != -1) {
+            "This assignment $assignmentId does not belong to subject ${subject.id}"
+        }
 
-        entityManager.createNativeQuery(
-            "UPDATE assignment SET `rank` = CASE " +
-                    "WHEN id=${assignmentId} THEN ${pos} " +
-                    "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
-                    " END " +
-                    "WHERE id in (${idsArray[pos - 1]}, ${assignmentId})"
-        ).executeUpdate()
+        if (pos != 0) {
+            entityManager.createNativeQuery(
+                """
+                UPDATE assignment 
+                SET `rank` = CASE 
+                WHEN id=${assignmentId} THEN ${pos} 
+                WHEN id=${idsArray[pos - 1]} THEN ${pos + 1}
+                END 
+                WHERE id in (${idsArray[pos - 1]}, ${assignmentId})
+                """.trimIndent()
+            ).executeUpdate()
+        }
     }
 
     fun moveDownAssignment(subject: Subject, assignmentId: Long) {
@@ -310,18 +319,22 @@ class SubjectService(
         val pos = idsArray.indexOf(assignmentId)
         val posValue = pos + 1
 
-        if (pos == -1)
-            throw IllegalStateException("This assignment $assignmentId does not belong to subject ${subject.id}")
-        if (pos == subject.assignments.size - 1)
-            return  // Nothing to do
+        check(pos != -1) {
+            "This assignment $assignmentId does not belong to subject ${subject.id}"
+        }
 
-        entityManager.createNativeQuery(
-            "UPDATE assignment SET `rank` = CASE " +
-                    "WHEN id=${assignmentId} THEN ${posValue + 1} " +
-                    "WHEN id=${idsArray[pos + 1]} THEN ${posValue} " +
-                    " END " +
-                    "WHERE id in (${idsArray[pos + 1]}, ${assignmentId})"
-        ).executeUpdate()
+        if (pos != subject.assignments.size - 1) {
+            entityManager.createNativeQuery(
+                """
+                UPDATE assignment 
+                SET `rank` = CASE 
+                WHEN id=${assignmentId} THEN ${posValue + 1} 
+                WHEN id=${idsArray[pos + 1]} THEN ${posValue} 
+                END 
+                WHERE id in (${idsArray[pos + 1]}, ${assignmentId})
+                """.trimIndent()
+            ).executeUpdate()
+        }
     }
 
     fun removeAssignment(user: User, assignment: Assignment) {
@@ -340,18 +353,20 @@ class SubjectService(
 
     fun updateAllAssignmentRank(subject: Subject) {
         val assignmentIds = subject.assignments.map { it.id }
-        if (assignmentIds.isEmpty()) return // Nothing to do
 
-        entityManager.createNativeQuery(
-            "UPDATE assignment SET `rank` = CASE " +
-                    assignmentIds.mapIndexed { index, id ->
-                        "WHEN id=$id THEN $index"
-                    }.joinToString(" ") +
-                    " END " +
-                    "WHERE id in (${assignmentIds.joinToString(",")})"
-        ).executeUpdate()
+        if (assignmentIds.isNotEmpty()) {
+            entityManager.createNativeQuery(
+                """
+                UPDATE assignment 
+                SET `rank` = CASE 
+                ${assignmentIds.mapIndexed { index, id -> "WHEN id=$id THEN $index" }.joinToString(" ")} 
+                END 
+                WHERE id in (${assignmentIds.joinToString(",")})
+                """.trimIndent()
+            ).executeUpdate()
 
-        subject.assignments.mapIndexed { index, assignment -> assignment.rank = index + 1 }
+            subject.assignments.mapIndexed { index, assignment -> assignment.rank = index + 1 }
+        }
     }
 
     fun sharedToTeacher(user: User, subject: Subject): SharedSubject? {
@@ -379,10 +394,7 @@ class SubjectService(
 
         val indexTitle = subjectRepository.countAllStartingWithTitle(user, normalizedTitle) + 1
         val duplicateTitle = if (indexTitle == 1) initialSubject.title else "$normalizedTitle ($indexTitle) "
-        val duplicateSubject = Subject(
-            duplicateTitle,
-            user
-        )
+        val duplicateSubject = Subject(duplicateTitle, user)
         duplicateSubject.parentSubject = initialSubject
         if (inSameCourse) {
             duplicateSubject.course = initialSubject.course
@@ -392,6 +404,7 @@ class SubjectService(
         for (statement: Statement in initialSubject.statements) {
             importStatementInSubject(statement, duplicateSubject)
         }
+
         return duplicateSubject
     }
 
