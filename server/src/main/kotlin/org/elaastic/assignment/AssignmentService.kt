@@ -137,53 +137,20 @@ class AssignmentService(
         updateAllSequenceRank(assignment)
     }
 
-    // TODO remove this unused method
-    fun moveUpSequence(assignment: Assignment, sequenceId: Long) {
-        val idsArray = assignment.sequences.map { it.id }.toTypedArray()
-        val pos = idsArray.indexOf(sequenceId)
-
-        check(pos != -1) { "This sequence $sequenceId does not belong to assignment ${assignment.id}" }
-        if (pos == 0)
-            return  // Nothing to do
-
-        entityManager.createNativeQuery(
-            "UPDATE sequence SET `rank` = CASE " +
-                    "WHEN id=${sequenceId} THEN ${pos} " +
-                    "WHEN id=${idsArray[pos - 1]} THEN ${pos + 1} " +
-                    " END " +
-                    "WHERE id in (${idsArray[pos - 1]}, ${sequenceId})"
-        ).executeUpdate()
-    }
-
-    // TODO remove this unused method
-    fun moveDownSequence(assignment: Assignment, sequenceId: Long) {
-        val idsArray = assignment.sequences.map { it.id }.toTypedArray()
-        val pos = idsArray.indexOf(sequenceId)
-
-        check(pos != -1) { "This sequence $sequenceId does not belong to assignment ${assignment.id}" }
-        if (pos == assignment.sequences.size - 1)
-            return  // Nothing to do
-
-        entityManager.createNativeQuery(
-            "UPDATE sequence SET `rank` = CASE " +
-                    "WHEN id=${sequenceId} THEN ${pos + 1} " +
-                    "WHEN id=${idsArray[pos + 1]} THEN ${pos} " +
-                    " END " +
-                    "WHERE id in (${idsArray[pos + 1]}, ${sequenceId})"
-        ).executeUpdate()
-    }
-
     fun updateAllSequenceRank(assignment: Assignment) {
         val sequenceIds = assignment.sequences.map { it.id }
         if (sequenceIds.isEmpty()) return // Nothing to do
 
-        entityManager.createNativeQuery(
-            "UPDATE sequence SET `rank` = CASE " +
-                    sequenceIds.mapIndexed { index, id ->
-                        "WHEN id=$id THEN $index"
-                    }.joinToString(" ") +
-                    " END " +
-                    "WHERE id in (${sequenceIds.joinToString(",")})"
+        entityManager
+            .createNativeQuery("""
+                UPDATE sequence SET `rank` = CASE 
+                ${sequenceIds
+                    .mapIndexed { index, id -> "WHEN id=$id THEN $index"}
+                    .joinToString(" ")
+                } 
+                END 
+                WHERE id in (${sequenceIds.joinToString(",")})
+                """.trimIndent()
         ).executeUpdate()
 
         assignment.sequences.mapIndexed { index, sequence -> sequence.rank = index + 1 }
