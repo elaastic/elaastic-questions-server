@@ -67,16 +67,6 @@ Reload the project and run the following command in the terminal at the root of 
 cd .. && ./gradlew updateVueComponents
 ```
 
-Then you can update the version number of the `application.properties`.
-
-- `server/src/main/resources/application.properties`
-- `server/src/test/resources/application.properties`
-
-```properties
-# You can find it at the top of the file
-ui.components.version=0.0.20 #Update the version number
-```
-
 ### 4. Integrate the new component in a Thymeleaf template
 
 Create a new template file with following content:
