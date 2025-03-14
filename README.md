@@ -31,9 +31,12 @@ docker-compose up -d [<service>]
 | cas                          | a CAS server just for testing CAS integration in dev mode       |
 | cas-2                        | another CAS server for testing multiple CAS servers integration |
 | elaastic-mailhog             | a mail server for testing email sending                         |
+| authentification             | a keycloak server to connect with OpenID Connect                |
 
-Running a database is mandatory.
-CAS servers is optional. It allows to test CAS authentication without to have to deploy a CAS server manually.
+Running a database is mandatory.\
+Running the authentification server is mandatory.\
+CAS servers are optional.
+It allows testing CAS authentication without having to deploy a CAS server manually.
 
 ### Launching the application
 
