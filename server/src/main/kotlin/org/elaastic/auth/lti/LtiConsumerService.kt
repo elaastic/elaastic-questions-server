@@ -29,17 +29,18 @@ import java.util.logging.Logger
 
 @Service
 class LtiConsumerService(
-        @Autowired val ltiConsumerRepository: LtiConsumerRepository
+    @Autowired val ltiConsumerRepository: LtiConsumerRepository
 ) {
 
     internal var logger = Logger.getLogger(LtiConsumerService::class.java.name)
 
     fun touchLtiConsumer(
-            consumerKey: String,
-            productName: String?,
-            productVersion: String?,
-            productGuid: String?,
-            ltiVersion: String?) {
+        consumerKey: String,
+        productName: String?,
+        productVersion: String?,
+        productGuid: String?,
+        ltiVersion: String?
+    ) {
         ltiConsumerRepository.findByKey(consumerKey)?.let {
             it.productName = productName
             it.productVersion = productVersion
@@ -52,27 +53,29 @@ class LtiConsumerService(
 
     /**
      * Generate LTI Consumer list from a CSV File containing the 2 attributes per raw : the key and the name
+     *
      * @param fileReader the input stream reader of the CSV file
      * @param suffix optional suffix to add to the key
      * @return the list of saved lti consumer
      */
     fun generateLtiConsumerListFromCSVFile(fileReader: InputStreamReader, suffix: String? = null): List<LtiConsumer> {
-        var consumers = ArrayList<LtiConsumer>()
+        val consumers = ArrayList<LtiConsumer>()
         val records = CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader().parse(fileReader)
-        for(record in records) {
-            var consumerKey = record.get(0)
-            suffix?.let {
-                consumerKey += suffix
-            }
-            var consumer = ltiConsumerRepository.findByKey(consumerKey)
-            if (consumer == null) {
-                val consumerName = if (record.get(1).length <= 45) record.get(1) else record.get(1).substring(0..44);
-                val consumerSecret = UUID.randomUUID().toString().substring(0..31)
-                LtiConsumer(consumerName, consumerSecret, consumerKey).let {
-                    consumer = ltiConsumerRepository.save(it)
+
+        records.forEach { record ->
+            val consumerKey = record[0] + (suffix ?: "")
+
+            consumers.add(
+                ltiConsumerRepository.findByKey(consumerKey) ?: run {
+                    // If no consumer found, we create a new one
+                    val consumerName = if (record[1].length <= 45) record[1] else record[1].substring(0..44);
+                    val consumerSecret = UUID.randomUUID().toString().substring(0..31)
+
+                    LtiConsumer(consumerName, consumerSecret, consumerKey).let {
+                        ltiConsumerRepository.save(it)
+                    }
                 }
-            }
-            consumers.add(consumer!!)
+            )
         }
         return consumers
     }
@@ -80,22 +83,23 @@ class LtiConsumerService(
 
     /**
      * Print lti consumer list in a CSV file
+     *
      * @param consumers the list of lti consumers
      * @param writer the writer to write in the CSV file
      * @return the writer
      */
     fun printLtiConsumerListInCsvFile(consumers: List<LtiConsumer>, writer: OutputStreamWriter): OutputStreamWriter {
         val csvFormat = CSVFormat.DEFAULT.withDelimiter(';')
-        val csvPrinter = CSVPrinter(writer, csvFormat)
-        try {
-            csvPrinter.printRecord(FileHeader)
-            consumers.forEach {
-                csvPrinter.printRecord(listOf(it.key, it.secret, it.consumerName))
+
+        CSVPrinter(writer, csvFormat).use { csvPrinter ->
+            try {
+                csvPrinter.printRecord(FileHeader)
+                consumers.forEach {
+                    csvPrinter.printRecord(listOf(it.key, it.secret, it.consumerName))
+                }
+            } catch (e: Exception) {
+                logger.severe(e.message)
             }
-        } catch (e: Exception) {
-            logger.severe(e.message)
-        } finally {
-            csvPrinter.close()
         }
         return writer
     }
