@@ -19,6 +19,7 @@ package org.elaastic.auth.oauth
 
 import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.User
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 
 /**
@@ -32,4 +33,8 @@ class ElaasticOidcUser(oidcUser: OidcUser, override val elaasticUser: User) : Oi
      * Perhaps the template could be use another way to get the fullname...
      */
     fun getFullname() = elaasticUser.getFullname()
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return elaasticUser.authorities
+    }
 }
