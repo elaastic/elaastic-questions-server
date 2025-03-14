@@ -148,14 +148,16 @@ class BootstrapService(
                 setUser("elaastic", "elaastic")
                 start()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
+            // Ignore exception
         }
     }
 
     fun stopDevLocalSmtpServer() {
         try {
             mailServer?.stop()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
+            // Ignore exception
         }
     }
 
@@ -414,18 +416,18 @@ class BootstrapService(
             subjectService.addAssignment(subject, it)
         }
 
-        playAssignmentsWithLearners(assignments.get(0), ExecutionContext.FaceToFace)
-        onlyStartSequences(assignments.get(1), ExecutionContext.FaceToFace)
-        registerLearners(assignments.get(2))
-        registerLearners(assignments.get(3))
+        playAssignmentsWithLearners(assignments[0], ExecutionContext.FaceToFace)
+        onlyStartSequences(assignments[1], ExecutionContext.FaceToFace)
+        registerLearners(assignments[2])
+        registerLearners(assignments[3])
     }
 
     @Transactional
     private fun playAssignmentsWithLearners(assignment: Assignment, mode: ExecutionContext) {
         var learners = registerLearners(assignment)
         startSequences(assignment, mode)
-        var sequence0 = assignment.sequences.get(0)
-        var sequence1 = assignment.sequences.get(1)
+        var sequence0 = assignment.sequences[0]
+        var sequence1 = assignment.sequences[1]
 
         var responses1 = firstAnswersForSequence(sequence0, learners)
         var responses2 = firstAnswersForSequence(sequence1, learners)
@@ -495,10 +497,10 @@ class BootstrapService(
         }
 
         val response0 = responseService.save(
-            sequenceService.getActiveInteractionForLearner(sequence, learners.get(0))
+            sequenceService.getActiveInteractionForLearner(sequence, learners[0])
                 ?: error("No active interaction, cannot submit a response"),
             Response(
-                learner = learners.get(0),
+                learner = learners[0],
                 interaction = sequence.getResponseSubmissionInteraction(),
                 attempt = 1,
                 confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -516,7 +518,7 @@ class BootstrapService(
         )
 
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-            sequenceService.nextInteractionForLearner(sequence, learners.get(0))
+            sequenceService.nextInteractionForLearner(sequence, learners[0])
         }
 
         /// Learner 1
@@ -528,10 +530,10 @@ class BootstrapService(
         }
 
         val response1 = responseService.save(
-            sequenceService.getActiveInteractionForLearner(sequence, learners.get(1))
+            sequenceService.getActiveInteractionForLearner(sequence, learners[1])
                 ?: error("No active interaction, cannot submit a response"),
             Response(
-                learner = learners.get(1),
+                learner = learners[1],
                 interaction = sequence.getResponseSubmissionInteraction(),
                 attempt = 1,
                 confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
@@ -549,7 +551,7 @@ class BootstrapService(
         )
 
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-            sequenceService.nextInteractionForLearner(sequence, learners.get(1))
+            sequenceService.nextInteractionForLearner(sequence, learners[1])
         }
 
         // Learner 2
@@ -561,10 +563,10 @@ class BootstrapService(
         }
 
         val response2 = responseService.save(
-            sequenceService.getActiveInteractionForLearner(sequence, learners.get(2))
+            sequenceService.getActiveInteractionForLearner(sequence, learners[2])
                 ?: error("No active interaction, cannot submit a response"),
             Response(
-                learner = learners.get(2),
+                learner = learners[2],
                 interaction = sequence.getResponseSubmissionInteraction(),
                 attempt = 1,
                 confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
@@ -582,7 +584,7 @@ class BootstrapService(
         )
 
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-            sequenceService.nextInteractionForLearner(sequence, learners.get(2))
+            sequenceService.nextInteractionForLearner(sequence, learners[2])
         }
 
 
@@ -595,10 +597,10 @@ class BootstrapService(
         }
 
         val response3 = responseService.save(
-            sequenceService.getActiveInteractionForLearner(sequence, learners.get(3))
+            sequenceService.getActiveInteractionForLearner(sequence, learners[3])
                 ?: error("No active interaction, cannot submit a response"),
             Response(
-                learner = learners.get(3),
+                learner = learners[3],
                 interaction = sequence.getResponseSubmissionInteraction(),
                 attempt = 1,
                 confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
@@ -616,34 +618,32 @@ class BootstrapService(
         )
 
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-            sequenceService.nextInteractionForLearner(sequence, learners.get(3))
+            sequenceService.nextInteractionForLearner(sequence, learners[3])
         }
 
         return listOf(response0, response1, response2, response3)
     }
 
     private fun feedbacksPhase2forSequence(sequence: Sequence, learners: List<User>, responses: List<Response>) {
-
         var learner0Eval = peerGradingService.createOrUpdateLikert(
-            learners.get(0),
-            responses.get(1),
+            learners[0],
+            responses[1],
             BigDecimal(5)
         )
         var learner1Eval = peerGradingService.createOrUpdateLikert(
-            learners.get(1),
-            responses.get(2),
+            learners[1],
+            responses[2],
             BigDecimal(1)
         )
         var learner2Eval = peerGradingService.createOrUpdateLikert(
-            learners.get(2),
-            responses.get(3),
+            learners[2],
+            responses[3],
             BigDecimal(2)
         )
         var learner3Eval = peerGradingService.createOrUpdateLikert(
-            learners.get(3),
-            responses.get(0),
+            learners[3],
+            responses[0],
             BigDecimal(4)
         )
     }
-
 }
