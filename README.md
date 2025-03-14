@@ -108,8 +108,8 @@ npm run build
 ```
 
 The built bundles will be available at `./ui-components/dist`.
-Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
-in order to use it.
+
+You can follow the [README.md](ui-components/README.md) in the `ui-components` folder for more information on how to use in Elaastic.
 
 ## Licence
 
