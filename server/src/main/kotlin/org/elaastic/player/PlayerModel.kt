@@ -18,24 +18,11 @@
 package org.elaastic.player
 
 import org.elaastic.player.assignmentview.AssignmentOverviewModel
-import org.elaastic.player.command.CommandModel
-import org.elaastic.player.results.ResultsModel
-import org.elaastic.player.sequence.status.SequenceInfoModel
-import org.elaastic.player.statement.StatementInfo
-import org.elaastic.player.statement.StatementPanelModel
-import org.elaastic.player.steps.SequenceStatistics
-import org.elaastic.player.steps.StepsModel
 import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.phase.LearnerPhase
 
 abstract class PlayerModel(
     val sequence: Sequence,
-    val userRole: UserRole,
     val assignmentOverviewModel: AssignmentOverviewModel,
-    val stepsModel: StepsModel,
-    val sequenceInfoModel: SequenceInfoModel,
-    val statementPanelModel: StatementPanelModel,
-    val statement: StatementInfo,
 ) {
     fun getAssignment() = sequence.assignment
 
@@ -46,23 +33,10 @@ class TeacherPlayerModel(
     val serverBaseUrl: String,
     sequence: Sequence,
     assignmentOverviewModel: AssignmentOverviewModel,
-    stepsModel: StepsModel,
-    val sequenceStatistics: SequenceStatistics,
-    val commandModel: CommandModel,
-    sequenceInfoModel: SequenceInfoModel,
-    statementPanelModel: StatementPanelModel,
-    statement: StatementInfo,
-    val showResults: Boolean,
-    val resultsModel: ResultsModel?,
     val assignmentOverviewModelOneSequence: AssignmentOverviewModel,
 ) : PlayerModel(
     sequence = sequence,
-    userRole = UserRole.Teacher, // TODO Check if we need it
     assignmentOverviewModel = assignmentOverviewModel,
-    stepsModel = stepsModel,
-    sequenceInfoModel = sequenceInfoModel,
-    statementPanelModel = statementPanelModel, // TODO Perhaps we merge this one with the following
-    statement = statement,
 ) {
     override fun isTeacher() = true
 }
@@ -70,23 +44,9 @@ class TeacherPlayerModel(
 class LearnerPlayerModel(
     sequence: Sequence,
     assignmentOverviewModel: AssignmentOverviewModel,
-    stepsModel: StepsModel,
-    sequenceInfoModel: SequenceInfoModel,
-    statementPanelModel: StatementPanelModel,
-    statement: StatementInfo,
-    val phaseList: List<LearnerPhase>
 ) : PlayerModel(
     sequence = sequence,
-    userRole = UserRole.Learner, // TODO Check if we need it
     assignmentOverviewModel = assignmentOverviewModel,
-    stepsModel = stepsModel,
-    sequenceInfoModel = sequenceInfoModel,
-    statementPanelModel = statementPanelModel, // TODO Perhaps we merge this one with the following
-    statement = statement,
 ) {
     override fun isTeacher() = false
-}
-
-enum class UserRole {
-    Teacher, Learner
 }

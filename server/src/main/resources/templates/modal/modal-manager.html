@@ -1,0 +1,146 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!--/* This fragment handles the display of modal. It should be called in the most upper level of the HTML */-->
+<div th:fragment="modalManager">
+    <div class="ui modal" id="loading_modal" style="display: none;">
+        <div class="ui active dimmer">
+            <div class="ui text loader" th:text="#{common.loading}">Loading</div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        $(function () {
+            const loader = $('#loading_modal');
+            const DETAILS_MODAL = 'show-details-modal';
+            const CONFIG_SEQUENCE_MODAL = 'show-config-sequence-modal';
+            const ALL_EXPLANATIONS_MODAL = 'show-all-explanations-modal';
+            const RECOMMENDATION_MODAL = 'show-recommendation-modal';
+
+            window.addEventListener('message', (event) => {
+                switch (event.data.command) {
+                    case DETAILS_MODAL:
+                        console.log('Details modal');
+                        showOrFetchModal(
+                                "#myResultsModal_" + event.data.userId,
+                                '/player/' + event.data.sequenceId + '/result/' + event.data.userId + '/modal'
+                        );
+                        break;
+                    case CONFIG_SEQUENCE_MODAL:
+                        console.log('Config sequence modal');
+                        showOrFetchModal(
+                                "#sequenceSpec_" + event.data.sequenceId,
+                                '/config-sequence/' + event.data.sequenceId + '/modal',
+                                () => saveAction(event.data.sequenceId, 'open', 'configure_popup')
+                        );
+                        break;
+                    case ALL_EXPLANATIONS_MODAL:
+                        console.log('All explanations modal');
+                        showOrFetchModal(
+                                '#all_explanations_for_' + event.data.sequenceId,
+                                '/all-explanations/' + event.data.sequenceId + '/modal',
+                                () => saveAction(event.data.sequenceId, 'open', 'rationales_popup'),
+                                () => saveAction(event.data.sequenceId, 'close', 'rationales_popup')
+                        );
+                        break;
+                    case RECOMMENDATION_MODAL:
+                        console.log('Recommendation modal');
+                        showOrFetchModal(
+                                '#recommendation_explanation_for_' + event.data.sequenceId,
+                                '/recommendation/' + event.data.sequenceId + '/modal',
+                                () => saveAction(event.data.sequenceId, 'open', 'explanation_popup'),
+                                () => saveAction(event.data.sequenceId, 'close', 'explanation_popup')
+                        );
+                        break;
+                    default:
+                        console.log('Unknown command: ' + event.data.command);
+                        console.log(event.data);
+                        break;
+                }
+            })
+
+            /**
+             * Hide the loader with a delay
+             */
+            function hideLoaderWithDelay() {
+                // For some reason, when you display and hide two modals in a row very quickly,
+                // the first one doesn't display.
+                // So to "fix" this, we add a delay before hiding the loader
+                setTimeout(function () {
+                    loader.modal('hide');
+                }, 1000);
+            }
+
+            /**
+             * Show a modal.
+             *
+             * If the action provided is a function, it will be executed when the modal is shown or hidden.
+             * Any other type of action will be ignored.
+             *
+             * @param modalSelector The selector of the modal to show
+             * @param actionOnShow The action to execute when the modal is shown
+             * @param actionOnHide The action to execute when the modal is hidden
+             */
+            function showModal(modalSelector, actionOnShow = null, actionOnHide = null) {
+                $(modalSelector).modal({
+                    onShow: function () {
+                        // If an action is provided, we execute it
+                        if (actionOnShow && typeof actionOnShow === 'function') actionOnShow()
+                    },
+                    onHide: function () {
+                        // If an action is provided, we execute it
+                        if (actionOnHide && typeof actionOnHide === 'function') actionOnHide()
+                    }
+                }).modal('show');
+            }
+
+            /**
+             * Show a modal.
+             * If the modal doesn't exist yet, it will be fetched from the server.
+             *
+             * If the action provided is a function, it will be executed when the modal is shown or hidden.
+             * Any other type of action will be ignored.
+             *
+             * @param modalSelector The selector of the modal to show
+             * @param urlToFetch The URL to fetch the modal
+             * @param actionOnShow The action to execute when the modal is shown
+             * @param actionOnHide The action to execute when the modal is hidden
+             */
+            function showOrFetchModal(modalSelector, urlToFetch, actionOnShow = null, actionOnHide = null) {
+                let $modal = $(modalSelector);
+                if ($modal.length) {
+                    // If the modal already exists, we show it
+                    showModal(modalSelector, actionOnShow, actionOnHide);
+                } else {
+                    console.log("Fetching modal from " + urlToFetch);
+                    loader.modal('show');
+                    // If the modal doesn't exist, we fetch it
+                    $.get(urlToFetch)
+                            .done(function (data) {
+                                $("body").append(data);
+                                showModal(modalSelector, actionOnShow, actionOnHide);
+                                hideLoaderWithDelay();
+                            })
+                            .fail(function () {
+                                loader.modal('hide');
+                                console.log("An error occurred while fetching the modal");
+                            })
+                }
+            }
+        });
+    </script>
+</div>

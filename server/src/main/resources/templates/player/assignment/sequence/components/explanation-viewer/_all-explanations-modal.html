@@ -1,0 +1,62 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<div th:fragment="allExplanationsPopup(sequenceId,explanationViewerModel, isTeacher)"
+     th:with="components=${'player/assignment/sequence/components/explanation-viewer'}"
+     th:id="|all_explanations_for_${sequenceId}|" xmlns:th="http://www.thymeleaf.org"
+     xmlns="http://www.w3.org/1999/html" class="ui modal" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div class="header" th:text="#{player.sequence.explanation.all}">
+        All explanations...
+    </div>
+
+    <div class="scrolling content">
+
+        <div th:if="${explanationViewerModel.hasChoice}">
+            <div class="ui styled fluid accordion" th:id="|accordion-explanation-viewer-${sequenceId}|">
+                <th:block th:if="${explanationViewerModel.hasRecommendedExplanations}">
+                    <div th:replace="|${components}/_recommendedResponseTab|::recommendedResponseTab(${explanationViewerModel.recommendedExplanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${explanationViewerModel.correctAreRecommended}, ${isTeacher})"></div>
+                </th:block>
+                <div th:replace="|${components}/_responseTab|::responseTab(${!explanationViewerModel.hasRecommendedExplanations}, ${true}, ${explanationViewerModel.correctResponse}, ${explanationViewerModel.explanationsForCorrectResponses}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${isTeacher})"></div>
+
+                <th:block th:unless="${explanationViewerModel.showOnlyCorrectResponse}">
+                    <div th:each="explanationsByResponse, i : ${explanationViewerModel.explanationsByIncorrectResponses}"
+                         th:remove="tag">
+                        <div th:replace="|${components}/_responseTab|::responseTab(${false}, ${false}, ${explanationsByResponse.key}, ${explanationsByResponse.value}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${isTeacher})"></div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+        <div th:if="${!explanationViewerModel.hasChoice}">
+            <div th:replace="|${components}/_explanationList|::explanationList(${explanationViewerModel.explanations}, ${explanationViewerModel.studentsIdentitiesAreDisplayable}, ${false}, ${isTeacher})"></div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <div class="ui cancel button" th:text="#{player.sequence.explanation.close.button}">
+            Close
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        $(function () {
+            let accordionId = /*[[|#accordion-explanation-viewer-${sequenceId}|]]*/ '';
+            $(accordionId).accordion();
+        });
+    </script>
+</div>

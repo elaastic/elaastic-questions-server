@@ -17,40 +17,22 @@
  */
 package org.elaastic.player
 
-import org.elaastic.common.web.MessageBuilder
 import org.elaastic.moderation.ReportInformation
 import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory
-import org.elaastic.player.command.CommandModelFactory
-import org.elaastic.player.results.TeacherResultDashboardService
-import org.elaastic.player.sequence.status.SequenceInfoResolver
-import org.elaastic.player.statement.StatementInfo
-import org.elaastic.player.statement.StatementPanelModel
-import org.elaastic.player.steps.SequenceStatistics
-import org.elaastic.player.steps.StepsModelFactory
-import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.State
-import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.user.User
 
 object PlayerModelFactory {
 
     /**
-     * @param nbReportBySequence Map of sequence to (a pair of (total numbers of reports) and (number of reports to
-     *    moderate))
+     * @param nbReportBySequence Map of a sequence to the [ReportInformation] of the sequence
      */
     fun buildForTeacher(
-        user: User,
         sequence: Sequence,
         serverBaseUrl: String,
         nbRegisteredUsers: Int,
-        messageBuilder: MessageBuilder,
-        sequenceStatistics: SequenceStatistics,
-        teacherResultDashboardService: TeacherResultDashboardService,
         nbReportBySequence: Map<Sequence, ReportInformation>,
     ): TeacherPlayerModel {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
-        val showResults = sequence.state != State.beforeStart
 
         return TeacherPlayerModel(
             serverBaseUrl = serverBaseUrl,
@@ -62,24 +44,6 @@ object PlayerModelFactory {
                 teacher = true,
                 nbReportBySequence = nbReportBySequence,
             ),
-            stepsModel = StepsModelFactory.buildForTeacher(sequence),
-            sequenceStatistics = sequenceStatistics,
-            commandModel = CommandModelFactory.build(user, sequence),
-            sequenceInfoModel = SequenceInfoResolver.resolve(
-                true,
-                sequence,
-                messageBuilder,
-                nbReportBySequence[sequence] ?: ReportInformation.empty
-            ),
-            statementPanelModel = StatementPanelModel(
-                hideStatement = false,
-                panelClosed = sequence.state != State.beforeStart
-            ),
-            statement = StatementInfo(sequence.statement),
-            showResults = showResults,
-            resultsModel = if (showResults)
-                teacherResultDashboardService.buildModel(sequence)
-            else null,
             assignmentOverviewModelOneSequence = AssignmentOverviewModelFactory.buildOnSequence(
                 teacher = true,
                 assignment = assignment,
@@ -93,9 +57,6 @@ object PlayerModelFactory {
     fun buildForLearner(
         sequence: Sequence,
         nbRegisteredUsers: Int,
-        messageBuilder: MessageBuilder,
-        activeInteraction: Interaction?,
-        learnerSequence: ILearnerSequence,
     ): LearnerPlayerModel = run {
         val assignment = sequence.assignment ?: error("The sequence must have an assignment to be played")
 
@@ -107,14 +68,6 @@ object PlayerModelFactory {
                 selectedSequenceId = sequence.id,
                 teacher = false,
             ),
-            stepsModel = StepsModelFactory.buildForLearner(sequence, activeInteraction),
-            sequenceInfoModel = SequenceInfoResolver.resolve(false, sequence, messageBuilder),
-            statementPanelModel = StatementPanelModel(
-                hideStatement = sequence.state == State.beforeStart,
-                panelClosed = false
-            ),
-            statement = StatementInfo(sequence.statement),
-            phaseList = learnerSequence.phaseList.filterNotNull()
         )
     }
 

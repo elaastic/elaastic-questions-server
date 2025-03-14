@@ -15,7 +15,7 @@ plugins {
 
 group = "org.elaastic.questions"
 version = "6.3.7"
-val uiComponentsVersion = "1.0.1"
+val uiComponentsVersion = "1.0.2"
 
 springBoot {
     buildInfo {
@@ -191,8 +191,5 @@ tasks.register<Exec>("updateVueComponents") {
         } else {
             commandLine("./update-bundle.sh", version)
         }
-
-        // Warn the user to update the application.properties with the new version
-        println("Please update the application.properties with the new version: $version")
     }
 }

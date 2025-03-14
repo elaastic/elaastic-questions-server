@@ -66,6 +66,16 @@ class SequenceService(
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
 ) {
 
+    /**
+     * Get a sequence by its id.
+     *
+     * If the user is not the owner of the sequence, an [AccessDeniedException] is thrown
+     * @param user [User] the user requesting the sequence
+     * @param id [Long] the id of the sequence
+     * @param fetchInteractions [Boolean] if true, fetch the interactions of the sequence
+     *
+     * @throws [AccessDeniedException] if the user is not the owner of the sequence
+     */
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
         get(id, fetchInteractions).let {
             if (it.owner != user) throw AccessDeniedException("You are not authorized to access to this sequence")
@@ -374,7 +384,7 @@ class SequenceService(
      * @return [Int] for the reported evaluation
      * @throws IllegalStateException if the evaluation phase is not initialized
      */
-    fun getReportedEvaluation(sequence: Sequence, teacher: Boolean, isRemoved: Boolean): Int {
+    fun countReportedEvaluation(sequence: Sequence, teacher: Boolean, isRemoved: Boolean): Int {
         if (!teacher || !sequence.responseSubmissionInteractionIsInitialized()) {
             return 0
         }
@@ -394,20 +404,22 @@ class SequenceService(
         return nbDRAXOEvaluationReported + nbChatGPTEvaluationReported
     }
 
-    fun getNbReportBySequence(sequences: List<Sequence>, isTeacher: Boolean): Map<Sequence, ReportInformation> {
-        return sequences.associateWith { sequence ->
-            // Load interactions if not already loaded
-            val sequenceInteractionsFetched = if (sequence.interactions.isEmpty()) {
-                loadInteractions(sequence)
-            } else {
-                sequence
-            }
-            val nbRemovedReport = getReportedEvaluation(sequenceInteractionsFetched, isTeacher, true)
-            val nbNotRemovedReport = getReportedEvaluation(sequenceInteractionsFetched, isTeacher, false)
-            ReportInformation(
+    fun countReportBySequence(sequences: List<Sequence>, isTeacher: Boolean): Map<Sequence, ReportInformation> {
+        return sequences.associateWith { countReportBySequence(it, isTeacher) }
+    }
+
+    fun countReportBySequence(sequence: Sequence, isTeacher: Boolean): ReportInformation {
+        // Load interactions if not already loaded
+        val sequenceInteractionsFetched = if (sequence.interactions.isEmpty()) {
+            loadInteractions(sequence)
+        } else {
+            sequence
+        }
+        val nbRemovedReport = countReportedEvaluation(sequenceInteractionsFetched, isTeacher, true)
+        val nbNotRemovedReport = countReportedEvaluation(sequenceInteractionsFetched, isTeacher, false)
+        return ReportInformation(
                 nbReportTotal = nbRemovedReport + nbNotRemovedReport,
                 nbReportToModerate = nbNotRemovedReport
-            )
-        }
+        )
     }
 }

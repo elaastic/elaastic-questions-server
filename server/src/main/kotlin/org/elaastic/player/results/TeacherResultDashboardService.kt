@@ -9,6 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.togglz.core.manager.FeatureManager
 
+/**
+ * Service to build the model for the teacher result dashboard.
+ *
+ * Do not mix with the [DashboardModelFactory][org.elaastic.player.dashboard.DashboardModelFactory]
+ * which display information about the progression of learner in a sequence.
+ */
 @Service
 class TeacherResultDashboardService(
     @Autowired val responseService: ResponseService,
@@ -24,7 +30,7 @@ class TeacherResultDashboardService(
 
         val listIdResponse = responseSet[1].map { it.id } + responseSet[2].map { it.id }
 
-        val explanationHasChatGPTEvaluationMap: Map<Long, Boolean> =
+        val chatGptEvaluationResponseStore =
             chatGptEvaluationService.associateResponseToChatGPTEvaluationExistence(listIdResponse)
 
         return ResultsModelFactory.build(
@@ -35,7 +41,7 @@ class TeacherResultDashboardService(
             true,
             messageBuilder,
             peerGradings = peerGradingService.findAllByAttempt(sequence, 1),
-            explanationHasChatGPTEvaluationMap = explanationHasChatGPTEvaluationMap
+            chatGptEvaluationResponseStore = chatGptEvaluationResponseStore
         )
     }
 

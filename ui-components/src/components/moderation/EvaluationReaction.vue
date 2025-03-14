@@ -42,6 +42,13 @@ function submitReport(reportReason: string[], reportDetail: string) {
   emit('submitReport', reportReason, reportDetail)
 }
 
+function contentCanBeReported(): boolean {
+  return props.contentToReport !== undefined &&
+         props.contentToReport !== null &&
+         props.contentToReport !== '';
+}
+
+
 </script>
 
 <template>
@@ -50,7 +57,7 @@ function submitReport(reportReason: string[], reportDetail: string) {
       <UtilityGrade :evaluation-from-chat-gpt="props.evaluationFromChatGpt" :view-by-teacher="props.viewByTeacher" :selected-grade="props.selectedGrade"
                     @submitUtilityGrade="submitUtilityGrade"/>
     </v-col>
-    <v-col v-if="!props.viewByTeacher">
+    <v-col v-if="!props.viewByTeacher && contentCanBeReported()">
       <ReportModal :content-to-report="contentToReport" :display-as-dialog="false" @submitReport="submitReport"/>
     </v-col>
   </v-row>

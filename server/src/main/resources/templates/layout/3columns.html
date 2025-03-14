@@ -51,253 +51,288 @@
     <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
     <meta th:replace="${extraHeader}"/>
 
-    <style type="text/css">[v-cloak] {
-      display: none;
-    }</style>
+        <style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
 
-    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script>
+        <script id="MathJax-script" async
+                src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML"></script>
 
-    <script>
-      $(document)
-        .ready(function () {
-          $('.message .close')
-            .on('click', function () {
-              $(this)
-                .closest('.message')
-                .transition('fade')
+        <script>
+            $(function () {
+                $('.message .close').on('click', function () {
+                    $(this).closest('.message').transition('fade')
+                })
             })
-        })
-    </script>
-  </head>
+        </script>
+    </head>
 
-  <body class="elaastic three-columns" style="background-color: #f9f9f9">
+    <body class="elaastic three-columns" style="background-color: #f9f9f9">
 
     <div class="ui left vertical inverted visible sidebar labeled icon menu"
          style="background-color: #4f7691; overflow: visible !important;">
 
-      <a th:href="@{/home}"
-         href="/home"
-         class="header item"
-         style="margin-top: 1em;">
-        <img th:src="@{/images/elaastic/logos/Elaastic_pictoRVB.png}"
-             src="/images/elaastic/logos/Elaastic_pictoRVB.png"
-             style="width: 48px"
-             alt="Elaastic logo"/>
-      </a>
+        <a th:href="@{/home}"
+           href="/home"
+           class="header item"
+           style="margin-top: 1em;">
+            <img th:src="@{/images/elaastic/logos/Elaastic_pictoRVB.png}"
+                 src="/images/elaastic/logos/Elaastic_pictoRVB.png"
+                 style="width: 48px"
+                 alt="Elaastic logo"/>
+        </a>
 
-      <div class="ui divider"></div>
+        <div class="ui divider"></div>
 
-      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
-         th:href="@{/course/}"
-         href="/course"
-         class="item"
-         th:attr="data-tooltip=#{course.my.list.label}"
-         data-tooltip="My courses"
-         data-position="right center"
-         data-inverted="">
-        <i class="folder open icon"></i>
-      </a>
-
-      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
-         th:href="@{/subject}"
-         href="/subjects"
-         class="item"
-         th:attr="data-tooltip=#{subject.my.list.label}"
-         data-tooltip="My subjects"
-         data-position="right center"
-         data-inverted="">
-        <i class="book icon"></i>
-      </a>
-
-      <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
-         th:href="@{/subject/shared_index}"
-         href="/subject/shared_index"
-         class="item"
-         th:attr="data-tooltip=#{subject.shared.my.list.label}"
-         data-tooltip="Shared subjects"
-         data-position="right center"
-         data-inverted="">
-        <i class="stacked icons">
-          <i class="large users icon"></i>
-          <i class="black bottom left attached book icon"></i>
-        </i>
-      </a>
-
-      <a sec:authorize="hasAnyAuthority('STUDENT_ROLE', 'ADMIN_ROLE')"
-         th:href="@{/player}"
-         href="/player"
-         class="item"
-         th:attr="data-tooltip=#{assignment.my.list.label}"
-         data-tooltip="My assignments"
-         data-position="right center"
-         data-inverted="">
-        <i class="travel icon"></i>
-      </a>
-
-      <a sec:authorize="hasAuthority('ADMIN_ROLE')"
-         th:href="@{/ltiConsumer}"
-         href="/ltiConsumer"
-         class="item"
-         data-tooltip="LtiConsumer"
-         data-position="right center"
-         data-inverted="">
-        <i class="settings icon"></i>
-      </a>
-
-      <style>
-          .bottom-menu {
-              position: relative;
-          }
-
-          @media (min-height: 600px) {
-              .bottom-menu {
-                  position: absolute !important;
-                  bottom: 0 !important;
-              }
-          }
-      </style>
-      <div class="bottom-menu">
-        <div sec:authorize="hasAnyAuthority('TEACHER_ROLE')" th:replace="layout/components/helpMenu :: helpMenu()"></div>
-        <div th:replace="layout/components/userMenu :: userMenu(user=${user})"></div>
-      </div>
-
-      <div class="ui divider"></div>
-
-      <div class="only mobile item"
-           onclick="$('#layout-nav-modal').modal('show')"
-           th:attr="data-tooltip=#{common.table-of-content}"
+        <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+           th:href="@{/course/}"
+           href="/course"
+           class="item"
+           th:attr="data-tooltip=#{course.my.list.label}"
+           data-tooltip="My courses"
            data-position="right center"
            data-inverted="">
-        <i class="yellow browser icon"></i>
-      </div>
+            <i class="folder open icon"></i>
+        </a>
 
-      <script>
-        /**
-         * if the URL param 'hideToc' has the value 'true' then the toc will be hidden by default
-         * The TOC visibility may be controlled with show/hide button in the menubar. TOC state is stored in a cookie.
-         */
+        <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+           th:href="@{/subject}"
+           href="/subjects"
+           class="item"
+           th:attr="data-tooltip=#{subject.my.list.label}"
+           data-tooltip="My subjects"
+           data-position="right center"
+           data-inverted="">
+            <i class="book icon"></i>
+        </a>
 
-        let tableOfContent = {}
+        <a sec:authorize="hasAnyAuthority('TEACHER_ROLE', 'ADMIN_ROLE')"
+           th:href="@{/subject/shared_index}"
+           href="/subject/shared_index"
+           class="item"
+           th:attr="data-tooltip=#{subject.shared.my.list.label}"
+           data-tooltip="Shared subjects"
+           data-position="right center"
+           data-inverted="">
+            <i class="stacked icons">
+                <i class="large users icon"></i>
+                <i class="black bottom left attached book icon"></i>
+            </i>
+        </a>
 
-        $(document).ready(function () {
-          let layoutAside = $('#layout-aside')
-          let assignmentsPane = $("#assignments_container");
-          let attendeesPane = $("#attendees_container");
-          let showPaneBtn = $("#open_pane_button");
-          let hidePaneBtn = $("#close_pane_button");
-          let showAssignmentsBtn = $("#show_assignments_button");
-          let showAttendeesBtn = $("#show_attendees_button");
-          let urlParams = new URLSearchParams(location.search);
-          let currentPane = urlParams.get("currentPane");
+        <a sec:authorize="hasAnyAuthority('STUDENT_ROLE', 'ADMIN_ROLE')"
+           th:href="@{/player}"
+           href="/player"
+           class="item"
+           th:attr="data-tooltip=#{assignment.my.list.label}"
+           data-tooltip="My assignments"
+           data-position="right center"
+           data-inverted="">
+            <i class="travel icon"></i>
+        </a>
 
-          tableOfContent.showAside = function () {
-            layoutAside.show();
+        <a sec:authorize="hasAuthority('ADMIN_ROLE')"
+           th:href="@{/ltiConsumer}"
+           href="/ltiConsumer"
+           class="item"
+           data-tooltip="LtiConsumer"
+           data-position="right center"
+           data-inverted="">
+            <i class="settings icon"></i>
+        </a>
 
-            showPaneBtn.hide();
-            hidePaneBtn.show();
-            Cookies.set('currentPane', currentPane);
-
-            if (!urlParams.has("currentPane")
-                || urlParams.get("currentPane") === ''
-                || urlParams.get("currentPane") !== "assignments"
-                && urlParams.get("currentPane") !== "attendees") {
-
-              //urlParams.set("currentPane", "assignments");
-              Cookies.set("currentPane", "assignments");
+        <style>
+            .bottom-menu {
+                position: relative;
             }
 
-            //urlParams.delete('currentPane');
-            window.location.search = urlParams.toString();
-          };
+            @media (min-height: 600px) {
+                .bottom-menu {
+                    position: absolute !important;
+                    bottom: 0 !important;
+                }
+            }
+        </style>
+        <div class="bottom-menu">
+            <div sec:authorize="hasAnyAuthority('TEACHER_ROLE')"
+                 th:replace="layout/components/helpMenu :: helpMenu()"></div>
+            <div th:replace="layout/components/userMenu :: userMenu(user=${user})"></div>
+        </div>
 
-          tableOfContent.hideAside = function () {
-            layoutAside.hide();
-            showPaneBtn.show();
-            hidePaneBtn.hide();
-            //urlParams.set('currentPane', 'none');
-            Cookies.set('currentPane', 'none');
-          };
+        <div class="ui divider"></div>
 
-          tableOfContent.showAssignments = function () {
-            attendeesPane.hide();
-            assignmentsPane.show();
+        <div class="only mobile item"
+             onclick="$('#layout-nav-modal').modal('show')"
+             th:attr="data-tooltip=#{common.table-of-content}"
+             data-position="right center"
+             data-inverted="">
+            <i class="yellow browser icon"></i>
+        </div>
 
-            showAssignmentsBtn.addClass("active");
-            showAttendeesBtn.removeClass("active");
+        <script>
+            /**
+             * if the URL param 'hideToc' has the value 'true' then the toc will be hidden by default
+             * The TOC visibility may be controlled with show/hide button in the menubar. TOC state is stored in a cookie.
+             */
 
-            //urlParams.set("currentPane", "assignments");
-            Cookies.set("currentPane", "assignments");
-            window.location.search = urlParams.toString();
-          };
+            let tableOfContent = {}
 
-          tableOfContent.showAttendees = function () {
-            assignmentsPane.hide();
-            attendeesPane.show();
+            const currentPaneKey = "currentPane";
+            const assignmentPaneKey = "assignments";
+            const attendeesPaneKey = "attendees";
+            const asideIsVisibleKey = 'asideIsVisible';
 
-            showAttendeesBtn.addClass("active");
-            showAssignmentsBtn.removeClass("active");
+            $(function () {
+                let layoutAside = $('#layout-aside')
+                let assignmentsPane = $("#assignments_container");
+                let attendeesPane = $("#attendees_container");
+                let showPaneBtn = $("#open_pane_button");
+                let hidePaneBtn = $("#close_pane_button");
+                let showAssignmentsBtn = $("#show_assignments_button");
+                let showAttendeesBtn = $("#show_attendees_button");
 
-            //urlParams.set("currentPane", "attendees");
-            Cookies.set("currentPane", "attendees");
-            window.location.search = urlParams.toString();
-          };
+                function activeAssignmentPane() {
+                    assignmentsPane.show();
+                    attendeesPane.hide();
+                    showAssignmentsBtn.addClass("active");
+                    showAttendeesBtn.removeClass("active");
+                }
 
-          showPaneBtn.hide();
+                function activeAttendeesPane() {
+                    attendeesPane.show();
+                    assignmentsPane.hide();
+                    showAttendeesBtn.addClass("active");
+                    showAssignmentsBtn.removeClass("active");
+                }
 
-          if (!Cookies.get("currentPane") || Cookies.get("currentPane") === "assignments") {
-            assignmentsPane.show();
-            showAssignmentsBtn.addClass("active");
-            showAttendeesBtn.removeClass("active");
-          } else if (Cookies.get("currentPane") === "attendees") {
-            attendeesPane.show();
-            showAttendeesBtn.addClass("active");
-            showAssignmentsBtn.removeClass("active");
-          } else if (Cookies.get("currentPane") === "none") {
-            layoutAside.hide();
-            showPaneBtn.show();
-            hidePaneBtn.hide();
-          }
+                function getCurrentPane() {
+                    let currentPane = Cookies.get(currentPaneKey);
+                    if (currentPane === assignmentPaneKey || currentPane === attendeesPaneKey) {
+                        return currentPane;
+                    } else {
+                        return assignmentPaneKey;
+                    }
+                }
 
-        })
-      </script>
+                function setCurrentPane(pane) {
+                    if (pane === assignmentPaneKey || pane === attendeesPaneKey) {
+                        Cookies.set(currentPaneKey, pane);
+                    } else {
+                        // By default, the assignments pane is shown
+                        Cookies.set(currentPaneKey, assignmentPaneKey);
+                    }
+                }
 
-      <div th:replace="${pageSpecificMenu}"></div>
+                function setAsideIsVisible(asideIsVisible) {
+                    if (asideIsVisible || !asideIsVisible) {
+                        Cookies.set(asideIsVisibleKey, asideIsVisible);
+                    } else {
+                        // By default, the aside is shown
+                        Cookies.set(asideIsVisibleKey, true);
+                    }
+                }
+
+                function getAsideIsVisible() {
+                    let asideIsVisible = Cookies.get(asideIsVisibleKey);
+                    return asideIsVisible === 'true';
+                }
+
+                function updateAsideVisibility(isVisible) {
+                    if (isVisible) {
+                        layoutAside.show();
+                        showPaneBtn.hide();
+                        hidePaneBtn.show();
+                    } else {
+                        layoutAside.hide();
+                        showPaneBtn.show();
+                        hidePaneBtn.hide();
+                    }
+                }
+
+                tableOfContent.showAside = function () {
+                    updateAsideVisibility(true);
+                    setAsideIsVisible(true);
+
+                    let currentPane = getCurrentPane();
+                    if (currentPane === assignmentPaneKey) {
+                        activeAssignmentPane();
+                    } else if (currentPane === attendeesPaneKey) {
+                        activeAttendeesPane();
+                    }
+                };
+
+                tableOfContent.hideAside = function () {
+                    updateAsideVisibility(false);
+                    setAsideIsVisible(false);
+                };
+
+                tableOfContent.showAssignments = function () {
+                    setAsideIsVisible(true);
+                    setCurrentPane(assignmentPaneKey);
+                    activeAssignmentPane();
+                };
+
+                tableOfContent.showAttendees = function () {
+                    setAsideIsVisible(true);
+                    setCurrentPane(attendeesPaneKey);
+                    activeAttendeesPane();
+                };
+
+                // Initialize the visibility of the different panes
+                if (getAsideIsVisible()) {
+                    updateAsideVisibility(true);
+
+                    let currentPane = getCurrentPane();
+                    console.log("currentPane: " + currentPane);
+                    if (currentPane === assignmentPaneKey) {
+                        activeAssignmentPane();
+                    } else if (currentPane === attendeesPaneKey) {
+                        activeAttendeesPane();
+                    }
+                } else {
+                    console.log("aside is hidden");
+                    updateAsideVisibility(false);
+                }
+            })
+        </script>
+
+        <div th:replace="${pageSpecificMenu}"></div>
     </div>
 
     <div class="wrap" style="margin-left: 90px;">
-      <main>
-        <aside id="layout-aside" th:replace="${aside}">
-        </aside>
+        <main>
+            <aside id="layout-aside" th:replace="${aside}">
+            </aside>
 
-        <article style="display: flex; column-gap: 30px;">
+            <article style="display: flex; column-gap: 30px;">
 
-          <section id="pane_actions"
-                   style="display: flex; flex-direction: column; row-gap: 20px; flex: none;">
+                <section id="pane_actions"
+                         style="display: flex; flex-direction: column; row-gap: 20px; flex: none;">
 
-            <button id="open_pane_button"
-                    class="ui button"
-                    style="margin-bottom: 20px;"
-                    onclick="tableOfContent.showAside()">
+                    <button id="open_pane_button"
+                            class="ui button"
+                            style="margin-bottom: 20px;"
+                            onclick="tableOfContent.showAside()">
 
               <span th:text="#{dashboard.open}">
                 open_pane_button_label</span>
-              <i class="icon angle double right"></i>
-            </button>
-          </section>
+                        <i class="icon angle double right"></i>
+                    </button>
+                </section>
 
-          <div class="ui container">
-            <div th:replace="${content}"></div>
-          </div>
-        </article>
-      </main>
+                <div class="ui container">
+                    <div th:replace="${content}"></div>
+                </div>
+            </article>
+        </main>
 
     </div>
 
     <div id="layout-nav-modal" class="ui modal">
-      <div class="content">
-        <div th:replace="${modalAside}"></div>
-      </div>
+        <div class="content">
+            <div th:replace="${modalAside}"></div>
+        </div>
     </div>
 
-  </body>
+    </body>
 </html>

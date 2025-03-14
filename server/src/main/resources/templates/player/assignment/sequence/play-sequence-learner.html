@@ -1,0 +1,57 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!--/* @thymesVar id="sequenceModel" type="org.elaastic.player.sequence.SequenceModel" */-->
+<!--/* sequenceModel is given by the controller with this url `/sequence/{sequenceId}`*/-->
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html"
+      th:replace="layout/iframeContent.html :: iframeContent(title=~{::title}, content=~{::body})"
+>
+    <!--/* @thymesVar id="sequenceProgressionModel" type="org.elaastic.player.sequence.SequenceProgressionModel" */-->
+    <!--/* @thymesVar id="activeInteractionModel" type="org.elaastic.player.activeinteraction.LearnerActiveInteractionModel" */-->
+    <head>
+        <title th:text="|elaastic : Sequence ${sequenceModel.sequenceId}|">Page title</title>
+    </head>
+
+    <body th:with="sequenceProgressionModel=${sequenceModel.sequenceProgressionModel}, activeInteractionModel=${sequenceModel.activeInteractionModel}">
+    <script th:inline="javascript">
+        elaastic.draxo.initialize(/*[[@{/peer-grading/draxo}]]*/);
+    </script>
+
+    <!--/* The sequence's interactions as steps */-->
+    <div th:replace="player/assignment/sequence/components/steps/_steps.html :: steps(${sequenceProgressionModel.stepsModel}, ~{})"></div>
+
+    <!--/* The sequence's information */-->
+    <div th:replace="player/assignment/sequence/components/sequence-info/_sequenceInfo.html :: sequenceInfo(${sequenceProgressionModel.sequenceInfoModel},${sequenceModel.sequenceId})"></div>
+
+    <!--/* The statement of the sequence */-->
+    <div th:replace="player/assignment/sequence/components/statement/_statement.html :: statement(${activeInteractionModel.statementInfoPanelModel})"></div>
+
+    <!--/* Each phase of the sequence */-->
+    <th:block th:each="phase : ${activeInteractionModel.phaseList}">
+        <th:block th:if="${phase.isVisible()}">
+            <div th:replace="|${phase.getPlayerTemplate().fileName}| :: ${phase.getPlayerTemplate().fragmentName}(${phase.viewModel})"></div>
+        </th:block>
+    </th:block>
+
+    <!--/* The auto-reload script */-->
+    <th:block
+            th:replace="player/assignment/sequence/components/_auto-reload.html :: auto-reload(${sequenceModel.sequenceId})"></th:block>
+    </body>
+</html>

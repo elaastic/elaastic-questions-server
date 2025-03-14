@@ -1,9 +1,19 @@
 package org.elaastic.test
 
+import org.elaastic.activity.evaluation.peergrading.PeerGrading
+import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
+import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGrading
+import org.elaastic.activity.evaluation.peergrading.draxo.criteria.Criteria
+import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.ReadyForConsolidation
@@ -11,13 +21,15 @@ import org.elaastic.material.instructional.course.Course
 import org.elaastic.material.instructional.course.CourseService
 import org.elaastic.material.instructional.question.*
 import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.material.instructional.statement.StatementRepository
+import org.elaastic.material.instructional.statement.StatementService
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.moderation.ReportCandidate
+import org.elaastic.moderation.ReportReason
+import org.elaastic.moderation.UtilityGrade
 import org.elaastic.player.PlayerController
-import org.elaastic.sequence.ExecutionContext
-import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.SequenceService
-import org.elaastic.sequence.State
+import org.elaastic.sequence.*
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.interpreter.command.*
@@ -26,6 +38,7 @@ import org.elaastic.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.random.Random
 
@@ -43,6 +56,12 @@ class FunctionalTestingService(
     @Autowired val responseService: ResponseService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val interactionService: InteractionService,
+    @Autowired val statementService: StatementService,
+    @Autowired val statementRepository: StatementRepository,
+    @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
+    @Autowired val peerGradingRepository: PeerGradingRepository,
+    @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
+    @Autowired val sequenceRepository: SequenceRepository,
 ) {
 
     fun createCourse(user: User, title: String = "Default course title") =
@@ -97,14 +116,15 @@ class FunctionalTestingService(
     fun addQuestion(subject: Subject, statement: Statement) =
         subjectService.addStatement(subject, statement)
 
-    fun addQuestion(subject: Subject, questionType: QuestionType) =
+    fun addQuestion(subject: Subject, questionType: QuestionType, addFakeResponse: Boolean = true) =
         subject.statements.size.let { questionIndex ->
             addQuestion(
                 subject,
                 generateStatement(
                     owner = subject.owner,
                     questionType = questionType,
-                    questionIndex = questionIndex
+                    questionIndex = questionIndex,
+                    addFakeResponse = addFakeResponse
                 )
             )
 
@@ -113,11 +133,13 @@ class FunctionalTestingService(
     fun generateStatement(
         owner: User,
         questionType: QuestionType,
-        questionIndex: Int
+        questionIndex: Int,
+        addFakeResponse: Boolean = true,
     ): Statement {
         val title = "Question ${questionIndex + 1} - $questionType"
         val content = "Content of question ${questionIndex + 1}"
-        val expectedExplanation = "Expected answer to question ${questionIndex + 1}"
+        // The expected explanation will become a fake response
+        val expectedExplanation = if (addFakeResponse) "Expected answer to question ${questionIndex + 1}" else null
 
         return Statement(
             title = title,
@@ -144,42 +166,47 @@ class FunctionalTestingService(
         )
     }
 
-    /**
-     * Generate a subject with questions and assignments ready to practice
-     */
+    /** Generate a subject with questions and assignments ready to practice */
     fun generateSubjectWithQuestionsAndAssignmentsReadyToPratice(user: User) =
         generateSubjectWithQuestionsAndAssignments(user, ReadyForConsolidation.AfterTeachings)
 
-    fun generateSubjectWithQuestionsAndAssignments(user: User, praticeStatus: ReadyForConsolidation = ReadyForConsolidation.NotAtAll) =
+    fun generateSubjectWithQuestionsAndAssignments(
+        user: User,
+        praticeStatus: ReadyForConsolidation = ReadyForConsolidation.NotAtAll,
+        addFakeResponse: Boolean = true,
+    ) =
         createSubject(user, "Test subject ${LocalDate.now()}")
             // Questions
             .also { subject ->
-                addQuestion(subject, QuestionType.OpenEnded)
-                addQuestion(subject, QuestionType.ExclusiveChoice)
-                addQuestion(subject, QuestionType.MultipleChoice)
+                addQuestion(subject, QuestionType.OpenEnded, addFakeResponse = addFakeResponse)
+                addQuestion(subject, QuestionType.ExclusiveChoice, addFakeResponse = addFakeResponse)
+                addQuestion(subject, QuestionType.MultipleChoice, addFakeResponse = addFakeResponse)
             }
             // Assignments
             .also { subject ->
                 listOf("Face-to-face", "Blended", "Distant").forEach {
                     when (praticeStatus) {
                         ReadyForConsolidation.NotAtAll -> createAssignment(subject, "$it Test Assignment")
-                        ReadyForConsolidation.Immediately -> createAssignmentReadyImmediatelyForPractice(subject, "$it Test Assignment")
-                        ReadyForConsolidation.AfterTeachings -> createAssignmentReadyToPractice(subject, "$it Test Assignment")
+                        ReadyForConsolidation.Immediately -> createAssignmentReadyImmediatelyForPractice(
+                            subject,
+                            "$it Test Assignment"
+                        )
+
+                        ReadyForConsolidation.AfterTeachings -> createAssignmentReadyToPractice(
+                            subject,
+                            "$it Test Assignment"
+                        )
                     }
                 }
             }
 
-    /**
-     * Generate an Assignment ready to use
-     */
+    /** Generate an Assignment ready to use */
     fun generateAssignement(user: User): Assignment {
         val subject = generateSubjectWithQuestionsAndAssignments(user)
         return subject.assignments.first()
     }
 
-    /**
-     * Generate a sequence ready to use
-     */
+    /** Generate a sequence ready to use */
     fun generateSequence(user: User): Sequence {
         val assignment = generateAssignement(user)
         return assignment.sequences.first()
@@ -197,7 +224,8 @@ class FunctionalTestingService(
             executionContext,
             studentsProvideExplanation,
             nbResponseToEvaluate,
-            EvaluationPhaseConfig.ALL_AT_ONCE,
+            sequence.evaluationPhaseConfig,
+            sequence.chatGptEvaluationEnabled
         )
 
     fun submitResponse(
@@ -327,19 +355,14 @@ class FunctionalTestingService(
             interactionService.startNext(sequence.owner, activeInteraction)
         }
 
-    /**
-     * Stop the active interaction of the sequence
-     */
+    /** Stop the active interaction of the sequence */
     fun stopPhase(sequence: Sequence) =
         sequence.activeInteraction.let { activeInteraction ->
             checkNotNull(activeInteraction) { THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION }
             interactionService.stop(sequence.owner, activeInteraction)
         }
 
-    /**
-     * Start the next interaction of the sequence
-     * The active interaction must be stopped
-     */
+    /** Start the next interaction of the sequence The active interaction must be stopped */
     fun startNextPhase(sequence: Sequence) =
         sequence.activeInteraction.let { activeInteraction ->
             checkNotNull(activeInteraction) { THE_SEQUENCE_HAS_NO_ACTIVE_INTERACTION }
@@ -362,10 +385,7 @@ class FunctionalTestingService(
         }
 
 
-    /**
-     * Generate a user choice depending on the question specification & the
-     * response must be correct or not
-     */
+    /** Generate a user choice depending on the question specification & the response must be correct or not */
     private fun generateExclusiveChoiceResponse(
         choiceSpecification: ExclusiveChoiceSpecification,
         correct: Boolean,
@@ -382,10 +402,7 @@ class FunctionalTestingService(
         )
     }
 
-    /**
-     * Generate a user choice depending on the question specification & the
-     * response must be correct or not
-     */
+    /** Generate a user choice depending on the question specification & the response must be correct or not */
     private fun generateMultipleChoiceResponse(
         choiceSpecification: MultipleChoiceSpecification,
         correct: Boolean,
@@ -472,5 +489,166 @@ class FunctionalTestingService(
 
     fun unpublishResults(sequence: Sequence) {
         sequenceService.unpublishResults(sequence.owner, sequence)
+    }
+
+    /**
+     * Create a sequence ready to use.
+     *
+     * The sequence is saved in the database
+     *
+     * @param teacher the teacher who owns the sequence
+     */
+    fun createSequence(teacher: User, addFakeResponse: Boolean = false): Sequence {
+        return generateSubjectWithQuestionsAndAssignments(
+            teacher,
+            addFakeResponse = addFakeResponse
+        ).assignments.first().sequences.first()
+    }
+
+    /**
+     * Create a response for the sequence. The sequence must be started and have a response submission interaction The
+     * response is randomly generated
+     *
+     * The response is saved in the database
+     *
+     * @param sequence the sequence to create the response for
+     * @param learner the learner who submits the response
+     */
+    fun createResponse(sequence: Sequence, learner: User): Response {
+        check(sequence.hasStarted()) { "The sequence must be started" }
+        check(sequence.getResponseSubmissionInteractionOrNull() != null) { "The sequence must have a response submission interaction" }
+
+        return submitResponse(
+            Phase.PHASE_1,
+            learner,
+            sequence,
+            Random.nextBoolean(),
+            ConfidenceDegree.values().random(),
+            "Random explanation on ${LocalDate.now()} by ${learner.username}"
+        )
+    }
+
+    /**
+     * Create a ChatGPT evaluation for a response
+     *
+     * The ChatGPT evaluation is saved in the database
+     *
+     * @param response the response to evaluate
+     * @param annotation the annotation of the evaluation
+     * @param grade the grade of the evaluation
+     * @param status the status of the evaluation
+     * @param reportReasons the report reasons of the evaluation
+     * @param reportComment the report comment of the evaluation
+     * @param utilityGrade the utility grade of the evaluation
+     * @param hiddenByTeacher the hidden by teacher status of the evaluation
+     * @param removedByTeacher the removed by teacher status of the evaluation
+     */
+    fun createChatGPTEvaluation(
+        response: Response,
+        annotation: String = "annotation",
+        grade: BigDecimal? = null,
+        status: ChatGptEvaluationStatus = ChatGptEvaluationStatus.DONE,
+        reportReasons: String? = null,
+        reportComment: String? = null,
+        utilityGrade: UtilityGrade? = null,
+        hiddenByTeacher: Boolean = false,
+        removedByTeacher: Boolean = false,
+    ): ChatGptEvaluation {
+        val chatGptEvaluation = ChatGptEvaluation(
+            grade,
+            annotation,
+            status.name,
+            reportReasons,
+            reportComment,
+            utilityGrade,
+            hiddenByTeacher,
+            removedByTeacher,
+            response,
+        )
+
+        return chatGptEvaluationRepository.save(chatGptEvaluation)
+    }
+
+    /**
+     * Create a DRAXO evaluation for a response The DRAXO evaluation is saved in the database
+     *
+     * @param response the response to evaluate
+     * @param grader the user who evaluates the response
+     * @param draxoEvaluation the DRAXO evaluation to give. By default, the evaluation is a D with a NO option and an
+     *    explanation
+     * @param lastSequencePeerGrading the last sequence peer grading status
+     */
+    fun createDRAXOEvaluation(
+        response: Response,
+        grader: User,
+        draxoEvaluation: DraxoEvaluation = DraxoEvaluation().addEvaluation(Criteria.D, OptionId.NO, "explanation"),
+        lastSequencePeerGrading: Boolean = false
+    ): DraxoPeerGrading {
+        DraxoPeerGrading(
+            grader,
+            response,
+            draxoEvaluation,
+            lastSequencePeerGrading
+        ).let {
+            return peerGradingRepository.save(it)
+        }
+    }
+
+    fun reportReportCandidate(
+        reporter: User,
+        reportCandidate: ReportCandidate,
+        reportReasons: List<ReportReason> = listOf(ReportReason.INCOHERENCE),
+        reportComment: String? = null
+    ) {
+        when (reportCandidate) {
+            is PeerGrading -> peerGradingService.updateReport(
+                reporter,
+                reportCandidate,
+                reportReasons.map { it.name },
+                reportComment
+            )
+
+            is ChatGptEvaluation -> chatGptEvaluationService.reportEvaluation(
+                reportCandidate,
+                reportReasons.map { it.name },
+                reportComment
+            )
+        }
+    }
+
+    /**
+     * Create a sequence
+     *
+     * The sequence is saved in the database
+     *
+     * @param teacher the teacher who owns the sequence
+     * @param executionContext the execution context of the sequence
+     * @param evaluationPhaseConfig the evaluation phase config of the sequence
+     * @param chatGptEvaluationEnabled the ChatGPT evaluation enabled status of the sequence
+     */
+    fun createSequence(
+        teacher: User,
+        evaluationPhaseConfig: EvaluationPhaseConfig,
+        executionContext: ExecutionContext = ExecutionContext.FaceToFace,
+        chatGptEvaluationEnabled: Boolean = false
+    ): Sequence {
+        val subject: Subject = createSubject(teacher)
+        addQuestion(subject, generateStatement(
+            owner = teacher,
+            questionType = QuestionType.OpenEnded,
+            questionIndex = 0
+        ))
+        val assignment: Assignment = createAssignment(subject)
+
+        Sequence(
+            teacher,
+            statement = subject.statements.first(),
+            assignment = assignment,
+            executionContext = executionContext,
+            evaluationPhaseConfig = evaluationPhaseConfig,
+            chatGptEvaluationEnabled = chatGptEvaluationEnabled,
+        ).let {
+            return sequenceRepository.save(it)
+        }
     }
 }

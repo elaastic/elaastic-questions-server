@@ -276,22 +276,22 @@ class SequenceMonitoringModelTest(
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
-                    1,
-                    "Alice",
+                    2,
+                    "Bob",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
                     LearnerStateOnPhase.ACTIVITY_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
-                    1,
-                    "Alice",
+                    3,
+                    "Bob",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // 1 IN_PROGRESS
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
-                    1,
-                    "Alice",
+                    4,
+                    "Claire",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 2 IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
@@ -300,11 +300,14 @@ class SequenceMonitoringModelTest(
         }.tWhen("I set the learners") {
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
-            val learnersSorted =
-                learnersMonitoringModel.learners.map { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) }
+            assertEquals(
+                listOf(4L,3L,1L,2L),
+                learnersMonitoringModel.learners.map { it.userId },
+                "This is the expected order of the learners"
+            )
             assertEquals(
                 listOf(2, 1, 0, 0),
-                learnersSorted,
+                learnersMonitoringModel.learners.map { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) },
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
             )
         }
@@ -328,15 +331,15 @@ class SequenceMonitoringModelTest(
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
-                    1,
-                    "Alice",
+                    2,
+                    "Bob",
                     LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
-                    1,
-                    "Alice",
+                    3,
+                    "Claire",
                     LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     // IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
@@ -346,13 +349,15 @@ class SequenceMonitoringModelTest(
         }.tWhen("I set the learners") {
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
-            val learnersSorted = learnersMonitoringModel.learners.map {
-                it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS)
-            }
             assertEquals(
                 listOf(2, 1, 0),
-                learnersSorted,
+                learnersMonitoringModel.learners.map {it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS)},
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
+            )
+            assertEquals(
+                listOf(3L,2L,1L),
+                learnersMonitoringModel.learners.map { it.userId },
+                "This is the expected order of the learners"
             )
         }
     }

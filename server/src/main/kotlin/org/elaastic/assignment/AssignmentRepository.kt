@@ -28,7 +28,7 @@ interface AssignmentRepository : JpaRepository<Assignment, Long> {
 
 
     @Query("SELECT DISTINCT a FROM Assignment a LEFT JOIN FETCH a.sequences s " +
-            "WHERE a.lastUpdated > :since OR s.lastUpdated > :since")
+            "WHERE :since < a.lastUpdated OR :since < s.lastUpdated")
     fun findAllAssignmentUpdatedSince(since: Date): List<Assignment>
 
     @Modifying

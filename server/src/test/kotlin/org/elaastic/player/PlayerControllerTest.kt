@@ -18,9 +18,11 @@
 
 package org.elaastic.player
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.atLeastOnce
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import io.mockk.every
-import io.mockk.mockkClass
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
@@ -33,19 +35,18 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.player.results.TeacherResultDashboardService
+import org.elaastic.player.sequence.SequenceModelFactory
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.security.TestSecurityConfig
-import org.elaastic.test.FunctionalTestingService
-import org.elaastic.test.IntegrationTestingService
-import org.elaastic.sequence.LearnerSequence
-import org.elaastic.sequence.LearnerSequenceService
-import org.elaastic.sequence.SequenceService
-import org.elaastic.sequence.State
+import org.elaastic.sequence.*
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.LearnerPhaseService
+import org.elaastic.test.FunctionalTestingService
+import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.AnonymousUserService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
@@ -108,9 +109,6 @@ internal class PlayerControllerTest(
     lateinit var featureManager: FeatureManager
 
     @MockBean
-    lateinit var teacherResultDashboardService: TeacherResultDashboardService
-
-    @MockBean
     lateinit var chatGptEvaluationService: ChatGptEvaluationService
 
     @MockBean
@@ -128,6 +126,13 @@ internal class PlayerControllerTest(
     @MockBean
     lateinit var draxoPeerGradingService: DraxoPeerGradingService
 
+    @MockBean
+    lateinit var sequenceModelFactory: SequenceModelFactory
+
+    @MockBean
+    lateinit var dashboardModelFactory: DashboardModelFactory
+
+
     @Test
     fun `consultPlayer is called whenever a student accesses to the player`() {
 
@@ -143,7 +148,8 @@ internal class PlayerControllerTest(
             audience = "Any",
             acceptAnonymousUsers = true
         )
-        val sequence = org.elaastic.sequence.Sequence(
+        assignment.id = fakeAssignmentId
+        val sequence = Sequence(
             owner = teacher,
             assignment = assignment,
             statement = Statement(teacher, "Title", "content", questionType = QuestionType.OpenEnded),
@@ -163,12 +169,12 @@ internal class PlayerControllerTest(
         sequence.activeInteraction = interaction
 
         whenever(assignmentService.get(fakeAssignmentId, true)).thenReturn(assignment)
-        whenever(sequenceService.get(sequence.id!!, fetchInteractions = true)).thenReturn(sequence)
+        whenever(sequenceService.loadInteractions(sequence)).thenReturn(sequence)
         whenever(learnerSequenceService.getLearnerSequence(user, sequence)).thenReturn(learnerSequence)
 
-        mockkObject(PlayerModelFactory)                                             // Dernier any() ajouté
-        every { PlayerModelFactory.buildForLearner(any(), any(), any(), any(), any()) } returns
-                mockkClass(LearnerPlayerModel::class, relaxed = true)
+        val learnerPlayerModel = PlayerModelFactory.buildForLearner(sequence, 1)
+        mockkObject(PlayerModelFactory)
+        every { PlayerModelFactory.buildForLearner(any(), any()) } returns learnerPlayerModel
 
         mockMvc.perform(
             MockMvcRequestBuilders.get("/player/assignment/{fakeAssignmentId}/play", fakeAssignmentId)

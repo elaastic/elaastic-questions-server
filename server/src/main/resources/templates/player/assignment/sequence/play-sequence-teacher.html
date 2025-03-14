@@ -1,0 +1,56 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!--/* @thymesVar id="sequenceModel" type="org.elaastic.player.sequence.TeacherSequenceModel" */-->
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html"
+      th:replace="layout/iframeContent.html :: iframeContent(title=~{::title}, content=~{::body})"
+>
+    <!--/* @thymesVar id="sequenceProgressionModel" type="org.elaastic.player.sequence.SequenceOrchestrationModel" */-->
+    <!--/* @thymesVar id="activeInteractionModel" type="org.elaastic.player.activeinteraction.ActiveInteractionModel" */-->
+    <head>
+        <title th:text="${sequenceModel.activeInteractionModel.statementInfoPanelModel.title}">Page title</title>
+    </head>
+
+    <body th:with="sequenceProgressionModel=${sequenceModel.sequenceProgressionModel}, activeInteractionModel=${sequenceModel.activeInteractionModel}">
+    <script th:inline="javascript">
+        elaastic.draxo.initialize(/*[[@{/peer-grading/draxo}]]*/);
+    </script>
+    <!--/* The sequence's interactions as steps */-->
+    <div th:replace="player/assignment/sequence/components/steps/_steps.html :: steps(${sequenceProgressionModel.stepsModel}, ${sequenceProgressionModel.sequenceStatistics})"></div>
+
+    <!--/* The sequence's management via button */-->
+    <div th:replace="player/assignment/sequence/components/command/_command.html :: command(${sequenceProgressionModel.commandModel})"></div>
+
+    <!--/* The sequence's information */-->
+    <div th:replace="player/assignment/sequence/components/sequence-info/_sequenceInfo.html :: sequenceInfo(${sequenceProgressionModel.sequenceInfoModel},${sequenceModel.sequenceId})"></div>
+
+    <!--/* Recommandation given to the teacher */-->
+    <div th:if="${sequenceModel.showResults and sequenceModel.resultsModel.recommendationModel != null}"
+         th:insert="player/assignment/sequence/components/_recommendation.html :: recommendation(${sequenceModel.resultsModel},${sequenceModel.sequenceId})"></div>
+
+    <!--/* The statement of the sequence */-->
+    <div th:replace="player/assignment/sequence/components/statement/_statement.html :: statement(${activeInteractionModel.statementInfoPanelModel})"></div>
+
+    <!--/* The results of the sequence */-->
+    <div th:if="${sequenceModel.showResults}" th:remove="tag">
+        <div th:replace="player/assignment/sequence/components/results/_results.html :: results(${sequenceModel.resultsModel}, true)"></div>
+    </div>
+    </body>
+</html>
