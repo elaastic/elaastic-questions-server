@@ -30,9 +30,12 @@ docker-compose up -d [<service>]
 | elaastic-questions-db-test-8 | mySQL 8 Database used for running integration tests             |
 | cas                          | a CAS server just for testing CAS integration in dev mode       |
 | cas-2                        | another CAS server for testing multiple CAS servers integration |
+| authentification             | a keycloak server to connect with OpenID Connect                |
 
-Running a database is mandatory.
-CAS servers is optional. It allows to test CAS authentication without to have to deploy a CAS server manually.
+Running a database is mandatory.\
+Running the authentification server is mandatory.\
+CAS servers are optional.
+It allows testing CAS authentication without having to deploy a CAS server manually.
 
 ### Launching the application
 
@@ -105,8 +108,8 @@ npm run build
 ```
 
 The built bundles will be available at `./ui-components/dist`.
-Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
-in order to use it.
+
+You can follow the [README.md](ui-components/README.md) in the `ui-components` folder for more information on how to use in Elaastic.
 
 ## Licence
 

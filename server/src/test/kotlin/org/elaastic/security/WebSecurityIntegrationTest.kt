@@ -24,15 +24,9 @@ import java.util.Base64
 @AutoConfigureMockMvc
 internal class WebSecurityIntegrationTest(
     @Autowired val mockMvc: MockMvc,
-
-    @LocalServerPort
-    val port: Int,
-
-    @Autowired
-    val restTemplate: TestRestTemplate,
-
-    @Autowired
-    val messageSource: MessageSource,
+    @LocalServerPort val port: Int,
+    @Autowired val restTemplate: TestRestTemplate,
+    @Autowired val messageSource: MessageSource,
 ) {
 
     @Test
@@ -135,7 +129,7 @@ internal class WebSecurityIntegrationTest(
     @Test
     fun `An authenticated user cannot access the REST API`() {
         val loginUrl = "http://localhost:$port/login"
-        val apiUrl = "http://localhost:$port"+ RestPracticeSubjectController.PRACTICE_API_URL
+        val apiUrl = "http://localhost:$port" + RestPracticeSubjectController.PRACTICE_API_URL
 
         // Authentication
         val loginHeaders = HttpHeaders()

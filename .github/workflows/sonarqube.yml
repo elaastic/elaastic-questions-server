@@ -21,8 +21,8 @@ jobs:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available
 
-      - name: Run Elaastic DB test
-        run: docker compose up -d  elaastic-questions-db-test-8
+      - name: Setup test environment
+        run: docker compose up -d  elaastic-questions-db-test-8 authentification
 
       - name: Build and analyze
         env:
