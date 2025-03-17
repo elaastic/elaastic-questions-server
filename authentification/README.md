@@ -11,14 +11,14 @@ See `.env.template`.
 
 This folder contains the configuration files for the realms in Keycloak.
 
-For now the single configuration file is `baeldung-keycloak-realm.json`.
+For now the single configuration file is `elaastic-keycloak-realm.json`.
 
-It describes the realm `baeldung-keycloak` with the following configuration:
+It describes the realm `elaastic-keycloak` with the following configuration:
 - Two users:
   - username: `brice` | password: `secret` | role: `NICE`
   - username: `igor` | password: `secret`
 - A client : 
-  - name: `baeldung-keycloak-confidential`
+  - name: `elaastic`
 
 
 ## `/themes`

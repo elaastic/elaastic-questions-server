@@ -1,6 +1,6 @@
 {
     "id": "d7cfb752-7e07-4e88-a655-704b68b934cd",
-    "realm": "baeldung-keycloak",
+    "realm": "elaastic-keycloak",
     "notBefore": 0,
     "defaultSignatureAlgorithm": "RS256",
     "revokeRefreshToken": false,
@@ -57,7 +57,7 @@
             },
             {
                 "id": "a49b22c4-1aa5-4621-a645-8bcfd5118dee",
-                "name": "default-roles-baeldung-keycloak",
+                "name": "default-roles-elaastic-keycloak",
                 "description": "${role_default-roles}",
                 "composite": true,
                 "composites": {
@@ -310,7 +310,7 @@
             ],
             "security-admin-console": [],
             "admin-cli": [],
-            "baeldung-keycloak-confidential": [],
+            "elaastic": [],
             "account-console": [],
             "broker": [
                 {
@@ -416,7 +416,7 @@
     "groups": [],
     "defaultRole": {
         "id": "a49b22c4-1aa5-4621-a645-8bcfd5118dee",
-        "name": "default-roles-baeldung-keycloak",
+        "name": "default-roles-elaastic-keycloak",
         "description": "${role_default-roles}",
         "composite": true,
         "clientRole": false,
@@ -469,8 +469,8 @@
             "id": "886efb4c-5018-49a5-9855-91e320d1f1c4",
             "username": "brice",
             "firstName": "Brice",
-            "lastName": "Baeldung",
-            "email": "brice@baeldung.com",
+            "lastName": "Demo",
+            "email": "brice@elaastic.irit.fr",
             "emailVerified": true,
             "createdTimestamp": 1721506081830,
             "enabled": true,
@@ -488,7 +488,7 @@
             "disableableCredentialTypes": [],
             "requiredActions": [],
             "realmRoles": [
-                "default-roles-baeldung-keycloak",
+                "default-roles-elaastic-keycloak",
                 "NICE"
             ],
             "notBefore": 0,
@@ -498,8 +498,8 @@
             "id": "34d88f42-15c8-4f47-ae58-ec7f1d7c2342",
             "username": "igor",
             "firstName": "Igor",
-            "lastName": "Baeldung",
-            "email": "igor@baeldung.com",
+            "lastName": "Demo",
+            "email": "igor@elaastic.irit.fr",
             "emailVerified": true,
             "createdTimestamp": 1721510598928,
             "enabled": true,
@@ -516,7 +516,7 @@
             "disableableCredentialTypes": [],
             "requiredActions": [],
             "realmRoles": [
-                "default-roles-baeldung-keycloak"
+                "default-roles-elaastic-keycloak"
             ],
             "notBefore": 0,
             "groups": []
@@ -547,13 +547,13 @@
             "clientId": "account",
             "name": "${client_account}",
             "rootUrl": "${authBaseUrl}",
-            "baseUrl": "/realms/baeldung-keycloak/account/",
+            "baseUrl": "/realms/elaastic-keycloak/account/",
             "surrogateAuthRequired": false,
             "enabled": true,
             "alwaysDisplayInConsole": false,
             "clientAuthenticatorType": "client-secret",
             "redirectUris": [
-                "/realms/baeldung-keycloak/account/*"
+                "/realms/elaastic-keycloak/account/*"
             ],
             "webOrigins": [],
             "notBefore": 0,
@@ -591,13 +591,13 @@
             "clientId": "account-console",
             "name": "${client_account-console}",
             "rootUrl": "${authBaseUrl}",
-            "baseUrl": "/realms/baeldung-keycloak/account/",
+            "baseUrl": "/realms/elaastic-keycloak/account/",
             "surrogateAuthRequired": false,
             "enabled": true,
             "alwaysDisplayInConsole": false,
             "clientAuthenticatorType": "client-secret",
             "redirectUris": [
-                "/realms/baeldung-keycloak/account/*"
+                "/realms/elaastic-keycloak/account/*"
             ],
             "webOrigins": [],
             "notBefore": 0,
@@ -681,7 +681,7 @@
         },
         {
             "id": "aa3ee3ab-3a36-41ff-b874-e0a7b6d8fec2",
-            "clientId": "baeldung-keycloak-confidential",
+            "clientId": "elaastic",
             "name": "",
             "description": "",
             "rootUrl": "http://localhost:8081",
@@ -836,13 +836,13 @@
             "clientId": "security-admin-console",
             "name": "${client_security-admin-console}",
             "rootUrl": "${authAdminUrl}",
-            "baseUrl": "/admin/baeldung-keycloak/console/",
+            "baseUrl": "/admin/elaastic-keycloak/console/",
             "surrogateAuthRequired": false,
             "enabled": true,
             "alwaysDisplayInConsole": false,
             "clientAuthenticatorType": "client-secret",
             "redirectUris": [
-                "/admin/baeldung-keycloak/console/*"
+                "/admin/elaastic-keycloak/console/*"
             ],
             "webOrigins": [
                 "+"
