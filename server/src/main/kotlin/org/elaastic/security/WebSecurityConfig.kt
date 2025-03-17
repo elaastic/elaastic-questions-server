@@ -18,6 +18,7 @@
 
 package org.elaastic.security
 
+import org.elaastic.auth.ElaasticLogoutSuccessHandler
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
 import org.elaastic.auth.oauth.ElaasticOidcUserService
 import org.elaastic.user.Role
@@ -40,11 +41,14 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.cli
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
+import java.net.URI
 
 
 @Configuration
@@ -55,6 +59,7 @@ class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val encoder: PasswordEncoder,
     @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
+    @Autowired val clientRegistrationRepository: ClientRegistrationRepository,
     @Value("\${elaastic.questions.url}") val elaasticUrl: String,
     @Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
@@ -99,7 +104,7 @@ class WebSecurityConfig(
     fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
 
-            if(elaasticOidcEnabled) {
+            if (elaasticOidcEnabled) {
                 oauth2Login {
                     Customizer.withDefaults<OAuth2LoginConfigurer<HttpSecurity>>()
                     userInfoEndpoint {
@@ -108,17 +113,28 @@ class WebSecurityConfig(
                 }
             }
 
+            val elaasticUrlLogoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
+                "/",
+                casSecurityConfigurer?.casKeyToServerUrl ?: mapOf(),
+                "/logout?service=${elaasticUrl}"
+            )
+
+            val oidcClientInitiatedLogoutSuccessHandler =
+                OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository)
+                    .also {
+                        it.setPostLogoutRedirectUri(elaasticUrl)
+                    }
+
             logout {
                 logoutRequestMatcher = AntPathRequestMatcher("/logout")
-                logoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
-                    "/",
-                    casSecurityConfigurer?.casKeyToServerUrl ?: mapOf(),
-                    "/logout?service=${elaasticUrl}"
+                logoutSuccessHandler = ElaasticLogoutSuccessHandler(
+                    elaasticUrlLogoutSuccessHandler,
+                    oidcClientInitiatedLogoutSuccessHandler,
                 )
                 clearAuthentication = true
                 deleteCookies("JSESSIONID")
                 invalidateHttpSession = true
-                // TODO JT: Handle OAuth2 logout
+
             }
 
             authorizeRequests {
