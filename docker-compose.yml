@@ -37,8 +37,7 @@ services:
     ports:
       - "8025:8025"
       - "1025:1025"
-  authentification:
-      container_name: elaastic-keycloak.openid-provider
+  authentication:
       image: quay.io/keycloak/keycloak:25.0.1
       command:
           - start-dev
