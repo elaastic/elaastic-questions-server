@@ -139,7 +139,7 @@
                             </th:block>
 
                             <!--/* OpenID Connect button */-->
-                            <th:block togglz:active="'OPENID_CONNECT'">
+                            <th:block th:if="${elaasticOidcEnabled}">
                                 <div class="ui horizontal divider" th:text="#{common.or}">OR</div>
 
                                 <a href="/oauth2/authorization/keycloak">

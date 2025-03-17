@@ -60,12 +60,7 @@ enum class ElaasticFeatures {
     CHATGPT_EVALUATION,
 
     // Disabled by default, accessible on username strategy
-    REVISION_ASSIGNMENT,
-
-    /**
-     * OpenID Connect authentication protocol
-     */
-    OPENID_CONNECT;
+    REVISION_ASSIGNMENT;
 
     fun isActive(): Boolean {
         return FeatureContext.getFeatureManager().isActive { name }
