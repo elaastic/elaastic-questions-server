@@ -56,6 +56,7 @@ class WebSecurityConfig(
     @Autowired val encoder: PasswordEncoder,
     @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
     @Value("\${elaastic.questions.url}") val elaasticUrl: String,
+    @Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
 
     companion object {
@@ -98,10 +99,12 @@ class WebSecurityConfig(
     fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
 
-            oauth2Login {
-                Customizer.withDefaults<OAuth2LoginConfigurer<HttpSecurity>>()
-                userInfoEndpoint {
-                    oidcUserService = elaasticOidcUserService
+            if(elaasticOidcEnabled) {
+                oauth2Login {
+                    Customizer.withDefaults<OAuth2LoginConfigurer<HttpSecurity>>()
+                    userInfoEndpoint {
+                        oidcUserService = elaasticOidcUserService
+                    }
                 }
             }
 
