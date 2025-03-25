@@ -76,7 +76,7 @@ class SequenceService(
         return sequenceRepository.findOneById(id)?.let { sequence ->
 
             if (fetchInteractions) {
-                loadInteractions(sequence)
+                interactionService.loadInteractions(sequence)
             }
 
             sequence
@@ -99,19 +99,11 @@ class SequenceService(
         return sequenceRepository.findByUuid(uuid)?.let { sequence ->
 
             if (fetchInteractions) {
-                loadInteractions(sequence)
+                interactionService.loadInteractions(sequence)
             }
 
             sequence
         } ?: throw EntityNotFoundException("There is no sequence for uuid \"$uuid\"")
-    }
-
-    fun loadInteractions(sequence: Sequence): Sequence {
-        interactionRepository.findAllBySequence(sequence).map {
-            sequence.interactions[it.interactionType] = it
-        }
-
-        return sequence
     }
 
     fun findAllFakeExplanation(user: User, sequenceId: Long): List<FakeExplanation> {
@@ -397,7 +389,7 @@ class SequenceService(
         return sequences.associateWith { sequence ->
             // Load interactions if not already loaded
             val sequenceInteractionsFetched = if (sequence.interactions.isEmpty()) {
-                loadInteractions(sequence)
+                interactionService.loadInteractions(sequence)
             } else {
                 sequence
             }

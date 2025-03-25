@@ -6,8 +6,8 @@ import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.ReadyForConsolidation
 import org.elaastic.sequence.Sequence
-import org.elaastic.sequence.SequenceService
 import org.elaastic.activity.response.ResponseService
+import org.elaastic.sequence.interaction.InteractionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -24,7 +24,7 @@ import java.util.*
 @Service
 class PracticeSubjectService(
     @Autowired val assignmentService: AssignmentService,
-    @Autowired val sequenceService: SequenceService,
+    @Autowired val interactionService: InteractionService,
     @Autowired val responseService: ResponseService,
 ) {
 
@@ -43,7 +43,7 @@ class PracticeSubjectService(
     fun getPracticeSubject(uuid: UUID) =
         assignmentService.findByUuid(uuid, true)
             .let { assignment ->
-                assignment.sequences.map(sequenceService::loadInteractions)
+                assignment.sequences.map(interactionService::loadInteractions)
 
                 val sequences = assignment.sequences.filter(::isSequenceReadyToPractice)
 
@@ -81,14 +81,6 @@ class PracticeSubjectService(
     fun isAttachmentReadyToPractice(subjectUuid: UUID, questionUuid: UUID, attachmentUuid: UUID): Boolean {
         // dirty fix to allow access to attachment
         return true
-
-        // Get the sequence bound to the question
-        //val sequence = sequenceService.findByUuid(questionUuid, true)
-        //sequenceService.loadInteractions(sequence)
-
-        //return isSequenceReadyToPractice(sequence)
-        //        && sequence.statement.attachment?.uuid == attachmentUuid
-        //        && sequence.assignment?.globalId == subjectUuid
     }
 
 

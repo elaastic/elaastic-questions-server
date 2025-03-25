@@ -174,4 +174,12 @@ class InteractionService(
         eventLogService.skipPhase(sequence, 2)
         return start(user, interaction.sequence.getInteractionAt(interaction.rank + 2))
     }
+
+    fun loadInteractions(sequence: Sequence): Sequence {
+        interactionRepository.findAllBySequence(sequence).map {
+            sequence.interactions[it.interactionType] = it
+        }
+
+        return sequence
+    }
 }
