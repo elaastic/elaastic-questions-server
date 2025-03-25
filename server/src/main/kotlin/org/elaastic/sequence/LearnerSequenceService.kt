@@ -20,7 +20,7 @@ package org.elaastic.sequence
 
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.sequence.interaction.Interaction
-import org.elaastic.sequence.interaction.InteractionType
+import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -30,6 +30,7 @@ import javax.transaction.Transactional
 @Transactional
 class LearnerSequenceService(
     @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
+    @Autowired val interactionService: InteractionService,
     @Autowired val peerGradingService: PeerGradingService
 ) {
 
@@ -70,6 +71,7 @@ class LearnerSequenceService(
                 .let { learnerSequenceRepository.save(it) }
         }.let {
             if (it.activeInteraction == null && sequence.activeInteraction != null) {
+                interactionService.loadInteractions(sequence)
                 it.activeInteraction =
                     sequence.getResponseSubmissionInteraction()
                 learnerSequenceRepository.save(it)
