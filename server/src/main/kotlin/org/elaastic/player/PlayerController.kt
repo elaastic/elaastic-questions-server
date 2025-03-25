@@ -428,7 +428,7 @@ class PlayerController(
         val user: User = authentication.principal as User
 
         interactionService.findById(id).let {
-            sequenceService.loadInteractions(it.sequence)
+            interactionService.loadInteractions(it.sequence)
             val interaction = interactionService.startNext(user, it)
             autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
             return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
@@ -444,7 +444,7 @@ class PlayerController(
         val user: User = authentication.principal as User
 
         interactionService.findById(id).let {
-            sequenceService.loadInteractions(it.sequence)
+            interactionService.loadInteractions(it.sequence)
             val interaction = interactionService.skipNext(user, it)
             autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
             return "redirect:/player/assignment/${interaction.sequence.assignment!!.id}/play/sequence/${interaction.sequence.id}"
@@ -460,7 +460,7 @@ class PlayerController(
         val user: User = authentication.principal as User
 
         interactionService.findById(id).let {
-            sequenceService.loadInteractions(it.sequence)
+            interactionService.loadInteractions(it.sequence)
             interactionService.stop(user, id)
             autoReloadSessionHandler.broadcastReload(it.sequence.id!!)
             return "redirect:/player/assignment/${it.sequence.assignment!!.id}/play/sequence/${it.sequence.id}"
