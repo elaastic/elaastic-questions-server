@@ -185,18 +185,19 @@ class Response(
                 is MultipleChoiceSpecification ->
                     run {
                         val zero = BigDecimal(0)
-                        val oneHundred = BigDecimal(100)
-                        val expectedIndexList = choiceSpecification.expectedChoiceList.map { it.index }
-                        var positiveScore = zero
-                        var negativeScore = zero
+                        val expectedIndexList = choiceSpecification.expectedChoiceList.map { it.index }.toSet()
+                        val positiveScore: BigDecimal
+                        val negativeScore: BigDecimal
+
                         if (expectedIndexList.size == choiceSpecification.nbCandidateItem) { // limit case: all choices are correct
                             positiveScore = BigDecimal(learnerChoice.size * 100.0 / choiceSpecification.nbCandidateItem)
                             negativeScore = zero
                         } else { // nominal case: only some choices are correct
-                            val nbCorrectLearnerChoices = learnerChoice.intersect(expectedIndexList).size
                             val nbCorrectChoices = expectedIndexList.size
-                            val nbIncorrectLearnerChoices = learnerChoice.minus(expectedIndexList).size
                             val nbIncorrectChoices = choiceSpecification.nbCandidateItem - nbCorrectChoices
+                            val nbCorrectLearnerChoices = learnerChoice.intersect(expectedIndexList).size
+                            val nbIncorrectLearnerChoices = learnerChoice.minus(expectedIndexList).size
+
                             positiveScore = BigDecimal(nbCorrectLearnerChoices * (100.0 / nbCorrectChoices))
                             negativeScore = BigDecimal(nbIncorrectLearnerChoices * (100.0 / nbIncorrectChoices))
                         }
