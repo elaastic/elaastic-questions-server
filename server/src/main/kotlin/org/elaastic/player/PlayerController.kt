@@ -156,9 +156,9 @@ class PlayerController(
         authentication: Authentication,
         @RequestParam("globalId") globalId: String
     ): String {
-        return doRegister(
-            authentication.principal as User,
-            findAssignment(globalId)
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
+
+        return doRegister(user, findAssignment(globalId)
         )
     }
 
@@ -301,7 +301,7 @@ class PlayerController(
         model: Model,
         @PathVariable sequenceId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId, true)
         val isTeacher = user == sequence.owner
 
@@ -637,8 +637,6 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        authentication.principal as User
-
         val response = responseService.findById(responseId)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
         model.addAttribute(
