@@ -158,8 +158,7 @@ class PlayerController(
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
-        return doRegister(user, findAssignment(globalId)
-        )
+        return doRegister(user, findAssignment(globalId))
     }
 
     /**

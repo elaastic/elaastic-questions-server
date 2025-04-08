@@ -29,9 +29,9 @@ typealias CasKey = String
 typealias Url = String
 
 /**
- * This LogoutSuccessHandler manage logouts from the elaastic formLogin and the configured CAS servers as well
- * If the session is not bound to a CAS session, it will redirect to formLogoutSuccessUrl
- * If the session is bound to a CAS session, it will redirect to the CAS server logout URL
+ * This LogoutSuccessHandler manages logouts from the elaastic formLogin and the configured CAS servers as well.
+ * If the session is not bound to a CAS session, it will redirect to formLogoutSuccessUrl.
+ * If the session is bound to a CAS session, it will redirect to the CAS server logout URL.
  */
 class ElaasticUrlLogoutSuccessHandler(
     formLogoutSuccessUrl: String,
@@ -52,9 +52,9 @@ class ElaasticUrlLogoutSuccessHandler(
         val user = (authentication?.principal as PrincipalUserResolver?)?.elaasticUser
 
         return if (user?.casKey != null) {
-            (casKeyToServerUrl[user.casKey]
-                ?: throw IllegalStateException("No logout URL configured for the CAS server [${user.casKey}]")) +
-                    casLogoutSuccessUrl
+            (casKeyToServerUrl[user.casKey] ?: throw IllegalStateException(
+                "No logout URL configured for the CAS server [${user.casKey}]"
+            )) + casLogoutSuccessUrl
         } else super.determineTargetUrl(request, response, authentication)
     }
 }
