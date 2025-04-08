@@ -1,5 +1,6 @@
 package org.elaastic.auth.cas
 
+import org.elaastic.auth.UserLinkService
 import org.jasig.cas.client.validation.TicketValidator
 import org.springframework.security.cas.ServiceProperties
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken
@@ -28,7 +29,7 @@ class ElaasticCasAuthenticationProvider(
     }
 
     override fun authenticate(authentication: Authentication?): Authentication? {
-        if(authentication is CasTicketAuthenticationToken && authentication.casKey != casKey) {
+        if (authentication is CasTicketAuthenticationToken && authentication.casKey != casKey) {
             return null // Not concerned ; this authentication is from another CAS server
         }
 
