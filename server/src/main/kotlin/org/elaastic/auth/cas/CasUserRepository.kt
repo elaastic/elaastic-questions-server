@@ -3,8 +3,8 @@ package org.elaastic.auth.cas
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.repository.CrudRepository
 
-interface CasUserRepository : CrudRepository<CasUser, Long> {
+interface CasUserRepository : CrudRepository<UserLink, Long> {
 
-    @EntityGraph(value = "CasUser.user.roles", type = EntityGraph.EntityGraphType.LOAD)
-    fun findByCasKeyAndCasUserId(casKey: String, casUserId: String): CasUser?
+    @EntityGraph(value = "UserLink.user.roles", type = EntityGraph.EntityGraphType.LOAD)
+    fun findByProviderIdAndProviderUserId(providerId: String, providerUserId: String): UserLink?
 }
