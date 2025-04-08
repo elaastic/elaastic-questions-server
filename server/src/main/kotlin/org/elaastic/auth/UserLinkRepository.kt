@@ -1,4 +1,4 @@
-package org.elaastic.auth.cas
+package org.elaastic.auth
 
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.repository.CrudRepository

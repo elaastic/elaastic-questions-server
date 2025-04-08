@@ -190,7 +190,7 @@ class CasSecurityConfig {
                 .let { builder ->
                     builder.addConstructorArgValue(casKey)
                     builder.addConstructorArgValue(casProvider)
-                    builder.addConstructorArgReference("casUserDetailService")
+                    builder.addConstructorArgReference("userLinkService")
                     builder.addConstructorArgReference("$SERVICE_PROPERTIES_BEAN_PREFIX${casKey}")
                     builder.addConstructorArgReference("$TICKET_VALIDATOR_BEAN_PREFIX${casKey}")
                     registry.registerBeanDefinition(

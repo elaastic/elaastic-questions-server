@@ -1,5 +1,6 @@
 package org.elaastic.auth.cas
 
+import org.elaastic.auth.UserLinkService
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
 import org.springframework.security.core.userdetails.UserDetails
@@ -19,7 +20,10 @@ class CasAuthenticationUserDetailService(
         }
 
         val username: String = token.name
-        return userLinkService.loadUserByUsername(casKey, username) ?:
-        userLinkService.registerNewCasUser(casKey, casProvider, token.assertion.principal)
+        return userLinkService.loadUserByUsername(casKey, username) ?: userLinkService.registerNewCasUser(
+            casKey, casProvider, token.assertion.principal
+        )
     }
+
+
 }
