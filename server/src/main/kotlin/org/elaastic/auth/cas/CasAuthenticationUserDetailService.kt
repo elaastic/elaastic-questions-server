@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import java.util.logging.Logger
 
 class CasAuthenticationUserDetailService(
-    private val casUserDetailService: CasUserDetailService,
+    private val userLinkService: UserLinkService,
     private val casKey: String,
     private val casProvider: String,
 ) : AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
@@ -19,7 +19,7 @@ class CasAuthenticationUserDetailService(
         }
 
         val username: String = token.name
-        return casUserDetailService.loadUserByUsername(casKey, username) ?:
-        casUserDetailService.registerNewCasUser(casKey, casProvider, token.assertion.principal)
+        return userLinkService.loadUserByUsername(casKey, username) ?:
+        userLinkService.registerNewCasUser(casKey, casProvider, token.assertion.principal)
     }
 }
