@@ -49,7 +49,7 @@ class ElaasticLogoutSuccessHandler(
             elaasticUrlLogoutSuccessHandler.onLogoutSuccess(request, response, authentication)
         } else {
             throw UnsupportedOperationException(
-                "This authentication implementation is not supported: " + authentication?.javaClass?.name
+                "This authentication implementation is not supported: ${authentication?.javaClass?.name}"
             )
         }
     }
