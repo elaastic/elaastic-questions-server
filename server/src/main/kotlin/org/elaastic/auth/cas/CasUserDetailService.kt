@@ -19,7 +19,7 @@ class CasUserDetailService(
 )  {
 
     fun loadUserByUsername(casKey: String, username: String): UserDetails? {
-        return casUserRepository.findByCasKeyAndCasUserId(casKey, username)?.user?.also { it.casKey = casKey }
+        return casUserRepository.findByProviderIdAndProviderUserId(casKey, username)?.user?.also { it.casKey = casKey }
     }
 
 
@@ -48,9 +48,9 @@ class CasUserDetailService(
             )
         }
 
-        CasUser(
-            casKey = casKey,
-            casUserId = principal.name,
+        UserLink(
+            providerId = casKey,
+            providerUserId = principal.name,
             user = user,
             ).let { casUserRepository.save(it) }
 
