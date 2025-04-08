@@ -1,4 +1,4 @@
-package org.elaastic.auth.cas
+package org.elaastic.auth
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.user.User
