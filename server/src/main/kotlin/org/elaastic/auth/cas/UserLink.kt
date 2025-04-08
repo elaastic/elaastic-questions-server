@@ -13,17 +13,18 @@ import javax.persistence.*
         NamedSubgraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
     ]
 )
-class CasUser(
-    @field:Column(name = "cas_key")
-    val casKey: String,
+@Table(name="link_user")
+class UserLink(
+    @Column(name = "provider_id")
+    val providerId: String,
 
-    @field:Column(name = "cas_user_id")
-    val casUserId: String,
+    @Column(name = "provider_user_id")
+    val providerUserId: String,
 
-    @field:OneToOne
+    @OneToOne
     @JoinColumn(name = "elaastic_user_id")
     val user: User,
 
-    @field:Column(name="created_at")
+    @Column(name="created_at")
     val createdAt: LocalDate = LocalDate.now()
 ): AbstractJpaPersistable<Long>()
