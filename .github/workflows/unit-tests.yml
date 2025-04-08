@@ -29,6 +29,10 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Create .env file
+        run: |
+              echo "KEYCLOAK_ADMIN_PASSWORD=keycloak_admin_password" >> .env
+
       - name: Setup test environment
         run: docker compose up -d  elaastic-questions-db-test-8 authentification
 
