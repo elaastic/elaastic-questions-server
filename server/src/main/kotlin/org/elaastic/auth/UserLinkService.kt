@@ -1,5 +1,9 @@
-package org.elaastic.auth.cas
+package org.elaastic.auth
 
+import org.elaastic.auth.cas.CasAttributeParser
+import org.elaastic.auth.cas.CasAttributeParserForEdifice
+import org.elaastic.auth.cas.CasAttributeParserForKosmos
+import org.elaastic.auth.cas.SupportedCasProvider
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
@@ -16,12 +20,10 @@ class UserLinkService(
     @Autowired val userLinkRepository: UserLinkRepository,
     @Autowired val userService: UserService,
     @Autowired val roleService: RoleService,
-)  {
-
+) {
     fun loadUserByUsername(casKey: String, username: String): UserDetails? {
         return userLinkRepository.findByProviderIdAndProviderUserId(casKey, username)?.user?.also { it.casKey = casKey }
     }
-
 
     @Transactional
     fun registerNewCasUser(casKey: String, casProvider: String, principal: AttributePrincipal): UserDetails {
@@ -52,15 +54,16 @@ class UserLinkService(
             providerId = casKey,
             providerUserId = principal.name,
             user = user,
-            ).let { userLinkRepository.save(it) }
+        ).let(userLinkRepository::save)
 
         return user
     }
 
-    private fun getCasAttributeParser(casProvider: String): CasAttributeParser =
-        when(casProvider) {
+    private fun getCasAttributeParser(casProvider: String): CasAttributeParser {
+        return when (casProvider) {
             SupportedCasProvider.Kosmos.name -> CasAttributeParserForKosmos()
             SupportedCasProvider.Edifice.name -> CasAttributeParserForEdifice()
             else -> throw IllegalArgumentException("The CAS provider '$casProvider' is not supported")
         }
+    }
 }
