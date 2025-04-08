@@ -43,8 +43,8 @@ private const val CAS_2_0 = "2.0"
  * - The CAS config for elaastic is defined in application.properties ; it comprises the list of cas identifiers (cas.keyList)
  * and the server.url for each CAS.
  *
- * When a CAS user is authenticated, the CasUser entity is looked up based on <casKey> and <principal.name>, and the
- * User bound the CasUser is loaded. User and CasUser are created for each first CAS authentication.
+ * When a CAS user is authenticated, the UserLink entity is looked up based on <casKey> and <principal.name>, and the
+ * User bound the UserLink is loaded. User and UserLink are created for each first CAS authentication.
  *
  * @author John Tranier
  */
