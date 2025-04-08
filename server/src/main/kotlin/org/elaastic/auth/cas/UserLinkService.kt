@@ -12,14 +12,14 @@ import javax.transaction.Transactional
 
 
 @Service
-class CasUserDetailService(
-    @Autowired val casUserRepository: CasUserRepository,
+class UserLinkService(
+    @Autowired val userLinkRepository: UserLinkRepository,
     @Autowired val userService: UserService,
     @Autowired val roleService: RoleService,
 )  {
 
     fun loadUserByUsername(casKey: String, username: String): UserDetails? {
-        return casUserRepository.findByProviderIdAndProviderUserId(casKey, username)?.user?.also { it.casKey = casKey }
+        return userLinkRepository.findByProviderIdAndProviderUserId(casKey, username)?.user?.also { it.casKey = casKey }
     }
 
 
@@ -52,7 +52,7 @@ class CasUserDetailService(
             providerId = casKey,
             providerUserId = principal.name,
             user = user,
-            ).let { casUserRepository.save(it) }
+            ).let { userLinkRepository.save(it) }
 
         return user
     }

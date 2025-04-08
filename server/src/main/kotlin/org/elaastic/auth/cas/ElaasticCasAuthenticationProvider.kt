@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication
 class ElaasticCasAuthenticationProvider(
     val casKey: String,
     val casProvider: String,
-    casUserDetailService: CasUserDetailService,
+    userLinkService: UserLinkService,
     serviceProperties: ServiceProperties,
     ticketValidator: TicketValidator,
 ) : CasAuthenticationProvider() {
@@ -19,7 +19,7 @@ class ElaasticCasAuthenticationProvider(
         this.ticketValidator = ticketValidator
         this.setAuthenticationUserDetailsService(
             CasAuthenticationUserDetailService(
-                casUserDetailService,
+                userLinkService,
                 casKey,
                 casProvider,
             )
