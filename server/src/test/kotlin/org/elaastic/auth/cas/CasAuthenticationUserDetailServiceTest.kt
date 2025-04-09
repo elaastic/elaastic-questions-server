@@ -10,8 +10,7 @@ import org.elaastic.user.*
 import org.jasig.cas.client.authentication.AttributePrincipalImpl
 import org.jasig.cas.client.validation.AssertionImpl
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Profile
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -56,6 +55,9 @@ class CasAuthenticationUserDetailServiceTest(
     @MockBean
     lateinit var roleService: RoleService
 
+    private var userCreated: MutableMap<Long, User> = mutableMapOf()
+    private var userLinkCreated: MutableMap<Long, UserLink> = mutableMapOf()
+
     private val defaultPassword = "1234"
 
     @AfterEach
@@ -65,20 +67,53 @@ class CasAuthenticationUserDetailServiceTest(
 
     @BeforeEach
     fun setUp() {
-        whenever(roleService.roleForName(any(), any()))
-            .thenReturn(Role("roleName"))
+        userCreated = mutableMapOf()
+        userLinkCreated = mutableMapOf()
+
+        whenever(userRepository.findById(any()))
+            .thenAnswer {
+                Optional.ofNullable(userCreated[it.getArgument(0)])
+            }
+        whenever(userLinkRepository.findById(any()))
+            .thenAnswer {
+                Optional.ofNullable(userLinkCreated[it.getArgument(0)])
+            }
+        whenever(userLinkRepository.findByProviderIdAndProviderUserId(any<String>(), any<String>()))
+            .thenAnswer {
+                userLinkCreated.values.firstOrNull { userLink ->
+                    userLink.providerId == it.getArgument<String>(0)
+                    &&
+                    userLink.providerUserId == it.getArgument<String>(1)
+                }
+            }
         whenever(userLinkRepository.save(any<UserLink>()))
-            .thenAnswer { it.getArgument<UserLink>(0) }
-        whenever(userService.generateUsername(any<String>(), any<String>()))
-            .thenAnswer { generateUsername(it.getArgument(0), it.getArgument(1)) }
-        whenever(userService.generatePassword())
-            .thenAnswer { defaultPassword }
+            .thenAnswer {
+                it.getArgument<UserLink>(0).also { userLink ->
+                    userLink.id = userLinkCreated.size.toLong()
+                    userLinkCreated[userLink.id!!] = userLink
+                }
+            }
+        whenever(userRepository.save(any<User>()))
+            .thenAnswer {
+                it.getArgument<User>(0).also { user ->
+                    user.id = userCreated.size.toLong()
+                    userCreated[user.id!!] = user
+                }
+            }
         whenever(userService.addUser(any<User>(), any<String>(), any<Boolean>(), any<Boolean>(), any<Boolean>()))
             .thenAnswer {
                 it.getArgument<User>(0).also { user ->
                     user.password = user.plainTextPassword
-                }
+                }.let(userRepository::save)
             }
+
+        whenever(roleService.roleForName(any(), any()))
+            .thenReturn(Role("roleName"))
+        whenever(userService.generateUsername(any<String>(), any<String>()))
+            .thenAnswer { generateUsername(it.getArgument(0), it.getArgument(1)) }
+        whenever(userService.generatePassword())
+            .thenAnswer { defaultPassword }
+
     }
 
     @Test
@@ -98,6 +133,9 @@ class CasAuthenticationUserDetailServiceTest(
             email = "john.doe@mail.com"
         )
 
+        assertTrue(userCreated.isEmpty())
+        assertTrue(userLinkCreated.isEmpty())
+
         // When loadUserDetails is called
         val userDetails = casAuthenticationUserDetailService.loadUserDetails(
             getCasAssertionAuthenticationToken(userName, casProvider)
@@ -105,13 +143,13 @@ class CasAuthenticationUserDetailServiceTest(
 
         // Then the user details should not be null
         assertNotNull(userDetails) { "User details should not be null" }
+        assertFalse(userCreated.isEmpty())
+        assertFalse(userLinkCreated.isEmpty())
         assertEquals(userName.username, userDetails.username) { "Username should be the same" }
         assertEquals(defaultPassword, userDetails.password) { "Password should be the default one" }
     }
 
-    /**
-     * Create a [CasAssertionAuthenticationToken] with a [AssertionImpl] and a [AttributePrincipalImpl].
-     */
+    /** Create a [CasAssertionAuthenticationToken] with a [AssertionImpl] and a [AttributePrincipalImpl]. */
     private fun getCasAssertionAuthenticationToken(
         user: UserInformation,
         casProvider: SupportedCasProvider
