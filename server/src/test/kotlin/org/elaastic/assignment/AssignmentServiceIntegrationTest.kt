@@ -74,8 +74,8 @@ internal class AssignmentServiceIntegrationTest(
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val sequenceService: SequenceService,
     @Autowired val functionalTestingService: FunctionalTestingService,
+    @Autowired val assignmentRepository: AssignmentRepository,
 ) {
-
     val persistentUnitUtil: PersistenceUnitUtil by lazy {
         entityManager.entityManagerFactory.persistenceUnitUtil
     }
@@ -112,7 +112,7 @@ internal class AssignmentServiceIntegrationTest(
         (1..n).forEach {
             assignmentService.save(
                 Assignment(
-                    title = "Assignment nï¿½$it",
+                    title = "Assignment n°$it",
                     owner = owner
                 )
             )
@@ -396,7 +396,7 @@ internal class AssignmentServiceIntegrationTest(
             subjectService.addStatement(
                 subject,
                 Statement.createDefaultStatement(subject.owner)
-                    .title("Sequence nï¿½1")
+                    .title("Sequence n°1")
                     .content("Content 1")
             )
         }.tThen {
@@ -419,7 +419,7 @@ internal class AssignmentServiceIntegrationTest(
         val statement1 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(subject.owner)
-                .title("Sequence nï¿½1")
+                .title("Sequence n°1")
                 .content("Content 1")
         )
         val assignment = subjectService.addAssignment(
@@ -666,7 +666,6 @@ internal class AssignmentServiceIntegrationTest(
     }
 
     @Test
-    @Disabled("This test is not working because the assignment is not updated")
     fun `test of findAllAssignmentUpdatedSince`() {
         val teacher = integrationTestingService.getTestTeacher()
 
@@ -681,11 +680,13 @@ internal class AssignmentServiceIntegrationTest(
         )
         Thread.sleep(1000) // To ensure, the assignment is updated before the after date
         val after = LocalDateTime.now()
+        assignmentRepository.flush()
 
         assertTrue(assignmentService.findAllAssignmentUpdatedSince(before).contains(assignment))
         assertFalse(assignmentService.findAllAssignmentUpdatedSince(after).contains(assignment))
 
         assignmentService.touch(assignment)
+        assignmentRepository.flush()
         Thread.sleep(1000) // To ensure, the assignment is updated before the check
 
         assertTrue(assignmentService.findAllAssignmentUpdatedSince(before).contains(assignment))
