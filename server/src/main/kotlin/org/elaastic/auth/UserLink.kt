@@ -25,7 +25,7 @@ import javax.persistence.*
 
 @Entity
 @NamedEntityGraph(
-    name = "CasUser.user.roles",
+    name = "UserLink.user.roles",
     attributeNodes = [NamedAttributeNode(value= "user", subgraph = "User.roles")],
     subgraphs = [
         NamedSubgraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
