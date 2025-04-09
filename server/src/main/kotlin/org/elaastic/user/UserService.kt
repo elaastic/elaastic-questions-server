@@ -49,7 +49,6 @@ class UserService(
     @Autowired val entityManager: EntityManager
 ) {
 
-    val FAKE_USER_PREFIX = "John_Doe___"
     val logger = Logger.getLogger(UserService::class.java.name)
     var fakeUserList: List<User>? = null
 
@@ -448,7 +447,7 @@ class UserService(
     private fun buildFakeUserList(): List<User> {
         return mutableListOf<User>().also { fakeUserList ->
             for (i in 1..9) {
-                fakeUserList.add(findByUsername("$FAKE_USER_PREFIX${i}")!!)
+                fakeUserList.add(findByUsername("${FAKE_USER_PREFIX}${i}")!!)
             }
         }
     }
@@ -537,6 +536,10 @@ class UserService(
     @Throws(IllegalArgumentException::class)
     fun findById(learnerId: Long): User {
         return userRepository.findById(learnerId).orElseThrow { IllegalArgumentException("Learner not found") }
+    }
+
+    companion object {
+        const val FAKE_USER_PREFIX = "John_Doe___"
     }
 
 }
