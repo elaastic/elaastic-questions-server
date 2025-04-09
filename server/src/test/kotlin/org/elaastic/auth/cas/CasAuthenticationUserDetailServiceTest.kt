@@ -82,8 +82,8 @@ class CasAuthenticationUserDetailServiceTest(
             .thenAnswer {
                 userLinkCreated.values.firstOrNull { userLink ->
                     userLink.providerId == it.getArgument<String>(0)
-                    &&
-                    userLink.providerUserId == it.getArgument<String>(1)
+                            &&
+                            userLink.providerUserId == it.getArgument<String>(1)
                 }
             }
         whenever(userLinkRepository.save(any<UserLink>()))
@@ -148,6 +148,124 @@ class CasAuthenticationUserDetailServiceTest(
         assertEquals(userName.username, userDetails.username) { "Username should be the same" }
         assertEquals(defaultPassword, userDetails.password) { "Password should be the default one" }
     }
+
+    @Test
+    fun `test loadUserDetails with a user already in the database`() {
+        /** The cas provider uses in this test */
+        val casProvider = SupportedCasProvider.Kosmos
+        val casKey = "casKey"
+        val casAuthenticationUserDetailService = CasAuthenticationUserDetailService(
+            userLinkService = userLinkService,
+            casKey = casKey,
+            casProvider = casProvider.name
+        )
+
+        // Given a username in the database
+        val user = User(
+            firstName = "John",
+            lastName = "Doe",
+            username = "",
+            plainTextPassword = "1234"
+        ).also {
+            it.username = generateUsername(it.firstName, it.lastName)
+        }.let(userService::addUser)
+        val userLink = UserLink(
+            providerId = casKey,
+            providerUserId = user.username,
+            user = user
+        ).let(userLinkRepository::save)
+
+        assertTrue(userCreated.isNotEmpty()) { "The user should be in the database" }
+        assertTrue(userLinkCreated.isNotEmpty()) { "The userLink should be in the database" }
+        assertEquals(1, userCreated.size) { "One user should be in the database" }
+        assertEquals(1, userLinkCreated.size) { "One userLink should be in the database" }
+
+        // When loadUserDetails is called
+        val userDetails = casAuthenticationUserDetailService.loadUserDetails(
+            getCasAssertionAuthenticationToken(user, casProvider)
+        )
+
+        // Then the user details should not be null
+        assertNotNull(userDetails) { "User details should not be null" }
+        assertTrue(userCreated.isNotEmpty()) { "The user should remain in the database" }
+        assertTrue(userLinkCreated.isNotEmpty()) { "A userLink should be created" }
+        assertEquals(1, userCreated.size) { "No other user should have been created" }
+        assertEquals(1, userLinkCreated.size) { "No other userLink should have been created" }
+        assertEquals(user.username, userDetails.username) { "Username should be the same" }
+        assertEquals(user.password, userDetails.password) { "Password should be the default one" }
+    }
+
+    @Test
+    fun `test loadUserDetails with another user in the database`() {
+        /** The cas provider uses in this test */
+        val casProvider = SupportedCasProvider.Kosmos
+        val casKey = "casKey"
+        val casAuthenticationUserDetailService = CasAuthenticationUserDetailService(
+            userLinkService = userLinkService,
+            casKey = casKey,
+            casProvider = casProvider.name
+        )
+
+        // Given a username in the database
+        User(
+            firstName = "John",
+            lastName = "Doe",
+            username = "",
+            plainTextPassword = "1234"
+        ).also {
+            it.username = generateUsername(it.firstName, it.lastName)
+        }.let {
+            userService.addUser(it)
+
+            UserLink(
+                providerId = casKey,
+                providerUserId = it.username,
+                user = it
+            ).let(userLinkRepository::save)
+        }
+
+        assertTrue(userCreated.isNotEmpty()) { "The user should be in the database" }
+        assertTrue(userLinkCreated.isNotEmpty()) { "The userLink should be in the database" }
+        assertEquals(1, userCreated.size) { "One user should be in the database" }
+        assertEquals(1, userLinkCreated.size) { "One userLink should be in the database" }
+
+        // Given another user
+        val alice = UserInformation(
+            "Alice",
+            "Smith",
+            "alice.smith@mail.com"
+        )
+
+        // When loadUserDetails is called
+        val userDetails = casAuthenticationUserDetailService.loadUserDetails(
+            getCasAssertionAuthenticationToken(alice, casProvider)
+        )
+
+        // Then the user details should not be null
+        assertNotNull(userDetails) { "User details should not be null" }
+        assertTrue(userCreated.isNotEmpty()) { "The user should remain in the database" }
+        assertTrue(userLinkCreated.isNotEmpty()) { "A userLink should be created" }
+        assertEquals(2, userCreated.size) { "No other user should have been created" }
+        assertEquals(2, userLinkCreated.size) { "No other userLink should have been created" }
+        assertEquals(alice.username, userDetails.username) { "Username should be the same" }
+        assertEquals(defaultPassword, userDetails.password) { "Password should be the default one" }
+        assertTrue(userLinkCreated.values.any { it.user.firstName == alice.firstName })
+    }
+
+    /** Create a [CasAssertionAuthenticationToken] with a [AssertionImpl] and a [AttributePrincipalImpl]. */
+    private fun getCasAssertionAuthenticationToken(
+        user: User,
+        casProvider: SupportedCasProvider
+    ): CasAssertionAuthenticationToken = getCasAssertionAuthenticationToken(
+        with(user) {
+            UserInformation(
+                firstName = firstName,
+                lastName = lastName,
+                email = email ?: ""
+            )
+        },
+        casProvider
+    )
 
     /** Create a [CasAssertionAuthenticationToken] with a [AssertionImpl] and a [AttributePrincipalImpl]. */
     private fun getCasAssertionAuthenticationToken(
