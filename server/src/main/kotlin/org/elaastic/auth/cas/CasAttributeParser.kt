@@ -43,6 +43,5 @@ interface CasAttributeParser {
             else throw IllegalArgumentException("The attribute '$attributeName' is expected of type 'String?' ; provided ${value!!::class.java}")
         }
 
-
 }
 
