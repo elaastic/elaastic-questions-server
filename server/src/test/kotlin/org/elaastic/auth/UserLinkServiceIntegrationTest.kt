@@ -45,7 +45,7 @@ class UserLinkServiceIntegrationTest(
     fun `test registerNewCasUser`() {
         val casProvider = SupportedCasProvider.Kosmos
         val email = "john.doe@mail.com"
-        val providerId = "johndoe"
+        val providerId = "johdoe"
         val userDetail = userLinkService.registerNewCasUser(
             "casKey",
             casProvider.name,
