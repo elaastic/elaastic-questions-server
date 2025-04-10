@@ -26,12 +26,12 @@ import javax.persistence.*
 @Entity
 @NamedEntityGraph(
     name = "UserLink.user.roles",
-    attributeNodes = [NamedAttributeNode(value= "user", subgraph = "User.roles")],
+    attributeNodes = [NamedAttributeNode(value = "user", subgraph = "User.roles")],
     subgraphs = [
         NamedSubgraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
     ]
 )
-@Table(name="link_user")
+@Table(name = "link_user")
 class UserLink(
     @Column(name = "provider_id")
     val providerId: String,
@@ -43,6 +43,27 @@ class UserLink(
     @JoinColumn(name = "elaastic_user_id")
     val user: User,
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     val createdAt: LocalDate = LocalDate.now()
-): AbstractJpaPersistable<Long>()
+) : AbstractJpaPersistable<Long>() {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+
+        return other is UserLink
+                && super.equals(other)
+                && providerId == other.providerId
+                && providerUserId == other.providerUserId
+                && user == other.user
+                && createdAt == other.createdAt
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + providerId.hashCode()
+        result = 31 * result + providerUserId.hashCode()
+        result = 31 * result + user.hashCode()
+        result = 31 * result + createdAt.hashCode()
+        return result
+    }
+}
