@@ -45,20 +45,21 @@ class UserLinkServiceIntegrationTest(
     fun `test registerNewCasUser`() {
         val casProvider = SupportedCasProvider.Kosmos
         val email = "john.doe@mail.com"
-        val providerId = "johdoe"
+        val username = "johdoe"
+        val casKey = "casKey"
         val userDetail = userLinkService.registerNewCasUser(
-            "casKey",
+            casKey,
             casProvider.name,
             AttributePrincipalImpl(
-                providerId,
+                username,
                 buildAttribute("John", "Doe", email, false, casProvider)
             )
         )
 
-        assertEquals(providerId, userDetail.username)
+        assertEquals(username, userDetail.username)
         val userFound = userRepository.findUsersByEmailLike(email).first()
         assertNotNull(userFound)
-        val userLinkFound = userLinkService.loadUserByUsername(providerId, userFound.username)
+        val userLinkFound = userLinkService.loadUserByUsername(casKey, userFound.username)
         assertNotNull(userLinkFound)
         assertEquals(userDetail, userLinkFound?.user)
     }
