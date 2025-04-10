@@ -21,8 +21,12 @@ jobs:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available
 
+      -   name: Create .env file
+          run: |
+              echo "KEYCLOAK_ADMIN_PASSWORD=keycloak_admin_password" >> .env
+
       - name: Setup test environment
-        run: docker compose up -d  elaastic-questions-db-test-8 authentification
+        run: docker compose up -d  elaastic-questions-db-test-8 authentication
 
       - name: Build and analyze
         env:
