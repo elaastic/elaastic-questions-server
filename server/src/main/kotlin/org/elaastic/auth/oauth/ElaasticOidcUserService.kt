@@ -17,6 +17,7 @@
  */
 package org.elaastic.auth.oauth
 
+import org.elaastic.auth.UserLink
 import org.elaastic.auth.UserLinkService
 import org.elaastic.user.Role
 import org.elaastic.user.UserRepository
@@ -29,9 +30,8 @@ import org.springframework.stereotype.Service
 /**
  * Service dedicated to retrieve the Elaastic User bound to an OidcUser
  *
- * Implementation note:
- * This service overrides OidcUserService, and, as such, must return an OidcUser.
- * The ElaasticOidcUser is an OidcUser bound to its corresponding Elaastic User
+ * Implementation note: This service overrides OidcUserService, and, as such, must return an OidcUser. The
+ * ElaasticOidcUser is an OidcUser bound to its corresponding Elaastic User
  *
  * @author John Tranier
  */
@@ -45,11 +45,13 @@ class ElaasticOidcUserService(
         val oidcUser = super.loadUser(userRequest)
 
         val role = Role.RoleId.STUDENT //STUB
-        val userLink = userLinkService.loadUserByUsername(
-                oidcUser.idToken.tokenValue,
-                oidcUser.name
-            )?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
+        val user = userLinkService.loadUserByUsername(
+            oidcUser.idToken.tokenValue,
+            oidcUser.name
+        )?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
 
-        return ElaasticOidcUser(oidcUser, userLink)
+
+
+        return ElaasticOidcUser(oidcUser, user)
     }
 }

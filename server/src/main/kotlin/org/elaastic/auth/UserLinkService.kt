@@ -93,7 +93,9 @@ class UserLinkService(
         return user
     }
 
-    /**  */
+    /**
+     * Register a new user with the given OIDC user and role
+     */
     @Transactional
     fun registerNewOidcUser(oidcUser: OidcUser, role: Role.RoleId): User {
         oidcUser.locale
@@ -107,7 +109,7 @@ class UserLinkService(
         )
 
         UserLink(
-            providerId = oidcUser.issuer.toString(),
+            providerId = oidcUser.idToken.tokenValue,
             providerUserId = oidcUser.name,
             user = user
         ).let(userLinkRepository::save)
