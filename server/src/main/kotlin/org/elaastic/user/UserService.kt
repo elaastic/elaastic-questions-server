@@ -19,6 +19,8 @@
 package org.elaastic.user
 
 import org.apache.commons.lang3.time.DateUtils
+import org.elaastic.auth.UserLinkRepository
+import org.elaastic.auth.UserLinkService
 import org.elaastic.common.onboarding.OnboardingChapter
 import org.elaastic.user.legal.TermsService
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,7 +48,8 @@ class UserService(
     @Autowired val termsService: TermsService,
     @Autowired val userConsentRepository: UserConsentRepository,
     @Autowired val onboardingStateRepository: OnboardingStateRepository,
-    @Autowired val entityManager: EntityManager
+    @Autowired val entityManager: EntityManager,
+    private val userLinkRepository: UserLinkRepository
 ) {
 
     val logger = Logger.getLogger(UserService::class.java.name)
@@ -123,8 +126,7 @@ class UserService(
      *
      * @param user the user to process
      * @param language the preferred language of the user
-     * @param checkEmailAccount flag to indicates if mail checking must be
-     *     perform by the system
+     * @param checkEmailAccount flag to indicates if mail checking must be perform by the system
      * @return the saved user
      */
     @Transactional
@@ -173,24 +175,28 @@ class UserService(
     /**
      * Change the password of a user
      *
+     * If the user, is link to an external provider, it cannot change is password and an exception is thrown.
+     *
      * @param user the processed user
      * @param newPlainTextPassword the new plain text password
      * @return the user with its new password
      */
     fun changePasswordForUser(user: User, newPlainTextPassword: String): User {
+        require(userLinkRepository.findByUser(user) == null) {
+            "User ${user.username} is linked to an external provider and cannot change his password"
+        }
+
         user.plainTextPassword = newPlainTextPassword // required to get validation
         user.password = passwordEncoder.encode(newPlainTextPassword)
-        userRepository.saveAndFlush(user).let {
-            return it
-        }
+
+        return userRepository.saveAndFlush(user)
     }
 
     /**
      * Change the password of a user
      *
      * @param user the processed user
-     * @param currentPassword the current password used to check current
-     *     password is known by the user
+     * @param currentPassword the current password used to check current password is known by the user
      * @param newPlainTextPassword the new plain text password
      * @return the user with its new password
      * @throws AccessDeniedException if current password not valid
@@ -363,11 +369,9 @@ class UserService(
     }
 
     /**
-     * Remove old activation keys and corresponding users who didn't activate
-     * their accounts
+     * Remove old activation keys and corresponding users who didn't activate their accounts
      *
-     * @param lifetime the lifetime in hours of activation keys, default set to
-     *     3
+     * @param lifetime the lifetime in hours of activation keys, default set to 3
      */
     fun removeOldActivationKeys(lifetime: Int = 3) {
         activationKeyRepository.findAllByDateCreatedLessThan(DateUtils.addHours(Date(), -lifetime)).let {
@@ -529,6 +533,7 @@ class UserService(
 
     /**
      * return the learner with the given id
+     *
      * @param learnerId id to find the learner
      * @return learner with the given id
      * @throws IllegalArgumentException if a learner with the given id doesn't exist
