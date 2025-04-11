@@ -47,7 +47,6 @@ class UserLinkService(
     @Value("\${spring.security.oauth2.client.registration.keycloak.provider}")
     val oidcProvider: String = "oidcProvider default value"
 
-
     /**
      * Fetch the userLink for the given providerId and username.
      *
@@ -108,7 +107,7 @@ class UserLinkService(
             oidcUser.email,
             role,
             UserSource.OIDC,
-            "fr"
+            getLanguage(oidcUser, "fr")
         )
 
         UserLink(
@@ -154,19 +153,23 @@ class UserLinkService(
      * See [OIDC Standard claims documentation](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims)
      * for more information about the locale.
      *
-     * If no locale is found, the JVM default locale is used.
+     * If no locale is found, the default is returned.
      *
+     * The default is given in the parameter, or it's the JVM default locale.
+     *
+     * @param oidcUser The OIDC user to get the locale from
+     * @param default The default language to use if no locale is found
      * @see OidcUser.getLocale
      * @see Locale.getDefault
      */
-    private fun getLanguage(oidcUser: OidcUser): String {
+    private fun getLanguage(oidcUser: OidcUser, default: String = Locale.getDefault().language): String {
         val localeClaim = oidcUser.locale
 
         return if (!localeClaim.isNullOrBlank()) {
-            Locale.forLanguageTag(localeClaim)
+            Locale.forLanguageTag(localeClaim).language
         } else {
-            Locale.getDefault()
-        }.language
+            default
+        }
     }
 
     /**
