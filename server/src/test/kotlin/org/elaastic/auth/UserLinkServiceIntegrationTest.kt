@@ -65,8 +65,7 @@ class UserLinkServiceIntegrationTest(
     }
 
     /**
-     * Build the attribute for the [AttributePrincipalImpl] with the user
-     * information.
+     * Build the attribute for the [AttributePrincipalImpl] with the user information.
      *
      * The information depends on the CAS provider.
      */
@@ -88,5 +87,27 @@ class UserLinkServiceIntegrationTest(
             SupportedCasProvider.Edifice -> TODO("Specify the map attribute for Edifice")
         }
     }
+
+    @Test
+    fun `test isUserLinked with a linked user`() {
+        val user = integrationTestingService.getAnyUser()
+        UserLink(
+            providerId = "testProvider",
+            providerUserId = user.username,
+            user = user
+        ).let(userLinkRepository::save)
+
+        assertTrue(userLinkService.isLinked(user))
+        assertFalse(userLinkService.isNotLinked(user))
+    }
+
+    @Test
+    fun `test isUserLinked with a not linked user`() {
+        val user = integrationTestingService.getAnyUser()
+
+        assertFalse(userLinkService.isLinked(user))
+        assertTrue(userLinkService.isNotLinked(user))
+    }
+
 
 }
