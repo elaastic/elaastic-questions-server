@@ -205,4 +205,20 @@ class UserLinkService(
             addUserConsent = true
         )
     }
+
+    /**
+     * @return true if the user is linked to an external authentication provider, false otherwise
+     */
+    fun isLinked(user: User): Boolean {
+        return  userLinkRepository.findByUser(user) != null
+    }
+
+    /**
+     * This method is the inverse of [isLinked].
+     * @return true if the user is not linked to an external authentication provider, false otherwise
+     * @see isLinked
+     */
+    fun isNotLinked(user: User): Boolean {
+        return !isLinked(user)
+    }
 }
