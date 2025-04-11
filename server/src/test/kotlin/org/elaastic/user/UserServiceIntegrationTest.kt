@@ -19,6 +19,8 @@
 package org.elaastic.user
 
 import org.apache.commons.lang3.time.DateUtils
+import org.elaastic.auth.UserLink
+import org.elaastic.auth.UserLinkRepository
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tExpect
 import org.elaastic.test.directive.tGiven
@@ -53,8 +55,10 @@ internal class UserServiceIntegrationTest(
     @Autowired val unsubscribeKeyRepository: UnsubscribeKeyRepository,
     @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
     @Autowired val passwordEncoder: PasswordEncoder,
-    @Autowired val userRepository: UserRepository
+    @Autowired val userRepository: UserRepository,
+    @Autowired val userLinkRepository: UserLinkRepository,
 ) {
+
 
     @Test
     fun addUserWithoutCheckingOfEmail() {
@@ -737,6 +741,24 @@ internal class UserServiceIntegrationTest(
         }.tThen("An exception is throws") {
             assertThrows(IllegalArgumentException::class.java) {
                 it()
+            }
+        }
+    }
+
+    @Test
+    fun `an user that link to an external identity provider can't change is password`() {
+        tGiven("a user link to an external identity provider") {
+            UserLink(
+                providerId = "oidcProvider",
+                providerUserId = "oidcUserId",
+                user = integrationTestingService.getAnyUser()
+            ).let(userLinkRepository::save)
+                .user
+        }.tWhen("we try to change the password") {
+            { userService.changePasswordForUser(it, "abcd") }
+        }.tThen("An exception is throws") { changePassword ->
+            assertThrows<IllegalArgumentException> {
+                changePassword()
             }
         }
     }
