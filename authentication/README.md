@@ -1,4 +1,4 @@
-# Authentification with Keycloak
+# Authentication with Keycloak
 
 This folder contains the configuration files for the Keycloak server.
 
