@@ -1,8 +1,13 @@
 package org.elaastic.auth.oauth
 
+import com.nhaarman.mockitokotlin2.*
 import org.elaastic.auth.UserLink
 import org.elaastic.auth.UserLinkRepository
+import org.elaastic.auth.UserLinkService
 import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tThen
+import org.elaastic.test.directive.tWhen
+import org.elaastic.user.Role
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserRepository
@@ -11,12 +16,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.context.annotation.Profile
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.OAuth2AccessToken
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,10 +32,16 @@ import javax.transaction.Transactional
 class ElaasticOidcUserServiceIntegrationTest(
     @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
     @Autowired val integrationTestingService: IntegrationTestingService,
-    @Autowired val userLinkRepository: UserLinkRepository,
     @Autowired val roleService: RoleService,
-    @Autowired val userRepository: UserRepository,
 ) {
+    @SpyBean
+    lateinit var userLinkRepository: UserLinkRepository
+
+    @SpyBean
+    lateinit var userRepository: UserRepository
+
+    @SpyBean
+    lateinit var userLinkService: UserLinkService
 
     @Test
     fun `test loadUser with null`() {
@@ -46,73 +59,79 @@ class ElaasticOidcUserServiceIntegrationTest(
             username = "johdoe",
             plainTextPassword = "1234"
         )
-        val userCountBefore = userRepository.count()
-        val userLinkCountBefore = userLinkRepository.count()
 
+        tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(getUserRequest(user))
 
-        // When we load the user
-        val elaasticOidcUser = elaasticOidcUserService.loadUser(getUserRequest(user))
+        }.tThen("the user is created") { elaasticOidcUser ->
+            verify(userLinkService, times(1)).registerNewOidcUser(any<OidcUser>(), any<Role.RoleId>())
+            verify(userRepository, times(1)).save(any<User>())
+            verify(userLinkRepository, times(1)).save(any<UserLink>())
 
-        // Then the user is created
-        assertEquals(userCountBefore + 1, userRepository.count()) { "One user should be created" }
-        assertEquals(userLinkCountBefore + 1, userLinkRepository.count()) { "On userLink should be created" }
-        assertInstanceOf(ElaasticOidcUser::class.java, elaasticOidcUser)
-        elaasticOidcUser as ElaasticOidcUser
-        assertEquals(user.email, elaasticOidcUser.email) { "Email should be the same" }
-        assertEquals(user.firstName, elaasticOidcUser.givenName) { "First name should be the same" }
-        assertEquals(user.lastName, elaasticOidcUser.familyName) { "Last name should be the same" }
+            assertInstanceOf(ElaasticOidcUser::class.java, elaasticOidcUser)
+            elaasticOidcUser as ElaasticOidcUser
+            assertEquals(user.email, elaasticOidcUser.email) { "Email should be the same" }
+            assertEquals(user.firstName, elaasticOidcUser.givenName) { "First name should be the same" }
+            assertEquals(user.lastName, elaasticOidcUser.familyName) { "Last name should be the same" }
 
-        val createdUser = userRepository.findById(elaasticOidcUser.elaasticUser.id!!)
-            .let {
-                assertTrue(it.isPresent) { "User should be present" }
-                it.get()
+            val createdUser = userRepository.findById(elaasticOidcUser.elaasticUser.id!!)
+                .let {
+                    assertTrue(it.isPresent) { "User should be present" }
+                    it.get()
+                }
+            assertEquals(user.firstName, createdUser.firstName) { "First name should be the same" }
+            assertEquals(user.lastName, createdUser.lastName) { "Last name should be the same" }
+            assertEquals(user.username, createdUser.username) { "Username should be the same" }
+            assertEquals(user.email, createdUser.email) { "Email should be the same" }
+
+            val createdUserLink = userLinkRepository.findByProviderIdAndProviderUserId(
+                userLinkService.oidcProvider,
+                elaasticOidcUser.name
+            ).let {
+                assertNotNull(it)
+                it!!
             }
-        assertEquals(user.firstName, createdUser.firstName) { "First name should be the same" }
-        assertEquals(user.lastName, createdUser.lastName) { "Last name should be the same" }
-        assertEquals(user.username, createdUser.username) { "Username should be the same" }
-        assertEquals(user.email, createdUser.email) { "Email should be the same" }
-
-        val createdUserLink = userLinkRepository.findByProviderIdAndProviderUserId(
-            elaasticOidcUser.idToken.tokenValue,
-            elaasticOidcUser.name
-        ).let {
-            assertNotNull(it)
-            it!!
+            assertEquals(createdUser, createdUserLink.user) { "User should be the same" }
+            assertEquals(
+                userLinkService.oidcProvider,
+                createdUserLink.providerId
+            ) { "Provider id should be the same" }
+            assertEquals(
+                elaasticOidcUser.name,
+                createdUserLink.providerUserId
+            ) { "Provider user id should be the same" }
         }
-        assertEquals(createdUser, createdUserLink.user) { "User should be the same" }
-        assertEquals(
-            elaasticOidcUser.idToken.tokenValue,
-            createdUserLink.providerId
-        ) { "Provider id should be the same" }
-        assertEquals(elaasticOidcUser.name, createdUserLink.providerUserId) { "Provider user id should be the same" }
     }
 
     @Test
     fun `test loadUser with existing User`() {
         // Given a user
         val user = integrationTestingService.getAnyUser()
-        val userRequest = getUserRequest(user)
-        val userLink = UserLink(
-            providerId = userRequest.idToken.tokenValue,
+        UserLink(
+            providerId = userLinkService.oidcProvider,
             providerUserId = user.username,
             user = user
         ).let(userLinkRepository::save)
+        clearInvocations(userLinkRepository)
 
-        val userCountBefore = userRepository.count()
-        val userLinkCountBefore = userLinkRepository.count()
+        tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(getUserRequest(user))
 
-        // When we load the user
-        val elaasticOidcUser = elaasticOidcUserService.loadUser(userRequest)
-
-        // Then the user is not created
-        assertEquals(userCountBefore, userRepository.count()) { "No new user should be created" }
-        assertEquals(userLinkCountBefore, userLinkRepository.count()) { "No new userLink should be created" }
-        assertInstanceOf(ElaasticOidcUser::class.java, elaasticOidcUser)
-        elaasticOidcUser as ElaasticOidcUser
-        assertEquals(user.email, elaasticOidcUser.email) { "Email should be the same" }
-        assertEquals(user.firstName, elaasticOidcUser.givenName) { "First name should be the same" }
-        assertEquals(user.lastName, elaasticOidcUser.familyName) { "Last name should be the same" }
-        assertEquals(user, elaasticOidcUser.elaasticUser) { "User should be the same" }
+        }.tThen("no other user is created") { elaasticOidcUser ->
+            verify(userRepository, never()).save(any<User>())
+            verify(userLinkRepository, never()).save(any<UserLink>())
+            verify(userLinkRepository, times(1)).findByProviderIdAndProviderUserId(
+                userLinkService.oidcProvider,
+                user.username
+            )
+            // And the user retrieve have the information we except
+            assertEquals(user.email, elaasticOidcUser.email) { "Email should be the same" }
+            assertEquals(user.firstName, elaasticOidcUser.givenName) { "First name should be the same" }
+            assertEquals(user.lastName, elaasticOidcUser.familyName) { "Last name should be the same" }
+            assertInstanceOf(ElaasticOidcUser::class.java, elaasticOidcUser)
+            elaasticOidcUser as ElaasticOidcUser
+            assertEquals(user, elaasticOidcUser.elaasticUser) { "User should be the same" }
+        }
     }
 
     /** Create a UserRequest for the given user */
