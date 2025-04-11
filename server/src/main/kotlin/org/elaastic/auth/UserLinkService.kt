@@ -25,14 +25,14 @@ import org.elaastic.auth.cas.SupportedCasProvider
 import org.elaastic.user.*
 import org.jasig.cas.client.authentication.AttributePrincipal
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
 
 /**
- * Service to manage the link between Elaastic user and external
- * authentication providers, like CAS or OIDC.
+ * Service to manage the link between Elaastic user and external authentication providers, like CAS or OIDC.
  *
  * @see org.elaastic.auth.cas.CasAuthenticationUserDetailService
  * @see org.elaastic.auth.oauth.ElaasticOidcUserService
@@ -43,6 +43,11 @@ class UserLinkService(
     @Autowired val userService: UserService,
     @Autowired val roleService: RoleService,
 ) {
+
+    @Value("\${spring.security.oauth2.client.registration.keycloak.provider}")
+    val oidcProvider: String = "oidcProvider default value"
+
+
     /**
      * Fetch the userLink for the given providerId and username.
      *
@@ -60,8 +65,8 @@ class UserLinkService(
     /**
      * Register a new user with the given CAS provider.
      *
-     * Get the information about the user from the principal. Create the new
-     * user, save it and create the link between the user and the CAS key.
+     * Get the information about the user from the principal. Create the new user, save it and create the link between
+     * the user and the CAS key.
      *
      * @see CasAttributeParser
      * @see AttributePrincipal
@@ -93,9 +98,7 @@ class UserLinkService(
         return user
     }
 
-    /**
-     * Register a new user with the given OIDC user and role
-     */
+    /** Register a new user with the given OIDC user and role */
     @Transactional
     fun registerNewOidcUser(oidcUser: OidcUser, role: Role.RoleId): User {
         oidcUser.locale
@@ -109,7 +112,7 @@ class UserLinkService(
         )
 
         UserLink(
-            providerId = oidcUser.idToken.tokenValue,
+            providerId = this.oidcProvider,
             providerUserId = oidcUser.name,
             user = user
         ).let(userLinkRepository::save)
@@ -133,10 +136,10 @@ class UserLinkService(
     /**
      * Return the language of the CAS provider.
      *
-     * As the user is managed by the CAS provider, we assume that his language
-     * and the Cas provider's language are the same.
+     * As the user is managed by the CAS provider, we assume that his language and the Cas provider's language are the
+     * same.
      */
-    // TODO maybe store the local information in another class
+    // TODO maybe store the language information of the CAS in another class
     private fun getLanguage(casProvider: String): String {
         return when (casProvider) {
             SupportedCasProvider.Kosmos.name -> "fr"
@@ -148,8 +151,7 @@ class UserLinkService(
     /**
      * Return the language of the user.
      *
-     * See
-     * [OIDC Standard claims documentation](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims)
+     * See [OIDC Standard claims documentation](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims)
      * for more information about the locale.
      *
      * If no locale is found, the JVM default locale is used.
@@ -170,12 +172,10 @@ class UserLinkService(
     /**
      * Create a new user with the given information.
      *
-     * The user is created with the given first name, last name, email, role,
-     * source and language. The user service generates the password and the
-     * username.
+     * The user is created with the given first name, last name, email, role, source and language. The user service
+     * generates the password and the username.
      *
-     * As the user is created with an authentication provider, the user is
-     * enabled and his consent is added.
+     * As the user is created with an authentication provider, the user is enabled and his consent is added.
      *
      * Then the user is saved and returned.
      */
