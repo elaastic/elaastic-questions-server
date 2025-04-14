@@ -17,7 +17,6 @@
  */
 package org.elaastic.auth.oauth
 
-import org.elaastic.auth.UserLink
 import org.elaastic.auth.UserLinkService
 import org.elaastic.user.Role
 import org.elaastic.user.UserRepository
