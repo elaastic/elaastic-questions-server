@@ -182,10 +182,6 @@ class UserService(
      * @return the user with its new password
      */
     fun changePasswordForUser(user: User, newPlainTextPassword: String): User {
-        require(userLinkRepository.findByUser(user) == null) {
-            "User ${user.username} is linked to an external provider and cannot change his password"
-        }
-
         user.plainTextPassword = newPlainTextPassword // required to get validation
         user.password = passwordEncoder.encode(newPlainTextPassword)
 

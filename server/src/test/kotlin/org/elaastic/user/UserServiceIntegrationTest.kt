@@ -684,22 +684,4 @@ internal class UserServiceIntegrationTest(
             }
         }
     }
-
-    @Test
-    fun `an user that link to an external identity provider can't change is password`() {
-        tGiven("a user link to an external identity provider") {
-            UserLink(
-                providerId = "oidcProvider",
-                providerUserId = "oidcUserId",
-                user = integrationTestingService.getAnyUser()
-            ).let(userLinkRepository::save)
-                .user
-        }.tWhen("we try to change the password") {
-            { userService.changePasswordForUser(it, "abcd") }
-        }.tThen("An exception is throws") { changePassword ->
-            assertThrows<IllegalArgumentException> {
-                changePassword()
-            }
-        }
-    }
 }
