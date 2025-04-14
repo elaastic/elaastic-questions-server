@@ -55,7 +55,6 @@ class UserLink(
                 && providerId == other.providerId
                 && providerUserId == other.providerUserId
                 && user == other.user
-                && createdAt == other.createdAt
     }
 
     override fun hashCode(): Int {
@@ -63,7 +62,6 @@ class UserLink(
         result = 31 * result + providerId.hashCode()
         result = 31 * result + providerUserId.hashCode()
         result = 31 * result + user.hashCode()
-        result = 31 * result + createdAt.hashCode()
         return result
     }
 }
