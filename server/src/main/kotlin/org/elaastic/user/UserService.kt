@@ -19,8 +19,6 @@
 package org.elaastic.user
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.auth.UserLinkRepository
-import org.elaastic.auth.UserLinkService
 import org.elaastic.common.onboarding.OnboardingChapter
 import org.elaastic.user.legal.TermsService
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,7 +47,6 @@ class UserService(
     @Autowired val userConsentRepository: UserConsentRepository,
     @Autowired val onboardingStateRepository: OnboardingStateRepository,
     @Autowired val entityManager: EntityManager,
-    private val userLinkRepository: UserLinkRepository
 ) {
 
     val logger = Logger.getLogger(UserService::class.java.name)
