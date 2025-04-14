@@ -100,7 +100,6 @@ class UserLinkService(
     /** Register a new user with the given OIDC user and role */
     @Transactional
     fun registerNewOidcUser(oidcUser: OidcUser, role: Role.RoleId): User {
-        oidcUser.locale
         val user = createUser(
             oidcUser.givenName,
             oidcUser.familyName,
@@ -206,15 +205,14 @@ class UserLinkService(
         )
     }
 
-    /**
-     * @return true if the user is linked to an external authentication provider, false otherwise
-     */
+    /** @return true if the user is linked to an external authentication provider, false otherwise */
     fun isLinked(user: User): Boolean {
-        return  userLinkRepository.findByUser(user) != null
+        return userLinkRepository.findByUser(user) != null
     }
 
     /**
      * This method is the inverse of [isLinked].
+     *
      * @return true if the user is not linked to an external authentication provider, false otherwise
      * @see isLinked
      */
