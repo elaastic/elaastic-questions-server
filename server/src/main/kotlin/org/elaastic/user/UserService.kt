@@ -175,8 +175,6 @@ class UserService(
     /**
      * Change the password of a user
      *
-     * If the user, is link to an external provider, it cannot change is password and an exception is thrown.
-     *
      * @param user the processed user
      * @param newPlainTextPassword the new plain text password
      * @return the user with its new password
