@@ -44,7 +44,7 @@ class ElaasticOidcUserService(
         val oidcUser = super.loadUser(userRequest)
 
         val role = Role.RoleId.STUDENT //STUB
-        val user = userLinkService.loadUserByUsername(
+        val user = userLinkService.loadUserLinkByUsername(
             userLinkService.oidcProvider,
             oidcUser.name
         )?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
