@@ -38,7 +38,7 @@ class CasAuthenticationUserDetailService(
         }
 
         val username: String = token.name
-        return userLinkService.loadUserByUsername(casKey, username)?.user ?: userLinkService.registerNewCasUser(
+        return userLinkService.loadUserLinkByUsername(casKey, username)?.user ?: userLinkService.registerNewCasUser(
             casKey, casProvider, token.assertion.principal
         )
     }
