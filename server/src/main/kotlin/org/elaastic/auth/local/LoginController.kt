@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import java.net.URI
 import java.net.URLEncoder
@@ -37,23 +38,13 @@ class LoginController(
     @GetMapping("/login")
     fun displayLoginForm(model: Model, request: HttpServletRequest): String {
 
-        model.addAttribute(
-            "casInfoList",
-            casSecurityConfigurer.casInfoList
-        )
-        model.addAttribute(
-            "casUrlWithServiceMap",
-            casSecurityConfigurer.casInfoList.associateBy(
+        model["casInfoList"] = casSecurityConfigurer.casInfoList
+        model["casUrlWithServiceMap"] = casSecurityConfigurer.casInfoList
+            .associateBy(
                 { it.casKey },
-                {
-                    buildCasUrlWithService(
-                        it.serverUrl,
-                        casSecurityConfigurer.getServiceCasLoginUrl(it.casKey)
-                    )
-                }
+                { buildCasUrlWithService(it.serverUrl, casSecurityConfigurer.getServiceCasLoginUrl(it.casKey)) }
             )
-        )
-        model.addAttribute("elaasticOidcEnabled", elaasticOidcEnabled)
+        model["elaasticOidcEnabled"] = elaasticOidcEnabled
 
         return "login"
     }
@@ -64,7 +55,6 @@ class LoginController(
          *
          * @param serverUrl the CAS server URL
          * @param serviceUrl the service URL
-         *
          * @return the CAS login URL with the service parameter
          */
         fun buildCasUrlWithService(serverUrl: String, serviceUrl: String): String {

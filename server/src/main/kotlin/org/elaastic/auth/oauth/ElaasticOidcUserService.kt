@@ -17,6 +17,8 @@
  */
 package org.elaastic.auth.oauth
 
+import org.elaastic.auth.UserLinkService
+import org.elaastic.user.Role
 import org.elaastic.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
@@ -27,21 +29,28 @@ import org.springframework.stereotype.Service
 /**
  * Service dedicated to retrieve the Elaastic User bound to an OidcUser
  *
- * Implementation note:
- * This service overrides OidcUserService, and, as such, must return an OidcUser.
- * The ElaasticOidcUser is an OidcUser bound to its corresponding Elaastic User
+ * Implementation note: This service overrides OidcUserService, and, as such, must return an OidcUser. The
+ * ElaasticOidcUser is an OidcUser bound to its corresponding Elaastic User
  *
  * @author John Tranier
  */
 @Service
 class ElaasticOidcUserService(
     @Autowired val userRepository: UserRepository,
+    private val userLinkService: UserLinkService
 ) : OidcUserService() {
 
     override fun loadUser(userRequest: OidcUserRequest?): OidcUser {
         val oidcUser = super.loadUser(userRequest)
 
-        // TODO: This is just a POC. We will implement here the logic to retrieve, and create on the fly if needed, the corresponding Elaastic User
-        return ElaasticOidcUser(oidcUser, userRepository.getByUsername("fsil"))
+        val role = Role.RoleId.STUDENT //STUB
+        val user = userLinkService.loadUserLinkByUsername(
+            userLinkService.oidcProvider,
+            oidcUser.name
+        )?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
+
+
+
+        return ElaasticOidcUser(oidcUser, user)
     }
 }

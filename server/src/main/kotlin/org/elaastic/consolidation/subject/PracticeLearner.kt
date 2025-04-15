@@ -25,6 +25,6 @@ class PracticeLearner(
 
     constructor(user: User) : this(
         id = user.uuid,
-        externalUserRef = user.casUser?.let { ExternalUserRef(it.casKey, it.casUserId) }
+        externalUserRef = user.userLink?.let { ExternalUserRef(it.providerId, it.providerUserId) }
     )
 }

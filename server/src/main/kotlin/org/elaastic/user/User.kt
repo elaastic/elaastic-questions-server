@@ -19,7 +19,7 @@
 package org.elaastic.user
 
 import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.auth.cas.CasUser
+import org.elaastic.auth.UserLink
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.user.validation.PlainTextPasswordIsTooShort
 import org.elaastic.user.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
@@ -72,7 +72,7 @@ class User(
     var casKey: String? = null,
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    val casUser: CasUser? = null
+    val userLink: UserLink? = null
 
 ) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource, PrincipalUserResolver {
 

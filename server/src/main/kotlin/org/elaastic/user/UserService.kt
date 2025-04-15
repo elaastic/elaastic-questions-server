@@ -46,10 +46,9 @@ class UserService(
     @Autowired val termsService: TermsService,
     @Autowired val userConsentRepository: UserConsentRepository,
     @Autowired val onboardingStateRepository: OnboardingStateRepository,
-    @Autowired val entityManager: EntityManager
+    @Autowired val entityManager: EntityManager,
 ) {
 
-    val FAKE_USER_PREFIX = "John_Doe___"
     val logger = Logger.getLogger(UserService::class.java.name)
     var fakeUserList: List<User>? = null
 
@@ -124,8 +123,7 @@ class UserService(
      *
      * @param user the user to process
      * @param language the preferred language of the user
-     * @param checkEmailAccount flag to indicates if mail checking must be
-     *     perform by the system
+     * @param checkEmailAccount flag to indicates if mail checking must be perform by the system
      * @return the saved user
      */
     @Transactional
@@ -181,17 +179,15 @@ class UserService(
     fun changePasswordForUser(user: User, newPlainTextPassword: String): User {
         user.plainTextPassword = newPlainTextPassword // required to get validation
         user.password = passwordEncoder.encode(newPlainTextPassword)
-        userRepository.saveAndFlush(user).let {
-            return it
-        }
+
+        return userRepository.saveAndFlush(user)
     }
 
     /**
      * Change the password of a user
      *
      * @param user the processed user
-     * @param currentPassword the current password used to check current
-     *     password is known by the user
+     * @param currentPassword the current password used to check current password is known by the user
      * @param newPlainTextPassword the new plain text password
      * @return the user with its new password
      * @throws AccessDeniedException if current password not valid
@@ -364,11 +360,9 @@ class UserService(
     }
 
     /**
-     * Remove old activation keys and corresponding users who didn't activate
-     * their accounts
+     * Remove old activation keys and corresponding users who didn't activate their accounts
      *
-     * @param lifetime the lifetime in hours of activation keys, default set to
-     *     3
+     * @param lifetime the lifetime in hours of activation keys, default set to 3
      */
     fun removeOldActivationKeys(lifetime: Int = 3) {
         activationKeyRepository.findAllByDateCreatedLessThan(DateUtils.addHours(Date(), -lifetime)).let {
@@ -448,7 +442,7 @@ class UserService(
     private fun buildFakeUserList(): List<User> {
         return mutableListOf<User>().also { fakeUserList ->
             for (i in 1..9) {
-                fakeUserList.add(findByUsername("$FAKE_USER_PREFIX${i}")!!)
+                fakeUserList.add(findByUsername("${FAKE_USER_PREFIX}${i}")!!)
             }
         }
     }
@@ -530,6 +524,7 @@ class UserService(
 
     /**
      * return the learner with the given id
+     *
      * @param learnerId id to find the learner
      * @return learner with the given id
      * @throws IllegalArgumentException if a learner with the given id doesn't exist
@@ -537,6 +532,10 @@ class UserService(
     @Throws(IllegalArgumentException::class)
     fun findById(learnerId: Long): User {
         return userRepository.findById(learnerId).orElseThrow { IllegalArgumentException("Learner not found") }
+    }
+
+    companion object {
+        const val FAKE_USER_PREFIX = "John_Doe___"
     }
 
 }
