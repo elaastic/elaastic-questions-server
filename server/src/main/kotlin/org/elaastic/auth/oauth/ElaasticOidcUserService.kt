@@ -19,8 +19,6 @@ package org.elaastic.auth.oauth
 
 import org.elaastic.auth.UserLinkService
 import org.elaastic.user.Role
-import org.elaastic.user.UserRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
@@ -36,7 +34,6 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ElaasticOidcUserService(
-    @Autowired val userRepository: UserRepository,
     private val userLinkService: UserLinkService
 ) : OidcUserService() {
 
@@ -48,8 +45,6 @@ class ElaasticOidcUserService(
             userLinkService.oidcProvider,
             oidcUser.name
         )?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
-
-
 
         return ElaasticOidcUser(oidcUser, user)
     }
