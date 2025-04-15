@@ -56,7 +56,7 @@ class UserLinkService(
      * @param username The username of the user
      * @see UserLink
      */
-    fun loadUserByUsername(providerId: String, username: String): UserLink? {
+    fun loadUserLinkByUsername(providerId: String, username: String): UserLink? {
         return userLinkRepository.findByProviderIdAndProviderUserId(providerId, username)
             ?.also { it.user.casKey = providerId }
     }

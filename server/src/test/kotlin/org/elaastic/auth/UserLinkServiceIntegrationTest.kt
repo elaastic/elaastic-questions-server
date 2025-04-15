@@ -23,12 +23,12 @@ class UserLinkServiceIntegrationTest(
 
 
     @Test
-    fun `test loadUserByUsername`() {
-        assertNull(userLinkService.loadUserByUsername("", ""))
+    fun `test loadUserLinkByUsername`() {
+        assertNull(userLinkService.loadUserLinkByUsername("", ""))
     }
 
     @Test
-    fun `test loadUserByUsername with a user in the database`() {
+    fun `test loadUserLinkByUsername with a user in the database`() {
         val user = integrationTestingService.getAnyUser()
         val userLink = UserLink(
             providerId = "testProvider",
@@ -36,7 +36,7 @@ class UserLinkServiceIntegrationTest(
             user = user
         ).let(userLinkRepository::save)
 
-        val loadedUser = userLinkService.loadUserByUsername(userLink.providerId, userLink.providerUserId)
+        val loadedUser = userLinkService.loadUserLinkByUsername(userLink.providerId, userLink.providerUserId)
 
         assertEquals(userLink, loadedUser)
     }
@@ -59,7 +59,7 @@ class UserLinkServiceIntegrationTest(
         assertEquals(username, userDetail.username)
         val userFound = userRepository.findUsersByEmailLike(email).first()
         assertNotNull(userFound)
-        val userLinkFound = userLinkService.loadUserByUsername(casKey, userFound.username)
+        val userLinkFound = userLinkService.loadUserLinkByUsername(casKey, userFound.username)
         assertNotNull(userLinkFound)
         assertEquals(userDetail, userLinkFound?.user)
     }
