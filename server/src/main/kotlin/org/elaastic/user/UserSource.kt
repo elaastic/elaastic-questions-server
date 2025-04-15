@@ -47,5 +47,9 @@ enum class UserSource {
      */
     CAS,
 
+    /**
+     * The user is created a IAM server using OIDC.
+     * This is intended to be used with a Keycloak Service.
+     */
     OIDC,
 }
