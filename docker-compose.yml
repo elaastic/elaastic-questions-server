@@ -37,7 +37,8 @@ services:
     ports:
       - "8025:8025"
       - "1025:1025"
-  authentication:
+
+  auth-iam:
       image: quay.io/keycloak/keycloak:25.0.1
       command:
           - start-dev
@@ -51,8 +52,8 @@ services:
           KEYCLOAK_ADMIN: admin
           KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
           KC_HTTP_PORT: 8080
-          KC_HOSTNAME_URL: http://localhost:8081
-          KC_HOSTNAME_ADMIN_URL: http://localhost:8081
+          KC_HOSTNAME_URL: http://host.docker.internal:8081
+          KC_HOSTNAME_ADMIN_URL: http://host.docker.internal:8081
           KC_HOSTNAME_STRICT_BACKCHANNEL: true
           KC_HTTP_RELATIVE_PATH: /
           KC_HTTP_ENABLED: true
@@ -66,7 +67,7 @@ services:
           timeout: 5s
           retries: 20
 
-  ext-idp-saml2:
+  auth-idp-saml2:
       image: quay.io/keycloak/keycloak:25.0.1
       command:
           - start-dev
@@ -79,8 +80,8 @@ services:
           KEYCLOAK_ADMIN: admin
           KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
           KC_HTTP_PORT: 8080
-          KC_HOSTNAME_URL: http://localhost:8082
-          KC_HOSTNAME_ADMIN_URL: http://localhost:8082
+          KC_HOSTNAME_URL: http://host.docker.internal:8082
+          KC_HOSTNAME_ADMIN_URL: http://host.docker.internal:8082
           KC_HOSTNAME_STRICT_BACKCHANNEL: true
           KC_HTTP_RELATIVE_PATH: /
           KC_HTTP_ENABLED: true
