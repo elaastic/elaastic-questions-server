@@ -5,6 +5,7 @@ import org.elaastic.auth.UserLink
 import org.elaastic.auth.UserLinkRepository
 import org.elaastic.auth.UserLinkService
 import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
 import org.elaastic.user.Role
@@ -134,26 +135,238 @@ class ElaasticOidcUserServiceIntegrationTest(
         }
     }
 
+    @Test
+    fun `test loadUser with new User and Student Role`() {
+        tGiven("a user with the STUDENT role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            ).also {
+                it.roles.clear()
+                it.roles.add(Role(name = Role.RoleId.STUDENT.name))
+            }
+        }.tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(getUserRequest(it))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser}
+        }.tThen("the user is created with the student role") {
+            assertTrue(it.elaasticUser.roles.any { role ->
+                role.name == Role.RoleId.STUDENT.name
+            }, "User should have the STUDENT role")
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and Teacher Role`() {
+        tGiven("a user with the TEACHER role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            )
+        }.tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(getUserRequest(it, Role.RoleId.TEACHER))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser}
+        }.tThen("the user is created with the teacher role") {
+            assertTrue(it.elaasticUser.roles.any { role ->
+                role.name == Role.RoleId.TEACHER.name
+            }, "User should have the TEACHER role")
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and Admin Role`() {
+        tGiven("a user with the ADMIN role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            )
+        }.tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(getUserRequest(it, Role.RoleId.ADMIN))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser}
+        }.tThen("the user is created with the admin role") {
+            assertTrue(it.elaasticUser.roles.any { role ->
+                role.name == Role.RoleId.ADMIN.name
+            }, "User should have the ADMIN role")
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and multiple Roles should throw`() {
+        tGiven("a user with the STUDENT and TEACHER roles") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            ).also {
+                it.roles.clear()
+                it.roles.add(Role(name = Role.RoleId.STUDENT.name))
+                it.roles.add(Role(name = Role.RoleId.TEACHER.name))
+            }
+        }.tWhen("we load the user") {
+            {
+                elaasticOidcUserService.loadUser(getUserRequest(it))
+            }
+        }.tThen("an exception is thrown") {
+            assertThrows<IllegalArgumentException> {
+                it()
+            }
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and only an unknow role should throw`() {
+        tGiven("a user with an unknown role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            ).also {
+                it.roles.clear()
+                it.roles.add(Role(name = "UNKNOWN_ROLE"))
+            }
+        }.tWhen("we load the user") {
+            {
+                elaasticOidcUserService.loadUser(getUserRequest(it))
+            }
+        }.tThen("an exception is thrown") {
+            assertThrows<IllegalArgumentException> {
+                it()
+            }
+
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and an unknow and one known Role shouldn't throw`() {
+        tGiven("a user with an unknown and a known role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            ).also {
+                it.roles.clear()
+                it.roles.add(Role(name = Role.RoleId.STUDENT.name))
+                it.roles.add(Role(name = "UNKNOWN_ROLE"))
+            }
+        }.tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(getUserRequest(it))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser}
+        }.tThen("the user is created with the student role") {
+            assertTrue(it.elaasticUser.roles.any { role ->
+                role.name == Role.RoleId.STUDENT.name
+            }, "User should have the STUDENT role")
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+    
+    @Test
+    fun `test loadUser with existing User and the Role don't match should throw`() {
+        tGiven("a user with STUDENT Role"){
+            // Given a user
+            val user = integrationTestingService.getAnyUser()
+                .also {
+                    it.roles.clear()
+                    it.roles.add(Role(name = Role.RoleId.STUDENT.name))
+                }
+            UserLink(
+                providerId = userLinkService.oidcProvider,
+                providerUserId = user.username,
+                user = user
+            ).let(userLinkRepository::save)
+        }.tWhen("we load the user BUT with a different role") {
+            val anotherRole = Role.RoleId.TEACHER
+            assertNotEquals(anotherRole.roleName, it.user.roles.first().name);
+            { elaasticOidcUserService.loadUser(getUserRequest(it.user, anotherRole)) }
+        }.tThen("an exception is thrown") {
+            assertThrows<IllegalArgumentException> {
+                it()
+            }
+        }
+    }
+
+    @Test
+    fun `test loadUser with existing User and the Role match`() {
+        tGiven("a user with STUDENT Role"){
+            // Given a user
+            val user = integrationTestingService.getAnyUser()
+                .also {
+                    it.roles.clear()
+                    it.roles.add(Role(name = Role.RoleId.STUDENT.name))
+                }
+            UserLink(
+                providerId = userLinkService.oidcProvider,
+                providerUserId = user.username,
+                user = user
+            ).let(userLinkRepository::save)
+        }.tWhen("we load the user with the same role") {
+            elaasticOidcUserService.loadUser(getUserRequest(it.user, Role.RoleId.STUDENT))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser}
+        }.tThen("the user is created with the student role") {
+            assertTrue(it.elaasticUser.roles.any { role ->
+                role.name == Role.RoleId.STUDENT.name
+            }, "User should have the STUDENT role")
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+
     /** Create a UserRequest for the given user */
     private fun getUserRequest(user: User): OidcUserRequest {
-        return OidcUserRequest(
-            ClientRegistration
-                .withRegistrationId(user.firstName)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .clientId(user.firstName)
-                .tokenUri("https://localhost:8080")
-                .build(),
-            OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "accessToken", null, null),
-            OidcIdToken(
-                "idToken", null, null, mapOf(
-                    "sub" to user.username,
-                    "given_name" to user.firstName,
-                    "family_name" to user.lastName,
-                    "email" to user.email,
-                    "iss" to "https://localhost:8080",
-                )
-            ),
-            emptyMap()
+        val userRole = user.roles
+            .map { it.name }
+            .mapNotNull {
+                when (it) {
+                    Role.RoleId.STUDENT.name -> Role.RoleId.STUDENT
+                    Role.RoleId.TEACHER.name -> Role.RoleId.TEACHER
+                    Role.RoleId.ADMIN.name -> Role.RoleId.ADMIN
+                    else -> null
+                }
+            }
+        return getUserRequest(user, userRole)
+    }
+
+    private fun getUserRequest(user: User, role: Role.RoleId): OidcUserRequest = getUserRequest(user, listOf(role))
+
+    private fun getUserRequest(user: User, roles: List<Role.RoleId>): OidcUserRequest = OidcUserRequest(
+        clientRegistration(user),
+        oAuth2AccessToken(),
+        oidcIdToken(user, roles),
+        emptyMap()
+    )
+
+    private fun oidcIdToken(user: User, roles: List<Role.RoleId>): OidcIdToken {
+        val realmRoles = mapOf(
+            "roles" to roles.map { it.name.lowercase() }
+        )
+        return OidcIdToken(
+            "idToken", null, null, mapOf(
+                "sub" to user.username,
+                "given_name" to user.firstName,
+                "family_name" to user.lastName,
+                "email" to user.email,
+                "iss" to "https://localhost:8080",
+                "realm_access" to realmRoles,
+            )
         )
     }
+
+    private fun oAuth2AccessToken() = OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "accessToken", null, null)
+
+    private fun clientRegistration(user: User): ClientRegistration? =
+        ClientRegistration
+            .withRegistrationId(user.firstName)
+            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+            .clientId(user.firstName)
+            .tokenUri("https://localhost:8080")
+            .build()
 }
