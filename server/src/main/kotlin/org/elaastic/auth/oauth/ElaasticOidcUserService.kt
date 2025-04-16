@@ -18,6 +18,7 @@
 package org.elaastic.auth.oauth
 
 import org.elaastic.auth.UserLinkService
+import org.elaastic.common.util.alsoCheck
 import org.elaastic.user.Role.RoleId
 import org.elaastic.user.contains
 import org.slf4j.Logger
@@ -48,7 +49,7 @@ private const val ROLES_KEY = "roles"
  */
 @Service
 class ElaasticOidcUserService(
-    private val userLinkService: UserLinkService
+    private val userLinkService: UserLinkService,
 ) : OidcUserService() {
 
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -107,19 +108,22 @@ class ElaasticOidcUserService(
             .also { logger.info(it.toString()) }
             .filterIsInstance<String>()
             .map { it.lowercase() }
+            .alsoCheck({ it.isNotEmpty() }) {
+                "There should be at least one role in the realm roles: $it"
+            }
 
-        check(realmRoles.size <= 1) {
-            "There should be only one role in the realm roles: $realmRoles"
-        }
-        check(realmRoles.isNotEmpty()) {
-            "There should be at least one role in the realm roles: $realmRoles"
-        }
-
-        return keycloakToElaasticRole[realmRoles.first()]
-            ?: throw IllegalStateException(
-                "The role ${realmRoles.first()} is not one of the following: " +
-                        keycloakToElaasticRole.keys.joinToString(", ")
-            )
+        return realmRoles
+            .associateWith { keycloakToElaasticRole[it] }
+            // We check that there is at least one Elaastic role in the realm roles
+            .alsoCheck({ it.values.any { role -> role != null } }) {
+                "There should be at least one Elaastic role in the realm roles: $realmRoles. " +
+                        "The roles are: ${keycloakToElaasticRole.keys.joinToString(", ")}"
+            }
+            .mapNotNull { it.value }
+            .alsoCheck({ it.size <= 1 }) {
+                "There should be exactly one Elaastic role in the realm roles: $realmRoles. Found roles: $it"
+            }
+            .first()
     }
 
 }
