@@ -218,10 +218,15 @@ class ElaasticOidcUserServiceIntegrationTest(
             )
         }.tWhen("we load the user") {
             {
-                elaasticOidcUserService.loadUser(getUserRequest(it, listOf(RoleId.STUDENT, RoleId.TEACHER).map(::getKeycloakRoleFrom)))
+                elaasticOidcUserService.loadUser(
+                    getUserRequest(
+                        it,
+                        listOf(RoleId.STUDENT, RoleId.TEACHER).map(::getKeycloakRoleFrom)
+                    )
+                )
             }
         }.tThen("an exception is thrown") {
-            assertThrows<IllegalStateException> {
+            assertThrows<RoleException> {
                 it()
             }
         }
@@ -241,10 +246,9 @@ class ElaasticOidcUserServiceIntegrationTest(
                 elaasticOidcUserService.loadUser(getUserRequest(it, "UNKNOWN_ROLE"))
             }
         }.tThen("an exception is thrown") {
-            assertThrows<IllegalStateException> {
+            assertThrows<RoleException> {
                 it()
             }
-
         }
     }
 
@@ -288,7 +292,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             assertFalse(it.user hasRole anotherRole);
             { elaasticOidcUserService.loadUser(getUserRequest(it.user, anotherRole)) }
         }.tThen("an exception is thrown") {
-            assertThrows<IllegalStateException> {
+            assertThrows<RoleException> {
                 it()
             }
         }
@@ -346,7 +350,8 @@ class ElaasticOidcUserServiceIntegrationTest(
 
     private fun getUserRequest(user: User, role: String): OidcUserRequest = getUserRequest(user, listOf(role))
 
-    private fun getUserRequest(user: User, role: RoleId): OidcUserRequest = getUserRequest(user, listOf(getKeycloakRoleFrom(role)))
+    private fun getUserRequest(user: User, role: RoleId): OidcUserRequest =
+        getUserRequest(user, listOf(getKeycloakRoleFrom(role)))
 
     /**
      * Create a UserRequest for the given user and role
@@ -383,7 +388,7 @@ class ElaasticOidcUserServiceIntegrationTest(
     /** Get the Keycloak role from the given RoleId */
     fun getKeycloakRoleFrom(role: RoleId): String {
         return keycloakToElaasticRole.entries.find { it.value == role }?.key
-            ?: throw IllegalStateException("Role $role not found")
+            ?: throw RoleException("Role $role not found")
     }
 
     /**
