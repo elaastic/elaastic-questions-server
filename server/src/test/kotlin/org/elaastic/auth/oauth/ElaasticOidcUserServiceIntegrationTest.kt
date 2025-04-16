@@ -152,12 +152,9 @@ class ElaasticOidcUserServiceIntegrationTest(
                 lastName = "Doe",
                 username = "johdoe",
                 plainTextPassword = "1234"
-            ).also {
-                it.roles.clear()
-                it.roles.add(Role(name = RoleId.STUDENT.roleName))
-            }
+            )
         }.tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(it))
+            elaasticOidcUserService.loadUser(getUserRequest(it, RoleId.STUDENT))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the student role") {
             assertTrue(
@@ -218,14 +215,10 @@ class ElaasticOidcUserServiceIntegrationTest(
                 lastName = "Doe",
                 username = "johdoe",
                 plainTextPassword = "1234"
-            ).also {
-                it.roles.clear()
-                it.roles.add(Role(name = RoleId.STUDENT.roleName))
-                it.roles.add(Role(name = RoleId.TEACHER.roleName))
-            }
+            )
         }.tWhen("we load the user") {
             {
-                elaasticOidcUserService.loadUser(getUserRequest(it))
+                elaasticOidcUserService.loadUser(getUserRequest(it, listOf(RoleId.STUDENT, RoleId.TEACHER).map(::getKeycloakRoleFrom)))
             }
         }.tThen("an exception is thrown") {
             assertThrows<IllegalStateException> {
@@ -242,13 +235,10 @@ class ElaasticOidcUserServiceIntegrationTest(
                 lastName = "Doe",
                 username = "johdoe",
                 plainTextPassword = "1234"
-            ).also {
-                it.roles.clear()
-                it.roles.add(Role(name = "UNKNOWN_ROLE"))
-            }
+            )
         }.tWhen("we load the user") {
             {
-                elaasticOidcUserService.loadUser(getUserRequest(it))
+                elaasticOidcUserService.loadUser(getUserRequest(it, "UNKNOWN_ROLE"))
             }
         }.tThen("an exception is thrown") {
             assertThrows<IllegalStateException> {
@@ -266,13 +256,9 @@ class ElaasticOidcUserServiceIntegrationTest(
                 lastName = "Doe",
                 username = "johdoe",
                 plainTextPassword = "1234"
-            ).also {
-                it.roles.clear()
-                it.roles.add(Role(name = RoleId.STUDENT.roleName))
-                it.roles.add(Role(name = "UNKNOWN_ROLE"))
-            }
+            )
         }.tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(it))
+            elaasticOidcUserService.loadUser(getUserRequest(it, listOf(RoleId.STUDENT.roleName, "UNKNOWN_ROLE")))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the student role") {
             assertTrue(
@@ -358,21 +344,9 @@ class ElaasticOidcUserServiceIntegrationTest(
         }
     }
 
-    /**
-     * Create a UserRequest for the given user
-     *
-     * The role is determined by the user roles if none, the STUDENT role is
-     * used
-     */
-    private fun getUserRequest(user: User): OidcUserRequest {
-        return getUserRequest(
-            user,
-            user.roles
-                .mapNotNull { RoleId.values().find { roleId -> it.equals(roleId) } }
-        )
-    }
+    private fun getUserRequest(user: User, role: String): OidcUserRequest = getUserRequest(user, listOf(role))
 
-    private fun getUserRequest(user: User, role: RoleId): OidcUserRequest = getUserRequest(user, listOf(role))
+    private fun getUserRequest(user: User, role: RoleId): OidcUserRequest = getUserRequest(user, listOf(getKeycloakRoleFrom(role)))
 
     /**
      * Create a UserRequest for the given user and role
@@ -381,17 +355,14 @@ class ElaasticOidcUserServiceIntegrationTest(
      *
      * @see oidcIdToken
      */
-    private fun getUserRequest(user: User, roles: List<RoleId>): OidcUserRequest = OidcUserRequest(
+    private fun getUserRequest(user: User, roles: List<String>): OidcUserRequest = OidcUserRequest(
         clientRegistration(user),
         oAuth2AccessToken(),
         oidcIdToken(user, roles),
         emptyMap()
     )
 
-    private fun oidcIdToken(user: User, roles: List<RoleId>): OidcIdToken {
-        val realmRoles = mapOf(
-            "roles" to roles.map(::getKeycloakRoleFrom)
-        )
+    private fun oidcIdToken(user: User, roles: List<String>): OidcIdToken {
         return OidcIdToken(
             "idToken",
             null,
@@ -402,17 +373,27 @@ class ElaasticOidcUserServiceIntegrationTest(
                 "family_name" to user.lastName,
                 "email" to user.email,
                 "iss" to "https://localhost:8080",
-                "realm_access" to realmRoles,
+                "realm_access" to mapOf(
+                    "roles" to roles.map(::getKeycloakRoleFrom)
+                ),
             )
         )
     }
 
-    /**
-     * Get the Keycloak role from the given RoleId
-     */
+    /** Get the Keycloak role from the given RoleId */
     fun getKeycloakRoleFrom(role: RoleId): String {
         return keycloakToElaasticRole.entries.find { it.value == role }?.key
-            ?: throw IllegalStateException("Role $role not found in keycloakToElaasticRole")
+            ?: throw IllegalStateException("Role $role not found")
+    }
+
+    /**
+     * Get the Keycloak role from the given role name.
+     *
+     * If the role name is not found, it will return the role name itself.
+     */
+    fun getKeycloakRoleFrom(role: String): String {
+        return keycloakToElaasticRole.entries.find { it.value.roleName == role }?.key
+            ?: role
     }
 
     private fun oAuth2AccessToken() = OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "accessToken", null, null)
