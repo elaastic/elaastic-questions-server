@@ -151,6 +151,7 @@ class WebSecurityConfig(
                 authorize("/ui/**", permitAll)
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
+                authorize("/error", permitAll)
                 authorize(LOGIN_URL, permitAll)
 
                 // Allow access to this URL on which the CAS filter are applied
