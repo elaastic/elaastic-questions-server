@@ -67,7 +67,35 @@
       "clientRole" : false,
       "containerId" : "d7cfb752-7e07-4e88-a655-704b68b934cd",
       "attributes" : { }
-    }, {
+    },
+        {
+            "id": "b907d9a8-d23d-4f65-b91f-49b2506644b3",
+            "name": "STUDENT",
+            "description": "A student for Elaastic",
+            "composite": false,
+            "clientRole": false,
+            "containerId": "d7cfb752-7e07-4e88-a655-704b68b934cd",
+            "attributes": {}
+        },
+        {
+            "id": "64f48369-1ccf-4897-b2c4-97c8a8c9cb08",
+            "name": "TEACHER",
+            "description": "A teacher for Elaastic",
+            "composite": false,
+            "clientRole": false,
+            "containerId": "d7cfb752-7e07-4e88-a655-704b68b934cd",
+            "attributes": {}
+        },
+        {
+            "id": "a78e0fcf-6964-4a38-9e2f-48a15afcfdfd",
+            "name": "ADMIN",
+            "description": "An Admin for Elaastic",
+            "composite": false,
+            "clientRole": false,
+            "containerId": "d7cfb752-7e07-4e88-a655-704b68b934cd",
+            "attributes": {}
+        },
+        {
       "id" : "987d111e-ef87-44de-a3ea-9b6ffed8c1ef",
       "name" : "uma_authorization",
       "description" : "${role_uma_authorization}",
@@ -387,66 +415,82 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister" : false,
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
-  "users" : [ {
-    "id" : "886efb4c-5018-49a5-9855-91e320d1f1c4",
-    "username" : "brice",
-    "firstName" : "Brice",
-    "lastName" : "Demo",
-    "email" : "brice@elaastic.irit.fr",
-    "emailVerified" : true,
-    "createdTimestamp" : 1721506081830,
-    "enabled" : true,
-    "totp" : false,
-    "credentials" : [ {
-      "id" : "d0e60614-31ff-4cef-9f0d-8b6870af8f4b",
-      "type" : "password",
-      "userLabel" : "My password",
-      "createdDate" : 1721506138445,
-      "secretData" : "{\"value\":\"SLn7crLsUiyNJfKOOYzIPuEnspwBykTRt5rSFc5BCaU=\",\"salt\":\"oW+frY4wTNqfqLc/9LLQOg==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
-    } ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-elaastic-keycloak", "NICE" ],
-    "notBefore" : 0,
-    "groups" : [ ]
-  }, {
-    "id" : "850ee97d-aab6-48c8-8eee-9dccf49c46e2",
-    "username" : "g-8a733bea-3c86-4920-ac38-7fb61c7a10e8",
-    "firstName" : "Eleve",
-    "lastName" : "Demo",
-    "email" : "demo@elaastic.com",
-    "emailVerified" : false,
-    "createdTimestamp" : 1744882036192,
-    "enabled" : true,
-    "totp" : false,
-    "credentials" : [ ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "federatedIdentities" : [ {
-      "identityProvider" : "saml",
-      "userId" : "G-8a733bea-3c86-4920-ac38-7fb61c7a10e8",
-      "userName" : "g-8a733bea-3c86-4920-ac38-7fb61c7a10e8"
-    } ],
-    "realmRoles" : [ "default-roles-elaastic-keycloak" ],
-    "notBefore" : 0,
-    "groups" : [ ]
-  }, {
-    "id" : "34d88f42-15c8-4f47-ae58-ec7f1d7c2342",
-    "username" : "igor",
-    "firstName" : "Igor",
-    "lastName" : "Demo",
-    "email" : "igor@elaastic.irit.fr",
-    "emailVerified" : true,
-    "createdTimestamp" : 1721510598928,
-    "enabled" : true,
-    "totp" : false,
-    "credentials" : [ {
-      "id" : "d8b9181a-e086-45b0-b246-59f52a37fd20",
-      "type" : "password",
-      "createdDate" : 1721511590667,
-      "secretData" : "{\"value\":\"Ji6U5BnPolyAvzhFBDRcYDXYNtQqena8Z2H0IC96TcE0cIJyDKVyeRCvaE0f1FuuGAMc4vh6Lc1wCtk+vxv8hg==\",\"salt\":\"lMF3OdYfnpd0/8wagGxhfA==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    "users": [
+        {
+            "id": "e0943b46-f740-4644-8020-265f672c8ff8",
+            "username": "alice",
+            "firstName": "Alice",
+            "lastName": "Smith",
+            "email": "alice.smith@mail.com",
+            "emailVerified": true,
+            "createdTimestamp": 1744799376806,
+            "enabled": true,
+            "totp": false,
+            "credentials": [
+                {
+                    "id": "9230fa9c-2728-4921-ad7c-d35c03b22c72",
+                    "type": "password",
+                    "userLabel": "My password",
+                    "createdDate": 1744799705775,
+                    "secretData": "{\"value\":\"Jr0CWgZlMESi912Q438JXfJtFnX03h17SCZ8RwRIje8=\",\"salt\":\"pON/rZU2w+F9xQYKtUoBHg==\",\"additionalParameters\":{}}",
+                    "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+                }
+            ],
+            "disableableCredentialTypes": [],
+            "requiredActions": [],
+            "realmRoles": [
+                "default-roles-elaastic-keycloak",
+                "ADMIN"
+            ],
+            "notBefore": 0,
+            "groups": []
+        },
+        {
+            "id": "886efb4c-5018-49a5-9855-91e320d1f1c4",
+            "username": "brice",
+            "firstName": "Brice",
+            "lastName": "Demo",
+            "email": "brice@elaastic.irit.fr",
+            "emailVerified": true,
+            "createdTimestamp": 1721506081830,
+            "enabled": true,
+            "totp": false,
+            "credentials": [
+                {
+                    "id": "d0e60614-31ff-4cef-9f0d-8b6870af8f4b",
+                    "type": "password",
+                    "userLabel": "My password",
+                    "createdDate": 1721506138445,
+                    "secretData": "{\"value\":\"dlJR+pZBE4HF8rX+xXuOa8R9M85mCdT4N0XjpQDmRQZ+AEqXIzX0vOiEAm1K8hLyF4fcCYrLdZeCd9cgN1JaCw==\",\"salt\":\"eluLV2Rl1GtI5gVPrjj4IA==\",\"additionalParameters\":{}}",
+                    "credentialData": "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+                }
+            ],
+            "disableableCredentialTypes": [],
+            "requiredActions": [],
+            "realmRoles": [
+                "default-roles-elaastic-keycloak",
+                "NICE"
+            ],
+            "notBefore": 0,
+            "groups": []
+        },
+        {
+            "id": "34d88f42-15c8-4f47-ae58-ec7f1d7c2342",
+            "username": "igor",
+            "firstName": "Igor",
+            "lastName": "Demo",
+            "email": "igor@elaastic.irit.fr",
+            "emailVerified": true,
+            "createdTimestamp": 1721510598928,
+            "enabled": true,
+            "totp": false,
+            "credentials": [
+                {
+                    "id": "d8b9181a-e086-45b0-b246-59f52a37fd20",
+                    "type": "password",
+                    "createdDate": 1721511590667,
+                    "secretData": "{\"value\":\"Ji6U5BnPolyAvzhFBDRcYDXYNtQqena8Z2H0IC96TcE0cIJyDKVyeRCvaE0f1FuuGAMc4vh6Lc1wCtk+vxv8hg==\",\"salt\":\"lMF3OdYfnpd0/8wagGxhfA==\",\"additionalParameters\":{}}",
+                    "credentialData": "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
                 }
             ],
             "disableableCredentialTypes": [],
@@ -503,37 +547,103 @@
                     "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
                 }
             ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-elaastic-keycloak" ],
-    "notBefore" : 0,
-    "groups" : [ ]
-  }, {
-    "id" : "7aeac2ea-de0e-467a-9d78-0e411571760d",
-    "username" : "successful-login",
-    "firstName" : "Learner",
-    "lastName" : "TEST",
-    "email" : "learner@test-ent.foo",
-    "emailVerified" : false,
-    "createdTimestamp" : 1744881121635,
-    "enabled" : true,
-    "totp" : false,
-    "credentials" : [ ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "federatedIdentities" : [ {
-      "identityProvider" : "saml",
-      "userId" : "G-0d350e4f-6502-40b4-9245-121e48b131e0",
-      "userName" : "g-0d350e4f-6502-40b4-9245-121e48b131e0"
-    } ],
-    "realmRoles" : [ "default-roles-elaastic-keycloak" ],
-    "notBefore" : 0,
-    "groups" : [ ]
-  } ],
-  "scopeMappings" : [ {
-    "clientScope" : "offline_access",
-    "roles" : [ "offline_access" ]
-  } ],
+            "disableableCredentialTypes": [],
+            "requiredActions": [],
+            "realmRoles": [
+                "default-roles-elaastic-keycloak"
+            ],
+            "notBefore": 0,
+            "groups": []
+        },
+        {
+            "id": "46730ae5-7408-444b-8dd2-f805820d070c",
+            "username": "steve",
+            "firstName": "Steve",
+            "lastName": "Smith",
+            "email": "steve.smith@mail.com",
+            "emailVerified": true,
+            "createdTimestamp": 1744799412113,
+            "enabled": true,
+            "totp": false,
+            "credentials": [
+                {
+                    "id": "12e96075-a285-4eae-8a6a-4fd8d2bbd2f1",
+                    "type": "password",
+                    "userLabel": "My password",
+                    "createdDate": 1744799715853,
+                    "secretData": "{\"value\":\"9oLcPhShIlIQhqFF2X4z0jzduRjya9orG8V0ohJSr8k=\",\"salt\":\"7M52epL7hBveGxoJ0+ZXlQ==\",\"additionalParameters\":{}}",
+                    "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+                }
+            ],
+            "disableableCredentialTypes": [],
+            "requiredActions": [],
+            "realmRoles": [
+                "default-roles-elaastic-keycloak",
+                "STUDENT"
+            ],
+            "notBefore": 0,
+            "groups": []
+        },
+        {
+            "id": "f5f5a3dc-dc7b-4ff8-b338-116dbee3dc3e",
+            "username": "tom",
+            "firstName": "Tom",
+            "lastName": "Dupont",
+            "email": "tom.dupont@mail.com",
+            "emailVerified": true,
+            "createdTimestamp": 1744799656360,
+            "enabled": true,
+            "totp": false,
+            "credentials": [
+                {
+                    "id": "99982d63-b1f5-4979-8bd0-f9320759bba4",
+                    "type": "password",
+                    "userLabel": "My password",
+                    "createdDate": 1744799678510,
+                    "secretData": "{\"value\":\"OQcbiqioRH+cKFHQ+WKpTYJawmX5Wq2qTYLh1NS1MVI=\",\"salt\":\"t/dp7FElulZG7wwTZJcPlA==\",\"additionalParameters\":{}}",
+                    "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+                }
+            ],
+            "disableableCredentialTypes": [],
+            "requiredActions": [],
+            "realmRoles": [
+                "default-roles-elaastic-keycloak",
+                "TEACHER"
+            ],
+            "notBefore": 0,
+            "groups": []
+        },
+        {
+            "id": "830b013b-d637-46aa-8543-fb984a9b5f41",
+            "username": "two_role",
+            "firstName": "Two",
+            "lastName": "Role",
+            "email": "invalid@mail.com",
+            "emailVerified": true,
+            "createdTimestamp": 1744804209298,
+            "enabled": true,
+            "totp": false,
+            "credentials": [
+                {
+                    "id": "9c1f9598-22a2-499e-9a4d-856f0c6304de",
+                    "type": "password",
+                    "userLabel": "My password",
+                    "createdDate": 1744804238241,
+                    "secretData": "{\"value\":\"LuW2c/caBX56Hl9abX88sFRHifMHBspPYKMDKyGkdOY=\",\"salt\":\"pooyZaRqBplIMfQq+yWAUg==\",\"additionalParameters\":{}}",
+                    "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+                }
+            ],
+            "disableableCredentialTypes": [],
+            "requiredActions": [],
+            "realmRoles": [
+                "default-roles-elaastic-keycloak",
+                "STUDENT",
+                "TEACHER"
+            ],
+            "notBefore": 0,
+            "groups": []
+        }
+    ],
   "clientScopeMappings" : {
     "account" : [ {
       "client" : "account-console",
