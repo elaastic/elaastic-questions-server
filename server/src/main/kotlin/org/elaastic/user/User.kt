@@ -239,4 +239,14 @@ class User(
         return username
     }
 
+    /**
+     * Check if the user has a specific role
+     *
+     * @param roleId the role to check
+     * @return true if the user has the role, false otherwise
+     * @see contains
+     */
+    infix fun hasRole(roleId: Role.RoleId): Boolean {
+        return this.roles.contains(roleId)
+    }
 }
