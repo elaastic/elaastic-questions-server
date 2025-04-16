@@ -62,7 +62,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         )
 
         tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(user))
+            elaasticOidcUserService.loadUser(getUserRequest(user), Role.RoleId.STUDENT)
 
         }.tThen("the user is created") { elaasticOidcUser ->
             verify(userLinkService, times(1)).registerNewOidcUser(any<OidcUser>(), any<Role.RoleId>())
@@ -116,8 +116,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         clearInvocations(userLinkRepository)
 
         tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(user))
-
+            elaasticOidcUserService.loadUser(getUserRequest(user, Role.RoleId.STUDENT))
         }.tThen("no other user is created") { elaasticOidcUser ->
             verify(userRepository, never()).save(any<User>())
             verify(userLinkRepository, never()).save(any<UserLink>())
@@ -216,7 +215,7 @@ class ElaasticOidcUserServiceIntegrationTest(
                 elaasticOidcUserService.loadUser(getUserRequest(it))
             }
         }.tThen("an exception is thrown") {
-            assertThrows<IllegalArgumentException> {
+            assertThrows<IllegalStateException> {
                 it()
             }
         }
@@ -239,7 +238,7 @@ class ElaasticOidcUserServiceIntegrationTest(
                 elaasticOidcUserService.loadUser(getUserRequest(it))
             }
         }.tThen("an exception is thrown") {
-            assertThrows<IllegalArgumentException> {
+            assertThrows<IllegalStateException> {
                 it()
             }
 
@@ -289,7 +288,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             assertNotEquals(anotherRole.roleName, it.user.roles.first().name);
             { elaasticOidcUserService.loadUser(getUserRequest(it.user, anotherRole)) }
         }.tThen("an exception is thrown") {
-            assertThrows<IllegalArgumentException> {
+            assertThrows<IllegalStateException> {
                 it()
             }
         }
@@ -359,9 +358,9 @@ class ElaasticOidcUserServiceIntegrationTest(
             .map { it.name }
             .mapNotNull {
                 when (it) {
-                    Role.RoleId.STUDENT.name -> Role.RoleId.STUDENT
-                    Role.RoleId.TEACHER.name -> Role.RoleId.TEACHER
-                    Role.RoleId.ADMIN.name -> Role.RoleId.ADMIN
+                    Role.RoleId.STUDENT.roleName -> Role.RoleId.STUDENT
+                    Role.RoleId.TEACHER.roleName -> Role.RoleId.TEACHER
+                    Role.RoleId.ADMIN.roleName -> Role.RoleId.ADMIN
                     else -> null
                 }
             }
@@ -386,7 +385,7 @@ class ElaasticOidcUserServiceIntegrationTest(
 
     private fun oidcIdToken(user: User, roles: List<Role.RoleId>): OidcIdToken {
         val realmRoles = mapOf(
-            "roles" to roles.map { it.roleName.lowercase() }
+            "roles" to roles.map { it.name.lowercase() }
         )
         return OidcIdToken(
             "idToken", null, null, mapOf(
