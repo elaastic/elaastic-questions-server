@@ -24,8 +24,12 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException
+import org.springframework.security.oauth2.core.OAuth2Error
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 /** Key to get the realm access from the OIDC user's claims */
 private const val REALM_ACCESS_KEY = "realm_access"
@@ -57,16 +61,32 @@ class ElaasticOidcUserService(
     override fun loadUser(userRequest: OidcUserRequest?): OidcUser {
         val oidcUser = super.loadUser(userRequest)
 
-        val role = getRoleFromOidcUser(oidcUser)
-        val user = userLinkService.loadUserLinkByUsername(
-            userLinkService.oidcProvider,
-            oidcUser.name
-        )?.alsoThrowIfFalse(RoleException::class.java, { it.user hasRole role }) {
+        try {
+            val role = getRoleFromOidcUser(oidcUser)
+            val user = userLinkService.loadUserLinkByUsername(
+                userLinkService.oidcProvider,
+                oidcUser.name
+            )?.alsoThrowIfFalse(RoleException::class.java, { it.user hasRole role }) {
                 "ElaasticUser ${it.user.username} does not have the role $role but the OIDC user ${oidcUser.name} has it. " +
                         "ElaasticUser ${it.user.username} has the roles ${it.user.roles.joinToString(", ") { role -> role.name }}"
-        }?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
+            }?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
 
-        return ElaasticOidcUser(oidcUser, user)
+            return ElaasticOidcUser(oidcUser, user)
+        } catch (e: RoleException) {
+            /**
+             * We throw an OAuth2AuthenticationException
+             * to be able
+             * to catch it in the [WebSecurityConfig.webFilterChain][org.elaastic.security.WebSecurityConfig.webFilterChain] method.
+             * And redirect the user to a page where he can log out of the OIDC provider.
+             */
+            throw OAuth2AuthenticationException(
+                OAuth2Error(
+                    RoleException::class.java.simpleName,
+                    e.message,
+                    "/error/oidc_role?message=${URLEncoder.encode(e.message, StandardCharsets.UTF_8)}"
+                )
+            )
+        }
     }
 
     /**
