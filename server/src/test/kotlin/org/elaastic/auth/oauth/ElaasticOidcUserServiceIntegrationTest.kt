@@ -8,10 +8,7 @@ import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
-import org.elaastic.user.Role
-import org.elaastic.user.RoleService
-import org.elaastic.user.User
-import org.elaastic.user.UserRepository
+import org.elaastic.user.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -107,16 +104,28 @@ class ElaasticOidcUserServiceIntegrationTest(
     @Test
     fun `test loadUser with existing User`() {
         // Given a user
-        val user = integrationTestingService.getAnyUser()
+        val user = User(
+            firstName = "John",
+            lastName = "Doe",
+            username = "johdoe",
+            plainTextPassword = "1234",
+            email = "john.doe@mail.com",
+        ).also {
+            it.roles.clear()
+            it.roles.add(Role(name = Role.RoleId.STUDENT.roleName))
+            it.password = "1234"
+        }.let(userRepository::save)
         UserLink(
             providerId = userLinkService.oidcProvider,
             providerUserId = user.username,
             user = user
         ).let(userLinkRepository::save)
-        clearInvocations(userLinkRepository)
 
+        clearInvocations(userLinkRepository, userRepository)
         tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(user, Role.RoleId.STUDENT))
+            val studentRole = Role.RoleId.STUDENT
+            assertTrue(user.roles.contains(studentRole))
+            elaasticOidcUserService.loadUser(getUserRequest(user, studentRole))
         }.tThen("no other user is created") { elaasticOidcUser ->
             verify(userRepository, never()).save(any<User>())
             verify(userLinkRepository, never()).save(any<UserLink>())
@@ -150,9 +159,8 @@ class ElaasticOidcUserServiceIntegrationTest(
             elaasticOidcUserService.loadUser(getUserRequest(it))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the student role") {
-            assertTrue(it.elaasticUser.roles.any { role ->
-                role.name == Role.RoleId.STUDENT.roleName
-            }, "User should have the STUDENT role, but was ${it.elaasticUser.roles.map { role -> role.name + ", " }}")
+            assertTrue(it.elaasticUser.roles.contains(Role.RoleId.STUDENT),
+                "User should have the STUDENT role, but was ${it.elaasticUser.roles}")
             assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
         }
     }
@@ -170,9 +178,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             elaasticOidcUserService.loadUser(getUserRequest(it, Role.RoleId.TEACHER))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the teacher role") {
-            assertTrue(it.elaasticUser.roles.any { role ->
-                role.name == Role.RoleId.TEACHER.roleName
-            }, "User should have the TEACHER role, but was ${it.elaasticUser.roles.map { role -> role.name + ", " }}")
+            assertTrue(it.elaasticUser.roles.contains(Role.RoleId.TEACHER), "User should have the TEACHER role, but was ${it.elaasticUser.roles}")
             assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
         }
     }
@@ -190,9 +196,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             elaasticOidcUserService.loadUser(getUserRequest(it, Role.RoleId.ADMIN))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the admin role") {
-            assertTrue(it.elaasticUser.roles.any { role ->
-                role.name == Role.RoleId.ADMIN.roleName
-            }, "User should have the ADMIN role, but was ${it.elaasticUser.roles.map { role -> role.name + ", " }}")
+            assertTrue(it.elaasticUser.roles.contains(Role.RoleId.ADMIN), "User should have the ADMIN role, but was ${it.elaasticUser.roles}")
             assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
         }
     }
@@ -262,9 +266,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             elaasticOidcUserService.loadUser(getUserRequest(it))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the student role") {
-            assertTrue(it.elaasticUser.roles.any { role ->
-                role.name == Role.RoleId.STUDENT.roleName
-            }, "User should have the STUDENT role")
+            assertTrue(it.elaasticUser.roles.contains(Role.RoleId.STUDENT), "User should have the STUDENT role, instead got ${it.elaasticUser.roles}")
             assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
         }
     }
@@ -285,7 +287,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             ).let(userLinkRepository::save)
         }.tWhen("we load the user BUT with a different role") {
             val anotherRole = Role.RoleId.TEACHER
-            assertNotEquals(anotherRole.roleName, it.user.roles.first().name);
+            assertNotEquals(anotherRole, it.user.roles.first());
             { elaasticOidcUserService.loadUser(getUserRequest(it.user, anotherRole)) }
         }.tThen("an exception is thrown") {
             assertThrows<IllegalStateException> {
@@ -312,12 +314,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         }.tThen("the user is created with the student role") {
             verify(userLinkRepository, never()).save(any<UserLink>())
             verify(userRepository, never()).save(any<User>())
-            assertTrue(
-                it.elaasticUser.roles.any { role ->
-                    role.name == studentRole.roleName
-                },
-                "User should have the STUDENT role, but was ${it.elaasticUser.roles.map { role -> role.name + ", " }} instead of ${studentRole.roleName}"
-            )
+            assertTrue(it.elaasticUser.roles.contains(studentRole), "User should have the ${studentRole.roleName} role, but was ${it.elaasticUser.roles}")
             assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
         }
 
@@ -338,12 +335,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         }.tThen("the user is created with the student role") {
             verify(userLinkRepository, never()).save(any<UserLink>())
             verify(userRepository, never()).save(any<User>())
-            assertTrue(
-                it.elaasticUser.roles.any { role ->
-                    role.name == teacherRole.roleName
-                },
-                "User should have the STUDENT role, but was ${it.elaasticUser.roles.map { role -> role.name + ", " }} instead of ${teacherRole.roleName}"
-            )
+            assertTrue(it.elaasticUser.roles.contains(teacherRole), "User should have the ${teacherRole.roleName} role, but was ${it.elaasticUser.roles}")
             assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
         }
     }
@@ -351,17 +343,14 @@ class ElaasticOidcUserServiceIntegrationTest(
     /**
      * Create a UserRequest for the given user
      *
-     * The role is determined by the user roles if none, the STUDENT role is used
+     * The role is determined by the user roles if none, the STUDENT role is
+     * used
      */
     private fun getUserRequest(user: User): OidcUserRequest {
         val userRole = user.roles
-            .map { it.name }
             .mapNotNull {
-                when (it) {
-                    Role.RoleId.STUDENT.roleName -> Role.RoleId.STUDENT
-                    Role.RoleId.TEACHER.roleName -> Role.RoleId.TEACHER
-                    Role.RoleId.ADMIN.roleName -> Role.RoleId.ADMIN
-                    else -> null
+                Role.RoleId.values().find { roleId ->
+                    it.equals(roleId)
                 }
             }
         return getUserRequest(user, userRole)
