@@ -11,25 +11,38 @@ See `.env.template` at the root of the project.
 
 This folder contains the configuration files for the realms in Keycloak.
 
+### elaastic-keycloak
+
 For now the single configuration file is `elaastic-keycloak-realm.json`.
 
 It describes the realm `elaastic-keycloak` with the following configuration:
 
+- Some realm roles :
+    - `STUDENT` : can log in to the `elaastic` client
+    - `TEACHER` : can log in to the `elaastic` client
+    - `ADMIN` : can log in to the `elaastic` client
+    - `NICE` : **CAN'T** log in to the `elaastic` client
+
 - Some users:
 
-| username | password | role | Comment                         |
-|----------|----------|:----:|---------------------------------|
-| brice    | secret   | NICE |                                 |
-| igor     | secret   |  /   |                                 |
-| janedoe  | secret   |  /   | Has the same email as `johndoe` |
-| johndoe  | secret   |  /   | Has the same email as `janedoe` |
+| username | password |      role       | Comment                                              |
+|----------|----------|:---------------:|------------------------------------------------------|
+| brice    | secret   |      NICE       | Didn't have an Elaastic role so it can't login to it |
+| igor     | secret   |        /        | Didn't have an Elaastic role so it can't login to it |
+| janedoe  | secret   |     STUDENT     | Has the same email as `johndoe`                      |
+| johndoe  | secret   |     STUDENT     | Has the same email as `janedoe`                      |
+| alice    | secret   |      ADMIN      |                                                      |
+| steve    | secret   |     STUDENT     |                                                      |
+| tom      | secret   |     TEACHER     |                                                      |
+| two_role | secret   | STUDENT,TEACHER | Has two roles so he can't login to Elaastic          |
 
-- A client: 
-  - name: `elaastic` => For the elaastic application
+- A client : => For the elaastic application
+    - name: `elaastic`
+
+If a user has exactly one role that can log in to the `elaastic` client, then they can log in to it.
 
 - An Identity Provider:
-  - alias: `saml` in `./keaycloak/README.md`
-
+    - alias: `saml` in `./keaycloak/README.md`
 
 ## `/themes`
 
