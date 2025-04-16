@@ -18,7 +18,6 @@
 package org.elaastic.auth.oauth
 
 import org.elaastic.auth.UserLinkService
-import org.elaastic.user.Role
 import org.elaastic.user.Role.RoleId
 import org.elaastic.user.contains
 import org.slf4j.Logger
@@ -28,12 +27,12 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
 
-/**
- * Key to get the realm access from the OIDC user's claims
- */
+/** Key to get the realm access from the OIDC user's claims */
 private const val REALM_ACCESS_KEY = "realm_access"
+
 /**
  * Key to get the roles from the realm access
+ *
  * @see REALM_ACCESS_KEY
  */
 private const val ROLES_KEY = "roles"
@@ -75,11 +74,10 @@ class ElaasticOidcUserService(
     /**
      * Get the role from the OIDC user
      *
-     * We search the role in the realm access of the OIDC user.
-     * The realm access is a map containing the roles of the user.
+     * We search the role in the realm access of the OIDC user. The realm
+     * access is a map containing the roles of the user.
      *
      * We expected a claims like this :
-     *
      * ```json
      * "claims": {
      *     [...]
@@ -91,14 +89,16 @@ class ElaasticOidcUserService(
      *     }
      * }
      * ```
+     *
      * An [IllegalStateException] is thrown if:
      * - there is more than one role in the realm access
      * - there is no role in the realm access
      * - the role is not one of the following: "admin", "teacher", "student"
      *
-     * @throws IllegalStateException if there is not exactly one role in the realm access and the role is unknown
      * @param oidcUser the OIDC user
      * @return the role of the OIDC user
+     * @throws IllegalStateException if there is not exactly one role in the
+     *    realm access and the role is unknown
      * @see REALM_ACCESS_KEY
      * @see ROLES_KEY
      */
@@ -115,11 +115,17 @@ class ElaasticOidcUserService(
             "There should be at least one role in the realm roles: $realmRoles"
         }
 
-        return when {
-            realmRoles.contains("admin") -> RoleId.ADMIN
-            realmRoles.contains("teacher") -> RoleId.TEACHER
-            realmRoles.contains("student") -> RoleId.STUDENT
-            else -> throw IllegalStateException("No valid role found among realm roles: $realmRoles")
-        }
+        return keycloakToElaasticRole[realmRoles.first()]
+            ?: throw IllegalStateException(
+                "The role ${realmRoles.first()} is not one of the following: " +
+                        keycloakToElaasticRole.keys.joinToString(", ")
+            )
     }
+
 }
+
+val keycloakToElaasticRole: Map<String, RoleId> = mapOf(
+    "student" to RoleId.STUDENT,
+    "teacher" to RoleId.TEACHER,
+    "admin" to RoleId.ADMIN
+)
