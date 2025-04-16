@@ -6,22 +6,24 @@ import org.junit.jupiter.api.Test
 class RoleTest {
     @Test
     fun testEquals() {
-        val student = Role(Role.RoleId.STUDENT)
-        val student2 = Role(Role.RoleId.STUDENT)
-
+        val student = Role(Role.RoleId.STUDENT).also { it.id = 1L }
         assertNotEquals(null, student)
         assertNotEquals("", student)
         assertSame(student, student)
         assertEquals(student, student)
 
-        assertNotSame(student.name, student2.name)
+        val student2 = Role(Role.RoleId.STUDENT).also { it.id = 1L }
+        assertEquals(student.id, student2.id, "For the next test we want to test the equality of the name, so the id must be the same")
         assertEquals(student.name, student2.name)
         assertEquals(student, student2)
 
-        val teacher = Role(Role.RoleId.TEACHER)
+        val teacher = Role(Role.RoleId.TEACHER).also { it.id = 1L }
+        assertEquals(student.id, teacher.id, "For the next test we want to test the equality of the name, so the id must be the same")
+        assertNotEquals(student.name, teacher.name)
         assertNotEquals(student, teacher)
 
-        val student3 = Role(Role.RoleId.STUDENT)
+        val student3 = Role(Role.RoleId.STUDENT).also { it.id = 2L }
+        assertNotEquals(student.id, student3.id, "For this test we want to test the equality of the id, so the id must be different")
         assertEquals(student.name, student3.name)
         assertNotEquals(student, student3)
     }
@@ -31,7 +33,6 @@ class RoleTest {
         val studentEnum = Role.RoleId.STUDENT
         val studentEntity = Role(studentEnum)
 
-        assertNotSame(studentEntity.name, studentEnum.roleName)
         assertEquals(studentEntity.name, studentEnum.roleName)
         assertEquals(studentEntity, studentEnum)
 
@@ -51,7 +52,7 @@ class RoleTest {
 
         assertEquals(studentEntity, studentString)
         assertNotEquals(studentString, studentEntity)
-        assertNotEquals(studentEntity, "anotherString")
+        assertNotEquals("anotherString", studentEntity)
     }
 
     @Test
@@ -72,14 +73,9 @@ class RoleTest {
         val role1 = Role(Role.RoleId.STUDENT)
         val role2 = Role(Role.RoleId.STUDENT)
 
-        assertNotSame(role1.name, role2.name)
         assertEquals(role1.hashCode(), role2.hashCode())
 
         val role3 = Role(Role.RoleId.TEACHER)
         assertNotEquals(role1.hashCode(), role3.hashCode())
-
-        val role4 = Role(Role.RoleId.STUDENT)
-        assertEquals(role1.name, role4.name)
-        assertNotEquals(role1.hashCode(), role4.hashCode())
     }
- }
+}

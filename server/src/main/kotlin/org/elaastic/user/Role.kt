@@ -66,6 +66,10 @@ class Role(
      *
      * This function will accept a String, a RoleId or another Role object.
      *
+     * - If the other object is a String, it will check if the name of the role is equal to the string.
+     * - If the other object is a RoleId,
+     * it will check if the name of the role is equal to the [roleName][RoleId.roleName] of the RoleId.
+     *
      */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -86,7 +90,7 @@ class Role(
 }
 
 /**
- * Extension function to check if a list of roles contains a specific role
+ * Extension function to check if a list of roles contains a [RoleId]
  *
  * @see Role.equals
  */

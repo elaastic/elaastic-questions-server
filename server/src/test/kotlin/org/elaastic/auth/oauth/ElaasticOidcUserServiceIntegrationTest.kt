@@ -62,7 +62,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         )
 
         tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(user), Role.RoleId.STUDENT)
+            elaasticOidcUserService.loadUser(getUserRequest(user, Role.RoleId.STUDENT))
 
         }.tThen("the user is created") { elaasticOidcUser ->
             verify(userLinkService, times(1)).registerNewOidcUser(any<OidcUser>(), any<Role.RoleId>())
