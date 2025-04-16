@@ -19,10 +19,15 @@ package org.elaastic.auth.oauth
 
 import org.elaastic.auth.UserLinkService
 import org.elaastic.user.Role
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
+import org.elaastic.user.contains
+import java.util.*
+import kotlin.math.log
 
 /**
  * Service dedicated to retrieve the Elaastic User bound to an OidcUser
@@ -37,15 +42,36 @@ class ElaasticOidcUserService(
     private val userLinkService: UserLinkService
 ) : OidcUserService() {
 
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
+
     override fun loadUser(userRequest: OidcUserRequest?): OidcUser {
         val oidcUser = super.loadUser(userRequest)
 
-        val role = Role.RoleId.STUDENT //STUB
+        val role = getRoleFromOidcUser(oidcUser)
         val user = userLinkService.loadUserLinkByUsername(
             userLinkService.oidcProvider,
             oidcUser.name
-        )?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
+        )?.also {
+            require(it.user.roles.contains(role))
+        }?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
 
         return ElaasticOidcUser(oidcUser, user)
+    }
+
+    private fun getRoleFromOidcUser(oidcUser: OidcUser): Role.RoleId {
+        val claimAsMap = oidcUser.getClaimAsMap("realm_access")
+        logger.info(claimAsMap.toString())
+        val realmRoles: List<String> = (claimAsMap["roles"] as List<*>)
+            .also { logger.info(it.toString()) }
+            .filterIsInstance<String>()
+            .map { it.lowercase() }
+
+        return when {
+            realmRoles.contains("admin") -> Role.RoleId.ADMIN
+            realmRoles.contains("teacher") -> Role.RoleId.TEACHER
+            realmRoles.contains("student") -> Role.RoleId.STUDENT
+            else -> throw IllegalStateException("No valid role found among realm roles: $realmRoles")
+        }
     }
 }
