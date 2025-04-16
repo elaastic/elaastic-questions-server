@@ -53,7 +53,7 @@ class Role(
     enum class RoleId(val roleName: String) {
         STUDENT("STUDENT_ROLE"),
         TEACHER("TEACHER_ROLE"),
-        ADMIN("ADMIN_ROLE"),
+        ADMIN("ADMIN_ROLE");
     }
 
     /** @return the name of the role */
