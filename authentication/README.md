@@ -19,7 +19,7 @@ Its implemented by another Keycloak server.
 ## Authentication scenarios
 Up to now, Elaastic support the following authentication workflows.
 
-### Local database 
+### Local database
 Users directly registered on the elaastic application can log onto the Elaastic login form.
 
 ### CAS server
@@ -29,7 +29,7 @@ Using this link, a user can authenticate against the CAS server and open a sessi
 
 ### OpenID Connect with `elaastic-iam`
 The `elaastic-iam` service holds its own users referential.
-When activated on elaastic (through `application.properties`), this new authentication source is presented on the 
+When activated on elaastic (through `application.properties`), this new authentication source is presented on the
 elaastic login form.
 Users can authenticate on `elaastic-iam` to open a session on Elaastic.
 
