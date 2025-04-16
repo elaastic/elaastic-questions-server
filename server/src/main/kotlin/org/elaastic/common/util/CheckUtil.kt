@@ -1,7 +1,5 @@
 package org.elaastic.common.util
 
-import kotlin.contracts.contract
-
 /*
  * This file contains utility functions for checking conditions and throwing exceptions.
  * It includes functions for checking conditions with custom messages and for checking
@@ -62,5 +60,39 @@ inline fun <T> T.alsoCheck(condition: (T) -> Boolean, message: (T) -> Any): T {
  */
 inline fun <T> T.alsoCheck(condition: (T) -> Boolean): T {
     check(condition(this))
+    return this
+}
+
+/**
+ * Throws an exception of type [exceptionClass] if the condition is false.
+ *
+ * Instead of writing:
+ * ```kotlin
+ * listOf(-1, 1, 2)
+ *   .also {
+ *      if (it.isEmpty()) {
+ *          throw IllegalArgumentException("List is empty")
+ *      }
+ *   }
+ * ```
+ *
+ * You can write:
+ * ```kotlin
+ * listOf(-1, 1, 2)
+ *   .alsoThrowIf(IllegalArgumentException::class.java, { it.isNotEmpty() }) {
+ *       "List is empty"
+ *   }
+ * ```
+ *
+ * @param exceptionClass The class of the exception to throw
+ * @param condition The condition to check
+ * @param message A lambda that provides the exception message
+ * @return The receiver object
+ * @throws Exception if the condition evaluates to true
+ */
+inline fun <E> E.alsoThrowIfFalse(exceptionClass: Class<out Exception>, condition: (E) -> Boolean, message: (E) -> String): E {
+    if (!condition(this)) {
+        throw exceptionClass.getConstructor(String::class.java).newInstance(message(this))
+    }
     return this
 }
