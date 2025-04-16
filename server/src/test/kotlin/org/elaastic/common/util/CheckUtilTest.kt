@@ -29,4 +29,29 @@ class CheckUtilTest {
             list.alsoCheck(condition)
         }
     }
+
+    @Test
+    fun `test alsoThrowIf with true condition`() {
+        val list = listOf(1, 2, 3)
+        val condition: (List<Int>) -> Boolean = { it.isNotEmpty() }
+        assertTrue(condition(list))
+        assertEquals(list, list.alsoThrowIfFalse(IllegalStateException::class.java, condition) { "List is empty" })
+    }
+
+    @Test
+    fun `test alsoThrowIf with false condition and different Exception class`() {
+        val list = listOf(1, 2, 3)
+        val condition: (List<Int>) -> Boolean = { it.isEmpty() }
+        assertFalse(condition(list))
+        assertThrows<IllegalStateException> {
+            list.alsoThrowIfFalse(IllegalStateException::class.java, condition) {
+                "List is empty"
+            }
+        }
+        assertThrows<NullPointerException> {
+            list.alsoThrowIfFalse(NullPointerException::class.java, condition) {
+                "List is empty"
+            }
+        }
+    }
 }
