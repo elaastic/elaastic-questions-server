@@ -7,7 +7,6 @@ import org.jasig.cas.client.authentication.AttributePrincipal
  * Parser for CAS attributes from Edifice.
  */
 class CasAttributeParserForEdifice : CasAttributeParser {
-
     override fun parseFirstName(principal: AttributePrincipal): String {
         return parseStringAttribute(principal, "firstName")
     }
