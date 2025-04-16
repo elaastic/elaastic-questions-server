@@ -21,6 +21,7 @@ package org.elaastic.security
 import org.elaastic.auth.ElaasticLogoutSuccessHandler
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
 import org.elaastic.auth.oauth.ElaasticOidcUserService
+import org.elaastic.auth.oauth.RoleException
 import org.elaastic.auth.oauth.OidcHintFilter
 import org.elaastic.auth.oauth.OidcLoginSuccessHandler
 import org.elaastic.user.Role
@@ -45,7 +46,9 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -114,6 +117,18 @@ class WebSecurityConfig(
                         oidcUserService = elaasticOidcUserService
                     }
                     authenticationSuccessHandler = oidcLoginSuccessHandler
+                    /**
+                     * Handle authentication failure
+                     * @see ElaasticOidcUserService.loadUser
+                     */
+                    authenticationFailureHandler = AuthenticationFailureHandler { request, response, exception ->
+                        if (exception is OAuth2AuthenticationException && exception.error.errorCode == RoleException::class.java.simpleName) {
+                            val redirectUrl = exception.error.uri ?: "/error"
+                            response.sendRedirect(redirectUrl)
+                        } else {
+                            response.sendRedirect("/error")
+                        }
+                    }
                 }
                 http.addFilterBefore(
                     OidcHintFilter(),
@@ -151,7 +166,7 @@ class WebSecurityConfig(
                 authorize("/ui/**", permitAll)
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
-                authorize("/error", permitAll)
+                authorize("/error/*", permitAll)
                 authorize(LOGIN_URL, permitAll)
 
                 // Allow access to this URL on which the CAS filter are applied
