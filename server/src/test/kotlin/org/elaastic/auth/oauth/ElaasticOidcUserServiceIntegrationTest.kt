@@ -390,10 +390,13 @@ class ElaasticOidcUserServiceIntegrationTest(
 
     private fun oidcIdToken(user: User, roles: List<RoleId>): OidcIdToken {
         val realmRoles = mapOf(
-            "roles" to roles.map { it.name.lowercase() }
+            "roles" to roles.map(::getKeycloakRoleFrom)
         )
         return OidcIdToken(
-            "idToken", null, null, mapOf(
+            "idToken",
+            null,
+            null,
+            mapOf(
                 "sub" to user.username,
                 "given_name" to user.firstName,
                 "family_name" to user.lastName,
@@ -402,6 +405,14 @@ class ElaasticOidcUserServiceIntegrationTest(
                 "realm_access" to realmRoles,
             )
         )
+    }
+
+    /**
+     * Get the Keycloak role from the given RoleId
+     */
+    fun getKeycloakRoleFrom(role: RoleId): String {
+        return keycloakToElaasticRole.entries.find { it.value == role }?.key
+            ?: throw IllegalStateException("Role $role not found in keycloakToElaasticRole")
     }
 
     private fun oAuth2AccessToken() = OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "accessToken", null, null)
