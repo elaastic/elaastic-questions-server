@@ -19,21 +19,20 @@ package org.elaastic.auth.oauth
 
 import org.elaastic.auth.UserLinkService
 import org.elaastic.user.Role
+import org.elaastic.user.contains
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
-import org.elaastic.user.contains
-import java.util.*
-import kotlin.math.log
 
 /**
  * Service dedicated to retrieve the Elaastic User bound to an OidcUser
  *
- * Implementation note: This service overrides OidcUserService, and, as such, must return an OidcUser. The
- * ElaasticOidcUser is an OidcUser bound to its corresponding Elaastic User
+ * Implementation note: This service overrides OidcUserService, and, as
+ * such, must return an OidcUser. The ElaasticOidcUser is an OidcUser bound
+ * to its corresponding Elaastic User
  *
  * @author John Tranier
  */
@@ -53,7 +52,10 @@ class ElaasticOidcUserService(
             userLinkService.oidcProvider,
             oidcUser.name
         )?.also {
-            require(it.user.roles.contains(role))
+            check(it.user.roles.contains(role)) {
+                "ElaasticUser ${it.user.username} does not have the role $role but the OIDC user ${oidcUser.name} has it. " +
+                        "ElaasticUser ${it.user.username} has the roles ${it.user.roles.joinToString(", ") { role -> role.name }}"
+            }
         }?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
 
         return ElaasticOidcUser(oidcUser, user)
