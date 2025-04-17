@@ -33,3 +33,10 @@ It describes the realm `elaastic-keycloak` with the following configuration:
 This folder contains the files that describe a theme that can be used in Keycloak.
 
 For now, we have a single theme called `elaastic`. It can only be applaid to the `login` page.
+
+## Common operations
+
+### Export the elaastic-keycloak realm
+```bash
+docker compose exec auth-iam /opt/keycloak/bin/kc.sh export --dir=/opt/keycloak/data/import/ --realm elaastic-keycloak --users realm_file --optimized
+```
