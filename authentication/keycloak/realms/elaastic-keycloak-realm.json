@@ -402,8 +402,8 @@
       "type" : "password",
       "userLabel" : "My password",
       "createdDate" : 1721506138445,
-      "secretData" : "{\"value\":\"dlJR+pZBE4HF8rX+xXuOa8R9M85mCdT4N0XjpQDmRQZ+AEqXIzX0vOiEAm1K8hLyF4fcCYrLdZeCd9cgN1JaCw==\",\"salt\":\"eluLV2Rl1GtI5gVPrjj4IA==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+      "secretData" : "{\"value\":\"SLn7crLsUiyNJfKOOYzIPuEnspwBykTRt5rSFc5BCaU=\",\"salt\":\"oW+frY4wTNqfqLc/9LLQOg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -1365,7 +1365,7 @@
       "postBindingLogout" : "true",
       "singleLogoutServiceUrl" : "http://host.docker.internal:8082/realms/test-external-idp-saml2/protocol/saml",
       "postBindingResponse" : "true",
-      "backchannelSupported" : "false",
+      "backchannelSupported" : "true",
       "caseSensitiveOriginalUsername" : "false",
       "xmlSigKeyInfoKeyNameTransformer" : "KEY_ID",
       "idpEntityId" : "http://host.docker.internal:8082/realms/test-external-idp-saml2",
@@ -1386,7 +1386,7 @@
       "signSpMetadata" : "false",
       "wantAssertionsEncrypted" : "false",
       "signatureAlgorithm" : "RSA_SHA256",
-      "sendClientIdOnLogout" : "false",
+      "sendClientIdOnLogout" : "true",
       "wantAssertionsSigned" : "false",
       "metadataDescriptorUrl" : "http://host.docker.internal:8082/realms/test-external-idp-saml2/protocol/saml/descriptor",
       "sendIdTokenOnLogout" : "true",
