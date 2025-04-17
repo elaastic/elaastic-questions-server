@@ -1,13 +1,19 @@
 package org.elaastic.auth.oauth
 
-/**
- * Exception throws during problems related role management.
- */
-class RoleException : RuntimeException {
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException
+import org.springframework.security.oauth2.core.OAuth2Error
 
-    constructor(message: String) : super(message)
+class RoleException : OAuth2AuthenticationException {
 
-    constructor(message: String, cause: Throwable) : super(message, cause)
+    val userRequest: OidcUserRequest?
 
-    constructor(cause: Throwable) : super(cause)
+    constructor(oidcUser: OidcUserRequest, message: String, cause: Throwable? = null) :
+            super(OAuth2Error("role_error", message, null), cause) {
+        this.userRequest = oidcUser
+    }
+
+    constructor(message: String) : super(OAuth2Error("role_error", message, null)) {
+        this.userRequest = null
+    }
 }
