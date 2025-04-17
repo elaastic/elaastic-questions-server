@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.context.annotation.Profile
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import javax.transaction.Transactional
 
@@ -222,9 +221,10 @@ class ElaasticOidcUserServiceIntegrationTest(
                 )
             }
         }.tThen("an exception is thrown") {
-            assertOAuth2AuthentificationThrowAndErrorCodeRoleException {
+            val exception = assertThrows<RoleException> {
                 it()
             }
+            assertNotNull(exception.userRequest)
         }
     }
 
@@ -242,9 +242,10 @@ class ElaasticOidcUserServiceIntegrationTest(
                 elaasticOidcUserService.loadUser(getUserRequest(it, "UNKNOWN_ROLE"))
             }
         }.tThen("an exception is thrown") {
-            assertOAuth2AuthentificationThrowAndErrorCodeRoleException {
+            val exception = assertThrows<RoleException> {
                 it()
             }
+            assertNotNull(exception.userRequest)
         }
     }
 
@@ -288,9 +289,10 @@ class ElaasticOidcUserServiceIntegrationTest(
             assertFalse(it.user hasRole anotherRole);
             { elaasticOidcUserService.loadUser(getUserRequest(it.user, anotherRole)) }
         }.tThen("an exception is thrown") {
-            assertOAuth2AuthentificationThrowAndErrorCodeRoleException {
+            val exception = assertThrows<RoleException> {
                 it()
             }
+            assertNotNull(exception.userRequest)
         }
     }
 
@@ -342,23 +344,5 @@ class ElaasticOidcUserServiceIntegrationTest(
             )
             assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
         }
-    }
-
-    /**
-     * Assert that the given block throws an [OAuth2AuthenticationException] with the error code
-     * [RoleException::class.java.simpleName]
-     *
-     * @param block the block to execute
-     */
-    private fun assertOAuth2AuthentificationThrowAndErrorCodeRoleException(
-        block: () -> Unit,
-    ) {
-        val exception = assertThrows<OAuth2AuthenticationException> {
-            block()
-        }
-        assertTrue(
-            exception.error.errorCode == RoleException::class.java.simpleName,
-            "The exception should have the error code ${RoleException::class.java.simpleName} but was ${exception.error.errorCode}"
-        )
     }
 }
