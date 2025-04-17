@@ -39,7 +39,7 @@ It describes the realm `elaastic-keycloak` with the following configuration:
 - A client : => For the elaastic application
     - name: `elaastic`
 
-If a user has exactly one role that can log in to the `elaastic` client, then they can log in to it.
+If a user has exactly one role that can log into the `elaastic` client, then he can log in to it.
 
 - An Identity Provider:
     - alias: `saml` in `./keaycloak/README.md`
