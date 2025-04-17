@@ -61,6 +61,8 @@ class ElaasticOidcUserService(
     override fun loadUser(userRequest: OidcUserRequest?): OidcUser {
         val oidcUser = super.loadUser(userRequest)
 
+        requireNotNull(userRequest)
+
         try {
             val role = getRoleFromOidcUser(oidcUser)
             val user = userLinkService.loadUserLinkByUsername(
@@ -73,18 +75,10 @@ class ElaasticOidcUserService(
 
             return ElaasticOidcUser(oidcUser, user)
         } catch (e: RoleException) {
-            /**
-             * We throw an OAuth2AuthenticationException
-             * to be able
-             * to catch it in the [WebSecurityConfig.webFilterChain][org.elaastic.security.WebSecurityConfig.webFilterChain] method.
-             * And redirect the user to a page where he can log out of the OIDC provider.
-             */
-            throw OAuth2AuthenticationException(
-                OAuth2Error(
-                    RoleException::class.java.simpleName,
-                    e.message,
-                    "/error/oidc_role?message=${URLEncoder.encode(e.message, StandardCharsets.UTF_8)}"
-                )
+            throw RoleException(
+                userRequest,
+                e.message ?: "There is a problem with the role of the OIDC user ${oidcUser.name}",
+                e
             )
         }
     }
