@@ -307,6 +307,7 @@ class ElaasticOidcUserServiceIntegrationTest(
                 user = user
             ).let(userLinkRepository::save)
             clearInvocations(userLinkRepository, userRepository)
+            assertTrue(user hasRole studentRole)
             userLink
         }.tWhen("we load the user with the same role") {
             elaasticOidcUserService.loadUser(getUserRequest(it.user, studentRole))
@@ -335,7 +336,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         }.tWhen("we load the user with the same role") {
             elaasticOidcUserService.loadUser(getUserRequest(it.user, teacherRole))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
-        }.tThen("the user is created with the student role") {
+        }.tThen("the user is created with the teacher role") {
             verify(userLinkRepository, never()).save(any<UserLink>())
             verify(userRepository, never()).save(any<User>())
             assertTrue(
