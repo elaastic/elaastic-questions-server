@@ -20,11 +20,10 @@ package org.elaastic.security
 
 import org.elaastic.auth.ElaasticLogoutSuccessHandler
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
-import org.elaastic.auth.oauth.ElaasticOidcUserService
-import org.elaastic.auth.oauth.RoleException
-import org.elaastic.auth.oauth.OidcHintFilter
-import org.elaastic.auth.oauth.OidcLoginSuccessHandler
+import org.elaastic.auth.oauth.*
 import org.elaastic.user.Role
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -46,7 +45,6 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
@@ -54,6 +52,8 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 @Configuration
@@ -69,6 +69,8 @@ class WebSecurityConfig(
     @Value("\${elaastic.questions.url}") val elaasticUrl: String,
     @Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
+
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     companion object {
         const val LOGIN_URL = "/login"
@@ -119,12 +121,21 @@ class WebSecurityConfig(
                     authenticationSuccessHandler = oidcLoginSuccessHandler
                     /**
                      * Handle authentication failure
+                     *
                      * @see ElaasticOidcUserService.loadUser
+                     * @see RoleExceptionController.handleRoleException
                      */
                     authenticationFailureHandler = AuthenticationFailureHandler { request, response, exception ->
-                        if (exception is OAuth2AuthenticationException && exception.error.errorCode == RoleException::class.java.simpleName) {
-                            val redirectUrl = exception.error.uri ?: "/error"
-                            response.sendRedirect(redirectUrl)
+                        if (exception is RoleException) {
+                            request.session.setAttribute(USER_REQUEST_ATTRIBUTE, exception.userRequest)
+                            response.sendRedirect(
+                                "$ERROR_ROLE_URL?message=${
+                                    URLEncoder.encode(
+                                        exception.message,
+                                        StandardCharsets.UTF_8
+                                    )
+                                }"
+                            )
                         } else {
                             response.sendRedirect("/error")
                         }

@@ -33,10 +33,9 @@
                 <p th:text="#{oidc.role_error.logout_description}"></p>
             </div>
         </div>
-        <div th:text="#{layout.main.disconnect}" class="ui button basic" style="text-transform: initial;"
-             onclick="alert('todo')">
+        <a th:text="#{layout.main.disconnect}" class="ui button basic" style="text-transform: initial;" href="/logout">
             Logout
-        </div>
+        </a>
 
     </section>
     </body>
