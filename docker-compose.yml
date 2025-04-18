@@ -46,8 +46,8 @@ services:
       ports:
           - "8081:8080"
       volumes:
-          - ./authentication/keycloak/realms/:/opt/keycloak/data/import/
-          - ./authentication/keycloak/themes/:/opt/keycloak/themes/
+          - ./authentication/elaastic-iam/realms/:/opt/keycloak/data/import/
+          - ./authentication/elaastic-iam/themes/:/opt/keycloak/themes/
       environment:
           KEYCLOAK_ADMIN: admin
           KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
