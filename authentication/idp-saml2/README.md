@@ -1,4 +1,4 @@
-# External Identity Provider SAML2
+# External Identity Provider SAML2 (idp-saml2)
 
 ## Description
 
@@ -11,6 +11,25 @@ source such as the CAS server of an "Environnement Numérique de Travail" (ENT).
 
 For sake of simplicity we will use another Keycloak server to implement this external Identity Provider
 using SAML2.
+
+## realms
+
+### master realm
+#### Users
+`admin` / ${KEYCLOAK_ADMIN_PASSWORD}
+
+### test-external-idp-saml2 realm
+This realm is loaded when creating the container from `./realms/test-external-idp-saml2-realm.json`.
+
+- Users predefined in the realm:
+  | username | password | role | Comment                         |
+  |----------|----------|:----:|---------------------------------|
+  | demo     | demo     |      |                                 |
+
+TODO: define a set of representative test users.
+
+- A client:
+  - clientId: `http://host.docker.internal:8081/realms/elaastic-keycloak` => For SAML2 Identity brokering from Elaastic IAM
 
 ## Common operations
 
