@@ -181,7 +181,7 @@ annotation class ValidateDraxoPeerGrading(
 
 class DraxoPeerGradingValidator : ConstraintValidator<ValidateDraxoPeerGrading, DraxoPeerGrading> {
     override fun isValid(draxoPeerGrading: DraxoPeerGrading?, context: ConstraintValidatorContext?): Boolean {
-        check(draxoPeerGrading != null)
+        checkNotNull(draxoPeerGrading)
         return draxoPeerGrading.getDraxoEvaluation().isValid()
     }
 }
