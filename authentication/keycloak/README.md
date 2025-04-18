@@ -24,8 +24,11 @@ It describes the realm `elaastic-keycloak` with the following configuration:
 | janedoe  | secret   |  /   | Has the same email as `johndoe` |
 | johndoe  | secret   |  /   | Has the same email as `janedoe` |
 
-- A client : 
-  - name: `elaastic`
+- A client: 
+  - name: `elaastic` => For the elaastic application
+
+- An Identity Provider:
+  - alias: `saml` in `./keaycloak/README.md`
 
 
 ## `/themes`
