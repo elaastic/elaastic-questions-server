@@ -30,35 +30,37 @@ import javax.persistence.EntityManager
 
 @Service
 class ResponseRecommendationService(
-        val entityManager: EntityManager,
-        val responseRepository: ResponseRepository
+    val entityManager: EntityManager,
+    val responseRepository: ResponseRepository
 ) {
 
-    fun computeRecommendations(responseList: List<Response>,
-                               nbEvaluation: Int): PeerEvaluationMapping {
+    fun computeRecommendations(
+        responseList: List<Response>,
+        nbEvaluation: Int
+    ): PeerEvaluationMapping {
         responseList.map { ResponseInfo(it) }.let { allResponse ->
             PeerEvaluationMapping(allResponse.map { it.id }).let { recommendationsMapping ->
                 RecommendationResponsePool(
-                        allResponse.filter { it.evaluable },
-                        INCORRECT_RESPONSE_FIRST
+                    allResponse.filter { it.evaluable },
+                    INCORRECT_RESPONSE_FIRST
                 ).let { recommendationResponsePool ->
                     val correctResponseList = allResponse.filter { it.correct }.shuffled()
                     val incorrectResponseList = allResponse.filter { !it.correct }.shuffled()
                     repeat(nbEvaluation) { i ->
                         computeRecommandations(
-                                forResponseList = correctResponseList,
-                                responsePool = recommendationResponsePool.comparator(
-                                        if (i % 2 == 0) INCORRECT_RESPONSE_FIRST else CORRECT_RESPONSE_FIRST
-                                ),
-                                recommendationsMapping = recommendationsMapping
+                            forResponseList = correctResponseList,
+                            responsePool = recommendationResponsePool.comparator(
+                                if (i % 2 == 0) INCORRECT_RESPONSE_FIRST else CORRECT_RESPONSE_FIRST
+                            ),
+                            recommendationsMapping = recommendationsMapping
                         )
 
                         computeRecommandations(
-                                forResponseList = incorrectResponseList,
-                                responsePool = recommendationResponsePool.comparator(
-                                        if (i % 2 == 0) CORRECT_RESPONSE_FIRST else INCORRECT_RESPONSE_FIRST
-                                ),
-                                recommendationsMapping = recommendationsMapping
+                            forResponseList = incorrectResponseList,
+                            responsePool = recommendationResponsePool.comparator(
+                                if (i % 2 == 0) CORRECT_RESPONSE_FIRST else INCORRECT_RESPONSE_FIRST
+                            ),
+                            recommendationsMapping = recommendationsMapping
                         )
                     }
                 }
@@ -69,17 +71,18 @@ class ResponseRecommendationService(
     }
 
     /**
-     * Add a recommendation (when possible) for each response in forResponseList
-     * using the responsePool (which stores candidates recommendationsMapping and the selection mechanism)
+     * Add a recommendation (when possible) for each response in forResponseList using the responsePool (which stores
+     * candidates recommendationsMapping and the selection mechanism)
      *
      * Recommendations are stored into the recommendationsMapping mapping
      */
-    private fun computeRecommandations(forResponseList: List<ResponseInfo>,
-                                       responsePool: RecommendationResponsePool,
-                                       recommendationsMapping: PeerEvaluationMapping
+    private fun computeRecommandations(
+        forResponseList: List<ResponseInfo>,
+        responsePool: RecommendationResponsePool,
+        recommendationsMapping: PeerEvaluationMapping
     ) {
         forResponseList.forEach { forResponse ->
-            var except = ArrayList<Long>(recommendationsMapping[forResponse.id])
+            val except = ArrayList(recommendationsMapping[forResponse.id])
             if (!except.contains(forResponse.id)) { // to avoid self-evaluation
                 except.add(forResponse.id)
             }
@@ -89,13 +92,16 @@ class ResponseRecommendationService(
         }
     }
 
-    fun findAllResponsesOrderedByEvaluationCount(evaluator: User,
-                                                 interaction: Interaction,
-                                                 attemptNum: AttemptNum,
-                                                 limit: Int,
-                                                 excludedIds: List<Long> = listOf(),
-                                                 seed: Long = System.nanoTime()): List<Response> =
-            entityManager.createNativeQuery("""
+    fun findAllResponsesOrderedByEvaluationCount(
+        evaluator: User,
+        interaction: Interaction,
+        attemptNum: AttemptNum,
+        limit: Int,
+        excludedIds: List<Long> = listOf(),
+        seed: Long = System.nanoTime()
+    ): List<Response> =
+        entityManager.createNativeQuery(
+            """
         SELECT 
             cir.id as responseId, 
             (select count(*) from peer_grading pg where pg.response_id = cir.id) as evalCount,
@@ -106,23 +112,27 @@ class ResponseRecommendationService(
               and cir.attempt = :attempt
               and cir.explanation is not null and CHAR_LENGTH(cir.explanation) > $MIN_SIZE_OF_EXPLANATION_TO_BE_EVALUATED
               
-              """.trimIndent()+
-                    if(excludedIds.isNotEmpty()) {
-                        "and cir.id not in (${excludedIds.joinToString()})" } else { "" } +
+              """.trimIndent() +
+                    if (excludedIds.isNotEmpty()) {
+                        "and cir.id not in (${excludedIds.joinToString()})"
+                    } else {
+                        ""
+                    } +
                     """
         ORDER BY evalCount ASC, randomIndex ASC LIMIT :limit            
-        """.trimIndent())
-                    .setParameter("interactionId", interaction.id)
-                    .setParameter("evaluatorId", evaluator.id)
-                    .setParameter("attempt", attemptNum)
-                    .setParameter("limit", limit)
-                    .resultList.let { rawData ->
+        """.trimIndent()
+        )
+            .setParameter("interactionId", interaction.id)
+            .setParameter("evaluatorId", evaluator.id)
+            .setParameter("attempt", attemptNum)
+            .setParameter("limit", limit)
+            .resultList.let { rawData ->
                 responseRepository.getAllByIdIn(
-                        rawData.map {
-                            if (it is Array<*>) {
-                                (it[0] as BigInteger).toLong()
-                            } else error("Expect an array but got a ${it?.javaClass}")
-                        }
+                    rawData.map {
+                        if (it is Array<*>) {
+                            (it[0] as BigInteger).toLong()
+                        } else error("Expect an array but got a ${it?.javaClass}")
+                    }
                 ).shuffled(random = Random(seed))
 
             }
@@ -136,9 +146,11 @@ class ResponseRecommendationService(
                 Pair(false, true) -> 1
                 else -> 0
             }
-        }
-                .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> -r1.nbSelection.compareTo(r2.nbSelection) })
-                .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> -r1.id.compareTo(r2.id) })
+        } // Sort by incorrect first
+            // If both have the same correctness,
+            // then sort by nbSelection and if they are still equals by id
+            .then { r1, r2 -> -r1.nbSelection.compareTo(r2.nbSelection) } // Sort by nbSelection in descending order
+            .then { r1, r2 -> -r1.id.compareTo(r2.id) } // Sort by id in descending order
 
         val CORRECT_RESPONSE_FIRST: Comparator<ResponseInfo> = kotlin.Comparator<ResponseInfo> { r1, r2 ->
             when (Pair(r1.correct, r2.correct)) {
@@ -146,8 +158,10 @@ class ResponseRecommendationService(
                 Pair(false, true) -> -1
                 else -> 0
             }
-        }
-                .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> -r1.nbSelection.compareTo(r2.nbSelection) })
-                .then(kotlin.Comparator<ResponseInfo> { r1, r2 -> -r1.id.compareTo(r2.id) })
+        } // Sort by correct first
+            // If both have the same correctness,
+            // then sort by nbSelection and if they are still equals by id
+            .then { r1, r2 -> -r1.nbSelection.compareTo(r2.nbSelection) } // Sort by nbSelection in descending order
+            .then { r1, r2 -> -r1.id.compareTo(r2.id) } // Sort by id in descending order
     }
 }
