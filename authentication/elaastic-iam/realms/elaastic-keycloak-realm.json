@@ -523,7 +523,8 @@
             "disableableCredentialTypes": [],
             "requiredActions": [],
             "realmRoles": [
-                "default-roles-elaastic-keycloak"
+                "default-roles-elaastic-keycloak",
+                "STUDENT"
             ],
             "notBefore": 0,
             "groups": []
@@ -550,7 +551,8 @@
             "disableableCredentialTypes": [],
             "requiredActions": [],
             "realmRoles": [
-                "default-roles-elaastic-keycloak"
+                "default-roles-elaastic-keycloak",
+                "STUDENT"
             ],
             "notBefore": 0,
             "groups": []
