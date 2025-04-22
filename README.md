@@ -30,6 +30,7 @@ docker-compose up -d [<service>]
 | elaastic-questions-db-test-8 | mySQL 8 Database used for running integration tests             |
 | cas                          | a CAS server just for testing CAS integration in dev mode       |
 | cas-2                        | another CAS server for testing multiple CAS servers integration |
+| elaastic-mailhog             | a mail server for testing email sending                         |
 
 Running a database is mandatory.
 CAS servers is optional. It allows to test CAS authentication without to have to deploy a CAS server manually.
@@ -38,11 +39,23 @@ CAS servers is optional. It allows to test CAS authentication without to have to
 
 To launch the application in development mode:
 
+You have to launch at least this container :
+- elaastic-questions-db-8
+- elaastic-mailhog
+
+````shell
+docker compose up -d elaastic-questions-db-8 elaastic-mailhog
+````
+
+Then, you can run the application with the following command:
+
 ````
 gradle bootRun
 ````
 
 The application is then accessible at `http://localhost:8080`.
+
+You can access the MailHog web interface at `http://localhost:8025` to check the emails sent by the application.
 
 ## Deploying the application
 
