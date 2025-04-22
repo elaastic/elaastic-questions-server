@@ -21,6 +21,7 @@ package org.elaastic.security
 import org.elaastic.auth.ElaasticLogoutSuccessHandler
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
 import org.elaastic.auth.oauth.ElaasticOidcUserService
+import org.elaastic.auth.oauth.OidcHintFilter
 import org.elaastic.user.Role
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -46,9 +47,9 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
-import java.net.URI
 
 
 @Configuration
@@ -111,6 +112,10 @@ class WebSecurityConfig(
                         oidcUserService = elaasticOidcUserService
                     }
                 }
+                http.addFilterBefore(
+                    OidcHintFilter(),
+                    UsernamePasswordAuthenticationFilter::class.java
+                )
             }
 
             val elaasticUrlLogoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
