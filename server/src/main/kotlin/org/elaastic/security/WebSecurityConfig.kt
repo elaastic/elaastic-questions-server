@@ -22,6 +22,7 @@ import org.elaastic.auth.ElaasticLogoutSuccessHandler
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
 import org.elaastic.auth.oauth.ElaasticOidcUserService
 import org.elaastic.auth.oauth.OidcHintFilter
+import org.elaastic.auth.oauth.OidcLoginSuccessHandler
 import org.elaastic.user.Role
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -61,6 +62,7 @@ class WebSecurityConfig(
     @Autowired val encoder: PasswordEncoder,
     @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
     @Autowired val clientRegistrationRepository: ClientRegistrationRepository,
+    private val oidcLoginSuccessHandler: OidcLoginSuccessHandler,
     @Value("\${elaastic.questions.url}") val elaasticUrl: String,
     @Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
@@ -111,6 +113,7 @@ class WebSecurityConfig(
                     userInfoEndpoint {
                         oidcUserService = elaasticOidcUserService
                     }
+                    authenticationSuccessHandler = oidcLoginSuccessHandler
                 }
                 http.addFilterBefore(
                     OidcHintFilter(),
