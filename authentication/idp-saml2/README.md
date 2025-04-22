@@ -24,17 +24,28 @@ using SAML2.
 
 This realm is loaded when creating the container from `./realms/test-external-idp-saml2-realm.json`.
 
-- Users predefined in the realm:
+Users predefined in the realm:
 
-  | username | password | role | Comment |
-  |----------|----------|:----:|---------|
-  | demo     | demo     |      |         |
+| username | password |  role   | Comment |
+|----------|----------|:-------:|---------|
+| demo     | demo     |         |         |
+| admin    | secret   |  ADMIN  |         |
+| eleve    | secret   |  Eleve  |         |
+| student  | secret   | STUDENT |         |
+| teacher  | secret   | TEACHER |         |
 
-TODO: define a set of representative test users.
+Roles in the reaml:
 
-- A client:
-    - clientId: `http://host.docker.internal:8081/realms/elaastic-keycloak` => For SAML2 Identity brokering from
-      Elaastic IAM
+- `STUDENT` : map to `STUDENT` in `auth-iam-1`
+- `TEACHER` : map to `TEACHER` in `auth-iam-1`
+- `ADMIN` : map to `ADMIN` in `auth-iam-1`
+- `Eleve` : map to `STUDENT` in `auth-iam-1`
+- `Professeur` : map to `TEACHER` in `auth-iam-1`
+
+A client:
+
+- clientId: `http://host.docker.internal:8081/realms/elaastic-keycloak` => For SAML2 Identity brokering from
+  Elaastic IAM
 
 ## Common operations
 
