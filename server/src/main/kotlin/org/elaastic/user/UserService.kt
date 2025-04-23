@@ -135,7 +135,9 @@ class UserService(
         addUserConsent: Boolean = true
     ): User {
 
-        require(user.roles.isNotEmpty())
+        require(user.roles.isNotEmpty()) {
+            "Role shouldn't be empty"
+        }
 
         with(user) {
             enabled = !checkEmailAccount && enable

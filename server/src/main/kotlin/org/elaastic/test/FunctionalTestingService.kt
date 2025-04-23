@@ -10,6 +10,7 @@ import org.elaastic.activity.evaluation.peergrading.draxo.option.OptionId
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
+import org.elaastic.activity.response.ResponseSet
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
@@ -33,8 +34,10 @@ import org.elaastic.sequence.*
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.interpreter.command.*
+import org.elaastic.user.Role
 import org.elaastic.user.User
 import org.elaastic.user.UserRepository
+import org.elaastic.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -62,6 +65,7 @@ class FunctionalTestingService(
     @Autowired val peerGradingRepository: PeerGradingRepository,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val sequenceRepository: SequenceRepository,
+    private val userService: UserService,
 ) {
 
     fun createCourse(user: User, title: String = "Default course title") =
@@ -622,8 +626,8 @@ class FunctionalTestingService(
      * The sequence is saved in the database
      *
      * @param teacher the teacher who owns the sequence
-     * @param executionContext the execution context of the sequence
      * @param evaluationPhaseConfig the evaluation phase config of the sequence
+     * @param executionContext the execution context of the sequence
      * @param chatGptEvaluationEnabled the ChatGPT evaluation enabled status of the sequence
      */
     fun createSequence(
@@ -633,11 +637,13 @@ class FunctionalTestingService(
         chatGptEvaluationEnabled: Boolean = false
     ): Sequence {
         val subject: Subject = createSubject(teacher)
-        addQuestion(subject, generateStatement(
-            owner = teacher,
-            questionType = QuestionType.OpenEnded,
-            questionIndex = 0
-        ))
+        addQuestion(
+            subject, generateStatement(
+                owner = teacher,
+                questionType = QuestionType.OpenEnded,
+                questionIndex = 0
+            )
+        )
         val assignment: Assignment = createAssignment(subject)
 
         Sequence(
@@ -650,5 +656,67 @@ class FunctionalTestingService(
         ).let {
             return sequenceRepository.save(it)
         }
+    }
+
+
+    /**
+     * Create a [ResponseSet] for the given sequence.
+     *
+     * Create on User per response needed.
+     *
+     * Each user will submit a response.
+     *
+     * The responses of the set are saved in the database
+     *
+     * @param sequence the sequence to create the response set for
+     * @param nbResponse the number of responses to create
+     */
+    fun createResponseSet(sequence: Sequence, nbResponse: Int): ResponseSet {
+        val users = mutableListOf<User>()
+
+        for (i in 1..nbResponse) {
+            users.add(
+                userService.addUser(
+                    User(
+                        firstName = "FirstName${LocalDate.now()}-$i",
+                        lastName = "LastName${LocalDate.now()}-$i",
+                        username = userService.generateUsername("FirstName${LocalDate.now()}-$i", "LastName${LocalDate.now()}-$i"),
+                        plainTextPassword = "1234",
+                        email = "email@elaastic.org"
+                    ).also {
+                        it.roles.add(Role(Role.RoleId.STUDENT.roleName))
+                    }
+                )
+            )
+        }
+
+        return createResponseSet(sequence, users)
+    }
+
+    /**
+     * Create a [ResponseSet] for the given sequence.
+     *
+     * Each user will submit a response.
+     *
+     * The responses of the set are saved in the database
+     *
+     * @param sequence the sequence to create the response set for
+     * @param users the users who submitted the responses
+     */
+    fun createResponseSet(sequence: Sequence, users: List<User>): ResponseSet {
+        val responses = mutableListOf<Response>()
+
+        users.map { user ->
+            submitResponse(
+                phase = Phase.PHASE_1,
+                user = user,
+                sequence = sequence,
+                correct = true,
+                confidenceDegree = ConfidenceDegree.CONFIDENT,
+                explanation = "Random explanation on ${LocalDate.now()} by ${user.getDisplayName()}"
+            )
+        }.also(responses::addAll)
+
+        return ResponseSet(responses)
     }
 }
