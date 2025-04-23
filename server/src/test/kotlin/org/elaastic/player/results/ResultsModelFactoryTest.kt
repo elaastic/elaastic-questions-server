@@ -21,7 +21,6 @@ import org.elaastic.sequence.interaction.InteractionType.*
 import org.elaastic.user.User
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
-import org.togglz.core.manager.FeatureManager
 
 
 class ResultsModelFactoryTest {
@@ -38,7 +37,6 @@ class ResultsModelFactoryTest {
             ResultsModelFactory.build(
                 teacher = true,
                 sequence = createSequence(MultipleChoice, MultipleChoiceSpecification(2)),
-                featureManager = mockk<FeatureManager>(),
                 responseSet = responseSet,
                 userCanRefreshResults = true,
                 messageBuilder = mockk<MessageBuilder>(),
@@ -50,7 +48,6 @@ class ResultsModelFactoryTest {
             ResultsModelFactory.build(
                 teacher = true,
                 sequence = createSequence(ExclusiveChoice, ExclusiveChoiceSpecification(2, ChoiceItem(1, 1f))),
-                featureManager = mockk<FeatureManager>(),
                 responseSet = responseSet,
                 userCanRefreshResults = true,
                 messageBuilder = mockk<MessageBuilder>(),
@@ -62,7 +59,6 @@ class ResultsModelFactoryTest {
             ResultsModelFactory.build(
                 teacher = true,
                 sequence = createSequence(OpenEnded, null),
-                featureManager = mockk<FeatureManager>(),
                 responseSet = responseSet,
                 userCanRefreshResults = true,
                 messageBuilder = mockk<MessageBuilder>(),
@@ -83,7 +79,6 @@ class ResultsModelFactoryTest {
             ResultsModelFactory.build(
                 teacher = true,
                 sequence = createSequence(MultipleChoice, MultipleChoiceSpecification(2)),
-                featureManager = mockk<FeatureManager>(),
                 responseSet = responseSet,
                 userCanRefreshResults = true,
                 messageBuilder = mockk<MessageBuilder>(),
@@ -95,7 +90,6 @@ class ResultsModelFactoryTest {
             ResultsModelFactory.build(
                 teacher = true,
                 sequence = createSequence(ExclusiveChoice, ExclusiveChoiceSpecification(2, ChoiceItem(1, 1f))),
-                featureManager = mockk<FeatureManager>(),
                 responseSet = responseSet,
                 userCanRefreshResults = true,
                 messageBuilder = mockk<MessageBuilder>(),

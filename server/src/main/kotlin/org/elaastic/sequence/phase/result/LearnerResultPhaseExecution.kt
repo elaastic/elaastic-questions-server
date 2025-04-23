@@ -11,7 +11,6 @@ class LearnerResultPhaseExecution(
     val responseSet: ResponseSet,
     val userCanRefreshResults: Boolean,
     val myResultsModel: LearnerResultsModel,
-    val featureManager: FeatureManager,
     val messageBuilder: MessageBuilder,
     val myChatGptEvaluationModel: ChatGptEvaluationModel?,
 ) : LearnerPhaseExecution {
