@@ -20,7 +20,6 @@ class TeacherResultDashboardService(
     @Autowired val responseService: ResponseService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val messageBuilder: MessageBuilder,
-    @Autowired val featureManager: FeatureManager,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
 ) {
 
@@ -36,7 +35,6 @@ class TeacherResultDashboardService(
         return ResultsModelFactory.build(
             true,
             sequence,
-            featureManager,
             responseSet = responseSet,
             true,
             messageBuilder,

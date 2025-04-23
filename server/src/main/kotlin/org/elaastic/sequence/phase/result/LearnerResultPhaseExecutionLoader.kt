@@ -19,7 +19,6 @@ import org.togglz.core.manager.FeatureManager
 class LearnerResultPhaseExecutionLoader(
     @Autowired val resultsService: ResultsService,
     @Autowired val responseService: ResponseService,
-    @Autowired val featureManager: FeatureManager,
     @Autowired val messageBuilder: MessageBuilder,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService
 ) : LearnerPhaseExecutionLoader {
@@ -92,7 +91,6 @@ class LearnerResultPhaseExecutionLoader(
                 learnerPhase.learnerSequence.sequence
             ),
             myResultsModel = myResultsModel,
-            featureManager = featureManager,
             messageBuilder = messageBuilder,
             myChatGptEvaluationModel = myChatGptEvaluationModel,
         )
