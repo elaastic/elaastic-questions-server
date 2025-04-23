@@ -49,7 +49,7 @@ object ResultsModelFactory {
         chatGptEvaluationResponseStore: ChatGptEvaluationResponseStore
     ): ResultsModel =
         if (sequence.statement.hasChoices()) {
-            val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
+            val recommendationIsActive = ElaasticFeatures.RECOMMENDATIONS.isActive()
             val recommendationModel = if (recommendationIsActive)
                 RecommendationResolver.resolve(
                     responseSet,

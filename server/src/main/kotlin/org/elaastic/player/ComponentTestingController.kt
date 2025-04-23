@@ -2657,7 +2657,7 @@ class ComponentTestingController(
 
     @GetMapping("/recommendations")
     fun testRecommendations(): ResponseEntity<String> {
-        val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
+        val recommendationIsActive = ElaasticFeatures.RECOMMENDATIONS.isActive()
 
         return ResponseEntity.ok("Recommendation feature : ${if (recommendationIsActive) "active" else "Inactive"}")
 
