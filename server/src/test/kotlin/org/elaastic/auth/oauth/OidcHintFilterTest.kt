@@ -67,6 +67,28 @@ class OidcHintFilterTest {
     }
 
     @Test
+    fun `test doFilterInternal without parameter`() {
+        val oidcHintFilter = TestableOidcHintFilter()
+        val request = MockHttpServletRequest()
+        request.addParameter(OIDC_HINT, "test")
+        val target = "/test"
+        request.requestURI = target
+
+        val response = MockHttpServletResponse()
+
+        oidcHintFilter.testableDoFilterInternal(request, response, MockFilterChain())
+
+        // Check that the target URL is set correctly in the session
+        assertEquals(
+            target,
+            request.session?.getAttribute(TARGET_URL_SESSION_ATTR)
+        )
+
+        // Check that the redirect URL is correct
+        assertEquals("/oauth2/authorization/test", response.redirectedUrl)
+    }
+
+    @Test
     fun `test doFilterInternal with authenticated user`() {
         val oidcHintFilter = TestableOidcHintFilter()
         val request = MockHttpServletRequest()
