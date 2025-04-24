@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import org.elaastic.activity.response.ResponseSet
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationResponseStore
+import org.elaastic.assertInstanceOf
 import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.common.web.MessageBuilder
@@ -19,7 +20,6 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.interaction.InteractionType.*
 import org.elaastic.user.User
-import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 
 
@@ -135,7 +135,4 @@ class ResultsModelFactoryTest {
     private fun <T : AbstractJpaPersistable<Long>> T.alsoSetId(givenId: Long = 1): T {
         return this.also { it.id = givenId }
     }
-
-    private inline fun <reified T> assertInstanceOf(actualValue: Any) =
-        assertInstanceOf(T::class.java, actualValue)
 }
