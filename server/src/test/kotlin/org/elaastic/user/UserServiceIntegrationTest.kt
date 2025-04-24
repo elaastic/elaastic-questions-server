@@ -19,6 +19,7 @@
 package org.elaastic.user
 
 import org.apache.commons.lang3.time.DateUtils
+import org.elaastic.assertIsEmpty
 import org.elaastic.auth.UserLink
 import org.elaastic.auth.UserLinkRepository
 import org.elaastic.test.IntegrationTestingService
@@ -679,6 +680,28 @@ internal class UserServiceIntegrationTest(
         }.tWhen("find the user by id") {
             { userService.findById(it) }
         }.tThen("An exception is throws") {
+            assertThrows<IllegalArgumentException> {
+                it()
+            }
+        }
+    }
+
+    @Test
+    fun `test addUser without role`() {
+        tGiven("a user") {
+            User(
+                username = "foo",
+                firstName = "f",
+                lastName = "oo",
+                plainTextPassword = "1234",
+                email = "foo@elaastic.org"
+            )
+        }.tWhen("The user is added") {
+            assertIsEmpty(it.roles);
+            {
+                userService.addUser(it)
+            }
+        }.tThen("an exception is thrown") {
             assertThrows<IllegalArgumentException> {
                 it()
             }
