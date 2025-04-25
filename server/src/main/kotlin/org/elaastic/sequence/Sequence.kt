@@ -151,11 +151,6 @@ class Sequence(
     }
 
     @Transient
-    fun getResponseSubmissionInteractionOrNull(): Interaction? {
-        return interactions[InteractionType.ResponseSubmission]
-    }
-
-    @Transient
     fun responseSubmissionInteractionIsInitialized() =
         interactions[InteractionType.ResponseSubmission] != null
 
@@ -194,11 +189,6 @@ class Sequence(
             ?: throw IllegalStateException("The evaluation interaction is not initialized")
     }
 
-    @Transient
-    fun getEvaluationInteractionOrNull(): Interaction? {
-        return interactions[InteractionType.Evaluation]
-    }
-
     /**
      * @return the read interaction of the sequence.
      * @see Interaction
@@ -208,11 +198,6 @@ class Sequence(
         check(interactions.isNotEmpty()) { "No interaction defined for this sequence" }
         return interactions[InteractionType.Read]
             ?: throw IllegalStateException("The read interaction is not initialized")
-    }
-
-    @Transient
-    fun getReadInteractionOrNull(): Interaction? {
-        return interactions[InteractionType.Read]
     }
 
 

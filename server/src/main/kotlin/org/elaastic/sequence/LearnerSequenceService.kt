@@ -30,7 +30,7 @@ import javax.transaction.Transactional
 @Transactional
 class LearnerSequenceService(
     @Autowired val learnerSequenceRepository: LearnerSequenceRepository,
-    @Autowired val peerGradingService: PeerGradingService,
+    @Autowired val peerGradingService: PeerGradingService
 ) {
 
     fun getActiveInteractionForLearner(learnerSequence: ILearnerSequence) =
@@ -71,7 +71,7 @@ class LearnerSequenceService(
         }.let {
             if (it.activeInteraction == null && sequence.activeInteraction != null) {
                 it.activeInteraction =
-                    sequence.getResponseSubmissionInteractionOrNull()
+                    sequence.getResponseSubmissionInteraction()
                 learnerSequenceRepository.save(it)
                 it
             } else it
