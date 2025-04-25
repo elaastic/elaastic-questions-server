@@ -33,7 +33,7 @@
   "verifyEmail" : false,
   "loginWithEmailAllowed" : false,
   "duplicateEmailsAllowed" : true,
-  "resetPasswordAllowed" : false,
+  "resetPasswordAllowed" : true,
   "editUsernameAllowed" : false,
   "bruteForceProtected" : false,
   "permanentLockout" : false,
@@ -1396,7 +1396,18 @@
     "xXSSProtection" : "1; mode=block",
     "strictTransportSecurity" : "max-age=31536000; includeSubDomains"
   },
-  "smtpServer" : { },
+  "smtpServer" : {
+    "replyToDisplayName" : "",
+    "starttls" : "false",
+    "auth" : "",
+    "port" : "1025",
+    "replyTo" : "",
+    "host" : "elaastic-mailhog",
+    "from" : "elaastic-keycloak@mail.fr",
+    "fromDisplayName" : "",
+    "envelopeFrom" : "",
+    "ssl" : "false"
+  },
   "loginTheme" : "elaastic",
   "accountTheme" : "",
   "adminTheme" : "",
