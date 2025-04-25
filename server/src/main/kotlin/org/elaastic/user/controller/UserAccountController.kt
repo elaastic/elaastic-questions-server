@@ -26,6 +26,8 @@ import org.elaastic.user.UserService
 import org.elaastic.user.controller.command.PasswordData
 import org.elaastic.user.controller.command.UserData
 import org.elaastic.user.legal.TermsService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
@@ -34,14 +36,16 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.util.*
-import java.util.logging.Logger
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
+
+private const val NOT_ALLOWED_TO_ANONYMOUS_USER = "Not allowed to anonymous user"
 
 @Controller
 class UserAccountController(
@@ -53,22 +57,22 @@ class UserAccountController(
     @Autowired val messageSource: MessageSource
 ) {
 
-    val logger = Logger.getLogger(UserAccountController::javaClass.name)
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     @GetMapping("/register")
     fun showSubscribeForm(model: Model): String {
-        model.addAttribute("checkEmail", checkEmail)
+        model["checkEmail"] = checkEmail
         return "userAccount/showSubscribeForm"
     }
 
     @GetMapping("/userAccount/edit")
     fun edit(authentication: Authentication, model: Model): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
-        if (user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+        check(!user.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
 
         val userToUpdate = userService.get(user.id!!)!!
-        model.addAttribute("userData", UserData(userToUpdate, userHasGivenConsent = true))
-        model.addAttribute("user", userToUpdate)
+        model["userData"] = UserData(userToUpdate, userHasGivenConsent = true)
+        model["user"] = userToUpdate
         return "userAccount/edit"
     }
 
@@ -84,7 +88,8 @@ class UserAccountController(
         locale: Locale
     ): String {
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
-        if (authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+        check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
+        
         if (!result.hasErrors()) {
             val updatedUser = userService.get(userData.id!!)!!
             userData.populateUser(updatedUser, roleService)
@@ -96,8 +101,8 @@ class UserAccountController(
         }
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
-            model.addAttribute("user", authUser)
-            model.addAttribute("userData", userData)
+            model["user"] = authUser
+            model["userData"] = userData
             "/userAccount/edit"
         } else {
             redirectAttributes.addFlashAttribute("messageType", "success")
@@ -111,9 +116,9 @@ class UserAccountController(
     @GetMapping("/userAccount/editPassword")
     fun editPassword(authentication: Authentication, model: Model): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
-        if (user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
-        model.addAttribute("passwordData", PasswordData(user))
-        model.addAttribute("user", user)
+        check(!user.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
+        model["passwordData"] = PasswordData(user)
+        model["user"] = user
         return "userAccount/editPassword"
     }
 
@@ -128,7 +133,8 @@ class UserAccountController(
         locale: Locale
     ): String {
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
-        if (authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+        check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
+
         if (!result.hasErrors()) {
             val updatedUser = userService.get(authUser, passwordData.id!!)
             try {
@@ -141,7 +147,7 @@ class UserAccountController(
         }
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
-            model.addAttribute("user", authUser)
+            model["user"] = authUser
             "/userAccount/editPassword"
         } else {
             redirectAttributes.addFlashAttribute("messageType", "success")
@@ -194,12 +200,12 @@ class UserAccountController(
     @GetMapping("/userAccount/unsubscribe")
     fun unsubscribe(authentication: Authentication, model: Model, locale: Locale): String {
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
-        if (authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+        check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
 
-        model.addAttribute("user", authUser)
+        model["user"] = authUser
         messageSource.getMessage("UnsubscribtionWarning.user", emptyArray(), locale).let {
-            model.addAttribute("messageContent", it)
-            model.addAttribute("messageType", "error")
+            model["messageContent"] = it
+            model["messageType"] = "error"
         }
         return "userAccount/unsubscribe"
     }
@@ -214,7 +220,7 @@ class UserAccountController(
             redirectAttributes.addFlashAttribute("message", it)
         }
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
-        if (authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+        check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
 
         userService.disableUser(authUser)
         return "redirect:/logout"
@@ -222,7 +228,7 @@ class UserAccountController(
 
     @GetMapping("/terms")
     fun terms(model: Model, locale: Locale): String {
-        model.addAttribute("termsContent", termsService.getTermsContentByLanguage(locale.language))
+        model["termsContent"] = termsService.getTermsContentByLanguage(locale.language)
         return "terms/terms"
     }
 
