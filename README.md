@@ -18,8 +18,10 @@ _elaastic_ is developed with the spring-boot framework and the Kotlin language.
 * Gradle
 * Docker
 
-### Launching the database & cas servers
-The databases and cas servers can be run using docker compose :
+### Launch the services required by Elaastic
+
+Those services are containerized and can be launched with docker compose:
+
 ````
 docker-compose up -d [<service>]
 ````
@@ -32,14 +34,25 @@ docker-compose up -d [<service>]
 | cas-2                        | another CAS server for testing multiple CAS servers integration |
 | elaastic-mailhog             | a mail server for testing email sending                         |
 
-Running a database is mandatory.
-CAS servers is optional. It allows to test CAS authentication without to have to deploy a CAS server manually.
+Running the main database is mandatory.
+CAS servers are optional. It allows to test CAS authentication without to have to deploy a CAS server manually.
+
+### Setup the dockerized CAS servers in dev mode
+
+The generated autosigned certificate must be imported on the JDK used to launch elaastic.
+
+From `JAVA_HOME`, run the following command :
+
+``` 
+.\bin\keytool.exe -importcert -cacerts -alias "elaastic-cas" -file <elaastic-questions-server>\docker-resources\cas\etc\cas\config\elaastic-cas-certificate.cer
+```
 
 ### Launching the application
 
 To launch the application in development mode:
 
 You have to launch at least this container :
+
 - elaastic-questions-db-8
 - elaastic-mailhog
 
@@ -56,6 +69,50 @@ gradle bootRun
 The application is then accessible at `http://localhost:8080`.
 
 You can access the MailHog web interface at `http://localhost:8025` to check the emails sent by the application.
+
+### Test users
+
+| Login | Password | role    | 
+|:------|:---------|:--------| 
+| fsil  | 1234     | teacher |
+| tsil  | 1234     | learner | 
+| jtra  | 1234     | learner | 
+| admin | admin    | admin   |
+
+## Development guide
+
+The project _elaastic_ is composed of two modules:
+
+1. `server`: The Spring Boot webapp developed in Kotlin
+2. `ui-components`: A set of UI components developed in Vue 3
+
+### `ui-components`
+
+#### Setup
+
+Install `Node v22.11.0` (recommendation: use `nvm` for installing Node).
+
+Then install the dependencies with :
+
+```shell
+npm install
+```
+
+#### Run storybook
+
+```shell
+npm run storybook
+```
+
+#### Build
+
+```shell
+npm run build
+```
+
+The built bundles will be available at `./ui-components/dist`.
+Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
+in order to use it.
 
 ## Deploying the application
 
@@ -82,44 +139,6 @@ Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 
 It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
 The application will be available at `http://localhost:8088`.
-       
-### Setup the dockerized CAS servers in dev mode
- The generated autosigned certificate must be imported on the JDK used to launch elaastic.
-
-From `JAVA_HOME`, run the following command :
-``` 
-.\bin\keytool.exe -importcert -cacerts -alias "elaastic-cas" -file <elaastic-questions-server>\docker-resources\cas\etc\cas\config\elaastic-cas-certificate.cer
-```
-
-## Development guide
-
-The project _elaastic_ is composed of two modules:
-1. `server`: The Spring Boot webapp developed in Kotlin
-2. `ui-components`: A set of UI components developed in Vue 3
-
-### `ui-components`
-
-#### Setup
-Install `Node v22.11.0` (recommendation: use `nvm` for installing Node).
-
-Then install the dependencies with :
-```shell
-npm install
-```
-
-#### Run storybook
-```shell
-npm run storybook
-```
-
-#### Build
-```shell
-npm run build
-```
-
-The built bundles will be available at `./ui-components/dist`.
-Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
-in order to use it.
 
 ## Licence
 
