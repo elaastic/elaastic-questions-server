@@ -86,34 +86,6 @@ The project _elaastic_ is composed of two modules:
 1. `server`: The Spring Boot webapp developed in Kotlin
 2. `ui-components`: A set of UI components developed in Vue 3
 
-### `ui-components`
-
-#### Setup
-
-Install `Node v22.11.0` (recommendation: use `nvm` for installing Node).
-
-Then install the dependencies with :
-
-```shell
-npm install
-```
-
-#### Run storybook
-
-```shell
-npm run storybook
-```
-
-#### Build
-
-```shell
-npm run build
-```
-
-The built bundles will be available at `./ui-components/dist`.
-Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
-in order to use it.
-
 ## Deploying the application
 
 _elaastic_ can be deployed in _stand-alone_ mode (with an embedded Tomcat server) or in a Tomcat server.

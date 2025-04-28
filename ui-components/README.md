@@ -1,4 +1,31 @@
-# elaastic-vue-components
+# elaastic ui-components
+
+## Setup
+
+Install `Node v22` (recommendation: use `nvm` for installing Node).
+
+Then install the dependencies with :
+
+```shell
+npm install
+```
+
+## Run storybook
+
+```shell
+npm run storybook
+```
+
+## Build
+
+```shell
+npm run build
+```
+
+The built bundles will be available at `./dist`.
+Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
+in order to use it.
+
 
 ## How to develop a new Vue.js component and integrate it in a Thymeleaf template
 
