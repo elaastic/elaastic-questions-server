@@ -1,45 +1,67 @@
 <script setup lang="ts">
 import {ref} from 'vue'
 import type {PropType} from "vue";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
   answers: {
-    type: Array as PropType<string[]>, // Assurer que c'est un tableau de chaînes
+    type: Array as PropType<string[]>,
     default: () => []
   },
   selected: {
-    type: Array as PropType<string[]>, // Assurer que c'est un tableau de chaînes
+    type: Array as PropType<string[]>,
     default: () => []
   }
 })
 
-const emit = defineEmits(['update:selected']) // Émettre l'événement de mise à jour de `selected`
+const emit = defineEmits(['update:selected'])
+const { t } = useI18n()
 
-// Valeur locale pour le `selected`
 const selectedLocal = ref([...props.selected])
 
-// Méthode pour émettre la mise à jour de `selected`
+
 const updateSelected = (newSelected: string[]) => {
-  emit('update:selected', newSelected) // Émettre l'événement de mise à jour
-  selectedLocal.value = newSelected // Mettre à jour la valeur locale
+  emit('update:selected', newSelected)
+  selectedLocal.value = newSelected
 }
 </script>
 
 <template>
-  <p>{{ selectedLocal }}</p>
-  <p>Votre réponse</p>
-  <v-container fluid>
-    <v-checkbox
-            v-for="answer in answers"
-            :key="answer"
-            v-model="selectedLocal" :value="answer"
-            @update:selected="updateSelected"
-    >
-    <template v-slot:label>
-      <div>{{ answer }}</div>
-    </template>
-    </v-checkbox>
-  </v-container>
+  <div class="Horizontal_container">
+    <p class="answer">{{t('your-answer')}}</p>
+    <v-container fluid class="Horizontal_container">
+      <v-checkbox
+              v-for="answer in answers"
+              :key="answer"
+              v-model="selectedLocal" :value="answer"
+              @update:selected="updateSelected"
+      >
+        <template v-slot:label>
+          <div>{{ answer }}</div>
+        </template>
+      </v-checkbox>
+    </v-container>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.Horizontal_container{
+  display: flex;
+  align-items: center;
+}
+.answer{
+  white-space: nowrap;
+  margin-bottom: 2.3%;
+  font-weight: bold;
+}
+</style>
+<i18n>
+{
+  "en": {
+    "your-answer": "Your Answer : "
+  },
+  "fr": {
+    "your-answer": "Votre Réponse : "
+  }
+}
+</i18n>
