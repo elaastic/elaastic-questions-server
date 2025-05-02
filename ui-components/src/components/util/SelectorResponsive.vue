@@ -19,6 +19,7 @@ interface SelectorResponsivProps {
 }
 interface SelectorResponsivEmit {
   (event: 'changeSelection', newSelection: Selection): void;
+  (event: 'update:selected', newSelection: Selection): void;
 }
 
 const props = withDefaults(defineProps<SelectorResponsivProps>(), {
@@ -51,6 +52,7 @@ const setSelected = (newSelection: Selection) => {
 const onChangeSelection = () => {
   if (selected.value != null) {
     emit('changeSelection', selected.value)
+    emit('update:selected', selected.value)
   }
 }
 
