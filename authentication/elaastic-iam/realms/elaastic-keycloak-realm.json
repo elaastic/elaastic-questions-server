@@ -751,7 +751,7 @@
       "oidc.ciba.grant.enabled" : "false",
       "client.secret.creation.time" : "1721505129",
       "backchannel.logout.session.required" : "true",
-      "backchannel.logout.url" : "http://host.docker.internal:8080/logout/connect/back-channel/keycloak",
+      "backchannel.logout.url" : "http://localhost:8080/logout/connect/back-channel/keycloak",
       "post.logout.redirect.uris" : "http://localhost:8080/",
       "oauth2.device.authorization.grant.enabled" : "false",
       "display.on.consent.screen" : "false",
