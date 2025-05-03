@@ -1,3 +1,21 @@
+/*
+ * Elaastic - formative assessment system
+ * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package org.elaastic.auth.oauth
 
 import com.nhaarman.mockitokotlin2.*
@@ -5,12 +23,11 @@ import org.elaastic.auth.UserLink
 import org.elaastic.auth.UserLinkRepository
 import org.elaastic.auth.UserLinkService
 import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
-import org.elaastic.user.Role
-import org.elaastic.user.RoleService
-import org.elaastic.user.User
-import org.elaastic.user.UserRepository
+import org.elaastic.user.*
+import org.elaastic.user.Role.RoleId
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,11 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.context.annotation.Profile
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
-import org.springframework.security.oauth2.client.registration.ClientRegistration
-import org.springframework.security.oauth2.core.AuthorizationGrantType
-import org.springframework.security.oauth2.core.OAuth2AccessToken
-import org.springframework.security.oauth2.core.oidc.OidcIdToken
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import javax.transaction.Transactional
 
@@ -61,10 +73,10 @@ class ElaasticOidcUserServiceIntegrationTest(
         )
 
         tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(user))
+            elaasticOidcUserService.loadUser(createUserRequest(user, RoleId.STUDENT))
 
         }.tThen("the user is created") { elaasticOidcUser ->
-            verify(userLinkService, times(1)).registerNewOidcUser(any<OidcUser>(), any<Role.RoleId>())
+            verify(userLinkService, times(1)).registerNewOidcUser(any<OidcUser>(), any<RoleId>())
             verify(userRepository, times(1)).save(any<User>())
             verify(userLinkRepository, times(1)).save(any<UserLink>())
 
@@ -106,17 +118,28 @@ class ElaasticOidcUserServiceIntegrationTest(
     @Test
     fun `test loadUser with existing User`() {
         // Given a user
-        val user = integrationTestingService.getAnyUser()
+        val user = User(
+            firstName = "John",
+            lastName = "Doe",
+            username = "johdoe",
+            plainTextPassword = "1234",
+            email = "john.doe@mail.com",
+        ).also {
+            it.roles.clear()
+            it.roles.add(Role(name = RoleId.STUDENT.roleName))
+            it.password = "1234"
+        }.let(userRepository::save)
         UserLink(
             providerId = userLinkService.oidcProvider,
             providerUserId = user.username,
             user = user
         ).let(userLinkRepository::save)
-        clearInvocations(userLinkRepository)
 
+        clearInvocations(userLinkRepository, userRepository)
         tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(user))
-
+            val studentRole = RoleId.STUDENT
+            assertTrue(user.roles.contains(studentRole))
+            elaasticOidcUserService.loadUser(createUserRequest(user, studentRole))
         }.tThen("no other user is created") { elaasticOidcUser ->
             verify(userRepository, never()).save(any<User>())
             verify(userLinkRepository, never()).save(any<UserLink>())
@@ -134,26 +157,211 @@ class ElaasticOidcUserServiceIntegrationTest(
         }
     }
 
-    /** Create a UserRequest for the given user */
-    private fun getUserRequest(user: User): OidcUserRequest {
-        return OidcUserRequest(
-            ClientRegistration
-                .withRegistrationId(user.firstName)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .clientId(user.firstName)
-                .tokenUri("https://localhost:8080")
-                .build(),
-            OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "accessToken", null, null),
-            OidcIdToken(
-                "idToken", null, null, mapOf(
-                    "sub" to user.username,
-                    "given_name" to user.firstName,
-                    "family_name" to user.lastName,
-                    "email" to user.email,
-                    "iss" to "https://localhost:8080",
+    @Test
+    fun `test loadUser with new User and Student Role`() {
+        tGiven("a user with the STUDENT role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            )
+        }.tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(createUserRequest(it, RoleId.STUDENT))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser }
+        }.tThen("the user is created with the student role") {
+            assertTrue(
+                it.elaasticUser hasRole RoleId.STUDENT,
+                "User should have the STUDENT role, but was ${it.elaasticUser.roles}"
+            )
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and Teacher Role`() {
+        tGiven("a user with the TEACHER role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            )
+        }.tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(createUserRequest(it, RoleId.TEACHER))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser }
+        }.tThen("the user is created with the teacher role") {
+            assertTrue(
+                it.elaasticUser hasRole RoleId.TEACHER,
+                "User should have the TEACHER role, but was ${it.elaasticUser.roles}"
+            )
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and Admin Role`() {
+        tGiven("a user with the ADMIN role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            )
+        }.tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(createUserRequest(it, RoleId.ADMIN))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser }
+        }.tThen("the user is created with the admin role") {
+            assertTrue(
+                it.elaasticUser hasRole RoleId.ADMIN,
+                "User should have the ADMIN role, but was ${it.elaasticUser.roles}"
+            )
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and multiple Roles should throw`() {
+        tGiven("a user with the STUDENT and TEACHER roles") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            )
+        }.tWhen("we load the user") {
+            {
+                elaasticOidcUserService.loadUser(
+                    createUserRequest(
+                        it,
+                        listOf(RoleId.STUDENT, RoleId.TEACHER).map(::findKeycloakRoleFrom)
+                    )
                 )
-            ),
-            emptyMap()
-        )
+            }
+        }.tThen("an exception is thrown") {
+            val exception = assertThrows<RoleException> {
+                it()
+            }
+            assertNotNull(exception.userRequest)
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and only an unknow role should throw`() {
+        tGiven("a user with an unknown role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            )
+        }.tWhen("we load the user") {
+            {
+                elaasticOidcUserService.loadUser(createUserRequest(it, "UNKNOWN_ROLE"))
+            }
+        }.tThen("an exception is thrown") {
+            val exception = assertThrows<RoleException> {
+                it()
+            }
+            assertNotNull(exception.userRequest)
+        }
+    }
+
+    @Test
+    fun `test loadUser with new User and an unknow and one known Role shouldn't throw`() {
+        tGiven("a user with an unknown and a known role") {
+            User(
+                firstName = "John",
+                lastName = "Doe",
+                username = "johdoe",
+                plainTextPassword = "1234"
+            )
+        }.tWhen("we load the user") {
+            elaasticOidcUserService.loadUser(createUserRequest(it, listOf(RoleId.STUDENT.roleName, "UNKNOWN_ROLE")))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser }
+        }.tThen("the user is created with the student role") {
+            assertTrue(
+                it.elaasticUser hasRole RoleId.STUDENT,
+                "User should have the STUDENT role, instead got ${it.elaasticUser.roles}"
+            )
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+    }
+
+    @Test
+    fun `test loadUser with existing User and the Role don't match should throw`() {
+        tGiven("a user with STUDENT Role") {
+            // Given a user
+            val user = integrationTestingService.getAnyUser()
+                .also {
+                    it.roles.clear()
+                    it.roles.add(Role(name = RoleId.STUDENT.roleName))
+                }
+            UserLink(
+                providerId = userLinkService.oidcProvider,
+                providerUserId = user.username,
+                user = user
+            ).let(userLinkRepository::save)
+        }.tWhen("we load the user BUT with a different role") {
+            val anotherRole = RoleId.TEACHER
+            assertFalse(it.user hasRole anotherRole);
+            { elaasticOidcUserService.loadUser(createUserRequest(it.user, anotherRole)) }
+        }.tThen("an exception is thrown") {
+            val exception = assertThrows<RoleException> {
+                it()
+            }
+            assertNotNull(exception.userRequest)
+        }
+    }
+
+    @Test
+    fun `test loadUser with existing User and the Role match`() {
+        val studentRole = RoleId.STUDENT
+        tGiven("a user with STUDENT Role") {
+            val user = integrationTestingService.getTestStudent()
+            val userLink = UserLink(
+                providerId = userLinkService.oidcProvider,
+                providerUserId = user.username,
+                user = user
+            ).let(userLinkRepository::save)
+            clearInvocations(userLinkRepository, userRepository)
+            assertTrue(user hasRole studentRole)
+            userLink
+        }.tWhen("we load the user with the same role") {
+            elaasticOidcUserService.loadUser(createUserRequest(it.user, studentRole))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser }
+        }.tThen("the user is created with the student role") {
+            verify(userLinkRepository, never()).save(any<UserLink>())
+            verify(userRepository, never()).save(any<User>())
+            assertTrue(
+                it.elaasticUser hasRole studentRole,
+                "User should have the ${studentRole.roleName} role, but was ${it.elaasticUser.roles}"
+            )
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
+
+        val teacherRole = RoleId.TEACHER
+        tGiven("a user with TEACHER Role") {
+            val user = integrationTestingService.getTestTeacher()
+            val userLink = UserLink(
+                providerId = userLinkService.oidcProvider,
+                providerUserId = user.username,
+                user = user
+            ).let(userLinkRepository::save)
+            clearInvocations(userLinkRepository, userRepository)
+            assertTrue(user.isTeacher())
+            userLink
+        }.tWhen("we load the user with the same role") {
+            elaasticOidcUserService.loadUser(createUserRequest(it.user, teacherRole))
+                .let { oidcUser -> oidcUser as ElaasticOidcUser }
+        }.tThen("the user is created with the teacher role") {
+            verify(userLinkRepository, never()).save(any<UserLink>())
+            verify(userRepository, never()).save(any<User>())
+            assertTrue(
+                it.elaasticUser hasRole teacherRole,
+                "User should have the ${teacherRole.roleName} role, but was ${it.elaasticUser.roles}"
+            )
+            assertEquals(1, it.elaasticUser.roles.size, "Exactly one role should be present")
+        }
     }
 }

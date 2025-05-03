@@ -31,8 +31,8 @@
   "registrationEmailAsUsername" : false,
   "rememberMe" : false,
   "verifyEmail" : false,
-    "loginWithEmailAllowed": false,
-    "duplicateEmailsAllowed": true,
+  "loginWithEmailAllowed" : false,
+  "duplicateEmailsAllowed" : true,
   "resetPasswordAllowed" : false,
   "editUsernameAllowed" : false,
   "bruteForceProtected" : false,
@@ -54,6 +54,14 @@
       "containerId" : "d7cfb752-7e07-4e88-a655-704b68b934cd",
       "attributes" : { }
     }, {
+      "id" : "b907d9a8-d23d-4f65-b91f-49b2506644b3",
+      "name" : "STUDENT",
+      "description" : "A student for Elaastic",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "d7cfb752-7e07-4e88-a655-704b68b934cd",
+      "attributes" : { }
+    }, {
       "id" : "a49b22c4-1aa5-4621-a645-8bcfd5118dee",
       "name" : "default-roles-elaastic-keycloak",
       "description" : "${role_default-roles}",
@@ -64,6 +72,22 @@
           "account" : [ "view-profile", "manage-account" ]
         }
       },
+      "clientRole" : false,
+      "containerId" : "d7cfb752-7e07-4e88-a655-704b68b934cd",
+      "attributes" : { }
+    }, {
+      "id" : "64f48369-1ccf-4897-b2c4-97c8a8c9cb08",
+      "name" : "TEACHER",
+      "description" : "A teacher for Elaastic",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "d7cfb752-7e07-4e88-a655-704b68b934cd",
+      "attributes" : { }
+    }, {
+      "id" : "a78e0fcf-6964-4a38-9e2f-48a15afcfdfd",
+      "name" : "ADMIN",
+      "description" : "An Admin for Elaastic",
+      "composite" : false,
       "clientRole" : false,
       "containerId" : "d7cfb752-7e07-4e88-a655-704b68b934cd",
       "attributes" : { }
@@ -352,10 +376,8 @@
     "clientRole" : false,
     "containerId" : "d7cfb752-7e07-4e88-a655-704b68b934cd"
   },
-    "requiredCredentials": [
-        "password"
-    ],
-    "passwordPolicy": "length(3)",
+  "requiredCredentials" : [ "password" ],
+  "passwordPolicy" : "length(3)",
   "otpPolicyType" : "totp",
   "otpPolicyAlgorithm" : "HmacSHA1",
   "otpPolicyInitialCounter" : 0,
@@ -388,6 +410,29 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
+    "id" : "e0943b46-f740-4644-8020-265f672c8ff8",
+    "username" : "alice",
+    "firstName" : "Alice",
+    "lastName" : "Smith",
+    "email" : "alice.smith@mail.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1744799376806,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "9230fa9c-2728-4921-ad7c-d35c03b22c72",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1744799705775,
+      "secretData" : "{\"value\":\"Jr0CWgZlMESi912Q438JXfJtFnX03h17SCZ8RwRIje8=\",\"salt\":\"pON/rZU2w+F9xQYKtUoBHg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-elaastic-keycloak", "ADMIN" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "886efb4c-5018-49a5-9855-91e320d1f1c4",
     "username" : "brice",
     "firstName" : "Brice",
@@ -402,33 +447,12 @@
       "type" : "password",
       "userLabel" : "My password",
       "createdDate" : 1721506138445,
-      "secretData" : "{\"value\":\"SLn7crLsUiyNJfKOOYzIPuEnspwBykTRt5rSFc5BCaU=\",\"salt\":\"oW+frY4wTNqfqLc/9LLQOg==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+      "secretData" : "{\"value\":\"dlJR+pZBE4HF8rX+xXuOa8R9M85mCdT4N0XjpQDmRQZ+AEqXIzX0vOiEAm1K8hLyF4fcCYrLdZeCd9cgN1JaCw==\",\"salt\":\"eluLV2Rl1GtI5gVPrjj4IA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-elaastic-keycloak", "NICE" ],
-    "notBefore" : 0,
-    "groups" : [ ]
-  }, {
-    "id" : "850ee97d-aab6-48c8-8eee-9dccf49c46e2",
-    "username" : "g-8a733bea-3c86-4920-ac38-7fb61c7a10e8",
-    "firstName" : "Eleve",
-    "lastName" : "Demo",
-    "email" : "demo@elaastic.com",
-    "emailVerified" : false,
-    "createdTimestamp" : 1744882036192,
-    "enabled" : true,
-    "totp" : false,
-    "credentials" : [ ],
-    "disableableCredentialTypes" : [ ],
-    "requiredActions" : [ ],
-    "federatedIdentities" : [ {
-      "identityProvider" : "saml",
-      "userId" : "G-8a733bea-3c86-4920-ac38-7fb61c7a10e8",
-      "userName" : "g-8a733bea-3c86-4920-ac38-7fb61c7a10e8"
-    } ],
-    "realmRoles" : [ "default-roles-elaastic-keycloak" ],
     "notBefore" : 0,
     "groups" : [ ]
   }, {
@@ -447,92 +471,125 @@
       "createdDate" : 1721511590667,
       "secretData" : "{\"value\":\"Ji6U5BnPolyAvzhFBDRcYDXYNtQqena8Z2H0IC96TcE0cIJyDKVyeRCvaE0f1FuuGAMc4vh6Lc1wCtk+vxv8hg==\",\"salt\":\"lMF3OdYfnpd0/8wagGxhfA==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
-                }
-            ],
-            "disableableCredentialTypes": [],
-            "requiredActions": [],
-            "realmRoles": [
-                "default-roles-elaastic-keycloak"
-            ],
-            "notBefore": 0,
-            "groups": []
-        },
-        {
-            "id": "5a2574e1-1817-4464-831b-301bf9149842",
-            "username": "janedoe",
-            "firstName": "Jane",
-            "lastName": "Doe",
-            "email": "j.doe@mail.com",
-            "emailVerified": true,
-            "createdTimestamp": 1744716162683,
-            "enabled": true,
-            "totp": false,
-            "credentials": [
-                {
-                    "id": "43b72d2e-d6fb-412f-b909-de1472bc75cf",
-                    "type": "password",
-                    "createdDate": 1744716942838,
-                    "secretData": "{\"value\":\"r1h4A3P0EPs3kR9lbXY5SZJDDVSJ0DOvVe1O8kRvie0=\",\"salt\":\"yO1/nWcQVK/5BeS527nwlA==\",\"additionalParameters\":{}}",
-                    "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
-                }
-            ],
-            "disableableCredentialTypes": [],
-            "requiredActions": [],
-            "realmRoles": [
-                "default-roles-elaastic-keycloak"
-            ],
-            "notBefore": 0,
-            "groups": []
-        },
-        {
-            "id": "6252c917-687d-4772-b1ea-920e4b389f33",
-            "username": "johndoe",
-            "firstName": "John",
-            "lastName": "Doe",
-            "email": "j.doe@mail.com",
-            "emailVerified": true,
-            "createdTimestamp": 1744715956801,
-            "enabled": true,
-            "totp": false,
-            "credentials": [
-                {
-                    "id": "16005e27-8dcd-4a9f-9bc8-3456050c0ee5",
-                    "type": "password",
-                    "createdDate": 1744716961457,
-                    "secretData": "{\"value\":\"h7W/rKOMyHYd/ctU1tMmOHi9qu8iWaWqcEW9qFl1/EA=\",\"salt\":\"qSuZ2Y6XHByDDOUk112ZKw==\",\"additionalParameters\":{}}",
-                    "credentialData": "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
-                }
-            ],
+    } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-elaastic-keycloak" ],
     "notBefore" : 0,
     "groups" : [ ]
   }, {
-    "id" : "7aeac2ea-de0e-467a-9d78-0e411571760d",
-    "username" : "successful-login",
-    "firstName" : "Learner",
-    "lastName" : "TEST",
-    "email" : "learner@test-ent.foo",
-    "emailVerified" : false,
-    "createdTimestamp" : 1744881121635,
+    "id" : "5a2574e1-1817-4464-831b-301bf9149842",
+    "username" : "janedoe",
+    "firstName" : "Jane",
+    "lastName" : "Doe",
+    "email" : "j.doe@mail.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1744716162683,
     "enabled" : true,
     "totp" : false,
-    "credentials" : [ ],
+    "credentials" : [ {
+      "id" : "43b72d2e-d6fb-412f-b909-de1472bc75cf",
+      "type" : "password",
+      "createdDate" : 1744716942838,
+      "secretData" : "{\"value\":\"r1h4A3P0EPs3kR9lbXY5SZJDDVSJ0DOvVe1O8kRvie0=\",\"salt\":\"yO1/nWcQVK/5BeS527nwlA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "federatedIdentities" : [ {
-      "identityProvider" : "saml",
-      "userId" : "G-0d350e4f-6502-40b4-9245-121e48b131e0",
-      "userName" : "g-0d350e4f-6502-40b4-9245-121e48b131e0"
-    } ],
-    "realmRoles" : [ "default-roles-elaastic-keycloak" ],
+    "realmRoles" : [ "default-roles-elaastic-keycloak", "STUDENT" ],
     "notBefore" : 0,
     "groups" : [ ]
-  } ],
-  "scopeMappings" : [ {
-    "clientScope" : "offline_access",
-    "roles" : [ "offline_access" ]
+  }, {
+    "id" : "6252c917-687d-4772-b1ea-920e4b389f33",
+    "username" : "johndoe",
+    "firstName" : "John",
+    "lastName" : "Doe",
+    "email" : "j.doe@mail.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1744715956801,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "16005e27-8dcd-4a9f-9bc8-3456050c0ee5",
+      "type" : "password",
+      "createdDate" : 1744716961457,
+      "secretData" : "{\"value\":\"h7W/rKOMyHYd/ctU1tMmOHi9qu8iWaWqcEW9qFl1/EA=\",\"salt\":\"qSuZ2Y6XHByDDOUk112ZKw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-elaastic-keycloak", "STUDENT" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "46730ae5-7408-444b-8dd2-f805820d070c",
+    "username" : "steve",
+    "firstName" : "Steve",
+    "lastName" : "Smith",
+    "email" : "steve.smith@mail.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1744799412113,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "12e96075-a285-4eae-8a6a-4fd8d2bbd2f1",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1744799715853,
+      "secretData" : "{\"value\":\"9oLcPhShIlIQhqFF2X4z0jzduRjya9orG8V0ohJSr8k=\",\"salt\":\"7M52epL7hBveGxoJ0+ZXlQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-elaastic-keycloak", "STUDENT" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "f5f5a3dc-dc7b-4ff8-b338-116dbee3dc3e",
+    "username" : "tom",
+    "firstName" : "Tom",
+    "lastName" : "Dupont",
+    "email" : "tom.dupont@mail.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1744799656360,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "99982d63-b1f5-4979-8bd0-f9320759bba4",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1744799678510,
+      "secretData" : "{\"value\":\"OQcbiqioRH+cKFHQ+WKpTYJawmX5Wq2qTYLh1NS1MVI=\",\"salt\":\"t/dp7FElulZG7wwTZJcPlA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-elaastic-keycloak", "TEACHER" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "830b013b-d637-46aa-8543-fb984a9b5f41",
+    "username" : "two_role",
+    "firstName" : "Two",
+    "lastName" : "Role",
+    "email" : "invalid@mail.com",
+    "emailVerified" : true,
+    "createdTimestamp" : 1744804209298,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "9c1f9598-22a2-499e-9a4d-856f0c6304de",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1744804238241,
+      "secretData" : "{\"value\":\"LuW2c/caBX56Hl9abX88sFRHifMHBspPYKMDKyGkdOY=\",\"salt\":\"pooyZaRqBplIMfQq+yWAUg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-elaastic-keycloak", "STUDENT", "TEACHER" ],
+    "notBefore" : 0,
+    "groups" : [ ]
   } ],
   "clientScopeMappings" : {
     "account" : [ {
@@ -694,7 +751,7 @@
       "oidc.ciba.grant.enabled" : "false",
       "client.secret.creation.time" : "1721505129",
       "backchannel.logout.session.required" : "true",
-      "backchannel.logout.url" : "http://host.docker.internal:8080/logout/connect/back-channel/keycloak",
+      "backchannel.logout.url" : "http://localhost:8080/logout/connect/back-channel/keycloak",
       "post.logout.redirect.uris" : "http://localhost:8080/",
       "oauth2.device.authorization.grant.enabled" : "false",
       "display.on.consent.screen" : "false",
@@ -887,8 +944,9 @@
       "consentRequired" : false,
       "config" : {
         "user.session.note" : "AUTH_TIME",
-        "id.token.claim" : "true",
         "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
         "access.token.claim" : "true",
         "claim.name" : "auth_time",
         "jsonType.label" : "long"
@@ -1397,7 +1455,95 @@
       "principalType" : "SUBJECT"
     }
   } ],
-  "identityProviderMappers" : [ ],
+  "identityProviderMappers" : [ {
+    "id" : "316dfb40-5e65-458f-8122-3626b12a3dfa",
+    "name" : "STUDENT  - Eleve Role",
+    "identityProviderAlias" : "saml",
+    "identityProviderMapper" : "saml-role-idp-mapper",
+    "config" : {
+      "syncMode" : "FORCE",
+      "attribute.value" : "Eleve",
+      "role" : "STUDENT",
+      "attribute.name" : "Role"
+    }
+  }, {
+    "id" : "086371b9-3fa3-419d-90c1-4eb052c45069",
+    "name" : "TEACHER Role",
+    "identityProviderAlias" : "saml",
+    "identityProviderMapper" : "saml-role-idp-mapper",
+    "config" : {
+      "syncMode" : "FORCE",
+      "attribute.value" : "TEACHER",
+      "role" : "TEACHER",
+      "attribute.name" : "Role"
+    }
+  }, {
+    "id" : "c7358368-d340-416a-8fec-abb491f5935b",
+    "name" : "STUDENT  Role",
+    "identityProviderAlias" : "saml",
+    "identityProviderMapper" : "saml-role-idp-mapper",
+    "config" : {
+      "syncMode" : "FORCE",
+      "attribute.value" : "STUDENT",
+      "role" : "STUDENT",
+      "attribute.name" : "Role"
+    }
+  }, {
+    "id" : "e3825fe2-f203-4c51-b8c6-4b1a110a36c3",
+    "name" : "TEACHER - Professeur Role",
+    "identityProviderAlias" : "saml",
+    "identityProviderMapper" : "saml-role-idp-mapper",
+    "config" : {
+      "syncMode" : "FORCE",
+      "attribute.value" : "Professeur",
+      "role" : "TEACHER",
+      "attribute.name" : "Role"
+    }
+  }, {
+    "id" : "8edadc05-393e-40b1-a060-a33c43d8a47f",
+    "name" : "Last Name",
+    "identityProviderAlias" : "saml",
+    "identityProviderMapper" : "saml-user-attribute-idp-mapper",
+    "config" : {
+      "syncMode" : "FORCE",
+      "user.attribute" : "lastName",
+      "attribute.name.format" : "ATTRIBUTE_FORMAT_BASIC",
+      "attribute.name" : "lastName"
+    }
+  }, {
+    "id" : "e31edf9a-6a3e-4447-9634-358aa937be60",
+    "name" : "First Name",
+    "identityProviderAlias" : "saml",
+    "identityProviderMapper" : "saml-user-attribute-idp-mapper",
+    "config" : {
+      "syncMode" : "INHERIT",
+      "user.attribute" : "firstName",
+      "attribute.name.format" : "ATTRIBUTE_FORMAT_BASIC",
+      "attribute.name" : "firstName"
+    }
+  }, {
+    "id" : "86817a2a-2fda-4f48-ae33-143ecd0cd50d",
+    "name" : "ADMIN Role",
+    "identityProviderAlias" : "saml",
+    "identityProviderMapper" : "saml-role-idp-mapper",
+    "config" : {
+      "syncMode" : "FORCE",
+      "attribute.value" : "ADMIN",
+      "role" : "ADMIN",
+      "attribute.name" : "Role"
+    }
+  }, {
+    "id" : "a1d6a293-8ca2-4ad5-8e8c-2d1491a610e2",
+    "name" : "Username",
+    "identityProviderAlias" : "saml",
+    "identityProviderMapper" : "saml-user-attribute-idp-mapper",
+    "config" : {
+      "syncMode" : "INHERIT",
+      "user.attribute" : "username",
+      "attribute.name.format" : "ATTRIBUTE_FORMAT_BASIC",
+      "attribute.name" : "username"
+    }
+  } ],
   "components" : {
     "org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy" : [ {
       "id" : "737a21fe-8acd-459c-9e47-edfd0556aa67",
@@ -1448,7 +1594,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "oidc-full-name-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper", "oidc-usermodel-attribute-mapper", "saml-role-list-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-address-mapper", "oidc-usermodel-attribute-mapper", "oidc-full-name-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-property-mapper", "oidc-usermodel-property-mapper", "saml-role-list-mapper" ]
       }
     }, {
       "id" : "201a0404-e42b-4b49-8732-f4348a4c0d9a",
@@ -1466,24 +1612,18 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-address-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-full-name-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper", "oidc-full-name-mapper", "saml-user-property-mapper", "oidc-address-mapper", "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-property-mapper" ]
       }
-            }
-        ],
-        "org.keycloak.userprofile.UserProfileProvider": [
-            {
-                "id": "76eeea7c-2c52-4927-8080-a2f8228f592c",
-                "providerId": "declarative-user-profile",
-                "subComponents": {},
-                "config": {
-                    "kc.user.profile.config": [
-                        "{\"attributes\":[{\"name\":\"username\",\"displayName\":\"${username}\",\"validations\":{\"username-prohibited-characters\":{},\"up-username-not-idn-homograph\":{},\"pattern\":{\"pattern\":\"^[a-zA-Z0-9_-]{1,31}$\",\"error-message\":\"\"},\"length\":{\"min\":\"1\",\"max\":\"31\"}},\"annotations\":{},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"email\",\"displayName\":\"${email}\",\"validations\":{\"email\":{},\"length\":{\"max\":255}},\"annotations\":{},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"firstName\",\"displayName\":\"${firstName}\",\"validations\":{\"person-name-prohibited-characters\":{},\"length\":{\"min\":\"1\",\"max\":\"255\"}},\"annotations\":{},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"lastName\",\"displayName\":\"${lastName}\",\"validations\":{\"length\":{\"min\":1,\"max\":255},\"person-name-prohibited-characters\":{}},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false}],\"groups\":[{\"name\":\"user-metadata\",\"displayHeader\":\"User metadata\",\"displayDescription\":\"Attributes, which refer to user metadata\"}]}"
-                    ]
-                }
-            }
-        ],
-        "org.keycloak.keys.KeyProvider": [
-            {
+    } ],
+    "org.keycloak.userprofile.UserProfileProvider" : [ {
+      "id" : "76eeea7c-2c52-4927-8080-a2f8228f592c",
+      "providerId" : "declarative-user-profile",
+      "subComponents" : { },
+      "config" : {
+        "kc.user.profile.config" : [ "{\"attributes\":[{\"name\":\"username\",\"displayName\":\"${username}\",\"validations\":{\"username-prohibited-characters\":{},\"up-username-not-idn-homograph\":{},\"pattern\":{\"pattern\":\"^[a-zA-Z0-9_-]{1,31}$\",\"error-message\":\"\"},\"length\":{\"min\":\"1\",\"max\":\"31\"}},\"annotations\":{},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"email\",\"displayName\":\"${email}\",\"validations\":{\"email\":{},\"length\":{\"max\":255}},\"annotations\":{},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"firstName\",\"displayName\":\"${firstName}\",\"validations\":{\"person-name-prohibited-characters\":{},\"length\":{\"min\":\"1\",\"max\":\"255\"}},\"annotations\":{},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"lastName\",\"displayName\":\"${lastName}\",\"validations\":{\"length\":{\"min\":1,\"max\":255},\"person-name-prohibited-characters\":{}},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false}],\"groups\":[{\"name\":\"user-metadata\",\"displayHeader\":\"User metadata\",\"displayDescription\":\"Attributes, which refer to user metadata\"}]}" ]
+      }
+    } ],
+    "org.keycloak.keys.KeyProvider" : [ {
       "id" : "cc609e44-8b4c-4b47-b4a4-0d96ef509cc9",
       "name" : "rsa-generated",
       "providerId" : "rsa-generated",
@@ -2095,6 +2235,7 @@
     "oauth2DeviceCodeLifespan" : "600",
     "parRequestUriLifespan" : "60",
     "clientSessionMaxLifespan" : "0",
+    "organizationsEnabled" : "false",
     "adminEventsExpiration" : "3600"
   },
   "keycloakVersion" : "25.0.1",
