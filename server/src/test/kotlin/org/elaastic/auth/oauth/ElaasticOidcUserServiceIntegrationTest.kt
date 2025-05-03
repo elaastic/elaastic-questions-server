@@ -73,7 +73,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         )
 
         tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(user, RoleId.STUDENT))
+            elaasticOidcUserService.loadUser(createUserRequest(user, RoleId.STUDENT))
 
         }.tThen("the user is created") { elaasticOidcUser ->
             verify(userLinkService, times(1)).registerNewOidcUser(any<OidcUser>(), any<RoleId>())
@@ -139,7 +139,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         tWhen("we load the user") {
             val studentRole = RoleId.STUDENT
             assertTrue(user.roles.contains(studentRole))
-            elaasticOidcUserService.loadUser(getUserRequest(user, studentRole))
+            elaasticOidcUserService.loadUser(createUserRequest(user, studentRole))
         }.tThen("no other user is created") { elaasticOidcUser ->
             verify(userRepository, never()).save(any<User>())
             verify(userLinkRepository, never()).save(any<UserLink>())
@@ -167,7 +167,7 @@ class ElaasticOidcUserServiceIntegrationTest(
                 plainTextPassword = "1234"
             )
         }.tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(it, RoleId.STUDENT))
+            elaasticOidcUserService.loadUser(createUserRequest(it, RoleId.STUDENT))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the student role") {
             assertTrue(
@@ -188,7 +188,7 @@ class ElaasticOidcUserServiceIntegrationTest(
                 plainTextPassword = "1234"
             )
         }.tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(it, RoleId.TEACHER))
+            elaasticOidcUserService.loadUser(createUserRequest(it, RoleId.TEACHER))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the teacher role") {
             assertTrue(
@@ -209,7 +209,7 @@ class ElaasticOidcUserServiceIntegrationTest(
                 plainTextPassword = "1234"
             )
         }.tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(it, RoleId.ADMIN))
+            elaasticOidcUserService.loadUser(createUserRequest(it, RoleId.ADMIN))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the admin role") {
             assertTrue(
@@ -232,9 +232,9 @@ class ElaasticOidcUserServiceIntegrationTest(
         }.tWhen("we load the user") {
             {
                 elaasticOidcUserService.loadUser(
-                    getUserRequest(
+                    createUserRequest(
                         it,
-                        listOf(RoleId.STUDENT, RoleId.TEACHER).map(::getKeycloakRoleFrom)
+                        listOf(RoleId.STUDENT, RoleId.TEACHER).map(::findKeycloakRoleFrom)
                     )
                 )
             }
@@ -257,7 +257,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             )
         }.tWhen("we load the user") {
             {
-                elaasticOidcUserService.loadUser(getUserRequest(it, "UNKNOWN_ROLE"))
+                elaasticOidcUserService.loadUser(createUserRequest(it, "UNKNOWN_ROLE"))
             }
         }.tThen("an exception is thrown") {
             val exception = assertThrows<RoleException> {
@@ -277,7 +277,7 @@ class ElaasticOidcUserServiceIntegrationTest(
                 plainTextPassword = "1234"
             )
         }.tWhen("we load the user") {
-            elaasticOidcUserService.loadUser(getUserRequest(it, listOf(RoleId.STUDENT.roleName, "UNKNOWN_ROLE")))
+            elaasticOidcUserService.loadUser(createUserRequest(it, listOf(RoleId.STUDENT.roleName, "UNKNOWN_ROLE")))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the student role") {
             assertTrue(
@@ -305,7 +305,7 @@ class ElaasticOidcUserServiceIntegrationTest(
         }.tWhen("we load the user BUT with a different role") {
             val anotherRole = RoleId.TEACHER
             assertFalse(it.user hasRole anotherRole);
-            { elaasticOidcUserService.loadUser(getUserRequest(it.user, anotherRole)) }
+            { elaasticOidcUserService.loadUser(createUserRequest(it.user, anotherRole)) }
         }.tThen("an exception is thrown") {
             val exception = assertThrows<RoleException> {
                 it()
@@ -328,7 +328,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             assertTrue(user hasRole studentRole)
             userLink
         }.tWhen("we load the user with the same role") {
-            elaasticOidcUserService.loadUser(getUserRequest(it.user, studentRole))
+            elaasticOidcUserService.loadUser(createUserRequest(it.user, studentRole))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the student role") {
             verify(userLinkRepository, never()).save(any<UserLink>())
@@ -352,7 +352,7 @@ class ElaasticOidcUserServiceIntegrationTest(
             assertTrue(user.isTeacher())
             userLink
         }.tWhen("we load the user with the same role") {
-            elaasticOidcUserService.loadUser(getUserRequest(it.user, teacherRole))
+            elaasticOidcUserService.loadUser(createUserRequest(it.user, teacherRole))
                 .let { oidcUser -> oidcUser as ElaasticOidcUser }
         }.tThen("the user is created with the teacher role") {
             verify(userLinkRepository, never()).save(any<UserLink>())
