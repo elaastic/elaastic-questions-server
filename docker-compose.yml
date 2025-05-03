@@ -39,7 +39,7 @@ services:
       - "1025:1025"
 
   auth-iam:
-      image: quay.io/keycloak/keycloak:25.0.1
+      image: quay.io/keycloak/keycloak:25.0.6
       command:
           - start-dev
           - --import-realm
@@ -68,7 +68,7 @@ services:
           retries: 20
 
   auth-idp-saml2:
-      image: quay.io/keycloak/keycloak:25.0.1
+      image: quay.io/keycloak/keycloak:25.0.6
       command:
           - start-dev
           - --import-realm
