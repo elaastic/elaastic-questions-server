@@ -26,26 +26,26 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.OAuth2AccessToken
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
 
-fun getUserRequest(user: User, role: String): OidcUserRequest = getUserRequest(user, listOf(role))
+fun createUserRequest(user: User, role: String): OidcUserRequest = createUserRequest(user, listOf(role))
 
-fun getUserRequest(user: User, role: RoleId): OidcUserRequest =
-    getUserRequest(user, listOf(getKeycloakRoleFrom(role)))
+fun createUserRequest(user: User, role: RoleId): OidcUserRequest =
+    createUserRequest(user, listOf(findKeycloakRoleFrom(role)))
 
 /**
  * Create a UserRequest for the given user and role
  *
  * To see how the role is added, see `oidcIdToken(User, List<Role.RoleId>)`
  *
- * @see oidcIdToken
+ * @see createOidcIdToken
  */
-fun getUserRequest(user: User, roles: List<String>): OidcUserRequest = OidcUserRequest(
-    clientRegistration(user),
-    oAuth2AccessToken(),
-    oidcIdToken(user, roles),
+fun createUserRequest(user: User, roles: List<String>): OidcUserRequest = OidcUserRequest(
+    buildClientRegistration(user),
+    createOAuth2AccessToken(),
+    createOidcIdToken(user, roles),
     emptyMap()
 )
 
-private fun oidcIdToken(user: User, roles: List<String>): OidcIdToken {
+private fun createOidcIdToken(user: User, roles: List<String>): OidcIdToken {
     return OidcIdToken(
         "idToken",
         null,
@@ -57,14 +57,14 @@ private fun oidcIdToken(user: User, roles: List<String>): OidcIdToken {
             "email" to user.email,
             "iss" to "https://localhost:8080",
             "realm_access" to mapOf(
-                "roles" to roles.map(::getKeycloakRoleFrom)
+                "roles" to roles.map(::findKeycloakRoleFrom)
             ),
         )
     )
 }
 
 /** Get the Keycloak role from the given RoleId */
-fun getKeycloakRoleFrom(role: RoleId): String {
+fun findKeycloakRoleFrom(role: RoleId): String {
     return keycloakToElaasticRole.entries.find { it.value == role }?.key
         ?: throw RoleException("Role $role not found")
 }
@@ -74,14 +74,14 @@ fun getKeycloakRoleFrom(role: RoleId): String {
  *
  * If the role name is not found, it will return the role name itself.
  */
-fun getKeycloakRoleFrom(role: String): String {
+fun findKeycloakRoleFrom(role: String): String {
     return keycloakToElaasticRole.entries.find { it.value.roleName == role }?.key
         ?: role
 }
 
-private fun oAuth2AccessToken() = OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "accessToken", null, null)
+private fun createOAuth2AccessToken() = OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "accessToken", null, null)
 
-private fun clientRegistration(user: User): ClientRegistration? =
+private fun buildClientRegistration(user: User): ClientRegistration? =
     ClientRegistration
         .withRegistrationId(user.firstName)
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
