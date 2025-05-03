@@ -743,11 +743,13 @@
       "saml.client.signature" : "false",
       "saml.authnstatement" : "true",
       "display.on.consent.screen" : "false",
-      "saml_name_id_format" : "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+      "saml_name_id_format" : "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
       "saml.allow.ecp.flow" : "false",
       "saml.onetimeuse.condition" : "false",
       "saml_signature_canonicalization_method" : "http://www.w3.org/2001/10/xml-exc-c14n#",
-      "saml.server.signature.keyinfo.xmlSigKeyInfoKeyNameTransformer" : "NONE"
+      "saml.server.signature.keyinfo.xmlSigKeyInfoKeyNameTransformer" : "NONE",
+       "saml_single_logout_service_url_post": "http://host.docker.internal:8081/realms/elaastic-keycloak/protocol/saml",
+  "saml_single_logout_service_url_redirect": "http://host.docker.internal:8081/realms/elaastic-keycloak/protocol/saml"
     },
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : true,
