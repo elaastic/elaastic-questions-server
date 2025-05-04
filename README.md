@@ -150,6 +150,15 @@ The built bundles will be available at `./ui-components/dist`.
 
 You can follow the [README.md](ui-components/README.md) in the `ui-components` folder for more information on how to use in Elaastic.
 
+## Authentication
+
+### Authenticate on Elaastic using the Keycloak OIDC Identity & Access Manager
+One can add to an Elaastic URL the `oidc_hint` parameter. When set to an OAuth2 server, it will be used for 
+authentication.
+With the development config & the Keycloak test service, you can log into Elaastic using Keycloak with 
+http://localhost:8080/home?oidc_hint=keycloak
+
+
 ## Licence
 
 Elaastic - formative assessment system
