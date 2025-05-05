@@ -226,13 +226,15 @@ class UserLinkService(
      *
      * The user information are updated with the OIDC user information.
      */
-    fun updateUserWithOidcUser(user: User, oidcUser: OidcUser) {
-        if (user.firstName != oidcUser.givenName || user.lastName != oidcUser.familyName || user.email != oidcUser.email) {
+    fun updateUserWithOidcUser(user: User, oidcUser: OidcUser): User {
+        return if (user.firstName != oidcUser.givenName || user.lastName != oidcUser.familyName || user.email != oidcUser.email) {
             user.apply {
                 firstName = oidcUser.givenName
                 lastName = oidcUser.familyName
                 email = oidcUser.email
             }.let(userRepository::save)
+        } else {
+            user
         }
     }
 }

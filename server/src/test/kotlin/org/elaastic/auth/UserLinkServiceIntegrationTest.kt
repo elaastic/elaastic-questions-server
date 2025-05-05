@@ -24,9 +24,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.elaastic.auth.cas.SupportedCasProvider
 import org.elaastic.auth.oauth.createOidcUser
-import org.elaastic.auth.oauth.createUserRequest
 import org.elaastic.test.IntegrationTestingService
-import org.elaastic.user.Role
 import org.elaastic.user.Role.RoleId
 import org.elaastic.user.User
 import org.elaastic.user.UserRepository
@@ -144,9 +142,7 @@ class UserLinkServiceIntegrationTest(
         val user = integrationTestingService.getAnyUser()
         val oidcUser = createOidcUser(user, listOf(RoleId.STUDENT.name))
 
-        userLinkService.updateUserWithOidcUser(user, oidcUser)
-
-        val updatedUser = userRepository.findById(user.id!!).orElseThrow()
+        val updatedUser = userLinkService.updateUserWithOidcUser(user, oidcUser)
 
         assertEquals(oidcUser.givenName, updatedUser.firstName)
         assertEquals(oidcUser.familyName, updatedUser.lastName)
@@ -171,9 +167,8 @@ class UserLinkServiceIntegrationTest(
         assertNotEquals(oidcUser.familyName, user.lastName)
         assertNotEquals(oidcUser.email, user.email)
 
-        userLinkService.updateUserWithOidcUser(user, oidcUser)
+        val updatedUser = userLinkService.updateUserWithOidcUser(user, oidcUser)
 
-        val updatedUser = userRepository.findById(user.id!!).orElseThrow()
         assertEquals(oidcUser.givenName, updatedUser.firstName)
         assertEquals(oidcUser.familyName, updatedUser.lastName)
         assertEquals(oidcUser.email, updatedUser.email)
@@ -197,9 +192,8 @@ class UserLinkServiceIntegrationTest(
         assertEquals(oidcUser.familyName, user.lastName)
         assertNotEquals(oidcUser.email, user.email)
 
-        userLinkService.updateUserWithOidcUser(user, oidcUser)
+        val updatedUser = userLinkService.updateUserWithOidcUser(user, oidcUser)
 
-        val updatedUser = userRepository.findById(user.id!!).orElseThrow()
         assertEquals(oidcUser.givenName, updatedUser.firstName)
         assertEquals(oidcUser.familyName, updatedUser.lastName)
         assertEquals(oidcUser.email, updatedUser.email)
