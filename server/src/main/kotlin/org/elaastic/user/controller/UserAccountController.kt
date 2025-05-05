@@ -73,6 +73,7 @@ class UserAccountController(
         val userToUpdate = userService.get(user.id!!)!!
         model["userData"] = UserData(userToUpdate, userHasGivenConsent = true)
         model["user"] = userToUpdate
+
         return "userAccount/edit"
     }
 
@@ -103,12 +104,14 @@ class UserAccountController(
             response.status = HttpStatus.BAD_REQUEST.value()
             model["user"] = authUser
             model["userData"] = userData
+
             "/userAccount/edit"
         } else {
             redirectAttributes.addFlashAttribute("messageType", "success")
             messageSource.getMessage("useraccount.update.success", emptyArray(), locale).let {
                 redirectAttributes.addFlashAttribute("messageContent", it)
             }
+
             "redirect:/userAccount/edit"
         }
     }
@@ -117,8 +120,10 @@ class UserAccountController(
     fun editPassword(authentication: Authentication, model: Model): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         check(!user.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
+
         model["passwordData"] = PasswordData(user)
         model["user"] = user
+
         return "userAccount/editPassword"
     }
 
@@ -148,12 +153,14 @@ class UserAccountController(
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
             model["user"] = authUser
+
             "/userAccount/editPassword"
         } else {
             redirectAttributes.addFlashAttribute("messageType", "success")
             messageSource.getMessage("useraccount.update.success", emptyArray(), locale).let {
                 redirectAttributes.addFlashAttribute("messageContent", it)
             }
+
             "redirect:/userAccount/edit"
         }
     }
@@ -216,19 +223,23 @@ class UserAccountController(
         redirectAttributes: RedirectAttributes,
         locale: Locale
     ): String {
-        messageSource.getMessage("useraccount.unsubscribe.success", emptyArray(), locale).let {
-            redirectAttributes.addFlashAttribute("message", it)
-        }
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
+        val authUser: User = authentication.principal as User
+        
         check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
 
         userService.disableUser(authUser)
+        messageSource.getMessage("useraccount.unsubscribe.success", emptyArray(), locale).let {
+            redirectAttributes.addFlashAttribute("message", it)
+        }
+
         return "redirect:/logout"
     }
 
     @GetMapping("/terms")
     fun terms(model: Model, locale: Locale): String {
         model["termsContent"] = termsService.getTermsContentByLanguage(locale.language)
+
         return "terms/terms"
     }
 
