@@ -20,11 +20,15 @@ package org.elaastic.auth.oauth
 
 import org.elaastic.user.Role.RoleId
 import org.elaastic.user.User
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.OAuth2AccessToken
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
 
 fun createUserRequest(user: User, role: String): OidcUserRequest = createUserRequest(user, listOf(role))
 
@@ -88,3 +92,19 @@ private fun buildClientRegistration(user: User): ClientRegistration? =
         .clientId(user.firstName)
         .tokenUri("https://localhost:8080")
         .build()
+
+private fun createOidcUserInfo(user: User): OidcUserInfo =
+    OidcUserInfo.builder()
+        .name(user.firstName)
+        .familyName(user.lastName)
+        .email(user.email)
+        .build()
+
+fun createOidcUser(user: User, roles: List<String>): OidcUser {
+    val authorities: List<GrantedAuthority> = emptyList()
+    return DefaultOidcUser(
+        authorities,
+        createOidcIdToken(user, roles),
+        createOidcUserInfo(user),
+    )
+}

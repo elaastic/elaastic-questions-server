@@ -42,6 +42,7 @@ class UserLinkService(
     @Autowired val userLinkRepository: UserLinkRepository,
     @Autowired val userService: UserService,
     @Autowired val roleService: RoleService,
+    @Autowired val userRepository: UserRepository,
 ) {
 
     @Value("\${spring.security.oauth2.client.registration.keycloak.provider}")
@@ -218,5 +219,20 @@ class UserLinkService(
      */
     fun isNotLinked(user: User): Boolean {
         return !isLinked(user)
+    }
+
+    /**
+     * Update the user with the given OIDC user
+     *
+     * The user information are updated with the OIDC user information.
+     */
+    fun updateUserWithOidcUser(user: User, oidcUser: OidcUser) {
+        if (user.firstName != oidcUser.givenName || user.lastName != oidcUser.familyName || user.email != oidcUser.email) {
+            user.apply {
+                firstName = oidcUser.givenName
+                lastName = oidcUser.familyName
+                email = oidcUser.email
+            }.let(userRepository::save)
+        }
     }
 }
