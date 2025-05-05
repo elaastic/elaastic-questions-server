@@ -20,9 +20,7 @@ package org.elaastic.user.controller
 
 
 import org.elaastic.common.onboarding.OnboardingChapter
-import org.elaastic.user.PrincipalUserResolver
-import org.elaastic.user.RoleService
-import org.elaastic.user.UserService
+import org.elaastic.user.*
 import org.elaastic.user.controller.command.PasswordData
 import org.elaastic.user.controller.command.UserData
 import org.elaastic.user.legal.TermsService
@@ -47,10 +45,13 @@ import javax.validation.Valid
 
 private const val NOT_ALLOWED_TO_ANONYMOUS_USER = "Not allowed to anonymous user"
 
+private const val NOT_ALLOWED_TO_OIDC_USER =
+    "Oidc user cannot update his profile, use the OIDC provider console to do so."
+
 @Controller
 class UserAccountController(
-    @Value("\${elaastic.auth.check_user_email:true}")
-    val checkEmail: Boolean,
+    @Value("\${elaastic.auth.check_user_email:true}") val checkEmail: Boolean,
+    @Value("\${oauth2.client.provider.elaastic-keycloak.account-console-url}") private val accountConsoleURL: String,
     @Autowired val userService: UserService,
     @Autowired val roleService: RoleService,
     @Autowired val termsService: TermsService,
@@ -73,6 +74,8 @@ class UserAccountController(
         val userToUpdate = userService.get(user.id!!)!!
         model["userData"] = UserData(userToUpdate, userHasGivenConsent = true)
         model["user"] = userToUpdate
+        model["source"] = userToUpdate.getSource()
+        model["accountConsoleURL"] = accountConsoleURL
 
         return "userAccount/edit"
     }
@@ -90,7 +93,8 @@ class UserAccountController(
     ): String {
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
         check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
-        
+        check(authUser.getSource() != UserSource.OIDC) { NOT_ALLOWED_TO_OIDC_USER }
+
         if (!result.hasErrors()) {
             val updatedUser = userService.get(userData.id!!)!!
             userData.populateUser(updatedUser, roleService)
@@ -104,6 +108,8 @@ class UserAccountController(
             response.status = HttpStatus.BAD_REQUEST.value()
             model["user"] = authUser
             model["userData"] = userData
+            model["source"] = authUser.getSource()
+            model["accountConsoleURL"] = accountConsoleURL
 
             "/userAccount/edit"
         } else {
@@ -120,6 +126,7 @@ class UserAccountController(
     fun editPassword(authentication: Authentication, model: Model): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         check(!user.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
+        check(user.getSource() != UserSource.OIDC) { NOT_ALLOWED_TO_OIDC_USER }
 
         model["passwordData"] = PasswordData(user)
         model["user"] = user
@@ -139,6 +146,7 @@ class UserAccountController(
     ): String {
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
         check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
+        check(authUser.getSource() != UserSource.OIDC) { NOT_ALLOWED_TO_OIDC_USER }
 
         if (!result.hasErrors()) {
             val updatedUser = userService.get(authUser, passwordData.id!!)
@@ -225,7 +233,7 @@ class UserAccountController(
     ): String {
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
         val authUser: User = authentication.principal as User
-        
+
         check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
 
         userService.disableUser(authUser)

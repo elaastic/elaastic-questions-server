@@ -38,7 +38,8 @@
                 Message
             </div>
 
-            <div class="ui segment">
+            <!--/* User account form. An OIDC User shouldn't be able to update his account with Elaastic. */-->
+            <div class="ui segment" th:if="${source != T(org.elaastic.user.UserSource).OIDC}">
 
                 <!--/* User account form */-->
                 <form class="ui form" method="post"
@@ -117,8 +118,15 @@
                 </form>
             </div>
 
+            <!--/* Redirect to the OIDC provider account console */-->
+            <div class="ui segment" th:if="${source == T(org.elaastic.user.UserSource).OIDC}">
+                <a th:href="${accountConsoleURL}" class="ui secondary button"
+                   th:text="#{useraccount.oidc.editAccount.button}">
+                </a>
+            </div>
+
             <!--/* Change password button */-->
-            <div class="ui segment">
+            <div class="ui segment" th:if="${source != T(org.elaastic.user.UserSource).OIDC}">
                 <a th:href="@{/userAccount/editPassword}" class="ui warning button"
                    th:text="#{useraccount.changePassword.button}">
                 </a>
