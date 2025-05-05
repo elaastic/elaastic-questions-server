@@ -20,11 +20,6 @@ const { t } = useI18n()
 const selectedLocal = ref([...props.selected])
 
 
-const updateSelected = (newSelected: string[]) => {
-  emit('update:selected', newSelected)
-  selectedLocal.value = newSelected
-  console.log(newSelected)
-}
 watch(selectedLocal, (newVal) => {
   emit('update:selected', newVal);
 });
@@ -32,9 +27,9 @@ watch(selectedLocal, (newVal) => {
 
 <template>
   <div class="Horizontal_container">
-    <h4 class="answer">{{t('your-answer')}}</h4>
+    <h5 class="answer">{{t('your-answer')}}</h5>
     <v-container fluid class="Horizontal_container">
-      <v-checkbox
+      <v-checkbox class="checkBox"
               v-for="answer in answers"
               :key="answer"
               v-model="selectedLocal"
@@ -58,14 +53,17 @@ watch(selectedLocal, (newVal) => {
   margin-bottom: 2.3%;
   font-weight: bold;
 }
+.checkBox{
+  margin-right: 2%;
+}
 </style>
 <i18n>
 {
   "en": {
-    "your-answer": "Your Answer : "
+    "your-answer": "Your answer : "
   },
   "fr": {
-    "your-answer": "Votre Réponse : "
+    "your-answer": "Votre réponse : "
   }
 }
 </i18n>

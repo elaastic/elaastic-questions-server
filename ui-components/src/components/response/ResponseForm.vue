@@ -2,90 +2,141 @@
 import TextBar from "@/components/util/TextBar.vue";
 import QCM from "@/components/response/QCM.vue";
 import SelectorResponsive from "@/components/util/SelectorResponsive.vue";
-import {computed, type PropType, ref} from "vue";
+import {type PropType, ref} from "vue";
 import type {Selection} from "@/components/util/SelectorResponsive.vue";
 import {useI18n} from "vue-i18n";
 import Ckeditor from "@/components/response/Ckeditor.vue";
 
 const props = defineProps({
+  /**
+   * The possibles answers at the question
+   */
   providedAnswers: {
     type: Array as PropType<string[]>,
     default: () => []
   },
+  /**
+   * The answers selected by the user
+   */
   selectedAnswers: {
     type: Array as PropType<string[]>,
     default: () => []
   },
+  /**
+   * The possibles degrees of trust
+   */
   selectionsConfiance: {
     type: Array as PropType<Selection[]>,
     default: () => []
   },
+  /**
+   * The selected degree of trust by the user
+   */
   selectedConfiance: {
     type: String,
     default:"Confiant(e)"
   },
-  text: {
+  /**
+   * The text which will be written on the editor when coming on this page
+   */
+  defaultText: {
     type: String,
     default: "Contenu par défaut"
   },
-  estQCM: {
+  /**
+   * A boolean. True : It's a multiple choice question. False : It's not.
+   */
+  isMCQ: {
     type: Boolean,
     default: true,
+  },
+  isSend: {
+    type: Boolean,
+    default: false,
   }
-
 
 });
 const selectedLocalAnswers = ref([...props.selectedAnswers]);
 const selectedLocalConfiance= ref(props.selectedConfiance);
-const emit = defineEmits(["update:selected"])
+const refIsValidate = ref(props.isSend);
+const refIsMCQ = ref(props.isMCQ);
 
-const text_ref = ref(props.text);
-const plainText = computed(() => {
-  const tempEl = document.createElement('div');
-  tempEl.innerHTML = text_ref.value;
-  return tempEl.textContent || '';
-});
+const text_ref = ref(props.defaultText);
 
+const sendAnswer = () => {
+  if(refIsMCQ.value){
+    if(selectedLocalAnswers.value.length!==0){
+      refIsValidate.value = true;
+    }
+  }
+  if(!refIsMCQ.value){
+    refIsValidate.value = true;
+  }
+
+}
 const { t } = useI18n()
 </script>
 
 <template>
-  <h1>{{t('answer')}}</h1>
-  <v-card>
-    <v-card-title>
-    </v-card-title>
-    <div v-if="estQCM">
-      <TextBar v-if="selectedLocalAnswers.length===0" color="red" value="Veuillez soumettre une réponse"></TextBar>
-      <QCM :answers="providedAnswers" v-model:selected="selectedLocalAnswers" />
-    </div>
-    <div>
-      <h4>{{t('textual-answer')}}</h4>
-      <ckeditor v-model="text_ref" />
-    </div>
-    <div>
-      <h4>{{t('trust-degree')}}</h4>
-      <SelectorResponsive :selections="selectionsConfiance" v-model:selected="selectedLocalConfiance" />
-    </div>
-    <v-btn color="secondary">{{t('save')}}</v-btn>
-  </v-card>
-
+  <div v-if="!refIsValidate">
+    <h1 class="h1Title">{{t('answer')}}</h1>
+    <v-card>
+      <div v-if="isMCQ">
+        <TextBar v-if="selectedLocalAnswers.length===0" color="red" value="Veuillez soumettre une réponse"></TextBar>
+        <QCM class="resize" :answers="providedAnswers" v-model:selected="selectedLocalAnswers" />
+      </div>
+      <div class="resize">
+        <h5>{{t('textual-answer')}}</h5>
+        <ckeditor v-model="text_ref" />
+      </div>
+      <div class="resize">
+        <h5 class="degreeTitle" >{{t('trust-degree')}}</h5>
+        <SelectorResponsive  class="selector" :selections="selectionsConfiance" v-model:selected="selectedLocalConfiance" />
+      </div>
+      <v-btn class="bouton" color="secondary" @click="sendAnswer()">{{t('save')}}</v-btn>
+    </v-card>
+  </div>
+  <div v-if="refIsValidate">
+    <h1 class="resize">{{t('answer-sent')}}</h1>
+  </div>
 </template>
 
 <style scoped>
+  .selector{
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
+  .bouton{
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: 4%;
+  }
+  .resize{
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+  .h1Title{
+    margin-bottom: 5%;
+  }
+  .degreeTitle{
+    margin-top: 3%;
+  }
 </style>
 <i18n>
   {
   "en": {
     "answer": "Answer  ",
-    "textual-answer": "Textual Answer",
-    "trust-degree": "Trust Degree",
-    "save": "Save"
+    "textual-answer": "Textual answer",
+    "trust-degree": "Trust degree",
+    "save": "Save",
+    "answer-sent": "Answer sent"
   },
   "fr": {
     "answer": "Réponse  ",
-    "textual-answer": "Réponse Textuelle",
+    "textual-answer": "Réponse textuelle",
     "trust-degree": "Votre degré de confiance",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "answer-sent": "Réponse Envoyée"
   }
 }
 </i18n>

@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ResponseForm from '@/components/response/ResponseForm.vue'
 
-
 const meta = {
   title: 'response/ResponseForm',
   component: ResponseForm,
@@ -14,16 +13,36 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    providedAnswers: ["1", "2", "3"],
+    providedAnswers: ['1', '2', '3', '4', '5', '6', '7', '8'],
     selectedAnswers: [],
     selectionsConfiance: [
-      {label: "Pas du tout confiant(e)", value: "Pas du tout confiant(e)"},
-      {label: "Pas vraiment confiant(e)", value: "Pas vraiment confiant(e)"},
-      {label: "Confiant(e)", value: "Confiant(e)"},
-      {label: "Tout à fait confiant(e)", value: "Tout à fait confiant(e)"}
+      { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
+      { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
+      { label: 'Confiant(e)', value: 'Confiant(e)' },
+      { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
     ],
-    selectedConfiance: "Confiant(e)",
-    text: "Votre Réponse",
-    estQCM: true,
+    selectedConfiance: 'Confiant(e)',
+    defaultText: 'Votre Réponse',
+    isMCQ: true,
+    isSend: false,
+  },
+}
+export const NOMCQ: Story = {
+  args: {
+    selectionsConfiance: [
+      { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
+      { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
+      { label: 'Confiant(e)', value: 'Confiant(e)' },
+      { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
+    ],
+    selectedConfiance: 'Confiant(e)',
+    defaultText: 'Votre Réponse',
+    isMCQ: false,
+    isSend: false,
+  },
+}
+export const Sent: Story = {
+  args: {
+    isSend: true,
   },
 }
