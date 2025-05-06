@@ -10,14 +10,14 @@ const props = defineProps({
     default: ""
   },
   /**
-   * The content of the text-area
+   * A boolean. true if you can't write in the text-area. false if you can.
    */
   isReadonly: {
     type: Boolean,
     default: false
   },
   /**
-   * The content of the text-area
+   * A boolean. true if the editor is in dark-mode (backgroundcolor=black). false if the editor is in light-mode (backgroundcolor=white)
    */
   isDark: {
     type: Boolean,
