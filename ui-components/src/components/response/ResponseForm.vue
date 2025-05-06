@@ -5,7 +5,7 @@ import SelectorResponsive from "@/components/util/SelectorResponsive.vue";
 import {type PropType, ref} from "vue";
 import type {Selection} from "@/components/util/SelectorResponsive.vue";
 import {useI18n} from "vue-i18n";
-import Ckeditor from "@/components/response/Ckeditor.vue";
+import TipTapEditor from "@/components/response/TipTapEditor.vue";
 
 const props = defineProps({
   /**
@@ -50,6 +50,9 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /**
+   * A boolean. True : The user has sent his answer to the question by click on the button. False : The user hasn't clicked yet.
+   */
   isSend: {
     type: Boolean,
     default: false,
@@ -87,7 +90,7 @@ const { t } = useI18n()
       </div>
       <div class="resize">
         <h5>{{t('textual-answer')}}</h5>
-        <ckeditor v-model="text_ref" />
+        <TipTapEditor v-model="text_ref"></TipTapEditor>
       </div>
       <div class="resize">
         <h5 class="degreeTitle" >{{t('trust-degree')}}</h5>
@@ -97,7 +100,7 @@ const { t } = useI18n()
     </v-card>
   </div>
   <div v-if="refIsValidate">
-    <h1 class="resize">{{t('answer-sent')}}</h1>
+    <h1 class="main-title">{{t('answer-sent')}}</h1>
   </div>
 </template>
 
@@ -120,6 +123,25 @@ const { t } = useI18n()
   }
   .degreeTitle{
     margin-top: 3%;
+  }
+  .main-title {
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 50px;
+    color: #333;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: relative;
+  }
+
+  .main-title::after {
+    content: "✔️";
+    display: block;
+    font-size: 50px;
+    color: green;
+    margin: 10px auto 0 auto;
   }
 </style>
 <i18n>

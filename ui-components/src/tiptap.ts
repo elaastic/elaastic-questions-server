@@ -5,7 +5,7 @@ import 'vuetify-pro-tiptap/style.css'
 import SelectImage from './components/SelectImage.vue'
 
 export const vuetifyProTipTap = createVuetifyProTipTap({
-  lang: 'zhHans',
+  lang: 'en',
   components: {
     VuetifyTiptap,
     VuetifyViewer

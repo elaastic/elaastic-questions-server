@@ -14,6 +14,22 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    modelValue: ""
+    modelValue: "Contenu par défaut",
+    isReadonly: false,
+    isDark: false,
+  },
+}
+export const Readonly: Story = {
+  args: {
+    modelValue: "Contenu par défaut",
+    isReadonly: true,
+    isDark: false,
+  },
+}
+export const Dark: Story = {
+  args: {
+    modelValue: "Contenu par défaut",
+    isReadonly: false,
+    isDark: true,
   },
 }
