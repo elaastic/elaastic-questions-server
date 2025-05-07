@@ -2,14 +2,14 @@
 
 const props = defineProps({
   /**
-   * The text showed by the component
+   * The text showed by the component.
    */
   value: {
     type: String,
     default: ""
   },
   /**
-   * The color of the background
+   * The color of the background.
    */
   color: {
     type: String,

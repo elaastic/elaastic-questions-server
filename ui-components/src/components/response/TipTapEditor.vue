@@ -3,7 +3,7 @@ import {ref, watch} from "vue";
 
 const props = defineProps({
   /**
-   * The content of the text-area
+   * The content of the text-area.
    */
   modelValue: {
     type: String,
@@ -17,7 +17,7 @@ const props = defineProps({
     default: false
   },
   /**
-   * A boolean. true if the editor is in dark-mode (backgroundcolor=black). false if the editor is in light-mode (backgroundcolor=white)
+   * A boolean. true if the editor is in dark-mode (backgroundcolor=black). false if the editor is in light-mode (backgroundcolor=white).
    */
   isDark: {
     type: Boolean,

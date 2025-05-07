@@ -9,35 +9,35 @@ import TipTapEditor from "@/components/response/TipTapEditor.vue";
 
 const props = defineProps({
   /**
-   * The possibles answers at the question
+   * The possibles answers at the question.
    */
   providedAnswers: {
     type: Array as PropType<string[]>,
     default: () => []
   },
   /**
-   * The answers selected by the user
+   * The answers selected by the user.
    */
   selectedAnswers: {
     type: Array as PropType<string[]>,
     default: () => []
   },
   /**
-   * The possibles degrees of trust
+   * The possibles degrees of trust.
    */
   selectionsConfiance: {
     type: Array as PropType<Selection[]>,
     default: () => []
   },
   /**
-   * The selected degree of trust by the user
+   * The selected degree of trust by the user.
    */
   selectedConfiance: {
     type: String,
-    default:"Confiant(e)"
+    default:""
   },
   /**
-   * The text which will be written on the editor when coming on this page
+   * The text which will be written on the editor when coming on this page.
    */
   defaultText: {
     type: String,
