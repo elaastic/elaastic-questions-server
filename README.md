@@ -33,20 +33,16 @@ docker-compose up -d [<service>]
 | cas                          | a CAS server just for testing CAS integration in dev mode       |
 | cas-2                        | another CAS server for testing multiple CAS servers integration |
 | elaastic-mailhog             | a mail server for testing email sending                         |
-| authentication               | a keycloak server to connect with OpenID Connect                |
+| auth-iam                     | a keycloak server to connect with OpenID Connect                |
+| auth-idp-saml2               | identity provider using SAML2 protocole                         |
 
-Running a database is mandatory.\
-Running the authentication server is mandatory when the OIDC client has been activated.\
-CAS servers are optional.
-It allows testing CAS authentication without having to deploy a CAS server manually.
-
-### Setup the dockerized CAS servers in dev mode
+### Set up the dockerized CAS servers in dev mode
 
 The generated autosigned certificate must be imported on the JDK used to launch elaastic.
 
 From `JAVA_HOME`, run the following command :
 
-``` 
+```shell
 .\bin\keytool.exe -importcert -cacerts -alias "elaastic-cas" -file <elaastic-questions-server>\docker-resources\cas\etc\cas\config\elaastic-cas-certificate.cer
 ```
 
@@ -58,14 +54,15 @@ You have to launch at least this container :
 
 - elaastic-questions-db-8
 - elaastic-mailhog
+- auth-iam
 
 ````shell
-docker compose up -d elaastic-questions-db-8 elaastic-mailhog
+docker compose up -d elaastic-questions-db-8 elaastic-mailhog auth-iam
 ````
 
 Then, you can run the application with the following command:
 
-````
+````shell
 gradle bootRun
 ````
 
@@ -73,13 +70,18 @@ The application is then accessible at `http://localhost:8080`.
 
 You can access the MailHog web interface at `http://localhost:8025` to check the emails sent by the application.
 
+To manage the authentification service Keycloak, you can access the web interface at `http://localhost:8081/`.
+To connect to the console as `admin`, use the password set in the [.env](.env) file
+(see [.env.template](.env.template)).
+More information about the Keycloak server can be found in the [README.md](authentication/elaastic-iam/README.md) file.
+
 ### Test users
 
 | Login | Password | role    | 
 |:------|:---------|:--------| 
 | fsil  | 1234     | teacher |
-| tsil  | 1234     | learner | 
-| jtra  | 1234     | learner | 
+| tsil  | 1234     | student | 
+| jtra  | 1234     | student | 
 | admin | admin    | admin   |
 
 ## Development guide
@@ -95,13 +97,14 @@ _elaastic_ can be deployed in _stand-alone_ mode (with an embedded Tomcat server
 
 ### Packaging the application in _stand-alone_ mode
 
-````
+````shell
 gradle bootJar
 ````
 
 Get the `elaastic-questions-server.jar` file from the `build/libs` folder.
 
-It is possible to test this packaged mode by running the services in the `docker-compose-standalone.yml` file.
+It is possible to test this packaged mode
+by running the services in the [docker-compose.konsolidation.yml](docker-compose.production_example.yml) file.
 The application will be available at `http://localhost:8081/elaastic-questions`.
 
 ### Packaging the application for Tomcat
@@ -112,52 +115,24 @@ gradle bootWar
 
 Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 
-It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
-The application will be available at `http://localhost:8088`.
-
-From `JAVA_HOME`, run the following command :
-``` 
-.\bin\keytool.exe -importcert -cacerts -alias "elaastic-cas" -file <elaastic-questions-server>\docker-resources\cas\etc\cas\config\elaastic-cas-certificate.cer
-```
-
 ## Development guide
 
 The project _elaastic_ is composed of two modules:
+
 1. `server`: The Spring Boot webapp developed in Kotlin
 2. `ui-components`: A set of UI components developed in Vue 3
 
-### `ui-components`
-
-#### Setup
-Install `Node v22.11.0` (recommendation: use `nvm` for installing Node).
-
-Then install the dependencies with :
-```shell
-npm install
-```
-
-#### Run storybook
-```shell
-npm run storybook
-```
-
-#### Build
-```shell
-npm run build
-```
-
-The built bundles will be available at `./ui-components/dist`.
-
-You can follow the [README.md](ui-components/README.md) in the `ui-components` folder for more information on how to use in Elaastic.
+You can follow the [README.md](ui-components/README.md) in the `ui-components` folder for more information
+on how to use it in Elaastic.
 
 ## Authentication
 
 ### Authenticate on Elaastic using the Keycloak OIDC Identity & Access Manager
-One can add to an Elaastic URL the `oidc_hint` parameter. When set to an OAuth2 server, it will be used for 
-authentication.
-With the development config & the Keycloak test service, you can log into Elaastic using Keycloak with 
-http://localhost:8080/home?oidc_hint=keycloak
 
+One can add to an Elaastic URL the `oidc_hint` parameter. When set to an OAuth2 server, it will be used for
+authentication.
+With the development config and the Keycloak test service, you can log into Elaastic using Keycloak with
+http://localhost:8080/home?oidc_hint=keycloak
 
 ## Licence
 

@@ -37,7 +37,6 @@ services:
     ports:
       - "8025:8025"
       - "1025:1025"
-
   auth-iam:
       image: quay.io/keycloak/keycloak:25.0.6
       command:
@@ -66,7 +65,6 @@ services:
           interval: 5s
           timeout: 5s
           retries: 20
-
   auth-idp-saml2:
       image: quay.io/keycloak/keycloak:25.0.6
       command:
