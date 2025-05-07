@@ -119,11 +119,21 @@
             </div>
 
             <!--/* Redirect to the OIDC provider account console */-->
-            <div class="ui segment" th:if="${source == T(org.elaastic.user.UserSource).OIDC}">
-                <a th:href="${accountConsoleURL}" class="ui secondary button"
-                   th:text="#{useraccount.oidc.editAccount.button}">
-                </a>
-            </div>
+            <th:block th:if="${source == T(org.elaastic.user.UserSource).OIDC}">
+                <div class="ui message info icon">
+                    <i class="info icon"></i>
+                    <div class="content">
+                        <div class="header" th:text="#{useraccount.oidc.editAccount.message.header}"></div>
+                        <p th:utext="#{useraccount.oidc.editAccount.message}"></p>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <a target="_blank" th:href="${accountConsoleURL}" class="ui secondary button right labeled icon">
+                        <i class="external icon"></i>
+                        <span th:text="#{useraccount.oidc.editAccount.button}"></span>
+                    </a>
+                </div>
+            </th:block>
 
             <!--/* Change password button */-->
             <div class="ui segment" th:if="${source != T(org.elaastic.user.UserSource).OIDC}">
