@@ -6,13 +6,13 @@ This directory contains all the services related to authentication for Elaastic.
 
 ## Authentication modules
 
-### `elaastic-iam`
+### [elaastic-iam](elaastic-iam/)
 
 This directory contains the "Identity and Access Management" service for Elaastic.
 It is implemented by a Keycloak server.
 Elaastic is registered as an OpenID Connect client of `elaastic-iam` service.
 
-### `idp-saml2`
+### [idp-saml2](idp-saml2/)
 
 This directory contains an Identity Provider that uses SAML2 protocol.
 It's implemented by another Keycloak server.

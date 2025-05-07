@@ -22,13 +22,13 @@ using SAML2.
 
 ### test-external-idp-saml2 realm
 
-This realm is loaded when creating the container from `./realms/test-external-idp-saml2-realm.json`.
+This realm is loaded when creating the container from [test-external-idp-saml2-realm.json](realms/test-external-idp-saml2-realm.json).
 
 Users predefined in the realm:
 
 | username | password |  role   | Comment |
 |----------|----------|:-------:|---------|
-| demo     | demo     |         |         |
+| demo     | demo     |    /    |         |
 | admin    | secret   |  ADMIN  |         |
 | eleve    | secret   |  Eleve  |         |
 | student  | secret   | STUDENT |         |
@@ -51,6 +51,6 @@ A client:
 
 ### Export the test-external-idp-saml2 realm
 
-```bash
+```shell
 docker compose exec auth-idp-saml2 /opt/keycloak/bin/kc.sh export --dir=/opt/keycloak/data/import/ --realm test-external-idp-saml2 --users realm_file --optimized
 ```
