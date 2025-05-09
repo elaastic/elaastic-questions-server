@@ -11,7 +11,7 @@ assignees: ''
 
 As a
 I want
-So tha
+So that
 
 ### Acceptance criteria
 
