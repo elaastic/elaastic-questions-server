@@ -14,7 +14,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    answers: ["Pierre", "Paul", "Jacques"],
+    answers: [1,2,3],
     selected: []
   },
 }

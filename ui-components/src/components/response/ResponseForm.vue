@@ -6,20 +6,15 @@ import {type PropType, ref} from "vue";
 import type {Selection} from "@/components/util/SelectorResponsive.vue";
 import {useI18n} from "vue-i18n";
 import TipTapEditor from "@/components/response/TipTapEditor.vue";
+import type {AnyResponse, ExclusiveChoiceResponse, MultipleChoiceResponse} from "@/models/Response";
+import ExclusiveQuestion from "@/components/response/ExclusiveQuestion.vue";
 
 const props = defineProps({
   /**
    * The possibles answers at the question
    */
   providedAnswers: {
-    type: Array as PropType<string[]>,
-    default: () => []
-  },
-  /**
-   * The answers selected by the user
-   */
-  selectedAnswers: {
-    type: Array as PropType<string[]>,
+    type: Array as PropType<number[]>,
     default: () => []
   },
   /**
@@ -37,42 +32,45 @@ const props = defineProps({
     default:"Confiant(e)"
   },
   /**
-   * The text which will be written on the editor when coming on this page
-   */
-  defaultText: {
-    type: String,
-    default: "Contenu par défaut"
-  },
-  /**
-   * A boolean. True : It's a multiple choice question. False : It's not.
-   */
-  isMCQ: {
-    type: Boolean,
-    default: true,
-  },
-  /**
    * A boolean. True : The user has sent his answer to the question by click on the button. False : The user hasn't clicked yet.
    */
   isSend: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * The answer proposed by the user. Composed of: an id, the questionType and an explanation for OpenEndedQuestion. Add choices for MultipleChoiceQuestion or choice for ExclusiveChoiceQuestion. All initialised empty but could continue an old answer.
+   */
+  answer: {
+    type: Object as PropType<AnyResponse>,
+    default: () => ({}),
   }
 
 });
-const selectedLocalAnswers = ref([...props.selectedAnswers]);
+const selectedMultipleAnswers = ref(
+        props.answer.questionType === 'MultipleChoice'
+                ? [...(props.answer as MultipleChoiceResponse).choices]
+                : []
+);
+
+const selectedExclusiveAnswers = ref<number>(
+        props.answer.questionType === 'ExclusiveChoice'
+                ? (props.answer as ExclusiveChoiceResponse).choice
+                : 0
+);
 const selectedLocalConfiance= ref(props.selectedConfiance);
 const refIsValidate = ref(props.isSend);
-const refIsMCQ = ref(props.isMCQ);
+const refqTYpe = ref(props.answer.questionType);
 
-const text_ref = ref(props.defaultText);
+const text_ref = ref(props.answer.explanation);
 
 const sendAnswer = () => {
-  if(refIsMCQ.value){
-    if(selectedLocalAnswers.value.length!==0){
+  if(refqTYpe.value === "MultipleChoice"){
+    if(selectedMultipleAnswers.value.length!==0){
       refIsValidate.value = true;
     }
   }
-  if(!refIsMCQ.value){
+  else{
     refIsValidate.value = true;
   }
 
@@ -82,11 +80,12 @@ const { t } = useI18n()
 
 <template>
   <div v-if="!refIsValidate">
-    <h1 class="h1Title">{{t('answer')}}</h1>
-    <v-card>
-      <div v-if="isMCQ">
-        <TextBar v-if="selectedLocalAnswers.length===0" color="red" value="Veuillez soumettre une réponse"></TextBar>
-        <QCM class="resize" :answers="providedAnswers" v-model:selected="selectedLocalAnswers" />
+      <div v-if="refqTYpe === 'MultipleChoice'">
+        <TextBar v-if="selectedMultipleAnswers.length===0" color="red" value="Veuillez soumettre une réponse"></TextBar>
+        <QCM class="resize" :answers="providedAnswers" v-model:selected="selectedMultipleAnswers" />
+      </div>
+      <div v-if="refqTYpe === 'ExclusiveChoice'">
+        <ExclusiveQuestion class="resize" :answers="providedAnswers" v-model:selected="selectedExclusiveAnswers" />
       </div>
       <div class="resize">
         <h5>{{t('textual-answer')}}</h5>
@@ -97,7 +96,6 @@ const { t } = useI18n()
         <SelectorResponsive  class="selector" :selections="selectionsConfiance" v-model:selected="selectedLocalConfiance" />
       </div>
       <v-btn class="bouton" color="secondary" @click="sendAnswer()">{{t('save')}}</v-btn>
-    </v-card>
   </div>
   <div v-if="refIsValidate">
     <h1 class="main-title">{{t('answer-sent')}}</h1>
@@ -117,9 +115,6 @@ const { t } = useI18n()
   .resize{
     margin-left: 4%;
     margin-right: 4%;
-  }
-  .h1Title{
-    margin-bottom: 5%;
   }
   .degreeTitle{
     margin-top: 3%;
@@ -147,14 +142,12 @@ const { t } = useI18n()
 <i18n>
   {
   "en": {
-    "answer": "Answer  ",
     "textual-answer": "Textual answer",
     "trust-degree": "Trust degree",
     "save": "Save",
     "answer-sent": "Answer sent"
   },
   "fr": {
-    "answer": "Réponse  ",
     "textual-answer": "Réponse textuelle",
     "trust-degree": "Votre degré de confiance",
     "save": "Enregistrer",

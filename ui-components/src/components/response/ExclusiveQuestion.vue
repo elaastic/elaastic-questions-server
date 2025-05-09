@@ -9,15 +9,15 @@ const props = defineProps({
     default: () => []
   },
   selected: {
-    type: Array as PropType<number[]>,
-    default: () => []
+    type: Number,
+    default: 0
   }
 })
 
 const emit = defineEmits(["update:selected"])
 const { t } = useI18n()
 
-const selectedLocal = ref([...props.selected])
+const selectedLocal = ref(props.selected);
 
 
 watch(selectedLocal, (newVal) => {
@@ -26,36 +26,34 @@ watch(selectedLocal, (newVal) => {
 </script>
 
 <template>
-  <div class="Horizontal_container">
+  <div>
     <h5 class="answer">{{t('your-answer')}}</h5>
-    <v-container fluid class="Horizontal_container">
-      <v-checkbox class="checkBox"
-              v-for="answer in answers"
-              :key="answer"
-              v-model="selectedLocal"
-              :value="answer"
-      >
-        <template v-slot:label>
-          <div>{{ answer }}</div>
-        </template>
-      </v-checkbox>
+    <v-container fluid>
+      <v-radio-group v-model="selectedLocal">
+        <v-row>
+          <v-radio
+                   v-for="answer in answers"
+                   :key="answer"
+                   :value="answer"
+          >
+            <template v-slot:label>
+              <div>{{ answer }}</div>
+            </template>
+          </v-radio>
+        </v-row>
+      </v-radio-group>
     </v-container>
   </div>
 </template>
 
 <style scoped>
-.Horizontal_container{
-  display: flex;
-  align-items: center;
-}
+
 .answer{
   white-space: nowrap;
   margin-bottom: 2.3%;
   font-weight: bold;
 }
-.checkBox{
-  margin-right: 2%;
-}
+
 </style>
 <i18n>
 {
