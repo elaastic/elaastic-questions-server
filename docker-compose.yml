@@ -92,3 +92,29 @@ services:
           interval: 5s
           timeout: 5s
           retries: 20
+
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+        - "traefik.http.routers.whoami.entrypoints=web"
+
+  traefik:
+      image: traefik:v3.4
+      restart: unless-stopped
+      command:
+          - --api.dashboard=true
+          - --providers.docker=true
+          - --providers.docker.exposedbydefault=false
+          - --entrypoints.web.address=:80
+      ports:
+          - "80:80"
+      volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro
+      labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`)"
+          - "traefik.http.routers.dashboard.service=api@internal"
+          - "traefik.http.services.dashboard.loadbalancer.server.port=8080"
