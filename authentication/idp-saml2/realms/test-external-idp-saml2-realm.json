@@ -287,7 +287,7 @@
       } ],
       "security-admin-console" : [ ],
       "admin-cli" : [ ],
-      "http://host.docker.internal:8081/realms/elaastic-keycloak" : [ ],
+      "http://iam.local/realms/elaastic-keycloak" : [ ],
       "account-console" : [ ],
       "broker" : [ {
         "id" : "e2bacf2a-2d51-4878-a23b-6527df2d3a24",
@@ -447,7 +447,7 @@
     "email" : "demo@elaastic.com",
     "emailVerified" : true,
     "attributes" : {
-      "saml.persistent.name.id.for.http://host.docker.internal:8081/realms/elaastic-keycloak" : [ "G-8a733bea-3c86-4920-ac38-7fb61c7a10e8" ]
+      "saml.persistent.name.id.for.http://iam.local/realms/elaastic-keycloak" : [ "G-8a733bea-3c86-4920-ac38-7fb61c7a10e8" ]
     },
     "createdTimestamp" : 1744881886814,
     "enabled" : true,
@@ -472,7 +472,7 @@
     "email" : "eleve@mail.com",
     "emailVerified" : true,
     "attributes" : {
-      "saml.persistent.name.id.for.http://host.docker.internal:8081/realms/elaastic-keycloak" : [ "G-db047722-0703-4a0b-bddf-1dad58ce59ff" ]
+      "saml.persistent.name.id.for.http://iam.local/realms/elaastic-keycloak" : [ "G-db047722-0703-4a0b-bddf-1dad58ce59ff" ]
     },
     "createdTimestamp" : 1745309803834,
     "enabled" : true,
@@ -498,7 +498,7 @@
     "email" : "learner@test-ent.foo",
     "emailVerified" : true,
     "attributes" : {
-      "saml.persistent.name.id.for.http://host.docker.internal:8081/realms/elaastic-keycloak" : [ "G-0d350e4f-6502-40b4-9245-121e48b131e0" ]
+      "saml.persistent.name.id.for.http://iam.local/realms/elaastic-keycloak" : [ "G-0d350e4f-6502-40b4-9245-121e48b131e0" ]
     },
     "createdTimestamp" : 1744359077932,
     "enabled" : true,
@@ -524,7 +524,7 @@
     "email" : "student@mail.com",
     "emailVerified" : true,
     "attributes" : {
-      "saml.persistent.name.id.for.http://host.docker.internal:8081/realms/elaastic-keycloak" : [ "G-fe8bc96a-c514-4809-986f-0d49ba5db05d" ]
+      "saml.persistent.name.id.for.http://iam.local/realms/elaastic-keycloak" : [ "G-fe8bc96a-c514-4809-986f-0d49ba5db05d" ]
     },
     "createdTimestamp" : 1745309842141,
     "enabled" : true,
@@ -703,7 +703,7 @@
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
   }, {
     "id" : "39a1d418-14ff-4f05-8175-781304cf46ea",
-    "clientId" : "http://host.docker.internal:8081/realms/elaastic-keycloak",
+    "clientId" : "http://iam.local/realms/elaastic-keycloak",
     "name" : "Keycloak A (Broker SP)",
     "description" : "",
     "rootUrl" : "",
@@ -714,8 +714,8 @@
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "miAyGZPxDUyJ6Y4pDHp5qV7zaFn2LTOP",
-    "redirectUris" : [ "http://host.docker.internal:8081/realms/elaastic-keycloak/broker/saml/endpoint" ],
-    "webOrigins" : [ "http://host.docker.internal:8081" ],
+    "redirectUris" : [ "http://iam.local/realms/elaastic-keycloak/broker/saml/endpoint" ],
+    "webOrigins" : [ "http://iam.local" ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,
@@ -748,8 +748,8 @@
       "saml.onetimeuse.condition" : "false",
       "saml_signature_canonicalization_method" : "http://www.w3.org/2001/10/xml-exc-c14n#",
       "saml.server.signature.keyinfo.xmlSigKeyInfoKeyNameTransformer" : "NONE",
-       "saml_single_logout_service_url_post": "http://host.docker.internal:8081/realms/elaastic-keycloak/protocol/saml",
-  "saml_single_logout_service_url_redirect": "http://host.docker.internal:8081/realms/elaastic-keycloak/protocol/saml"
+       "saml_single_logout_service_url_post": "http://iam.local/realms/elaastic-keycloak/protocol/saml",
+  "saml_single_logout_service_url_redirect": "http://iam.local/realms/elaastic-keycloak/protocol/saml"
     },
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : true,
