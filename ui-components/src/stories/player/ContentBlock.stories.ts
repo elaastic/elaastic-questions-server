@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ContentBlock from '@/components/player/ContentBlock.vue'
 import ResponseForm from "@/components/response/ResponseForm.vue";
+import {ref} from "vue";
+import type {AnyResponse} from "@/models/Response";
 const meta = {
   title: 'player/ContentBlock',
   component: ContentBlock,
@@ -9,6 +11,23 @@ const meta = {
 
 export default meta
 type Story = StoryObj<typeof meta>
+
+
+const answer = ref<AnyResponse>({
+  id: 1,
+  questionType: "MultipleChoice",
+  explanation: "",
+  choices: [],
+  trust: "Confiant(e)"
+});
+
+const validate = ref(false);
+
+function handleAnswer(newAnswer: AnyResponse) {
+  answer.value = newAnswer;
+  validate.value = true;
+}
+
 
 export const Default: Story = {
   render: (args) => ({
@@ -33,21 +52,45 @@ export const RespForm: Story = {
   render: (args) => ({
     components: { ContentBlock, ResponseForm },
     setup() {
-      return { args }
+      return { args, answer, validate, handleAnswer }
     },
     template: `
       <ContentBlock v-bind="args">
-        <ResponseForm
-          :provided-answers="['1', '2', '3', '4', '5', '6', '7', '8']"
-          :selections-confiance="[
-          { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-          { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-          { label: 'Confiant(e)', value: 'Confiant(e)' },
-          { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
-          ]"
-          selected-confiance="Confiant(e)"
-          default-text="Votre réponse">
-        </ResponseForm>
+        <ResponseForm v-if="!validate"
+            :providedAnswers="[1,2,3,4,5,6,7,8,9]"
+            :trust-selections=" [
+              { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
+              { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
+              { label: 'Confiant(e)', value: 'Confiant(e)' },
+              { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
+            ]"
+            :selectedConfiance="'Confiant(e)'"
+            :isSend="false"
+            :answer='answer'
+            @update:answer="handleAnswer"
+        ></ResponseForm>
+        <div v-if="validate">
+          <h1 class="main-title" style="
+          text-align: center;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 50px;
+          color: #333;
+          margin-top: 50px;
+          margin-bottom: 30px;
+          font-weight: 600;
+          letter-spacing: 1px;
+          position: relative;">
+            Réponse Envoyée
+          </h1>
+          <p style="
+          display: block;
+          font-size: 50px;
+          color: green;
+          margin: 10px auto 0 auto;
+          text-align: center">
+            ✔️
+          </p>
+        </div>
       </ContentBlock>
     `,
   }),

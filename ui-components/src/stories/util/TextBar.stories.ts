@@ -17,3 +17,9 @@ export const Default: Story = {
     color: 'primary'
   }
 }
+export const Variant: Story = {
+  args: {
+    value: "Soumettez une réponse",
+    color: 'yellow'
+  }
+}

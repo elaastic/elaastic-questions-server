@@ -4,10 +4,16 @@ import type {PropType} from "vue";
 import {useI18n} from "vue-i18n";
 
 const props = defineProps({
+  /**
+   * The possibles answers
+   */
   answers: {
     type: Array as PropType<number[]>,
     default: () => []
   },
+  /**
+   * The answers selected by the user
+   */
   selected: {
     type: Array as PropType<number[]>,
     default: () => []

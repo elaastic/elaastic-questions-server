@@ -20,10 +20,10 @@ const answer = ref<AnyResponse>({
     choices: [],
     trust: "Confiant(e)"
 });
-let validate = false;
+const validate = ref(false);
 function handleAnswer(newAnswer: AnyResponse) {
     answer.value = newAnswer;
-    validate = true;
+    validate.value = true;
 }
 export const Default: Story = {
     render: (args) => ({

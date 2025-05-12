@@ -42,14 +42,12 @@ watch(() => props.state, (newVal) => {
 <template>
   <v-expansion-panels :readonly="readonly" v-model="refModelValue" @update:modelValue="emit('update:state', $event)">
     <v-expansion-panel>
-      <v-expansion-panel-title>
-        <div class="title">
-          {{ title }}
+      <v-expansion-panel-title class="title-container">
+        <div class="title-side">
+          <span class="title">{{ title }}</span>
+          <span class="side">{{ side }}</span>
         </div>
-        <div class="side">
-          {{ side }}
-        </div>
-
+        <div class="line-full-width"></div>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <slot />
@@ -59,11 +57,35 @@ watch(() => props.state, (newVal) => {
 </template>
 
 <style scoped>
-.side{
-  margin-left: 1%;
-  font-size: small;
+.title-container {
+  display: flex;
+  flex-direction: column;
 }
-.title{
+
+.title-side {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+}
+
+.title {
   font-weight: bold;
+  font-size: 1.1em;
 }
+
+.side {
+  font-size: small;
+  color: #666;
+}
+
+.line-full-width {
+  height: 2px;
+  background-color: #ccc;
+  width: 100%;
+  margin-top: 6px;
+}
+
 </style>
