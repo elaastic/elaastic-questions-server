@@ -11,82 +11,61 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
+const trustSelections = [
+  { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
+  { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
+  { label: 'Confiant(e)', value: 'Confiant(e)' },
+  { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
+];
+const providedAnswers= [1,2,3,4,5,6,7,8,9];
+
 export const Default: Story = {
   args: {
-    providedAnswers: [1,2,3,4,5,6,7,8,9],
-    selectionsConfiance: [
-      { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-      { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-      { label: 'Confiant(e)', value: 'Confiant(e)' },
-      { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
-    ],
-    selectedConfiance: 'Confiant(e)',
-    isSend: false,
+    providedAnswers,
+    trustSelections,
     answer: {
       id: 1,
       questionType: 'MultipleChoice',
       explanation: '',
-      choices: []
-    } satisfies MultipleChoiceResponse
+      choices: [],
+      trust: trustSelections[2].label,
+    } satisfies MultipleChoiceResponse,
   },
-}
+};
 export const Exclusive: Story = {
   args: {
-    providedAnswers: [1,2,3,4,5,6,7,8,9],
-    selectionsConfiance: [
-      { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-      { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-      { label: 'Confiant(e)', value: 'Confiant(e)' },
-      { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
-    ],
-    selectedConfiance: 'Confiant(e)',
-    isSend: false,
+    providedAnswers,
+    trustSelections,
     answer: {
       id: 2,
       questionType: 'ExclusiveChoice',
       explanation: '',
-      choice: 1
+      choice: providedAnswers[0],
+      trust: trustSelections[2].label,
     } satisfies ExclusiveChoiceResponse
   },
 }
 export const Open: Story = {
   args: {
-    selectionsConfiance: [
-      { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-      { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-      { label: 'Confiant(e)', value: 'Confiant(e)' },
-      { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
-    ],
-    selectedConfiance: 'Confiant(e)',
-    isSend: false,
+    trustSelections,
     answer: {
       id: 3,
       questionType: 'OpenEnded',
       explanation: 'Ma Réponse',
+      trust: trustSelections[2].label,
     } satisfies OpenEndedResponse
   },
 }
 export const AnswerProvided: Story = {
   args: {
-    providedAnswers: [1,2,3,4,5,6,7,8,9],
-    selectionsConfiance: [
-      { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-      { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-      { label: 'Confiant(e)', value: 'Confiant(e)' },
-      { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
-    ],
-    selectedConfiance: 'Confiant(e)',
-    isSend: false,
+    providedAnswers,
+    trustSelections,
     answer: {
       id: 3,
       questionType: 'MultipleChoice',
       explanation: 'Ma Réponse',
-      choices: [1,5]
+      choices: [providedAnswers[0],providedAnswers[4]],
+      trust: trustSelections[2].label,
     } satisfies MultipleChoiceResponse
-  },
-}
-export const Sent: Story = {
-  args: {
-    isSend: true,
   },
 }

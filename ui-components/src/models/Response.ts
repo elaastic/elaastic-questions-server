@@ -9,7 +9,8 @@ type QuestionType = 'OpenEnded' | 'ExclusiveChoice' | 'MultipleChoice'
 export interface Response {
   id: number
   questionType: QuestionType
-  explanation: string
+  explanation: string,
+  trust: string
 }
 
 export interface ExclusiveChoiceResponse extends Response {
