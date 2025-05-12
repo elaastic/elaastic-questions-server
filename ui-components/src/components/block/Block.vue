@@ -1,5 +1,8 @@
 <script setup lang="ts">
 const props = defineProps({
+  /**
+   * The title of the frame
+   */
   title: {
     type: String,
     default: ""
