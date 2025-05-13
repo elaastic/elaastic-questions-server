@@ -15,7 +15,7 @@ const props = defineProps({
     <v-card-title>
       <h1>{{title}}</h1>
     </v-card-title>
-    <hr color="lightgray" class="line"/>
+    <v-divider class="line" thickness="2"></v-divider>
     <v-card-text>
       <slot/>
     </v-card-text>
@@ -24,7 +24,8 @@ const props = defineProps({
 
 <style scoped>
 .line {
-  border-top: 2px ;
   margin-top: -1%;
+  margin-right: 2%;
+  margin-left: 2%;
 }
 </style>
