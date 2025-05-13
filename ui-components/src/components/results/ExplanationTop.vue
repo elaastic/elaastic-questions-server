@@ -12,24 +12,21 @@ const props=defineProps({
     type: Boolean,
     default: false
   },
-  peerReview: {
-    type: Boolean,
-    default: false
-  }
 });
 </script>
 
 <template>
-  <v-card  class="fit-content" color="secondary" >
-    <v-card-text class="info-row">
+  <v-card  class="fit-content" color="#00695C" >
+    <v-card-text class="info-row tight-card-text">
       <div v-if="teacher">
         <p><strong> 🎓 Explication de l'enseignant</strong></p>
       </div>
 
-      <div v-if="peerReview" class="row-elements">
+      <div v-if="numberOfPeerReview!==0" class="row-elements">
         <div><strong>{{ grade }}/5</strong></div>
 
-        <div class="gray">{{ numberOfPeerReview }} évaluations par les pairs</div>
+        <div v-if="numberOfPeerReview===1" class="gray">{{ numberOfPeerReview }} évaluation par les pairs</div>
+        <div v-if="numberOfPeerReview>1" class="gray">{{ numberOfPeerReview }} évaluations par les pairs</div>
 
         <div v-if="teacher" class="gray">
           <p class="yellow_hover">(voir les évaluations)</p>
@@ -48,6 +45,7 @@ const props=defineProps({
 <style scoped>
 .yellow_hover:hover{
   color: yellow;
+  cursor: pointer;
 }
 .info-row {
   display: flex;
@@ -71,6 +69,14 @@ const props=defineProps({
 
 .gray{
   color: lightgray;
+}
+.tight-card-text {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.tight-card-text p {
+  margin: 0;
 }
 
 
