@@ -4,7 +4,7 @@ import type {MultipleChoiceResponse, OpenEndedResponse} from "@/models/Response"
 
 
 const meta = {
-  title: 'result/Explanation',
+  title: 'results/Explanation',
   component: Explanation,
   tags: ['autodocs'],
 } satisfies Meta<typeof Explanation>

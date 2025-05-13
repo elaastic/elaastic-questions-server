@@ -3,7 +3,7 @@ import ExplanationTop from '@/components/results/ExplanationTop.vue'
 
 
 const meta = {
-  title: 'result/ExplanationTop',
+  title: 'results/ExplanationTop',
   component: ExplanationTop,
   tags: ['autodocs'],
 } satisfies Meta<typeof ExplanationTop>
@@ -17,7 +17,6 @@ export const Default: Story = {
     grade: 0,
     numberOfPeerReview: 0,
     teacher: false,
-    peerReview: false
   },
 }
 export const Teacher: Story = {
@@ -25,7 +24,6 @@ export const Teacher: Story = {
     grade: 0,
     numberOfPeerReview: 0,
     teacher: true,
-    peerReview: false
   },
 }
 export const PeerReview: Story = {
@@ -33,7 +31,6 @@ export const PeerReview: Story = {
     grade: 2,
     numberOfPeerReview: 3,
     teacher: false,
-    peerReview: true
   },
 }
 export const PeerReviewAndTeacher: Story = {
@@ -41,6 +38,5 @@ export const PeerReviewAndTeacher: Story = {
     grade: 2,
     numberOfPeerReview: 3,
     teacher: true,
-    peerReview: true
   },
 }
