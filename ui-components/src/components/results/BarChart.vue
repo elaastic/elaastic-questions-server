@@ -7,7 +7,7 @@ const props = defineProps({
    * The chart's data. It's an array of 3-uplet : the number of the answer, its value and a boolean to say if it's the good answer.
    */
   data: {
-    type: Array<{ choix: number, value: number, isCorrect: Boolean }>,
+    type: Array<{ choix: number, value: number, isCorrect: boolean }>,
     default: () => []
   },
   /**
