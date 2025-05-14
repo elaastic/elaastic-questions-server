@@ -4,18 +4,30 @@ import ExplanationTop from "@/components/results/ExplanationTop.vue";
 import type {AnyResponse, ExclusiveChoiceResponse, MultipleChoiceResponse} from "@/models/Response";
 
 const props = defineProps({
+  /**
+   * The answers selected by the user.
+   */
   answer: {
     type: Object as PropType<AnyResponse>,
     default: () => ({}),
   },
+  /**
+   * The average grade out of 5 given by reviewers.
+   */
   grade: {
     type: Number,
     default: 0
   },
+  /**
+   * The number of reviewers
+   */
   numberOfPeerReview: {
     type: Number,
     default: 0
   },
+  /**
+   * A boolean. true if it's the teacher's explanation. false if it's a student explanation.
+   */
   teacher: {
     type: Boolean,
     default: false

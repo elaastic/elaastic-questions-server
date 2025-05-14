@@ -1,24 +1,39 @@
 <script setup lang="ts">
-import {ref, watchEffect, computed, type PropType} from 'vue'
+import {ref, watchEffect} from 'vue'
 import embed from 'vega-embed'
 import type { VisualizationSpec } from 'vega-embed'
 const props = defineProps({
+  /**
+   * The chart's data. It's an array of 3-uplet : the number of the answer, its value and a boolean to say if it's the good answer.
+   */
   data: {
     type: Array<{ choix: number, value: number, isCorrect: Boolean }>,
     default: () => []
   },
+  /**
+   * The title of the chart.
+   */
   title: {
     type: String,
     default: ""
   },
+  /**
+   * The title of x axis.
+   */
   xLabel: {
     type: String,
     default: ""
   },
+  /**
+   * The title of y axis.
+   */
   yLabel: {
     type: String,
     default: ""
   },
+  /**
+   * The width of the chart.
+   */
   width: {
     type: Number,
     default: 500
@@ -43,8 +58,16 @@ watchEffect(() => {
       }))
     },
     encoding: {
-      x: { field: 'Choix', type: 'nominal', axis: { title: props.xLabel } },
-      y: { field: 'Pourcentage des votants', type: 'quantitative', axis: { title: props.yLabel } }
+      x: { field: 'Choix', type: 'nominal', axis: { title: props.xLabel },  },
+      y: {
+        field: 'Pourcentage des votants',
+        type: 'quantitative',
+        axis: { title: props.yLabel, values: [0, 25, 50, 75, 100] },
+        scale: {
+          domain: [0,100],
+          nice: false
+        },
+      }
     },
     layer: [
       {
@@ -56,9 +79,9 @@ watchEffect(() => {
           color: {
             condition: {
               test: "datum.isCorrect == true",
-              value: "#10b981"
+              value: "#1B5E20"
             },
-            value: "#ef4444"
+            value: "#AD1457"
           }
         }
       },

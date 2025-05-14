@@ -1,13 +1,22 @@
 <script setup lang="ts">
 const props=defineProps({
+  /**
+   * The average grade out of 5 given by reviewers.
+   */
   grade: {
     type: Number,
     default: 0
   },
+  /**
+   * The number of reviewers.
+   */
   numberOfPeerReview: {
     type: Number,
     default: 0
   },
+  /**
+   * A boolean. true if it's the teacher's explanation. false if it's a student explanation.
+   */
   teacher: {
     type: Boolean,
     default: false
