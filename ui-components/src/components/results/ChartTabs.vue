@@ -74,7 +74,7 @@ const { t } = useI18n()
     </v-tabs>
   <v-tabs-window v-model="selectedTab">
     <v-tabs-window-item value="votes">
-      <BarChart
+      <BarChart class="voteChart chart"
               :data="props.dataVoteChart"
               title=""
               :x-label="t('choice')"
@@ -83,18 +83,18 @@ const { t } = useI18n()
       ></BarChart>
     </v-tabs-window-item>
     <v-tabs-window-item value="trust">
-      <DoubleBarChartH
-              :data-left="[{ choix: t('completely-confident'), value: props.dataTrustChartLeft.at(0)}, { choix: t('confident'), value: props.dataTrustChartLeft.at(1)}, { choix: t('not-really-confident'), value: props.dataTrustChartLeft.at(2)}, { choix: t('not-confident-at-all'), value: props.dataTrustChartLeft.at(3)}]"
-              :data-right="[{ choix: t('completely-confident'), value: props.dataTrustChartRight.at(0) }, { choix: t('confident'), value: props.dataTrustChartRight.at(1) }, { choix: t('not-really-confident'), value: props.dataTrustChartRight.at(2) }, { choix: t('not-confident-at-all'), value: props.dataTrustChartRight.at(3)}]"
+      <DoubleBarChartH class="chart"
+              :data-left="[{ choix: t('completely-confident'), value: props.dataTrustChartLeft.at(0) ?? -1}, { choix: t('confident'), value: props.dataTrustChartLeft.at(1) ?? -1}, { choix: t('not-really-confident'), value: props.dataTrustChartLeft.at(2) ?? -1}, { choix: t('not-confident-at-all'), value: props.dataTrustChartLeft.at(3) ?? -1}]"
+              :data-right="[{ choix: t('completely-confident'), value: props.dataTrustChartRight.at(0) ?? -1}, { choix: t('confident'), value: props.dataTrustChartRight.at(1) ?? -1 }, { choix: t('not-really-confident'), value: props.dataTrustChartRight.at(2) ?? -1}, { choix: t('not-confident-at-all'), value: props.dataTrustChartRight.at(3) ?? -1}]"
               :title-left= "t('good-answer')"
               :title-right="t('bad-answer')"
               :x-label="t('percentage-of-voters')"
               :width="500"></DoubleBarChartH>
     </v-tabs-window-item>
     <v-tabs-window-item value="peers">
-      <DoubleBarChartH
-              :data-left="[{ choix: t('completely-agree'), value: props.dataPeerChartLeft.at(0)}, { choix: t('agree'), value: props.dataPeerChartLeft.at(1)}, { choix: t('neither-agree-nor-disagree'), value: props.dataPeerChartLeft.at(2)}, { choix: t('not-agree'), value: props.dataPeerChartLeft.at(3)}, { choix: t('not-agree-at-all'), value: props.dataPeerChartLeft.at(4)}]"
-              :data-right="[{ choix: t('completely-agree'), value: props.dataPeerChartRight.at(0)}, { choix: t('agree'), value: props.dataPeerChartRight.at(1)}, { choix: t('neither-agree-nor-disagree'), value: props.dataPeerChartRight.at(2)}, { choix: t('not-agree'), value: props.dataPeerChartRight.at(3)}, { choix: t('not-agree-at-all'), value: props.dataPeerChartRight.at(4)}]"
+      <DoubleBarChartH class="chart"
+              :data-left="[{ choix: t('completely-agree'), value: props.dataPeerChartLeft.at(0) ?? -1}, { choix: t('agree'), value: props.dataPeerChartLeft.at(1) ?? -1}, { choix: t('neither-agree-nor-disagree'), value: props.dataPeerChartLeft.at(2) ?? -1}, { choix: t('not-agree'), value: props.dataPeerChartLeft.at(3) ?? -1}, { choix: t('not-agree-at-all'), value: props.dataPeerChartLeft.at(4) ?? -1}]"
+              :data-right="[{ choix: t('completely-agree'), value: props.dataPeerChartRight.at(0) ?? -1}, { choix: t('agree'), value: props.dataPeerChartRight.at(1) ?? -1}, { choix: t('neither-agree-nor-disagree'), value: props.dataPeerChartRight.at(2) ?? -1}, { choix: t('not-agree'), value: props.dataPeerChartRight.at(3) ?? -1}, { choix: t('not-agree-at-all'), value: props.dataPeerChartRight.at(4) ?? -1}]"
               :title-left="t('good-answer')"
               :title-right="t('bad-answer')"
               :x-label="t('percentage-of-voters')"
@@ -104,6 +104,12 @@ const { t } = useI18n()
 </template>
 
 <style scoped>
+.voteChart{
+  margin-left: 7%;
+}
+.chart{
+  margin-top: 3%;
+}
 </style>
 
 <i18n>
