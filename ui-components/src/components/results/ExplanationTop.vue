@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {useI18n} from "vue-i18n";
+
 const props=defineProps({
   /**
    * The average grade out of 5 given by reviewers.
@@ -22,30 +24,31 @@ const props=defineProps({
     default: false
   },
 });
+const { t } = useI18n()
 </script>
 
 <template>
   <v-card  class="fit-content" color="#00695C" >
     <v-card-text class="info-row tight-card-text">
       <div v-if="teacher">
-        <p><strong> 🎓 Explication de l'enseignant</strong></p>
+        <p><strong> 🎓 {{t('teacher-explanation')}}</strong></p>
       </div>
 
       <div v-if="numberOfPeerReview!==0" class="row-elements">
         <div><strong>{{ grade }}/5</strong></div>
 
-        <div v-if="numberOfPeerReview===1" class="gray">{{ numberOfPeerReview }} évaluation par les pairs</div>
-        <div v-if="numberOfPeerReview>1" class="gray">{{ numberOfPeerReview }} évaluations par les pairs</div>
+        <div v-if="numberOfPeerReview===1" class="gray">{{ numberOfPeerReview }} {{t('peer-review')}}</div>
+        <div v-if="numberOfPeerReview>1" class="gray">{{ numberOfPeerReview }} {{t('peer-reviews')}}</div>
 
         <div v-if="teacher" class="gray">
-          <p class="yellow_hover">(voir les évaluations)</p>
+          <p class="yellow_hover">{{t('see-reviews')}}</p>
         </div>
       </div>
 
-      <div v-else class="gray">- Aucune évaluation par les pairs</div>
+      <div v-else class="gray">{{t('no-peer-review')}}</div>
 
       <div v-if="!teacher" class="gray">
-        <p class="yellow_hover">(Afficher les détails)</p>
+        <p class="yellow_hover">{{t('see-details')}}</p>
       </div>
     </v-card-text>
   </v-card>
@@ -90,3 +93,23 @@ const props=defineProps({
 
 
 </style>
+<i18n>
+{
+  "en": {
+    "teacher-explanation": "Teacher explanation",
+    "peer-review": "peer review",
+    "peer-reviews": "peer reviews",
+    "see-reviews": "(see reviews)",
+    "no-peer-review": "- No peer review",
+    "see-details": "(See details)"
+  },
+  "fr": {
+    "teacher-explanation": "Explication de l'enseignant",
+    "peer-review": "évaluation par les pairs",
+    "peer-reviews": "évaluations par les pairs",
+    "see-reviews": "(voir les évaluations)",
+    "no-peer-review": "- Aucune évaluation par les pairs",
+    "see-details": "(Afficher les détails)"
+  }
+}
+</i18n>

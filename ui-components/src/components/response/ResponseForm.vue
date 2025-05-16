@@ -79,7 +79,7 @@ const { t } = useI18n()
 
 <template>
     <div v-if="refqTYpe === 'MultipleChoice'">
-      <TextBar v-if="selectedMultipleAnswers.length===0" color="red" value="Veuillez soumettre une réponse"></TextBar>
+      <TextBar v-if="selectedMultipleAnswers.length===0" color="red" :value="t('please-submit-a-response')"></TextBar>
       <QCM class="resize" :answers="providedAnswers" v-model:selected="selectedMultipleAnswers" />
     </div>
     <div v-if="refqTYpe === 'ExclusiveChoice'">
@@ -119,12 +119,14 @@ const { t } = useI18n()
   "en": {
     "textual-answer": "Textual answer",
     "trust-degree": "Trust degree",
-    "save": "Save"
+    "save": "Save",
+    "please-submit-a-response": "Please submit a response"
   },
   "fr": {
     "textual-answer": "Réponse textuelle",
     "trust-degree": "Votre degré de confiance",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "please-submit-a-response": "Veuillez soumettre une réponse"
   }
 }
 </i18n>

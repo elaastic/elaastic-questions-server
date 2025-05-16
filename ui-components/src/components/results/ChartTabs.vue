@@ -61,20 +61,24 @@ const { t } = useI18n()
 </script>
 
 <template>
-    <v-tabs v-model="selectedTab">
-      <v-tab value="votes">
-        {{t('distribution-of-votes')}}
-      </v-tab>
-      <v-tab value="trust">
-        {{t('trust-degree')}}
-      </v-tab>
-      <v-tab v-if="displayPeerTab" value="peers">
-        {{t('peer-review')}}
-      </v-tab>
-    </v-tabs>
+  <v-tabs v-model="selectedTab">
+    <v-tab value="votes" class="text-none">
+      <strong v-if="selectedTab==='votes'">{{t('distribution-of-votes')}}</strong>
+      <div v-else>{{t('distribution-of-votes')}}</div>
+    </v-tab>
+    <v-tab value="trust" class="text-none">
+      <strong v-if="selectedTab==='trust'">{{t('trust-degree')}}</strong>
+      <div v-else>{{t('trust-degree')}}</div>
+    </v-tab>
+    <v-tab v-if="displayPeerTab" value="peers" class="text-none">
+      <strong v-if="selectedTab==='peers'">{{t('peer-review')}}</strong>
+      <div v-else>{{t('peer-review')}}</div>
+    </v-tab>
+  </v-tabs>
+  <div class="chartTabs">
   <v-tabs-window v-model="selectedTab">
     <v-tabs-window-item value="votes">
-      <BarChart class="voteChart chart"
+      <BarChart class="voteChart"
               :data="props.dataVoteChart"
               title=""
               :x-label="t('choice')"
@@ -101,14 +105,24 @@ const { t } = useI18n()
               :width="500"></DoubleBarChartH>
     </v-tabs-window-item>
   </v-tabs-window>
+  </div>
 </template>
 
 <style scoped>
 .voteChart{
-  margin-left: 7%;
+  margin-left: 25%;
+  margin-top: 3%;
+  width: 100%
 }
 .chart{
   margin-top: 3%;
+  margin-left: 18%;
+}
+
+.chartTabs{
+  box-sizing: border-box;
+  border-radius: 2px;
+  border: 1px solid gray;
 }
 </style>
 

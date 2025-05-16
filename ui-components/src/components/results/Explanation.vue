@@ -2,6 +2,7 @@
 import {type PropType, ref} from "vue";
 import ExplanationTop from "@/components/results/ExplanationTop.vue";
 import type {AnyResponse, ExclusiveChoiceResponse, MultipleChoiceResponse} from "@/models/Response";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
   /**
@@ -44,25 +45,25 @@ const selectedExclusiveAnswers = ref<number>(
                 ? (props.answer as ExclusiveChoiceResponse).choice
                 : 0
 );
-
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="card-wrapper">
     <div class="icones">
-      <v-tooltip text="Retirer des meilleures réponses" location="bottom">
+      <v-tooltip :text="t('remove-from-best-answers')" location="bottom">
         <template v-slot:activator="{ props }">
           <v-btn size="small" v-bind="props" icon>★</v-btn>
         </template>
       </v-tooltip>
 
-      <v-tooltip text="Ajouter aux meilleures réponses" location="bottom">
+      <v-tooltip :text="t('add-to-best-answers')" location="bottom">
         <template v-slot:activator="{ props }">
           <v-btn size="small" v-bind="props" icon>☆</v-btn>
         </template>
       </v-tooltip>
 
-      <v-tooltip text="Masquer la réponse" location="bottom">
+      <v-tooltip :text="t('hide-answer')" location="bottom">
         <template v-slot:activator="{ props }">
           <v-btn size="small" v-bind="props" icon>👁</v-btn>
         </template>
@@ -80,8 +81,8 @@ const selectedExclusiveAnswers = ref<number>(
       </v-card-title>
       <v-card-text>
         <div class="txt">
-          <strong v-if="props.answer.questionType==='MultipleChoice'">Réponses: {{ selectedMultipleAnswers }}</strong>
-          <strong v-if="props.answer.questionType==='ExclusiveChoice'">Réponses: {{ selectedExclusiveAnswers }}</strong>
+          <strong v-if="props.answer.questionType==='MultipleChoice'"> {{t('answer')}}{{ selectedMultipleAnswers }}</strong>
+          <strong v-if="props.answer.questionType==='ExclusiveChoice'">{{t('answer')}} {{ selectedExclusiveAnswers }}</strong>
           {{ props.answer.explanation }}
         </div>
       </v-card-text>
@@ -142,3 +143,20 @@ const selectedExclusiveAnswers = ref<number>(
 }
 
 </style>
+<i18n>
+{
+  "en": {
+    "remove-from-best-answers": "Remove from best answers",
+    "add-to-best-answers": "Add to best answers",
+    "hide-answer": "Hide answer",
+    "answer": "Answer:"
+
+  },
+  "fr": {
+    "remove-from-best-answers": "Retirer des meilleures réponses",
+    "add-to-best-answers": "Ajouter aux meilleures réponses",
+    "hide-answer": "Masquer la réponse",
+    "answer": "Réponses:"
+  }
+}
+</i18n>
