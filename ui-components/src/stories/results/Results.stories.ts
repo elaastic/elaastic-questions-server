@@ -23,6 +23,7 @@ export const Default: Story = {
     displayPeerTab: false,
     qType: 'MultipleChoice',
     explanations: [],
+    displayTrustTab: false
   }
 }
 
@@ -36,6 +37,7 @@ export const HasResults: Story = {
     displayPeerTab: false,
     qType: 'MultipleChoice',
     explanations: [],
+    displayTrustTab: false
   }
 }
 export const NoEvaluation: Story = {
@@ -85,9 +87,10 @@ export const NoEvaluation: Story = {
         isTeacher: true,
       }
     ],
+    displayTrustTab: false
   }
 }
-export const HasExplanation: Story = {
+export const WithPeerReview: Story = {
   args: {
     dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
     dataTrustGoodAnswer: [20,20,20,40],
@@ -134,6 +137,7 @@ export const HasExplanation: Story = {
         isTeacher: true,
       }
     ],
+    displayTrustTab: false
   }
 }
 export const NoTeacher: Story = {
@@ -183,6 +187,7 @@ export const NoTeacher: Story = {
         isTeacher: false,
       }
     ],
+    displayTrustTab: false
   }
 }
 export const OpenQuestion: Story = {
@@ -229,6 +234,57 @@ export const OpenQuestion: Story = {
         isTeacher: true,
       }
     ],
+    displayTrustTab: true
+  }
+}
+export const TrustChart: Story = {
+  args: {
+    dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataTrustGoodAnswer: [20,20,20,40],
+    dataTrustBadAnswer: [25,20,20,35],
+    dataPeerGoodAnswer: [15,70,5,5,5],
+    dataPeerBadAnswer: [50,20,10,10,10],
+    displayPeerTab: false,
+    qType: 'MultipleChoice',
+    explanations: [
+      {
+        answer: {
+          id: 1,
+          questionType: 'MultipleChoice',
+          explanation: 'Mon explication',
+          choices: [1,3],
+          trust: "",
+        } satisfies MultipleChoiceResponse,
+        grade: 2,
+        nbPeer: 1,
+        isTeacher: false,
+      },
+      {
+        answer: {
+          id: 2,
+          questionType: 'MultipleChoice',
+          explanation: 'Ma Réponse',
+          choices: [2],
+          trust: "",
+        } satisfies MultipleChoiceResponse,
+        grade: 2,
+        nbPeer: 1,
+        isTeacher: false,
+      },
+      {
+        answer: {
+          id: 2,
+          questionType: 'MultipleChoice',
+          explanation: 'La Réponse de l\'enseignant',
+          choices: [1],
+          trust: "",
+        } satisfies MultipleChoiceResponse,
+        grade: 2,
+        nbPeer: 1,
+        isTeacher: true,
+      }
+    ],
+    displayTrustTab: true
   }
 }
 export const PeerReviewChart: Story = {
@@ -278,5 +334,6 @@ export const PeerReviewChart: Story = {
         isTeacher: true,
       }
     ],
+    displayTrustTab: true
   }
 }

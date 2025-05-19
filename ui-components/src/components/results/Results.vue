@@ -51,6 +51,13 @@ const props = defineProps({
     default: false
   },
   /**
+   * A boolean. true if the trust tab has to be sown. false if not.
+   */
+  displayTrustTab: {
+    type: Boolean,
+    default: false
+  },
+  /**
    * The answers and explanations given by students and possibly the teacher. If there was a review, it also has a grade and a number of reviewer
    */
   explanations: {
@@ -94,6 +101,7 @@ const { t } = useI18n()
                 :dataPeerChartLeft="props.dataPeerGoodAnswer"
                 :dataPeerChartRight="props.dataPeerBadAnswer"
                 :displayPeerTab="props.displayPeerTab"
+                :display-trust-tab="props.displayTrustTab"
         />
       </div>
       <TextBar v-if="explanations.length === 0" class="textbar" :value="t('no-contribution')" color="#FFF8E1"></TextBar>

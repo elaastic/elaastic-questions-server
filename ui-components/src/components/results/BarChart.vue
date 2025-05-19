@@ -58,7 +58,7 @@ watchEffect(() => {
       }))
     },
     encoding: {
-      x: { field: 'Choix', type: 'nominal', axis: { title: props.xLabel },  },
+      x: { field: 'Choix', type: 'nominal', axis: { title: props.xLabel, labelAngle: 0 }},
       y: {
         field: 'Pourcentage des votants',
         type: 'quantitative',

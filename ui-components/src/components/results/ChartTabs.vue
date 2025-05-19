@@ -54,7 +54,14 @@ const props = defineProps({
   displayPeerTab: {
     type: Boolean,
     default: false
-  }
+  },
+  /**
+   * A boolean. true if the trust tab has to be sown. false if not.
+   */
+  displayTrustTab: {
+    type: Boolean,
+    default: false
+  },
 });
 const selectedTab = ref(props.tab);
 const { t } = useI18n()
@@ -66,7 +73,7 @@ const { t } = useI18n()
       <strong v-if="selectedTab==='votes'">{{t('distribution-of-votes')}}</strong>
       <div v-else>{{t('distribution-of-votes')}}</div>
     </v-tab>
-    <v-tab value="trust" class="text-none">
+    <v-tab v-if="displayTrustTab" value="trust" class="text-none">
       <strong v-if="selectedTab==='trust'">{{t('trust-degree')}}</strong>
       <div v-else>{{t('trust-degree')}}</div>
     </v-tab>
