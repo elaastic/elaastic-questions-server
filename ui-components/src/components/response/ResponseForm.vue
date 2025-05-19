@@ -79,7 +79,7 @@ const { t } = useI18n()
 
 <template>
     <div v-if="refqTYpe === 'MultipleChoice'">
-      <TextBar v-if="selectedMultipleAnswers.length===0" color="red" :value="t('please-submit-a-response')"></TextBar>
+      <v-alert v-if="selectedMultipleAnswers.length===0" :text="t('please-submit-a-response')" type="info"></v-alert>
       <QCM class="resize" :answers="providedAnswers" v-model:selected="selectedMultipleAnswers" />
     </div>
     <div v-if="refqTYpe === 'ExclusiveChoice'">

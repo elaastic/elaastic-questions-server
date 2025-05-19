@@ -61,27 +61,8 @@ export const RespForm: Story = {
           @update:answer="handleAnswer"
         ></ResponseForm>
         <div v-if="validate">
-          <h1 class="main-title" style="
-          text-align: center;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 50px;
-          color: #333;
-          margin-top: 50px;
-          margin-bottom: 30px;
-          font-weight: 600;
-          letter-spacing: 1px;
-          position: relative;">
-            Réponse Envoyée
-          </h1>
-          <p style="
-          display: block;
-          font-size: 50px;
-          color: green;
-          margin: 10px auto 0 auto;
-          text-align: center">
-            ✔️
-          </p>
-          <ul>
+          <v-alert text="Réponse Envoyée" type="success" class="mb-4"></v-alert>
+          <ul class="ml-9">
             <li>
               Votre Réponse : {{answer.choices}}
             </li>

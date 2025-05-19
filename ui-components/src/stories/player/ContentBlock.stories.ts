@@ -57,38 +57,19 @@ export const RespForm: Story = {
     template: `
       <ContentBlock v-bind="args">
         <ResponseForm v-if="!validate"
-                      :providedAnswers="[1,2,3,4,5,6,7,8,9]"
-                      :trust-selections=" [
-            { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-            { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-            { label: 'Confiant(e)', value: 'Confiant(e)' },
-            { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
+            :providedAnswers="[1,2,3,4,5,6,7,8,9]"
+            :trust-selections=" [
+              { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
+              { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
+              { label: 'Confiant(e)', value: 'Confiant(e)' },
+              { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
             ]"
-                      :answer="answer"
-                      @update:answer="handleAnswer"
+            :answer="answer"
+            @update:answer="handleAnswer"
         ></ResponseForm>
         <div v-if="validate">
-          <h1 class="main-title" style="
-          text-align: center;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 50px;
-          color: #333;
-          margin-top: 50px;
-          margin-bottom: 30px;
-          font-weight: 600;
-          letter-spacing: 1px;
-          position: relative;">
-            Réponse Envoyée
-          </h1>
-          <p style="
-          display: block;
-          font-size: 50px;
-          color: green;
-          margin: 10px auto 0 auto;
-          text-align: center">
-            ✔️
-          </p>
-          <ul>
+          <v-alert text="Réponse Envoyée" type="success" class="mb-4"></v-alert>
+          <ul class="ml-9">
             <li>
               Votre Réponse : {{answer.choices}}
             </li>
@@ -107,7 +88,7 @@ export const RespForm: Story = {
     title: 'Enoncé',
     readonly: false,
     state: 0,
-    side: "[Question ouverte]"
+    side: "[Question à choix multiple]"
   },
 }
 export const Results: Story = {

@@ -47,7 +47,6 @@ watch(() => props.state, (newVal) => {
           <span class="title">{{ title }}</span>
           <span class="side">{{ side }}</span>
         </div>
-        <v-divider class="line" thickness="2"></v-divider>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <slot />
@@ -81,9 +80,5 @@ watch(() => props.state, (newVal) => {
   color: #666;
 }
 
-.line {
-  width: 100%;
-  margin-top: 8px;
-}
 
 </style>
