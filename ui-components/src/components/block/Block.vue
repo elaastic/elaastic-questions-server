@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {useI18n} from "vue-i18n";
+
 const props = defineProps({
   /**
    * The title of the frame
@@ -8,6 +10,7 @@ const props = defineProps({
     default: ""
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
@@ -29,3 +32,13 @@ const props = defineProps({
   margin-left: 2%;
 }
 </style>
+<i18n>
+{
+  "en": {
+    "save": "Savell"
+  },
+  "fr": {
+    "save": "Enregistrer"
+  }
+}
+</i18n>

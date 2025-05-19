@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 import BarChart from "@/components/results/BarChart.vue";
 import DoubleBarChartH from "@/components/results/DoubleBarChartH.vue";
 import {useI18n} from "vue-i18n";
@@ -65,6 +65,20 @@ const props = defineProps({
 });
 const selectedTab = ref(props.tab);
 const { t } = useI18n()
+
+const chartWidth = ref(500)
+
+const updateChartWidth = () => {
+  chartWidth.value = window.innerWidth < 900 ? window.innerWidth * 0.3 : 500
+}
+onMounted(() => {
+  updateChartWidth()
+  window.addEventListener('resize', updateChartWidth)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateChartWidth)
+})
 </script>
 
 <template>
@@ -90,7 +104,7 @@ const { t } = useI18n()
               title=""
               :x-label="t('choice')"
               :y-label= "t('percentage-of-voters')"
-              :width="500"
+              :width="chartWidth"
       ></BarChart>
     </v-tabs-window-item>
     <v-tabs-window-item value="trust">
@@ -100,7 +114,7 @@ const { t } = useI18n()
               :title-left= "t('good-answer')"
               :title-right="t('bad-answer')"
               :x-label="t('percentage-of-voters')"
-              :width="500"></DoubleBarChartH>
+              :width="chartWidth"></DoubleBarChartH>
     </v-tabs-window-item>
     <v-tabs-window-item value="peers">
       <DoubleBarChartH class="chart"
@@ -109,7 +123,7 @@ const { t } = useI18n()
               :title-left="t('good-answer')"
               :title-right="t('bad-answer')"
               :x-label="t('percentage-of-voters')"
-              :width="500"></DoubleBarChartH>
+              :width="chartWidth"></DoubleBarChartH>
     </v-tabs-window-item>
   </v-tabs-window>
   </div>
@@ -117,7 +131,7 @@ const { t } = useI18n()
 
 <style scoped>
 .voteChart{
-  margin-left: 25%;
+  margin-left: 20%;
   margin-top: 3%;
   width: 100%
 }
@@ -130,6 +144,11 @@ const { t } = useI18n()
   box-sizing: border-box;
   border-radius: 2px;
   border: 1px solid gray;
+}
+@media (min-width: 900px) {
+  .voteChart{
+    margin-left: 25%;
+  }
 }
 </style>
 

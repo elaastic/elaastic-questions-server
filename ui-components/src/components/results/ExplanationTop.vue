@@ -77,6 +77,7 @@ const { t } = useI18n()
   width: fit-content;
   max-width: 100%;
   padding: 12px;
+  box-sizing: border-box;
 }
 
 .gray{
@@ -90,6 +91,60 @@ const { t } = useI18n()
 .tight-card-text p {
   margin: 0;
 }
+
+@media (max-width: 900px) {
+  .fit-content {
+    width: 100%;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .row-elements {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .info-row p, .info-row div {
+    font-size: 13px;
+  }
+}
+@media (max-width: 900px) {
+  .fit-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .row-elements {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    flex-wrap: nowrap;
+  }
+
+  .info-row p,
+  .info-row div {
+    font-size: 13px;
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  /* Ajout important : forcer le <strong> avec l'emoji à se placer seul sur sa ligne */
+  .info-row strong {
+    display: block;
+    width: 100%;
+  }
+}
+
 
 
 </style>

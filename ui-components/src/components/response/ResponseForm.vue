@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import TextBar from "@/components/util/TextBar.vue";
 import QCM from "@/components/response/QCM.vue";
 import SelectorResponsive from "@/components/util/SelectorResponsive.vue";
-import {type PropType, ref} from "vue";
+import {type PropType, ref, watch} from "vue";
 import type {Selection} from "@/components/util/SelectorResponsive.vue";
 import {useI18n} from "vue-i18n";
 import TipTapEditor from "@/components/response/TipTapEditor.vue";
@@ -55,25 +54,38 @@ const refqTYpe = ref(props.answer.questionType);
 
 const text_ref = ref(props.answer.explanation);
 
-const sendAnswer = () => {
+watch(selectedLocalConfiance, (newValue) => {
   const submitedAnswer={
     ...props.answer,
-    explanation: text_ref.value,
-    trust: selectedLocalConfiance.value,
-    ...(refqTYpe.value === "MultipleChoice"
-            ? { choices: selectedMultipleAnswers.value }
-            : { choice: selectedExclusiveAnswers.value })
+    trust: newValue,
   };
-  if(refqTYpe.value === "MultipleChoice"){
-    if(selectedMultipleAnswers.value.length!==0){
-      emit('update:answer', submitedAnswer);
-    }
-  }
-  else{
-    emit('update:answer', submitedAnswer);
-  }
-
-}
+  emit('update:answer', submitedAnswer);
+})
+watch(text_ref, (newValue) => {
+  const submitedAnswer={
+    ...props.answer,
+    explanation: newValue,
+  };
+  emit('update:answer', submitedAnswer);
+})
+watch(selectedMultipleAnswers, (newValue) => {
+  const submitedAnswer={
+    ...props.answer,
+    ...(refqTYpe.value === "MultipleChoice"
+            ? { choices: newValue }
+            : {})
+  };
+  emit('update:answer', submitedAnswer);
+})
+watch(selectedExclusiveAnswers, (newValue) => {
+  const submitedAnswer={
+    ...props.answer,
+    ...(refqTYpe.value === "ExclusiveChoice"
+            ? { choice: newValue }
+            : {})
+  };
+  emit('update:answer', submitedAnswer);
+})
 const { t } = useI18n()
 </script>
 
@@ -93,18 +105,12 @@ const { t } = useI18n()
       <h5 class="degreeTitle" >{{t('trust-degree')}}</h5>
       <SelectorResponsive  class="selector" :selections="trustSelections" v-model:selected="selectedLocalConfiance" />
     </div>
-    <v-btn class="bouton" color="secondary" @click="sendAnswer()">{{t('save')}}</v-btn>
 </template>
 
 <style scoped>
   .selector{
     margin-top: 5%;
     margin-bottom: 5%;
-  }
-  .bouton{
-    margin-top: 5%;
-    margin-bottom: 5%;
-    margin-left: 4%;
   }
   .resize{
     margin-left: 4%;

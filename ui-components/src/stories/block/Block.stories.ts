@@ -23,7 +23,15 @@ const answer = ref<AnyResponse>({
 const validate = ref(false);
 function handleAnswer(newAnswer: AnyResponse) {
     answer.value = newAnswer;
+}
+function sendAnswer(){
+  if (answer.value.questionType === "MultipleChoice") {
+    if (answer.value.choices.length !== 0) {
+      validate.value = true;
+    }
+  } else {
     validate.value = true;
+  }
 }
 export const Default: Story = {
     render: (args) => ({
@@ -45,21 +53,24 @@ export const RespForm: Story = {
     render: (args) => ({
         components: { Block, ResponseForm },
         setup() {
-            return { args, validate, answer, handleAnswer };
+            return { args, validate, answer, handleAnswer, sendAnswer };
         },
         template: `
       <Block :title="args.title">
-        <ResponseForm v-if="!validate"
-          :providedAnswers="[1,2,3,4,5,6,7,8,9]"
-          :trust-selections=" [
-            { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-            { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-            { label: 'Confiant(e)', value: 'Confiant(e)' },
-            { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
-            ]"
-          :answer="answer"
-          @update:answer="handleAnswer"
-        ></ResponseForm>
+        <div v-if="!validate">
+          <ResponseForm
+                  :providedAnswers="[1,2,3,4,5,6,7,8,9]"
+                  :trust-selections=" [
+              { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
+              { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
+              { label: 'Confiant(e)', value: 'Confiant(e)' },
+              { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
+              ]"
+                  :answer="answer"
+                  @update:answer="handleAnswer"
+          ></ResponseForm>
+          <v-btn class="bouton" color="secondary" @click="sendAnswer()" style="margin-top: 5%; margin-bottom: 5%; margin-left: 4%;">Enregistrer</v-btn>
+        </div>
         <div v-if="validate">
           <v-alert text="Réponse Envoyée" type="success" class="mb-4"></v-alert>
           <ul class="ml-9">

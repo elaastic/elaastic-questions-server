@@ -103,7 +103,7 @@ const { t } = useI18n()
 }
 .card-wrapper {
   position: relative;
-  width: 800px;
+  width: 280px;
 }
 
 .card {

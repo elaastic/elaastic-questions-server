@@ -46,14 +46,32 @@ watch(selectedLocal, (newVal) => {
 
 <style scoped>
 
-.answer{
+.answer {
   white-space: nowrap;
   margin-bottom: 2.3%;
   font-weight: bold;
 }
-.radio{
+
+.radio {
   display: flex;
-  padding-right: 50%!important;
+  flex-wrap: nowrap;
+
+}
+
+@media (max-width: 900px) {
+  .radio {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .radio :deep(.v-radio) {
+    flex: 1 1 calc(33.33% - 1rem);
+  }
+}
+@media (min-width: 900px){
+  .radio{
+    padding-right: 50%!important;
+  }
 }
 
 </style>

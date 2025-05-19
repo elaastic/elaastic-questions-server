@@ -50,21 +50,33 @@ watch(selectedLocal, (newVal) => {
 </template>
 
 <style scoped>
-.Horizontal_container{
-  display: flex;
-  align-items: center;
-  margin-left: 1%;
-  margin-top: -1%;
-}
 .answer{
   white-space: nowrap;
   margin-bottom: 2.3%;
   font-weight: bold;
   margin-left: 4%;
 }
-.checkBox{
+.Horizontal_container {
+  display: flex;
+  align-items: flex-start;
+  margin-left: 1.2%;
+  margin-top: -1%;
+}
+
+.checkBox {
   margin-right: 2%;
 }
+
+@media (max-width: 900px) {
+  .checkBox {
+    flex: 1 1 calc(33.33% - 1rem);
+  }
+  .Horizontal_container{
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+}
+
 </style>
 <i18n>
 {

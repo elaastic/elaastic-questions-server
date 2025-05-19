@@ -25,9 +25,16 @@ const validate = ref(false);
 
 function handleAnswer(newAnswer: AnyResponse) {
   answer.value = newAnswer;
-  validate.value = true;
 }
-
+function sendAnswer() {
+  if (answer.value.questionType === "MultipleChoice") {
+    if (answer.value.choices.length !== 0) {
+      validate.value = true;
+    }
+  } else {
+    validate.value = true;
+  }
+}
 
 export const Default: Story = {
   render: (args) => ({
@@ -52,21 +59,24 @@ export const RespForm: Story = {
   render: (args) => ({
     components: { ContentBlock, ResponseForm },
     setup() {
-      return { args, answer, validate, handleAnswer }
+      return { args, answer, validate, handleAnswer, sendAnswer }
     },
     template: `
       <ContentBlock v-bind="args">
-        <ResponseForm v-if="!validate"
-            :providedAnswers="[1,2,3,4,5,6,7,8,9]"
-            :trust-selections=" [
+        <div v-if="!validate">
+          <ResponseForm
+                  :providedAnswers="[1,2,3,4,5,6,7,8,9]"
+                  :trust-selections=" [
               { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
               { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
               { label: 'Confiant(e)', value: 'Confiant(e)' },
               { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
-            ]"
-            :answer="answer"
-            @update:answer="handleAnswer"
-        ></ResponseForm>
+              ]"
+                  :answer="answer"
+                  @update:answer="handleAnswer"
+          ></ResponseForm>
+          <v-btn class="bouton" color="secondary" @click="sendAnswer()" style="margin-top: 5%; margin-bottom: 5%; margin-left: 4%;">Enregistrer</v-btn>
+        </div>
         <div v-if="validate">
           <v-alert text="Réponse Envoyée" type="success" class="mb-4"></v-alert>
           <ul class="ml-9">
