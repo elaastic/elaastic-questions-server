@@ -10,7 +10,6 @@ const props = defineProps({
     default: ""
   }
 })
-const { t } = useI18n()
 </script>
 
 <template>
@@ -32,13 +31,3 @@ const { t } = useI18n()
   margin-left: 2%;
 }
 </style>
-<i18n>
-{
-  "en": {
-    "save": "Savell"
-  },
-  "fr": {
-    "save": "Enregistrer"
-  }
-}
-</i18n>
