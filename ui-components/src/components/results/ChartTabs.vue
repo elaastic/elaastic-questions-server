@@ -21,14 +21,14 @@ const props = defineProps({
     default: () => []
   },
   /**
-   * The left chart's data of the confiance's tab.
+   * The left chart's data of the confident's tab.
    */
   dataTrustChartLeft: {
     type: Array<number>,
     default: () => []
   },
   /**
-   * The right chart's data of the confiance's tab.
+   * The right chart's data of the confident's tab.
    */
   dataTrustChartRight: {
     type: Array<number>,

@@ -8,34 +8,58 @@ import TextBar from "@/components/util/TextBar.vue";
 import type {QuestionType} from "@/models/Response"
 import {useI18n} from "vue-i18n";
 const props = defineProps({
+  /**
+   * The data of the results chart. It's an array of 3-uplet : the number of the answer, the percentage of students who have chosen this answer and a boolean to say if it's the good answer.
+   */
   dataVote: {
     type: Array<{ choix: number, value: number, isCorrect: boolean }>,
     default: () => []
   },
+  /**
+   * The percentage of each feeling for students who answered correctly. The feeling in the order are : "Completely confident", "Confident", "Not really confident", "Not confident at all"
+   */
   dataTrustGoodAnswer: {
     type: Array<number>,
     default: () => []
   },
+  /**
+   * The percentage of each feeling for students who answered wrongly. The feeling in the order are : "Completely confident", "Confident", "Not really confident", "Not confident at all"
+   */
   dataTrustBadAnswer: {
     type: Array<number>,
     default: () => []
   },
+  /**
+   * The percentage of each level of agreement for correct answer(s). The level are : "Completely agree", "Agree", "Neither agree nor disagree", "Not agree", "Not agree at all"
+   */
   dataPeerGoodAnswer: {
     type: Array<number>,
     default: () => []
   },
+  /**
+   * The percentage of each level of agreement for wrong answer(s). The level are : "Completely agree", "Agree", "Neither agree nor disagree", "Not agree", "Not agree at all"
+   */
   dataPeerBadAnswer: {
     type: Array<number>,
     default: () => []
   },
+  /**
+   * A boolean. true if the peer tab has to be sown. false if not.
+   */
   displayPeerTab: {
     type: Boolean,
     default: false
   },
+  /**
+   * The answers and explanations given by students and possibly the teacher. If there was a review, it also has a grade and a number of reviewer
+   */
   explanations: {
     type: Array<{answer: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean}>,
     default: () => []
   },
+  /**
+   * The type of the question related to the results. It could be : MultipleChoice, OpenEnded or ExclusiveChoice
+   */
   qType: {
     type: Object as PropType<QuestionType>,
     default: () => 'MultipleChoice',

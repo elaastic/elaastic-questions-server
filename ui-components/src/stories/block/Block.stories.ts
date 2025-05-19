@@ -57,8 +57,6 @@ export const RespForm: Story = {
             { label: 'Confiant(e)', value: 'Confiant(e)' },
             { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
             ]"
-          :selectedConfiance="'Confiant(e)'"
-          :isSend="false"
           :answer="answer"
           @update:answer="handleAnswer"
         ></ResponseForm>
@@ -83,6 +81,17 @@ export const RespForm: Story = {
           text-align: center">
             ✔️
           </p>
+          <ul>
+            <li>
+              Votre Réponse : {{answer.choices}}
+            </li>
+            <li>
+              Votre explication : {{answer.explanation}}
+            </li>
+            <li>
+              Votre degré de confiance : {{answer.trust}}
+            </li>
+          </ul>
         </div>
       </Block>
     `,

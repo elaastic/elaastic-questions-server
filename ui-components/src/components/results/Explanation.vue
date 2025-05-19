@@ -99,7 +99,7 @@ const { t } = useI18n()
 }
 .expTop{
   margin-top: 0%;
-  margin-left: -2%;
+  margin-left: -3%;
 }
 .card-wrapper {
   position: relative;

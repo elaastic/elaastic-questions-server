@@ -57,17 +57,15 @@ export const RespForm: Story = {
     template: `
       <ContentBlock v-bind="args">
         <ResponseForm v-if="!validate"
-            :providedAnswers="[1,2,3,4,5,6,7,8,9]"
-            :trust-selections=" [
-              { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-              { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-              { label: 'Confiant(e)', value: 'Confiant(e)' },
-              { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
+                      :providedAnswers="[1,2,3,4,5,6,7,8,9]"
+                      :trust-selections=" [
+            { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
+            { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
+            { label: 'Confiant(e)', value: 'Confiant(e)' },
+            { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
             ]"
-            :selectedConfiance="'Confiant(e)'"
-            :isSend="false"
-            :answer='answer'
-            @update:answer="handleAnswer"
+                      :answer="answer"
+                      @update:answer="handleAnswer"
         ></ResponseForm>
         <div v-if="validate">
           <h1 class="main-title" style="
@@ -90,6 +88,17 @@ export const RespForm: Story = {
           text-align: center">
             ✔️
           </p>
+          <ul>
+            <li>
+              Votre Réponse : {{answer.choices}}
+            </li>
+            <li>
+              Votre explication : {{answer.explanation}}
+            </li>
+            <li>
+              Votre degré de confiance : {{answer.trust}}
+            </li>
+          </ul>
         </div>
       </ContentBlock>
     `,

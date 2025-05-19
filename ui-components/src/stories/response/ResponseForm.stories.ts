@@ -28,7 +28,7 @@ export const Default: Story = {
       questionType: 'MultipleChoice',
       explanation: '',
       choices: [],
-      trust: trustSelections[2].label,
+      trust: trustSelections[2].value,
     } satisfies MultipleChoiceResponse,
   },
 };
@@ -41,7 +41,7 @@ export const Exclusive: Story = {
       questionType: 'ExclusiveChoice',
       explanation: '',
       choice: providedAnswers[0],
-      trust: trustSelections[2].label,
+      trust: trustSelections[2].value,
     } satisfies ExclusiveChoiceResponse
   },
 }
@@ -52,7 +52,7 @@ export const Open: Story = {
       id: 3,
       questionType: 'OpenEnded',
       explanation: 'Ma Réponse',
-      trust: trustSelections[2].label,
+      trust: trustSelections[2].value,
     } satisfies OpenEndedResponse
   },
 }
@@ -65,7 +65,7 @@ export const AnswerProvided: Story = {
       questionType: 'MultipleChoice',
       explanation: 'Ma Réponse',
       choices: [providedAnswers[0],providedAnswers[4]],
-      trust: trustSelections[2].label,
+      trust: trustSelections[2].value,
     } satisfies MultipleChoiceResponse
   },
 }

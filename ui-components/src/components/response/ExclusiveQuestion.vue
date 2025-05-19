@@ -28,21 +28,19 @@ watch(selectedLocal, (newVal) => {
 <template>
   <div>
     <h5 class="answer">{{t('your-answer')}}</h5>
-    <v-container fluid>
       <v-radio-group v-model="selectedLocal">
-        <v-row>
+        <div class="radio">
           <v-radio
-                   v-for="answer in answers"
-                   :key="answer"
-                   :value="answer"
+                  v-for="answer in answers"
+                  :key="answer"
+                  :value="answer"
           >
             <template v-slot:label>
               <div>{{ answer }}</div>
             </template>
           </v-radio>
-        </v-row>
+        </div>
       </v-radio-group>
-    </v-container>
   </div>
 </template>
 
@@ -52,6 +50,10 @@ watch(selectedLocal, (newVal) => {
   white-space: nowrap;
   margin-bottom: 2.3%;
   font-weight: bold;
+}
+.radio{
+  display: flex;
+  padding-right: 50%!important;
 }
 
 </style>

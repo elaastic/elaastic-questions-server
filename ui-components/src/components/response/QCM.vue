@@ -32,8 +32,8 @@ watch(selectedLocal, (newVal) => {
 </script>
 
 <template>
-  <div class="Horizontal_container">
     <h5 class="answer">{{t('your-answer')}}</h5>
+    <div class="Horizontal_container">
     <v-container fluid class="Horizontal_container">
       <v-checkbox class="checkBox"
               v-for="answer in answers"
@@ -53,11 +53,14 @@ watch(selectedLocal, (newVal) => {
 .Horizontal_container{
   display: flex;
   align-items: center;
+  margin-left: 1%;
+  margin-top: -1%;
 }
 .answer{
   white-space: nowrap;
   margin-bottom: 2.3%;
   font-weight: bold;
+  margin-left: 4%;
 }
 .checkBox{
   margin-right: 2%;
