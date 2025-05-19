@@ -19,7 +19,19 @@ export const Default: Story = {
     dataTrustChartRight: [25,20,20,35],
     dataPeerChartLeft: [15,70,5,5,5],
     dataPeerChartRight: [50,20,10,10,10],
-    displayPeerTab: false
+    displayPeerTab: false,
+    displayTrustTab: false,
+  },
+}
+export const WithTrustTab: Story = {
+  args: {
+    dataVoteChart: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataTrustChartLeft: [20,20,20,40],
+    dataTrustChartRight: [25,20,20,35],
+    dataPeerChartLeft: [15,70,5,5,5],
+    dataPeerChartRight: [50,20,10,10,10],
+    displayPeerTab: false,
+    displayTrustTab: true,
   },
 }
 export const WithPeerChart: Story = {
@@ -29,6 +41,7 @@ export const WithPeerChart: Story = {
     dataTrustChartRight: [25,20,20,35],
     dataPeerChartLeft: [15,70,5,5,5],
     dataPeerChartRight: [50,20,10,10,10],
-    displayPeerTab: true
+    displayPeerTab: true,
+    displayTrustTab: true,
   },
 }
