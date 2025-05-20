@@ -2,12 +2,13 @@
 import {ref, watchEffect} from 'vue'
 import embed from 'vega-embed'
 import type { VisualizationSpec } from 'vega-embed'
+import {useI18n} from "vue-i18n";
 const props = defineProps({
   /**
    * The chart's data. It's an array of 3-uplet : the number of the answer, its value and a boolean to say if it's the good answer.
    */
   data: {
-    type: Array<{ choix: number, value: number, isCorrect: boolean }>,
+    type: Array<{ itemIndex: number, value: number, isCorrect: boolean }>,
     default: () => []
   },
   /**
@@ -39,7 +40,7 @@ const props = defineProps({
     default: 500
   },
 })
-
+const { t } = useI18n();
 const vegaContainer = ref<HTMLDivElement | null>(null)
 
 watchEffect(() => {
@@ -51,7 +52,7 @@ watchEffect(() => {
     title: props.title,
     data: {
       values: props.data.map(item => ({
-        "Choix": item.choix,
+        "Choix": item.itemIndex,
         "Pourcentage des votants": item.value,
         "Pourcentage avec %": item.value + '%',
         isCorrect: item.isCorrect
@@ -114,3 +115,6 @@ watchEffect(() => {
   <div ref="vegaContainer"></div>
 </template>
 
+<i18n>
+
+</i18n>

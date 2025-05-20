@@ -29,7 +29,7 @@ export const Default: Story = {
 
 export const HasResults: Story = {
   args: {
-    dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
     dataTrustGoodAnswer: [20,20,20,40],
     dataTrustBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
@@ -42,7 +42,7 @@ export const HasResults: Story = {
 }
 export const NoEvaluation: Story = {
   args: {
-    dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
     dataTrustGoodAnswer: [20,20,20,40],
     dataTrustBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
@@ -92,7 +92,7 @@ export const NoEvaluation: Story = {
 }
 export const WithPeerReview: Story = {
   args: {
-    dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
     dataTrustGoodAnswer: [20,20,20,40],
     dataTrustBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
@@ -142,7 +142,7 @@ export const WithPeerReview: Story = {
 }
 export const NoTeacher: Story = {
   args: {
-    dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
     dataTrustGoodAnswer: [20,20,20,40],
     dataTrustBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
@@ -192,7 +192,7 @@ export const NoTeacher: Story = {
 }
 export const OpenQuestion: Story = {
   args: {
-    dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
     dataTrustGoodAnswer: [20,20,20,40],
     dataTrustBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
@@ -239,7 +239,7 @@ export const OpenQuestion: Story = {
 }
 export const TrustChart: Story = {
   args: {
-    dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
     dataTrustGoodAnswer: [20,20,20,40],
     dataTrustBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
@@ -289,7 +289,7 @@ export const TrustChart: Story = {
 }
 export const PeerReviewChart: Story = {
   args: {
-    dataVote: [{ choix: 1, value: 10, isCorrect: true }, { choix: 2, value: 40, isCorrect: false }, { choix: 3, value: 30,isCorrect: false }, { choix: 4, value: 20,isCorrect: false }],
+    dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
     dataTrustGoodAnswer: [20,20,20,40],
     dataTrustBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],

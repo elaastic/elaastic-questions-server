@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
-    "semantic-ui-css": "^2.5.0",
     "vega": "^6.1.2",
     "vega-embed": "^7.0.2",
     "vega-lite": "^6.1.0",

@@ -1,27 +1,30 @@
 <script setup lang="ts">
-import {ref, watch} from 'vue'
+import {computed, ref, watch} from 'vue'
 import type {PropType} from "vue";
 import {useI18n} from "vue-i18n";
 
 const props = defineProps({
-  answers: {
-    type: Array as PropType<number[]>,
-    default: () => []
+  /**
+   * The number of possible answers
+   */
+  nbCandidateItem : {
+    type: Number,
   },
+  /**
+   * The answers selected by the user
+   */
   selected: {
     type: Number,
-    default: 0
+    default: null
   }
 })
 
 const emit = defineEmits(["update:selected"])
 const { t } = useI18n()
 
-const selectedLocal = ref(props.selected);
-
-
-watch(selectedLocal, (newVal) => {
-  emit('update:selected', newVal);
+const selectedLocal = computed({
+  get: () => props.selected,
+  set: (val) => emit('update:selected', val)
 });
 </script>
 
@@ -31,7 +34,7 @@ watch(selectedLocal, (newVal) => {
       <v-radio-group v-model="selectedLocal">
         <div class="radio">
           <v-radio
-                  v-for="answer in answers"
+                  v-for="answer in nbCandidateItem"
                   :key="answer"
                   :value="answer"
           >

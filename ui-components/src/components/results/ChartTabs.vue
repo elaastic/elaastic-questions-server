@@ -17,7 +17,7 @@ const props = defineProps({
    * The chart's data of the vote's tab.
    */
   dataVoteChart: {
-    type: Array<{ choix: number, value: number, isCorrect: boolean }>,
+    type: Array<{ itemIndex: number, value: number, isCorrect: boolean }>,
     default: () => []
   },
   /**
@@ -109,8 +109,8 @@ onBeforeUnmount(() => {
     </v-tabs-window-item>
     <v-tabs-window-item value="trust">
       <DoubleBarChartH class="chart"
-              :data-left="[{ choix: t('completely-confident'), value: props.dataTrustChartLeft.at(0) ?? -1}, { choix: t('confident'), value: props.dataTrustChartLeft.at(1) ?? -1}, { choix: t('not-really-confident'), value: props.dataTrustChartLeft.at(2) ?? -1}, { choix: t('not-confident-at-all'), value: props.dataTrustChartLeft.at(3) ?? -1}]"
-              :data-right="[{ choix: t('completely-confident'), value: props.dataTrustChartRight.at(0) ?? -1}, { choix: t('confident'), value: props.dataTrustChartRight.at(1) ?? -1 }, { choix: t('not-really-confident'), value: props.dataTrustChartRight.at(2) ?? -1}, { choix: t('not-confident-at-all'), value: props.dataTrustChartRight.at(3) ?? -1}]"
+              :data-left="[{ itemIndex: t('completely-confident'), value: props.dataTrustChartLeft.at(0) ?? -1}, { itemIndex: t('confident'), value: props.dataTrustChartLeft.at(1) ?? -1}, { itemIndex: t('not-really-confident'), value: props.dataTrustChartLeft.at(2) ?? -1}, { itemIndex: t('not-confident-at-all'), value: props.dataTrustChartLeft.at(3) ?? -1}]"
+              :data-right="[{ itemIndex: t('completely-confident'), value: props.dataTrustChartRight.at(0) ?? -1}, { itemIndex: t('confident'), value: props.dataTrustChartRight.at(1) ?? -1 }, { itemIndex: t('not-really-confident'), value: props.dataTrustChartRight.at(2) ?? -1}, { itemIndex: t('not-confident-at-all'), value: props.dataTrustChartRight.at(3) ?? -1}]"
               :title-left= "t('good-answer')"
               :title-right="t('bad-answer')"
               :x-label="t('percentage-of-voters')"
@@ -118,8 +118,8 @@ onBeforeUnmount(() => {
     </v-tabs-window-item>
     <v-tabs-window-item value="peers">
       <DoubleBarChartH class="chart"
-              :data-left="[{ choix: t('completely-agree'), value: props.dataPeerChartLeft.at(0) ?? -1}, { choix: t('agree'), value: props.dataPeerChartLeft.at(1) ?? -1}, { choix: t('neither-agree-nor-disagree'), value: props.dataPeerChartLeft.at(2) ?? -1}, { choix: t('not-agree'), value: props.dataPeerChartLeft.at(3) ?? -1}, { choix: t('not-agree-at-all'), value: props.dataPeerChartLeft.at(4) ?? -1}]"
-              :data-right="[{ choix: t('completely-agree'), value: props.dataPeerChartRight.at(0) ?? -1}, { choix: t('agree'), value: props.dataPeerChartRight.at(1) ?? -1}, { choix: t('neither-agree-nor-disagree'), value: props.dataPeerChartRight.at(2) ?? -1}, { choix: t('not-agree'), value: props.dataPeerChartRight.at(3) ?? -1}, { choix: t('not-agree-at-all'), value: props.dataPeerChartRight.at(4) ?? -1}]"
+              :data-left="[{ itemIndex: t('completely-agree'), value: props.dataPeerChartLeft.at(0) ?? -1}, { itemIndex: t('agree'), value: props.dataPeerChartLeft.at(1) ?? -1}, { itemIndex: t('neither-agree-nor-disagree'), value: props.dataPeerChartLeft.at(2) ?? -1}, { itemIndex: t('not-agree'), value: props.dataPeerChartLeft.at(3) ?? -1}, { itemIndex: t('not-agree-at-all'), value: props.dataPeerChartLeft.at(4) ?? -1}]"
+              :data-right="[{ itemIndex: t('completely-agree'), value: props.dataPeerChartRight.at(0) ?? -1}, { itemIndex: t('agree'), value: props.dataPeerChartRight.at(1) ?? -1}, { itemIndex: t('neither-agree-nor-disagree'), value: props.dataPeerChartRight.at(2) ?? -1}, { itemIndex: t('not-agree'), value: props.dataPeerChartRight.at(3) ?? -1}, { itemIndex: t('not-agree-at-all'), value: props.dataPeerChartRight.at(4) ?? -1}]"
               :title-left="t('good-answer')"
               :title-right="t('bad-answer')"
               :x-label="t('percentage-of-voters')"
@@ -176,7 +176,6 @@ onBeforeUnmount(() => {
     "distribution-of-votes": "Répartition des votes",
     "trust-degree": "Degré de confiance (phase 1)",
     "peer-review": "Evaluation par les pairs",
-    "choice": "Choix",
     "percentage-of-voters": "Pourcentage des votants",
     "completely-confident": "Tout à fait confiant(e)",
     "confident": "Confiant(e)",

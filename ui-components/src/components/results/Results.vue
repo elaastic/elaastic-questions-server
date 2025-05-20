@@ -12,7 +12,7 @@ const props = defineProps({
    * The data of the results chart. It's an array of 3-uplet : the number of the answer, the percentage of students who have chosen this answer and a boolean to say if it's the good answer.
    */
   dataVote: {
-    type: Array<{ choix: number, value: number, isCorrect: boolean }>,
+    type: Array<{ itemIndex: number, value: number, isCorrect: boolean }>,
     default: () => []
   },
   /**
@@ -87,7 +87,7 @@ const { t } = useI18n()
 
 
 <template>
-    <ContentBlock :title="t('results')" :readonly="true" :state="0" side="">
+    <ContentBlock :title="t('results')" :readonly="true" :open="true" subtitle="">
     <v-tooltip :text="t('update-results')" location="bottom">
       <template v-slot:activator="{ props }">
         <v-btn size="small" v-bind="props" icon class="wheel">⟳</v-btn>

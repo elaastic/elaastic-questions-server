@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import ContentBlock from "@/components/player/ContentBlock.vue";
-import {ref} from "vue";
+import {type PropType, ref} from "vue";
 import {useI18n} from "vue-i18n";
 
 const props = defineProps({
@@ -29,9 +29,9 @@ const props = defineProps({
   /**
    * The state of the collapsible block. 0 if the block is open, 1 if the block is closed.
    */
-  panelClosed: {
-    type: Number,
-    default: 0,
+  panelOpen: {
+    type: Boolean,
+    default: true
   },
   /**
    * The state of the block's content. false if the content is shown, true if the content is hidden.
@@ -62,7 +62,7 @@ const props = defineProps({
     default: false
   }
 })
-const refpanelClosed = ref(props.panelClosed);
+const refpanelOpen = ref(props.panelOpen);
 const refhideQuestionType = ref(props.questionType);
 const refhideStatement = ref(props.hideStatement);
 const refcheck1 = ref(props.check1);
@@ -70,9 +70,9 @@ const refcheck2= ref(props.check2);
 const refcheck3= ref(props.check3);
 const changeStatement = () => {
   if (refcheck1.value) {
-    refpanelClosed.value = 1;
+    refpanelOpen.value = false;
   } else {
-    refpanelClosed.value = 0;
+    refpanelOpen.value = true;
   }
   if(refcheck2.value){
     refhideQuestionType.value = "";
@@ -95,8 +95,9 @@ const { t } = useI18n()
   <v-btn class="button" @click="changeStatement">{{t('send')}}</v-btn>
   <ContentBlock class="cb"
           :title="titleStatement"
-          :side="refhideQuestionType"
-          v-model:state="refpanelClosed"
+          :subtitle="refhideQuestionType"
+          :collapsible="true"
+          v-model:open="refpanelOpen"
   >
     <div v-html="contentStatement" v-if="!refhideStatement"></div>
   </ContentBlock>

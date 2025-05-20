@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 
 const props = defineProps({
   /**
@@ -25,7 +25,10 @@ const props = defineProps({
   },
 
 })
-const modelContent = ref(props.modelValue)
+const modelContent = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val)
+});
 const emit = defineEmits(["update:modelValue"])
 watch(modelContent, (newVal) => {
   emit('update:modelValue', newVal);

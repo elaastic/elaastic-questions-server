@@ -7,14 +7,14 @@ const props = defineProps({
    * The data of the left chart. It's an array of 2-uplet : the number of the answer and its value .
    */
   dataLeft: {
-    type: Array<{ choix: string, value: number }>,
+    type: Array<{ itemIndex: string, value: number }>,
     default: () => []
   },
   /**
    * The data of the right chart. It's an array of 2-uplet : the number of the answer and its value .
    */
   dataRight: {
-    type: Array<{ choix: string, value: number }>,
+    type: Array<{ itemIndex: string, value: number }>,
     default: () => []
   },
   /**
@@ -52,12 +52,12 @@ const vegaContainer = ref<HTMLDivElement | null>(null)
 watchEffect(() => {
 
   const leftData = props.dataLeft.map(item => ({
-    Choix: item.choix,
+    Choix: item.itemIndex,
     Value: -item.value,
   }))
 
   const rightData = props.dataRight.map(item => ({
-    Choix: item.choix,
+    Choix: item.itemIndex,
     Value: item.value,
   }))
 
@@ -113,8 +113,8 @@ watchEffect(() => {
         data: { values: props.dataLeft },
         mark: { type: 'text',fontSize: 14, dy: 4},
         encoding: {
-          y: { field: 'choix', type: 'nominal', axis: null, sort: null },
-          text: { field: 'choix', type: 'nominal' }
+          y: { field: 'itemIndex', type: 'nominal', axis: null, sort: null },
+          text: { field: 'itemIndex', type: 'nominal' }
         }
       },
 

@@ -138,7 +138,6 @@ const { t } = useI18n()
     white-space: normal;
   }
 
-  /* Ajout important : forcer le <strong> avec l'emoji à se placer seul sur sa ligne */
   .info-row strong {
     display: block;
     width: 100%;

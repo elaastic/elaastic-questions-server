@@ -40,32 +40,45 @@ export const Default: Story = {
   render: (args) => ({
     components: { ContentBlock },
     setup() {
-      return { args }
+      const isOpen = ref(args.open);
+
+      return {
+        args,
+        isOpen,
+        updateOpen: (val: boolean) => isOpen.value = val
+      }
     },
     template: `
-      <ContentBlock v-bind="args">
+      <ContentBlock
+              v-bind="args"
+              :open="isOpen"
+              @update:open="updateOpen"
+      >
         <p>Contenu</p>
       </ContentBlock>
     `,
   }),
   args: {
     title: 'Enoncé',
-    readonly: false,
-    state: 0,
-    side: "[Question ouverte]"
+    collapsible: true,
+    open: true,
+    subtitle: "[Question ouverte]"
   },
 }
 export const RespForm: Story = {
   render: (args) => ({
     components: { ContentBlock, ResponseForm },
     setup() {
-      return { args, answer, validate, handleAnswer, sendAnswer }
+      const isOpen = ref(args.open);
+      return { args, answer, validate, handleAnswer, sendAnswer, isOpen,
+        updateOpen: (val: boolean) => isOpen.value = val }
     },
     template: `
-      <ContentBlock v-bind="args">
+      <ContentBlock v-bind="args" :open="isOpen"
+                    @update:open="updateOpen">
         <div v-if="!validate">
           <ResponseForm
-                  :providedAnswers="[1,2,3,4,5,6,7,8,9]"
+                  :providedAnswers="9"
                   :trust-selections=" [
               { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
               { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
@@ -96,44 +109,45 @@ export const RespForm: Story = {
   }),
   args: {
     title: 'Enoncé',
-    readonly: false,
-    state: 0,
-    side: "[Question à choix multiple]"
+    collapsible: true,
+    open: true,
+    subtitle: "[Question à choix multiple]"
   },
 }
 export const Results: Story = {
   render: (args) => ({
     components: { ContentBlock },
     setup() {
-      return { args };
+      const isOpen = ref(args.open);
+      return { args, isOpen,
+        updateOpen: (val: boolean) => isOpen.value = val };
     },
     template: `
-      <ContentBlock v-bind="args">
+      <ContentBlock v-bind="args" :open="isOpen"
+                    @update:open="updateOpen">
         <div>
-          <div class="small" style="margin-bottom: 5px;">Choix</div>
-          <div class="ui left labeled button small" tabindex="0" style="margin-right: 10px;">
-            <a class="ui label green">1</a>
-            <div class="ui button compact">
-              <i class="icon"></i>
-            </div>
-            <a class="ui label green">2</a>
-            <div class="ui button compact">
-              <i class="icon"></i>
-            </div>
+          <h3>Choix</h3>
+          <div style="display: flex">
+              <v-card style="width: 50px; background-color: green">
+                <v-card-text style="color: white">1</v-card-text>
+              </v-card>
+              <v-card style="width: 50px; background-color: red">
+                <v-card-text style="color: white">2</v-card-text>
+              </v-card>
           </div>
-          <div style="margin-top: 15px;">
-            <div class="small" style="margin-bottom: 5px">Score</div>
-            <div class="ui medium label red">0%</div>
-          </div>
+            <p>Score</p>
+          <v-card style="width: 60px; background-color: blue">
+            <v-card-text style="color: white">50%</v-card-text>
+          </v-card>
         </div>
       </ContentBlock>
     `
   }),
   args: {
     title: 'Results',
-    readonly: true,
-    state: 0,
-    side: ""
+    collapsible: false,
+    open: true,
+    subtitle: ""
   }
 }
 

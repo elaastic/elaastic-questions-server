@@ -14,7 +14,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    data: [{ choix: 1, value: 60, isCorrect: true }, { choix: 2, value: 40, isCorrect: true }, { choix: 3, value: 30,isCorrect: false }],
+    data: [{ itemIndex: 1, value: 60, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: true }, { itemIndex: 3, value: 30,isCorrect: false }],
     title: "Résultats du sondage",
     xLabel: "Choix",
     yLabel: "Pourcentage des votants",

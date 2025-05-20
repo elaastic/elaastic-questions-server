@@ -1,6 +1,5 @@
 import type { Preview } from '@storybook/vue3'
 import { setup } from '@storybook/vue3'
-import 'semantic-ui-css/semantic.min.css'
 import { registerPlugins } from '../src/plugins'
 
 setup((app) => {

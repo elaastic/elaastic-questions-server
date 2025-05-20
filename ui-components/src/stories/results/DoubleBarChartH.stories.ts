@@ -14,8 +14,8 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    dataLeft: [{ choix: "Tout à fait confiant(e)", value: 40 }, { choix: "Confiant(e)", value: 10 }, { choix: "Pas vraiment confiant(e)", value: 15 }, { choix: "Pas du tout confiant(e)", value: 35 }],
-    dataRight: [{ choix: "Tout à fait confiant(e)", value: 0 }, { choix: "Confiant(e)", value: 80 }, { choix: "Pas vraiment confiant(e)", value: 10 }, { choix: "Pas du tout confiant(e)", value: 10 }],
+    dataLeft: [{ itemIndex: "Tout à fait confiant(e)", value: 40 }, { itemIndex: "Confiant(e)", value: 10 }, { itemIndex: "Pas vraiment confiant(e)", value: 15 }, { itemIndex: "Pas du tout confiant(e)", value: 35 }],
+    dataRight: [{ itemIndex: "Tout à fait confiant(e)", value: 0 }, { itemIndex: "Confiant(e)", value: 80 }, { itemIndex: "Pas vraiment confiant(e)", value: 10 }, { itemIndex: "Pas du tout confiant(e)", value: 10 }],
     titleLeft: "Bonne(s) réponse(s)",
     titleRight: "Mauvaise(s) réponse(s)",
     xLabel: "Pourcentage des votants",

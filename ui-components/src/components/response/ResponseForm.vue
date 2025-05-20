@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import QCM from "@/components/response/QCM.vue";
+import MultipleChoiceResponseInput from "@/components/response/MultipleChoiceResponseInput.vue";
 import SelectorResponsive from "@/components/util/SelectorResponsive.vue";
 import {type PropType, ref, watch} from "vue";
 import type {Selection} from "@/components/util/SelectorResponsive.vue";
 import {useI18n} from "vue-i18n";
 import TipTapEditor from "@/components/response/TipTapEditor.vue";
 import type {AnyResponse, ExclusiveChoiceResponse, MultipleChoiceResponse} from "@/models/Response";
-import ExclusiveQuestion from "@/components/response/ExclusiveQuestion.vue";
+import ExclusiveChoiceResponseItem from "@/components/response/ExclusiveChoiceResponseItem.vue";
 
 const props = defineProps({
   /**
    * The possibles answers at the question
    */
-  providedAnswers: {
-    type: Array as PropType<number[]>,
-    default: () => []
+  providedAnswers : {
+    type: Number,
   },
   /**
    * The possibles degrees of trust
@@ -92,10 +91,10 @@ const { t } = useI18n()
 <template>
     <div v-if="refqTYpe === 'MultipleChoice'">
       <v-alert v-if="selectedMultipleAnswers.length===0" :text="t('please-submit-a-response')" type="info"></v-alert>
-      <QCM class="resize" :answers="providedAnswers" v-model:selected="selectedMultipleAnswers" />
+      <MultipleChoiceResponseInput class="resize" :nb-candidate-item="providedAnswers" v-model:selected="selectedMultipleAnswers" />
     </div>
     <div v-if="refqTYpe === 'ExclusiveChoice'">
-      <ExclusiveQuestion class="resize" :answers="providedAnswers" v-model:selected="selectedExclusiveAnswers" />
+      <ExclusiveChoiceResponseItem class="resize" :nb-candidate-item="providedAnswers" v-model:selected="selectedExclusiveAnswers" />
     </div>
     <div class="resize">
       <h5>{{t('textual-answer')}}</h5>

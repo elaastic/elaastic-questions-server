@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch} from 'vue'
+import {computed, ref, watch} from 'vue'
 import type {PropType} from "vue";
 import {useI18n} from "vue-i18n";
 
@@ -7,9 +7,8 @@ const props = defineProps({
   /**
    * The possibles answers
    */
-  answers: {
-    type: Array as PropType<number[]>,
-    default: () => []
+  nbCandidateItem : {
+    type: Number,
   },
   /**
    * The answers selected by the user
@@ -23,11 +22,10 @@ const props = defineProps({
 const emit = defineEmits(["update:selected"])
 const { t } = useI18n()
 
-const selectedLocal = ref([...props.selected])
 
-
-watch(selectedLocal, (newVal) => {
-  emit('update:selected', newVal);
+const selectedLocal = computed({
+  get: () => props.selected,
+  set: (val) => emit('update:selected', val)
 });
 </script>
 
@@ -36,7 +34,7 @@ watch(selectedLocal, (newVal) => {
     <div class="Horizontal_container">
     <v-container fluid class="Horizontal_container">
       <v-checkbox class="checkBox"
-              v-for="answer in answers"
+              v-for="answer in nbCandidateItem"
               :key="answer"
               v-model="selectedLocal"
               :value="answer"

@@ -17,7 +17,7 @@ const trustSelections = [
   { label: 'Confiant(e)', value: 'Confiant(e)' },
   { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
 ];
-const providedAnswers= [1,2,3,4,5,6,7,8,9];
+const providedAnswers= 9;
 
 export const Default: Story = {
   args: {
@@ -40,7 +40,7 @@ export const Exclusive: Story = {
       id: 2,
       questionType: 'ExclusiveChoice',
       explanation: '',
-      choice: providedAnswers[0],
+      choice: 1,
       trust: trustSelections[2].value,
     } satisfies ExclusiveChoiceResponse
   },
@@ -64,7 +64,7 @@ export const AnswerProvided: Story = {
       id: 3,
       questionType: 'MultipleChoice',
       explanation: 'Ma Réponse',
-      choices: [providedAnswers[0],providedAnswers[4]],
+      choices: [1,5],
       trust: trustSelections[2].value,
     } satisfies MultipleChoiceResponse
   },

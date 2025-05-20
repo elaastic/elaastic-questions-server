@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 
 const props = defineProps({
   /**
@@ -8,44 +8,48 @@ const props = defineProps({
    */
   title: {
     type: String,
-    default: "",
   },
   /**
-   * A boolean. true if the block is readonly (no collapsible). false if the block is not readonly (collapsible).
+   * A boolean. true if the block is collapsible. false if not.
    */
-  readonly: {
+  collapsible: {
     type: Boolean,
     default: false,
   },
   /**
-   * The state of the block. 0 if the block is open, 1 if the block is closed.
+   * The state of the block. true if the block is open, false if the block is closed.
    */
-  state: {
-    type: [Number, null],
-    default: null,
+  open: {
+    type: Boolean,
+    default: true,
   },
   /**
    * The side of the block, which is next to the title but has a smaller size than it.
    */
-  side: {
+  subtitle: {
     type: String,
-    default: "",
   },
 });
-const refModelValue = ref(props.state)
-const emit = defineEmits(["update:state"]);
-watch(() => props.state, (newVal) => {
-  refModelValue.value = newVal;
+const emit = defineEmits(["update:open"]);
+const openPanel = computed({
+  get: () => props.open ? [0] : [],
+  set: (val: number[] | number | null) => {
+    const isOpen = Array.isArray(val) ? val.includes(0) : val === 0;
+    emit("update:open", isOpen);
+  },
 });
 </script>
 
 <template>
-  <v-expansion-panels :readonly="readonly" v-model="refModelValue" @update:modelValue="emit('update:state', $event)">
+  <v-expansion-panels
+          :readonly="!collapsible"
+          v-model="openPanel"
+  >
     <v-expansion-panel>
       <v-expansion-panel-title class="title-container">
         <div class="title-side">
           <span class="title">{{ title }}</span>
-          <span class="side">{{ side }}</span>
+          <span class="side">{{ subtitle }}</span>
         </div>
       </v-expansion-panel-title>
       <v-expansion-panel-text>

@@ -19,7 +19,7 @@ export const Default: Story = {
             "<li>Third point</li>" +
             "</ul>",
     questionType: "[Question à choix exclusif]",
-    panelClosed: 0,
+    panelOpen: true,
     hideStatement: false,
     check1: false,
     check2: false,
@@ -36,7 +36,7 @@ export const PanelClosed: Story = {
             "<li>Third point</li>" +
             "</ul>",
     questionType: "[Question à choix exclusif]",
-    panelClosed: 0,
+    panelOpen: true,
     hideStatement: false,
     check1: true,
     check2: false,
@@ -53,7 +53,7 @@ export const HiddenQuestionType: Story = {
             "<li>Third point</li>" +
             "</ul>",
     questionType: "[Question à choix exclusif]",
-    panelClosed: 0,
+    panelOpen: true,
     hideStatement: false,
     check1: false,
     check2: true,
@@ -70,7 +70,7 @@ export const HiddenStatement: Story = {
             "<li>Third point</li>" +
             "</ul>",
     questionType: "[Question à choix exclusif]",
-    panelClosed: 0,
+    panelOpen: true,
     hideStatement: false,
     check1: false,
     check2: false,
