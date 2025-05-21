@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {computed, ref, watch} from "vue";
+import {computed, onMounted} from "vue";
 
 const props = defineProps({
   /**
@@ -29,14 +29,26 @@ const props = defineProps({
   subtitle: {
     type: String,
   },
+  /**
+   * A boolean. true if the subtitle is hidden. false if not.
+   */
+  isSubtitleHidden: {
+    type: Boolean,
+    default: false
+  }
 });
-const emit = defineEmits(["update:open"]);
+const emit = defineEmits(["update:open", "update:isQTypeHidden"]);
 const openPanel = computed({
   get: () => props.open ? [0] : [],
   set: (val: number[] | number | null) => {
     const isOpen = Array.isArray(val) ? val.includes(0) : val === 0;
     emit("update:open", isOpen);
   },
+});
+onMounted(() => {
+  if (!props.title || props.title.trim() === "") {
+    throw new Error("Prop 'title' is required and cannot be empty.");
+  }
 });
 </script>
 
@@ -49,7 +61,7 @@ const openPanel = computed({
       <v-expansion-panel-title class="title-container">
         <div class="title-side">
           <span class="title">{{ title }}</span>
-          <span class="side">{{ subtitle }}</span>
+          <span v-if="!props.isSubtitleHidden" class="side">[{{ subtitle }}]</span>
         </div>
       </v-expansion-panel-title>
       <v-expansion-panel-text>

@@ -76,7 +76,7 @@ export const NoEvaluation: Story = {
       },
       {
         answer: {
-          id: 2,
+          id: 3,
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
           choices: [1],
@@ -126,7 +126,7 @@ export const WithPeerReview: Story = {
       },
       {
         answer: {
-          id: 2,
+          id: 3,
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
           choices: [1],
@@ -176,7 +176,7 @@ export const NoTeacher: Story = {
       },
       {
         answer: {
-          id: 2,
+          id: 3,
           questionType: 'MultipleChoice',
           explanation: '3ème réponse',
           choices: [1],
@@ -224,7 +224,7 @@ export const OpenQuestion: Story = {
       },
       {
         answer: {
-          id: 2,
+          id: 3,
           questionType: 'OpenEnded',
           explanation: 'La Réponse de l\'enseignant',
           trust: "",
@@ -273,7 +273,7 @@ export const TrustChart: Story = {
       },
       {
         answer: {
-          id: 2,
+          id: 3,
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
           choices: [1],
@@ -323,7 +323,7 @@ export const PeerReviewChart: Story = {
       },
       {
         answer: {
-          id: 2,
+          id: 3,
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
           choices: [1],

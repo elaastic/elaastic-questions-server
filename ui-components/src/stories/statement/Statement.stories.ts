@@ -11,14 +11,14 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    titleStatement: 'Statement\'s title',
+    title: 'Statement\'s title',
     contentStatement: "<h4>Statement\'s content</h4>" +
             "<ul>" +
             "<li>First point</li>" +
             "<li>Second point</li>" +
             "<li>Third point</li>" +
             "</ul>",
-    questionType: "[Question à choix exclusif]",
+    questionType: "MultipleChoice",
     panelOpen: true,
     hideStatement: false,
     check1: false,
@@ -28,14 +28,14 @@ export const Default: Story = {
 }
 export const PanelClosed: Story = {
   args: {
-    titleStatement: 'Statement\'s title',
+    title: 'Statement\'s title',
     contentStatement: "<h4>Statement\'s content</h4>" +
             "<ul>" +
             "<li>First point</li>" +
             "<li>Second point</li>" +
             "<li>Third point</li>" +
             "</ul>",
-    questionType: "[Question à choix exclusif]",
+    questionType: "MultipleChoice",
     panelOpen: true,
     hideStatement: false,
     check1: true,
@@ -45,14 +45,14 @@ export const PanelClosed: Story = {
 }
 export const HiddenQuestionType: Story = {
   args: {
-    titleStatement: 'Statement\'s title',
+    title: 'Statement\'s title',
     contentStatement: "<h4>Statement\'s content</h4>" +
             "<ul>" +
             "<li>First point</li>" +
             "<li>Second point</li>" +
             "<li>Third point</li>" +
             "</ul>",
-    questionType: "[Question à choix exclusif]",
+    questionType: "MultipleChoice",
     panelOpen: true,
     hideStatement: false,
     check1: false,
@@ -62,14 +62,14 @@ export const HiddenQuestionType: Story = {
 }
 export const HiddenStatement: Story = {
   args: {
-    titleStatement: 'Statement\'s title',
+    title: 'Statement\'s title',
     contentStatement: "<h4>Statement\'s content</h4>" +
             "<ul>" +
             "<li>First point</li>" +
             "<li>Second point</li>" +
             "<li>Third point</li>" +
             "</ul>",
-    questionType: "[Question à choix exclusif]",
+    questionType: "MultipleChoice",
     panelOpen: true,
     hideStatement: false,
     check1: false,

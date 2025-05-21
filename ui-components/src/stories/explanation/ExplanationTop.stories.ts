@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import ExplanationTop from '@/components/results/ExplanationTop.vue'
+import ExplanationTop from '@/components/explanation/ExplanationTop.vue'
 
 
 const meta = {
-  title: 'results/ExplanationTop',
+  title: 'explanation/ExplanationTop',
   component: ExplanationTop,
   tags: ['autodocs'],
 } satisfies Meta<typeof ExplanationTop>

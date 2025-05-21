@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import ContentBlock from "@/components/player/ContentBlock.vue";
 import ChartTabs from "@/components/results/ChartTabs.vue";
-import Explanation from "@/components/results/Explanation.vue";
+import Explanation from "@/components/explanation/Explanation.vue";
 import type {AnyResponse} from "@/models/Response";
-import {onMounted, type PropType, ref} from "vue";
+import {computed, onMounted, type PropType, ref} from "vue";
 import TextBar from "@/components/util/TextBar.vue";
 import type {QuestionType} from "@/models/Response"
 import {useI18n} from "vue-i18n";
@@ -71,23 +71,54 @@ const props = defineProps({
     type: Object as PropType<QuestionType>,
     default: () => 'MultipleChoice',
   },
+  /**
+   * An array of the best answers written by students.
+   */
+  bestAnswers: {
+    type: Array as PropType<number[]>,
+    default: () => []
+  },
 })
 
 const teacherExp = ref<{answer: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean} | null>(null)
 const studentExplanations = ref<typeof props.explanations>([])
-
+const bestAnswersLocal = ref(props.bestAnswers);
 
 onMounted(() => {
   teacherExp.value = props.explanations.find(exp => exp.isTeacher) ?? null
   studentExplanations.value = props.explanations.filter(exp => !exp.isTeacher)
 })
 
+const changeBestAnswers = (id: number, amongBestAnswer: boolean) => {
+  if(amongBestAnswer){
+    if(bestAnswersLocal.value.find(a => a === id) === undefined) {
+      bestAnswersLocal.value.push(id)
+    }
+  }
+  else{
+    if(bestAnswersLocal.value.find(a => a === id) !== undefined) {
+      bestAnswersLocal.value = bestAnswersLocal.value.filter(a => a !== id)
+    }
+  }
+  console.log(bestAnswersLocal.value)
+}
+const hideAnswerStudent = (id: number, isHidden: boolean) => {
+  if(isHidden){
+    studentExplanations.value = studentExplanations.value.filter(a => a.answer.id !== id)
+  }
+}
+
+const hideAnswerTeacher = (isHidden: boolean) => {
+  if(isHidden){
+    teacherExp.value = null;
+  }
+}
 const { t } = useI18n()
 </script>
 
 
 <template>
-    <ContentBlock :title="t('results')" :readonly="true" :open="true" subtitle="">
+    <ContentBlock :title="t('results')" :readonly="true" :open="true" subtitle="" :is-q-type-hidden="true">
     <v-tooltip :text="t('update-results')" location="bottom">
       <template v-slot:activator="{ props }">
         <v-btn size="small" v-bind="props" icon class="wheel">⟳</v-btn>
@@ -111,7 +142,9 @@ const { t } = useI18n()
                   :answer="teacherExp.answer"
                   :grade="teacherExp.grade"
                   :number-of-peer-review="teacherExp.nbPeer"
-                  :teacher="true"
+                  :providedByTeacher="true"
+                   @update:is-best-answer="changeBestAnswers"
+                   @update:is-hidden="hideAnswerTeacher"
           />
           <v-divider class="line" thickness="2"></v-divider>
         </div>
@@ -121,7 +154,9 @@ const { t } = useI18n()
                 :answer="item.answer"
                 :grade="item.grade"
                 :number-of-peer-review="item.nbPeer"
-                :teacher="false"
+                :providedByTeacher="false"
+                 @update:is-best-answer="changeBestAnswers"
+                 @update:is-hidden="hideAnswerStudent"
         />
         <v-btn class="button text-none">{{t('see-all-explanations')}}</v-btn>
       </div>

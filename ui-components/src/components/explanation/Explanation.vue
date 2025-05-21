@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {type PropType, ref} from "vue";
-import ExplanationTop from "@/components/results/ExplanationTop.vue";
+import ExplanationTop from "@/components/explanation/ExplanationTop.vue";
 import type {AnyResponse, ExclusiveChoiceResponse, MultipleChoiceResponse} from "@/models/Response";
 import {useI18n} from "vue-i18n";
 
@@ -29,11 +29,26 @@ const props = defineProps({
   /**
    * A boolean. true if it's the teacher's explanation. false if it's a student explanation.
    */
-  teacher: {
+  providedByTeacher: {
     type: Boolean,
     default: false
   },
+  /**
+   * A boolean. true if the answer is among the best answers. false if not.
+   */
+  isBestAnswer: {
+    type: Boolean,
+    default: true
+  },
+  /**
+   * A boolean. true if the answer is hidden. false if not.
+   */
+  isHidden: {
+    type: Boolean,
+    default: false
+  }
 });
+const emit = defineEmits(["update:is-best-answer", "update:is-hidden"]);
 const selectedMultipleAnswers = ref(
         props.answer.questionType === 'MultipleChoice'
                 ? [...(props.answer as MultipleChoiceResponse).choices]
@@ -45,6 +60,20 @@ const selectedExclusiveAnswers = ref<number>(
                 ? (props.answer as ExclusiveChoiceResponse).choice
                 : 0
 );
+const bestAnswerLocal = ref(props.isBestAnswer)
+const isHiddenLocal = ref(props.isHidden)
+const outBest = () => {
+  bestAnswerLocal.value = false;
+  emit('update:is-best-answer', props.answer.id, bestAnswerLocal.value);
+}
+const inBest = () => {
+  bestAnswerLocal.value = true;
+  emit('update:is-best-answer', props.answer.id, bestAnswerLocal.value)
+}
+const hide = () => {
+  isHiddenLocal.value = true;
+  emit('update:is-hidden', props.answer.id, isHiddenLocal.value)
+}
 const { t } = useI18n()
 </script>
 
@@ -52,31 +81,31 @@ const { t } = useI18n()
   <div class="card-wrapper">
     <div class="icones">
       <v-tooltip :text="t('remove-from-best-answers')" location="bottom">
-        <template v-slot:activator="{ props }">
-          <v-btn size="small" v-bind="props" icon>★</v-btn>
+        <template v-slot:activator="{props}">
+          <v-btn size="small" v-bind="props" @click="outBest" icon>★</v-btn>
         </template>
       </v-tooltip>
 
       <v-tooltip :text="t('add-to-best-answers')" location="bottom">
-        <template v-slot:activator="{ props }">
-          <v-btn size="small" v-bind="props" icon>☆</v-btn>
+        <template v-slot:activator="{props}">
+          <v-btn size="small" v-bind="props" @click="inBest" icon>☆</v-btn>
         </template>
       </v-tooltip>
 
       <v-tooltip :text="t('hide-answer')" location="bottom">
-        <template v-slot:activator="{ props }">
-          <v-btn size="small" v-bind="props" icon>👁</v-btn>
+        <template v-slot:activator="{props}">
+          <v-btn size="small" v-bind="props" @click="hide" icon>👁</v-btn>
         </template>
       </v-tooltip>
     </div>
 
-    <v-card :class="['card', teacher ? 'teacher-bg' : 'default-bg']">
+    <v-card :class="['card', providedByTeacher ? 'teacher-bg' : 'default-bg']">
       <v-card-title>
         <ExplanationTop
                 class="expTop"
                 :grade="grade"
                 :number-of-peer-review="numberOfPeerReview"
-                :teacher="teacher"
+                :teacher="providedByTeacher"
         />
       </v-card-title>
       <v-card-text>

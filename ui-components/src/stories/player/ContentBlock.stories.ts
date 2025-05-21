@@ -62,7 +62,7 @@ export const Default: Story = {
     title: 'Enoncé',
     collapsible: true,
     open: true,
-    subtitle: "[Question ouverte]"
+    isSubtitleHidden: true
   },
 }
 export const RespForm: Story = {
@@ -111,7 +111,8 @@ export const RespForm: Story = {
     title: 'Enoncé',
     collapsible: true,
     open: true,
-    subtitle: "[Question à choix multiple]"
+    subtitle: "Question à choix multiple",
+    isSubtitleHidden: false
   },
 }
 export const Results: Story = {
@@ -147,7 +148,7 @@ export const Results: Story = {
     title: 'Results',
     collapsible: false,
     open: true,
-    subtitle: ""
+    isSubtitleHidden: true
   }
 }
 

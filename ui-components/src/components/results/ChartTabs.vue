@@ -176,6 +176,7 @@ onBeforeUnmount(() => {
     "distribution-of-votes": "Répartition des votes",
     "trust-degree": "Degré de confiance (phase 1)",
     "peer-review": "Evaluation par les pairs",
+    "choice": "Choix",
     "percentage-of-voters": "Pourcentage des votants",
     "completely-confident": "Tout à fait confiant(e)",
     "confident": "Confiant(e)",

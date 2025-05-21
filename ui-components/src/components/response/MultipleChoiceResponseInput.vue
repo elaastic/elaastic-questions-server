@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import type {PropType} from "vue";
 import {useI18n} from "vue-i18n";
 
@@ -26,6 +26,12 @@ const { t } = useI18n()
 const selectedLocal = computed({
   get: () => props.selected,
   set: (val) => emit('update:selected', val)
+});
+
+onMounted(() => {
+  if (!props.nbCandidateItem || props.nbCandidateItem === 0) {
+    throw new Error("Prop 'nbCandidateItem' is required and cannot be 0.");
+  }
 });
 </script>
 

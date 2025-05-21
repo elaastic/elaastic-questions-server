@@ -3,12 +3,13 @@
 import ContentBlock from "@/components/player/ContentBlock.vue";
 import {type PropType, ref} from "vue";
 import {useI18n} from "vue-i18n";
+import type {QuestionType} from "@/models/Response";
 
 const props = defineProps({
   /**
    * The title of the statement.
    */
-  titleStatement: {
+  title: {
     type: String,
     default: "The title of this test statement"
   },
@@ -23,8 +24,7 @@ const props = defineProps({
    * The type of the question.
    */
   questionType: {
-    type: String,
-    default: "[Question à choix exclusif]"
+    type: Object as PropType<QuestionType>,
   },
   /**
    * The state of the collapsible block. 0 if the block is open, 1 if the block is closed.
@@ -60,10 +60,18 @@ const props = defineProps({
   check3: {
     type: Boolean,
     default: false
+  },
+  /**
+   * A boolean. true if the type of the question is hidden. false if not.
+   */
+  HideQuestionType: {
+    type: Boolean,
+    default: false
   }
 })
 const refpanelOpen = ref(props.panelOpen);
-const refhideQuestionType = ref(props.questionType);
+const refQuestionType = ref(props.questionType);
+const refHideQuestionType = ref(props.HideQuestionType);
 const refhideStatement = ref(props.hideStatement);
 const refcheck1 = ref(props.check1);
 const refcheck2= ref(props.check2);
@@ -75,10 +83,10 @@ const changeStatement = () => {
     refpanelOpen.value = true;
   }
   if(refcheck2.value){
-    refhideQuestionType.value = "";
+    refHideQuestionType.value = true;
   }
   else{
-    refhideQuestionType.value = props.questionType;
+    refHideQuestionType.value = false;
   }
   refhideStatement.value = refcheck3.value;
 };
@@ -94,10 +102,11 @@ const { t } = useI18n()
   </div>
   <v-btn class="button" @click="changeStatement">{{t('send')}}</v-btn>
   <ContentBlock class="cb"
-          :title="titleStatement"
-          :subtitle="refhideQuestionType"
+          :title="title"
+          :subtitle="refQuestionType"
           :collapsible="true"
           v-model:open="refpanelOpen"
+          v-model:isQTypeHidden="refHideQuestionType"
   >
     <div v-html="contentStatement" v-if="!refhideStatement"></div>
   </ContentBlock>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import {ref, watchEffect} from 'vue'
+import { ref, watchEffect } from 'vue'
 import embed from 'vega-embed'
 import type { VisualizationSpec } from 'vega-embed'
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n'
+
+const { t, locale } = useI18n({ useScope: 'local' })
 const props = defineProps({
   /**
    * The chart's data. It's an array of 3-uplet : the number of the answer, its value and a boolean to say if it's the good answer.
@@ -16,21 +18,18 @@ const props = defineProps({
    */
   title: {
     type: String,
-    default: ""
   },
   /**
    * The title of x axis.
    */
   xLabel: {
     type: String,
-    default: ""
   },
   /**
    * The title of y axis.
    */
   yLabel: {
     type: String,
-    default: ""
   },
   /**
    * The width of the chart.
@@ -40,28 +39,32 @@ const props = defineProps({
     default: 500
   },
 })
-const { t } = useI18n();
 const vegaContainer = ref<HTMLDivElement | null>(null)
 
 watchEffect(() => {
+  locale.value
   if (!props.data || !Array.isArray(props.data)) return
+
+  const choiceLabel = t('chart.choice')
+  const percentageLabel = t('chart.voterPercentage')
+  const percentageWithUnitLabel = t('chart.voterPercentageWithUnit')
+
+  const values = props.data.map(item => ({
+    [choiceLabel]: item.itemIndex,
+    [percentageLabel]: item.value,
+    [percentageWithUnitLabel]: item.value + '%',
+    isCorrect: item.isCorrect
+  }))
 
   const spec: VisualizationSpec = {
     $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
     width: props.width,
     title: props.title,
-    data: {
-      values: props.data.map(item => ({
-        "Choix": item.itemIndex,
-        "Pourcentage des votants": item.value,
-        "Pourcentage avec %": item.value + '%',
-        isCorrect: item.isCorrect
-      }))
-    },
+    data: { values },
     encoding: {
-      x: { field: 'Choix', type: 'nominal', axis: { title: props.xLabel, labelAngle: 0 }},
+      x: { field: choiceLabel, type: 'nominal', axis: { title: props.xLabel, labelAngle: 0 } },
       y: {
-        field: 'Pourcentage des votants',
+        field: percentageLabel,
         type: 'quantitative',
         axis: { title: props.yLabel, values: [0, 25, 50, 75, 100] },
         scale: {
@@ -96,14 +99,11 @@ watchEffect(() => {
           fontWeight: 'bold'
         },
         encoding: {
-          text: { field: 'Pourcentage avec %', type: 'nominal' },
-
+          text: { field: percentageWithUnitLabel, type: 'nominal' }
         }
       }
     ]
   }
-
-
 
   if (vegaContainer.value) {
     embed(vegaContainer.value, spec, { actions: false })
@@ -115,6 +115,21 @@ watchEffect(() => {
   <div ref="vegaContainer"></div>
 </template>
 
-<i18n>
-
+<i18n lang="json">
+{
+  "en": {
+    "chart": {
+      "choice": "Choice",
+      "voterPercentage": "Voter Percentage",
+      "voterPercentageWithUnit": "Voter Percentage (%)"
+    }
+  },
+  "fr": {
+    "chart": {
+      "choice": "Choix",
+      "voterPercentage": "Pourcentage des votants",
+      "voterPercentageWithUnit": "Pourcentage (%)"
+    }
+  }
+}
 </i18n>

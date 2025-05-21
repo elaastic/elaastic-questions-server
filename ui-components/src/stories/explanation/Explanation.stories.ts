@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import Explanation from '@/components/results/Explanation.vue'
+import Explanation from '@/components/explanation/Explanation.vue'
 import type {MultipleChoiceResponse, OpenEndedResponse} from "@/models/Response";
 
 
 const meta = {
-  title: 'results/Explanation',
+  title: 'explanation/Explanation',
   component: Explanation,
   tags: ['autodocs'],
 } satisfies Meta<typeof Explanation>
@@ -24,7 +24,7 @@ export const Default: Story = {
     } satisfies MultipleChoiceResponse,
     grade: 2,
     numberOfPeerReview: 1,
-    teacher: false,
+    providedByTeacher: false,
   },
 }
 export const OpenQuestion: Story = {
@@ -37,6 +37,6 @@ export const OpenQuestion: Story = {
     } satisfies OpenEndedResponse,
     grade: 2,
     numberOfPeerReview: 1,
-    teacher: false,
+    providedByTeacher: false,
   },
 }

@@ -16,8 +16,6 @@ export const Default: Story = {
   args: {
     data: [{ itemIndex: 1, value: 60, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: true }, { itemIndex: 3, value: 30,isCorrect: false }],
     title: "Résultats du sondage",
-    xLabel: "Choix",
-    yLabel: "Pourcentage des votants",
     width: 500,
   }
 }
