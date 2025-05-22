@@ -57,11 +57,11 @@ onMounted(() => {
           :readonly="!collapsible"
           v-model="openPanel"
   >
-    <v-expansion-panel>
+    <v-expansion-panel :elevation="2">
       <v-expansion-panel-title class="title-container">
         <div class="title-side">
           <span class="title">{{ title }}</span>
-          <span v-if="!props.isSubtitleHidden" class="side">[{{ subtitle }}]</span>
+          <span v-if="!props.isSubtitleHidden" class="side"><strong>[</strong>{{ subtitle }}<strong>]</strong></span>
         </div>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
@@ -88,7 +88,7 @@ onMounted(() => {
 
 .title {
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 1.6em;
 }
 
 .side {

@@ -28,6 +28,13 @@ const props = defineProps({
   answer: {
     type: Object as PropType<AnyResponse>,
     default: () => ({}),
+  },
+  /**
+   * The text of the alert (here it's an information)
+   */
+  textAlert: {
+    type: String,
+    default: "Veuillez soumettre une réponse"
   }
 
 });
@@ -90,7 +97,7 @@ const { t } = useI18n()
 
 <template>
     <div v-if="refqTYpe === 'MultipleChoice'">
-      <v-alert v-if="selectedMultipleAnswers.length===0" :text="t('please-submit-a-response')" type="info"></v-alert>
+      <v-alert v-if="selectedMultipleAnswers.length===0 || props.textAlert !== 'Veuillez soumettre une réponse'" :text="props.textAlert" type="info" variant="tonal" class="alert"></v-alert>
       <MultipleChoiceResponseInput class="resize" :nb-candidate-item="providedAnswers" v-model:selected="selectedMultipleAnswers" />
     </div>
     <div v-if="refqTYpe === 'ExclusiveChoice'">
@@ -117,6 +124,9 @@ const { t } = useI18n()
   }
   .degreeTitle{
     margin-top: 3%;
+  }
+  .alert{
+    margin-bottom: 2%;
   }
 </style>
 <i18n>
