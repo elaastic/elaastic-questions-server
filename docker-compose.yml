@@ -34,9 +34,18 @@ services:
   mailHog:
     container_name: elaastic-mailhog
     image: mailhog/mailhog
-    ports:
-      - "8025:8025"
-      - "1025:1025"
+    labels:
+      - "traefik.enable=true"
+      # Configuration for web interface
+      - "traefik.http.routers.mailhog.rule=Host(`mailhog.local`)"
+      - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
+      - "traefik.http.routers.mailhog.entrypoints=web"
+      # Configuration for SMTP server
+      - "traefik.tcp.routers.mailhog-smtp.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.mailhog-smtp.entrypoints=smtp"
+      - "traefik.tcp.routers.mailhog-smtp.service=mailhog-smtp"
+      - "traefik.tcp.services.mailhog-smtp.loadbalancer.server.port=1025"
+
   auth-iam:
       image: quay.io/keycloak/keycloak:25.0.6
       command:
@@ -102,10 +111,12 @@ services:
           - --providers.docker=true
           - --providers.docker.exposedbydefault=false
           - --entrypoints.web.address=:80
+          - --entrypoints.smtp.address=:1025
           - --log.level=DEBUG
 
       ports:
           - "80:80"
+          - "1025:1025"
       volumes:
           - /var/run/docker.sock:/var/run/docker.sock:ro
       labels:
