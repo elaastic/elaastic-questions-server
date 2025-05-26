@@ -6,6 +6,8 @@ import ResponseForm from "@/components/response/ResponseForm.vue";
 import {onMounted, type PropType, ref} from "vue";
 import type {AnyResponse, QuestionType} from "@/models/Response";
 import type {LikertValue} from "@/components/evaluation/Likert";
+import ProgressBar from "@/components/progressBar/ProgressBar.vue";
+import TextBar from "@/components/util/TextBar.vue";
 const props = defineProps({
   /**
    * The title of the question.
@@ -81,6 +83,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <ProgressBar :steps="[false, true, false]"></ProgressBar>
+  <TextBar value="La séquence est en cours." color="#BBDEFB" style="color: #1976D2"></TextBar>
   <ContentBlock class="cb"
           :title="questionTitle"
           :collapsible="true"
