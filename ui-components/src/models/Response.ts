@@ -10,7 +10,7 @@ export interface Response {
   id: number
   questionType: QuestionType
   explanation: string,
-  trust: string
+  confidence: string
 }
 
 export interface ExclusiveChoiceResponse extends Response {

@@ -24,14 +24,14 @@ export const Default: Story = {
               questionType: 'MultipleChoice',
               explanation: 'Une Réponse',
               choices: [1],
-              trust: 'Confiant(e)'
+              confidence: 'Confiant(e)'
             },
               {
                 id: 2,
                 questionType: 'MultipleChoice',
                 explanation: 'Une Autre Réponse',
                 choices: [2, 3],
-                trust: 'Confiant(e)'
+                confidence: 'Confiant(e)'
               }],
     updatedAnswer:
             {
@@ -39,7 +39,7 @@ export const Default: Story = {
               questionType: 'MultipleChoice',
               explanation: 'Ma réponse',
               choices: [1],
-              trust: 'Confiant(e)'
+              confidence: 'Confiant(e)'
             },
   }
 }

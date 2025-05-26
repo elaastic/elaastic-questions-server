@@ -15,33 +15,33 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     dataVoteChart: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustChartLeft: [20,20,20,40],
-    dataTrustChartRight: [25,20,20,35],
+    dataConfidenceChartLeft: [20,20,20,40],
+    dataConfidenceChartRight: [25,20,20,35],
     dataPeerChartLeft: [15,70,5,5,5],
     dataPeerChartRight: [50,20,10,10,10],
     displayPeerTab: false,
-    displayTrustTab: false,
+    displayConfidenceTab: false,
   },
 }
-export const WithTrustTab: Story = {
+export const WithConfidenceTab: Story = {
   args: {
     dataVoteChart: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustChartLeft: [20,20,20,40],
-    dataTrustChartRight: [25,20,20,35],
+    dataConfidenceChartLeft: [20,20,20,40],
+    dataConfidenceChartRight: [25,20,20,35],
     dataPeerChartLeft: [15,70,5,5,5],
     dataPeerChartRight: [50,20,10,10,10],
     displayPeerTab: false,
-    displayTrustTab: true,
+    displayConfidenceTab: true,
   },
 }
 export const WithPeerChart: Story = {
   args: {
     dataVoteChart: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustChartLeft: [20,20,20,40],
-    dataTrustChartRight: [25,20,20,35],
+    dataConfidenceChartLeft: [20,20,20,40],
+    dataConfidenceChartRight: [25,20,20,35],
     dataPeerChartLeft: [15,70,5,5,5],
     dataPeerChartRight: [50,20,10,10,10],
     displayPeerTab: true,
-    displayTrustTab: true,
+    displayConfidenceTab: true,
   },
 }

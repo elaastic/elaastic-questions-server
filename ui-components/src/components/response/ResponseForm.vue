@@ -16,14 +16,14 @@ const props = defineProps({
     type: Number,
   },
   /**
-   * The possibles degrees of trust
+   * The possibles degrees of confidence
    */
-  trustSelections: {
+  confidenceSelections: {
     type: Array as PropType<Selection[]>,
     default: () => []
   },
   /**
-   * The answer proposed by the user. Composed of: an id, the questionType, an explanation and a degree of trust for OpenEndedQuestion. Add choices for MultipleChoiceQuestion or choice for ExclusiveChoiceQuestion. All initialised empty but could also continue an old answer.
+   * The answer proposed by the user. Composed of: an id, the questionType, an explanation and a degree of confidence for OpenEndedQuestion. Add choices for MultipleChoiceQuestion or choice for ExclusiveChoiceQuestion. All initialised empty but could also continue an old answer.
    */
   answer: {
     type: Object as PropType<AnyResponse>,
@@ -55,7 +55,7 @@ const selectedExclusiveAnswers = ref<number>(
                 ? (props.answer as ExclusiveChoiceResponse).choice
                 : 0
 );
-const selectedLocalConfiance= ref(props.answer.trust);
+const selectedLocalConfiance= ref(props.answer.confidence);
 const refqTYpe = ref(props.answer.questionType);
 
 const text_ref = ref(props.answer.explanation);
@@ -63,7 +63,7 @@ const text_ref = ref(props.answer.explanation);
 watch(selectedLocalConfiance, (newValue) => {
   const submitedAnswer={
     ...props.answer,
-    trust: newValue,
+    confidence: newValue,
   };
   emit('update:answer', submitedAnswer);
 })
@@ -108,8 +108,8 @@ const { t } = useI18n()
       <TipTapEditor v-model="text_ref"></TipTapEditor>
     </div>
     <div class="resize">
-      <h5 class="degreeTitle" >{{t('trust-degree')}}</h5>
-      <SelectorResponsive  class="selector" :selections="trustSelections" v-model:selected="selectedLocalConfiance" />
+      <h5 class="degreeTitle" >{{t('confidence-degree')}}</h5>
+      <SelectorResponsive  class="selector" :selections="confidenceSelections" v-model:selected="selectedLocalConfiance" />
     </div>
 </template>
 
@@ -133,13 +133,13 @@ const { t } = useI18n()
   {
   "en": {
     "textual-answer": "Textual answer",
-    "trust-degree": "Trust degree",
+    "confidence-degree": "Confidence degree",
     "save": "Save",
     "please-submit-a-response": "Please submit a response"
   },
   "fr": {
     "textual-answer": "Réponse textuelle",
-    "trust-degree": "Votre degré de confiance",
+    "confidence-degree": "Votre degré de confiance",
     "save": "Enregistrer",
     "please-submit-a-response": "Veuillez soumettre une réponse"
   }

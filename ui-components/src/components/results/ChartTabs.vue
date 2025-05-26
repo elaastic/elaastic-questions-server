@@ -23,14 +23,14 @@ const props = defineProps({
   /**
    * The left chart's data of the confident's tab.
    */
-  dataTrustChartLeft: {
+  dataConfidenceChartLeft: {
     type: Array<number>,
     default: () => []
   },
   /**
    * The right chart's data of the confident's tab.
    */
-  dataTrustChartRight: {
+  dataConfidenceChartRight: {
     type: Array<number>,
     default: () => []
   },
@@ -56,9 +56,9 @@ const props = defineProps({
     default: false
   },
   /**
-   * A boolean. true if the trust tab has to be sown. false if not.
+   * A boolean. true if the confidence tab has to be sown. false if not.
    */
-  displayTrustTab: {
+  displayConfidenceTab: {
     type: Boolean,
     default: false
   },
@@ -87,9 +87,9 @@ onBeforeUnmount(() => {
       <strong v-if="selectedTab==='votes'">{{t('distribution-of-votes')}}</strong>
       <div v-else>{{t('distribution-of-votes')}}</div>
     </v-tab>
-    <v-tab v-if="displayTrustTab" value="trust" class="text-none">
-      <strong v-if="selectedTab==='trust'">{{t('trust-degree')}}</strong>
-      <div v-else>{{t('trust-degree')}}</div>
+    <v-tab v-if="displayConfidenceTab" value="confidence" class="text-none">
+      <strong v-if="selectedTab==='confidence'">{{t('confidence-degree')}}</strong>
+      <div v-else>{{t('confidence-degree')}}</div>
     </v-tab>
     <v-tab v-if="displayPeerTab" value="peers" class="text-none">
       <strong v-if="selectedTab==='peers'">{{t('peer-review')}}</strong>
@@ -107,10 +107,10 @@ onBeforeUnmount(() => {
               :width="chartWidth"
       ></BarChart>
     </v-tabs-window-item>
-    <v-tabs-window-item value="trust">
+    <v-tabs-window-item value="confidence">
       <DoubleBarChartH class="chart"
-              :data-left="[{ itemIndex: t('completely-confident'), value: props.dataTrustChartLeft.at(0) ?? -1}, { itemIndex: t('confident'), value: props.dataTrustChartLeft.at(1) ?? -1}, { itemIndex: t('not-really-confident'), value: props.dataTrustChartLeft.at(2) ?? -1}, { itemIndex: t('not-confident-at-all'), value: props.dataTrustChartLeft.at(3) ?? -1}]"
-              :data-right="[{ itemIndex: t('completely-confident'), value: props.dataTrustChartRight.at(0) ?? -1}, { itemIndex: t('confident'), value: props.dataTrustChartRight.at(1) ?? -1 }, { itemIndex: t('not-really-confident'), value: props.dataTrustChartRight.at(2) ?? -1}, { itemIndex: t('not-confident-at-all'), value: props.dataTrustChartRight.at(3) ?? -1}]"
+              :data-left="[{ itemIndex: t('completely-confident'), value: props.dataConfidenceChartLeft.at(0) ?? -1}, { itemIndex: t('confident'), value: props.dataConfidenceChartLeft.at(1) ?? -1}, { itemIndex: t('not-really-confident'), value: props.dataConfidenceChartLeft.at(2) ?? -1}, { itemIndex: t('not-confident-at-all'), value: props.dataConfidenceChartLeft.at(3) ?? -1}]"
+              :data-right="[{ itemIndex: t('completely-confident'), value: props.dataConfidenceChartRight.at(0) ?? -1}, { itemIndex: t('confident'), value: props.dataConfidenceChartRight.at(1) ?? -1 }, { itemIndex: t('not-really-confident'), value: props.dataConfidenceChartRight.at(2) ?? -1}, { itemIndex: t('not-confident-at-all'), value: props.dataConfidenceChartRight.at(3) ?? -1}]"
               :title-left= "t('good-answer')"
               :title-right="t('bad-answer')"
               :x-label="t('percentage-of-voters')"
@@ -156,7 +156,7 @@ onBeforeUnmount(() => {
  {
   "en": {
     "distribution-of-votes": "Distribution of votes",
-    "trust-degree": "Trust Degree",
+    "confidence-degree": "Confidence Degree",
     "peer-review": "Peer review",
     "choice": "Choice",
     "percentage-of-voters": "Percentage of voters",
@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
   },
   "fr": {
     "distribution-of-votes": "Répartition des votes",
-    "trust-degree": "Degré de confiance (phase 1)",
+    "confidence-degree": "Degré de confiance (phase 1)",
     "peer-review": "Evaluation par les pairs",
     "choice": "Choix",
     "percentage-of-voters": "Pourcentage des votants",

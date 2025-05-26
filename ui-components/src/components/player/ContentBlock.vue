@@ -37,7 +37,7 @@ const props = defineProps({
     default: false
   }
 });
-const emit = defineEmits(["update:open", "update:isQTypeHidden"]);
+const emit = defineEmits(["update:open", "update:isSubtitleHidden"]);
 const openPanel = computed({
   get: () => props.open ? [0] : [],
   set: (val: number[] | number | null) => {

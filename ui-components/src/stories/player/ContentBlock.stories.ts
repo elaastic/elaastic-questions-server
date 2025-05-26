@@ -18,7 +18,7 @@ const answer = ref<AnyResponse>({
   questionType: "MultipleChoice",
   explanation: "",
   choices: [],
-  trust: "Confiant(e)"
+  confidence: "Confiant(e)"
 });
 
 const validate = ref(false);
@@ -79,7 +79,7 @@ export const RespForm: Story = {
         <div v-if="!validate">
           <ResponseForm
                   :providedAnswers="9"
-                  :trust-selections=" [
+                  :confidence-selections=" [
               { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
               { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
               { label: 'Confiant(e)', value: 'Confiant(e)' },
@@ -100,7 +100,7 @@ export const RespForm: Story = {
               Votre explication : {{answer.explanation}}
             </li>
             <li>
-              Votre degré de confiance : {{answer.trust}}
+              Votre degré de confiance : {{answer.confidence}}
             </li>
           </ul>
         </div>

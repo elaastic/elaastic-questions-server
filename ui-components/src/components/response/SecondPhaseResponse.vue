@@ -100,7 +100,7 @@ onMounted(() => {
   <br/>
   <ResponseForm
           :provided-answers="props.providedAnswers"
-          :trust-selections="[
+          :confidence-selections="[
             { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
             { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
             { label: 'Confiant(e)', value: 'Confiant(e)' },
