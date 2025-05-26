@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ExclusiveChoiceResponseItem from '@/components/response/ExclusiveChoiceResponseItem.vue'
+import MultipleChoiceResponseInput from "@/components/response/MultipleChoiceResponseInput.vue";
+import {ref} from "vue";
 
 
 const meta = {
@@ -13,6 +15,19 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
+  render: (args) => ({
+    components: { ExclusiveChoiceResponseItem },
+    setup() {
+      const selected = ref<number>()
+      return { args, selected }
+    },
+    template: `
+        <ExclusiveChoiceResponseItem
+          v-bind="args"
+          v-model:selected="selected"
+        />
+    `
+  }),
   args: {
     nbCandidateItem: 3,
     selected:1
