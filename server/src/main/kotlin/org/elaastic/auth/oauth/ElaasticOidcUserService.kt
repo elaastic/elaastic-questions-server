@@ -19,18 +19,14 @@
 package org.elaastic.auth.oauth
 
 import org.elaastic.auth.UserLinkService
-import org.elaastic.common.util.alsoThrowIfFalse
+import org.elaastic.common.util.alsoThrowIf
 import org.elaastic.user.Role.RoleId
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException
-import org.springframework.security.oauth2.core.OAuth2Error
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 /** Key to get the realm access from the OIDC user's claims */
 private const val REALM_ACCESS_KEY = "realm_access"
@@ -69,7 +65,7 @@ class ElaasticOidcUserService(
             val user = userLinkService.loadUserLinkByUsername(
                 userLinkService.oidcProvider,
                 oidcUser.name
-            )?.alsoThrowIfFalse(RoleException::class.java, { it.user hasRole role }) {
+            )?.alsoThrowIf({ !(it.user hasRole role) }, RoleException::class.java) {
                 "ElaasticUser ${it.user.username} does not have the role $role but the OIDC user ${oidcUser.name} has it. " +
                         "ElaasticUser ${it.user.username} has the roles ${it.user.roles.joinToString(", ") { role -> role.name }}"
             }?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
@@ -120,19 +116,19 @@ class ElaasticOidcUserService(
             .also { logger.info(it.toString()) }
             .filterIsInstance<String>()
             .map { it.lowercase() }
-            .alsoThrowIfFalse(RoleException::class.java, { it.isNotEmpty() }) {
+            .alsoThrowIf({ it.isEmpty() }, RoleException::class.java) {
                 "There should be at least one role in the realm roles: $it"
             }
 
         return realmRoles
             .associateWith { keycloakToElaasticRole[it] }
             // We check that there is at least one Elaastic role in the realm roles
-            .alsoThrowIfFalse(RoleException::class.java, { it.values.any { role -> role != null } }) {
+            .alsoThrowIf({ it.values.all { role -> role == null } }, RoleException::class.java) {
                 "There should be at least one Elaastic role in the realm roles: $realmRoles. " +
                         "The roles are: ${keycloakToElaasticRole.keys.joinToString(", ")}"
             }
             .mapNotNull { it.value }
-            .alsoThrowIfFalse(RoleException::class.java, { it.size <= 1 }) {
+            .alsoThrowIf({ 1 < it.size }, RoleException::class.java) {
                 "There should be exactly one Elaastic role in the realm roles: $realmRoles. Found roles: $it"
             }
             .first()

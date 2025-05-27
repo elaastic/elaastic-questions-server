@@ -20,8 +20,7 @@ package org.elaastic.common.util
 
 /*
  * This file contains utility functions for checking conditions and throwing exceptions.
- * It includes functions for checking conditions with custom messages and for checking
- * if an object is not null.
+ * Their goal is to improve the readability of the code in inline chain calls.
  */
 
 /**
@@ -97,7 +96,7 @@ inline fun <T> T.alsoCheck(condition: (T) -> Boolean): T {
  * You can write:
  * ```kotlin
  * listOf(-1, 1, 2)
- *   .alsoThrowIf(IllegalArgumentException::class.java, { it.isNotEmpty() }) {
+ *   .alsoThrowIf({ it.isEmpty() }, IllegalArgumentException::class.java) {
  *       "List is empty"
  *   }
  * ```
@@ -108,8 +107,8 @@ inline fun <T> T.alsoCheck(condition: (T) -> Boolean): T {
  * @return The receiver object
  * @throws Exception if the condition evaluates to true
  */
-inline fun <E> E.alsoThrowIfFalse(exceptionClass: Class<out Exception>, condition: (E) -> Boolean, message: (E) -> String): E {
-    if (!condition(this)) {
+inline fun <T> T.alsoThrowIf(condition: (T) -> Boolean, exceptionClass: Class<out Exception>, message: (T) -> String): T {
+    if (condition(this)) {
         throw exceptionClass.getConstructor(String::class.java).newInstance(message(this))
     }
     return this
