@@ -17,12 +17,6 @@ const props = defineProps({
     type: String,
   },
   /**
-   * The type of the question. It could be 'OpenEnded' | 'ExclusiveChoice' | 'MultipleChoice'.
-   */
-  questionType: {
-    type: Object as PropType<QuestionType>
-  },
-  /**
    * The content of the question.
    */
   questionContent: {
@@ -90,7 +84,7 @@ const { t } = useI18n();
   <ContentBlock class="contentBlock"
                 :title="questionTitle"
                 :collapsible="true"
-                :subtitle="questionType"
+                :subtitle="props.updatedAnswer?.questionType"
                 v-model:open="refpanelOpen">
     <p>{{ questionContent }}</p>
   </ContentBlock>
@@ -111,7 +105,7 @@ const { t } = useI18n();
           @update:answer="handleAnswer"
           :textAlert="t('second-chance')">
   </ResponseForm>
-  <v-btn class="bouton" color="secondary" @click="sendAnswer()" style="margin-top: 5%; margin-bottom: 5%; margin-left: 4%;">{{t('save')}}</v-btn>
+  <v-btn class="bouton" color="secondary" @click="sendAnswer()" style="margin-top: 5%; margin-bottom: 5%; margin-left: 2%;">{{t('save')}}</v-btn>
 </template>
 
 <style scoped>

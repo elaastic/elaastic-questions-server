@@ -15,7 +15,6 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     questionTitle: "Question 1",
-    questionType: "MultipleChoice",
     questionContent: "Content of Question 1",
     providedAnswers: 4,
     responsesToEvaluate:
@@ -39,6 +38,63 @@ export const Default: Story = {
               questionType: 'MultipleChoice',
               explanation: 'Ma réponse',
               choices: [1],
+              trust: 'Confiant(e)'
+            },
+  }
+}
+export const Exclusive: Story = {
+  args: {
+    questionTitle: "Question 1",
+    questionContent: "Content of Question 1",
+    providedAnswers: 4,
+    responsesToEvaluate:
+            [{
+              id: 1,
+              questionType: 'ExclusiveChoice',
+              explanation: 'Une Réponse',
+              choice: 1,
+              trust: 'Confiant(e)'
+            },
+              {
+                id: 2,
+                questionType: 'ExclusiveChoice',
+                explanation: 'Une Autre Réponse',
+                choice: 2,
+                trust: 'Confiant(e)'
+              }],
+    updatedAnswer:
+            {
+              id: 3,
+              questionType: 'ExclusiveChoice',
+              explanation: 'Ma réponse',
+              choice: 3,
+              trust: 'Confiant(e)'
+            },
+  }
+}
+export const Open: Story = {
+  args: {
+    questionTitle: "Question 1",
+    questionContent: "Content of Question 1",
+    providedAnswers: 4,
+    responsesToEvaluate:
+            [{
+              id: 1,
+              questionType: 'OpenEnded',
+              explanation: 'Une Réponse',
+              trust: 'Confiant(e)'
+            },
+              {
+                id: 2,
+                questionType: 'OpenEnded',
+                explanation: 'Une Autre Réponse',
+                trust: 'Confiant(e)'
+              }],
+    updatedAnswer:
+            {
+              id: 3,
+              questionType: 'OpenEnded',
+              explanation: 'Ma réponse',
               trust: 'Confiant(e)'
             },
   }
