@@ -8,6 +8,7 @@ import type {AnyResponse, QuestionType} from "@/models/Response";
 import type {LikertValue} from "@/components/evaluation/Likert";
 import ProgressBar from "@/components/progressBar/ProgressBar.vue";
 import TextBar from "@/components/util/TextBar.vue";
+import {useI18n} from "vue-i18n";
 const props = defineProps({
   /**
    * The title of the question.
@@ -80,12 +81,13 @@ onMounted(() => {
     grades.push({id: response.id, value: null})
   }
 })
+const { t } = useI18n();
 </script>
 
 <template>
   <ProgressBar :steps="[false, true, false]"></ProgressBar>
-  <TextBar value="La séquence est en cours." color="#BBDEFB" style="color: #1976D2"></TextBar>
-  <ContentBlock class="cb"
+  <TextBar :value="t('the-sequence-is-in-progress')" color="#BBDEFB" style="color: #1976D2; margin-bottom: 4%"></TextBar>
+  <ContentBlock class="contentBlock"
           :title="questionTitle"
           :collapsible="true"
           :subtitle="questionType"
@@ -101,20 +103,42 @@ onMounted(() => {
   <ResponseForm
           :provided-answers="props.providedAnswers"
           :trust-selections="[
-            { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-            { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-            { label: 'Confiant(e)', value: 'Confiant(e)' },
-            { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' }]"
+            { label: t('not-confident-at-all'), value: t('not-confident-at-all') },
+            { label: t('not-really-confident'), value: t('not-really-confident') },
+            { label: t('confident'), value: t('confident') },
+            { label: t('completely-confident'), value: t('completely-confident') }]"
           :answer="updatedAnswerLocal"
           @update:answer="handleAnswer"
-          :textAlert="'Vous disposez d\'une deuxième chance pour changer votre réponse et votre degré de confiance.'">
+          :textAlert="t('second-chance')">
   </ResponseForm>
-  <v-btn class="bouton" color="secondary" @click="sendAnswer()" style="margin-top: 5%; margin-bottom: 5%; margin-left: 4%;">Enregistrer</v-btn>
+  <v-btn class="bouton" color="secondary" @click="sendAnswer()" style="margin-top: 5%; margin-bottom: 5%; margin-left: 4%;">{{t('save')}}</v-btn>
 </template>
 
 <style scoped>
-.cb {
+.contentBlock {
   margin-bottom: 4%;
 }
 
 </style>
+<i18n>
+{
+  "en": {
+    "the-sequence-is-in-progress": "The sequence is in progress.",
+    "second-chance": "You have a second chance to change your answer and your confident degree.",
+    "save": "Save",
+    "not-confident-at-all": "Not confident at all",
+    "not-really-confident": "Not really confident",
+    "confident": "Confident",
+    "completely-confident": "Completely confident"
+  },
+  "fr": {
+    "the-sequence-is-in-progress": "La séquence est en cours.",
+    "second-chance": "Vous disposez d'une deuxième chance pour changer votre réponse et votre degré de confiance.",
+    "save": "Enregistrer",
+    "not-confident-at-all": "Pas du tout confiant(e)",
+    "not-really-confident": "Pas vraiment confiant(e)",
+    "confident": "Confiant(e)",
+    "completely-confident": "Tout à fait confiant(e)"
+  }
+}
+</i18n>
