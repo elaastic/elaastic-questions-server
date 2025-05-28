@@ -40,6 +40,7 @@ export const Default: Story = {
               choices: [1],
               trust: 'Confiant(e)'
             },
+    sequenceInProgress: true
   }
 }
 export const Exclusive: Story = {
@@ -70,6 +71,7 @@ export const Exclusive: Story = {
               choice: 3,
               trust: 'Confiant(e)'
             },
+    sequenceInProgress: true
   }
 }
 export const Open: Story = {
@@ -97,5 +99,34 @@ export const Open: Story = {
               explanation: 'Ma réponse',
               trust: 'Confiant(e)'
             },
+    sequenceInProgress: true
+  }
+}
+export const SequenceClosed: Story = {
+  args: {
+    questionTitle: "Question 1",
+    questionContent: "Content of Question 1",
+    providedAnswers: 4,
+    responsesToEvaluate:
+            [{
+              id: 1,
+              questionType: 'OpenEnded',
+              explanation: 'Une Réponse',
+              trust: 'Confiant(e)'
+            },
+              {
+                id: 2,
+                questionType: 'OpenEnded',
+                explanation: 'Une Autre Réponse',
+                trust: 'Confiant(e)'
+              }],
+    updatedAnswer:
+            {
+              id: 3,
+              questionType: 'OpenEnded',
+              explanation: 'Ma réponse',
+              trust: 'Confiant(e)'
+            },
+    sequenceInProgress: false
   }
 }
