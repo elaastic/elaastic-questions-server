@@ -25,6 +25,7 @@ export const Default: Story = {
               choices: [],
               trust: 'Confiant(e)'
             },
+    sequenceInProgress: true
   }
 }
 export const Exclusive: Story = {
@@ -40,6 +41,7 @@ export const Exclusive: Story = {
               choice: 1,
               trust: 'Confiant(e)'
             },
+    sequenceInProgress: true
   }
 }
 export const Open: Story = {
@@ -54,5 +56,21 @@ export const Open: Story = {
               explanation: '',
               trust: 'Confiant(e)'
             },
+    sequenceInProgress: true,
+  }
+}
+export const SequenceClosed: Story = {
+  args: {
+    questionTitle: "Question 1",
+    questionContent: "Content of Question 1",
+    providedAnswers: 4,
+    firstAnswer:
+            {
+              id: 0,
+              questionType: 'OpenEnded',
+              explanation: '',
+              trust: 'Confiant(e)'
+            },
+    sequenceInProgress: false,
   }
 }

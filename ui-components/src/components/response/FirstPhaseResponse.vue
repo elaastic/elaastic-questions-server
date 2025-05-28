@@ -38,6 +38,10 @@ const props = defineProps({
   panelOpen: {
     type: Boolean,
     default: true
+  },
+  sequenceInProgress: {
+    type: Boolean,
+    default: false,
   }
 })
 
@@ -58,21 +62,23 @@ const { t } = useI18n()
 
 <template>
   <ProgressBar :steps="[true, false, false]"/>
-  <TextBar :value="t('the-sequence-is-in-progress')" color="#BBDEFB"/>
+  <TextBar :value="props.sequenceInProgress ? t('the-sequence-is-in-progress') : t('sequence-is-closed')" :color="props.sequenceInProgress ? '#BBDEFB' : 'white'"/>
   <ContentBlock class="resize" :title="props.questionTitle" :subtitle="props.firstAnswer?.questionType" :collapsible="true" v-model:open="refpanelOpen">{{props.questionContent}}</ContentBlock>
-  <ContentBlock class="resize" title="Réponse" :is-subtitle-hidden="true">
-    <ResponseForm
-            :provided-answers="props.providedAnswers"
-            :answer="firstAnswerLocal"
-            @update:answer="handleFirstAnswer"
-            :trust-selections="[
-              { label: t('not-confident-at-all'), value: t('not-confident-at-all') },
-              { label: t('not-really-confident'), value: t('not-really-confident') },
-              { label: t('confident'), value: t('confident') },
-              { label: t('completely-confident'), value: t('completely-confident') }]"
-    ></ResponseForm>
-    <v-btn style="margin-top: 3%; margin-left:4% " color="secondary" @click="sendAnswer">{{ t('save') }}</v-btn>
-  </ContentBlock>
+  <div v-if="props.sequenceInProgress">
+    <ContentBlock class="resize" title="Réponse" :is-subtitle-hidden="true">
+      <ResponseForm
+              :provided-answers="props.providedAnswers"
+              :answer="firstAnswerLocal"
+              @update:answer="handleFirstAnswer"
+              :trust-selections="[
+                { label: t('not-confident-at-all'), value: t('not-confident-at-all') },
+                { label: t('not-really-confident'), value: t('not-really-confident') },
+                { label: t('confident'), value: t('confident') },
+                { label: t('completely-confident'), value: t('completely-confident') }]"
+      ></ResponseForm>
+      <v-btn style="margin-top: 3%; margin-left:4% " color="secondary" @click="sendAnswer">{{ t('save') }}</v-btn>
+    </ContentBlock>
+  </div>
 </template>
 
 <style scoped>
@@ -89,7 +95,8 @@ const { t } = useI18n()
     "not-confident-at-all": "Not confident at all",
     "not-really-confident": "Not really confident",
     "confident": "Confident",
-    "completely-confident": "Completely confident"
+    "completely-confident": "Completely confident",
+    "sequence-is-closed": "Sequence is closed"
   },
   "fr": {
     "the-sequence-is-in-progress": "La séquence est en cours.",
@@ -97,7 +104,8 @@ const { t } = useI18n()
     "not-confident-at-all": "Pas du tout confiant(e)",
     "not-really-confident": "Pas vraiment confiant(e)",
     "confident": "Confiant(e)",
-    "completely-confident": "Tout à fait confiant(e)"
+    "completely-confident": "Tout à fait confiant(e)",
+    "sequence-is-closed": "La séquence est close."
   }
 }
 </i18n>
