@@ -18,14 +18,14 @@ const props = defineProps({
   /**
    * The percentage of each feeling for students who answered correctly. The feeling in the order are : "Completely confident", "Confident", "Not really confident", "Not confident at all"
    */
-  dataTrustGoodAnswer: {
+  dataConfidenceGoodAnswer: {
     type: Array<number>,
     default: () => []
   },
   /**
    * The percentage of each feeling for students who answered wrongly. The feeling in the order are : "Completely confident", "Confident", "Not really confident", "Not confident at all"
    */
-  dataTrustBadAnswer: {
+  dataConfidenceBadAnswer: {
     type: Array<number>,
     default: () => []
   },
@@ -51,9 +51,9 @@ const props = defineProps({
     default: false
   },
   /**
-   * A boolean. true if the trust tab has to be sown. false if not.
+   * A boolean. true if the confidence tab has to be sown. false if not.
    */
-  displayTrustTab: {
+  displayConfidenceTab: {
     type: Boolean,
     default: false
   },
@@ -118,7 +118,7 @@ const { t } = useI18n()
 
 
 <template>
-    <ContentBlock :title="t('results')" :readonly="true" :open="true" subtitle="" :is-q-type-hidden="true">
+    <ContentBlock :title="t('results')" :readonly="true" :open="true" subtitle="" :is-subtitle-hidden="true">
     <v-tooltip :text="t('update-results')" location="bottom">
       <template v-slot:activator="{ props }">
         <v-btn size="small" v-bind="props" icon class="wheel">⟳</v-btn>
@@ -127,12 +127,12 @@ const { t } = useI18n()
       <div v-if="dataVote.length!==0 && props.qType !== 'OpenEnded'">
         <ChartTabs
                 :dataVoteChart="props.dataVote"
-                :dataTrustChartLeft="props.dataTrustGoodAnswer"
-                :dataTrustChartRight="props.dataTrustBadAnswer"
+                :dataConfidenceChartLeft="props.dataConfidenceGoodAnswer"
+                :dataConfidenceChartRight="props.dataConfidenceBadAnswer"
                 :dataPeerChartLeft="props.dataPeerGoodAnswer"
                 :dataPeerChartRight="props.dataPeerBadAnswer"
                 :displayPeerTab="props.displayPeerTab"
-                :display-trust-tab="props.displayTrustTab"
+                :display-confidence-tab="props.displayConfidenceTab"
         />
       </div>
       <TextBar v-if="explanations.length === 0" class="textbar" :value="t('no-contribution')" color="#FFF8E1"></TextBar>

@@ -16,35 +16,35 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     dataVote: [],
-    dataTrustGoodAnswer: [20,20,20,40],
-    dataTrustBadAnswer: [25,20,20,35],
+    dataConfidenceGoodAnswer: [20,20,20,40],
+    dataConfidenceBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
     dataPeerBadAnswer: [50,20,10,10,10],
     displayPeerTab: false,
     qType: 'MultipleChoice',
     explanations: [],
-    displayTrustTab: false
+    displayConfidenceTab: false
   }
 }
 
 export const HasResults: Story = {
   args: {
     dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustGoodAnswer: [20,20,20,40],
-    dataTrustBadAnswer: [25,20,20,35],
+    dataConfidenceGoodAnswer: [20,20,20,40],
+    dataConfidenceBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
     dataPeerBadAnswer: [50,20,10,10,10],
     displayPeerTab: false,
     qType: 'MultipleChoice',
     explanations: [],
-    displayTrustTab: false
+    displayConfidenceTab: false
   }
 }
 export const NoEvaluation: Story = {
   args: {
     dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustGoodAnswer: [20,20,20,40],
-    dataTrustBadAnswer: [25,20,20,35],
+    dataConfidenceGoodAnswer: [20,20,20,40],
+    dataConfidenceBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
     dataPeerBadAnswer: [50,20,10,10,10],
     displayPeerTab: false,
@@ -56,7 +56,7 @@ export const NoEvaluation: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
           choices: [1,3],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 0,
@@ -68,7 +68,7 @@ export const NoEvaluation: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
           choices: [2],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 0,
@@ -80,21 +80,21 @@ export const NoEvaluation: Story = {
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
           choices: [1],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 0,
         isTeacher: true,
       }
     ],
-    displayTrustTab: false
+    displayConfidenceTab: false
   }
 }
 export const WithPeerReview: Story = {
   args: {
     dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustGoodAnswer: [20,20,20,40],
-    dataTrustBadAnswer: [25,20,20,35],
+    dataConfidenceGoodAnswer: [20,20,20,40],
+    dataConfidenceBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
     dataPeerBadAnswer: [50,20,10,10,10],
     displayPeerTab: false,
@@ -106,7 +106,7 @@ export const WithPeerReview: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
           choices: [1,3],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 1,
@@ -118,7 +118,7 @@ export const WithPeerReview: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
           choices: [2],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 1,
@@ -130,21 +130,21 @@ export const WithPeerReview: Story = {
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
           choices: [1],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 1,
         isTeacher: true,
       }
     ],
-    displayTrustTab: false
+    displayConfidenceTab: false
   }
 }
 export const NoTeacher: Story = {
   args: {
     dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustGoodAnswer: [20,20,20,40],
-    dataTrustBadAnswer: [25,20,20,35],
+    dataConfidenceGoodAnswer: [20,20,20,40],
+    dataConfidenceBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
     dataPeerBadAnswer: [50,20,10,10,10],
     displayPeerTab: false,
@@ -156,7 +156,7 @@ export const NoTeacher: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
           choices: [1,3],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 0,
@@ -168,7 +168,7 @@ export const NoTeacher: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
           choices: [2],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 0,
@@ -180,21 +180,21 @@ export const NoTeacher: Story = {
           questionType: 'MultipleChoice',
           explanation: '3ème réponse',
           choices: [1],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 0,
         isTeacher: false,
       }
     ],
-    displayTrustTab: false
+    displayConfidenceTab: false
   }
 }
 export const OpenQuestion: Story = {
   args: {
     dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustGoodAnswer: [20,20,20,40],
-    dataTrustBadAnswer: [25,20,20,35],
+    dataConfidenceGoodAnswer: [20,20,20,40],
+    dataConfidenceBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
     dataPeerBadAnswer: [50,20,10,10,10],
     displayPeerTab: false,
@@ -205,7 +205,7 @@ export const OpenQuestion: Story = {
           id: 1,
           questionType: 'OpenEnded',
           explanation: 'Mon explication',
-          trust: "",
+          confidence: "",
         } satisfies OpenEndedResponse,
         grade: 2,
         nbPeer: 1,
@@ -216,7 +216,7 @@ export const OpenQuestion: Story = {
           id: 2,
           questionType: 'OpenEnded',
           explanation: 'Ma Réponse',
-          trust: "",
+          confidence: "",
         } satisfies OpenEndedResponse,
         grade: 2,
         nbPeer: 1,
@@ -227,21 +227,21 @@ export const OpenQuestion: Story = {
           id: 3,
           questionType: 'OpenEnded',
           explanation: 'La Réponse de l\'enseignant',
-          trust: "",
+          confidence: "",
         } satisfies OpenEndedResponse,
         grade: 2,
         nbPeer: 1,
         isTeacher: true,
       }
     ],
-    displayTrustTab: true
+    displayConfidenceTab: true
   }
 }
-export const TrustChart: Story = {
+export const ConfidenceChart: Story = {
   args: {
     dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustGoodAnswer: [20,20,20,40],
-    dataTrustBadAnswer: [25,20,20,35],
+    dataConfidenceGoodAnswer: [20,20,20,40],
+    dataConfidenceBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
     dataPeerBadAnswer: [50,20,10,10,10],
     displayPeerTab: false,
@@ -253,7 +253,7 @@ export const TrustChart: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
           choices: [1,3],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 1,
@@ -265,7 +265,7 @@ export const TrustChart: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
           choices: [2],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 1,
@@ -277,21 +277,21 @@ export const TrustChart: Story = {
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
           choices: [1],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 1,
         isTeacher: true,
       }
     ],
-    displayTrustTab: true
+    displayConfidenceTab: true
   }
 }
 export const PeerReviewChart: Story = {
   args: {
     dataVote: [{ itemIndex: 1, value: 10, isCorrect: true }, { itemIndex: 2, value: 40, isCorrect: false }, { itemIndex: 3, value: 30,isCorrect: false }, { itemIndex: 4, value: 20,isCorrect: false }],
-    dataTrustGoodAnswer: [20,20,20,40],
-    dataTrustBadAnswer: [25,20,20,35],
+    dataConfidenceGoodAnswer: [20,20,20,40],
+    dataConfidenceBadAnswer: [25,20,20,35],
     dataPeerGoodAnswer: [15,70,5,5,5],
     dataPeerBadAnswer: [50,20,10,10,10],
     displayPeerTab: true,
@@ -303,7 +303,7 @@ export const PeerReviewChart: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
           choices: [1,3],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 1,
@@ -315,7 +315,7 @@ export const PeerReviewChart: Story = {
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
           choices: [2],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 3,
@@ -327,13 +327,13 @@ export const PeerReviewChart: Story = {
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
           choices: [1],
-          trust: "",
+          confidence: "",
         } satisfies MultipleChoiceResponse,
         grade: 2,
         nbPeer: 2,
         isTeacher: true,
       }
     ],
-    displayTrustTab: true
+    displayConfidenceTab: true
   }
 }

@@ -106,7 +106,7 @@ const { t } = useI18n()
           :subtitle="refQuestionType"
           :collapsible="true"
           v-model:open="refpanelOpen"
-          v-model:isQTypeHidden="refHideQuestionType"
+          v-model:isSubtitleHidden="refHideQuestionType"
   >
     <div v-html="contentStatement" v-if="!refhideStatement"></div>
   </ContentBlock>
