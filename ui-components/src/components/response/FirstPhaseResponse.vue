@@ -39,6 +39,9 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  /**
+   * A boolean. true if the sequence is in progress. false if not.
+   */
   sequenceInProgress: {
     type: Boolean,
     default: false,
@@ -65,7 +68,7 @@ const { t } = useI18n()
   <TextBar :value="props.sequenceInProgress ? t('the-sequence-is-in-progress') : t('sequence-is-closed')" :color="props.sequenceInProgress ? '#BBDEFB' : 'white'"/>
   <ContentBlock class="resize" :title="props.questionTitle" :subtitle="props.firstAnswer?.questionType" :collapsible="true" v-model:open="refpanelOpen">{{props.questionContent}}</ContentBlock>
   <div v-if="props.sequenceInProgress">
-    <ContentBlock class="resize" title="Réponse" :is-subtitle-hidden="true">
+    <ContentBlock class="resize" :title="t('answer')" :is-subtitle-hidden="true">
       <ResponseForm
               :provided-answers="props.providedAnswers"
               :answer="firstAnswerLocal"
@@ -96,7 +99,8 @@ const { t } = useI18n()
     "not-really-confident": "Not really confident",
     "confident": "Confident",
     "completely-confident": "Completely confident",
-    "sequence-is-closed": "Sequence is closed"
+    "sequence-is-closed": "The sequence is closed.",
+    "answer": "Answer"
   },
   "fr": {
     "the-sequence-is-in-progress": "La séquence est en cours.",
@@ -105,7 +109,8 @@ const { t } = useI18n()
     "not-really-confident": "Pas vraiment confiant(e)",
     "confident": "Confiant(e)",
     "completely-confident": "Tout à fait confiant(e)",
-    "sequence-is-closed": "La séquence est close."
+    "sequence-is-closed": "La séquence est close.",
+    "answer": "Réponse"
   }
 }
 </i18n>

@@ -3,7 +3,7 @@ import messages from '@intlify/unplugin-vue-i18n/messages'
 
 export default createI18n({
   legacy: false, // you must set `false`, to use Composition API
-  locale: 'fr',
+  locale: 'en',
   fallbackLocale: 'en',
   messages
 })
