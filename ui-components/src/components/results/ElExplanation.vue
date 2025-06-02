@@ -75,44 +75,50 @@ const hide = () => {
 </script>
 
 <template>
-  <div class="card-wrapper">
-    <div class="icones">
-      <v-tooltip :text="t('remove-from-best-answers')" location="bottom">
-        <template v-slot:activator="{ props }">
-          <v-btn size="small" v-bind="props" @click="outBest" icon>★</v-btn>
-        </template>
-      </v-tooltip>
+  <!--    <div class="icones">-->
 
-      <v-tooltip :text="t('add-to-best-answers')" location="bottom">
-        <template v-slot:activator="{ props }">
-          <v-btn size="small" v-bind="props" @click="inBest" icon>☆</v-btn>
-        </template>
-      </v-tooltip>
+  <v-card :class="['card', providedByTeacher ? 'teacher-bg' : 'default-bg']">
+    <v-card-title class="d-flex align-center">
+      <ExplanationTop
+        class="expTop"
+        :grade="grade"
+        :number-of-peer-review="numberOfPeerReview"
+        :teacher="providedByTeacher"
+      />
 
-      <v-tooltip :text="t('hide-answer')" location="bottom">
-        <template v-slot:activator="{ props }">
-          <v-btn size="small" v-bind="props" @click="hide" icon>👁</v-btn>
-        </template>
-      </v-tooltip>
-    </div>
+      <div class="ms-auto">
+        <v-tooltip :text="t('remove-from-best-answers')" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn size="small" v-bind="props" @click="outBest" icon>
+              <v-icon>mdi-star</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
 
-    <v-card :class="['card', providedByTeacher ? 'teacher-bg' : 'default-bg']">
-      <v-card-title>
-        <ExplanationTop
-          class="expTop"
-          :grade="grade"
-          :number-of-peer-review="numberOfPeerReview"
-          :teacher="providedByTeacher"
-        />
-      </v-card-title>
-      <v-card-text>
-        <div class="txt">
-          <strong v-if="choices">{{ choices }}</strong>
-          {{ props.response.explanation }}
-        </div>
-      </v-card-text>
-    </v-card>
-  </div>
+        <v-tooltip :text="t('add-to-best-answers')" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn size="small" v-bind="props" @click="inBest" icon>
+              <v-icon>mdi-star-outline</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
+
+        <v-tooltip :text="t('hide-answer')" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn size="small" v-bind="props" @click="hide" icon><v-icon>mdi-eye</v-icon></v-btn>
+          </template>
+        </v-tooltip>
+      </div>
+    </v-card-title>
+
+    <v-card-title> </v-card-title>
+    <v-card-text>
+      <div class="txt">
+        <strong v-if="choices">{{ choices }}</strong>
+        {{ props.response.explanation }}
+      </div>
+    </v-card-text>
+  </v-card>
 </template>
 
 <style scoped>
@@ -122,13 +128,8 @@ const hide = () => {
 }
 
 .expTop {
-  margin-top: 0%;
+  margin-top: 0;
   margin-left: -3%;
-}
-
-.card-wrapper {
-  position: relative;
-  width: 280px;
 }
 
 .card {
@@ -147,7 +148,7 @@ const hide = () => {
 }
 
 ::v-deep(.v-card-title) {
-  padding-top: 0px;
+  padding-top: 0;
   padding-bottom: 8px;
 }
 
