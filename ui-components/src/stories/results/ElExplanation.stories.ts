@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import ElExplanation from '@/components/explanation/ElExplanation.vue'
+import ElExplanation from '@/components/results/ElExplanation.vue'
 import type { ExclusiveChoiceResponse, MultipleChoiceResponse, OpenEndedResponse } from '@/models/Response'
 
 
 const meta = {
-  title: 'explanation/ElExplanation',
+  title: 'result/ElExplanation',
   component: ElExplanation,
   tags: ['autodocs'],
 } satisfies Meta<typeof ElExplanation>
