@@ -3,8 +3,7 @@ import ContentBlock from "@/components/player/ContentBlock.vue";
 import ChartTabs from "@/components/results/ChartTabs.vue";
 import Explanation from "@/components/explanation/Explanation.vue";
 import type {AnyResponse} from "@/models/Response";
-import {computed, onMounted, type PropType, ref} from "vue";
-import TextBar from "@/components/util/TextBar.vue";
+import {onMounted, type PropType, ref} from "vue";
 import type {QuestionType} from "@/models/Response"
 import {useI18n} from "vue-i18n";
 const props = defineProps({
@@ -135,7 +134,7 @@ const { t } = useI18n()
                 :display-trust-tab="props.displayTrustTab"
         />
       </div>
-      <TextBar v-if="explanations.length === 0" class="textbar" :value="t('no-contribution')" color="#FFF8E1"></TextBar>
+      <VAlert v-if="explanations.length === 0" class="textbar" :text="t('no-contribution')" type="warning"></VAlert>
       <div v-if="explanations.length !== 0">
         <div v-if="teacherExp">
           <Explanation class="exp"
