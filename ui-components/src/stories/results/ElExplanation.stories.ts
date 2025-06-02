@@ -4,7 +4,7 @@ import type { ExclusiveChoiceResponse, MultipleChoiceResponse, OpenEndedResponse
 
 
 const meta = {
-  title: 'result/ElExplanation',
+  title: 'results/ElExplanation',
   component: ElExplanation,
   tags: ['autodocs'],
 } satisfies Meta<typeof ElExplanation>
