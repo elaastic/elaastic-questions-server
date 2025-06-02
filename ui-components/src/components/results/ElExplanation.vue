@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, type PropType, ref } from 'vue'
-import ExplanationTop from '@/components/explanation/ExplanationTop.vue'
+import ExplanationHeader from '@/components/results/ElExplanationHeader.vue'
 import type { AnyResponse, MultipleChoiceResponse } from '@/models/Response'
 import { useI18n } from 'vue-i18n'
 
@@ -79,7 +79,7 @@ const hide = () => {
 
   <v-card :class="['card', providedByTeacher ? 'teacher-bg' : 'default-bg']">
     <v-card-title class="d-flex align-center">
-      <ExplanationTop
+      <ExplanationHeader
         class="expTop"
         :grade="grade"
         :number-of-peer-review="numberOfPeerReview"
