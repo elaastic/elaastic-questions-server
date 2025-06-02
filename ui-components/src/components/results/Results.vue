@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import ContentBlock from "@/components/player/ContentBlock.vue";
 import ChartTabs from "@/components/results/ChartTabs.vue";
-import Explanation from "@/components/explanation/Explanation.vue";
+import ElExplanation from "@/components/results/ElExplanation.vue";
 import type {AnyResponse} from "@/models/Response";
-import {computed, onMounted, type PropType, ref} from "vue";
-import TextBar from "@/components/util/TextBar.vue";
+import {onMounted, type PropType, ref} from "vue";
 import type {QuestionType} from "@/models/Response"
 import {useI18n} from "vue-i18n";
 const props = defineProps({
@@ -61,14 +60,14 @@ const props = defineProps({
    * The answers and explanations given by students and possibly the teacher. If there was a review, it also has a grade and a number of reviewer
    */
   explanations: {
-    type: Array<{answer: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean}>,
+    type: Array<{response: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean}>,
     default: () => []
   },
   /**
    * The type of the question related to the results. It could be : MultipleChoice, OpenEnded or ExclusiveChoice
    */
   qType: {
-    type: Object as PropType<QuestionType>,
+    type: String as PropType<QuestionType>,
     default: () => 'MultipleChoice',
   },
   /**
@@ -80,7 +79,7 @@ const props = defineProps({
   },
 })
 
-const teacherExp = ref<{answer: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean} | null>(null)
+const teacherExp = ref<{response: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean} | null>(null)
 const studentExplanations = ref<typeof props.explanations>([])
 const bestAnswersLocal = ref(props.bestAnswers);
 
@@ -104,7 +103,7 @@ const changeBestAnswers = (id: number, amongBestAnswer: boolean) => {
 }
 const hideAnswerStudent = (id: number, isHidden: boolean) => {
   if(isHidden){
-    studentExplanations.value = studentExplanations.value.filter(a => a.answer.id !== id)
+    studentExplanations.value = studentExplanations.value.filter(a => a.response.id !== id)
   }
 }
 
@@ -135,11 +134,11 @@ const { t } = useI18n()
                 :display-trust-tab="props.displayTrustTab"
         />
       </div>
-      <TextBar v-if="explanations.length === 0" class="textbar" :value="t('no-contribution')" color="#FFF8E1"></TextBar>
+      <VAlert v-if="explanations.length === 0" class="textbar" :text="t('no-contribution')" type="warning"></VAlert>
       <div v-if="explanations.length !== 0">
         <div v-if="teacherExp">
-          <Explanation class="exp"
-                  :answer="teacherExp.answer"
+          <ElExplanation class="exp"
+                  :response="teacherExp.response"
                   :grade="teacherExp.grade"
                   :number-of-peer-review="teacherExp.nbPeer"
                   :providedByTeacher="true"
@@ -148,10 +147,10 @@ const { t } = useI18n()
           />
           <v-divider class="line" thickness="2"></v-divider>
         </div>
-        <Explanation class="exp"
+        <ElExplanation class="exp"
                 v-for="item in studentExplanations"
-                :key="item.answer.id"
-                :answer="item.answer"
+                :key="item.response.id"
+                :response="item.response"
                 :grade="item.grade"
                 :number-of-peer-review="item.nbPeer"
                 :providedByTeacher="false"

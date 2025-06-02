@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import ExplanationTop from '@/components/explanation/ExplanationTop.vue'
+import ElExplanationHeader from '@/components/results/ElExplanationHeader.vue'
 
 
 const meta = {
-  title: 'explanation/ExplanationTop',
-  component: ExplanationTop,
+  title: 'results/ElExplanationHeader',
+  component: ElExplanationHeader,
   tags: ['autodocs'],
-} satisfies Meta<typeof ExplanationTop>
+} satisfies Meta<typeof ElExplanationHeader>
 
 export default meta
 
