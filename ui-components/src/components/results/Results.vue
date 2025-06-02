@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ContentBlock from "@/components/player/ContentBlock.vue";
 import ChartTabs from "@/components/results/ChartTabs.vue";
-import Explanation from "@/components/explanation/Explanation.vue";
+import ElExplanation from "@/components/results/ElExplanation.vue";
 import type {AnyResponse} from "@/models/Response";
 import {onMounted, type PropType, ref} from "vue";
 import type {QuestionType} from "@/models/Response"
@@ -137,7 +137,7 @@ const { t } = useI18n()
       <VAlert v-if="explanations.length === 0" class="textbar" :text="t('no-contribution')" type="warning"></VAlert>
       <div v-if="explanations.length !== 0">
         <div v-if="teacherExp">
-          <Explanation class="exp"
+          <ElExplanation class="exp"
                   :answer="teacherExp.answer"
                   :grade="teacherExp.grade"
                   :number-of-peer-review="teacherExp.nbPeer"
@@ -147,7 +147,7 @@ const { t } = useI18n()
           />
           <v-divider class="line" thickness="2"></v-divider>
         </div>
-        <Explanation class="exp"
+        <ElExplanation class="exp"
                 v-for="item in studentExplanations"
                 :key="item.answer.id"
                 :answer="item.answer"
