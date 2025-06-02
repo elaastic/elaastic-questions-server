@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import {type PropType, ref} from "vue";
+import {ref} from "vue";
 import ExplanationTop from "@/components/explanation/ExplanationTop.vue";
-import type {AnyResponse, ExclusiveChoiceResponse, MultipleChoiceResponse} from "@/models/Response";
 import {useI18n} from "vue-i18n";
 
 const props = defineProps({
+
+  /**
+   * Identifier of the response containing this explanation
+   */
+  responseId: {
+    type: Number,
+  },
+
   /**
    * The user response.
    */
-  response: {
-    type: Object as PropType<AnyResponse>,
+  explanation: {
+    type: String,
   },
   /**
    * The average grade out of 5 given by reviewers.
@@ -46,30 +53,19 @@ const props = defineProps({
   }
 });
 const emit = defineEmits(["update:is-best-answer", "update:is-hidden"]);
-const selectedMultipleAnswers = ref(
-        props.response.questionType === 'MultipleChoice'
-                ? [...(props.response as MultipleChoiceResponse).choices]
-                : []
-);
-
-const selectedExclusiveAnswers = ref<number>(
-        props.response.questionType === 'ExclusiveChoice'
-                ? (props.response as ExclusiveChoiceResponse).choice
-                : 0
-);
 const bestAnswerLocal = ref(props.isBestAnswer)
 const isHiddenLocal = ref(props.isHidden)
 const outBest = () => {
   bestAnswerLocal.value = false;
-  emit('update:is-best-answer', props.response.id, bestAnswerLocal.value);
+  emit('update:is-best-answer', props.responseId, bestAnswerLocal.value);
 }
 const inBest = () => {
   bestAnswerLocal.value = true;
-  emit('update:is-best-answer', props.response.id, bestAnswerLocal.value)
+  emit('update:is-best-answer', props.responseId, bestAnswerLocal.value)
 }
 const hide = () => {
   isHiddenLocal.value = true;
-  emit('update:is-hidden', props.response.id, isHiddenLocal.value)
+  emit('update:is-hidden', props.responseId, isHiddenLocal.value)
 }
 const { t } = useI18n()
 </script>
@@ -107,9 +103,7 @@ const { t } = useI18n()
       </v-card-title>
       <v-card-text>
         <div class="txt">
-          <strong v-if="props.response.questionType==='MultipleChoice'"> {{t('responses')}}{{ selectedMultipleAnswers }}</strong>
-          <strong v-if="props.response.questionType==='ExclusiveChoice'">{{t('response')}} {{ selectedExclusiveAnswers }}</strong>
-          {{ props.response.explanation }}
+          {{ props.explanation }}
         </div>
       </v-card-text>
     </v-card>
@@ -175,16 +169,12 @@ const { t } = useI18n()
     "remove-from-best-answers": "Remove from best answers",
     "add-to-best-answers": "Add to best answers",
     "hide-answer": "Hide answer",
-    "response": "Response:",
-    "responses": "Responses:"
 
   },
   "fr": {
     "remove-from-best-answers": "Retirer des meilleures réponses",
     "add-to-best-answers": "Ajouter aux meilleures réponses",
     "hide-answer": "Masquer la réponse",
-    "response": "Réponse :",
-    "responses": "Réponses :"
   }
 }
 </i18n>
