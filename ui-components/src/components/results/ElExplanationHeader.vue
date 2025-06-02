@@ -7,14 +7,12 @@ const props=defineProps({
    */
   grade: {
     type: Number,
-    default: 0
   },
   /**
    * The number of reviewers.
    */
   numberOfPeerReview: {
     type: Number,
-    default: 0
   },
   /**
    * A boolean. true if it's the teacher's explanation. false if it's a student explanation.
@@ -34,9 +32,11 @@ const { t } = useI18n()
         <p><strong> 🎓 {{t('teacher-explanation')}}</strong></p>
       </div>
 
-      <div v-if="numberOfPeerReview!==0" class="row-elements">
-        <div><strong>{{ grade }}/5</strong></div>
+      <div class="row-elements">
+        <div v-if="numberOfPeerReview"><strong>{{ grade }}/5</strong></div>
+        <div v-else><strong>-</strong></div>
 
+        <div v-if="numberOfPeerReview===0" class="gray">{{ t('no-peer-review') }}</div>
         <div v-if="numberOfPeerReview===1" class="gray">{{ numberOfPeerReview }} {{t('peer-review')}}</div>
         <div v-if="numberOfPeerReview>1" class="gray">{{ numberOfPeerReview }} {{t('peer-reviews')}}</div>
 
@@ -44,8 +44,6 @@ const { t } = useI18n()
           <p class="yellow_hover">{{t('see-reviews')}}</p>
         </div>
       </div>
-
-      <div v-else class="gray">{{t('no-peer-review')}}</div>
 
       <div v-if="!teacher" class="gray">
         <p class="yellow_hover">{{t('see-details')}}</p>
@@ -154,7 +152,7 @@ const { t } = useI18n()
     "peer-review": "peer review",
     "peer-reviews": "peer reviews",
     "see-reviews": "(see reviews)",
-    "no-peer-review": "- No peer review",
+    "no-peer-review": "No peer review",
     "see-details": "(See details)"
   },
   "fr": {
@@ -162,7 +160,7 @@ const { t } = useI18n()
     "peer-review": "évaluation par les pairs",
     "peer-reviews": "évaluations par les pairs",
     "see-reviews": "(voir les évaluations)",
-    "no-peer-review": "- Aucune évaluation par les pairs",
+    "no-peer-review": "Aucune évaluation par les pairs",
     "see-details": "(Afficher les détails)"
   }
 }
