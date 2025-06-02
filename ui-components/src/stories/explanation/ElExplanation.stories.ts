@@ -45,7 +45,7 @@ export const SingleChoice: Story = {
 
 export const OpenQuestion: Story = {
   args: {
-    answer: {
+    response: {
       id: 2,
       questionType: 'OpenEnded',
       explanation: 'A generated explanation',

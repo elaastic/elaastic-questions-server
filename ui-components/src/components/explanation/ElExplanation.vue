@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {type PropType, ref} from "vue";
-import ExplanationTop from "@/components/explanation/ExplanationTop.vue";
-import type {AnyResponse, ExclusiveChoiceResponse, MultipleChoiceResponse} from "@/models/Response";
-import {useI18n} from "vue-i18n";
+import { computed, type PropType, ref } from 'vue'
+import ExplanationTop from '@/components/explanation/ExplanationTop.vue'
+import type { AnyResponse, MultipleChoiceResponse } from '@/models/Response'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   /**
@@ -10,6 +10,7 @@ const props = defineProps({
    */
   response: {
     type: Object as PropType<AnyResponse>,
+    required: true,
   },
   /**
    * The average grade out of 5 given by reviewers.
@@ -28,69 +29,68 @@ const props = defineProps({
    */
   providedByTeacher: {
     type: Boolean,
-    default: false
+    default: false,
   },
   /**
    * A boolean. true if the answer is among the best answers. false if not.
    */
   isBestAnswer: {
     type: Boolean,
-    default: false
+    default: false,
   },
   /**
    * A boolean. true if the answer is hidden. false if not.
    */
   isHidden: {
     type: Boolean,
-    default: false
+    default: false,
+  },
+})
+const emit = defineEmits(['update:is-best-answer', 'update:is-hidden'])
+const { t } = useI18n()
+const choices = computed(() => {
+  if (props.response.questionType === 'MultipleChoice') {
+    return `${t('responses')} ${(props.response as MultipleChoiceResponse).choices}`
+  } else if (props.response.questionType === 'ExclusiveChoice') {
+    return `${t('reponse')} ${props.response.choice}`
   }
-});
-const emit = defineEmits(["update:is-best-answer", "update:is-hidden"]);
-const selectedMultipleAnswers = ref(
-        props.response.questionType === 'MultipleChoice'
-                ? [...(props.response as MultipleChoiceResponse).choices]
-                : []
-);
 
-const selectedExclusiveAnswers = ref<number>(
-        props.response.questionType === 'ExclusiveChoice'
-                ? (props.response as ExclusiveChoiceResponse).choice
-                : 0
-);
+  return null
+})
+
 const bestAnswerLocal = ref(props.isBestAnswer)
 const isHiddenLocal = ref(props.isHidden)
 const outBest = () => {
-  bestAnswerLocal.value = false;
-  emit('update:is-best-answer', props.response.id, bestAnswerLocal.value);
+  bestAnswerLocal.value = false
+  emit('update:is-best-answer', props.response.id, bestAnswerLocal.value)
 }
 const inBest = () => {
-  bestAnswerLocal.value = true;
+  bestAnswerLocal.value = true
   emit('update:is-best-answer', props.response.id, bestAnswerLocal.value)
 }
 const hide = () => {
-  isHiddenLocal.value = true;
+  isHiddenLocal.value = true
   emit('update:is-hidden', props.response.id, isHiddenLocal.value)
 }
-const { t } = useI18n()
 </script>
 
 <template>
   <div class="card-wrapper">
     <div class="icones">
       <v-tooltip :text="t('remove-from-best-answers')" location="bottom">
-        <template v-slot:activator="{props}">
+        <template v-slot:activator="{ props }">
           <v-btn size="small" v-bind="props" @click="outBest" icon>★</v-btn>
         </template>
       </v-tooltip>
 
       <v-tooltip :text="t('add-to-best-answers')" location="bottom">
-        <template v-slot:activator="{props}">
+        <template v-slot:activator="{ props }">
           <v-btn size="small" v-bind="props" @click="inBest" icon>☆</v-btn>
         </template>
       </v-tooltip>
 
       <v-tooltip :text="t('hide-answer')" location="bottom">
-        <template v-slot:activator="{props}">
+        <template v-slot:activator="{ props }">
           <v-btn size="small" v-bind="props" @click="hide" icon>👁</v-btn>
         </template>
       </v-tooltip>
@@ -99,16 +99,15 @@ const { t } = useI18n()
     <v-card :class="['card', providedByTeacher ? 'teacher-bg' : 'default-bg']">
       <v-card-title>
         <ExplanationTop
-                class="expTop"
-                :grade="grade"
-                :number-of-peer-review="numberOfPeerReview"
-                :teacher="providedByTeacher"
+          class="expTop"
+          :grade="grade"
+          :number-of-peer-review="numberOfPeerReview"
+          :teacher="providedByTeacher"
         />
       </v-card-title>
       <v-card-text>
         <div class="txt">
-          <strong v-if="props.response.questionType==='MultipleChoice'"> {{t('responses')}}{{ selectedMultipleAnswers }}</strong>
-          <strong v-if="props.response.questionType==='ExclusiveChoice'">{{t('response')}} {{ selectedExclusiveAnswers }}</strong>
+          <strong v-if="choices">{{ choices }}</strong>
           {{ props.response.explanation }}
         </div>
       </v-card-text>
@@ -116,17 +115,17 @@ const { t } = useI18n()
   </div>
 </template>
 
-
-
 <style scoped>
-.txt{
-  color: #00695C;
+.txt {
+  color: #00695c;
   margin-top: 2%;
 }
-.expTop{
+
+.expTop {
   margin-top: 0%;
   margin-left: -3%;
 }
+
 .card-wrapper {
   position: relative;
   width: 280px;
@@ -144,8 +143,9 @@ const { t } = useI18n()
 }
 
 .teacher-bg {
-  background-color: #F9FBE7;
+  background-color: #f9fbe7;
 }
+
 ::v-deep(.v-card-title) {
   padding-top: 0px;
   padding-bottom: 8px;
@@ -159,6 +159,7 @@ const { t } = useI18n()
   display: flex;
   gap: 0;
 }
+
 .v-btn {
   min-width: 32px !important;
   height: 32px !important;
@@ -167,7 +168,6 @@ const { t } = useI18n()
   border-radius: 0 !important;
   background-color: lightgray;
 }
-
 </style>
 <i18n>
 {
@@ -177,7 +177,6 @@ const { t } = useI18n()
     "hide-answer": "Hide answer",
     "response": "Response:",
     "responses": "Responses:"
-
   },
   "fr": {
     "remove-from-best-answers": "Retirer des meilleures réponses",
