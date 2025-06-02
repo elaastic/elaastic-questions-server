@@ -37,8 +37,8 @@ export const SingleChoice: Story = {
       choice: 2,
       trust: "",
     } satisfies ExclusiveChoiceResponse,
-    grade: 2,
-    numberOfPeerReview: 1,
+    grade: 3.5,
+    numberOfPeerReview: 4,
     providedByTeacher: false,
   },
 }
@@ -51,8 +51,8 @@ export const OpenQuestion: Story = {
       explanation: 'A generated explanation',
       trust: "",
     } satisfies OpenEndedResponse,
-    grade: 2,
-    numberOfPeerReview: 1,
+    grade: null,
+    numberOfPeerReview: 0,
     providedByTeacher: false,
   },
 }
