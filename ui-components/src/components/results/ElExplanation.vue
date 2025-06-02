@@ -50,9 +50,9 @@ const emit = defineEmits(['update:is-best-answer', 'update:is-hidden'])
 const { t } = useI18n()
 const choices = computed(() => {
   if (props.response.questionType === 'MultipleChoice') {
-    return `${t('responses')} ${(props.response as MultipleChoiceResponse).choices}`
+    return `${t('responses')} [${(props.response as MultipleChoiceResponse).choices}]`
   } else if (props.response.questionType === 'ExclusiveChoice') {
-    return `${t('reponse')} ${props.response.choice}`
+    return `${t('response')} ${props.response.choice}`
   }
 
   return null
