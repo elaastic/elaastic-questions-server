@@ -107,8 +107,8 @@ const { t } = useI18n()
       </v-card-title>
       <v-card-text>
         <div class="txt">
-          <strong v-if="props.response.questionType==='MultipleChoice'"> {{t('answer')}}{{ selectedMultipleAnswers }}</strong>
-          <strong v-if="props.response.questionType==='ExclusiveChoice'">{{t('answer')}} {{ selectedExclusiveAnswers }}</strong>
+          <strong v-if="props.response.questionType==='MultipleChoice'"> {{t('responses')}}{{ selectedMultipleAnswers }}</strong>
+          <strong v-if="props.response.questionType==='ExclusiveChoice'">{{t('response')}} {{ selectedExclusiveAnswers }}</strong>
           {{ props.response.explanation }}
         </div>
       </v-card-text>
@@ -175,14 +175,16 @@ const { t } = useI18n()
     "remove-from-best-answers": "Remove from best answers",
     "add-to-best-answers": "Add to best answers",
     "hide-answer": "Hide answer",
-    "answer": "Answer:"
+    "response": "Response:",
+    "responses": "Responses:"
 
   },
   "fr": {
     "remove-from-best-answers": "Retirer des meilleures réponses",
     "add-to-best-answers": "Ajouter aux meilleures réponses",
     "hide-answer": "Masquer la réponse",
-    "answer": "Réponses:"
+    "response": "Réponse :",
+    "responses": "Réponses :"
   }
 }
 </i18n>

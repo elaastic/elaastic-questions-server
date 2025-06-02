@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ElExplanation from '@/components/explanation/ElExplanation.vue'
-import type {MultipleChoiceResponse, OpenEndedResponse} from "@/models/Response";
+import type { ExclusiveChoiceResponse, MultipleChoiceResponse, OpenEndedResponse } from '@/models/Response'
 
 
 const meta = {
@@ -13,7 +13,7 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+export const MultipleChoice: Story = {
   args: {
     response: {
       id: 1,
@@ -27,6 +27,22 @@ export const Default: Story = {
     providedByTeacher: false,
   },
 }
+
+export const SingleChoice: Story = {
+  args: {
+    response: {
+      id: 3,
+      questionType: 'ExclusiveChoice',
+      explanation: 'Mon explication',
+      choice: 2,
+      trust: "",
+    } satisfies ExclusiveChoiceResponse,
+    grade: 2,
+    numberOfPeerReview: 1,
+    providedByTeacher: false,
+  },
+}
+
 export const OpenQuestion: Story = {
   args: {
     answer: {
