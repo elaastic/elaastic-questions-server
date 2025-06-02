@@ -51,7 +51,7 @@ export const NoEvaluation: Story = {
     qType: 'MultipleChoice',
     explanations: [
       {
-        answer: {
+        response: {
           id: 1,
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
@@ -63,7 +63,7 @@ export const NoEvaluation: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 2,
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
@@ -75,7 +75,7 @@ export const NoEvaluation: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 3,
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
@@ -101,7 +101,7 @@ export const WithPeerReview: Story = {
     qType: 'MultipleChoice',
     explanations: [
       {
-        answer: {
+        response: {
           id: 1,
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
@@ -113,7 +113,7 @@ export const WithPeerReview: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 2,
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
@@ -125,7 +125,7 @@ export const WithPeerReview: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 3,
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
@@ -151,7 +151,7 @@ export const NoTeacher: Story = {
     qType: 'MultipleChoice',
     explanations: [
       {
-        answer: {
+        response: {
           id: 1,
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
@@ -163,7 +163,7 @@ export const NoTeacher: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 2,
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
@@ -175,7 +175,7 @@ export const NoTeacher: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 3,
           questionType: 'MultipleChoice',
           explanation: '3ème réponse',
@@ -201,7 +201,7 @@ export const OpenQuestion: Story = {
     qType: 'OpenEnded',
     explanations: [
       {
-        answer: {
+        response: {
           id: 1,
           questionType: 'OpenEnded',
           explanation: 'Mon explication',
@@ -212,7 +212,7 @@ export const OpenQuestion: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 2,
           questionType: 'OpenEnded',
           explanation: 'Ma Réponse',
@@ -223,7 +223,7 @@ export const OpenQuestion: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 3,
           questionType: 'OpenEnded',
           explanation: 'La Réponse de l\'enseignant',
@@ -248,7 +248,7 @@ export const TrustChart: Story = {
     qType: 'MultipleChoice',
     explanations: [
       {
-        answer: {
+        response: {
           id: 1,
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
@@ -260,7 +260,7 @@ export const TrustChart: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 2,
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
@@ -272,7 +272,7 @@ export const TrustChart: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 3,
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
@@ -298,7 +298,7 @@ export const PeerReviewChart: Story = {
     qType: 'MultipleChoice',
     explanations: [
       {
-        answer: {
+        response: {
           id: 1,
           questionType: 'MultipleChoice',
           explanation: 'Mon explication',
@@ -310,7 +310,7 @@ export const PeerReviewChart: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 2,
           questionType: 'MultipleChoice',
           explanation: 'Ma Réponse',
@@ -322,7 +322,7 @@ export const PeerReviewChart: Story = {
         isTeacher: false,
       },
       {
-        answer: {
+        response: {
           id: 3,
           questionType: 'MultipleChoice',
           explanation: 'La Réponse de l\'enseignant',
