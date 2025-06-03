@@ -86,7 +86,10 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <ProgressBar :steps="[false, true, false]"></ProgressBar>
+  <ProgressBar
+          responseSubmissionState="COMPLETED"
+          evaluationState="ACTIVE"
+          readState="DISABLED"/>
   <TextBar :value="props.sequenceInProgress ? t('the-sequence-is-in-progress') : t('sequence-is-closed')" :color="props.sequenceInProgress ? '#BBDEFB' : 'white'" style="color: #1976D2; margin-bottom: 4%"></TextBar>
   <ContentBlock class="contentBlock"
                 :title="questionTitle"
@@ -104,7 +107,7 @@ const { t } = useI18n();
     <br/>
     <ResponseForm
             :provided-answers="props.providedAnswers"
-            :trust-selections="[
+            :confidence-selections="[
               { label: t('not-confident-at-all'), value: t('not-confident-at-all') },
               { label: t('not-really-confident'), value: t('not-really-confident') },
               { label: t('confident'), value: t('confident') },

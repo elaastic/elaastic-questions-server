@@ -23,7 +23,7 @@ export const Default: Story = {
               questionType: 'MultipleChoice',
               explanation: '',
               choices: [],
-              trust: 'Confiant(e)'
+              confidence: 'Confiant(e)'
             },
     sequenceInProgress: true
   }
@@ -39,7 +39,7 @@ export const Exclusive: Story = {
               questionType: 'ExclusiveChoice',
               explanation: '',
               choice: 1,
-              trust: 'Confiant(e)'
+              confidence: 'Confiant(e)'
             },
     sequenceInProgress: true
   }
@@ -54,7 +54,7 @@ export const Open: Story = {
               id: 0,
               questionType: 'OpenEnded',
               explanation: '',
-              trust: 'Confiant(e)'
+              confidence: 'Confiant(e)'
             },
     sequenceInProgress: true,
   }
@@ -69,7 +69,7 @@ export const SequenceClosed: Story = {
               id: 0,
               questionType: 'OpenEnded',
               explanation: '',
-              trust: 'Confiant(e)'
+              confidence: 'Confiant(e)'
             },
     sequenceInProgress: false,
   }

@@ -64,7 +64,9 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <ProgressBar :steps="[true, false, false]"/>
+  <ProgressBar responseSubmissionState="ACTIVE"
+               evaluationState="DISABLED"
+               readState="DISABLED"/>
   <TextBar :value="props.sequenceInProgress ? t('the-sequence-is-in-progress') : t('sequence-is-closed')" :color="props.sequenceInProgress ? '#BBDEFB' : 'white'"/>
   <ContentBlock class="resize" :title="props.questionTitle" :subtitle="props.firstAnswer?.questionType" :collapsible="true" v-model:open="refpanelOpen">{{props.questionContent}}</ContentBlock>
   <div v-if="props.sequenceInProgress">
@@ -73,7 +75,7 @@ const { t } = useI18n()
               :provided-answers="props.providedAnswers"
               :answer="firstAnswerLocal"
               @update:answer="handleFirstAnswer"
-              :trust-selections="[
+              :confidence-selections="[
                 { label: t('not-confident-at-all'), value: t('not-confident-at-all') },
                 { label: t('not-really-confident'), value: t('not-really-confident') },
                 { label: t('confident'), value: t('confident') },

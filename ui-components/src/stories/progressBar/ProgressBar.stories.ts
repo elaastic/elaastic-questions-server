@@ -14,7 +14,21 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    steps: [false, true, false]
+    responseSubmissionState: 'COMPLETED',
+    evaluationState: 'ACTIVE',
+    readState: 'DISABLED',
+    studentsProvideExplanation: true
   },
 }
-
+export const ShowStatistics: Story = {
+  args: {
+    responseSubmissionState: 'COMPLETED',
+    evaluationState: 'ACTIVE',
+    readState: 'DISABLED',
+    showStatistics: true,
+    numberOfAnswerFirstAttempt: 10,
+    numberOfAnswerSecondAttempt: 8,
+    numberOfReviewers: 4,
+    studentsProvideExplanation: true
+  },
+}
