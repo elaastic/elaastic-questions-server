@@ -3,6 +3,7 @@ import ContentBlock from '@/components/player/ContentBlock.vue'
 import ResponseForm from "@/components/response/ResponseForm.vue";
 import {ref} from "vue";
 import type {AnyResponse} from "@/models/Response";
+import ChoiceChip from '@/components/response/ChoiceChip.vue';
 const meta = {
   title: 'player/ContentBlock',
   component: ContentBlock,
@@ -67,7 +68,7 @@ export const Default: Story = {
 }
 export const RespForm: Story = {
   render: (args) => ({
-    components: { ContentBlock, ResponseForm },
+    components: { ContentBlock, ResponseForm, ChoiceChip },
     setup() {
       const isOpen = ref(args.open);
       return { args, answer, validate, handleAnswer, sendAnswer, isOpen,
@@ -94,7 +95,7 @@ export const RespForm: Story = {
           <v-alert text="Réponse Envoyée" type="success" class="mb-4"></v-alert>
           <ul class="ml-9">
             <li>
-              Votre Réponse : {{answer.choices}}
+              {{ answer.choices.length === 1 ? 'Votre Réponse :' : 'Vos Réponses' }} <ChoiceChip v-for="a in answer.choices" :value="a" color="gray"/>
             </li>
             <li>
               Votre explication : {{answer.explanation}}

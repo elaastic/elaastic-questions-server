@@ -74,7 +74,6 @@ onMounted(() => {
 <style scoped>
 .title-container {
   display: flex;
-  flex-direction: column;
 }
 
 .title-side {
