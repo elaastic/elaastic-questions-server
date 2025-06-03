@@ -85,10 +85,10 @@ onMounted(() => {
 <i18n>
 {
   "en": {
-    "your-answer": "Your answer : "
+    "your-answer": "Your answer  "
   },
   "fr": {
-    "your-answer": "Votre réponse : "
+    "your-answer": "Votre réponse  "
   }
 }
 </i18n>

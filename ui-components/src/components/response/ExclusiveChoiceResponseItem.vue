@@ -78,7 +78,7 @@ onMounted(() => {
 }
 @media (min-width: 900px){
   .radio{
-    padding-right: 50%!important;
+    padding-right: 70%!important;
   }
 }
 
@@ -86,10 +86,10 @@ onMounted(() => {
 <i18n>
 {
   "en": {
-    "your-answer": "Your answer : "
+    "your-answer": "Your answer  "
   },
   "fr": {
-    "your-answer": "Votre réponse : "
+    "your-answer": "Votre réponse  "
   }
 }
 </i18n>
