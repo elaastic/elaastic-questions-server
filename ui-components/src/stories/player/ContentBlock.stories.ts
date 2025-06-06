@@ -66,7 +66,7 @@ export const Default: Story = {
         isSubtitleHidden: true
     },
 }
-export const RespForm: Story = {
+export const responseForm: Story = {
     render: (args) => ({
         components: { ContentBlock, ResponseForm, ChoiceChip },
         setup() {
