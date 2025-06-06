@@ -104,7 +104,7 @@ const { t } = useI18n()
     <ExclusiveChoiceResponseItem class="resize" :nb-candidate-item="providedAnswers" v-model:selected="selectedExclusiveAnswers" />
   </div>
   <div class="resize">
-    <h5>{{refqTYpe !== 'OpenEnded' ? t('explanation')  :  t('textual-answer')}}</h5>
+    <h5>{{refqTYpe !== 'OpenEnded' ? t('explanation')  :  t('your-answer')}}</h5>
     <TipTapEditor v-model="text_ref"></TipTapEditor>
   </div>
   <div class="resize">
@@ -136,14 +136,16 @@ const { t } = useI18n()
     "confidence-degree": "Confidence degree",
     "save": "Save",
     "please-submit-a-response": "Please submit a response",
-    "explanation":  "Explanation"
+    "explanation":  "Explanation",
+    "your-answer": "Your answer  "
   },
   "fr": {
     "textual-answer": "Réponse textuelle",
     "confidence-degree": "Votre degré de confiance",
     "save": "Enregistrer",
     "please-submit-a-response": "Veuillez soumettre une réponse",
-    "explanation": "Explication"
+    "explanation": "Explication",
+    "your-answer": "Votre réponse  "
   }
 }
 </i18n>
