@@ -34,7 +34,7 @@ const { t } = useI18n()
 
       <div class="row-elements">
         <div v-if="numberOfPeerReview"><strong>{{ grade }}/5</strong></div>
-        <div v-else><strong>-</strong></div>
+        <div v-else> <p>&nbsp &nbsp &nbsp</p></div>
 
         <div v-if="numberOfPeerReview===0" class="gray">{{ t('no-peer-review') }}</div>
         <div v-if="numberOfPeerReview===1" class="gray">{{ numberOfPeerReview }} {{t('peer-review')}}</div>
