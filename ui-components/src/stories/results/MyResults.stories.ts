@@ -4,7 +4,7 @@ import type {ExclusiveChoiceResponse, MultipleChoiceResponse, OpenEndedResponse}
 
 
 const meta = {
-  title: 'response/MyResults',
+  title: 'results/MyResults',
   component: MyResults,
   tags: ['autodocs'],
 } satisfies Meta<typeof MyResults>

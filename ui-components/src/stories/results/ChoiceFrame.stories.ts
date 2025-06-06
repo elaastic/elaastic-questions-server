@@ -3,7 +3,7 @@ import ChoiceFrame from '@/components/results/ChoiceFrame.vue'
 
 
 const meta = {
-  title: 'response/ChoiceFrame',
+  title: 'results/ChoiceFrame',
   component: ChoiceFrame,
   tags: ['autodocs'],
 } satisfies Meta<typeof ChoiceFrame>
