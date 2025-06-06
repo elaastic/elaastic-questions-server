@@ -4,12 +4,13 @@
  * @author John Tranier
  */
 
-type QuestionType = 'OpenEnded' | 'ExclusiveChoice' | 'MultipleChoice'
+export type QuestionType = 'OpenEnded' | 'ExclusiveChoice' | 'MultipleChoice'
 
 export interface Response {
   id: number
   questionType: QuestionType
-  explanation: string
+  explanation: string,
+  confidence: string
 }
 
 export interface ExclusiveChoiceResponse extends Response {
