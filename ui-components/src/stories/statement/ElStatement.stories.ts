@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import Statement from '@/components/statement/Statement.vue'
+import ElStatement from '@/components/statement/ElStatement.vue'
 const meta = {
-  title: 'statement/Statement',
-  component: Statement,
+  title: 'statement/ElStatement',
+  component: ElStatement,
   tags: ['autodocs'],
-} satisfies Meta<typeof Statement>
+} satisfies Meta<typeof ElStatement>
 
 export default meta
 type Story = StoryObj<typeof meta>

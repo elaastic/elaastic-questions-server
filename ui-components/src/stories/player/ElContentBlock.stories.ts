@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import ContentBlock from '@/components/player/ContentBlock.vue'
+import ElContentBlock from '@/components/player/ElContentBlock.vue'
 import {ref} from "vue";
 import type {AnyResponse} from "@/models/Response";
 const meta = {
-  title: 'player/ContentBlock',
-  component: ContentBlock,
+  title: 'player/ElContentBlock',
+  component: ElContentBlock,
   tags: ['autodocs'],
-} satisfies Meta<typeof ContentBlock>
+} satisfies Meta<typeof ElContentBlock>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -37,7 +37,7 @@ function sendAnswer() {
 
 export const Default: Story = {
   render: (args) => ({
-    components: { ContentBlock },
+    components: { ContentBlock: ElContentBlock },
     setup() {
       const isOpen = ref(args.open);
 
@@ -66,7 +66,7 @@ export const Default: Story = {
 }
 export const Results: Story = {
   render: (args) => ({
-    components: { ContentBlock },
+    components: { ContentBlock: ElContentBlock },
     setup() {
       const isOpen = ref(args.open);
       return { args, isOpen,

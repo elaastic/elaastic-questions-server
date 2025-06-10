@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import ContentBlock from "@/components/player/ContentBlock.vue";
+import ElContentBlock from "@/components/player/ElContentBlock.vue";
 import {type PropType, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import type {QuestionType} from "@/models/Response";
@@ -101,7 +101,7 @@ const { t } = useI18n()
     <v-checkbox class="checkbox" :label="t('hideStatement')" v-model="refcheck3"/>
   </div>
   <v-btn class="button" @click="changeStatement">{{t('send')}}</v-btn>
-  <ContentBlock class="cb"
+  <ElContentBlock class="cb"
                 :title="title"
                 :subtitle="refQuestionType"
                 :collapsible="true"
@@ -109,7 +109,7 @@ const { t } = useI18n()
                 v-model:isSubtitleHidden="refHideQuestionType"
   >
     <div v-html="contentStatement" v-if="!refhideStatement"></div>
-  </ContentBlock>
+  </ElContentBlock>
 </template>
 
 <style scoped>
