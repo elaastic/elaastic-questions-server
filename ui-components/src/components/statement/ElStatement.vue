@@ -11,7 +11,7 @@ const props = defineProps({
    */
   title: {
     type: String,
-    default: "The title of this test statement"
+    required: true
   },
   /**
    * The content of the statement, given as a string but actually is HTML code.
