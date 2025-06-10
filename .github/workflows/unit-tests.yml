@@ -6,7 +6,7 @@ on:
   push:
     branches: [ github-actions, develop ]
   pull_request:
-    branches: [ github-actions, develop, feature/oidc-mvp/1 ]
+    branches: [ github-actions, develop ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,12 +29,16 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Create .env file
+      - name: Configure hosts file
         run: |
+            sudo echo "127.0.0.1 iam.local idp.local" | sudo tee -a /etc/hosts
+
+      -   name: Create .env file
+          run: |
               echo "KEYCLOAK_ADMIN_PASSWORD=keycloak_admin_password" >> .env
 
       - name: Setup test environment
-        run: docker compose up -d  elaastic-questions-db-test-8 auth-iam
+        run: docker compose up -d traefik elaastic-questions-db-test-8 auth-iam
 
       - name: Build with Gradle
         run: ./server/gradlew build
