@@ -8,6 +8,7 @@ const props = defineProps({
    */
   title: {
     type: String,
+    required: true
   },
   /**
    * A boolean. true if the block is collapsible. false if not.
