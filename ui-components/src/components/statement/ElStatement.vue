@@ -88,12 +88,24 @@ const { t } = useI18n()
 
 <template>
   <h1>{{t('statement')}}</h1>
-  <div class="checkboxs">
-    <v-checkbox class="checkbox" :label="t('panelClosed')" v-model="refcheck1"></v-checkbox>
-    <v-checkbox class="checkbox" :label="t('hideQuestionType')" v-model="refcheck2"/>
-    <v-checkbox class="checkbox" :label="t('hideStatement')" v-model="refcheck3"/>
+  <div class="d-sm-flex">
+    <v-checkbox class="mr-1"  v-model="refcheck1">
+      <template #label>
+        <p class="text-black font-weight-bold text-caption">{{ t('panelClosed') }}</p>
+      </template>
+    </v-checkbox>
+    <v-checkbox class="mr-1"  v-model="refcheck2">
+      <template #label>
+        <p class="text-black font-weight-bold text-caption">{{ t('hideQuestionType') }}</p>
+      </template>
+    </v-checkbox>
+    <v-checkbox class="mr-1"  v-model="refcheck3">
+      <template #label>
+        <p class="text-black font-weight-bold text-caption">{{ t('hideStatement') }}</p>
+      </template>
+    </v-checkbox>
   </div>
-  <v-btn class="button" @click="changeStatement">{{t('send')}}</v-btn>
+  <v-btn class="mt-n3 mb-10 button" @click="changeStatement">{{t('send')}}</v-btn>
   <ElContentBlock class="cb"
                 :title="title"
                 :subtitle="refQuestionType"
@@ -101,25 +113,12 @@ const { t } = useI18n()
                 v-model:open="refpanelOpen"
                 v-model:isSubtitleHidden="refHideQuestionType"
   >
-    <slot />
+    <slot v-if="!refhideStatement"/>
   </ElContentBlock>
 </template>
 
 <style scoped>
-.checkbox{
-  margin-right: 3%;
-}
-.checkboxs{
-  display: flex;
-}
-.checkboxs ::v-deep(.v-label){
-  font-size: small;
-  font-weight: bold;
-  color: black;
-}
 .button{
-  margin-bottom: 9%;
-  margin-top: -2%;
   background-color: lightgray;
 }
 .button:hover{
