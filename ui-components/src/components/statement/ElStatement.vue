@@ -14,13 +14,6 @@ const props = defineProps({
     required: true
   },
   /**
-   * The content of the statement, given as a string but actually is HTML code.
-   */
-  contentStatement: {
-    type: String,
-    default: "<p>The content <strong>of</strong> this test statement</p>"
-  },
-  /**
    * The type of the question.
    */
   questionType: {
@@ -108,7 +101,7 @@ const { t } = useI18n()
                 v-model:open="refpanelOpen"
                 v-model:isSubtitleHidden="refHideQuestionType"
   >
-    <div v-html="contentStatement" v-if="!refhideStatement"></div>
+    <slot />
   </ElContentBlock>
 </template>
 
