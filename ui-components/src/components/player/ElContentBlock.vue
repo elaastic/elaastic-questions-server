@@ -40,9 +40,9 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:open", "update:isSubtitleHidden"]);
 const openPanel = computed({
-  get: () => props.open ? [0] : [],
-  set: (val: number[] | number | null) => {
-    const isOpen = Array.isArray(val) ? val.includes(0) : val === 0;
+  get: () => props.open ? 0 : null,
+  set: (val: number | null) => {
+    const isOpen = val === 0;
     emit("update:open", isOpen);
   },
 });
