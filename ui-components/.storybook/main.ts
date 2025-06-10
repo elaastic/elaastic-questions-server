@@ -8,7 +8,8 @@ const config: StorybookConfig = {
     '@chromatic-com/storybook',
     '@storybook/addon-a11y',
     '@storybook/addon-docs',
-    'storybook-addon-test-codegen'
+    'storybook-addon-test-codegen',
+    'storybook-addon-tag-badges'
   ],
   framework: {
     name: '@storybook/vue3-vite',
