@@ -21,12 +21,16 @@ jobs:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available
 
+      - name: Configure hosts file
+        run: |
+            sudo echo "127.0.0.1 iam.local idp.local" | sudo tee -a /etc/hosts
+
       -   name: Create .env file
           run: |
               echo "KEYCLOAK_ADMIN_PASSWORD=keycloak_admin_password" >> .env
 
       - name: Setup test environment
-        run: docker compose up -d  elaastic-questions-db-test-8 auth-iam
+        run: docker compose up -d traefik elaastic-questions-db-test-8 auth-iam
 
       - name: Build and analyze
         env:

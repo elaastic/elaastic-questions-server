@@ -44,7 +44,7 @@ Roles in the reaml:
 
 A client:
 
-- clientId: `http://host.docker.internal:8081/realms/elaastic-keycloak` => For SAML2 Identity brokering from
+- clientId: `http://iam.local/realms/elaastic-keycloak` => For SAML2 Identity brokering from
   Elaastic IAM
 
 ## Common operations
