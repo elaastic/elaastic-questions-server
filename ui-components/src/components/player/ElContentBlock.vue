@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {computed, onMounted} from "vue";
+import {computed} from "vue";
 
 const props = defineProps({
   /**
@@ -45,11 +45,6 @@ const openPanel = computed({
     const isOpen = val === 0;
     emit("update:open", isOpen);
   },
-});
-onMounted(() => {
-  if (!props.title || props.title.trim() === "") {
-    throw new Error("Prop 'title' is required and cannot be empty.");
-  }
 });
 </script>
 
