@@ -7,7 +7,8 @@ const config: StorybookConfig = {
     '@storybook/addon-links',
     '@chromatic-com/storybook',
     '@storybook/addon-a11y',
-    '@storybook/addon-docs'
+    '@storybook/addon-docs',
+    'storybook-addon-test-codegen'
   ],
   framework: {
     name: '@storybook/vue3-vite',
