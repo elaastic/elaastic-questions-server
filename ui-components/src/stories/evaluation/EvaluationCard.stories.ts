@@ -7,7 +7,7 @@ import type { LikertValue } from '@/components/evaluation/Likert'
 const meta = {
   title: 'Evaluation/EvaluationCard',
   component: EvaluationCard,
-  tags: ['autodocs']
+  tags: ['autodocs', 'organisms']
 } satisfies Meta<typeof EvaluationCard>
 
 export default meta

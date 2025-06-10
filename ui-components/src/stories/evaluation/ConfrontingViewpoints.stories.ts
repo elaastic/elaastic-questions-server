@@ -5,7 +5,7 @@ import ConfrontingViewpoint from '@/components/evaluation/ConfrontingViewpoint.v
 const meta = {
   title: 'Evaluation/ConfrontingViewpoints',
   component: ConfrontingViewpoint,
-  tags: ['autodocs']
+  tags: ['autodocs', 'pages']
 } satisfies Meta<typeof ConfrontingViewpoint>
 
 export default meta

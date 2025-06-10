@@ -17,7 +17,7 @@ const meta: any = {
   args: {
     onChangeSelection: fn(),
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', 'molecules'],
   parameters: {
     docs: {
       description: {

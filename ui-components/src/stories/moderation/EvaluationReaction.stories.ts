@@ -11,7 +11,7 @@ const meta: any = {
     onSubmitReport: fn(),
     onSubmitUtilityGrade: fn(),
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', "organisms"],
   parameters: {
     docs: {
       description: {

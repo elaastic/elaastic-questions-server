@@ -7,7 +7,7 @@ import type { LikertValue } from '@/components/evaluation/Likert'
 const meta = {
   title: 'Evaluation/Likert',
   component: LikertScale,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'molecules'],
   argTypes: {
     color: { control: 'text' },
   },

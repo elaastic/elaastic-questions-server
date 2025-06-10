@@ -9,7 +9,7 @@ const lorem =
 const meta: any = {
   title: 'Moderation/ReportModal',
   component: ReportModal,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'molecules'],
   args: {
     onSubmitReport: fn(),
   },

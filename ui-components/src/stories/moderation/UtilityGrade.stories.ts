@@ -13,7 +13,7 @@ const meta: any = {
     // Has to have the name of the event with `on` in front and in camelCase
     onSubmitUtilityGrade: fn(),
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', 'molecules'],
   parameters: {
     docs: {
       description: {
