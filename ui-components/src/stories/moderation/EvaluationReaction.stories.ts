@@ -1,5 +1,5 @@
-import {expect, fn, waitFor} from '@storybook/test'
-import type { Meta, StoryObj } from '@storybook/vue3'
+import {expect, fn, waitFor} from 'storybook/test'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import EvaluationReaction from '@/components/moderation/EvaluationReaction.vue'
 
