@@ -1,7 +1,8 @@
 package org.elaastic
 
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertInstanceOf
+import org.junit.jupiter.api.Assertions.assertTrue
 
 /*
  * Custom assertion functions for testing.

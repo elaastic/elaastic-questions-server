@@ -18,20 +18,18 @@
 
 package org.elaastic.auth.lti
 
-import org.elaastic.auth.lti.LmsAssignment
-import org.elaastic.auth.lti.LmsAssignmentRepository
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
-import org.hamcrest.MatcherAssert.assertThat
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional

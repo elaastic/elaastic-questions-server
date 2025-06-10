@@ -22,14 +22,13 @@ import org.elaastic.assignment.AssignmentService
 import org.elaastic.filestore.DataIdentifier
 import org.elaastic.filestore.FileDataStore
 import org.elaastic.material.instructional.question.QuestionType
-import org.elaastic.material.instructional.question.attachment.*
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementRepository
+import org.elaastic.sequence.LearnerSequenceRepository
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
-import org.elaastic.sequence.LearnerSequenceRepository
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.AfterEach

@@ -4,13 +4,12 @@ import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGradingController.ResponseSubmissionAsynchronous
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.assignment.AssignmentService
-import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.common.util.requireAccessThrowDenied
 import org.elaastic.moderation.UtilityGrade
 import org.elaastic.player.evaluation.EvaluationModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.sequence.SequenceService
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder

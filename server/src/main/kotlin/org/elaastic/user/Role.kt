@@ -26,10 +26,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.security.core.GrantedAuthority
 import java.io.Serializable
-import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
-import kotlin.collections.Collection
 
 
 /** Role entity */

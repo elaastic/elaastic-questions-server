@@ -10,14 +10,13 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.common.util.requireAccess
 import org.elaastic.moderation.ReportCandidate
 import org.elaastic.moderation.UtilityGrade
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.elaastic.user.PrincipalUserResolver
 
 /** Controller for stat of utility grade */
 @RequestMapping("stat/utility-grade")

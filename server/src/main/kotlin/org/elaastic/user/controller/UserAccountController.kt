@@ -19,8 +19,8 @@
 package org.elaastic.user.controller
 
 
-import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.common.onboarding.OnboardingChapter
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService

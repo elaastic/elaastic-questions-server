@@ -12,7 +12,8 @@ import org.elaastic.consolidation.subject.question.specification.OpenQuestionSpe
 import org.elaastic.material.instructional.question.attachment.Attachment
 import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.security.TestSecurityConfig
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.CoreMatchers.hasItem
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

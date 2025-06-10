@@ -20,12 +20,12 @@ package org.elaastic.user
 
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.jupiter.api.Assertions.*
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

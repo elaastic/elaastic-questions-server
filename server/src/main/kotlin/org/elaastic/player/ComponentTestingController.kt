@@ -28,7 +28,6 @@ import org.elaastic.activity.response.MultipleChoiceResponseData
 import org.elaastic.activity.response.OpenEndedResponseData
 import org.elaastic.activity.results.*
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
-import org.elaastic.auth.oauth.ElaasticOidcUser
 import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.question.ChoiceItem
@@ -85,7 +84,6 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.togglz.core.Feature
 import org.togglz.core.manager.FeatureManager
 import java.math.BigDecimal
 import kotlin.random.Random

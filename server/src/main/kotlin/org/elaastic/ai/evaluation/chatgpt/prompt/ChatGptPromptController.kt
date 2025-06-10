@@ -1,8 +1,7 @@
 package org.elaastic.ai.evaluation.chatgpt.prompt
 
-import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

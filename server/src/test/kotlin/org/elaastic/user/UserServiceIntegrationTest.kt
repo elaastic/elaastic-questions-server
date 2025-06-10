@@ -20,7 +20,6 @@ package org.elaastic.user
 
 import org.apache.commons.lang3.time.DateUtils
 import org.elaastic.assertIsEmpty
-import org.elaastic.auth.UserLink
 import org.elaastic.auth.UserLinkRepository
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tExpect

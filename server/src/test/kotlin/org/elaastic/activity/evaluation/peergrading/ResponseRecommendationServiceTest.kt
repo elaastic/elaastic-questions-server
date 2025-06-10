@@ -17,11 +17,11 @@
  */
 package org.elaastic.activity.evaluation.peergrading
 
-import org.elaastic.activity.response.Response
-import org.junit.jupiter.api.Test
 import com.nhaarman.mockitokotlin2.*
 import org.elaastic.activity.evaluation.ResponseId
+import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
+import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import javax.persistence.EntityManager
 

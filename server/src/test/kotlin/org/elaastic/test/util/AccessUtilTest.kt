@@ -2,9 +2,9 @@ package org.elaastic.test.util
 
 import org.elaastic.common.util.requireAccess
 import org.elaastic.common.util.requireAccessThrowDenied
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.security.access.AccessDeniedException as AccessDeniedExceptionSpring
 
 class AccessUtilTest {

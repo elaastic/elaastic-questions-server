@@ -13,7 +13,6 @@ import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhaseExecutionLoader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.togglz.core.manager.FeatureManager
 
 @Service("LearnerResultPhaseExecutionLoader")
 class LearnerResultPhaseExecutionLoader(

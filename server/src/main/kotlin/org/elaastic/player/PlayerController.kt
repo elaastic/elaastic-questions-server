@@ -28,14 +28,12 @@ import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.player.dashboard.SequenceMonitoringModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
-import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.results.learner.LearnerResultsModelFactory
 import org.elaastic.player.results.learner.LearnerSequenceResponses
@@ -52,6 +50,7 @@ import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.LearnerPhaseService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.user.AnonymousUserService
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.User
 import org.elaastic.user.UserService
 import org.slf4j.LoggerFactory

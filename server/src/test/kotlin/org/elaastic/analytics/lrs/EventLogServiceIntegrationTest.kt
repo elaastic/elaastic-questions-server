@@ -7,10 +7,10 @@ import com.nhaarman.mockitokotlin2.verify
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.LearnerSequence
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.user.Role
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
+import org.elaastic.user.Role
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.BeforeEach

@@ -19,20 +19,19 @@
 package org.elaastic.user
 
 import org.elaastic.test.IntegrationTestingService
-
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import java.util.logging.Logger
-import javax.validation.Validation
-import javax.validation.Validator
-import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.util.logging.Logger
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
+import javax.validation.Validation
+import javax.validation.Validator
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional

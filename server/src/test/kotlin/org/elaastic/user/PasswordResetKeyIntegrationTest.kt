@@ -24,19 +24,18 @@ import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
 import org.hamcrest.CoreMatchers.*
-
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
 import java.util.logging.Logger
-import javax.validation.Validation
-import javax.validation.Validator
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.jupiter.api.assertThrows
-import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
 import javax.validation.ConstraintViolationException
+import javax.validation.Validation
+import javax.validation.Validator
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional

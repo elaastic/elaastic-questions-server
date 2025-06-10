@@ -21,10 +21,10 @@ package org.elaastic.sequence.interaction
 import org.elaastic.activity.results.ResponseDistributionConverter
 import org.elaastic.activity.results.ResponsesDistribution
 import org.elaastic.activity.results.ResponsesDistributionOnAttempt
-import org.junit.jupiter.api.Test
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 
 internal class ResponsesDistributionConverterTest {

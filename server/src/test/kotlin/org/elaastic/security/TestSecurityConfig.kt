@@ -18,7 +18,6 @@
 
 package org.elaastic.security
 
-import org.elaastic.security.RestSecurityConfig
 import org.elaastic.user.Role
 import org.elaastic.user.User
 import org.springframework.boot.test.context.TestConfiguration

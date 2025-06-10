@@ -7,7 +7,6 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.sequence.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.togglz.core.manager.FeatureManager
 
 /**
  * Service to build the model for the teacher result dashboard.

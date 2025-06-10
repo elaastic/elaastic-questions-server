@@ -18,12 +18,11 @@
 
 package org.elaastic.material.instructional.question.explanation
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import javax.validation.Validation
 import javax.validation.Validator
-
 
 
 class TeacherExplanationTest {

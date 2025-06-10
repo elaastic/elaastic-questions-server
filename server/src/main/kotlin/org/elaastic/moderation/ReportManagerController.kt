@@ -8,7 +8,7 @@ import org.elaastic.assignment.AssignmentService
 import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.sequence.SequenceService
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.http.ResponseEntity
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import org.elaastic.user.PrincipalUserResolver
 
 @Controller
 @RequestMapping("/report-manager")

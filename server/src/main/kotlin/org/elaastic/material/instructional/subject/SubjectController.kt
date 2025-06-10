@@ -2,7 +2,6 @@ package org.elaastic.material.instructional.subject
 
 import org.elaastic.assignment.AssignmentController
 import org.elaastic.assignment.AssignmentService
-import org.elaastic.auth.oauth.ElaasticOidcUser
 import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
@@ -12,6 +11,7 @@ import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.statement.StatementController
 import org.elaastic.material.instructional.statement.StatementService
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
@@ -38,7 +38,6 @@ import javax.transaction.Transactional
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
-import org.elaastic.user.PrincipalUserResolver
 
 @Controller
 @RequestMapping("/subject", "/elaastic-questions/subject")

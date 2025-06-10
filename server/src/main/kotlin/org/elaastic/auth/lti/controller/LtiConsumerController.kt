@@ -21,10 +21,9 @@ package org.elaastic.auth.lti.controller
 import org.elaastic.auth.lti.LtiConsumer
 import org.elaastic.auth.lti.LtiConsumerRepository
 import org.elaastic.auth.lti.LtiConsumerService
-import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort

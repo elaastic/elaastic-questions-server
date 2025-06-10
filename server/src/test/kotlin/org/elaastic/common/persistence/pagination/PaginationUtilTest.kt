@@ -18,8 +18,8 @@
 
 package org.elaastic.common.persistence.pagination
 
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test
 
 
