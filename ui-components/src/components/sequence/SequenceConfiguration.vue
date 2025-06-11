@@ -1,18 +1,28 @@
 <script setup lang="ts">
 import {useI18n} from 'vue-i18n'
 import {computed, ref} from "vue";
-import type {Selection} from "@/components/util/SelectorResponsive.vue";
 
 const {t} = useI18n()
 
 type ExecutionContext = string
+type EvaluationMethod = string
+
+export interface SequenceConfigurationProps {
+  /**
+   * Maximal number of responses to evaluate
+   */
+  maxResponseToEvaluate: number
+}
+
+const props = withDefaults(defineProps<SequenceConfigurationProps>(), {
+  maxResponseToEvaluate: 5
+})
 
 const ECOption: ExecutionContext[] = [
   'FaceToFace',
   'Distance',
   'Blended'
 ]
-
 const noticeForEC = (executionContextKey: ExecutionContext) => {
   return t(`sequenceConfiguration.executionContext.${executionContextKey}.notice`)
 }
@@ -20,7 +30,18 @@ const labelForEC = (executionContextKey: ExecutionContext) => {
   return t(`sequenceConfiguration.executionContext.${executionContextKey}.title`)
 }
 
+const EMOption: EvaluationMethod[] = [
+  'ALL_AT_ONCE',
+  'DRAXO'
+]
+const labelForEM = (evaluationMethodKey: EvaluationMethod) => {
+  return t(`sequenceConfiguration.phase.confrontingViews.evaluationMethod.${evaluationMethodKey}`)
+}
+
 const executionContext = ref<ExecutionContext>(ECOption[0])
+const studentGiveExplanation = ref<boolean>(true)
+const nbResponseToEvaluate = ref<number>(props.maxResponseToEvaluate)
+const evaluationMethod = ref<EvaluationMethod>(EMOption[0])
 
 const readyToSend = computed(() => {
   return executionContext.value !== undefined
@@ -29,19 +50,20 @@ const readyToSend = computed(() => {
 
 <template>
   <v-card
-          :title="t('sequenceConfiguration.title')"
+    class="d-flex flex-column"
+    :title="t('sequenceConfiguration.title')"
   >
-    <v-radio-group inline
-                   :label="t('sequenceConfiguration.executionContext.title') + ' : ' + executionContext"
-                   v-model="executionContext"
-    >
-      <v-radio
-              v-for="option in ECOption"
-              :key="option"
-              :label="labelForEC(option)"
-              :value="option"></v-radio>
-    </v-radio-group>
-
+    <v-card-text>
+      <v-radio-group inline
+                     :label="t('sequenceConfiguration.executionContext.title')"
+                     v-model="executionContext"
+      >
+        <v-radio
+          v-for="option in ECOption"
+          :key="option"
+          :label="labelForEC(option)"
+          :value="option"></v-radio>
+      </v-radio-group>
       <v-alert
         v-if="executionContext !== undefined"
         :text="noticeForEC(executionContext)"
@@ -51,6 +73,66 @@ const readyToSend = computed(() => {
       >
       </v-alert>
 
+      <v-divider></v-divider>
+      <v-checkbox
+        v-model="studentGiveExplanation"
+        :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
+        class="mt-4"
+      >
+      </v-checkbox>
+
+      <v-expand-transition>
+        <v-sheet v-if="studentGiveExplanation">
+          <v-row align="center" justify="start">
+            <v-col cols="auto">
+              <v-checkbox
+                v-model="studentGiveExplanation"
+                :label="t('sequenceConfiguration.phase.confrontingViews.studentsEvaluate')"
+                class="mt-4"
+                :disabled="true"
+              >
+              </v-checkbox>
+            </v-col>
+            <v-col cols="auto">
+              <v-select
+                variant="outlined"
+                density="compact"
+                v-model="nbResponseToEvaluate"
+                :items="props.maxResponseToEvaluate > 0 ? Array.from({length: props.maxResponseToEvaluate}, (_, i) => i + 1) : []"
+                class="mt-4"
+                style="min-width: 50px;"
+              >
+              </v-select>
+            </v-col>
+            <v-col cols="auto">
+              <p>
+                {{ t('sequenceConfiguration.phase.confrontingViews.answers') }}
+              </p>
+            </v-col>
+          </v-row>
+
+          <div class="d-flex flex-column align-start">
+            <v-radio-group
+              :label="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.title')"
+              v-model="evaluationMethod"
+            >
+              <v-radio
+                v-for="option in EMOption"
+                :key="option"
+                :label="labelForEM(option)"
+                :value="option"></v-radio>
+            </v-radio-group>
+            <v-alert type="info" variant="outlined" class="align-self-end " density="compact">
+              <a href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO">
+                {{ t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.draxoDocumentation') }}
+              </a>
+            </v-alert>
+          </div>
+        </v-sheet>
+      </v-expand-transition>
+
+
+    </v-card-text>
 
     <v-card-actions>
       <v-btn
@@ -62,8 +144,8 @@ const readyToSend = computed(() => {
         {{ t('submit') }}
       </v-btn>
       <v-btn
-              class="text-none text-subtitle-1"
-              text="Cancel"
+        class="text-none text-subtitle-1"
+        text="Cancel"
       ></v-btn>
     </v-card-actions>
   </v-card>
@@ -93,6 +175,21 @@ const readyToSend = computed(() => {
           "title": "Blended",
           "notice": "The \"Hybrid\" context corresponds to a pedagogical situation taking place at a distance followed by a presentation of the results in face-to-face.\nThe teacher controls the opening of the sequence and the publication of the results.\nLearners can follow the first two phases at their own pace, but will not discover the results until they are published."
         }
+      },
+      "phase": {
+        "response": {
+          "studentsProvideAtextualExplanation": "Students provide a textual explanation"
+        },
+        "confrontingViews": {
+          "studentsEvaluate": "Students evaluate",
+          "answers": "answers",
+          "evaluationMethod": {
+            "title": "Evaluation method:",
+            "ALL_AT_ONCE": "Single evaluation criterion \"Degree of agreement\" without textual feedback",
+            "DRAXO": "DRAXO criteria grid with textual feedback",
+            "draxoDocumentation": "More information on the DRAXO evaluation grid"
+          }
+        }
       }
     }
   },
@@ -113,6 +210,21 @@ const readyToSend = computed(() => {
         "Blended": {
           "title": "Hybride",
           "notice": "Le contexte \"Hybride\" correspond à une situation pédagogique se déroulant à distance suivie d'une restitution des résultats en présentiel.\nL'enseignant contrôle l'ouverture de la séquence et la publication des résultats.\nLes apprenants peuvent enchaîner les deux premières phases à leur rythme mais ne découvriront les résultats qu'au moment de leur publication."
+        }
+      },
+      "phase": {
+        "response": {
+          "studentsProvideAtextualExplanation": "Les étudiants fournissent une explication"
+        },
+        "confrontingViews": {
+          "studentsEvaluate": "Les étudiants évaluent",
+          "answers": "réponses",
+          "evaluationMethod": {
+            "title": "Méthode d'évaluation",
+            "ALL_AT_ONCE": "Critère d'évaluation unique \"Degré d'accord\" sans feedback textuel",
+            "DRAXO": "Grille de critères DRAXO avec feedback textuel possible",
+            "draxoDocumentation": "Plus d'informations sur la grille d'évaluation DRAXO"
+          }
         }
       }
     }

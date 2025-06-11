@@ -6,7 +6,9 @@ import SequenceConfiguration from "@/components/sequence/SequenceConfiguration.v
 const meta: any = {
   title: 'sequence/SequenceConfiguration',
   component: SequenceConfiguration,
-  args: {},
+  args: {
+    maxResponseToEvaluate: 5
+  },
   tags: ['autodocs', 'pages'],
   parameters: {
     docs: {
