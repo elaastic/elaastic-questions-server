@@ -1,5 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/vue3-vite';
 import SequenceConfiguration from "@/components/sequence/SequenceConfiguration.vue";
+import {fn} from "storybook/test";
 
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
@@ -7,7 +8,9 @@ const meta: any = {
   title: 'sequence/SequenceConfiguration',
   component: SequenceConfiguration,
   args: {
-    maxResponseToEvaluate: 5
+    maxResponseToEvaluate: 5,
+    onCancelSequenceConfiguration: fn(),
+    onSubmitSequenceConfiguration: fn()
   },
   tags: ['autodocs', 'pages'],
   parameters: {

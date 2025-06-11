@@ -12,7 +12,7 @@ export interface LinkProps {
   /**
    * The target attribute for the link, defaults to "_self"
    */
-  target: string;
+  target?: string;
 }
 const props = withDefaults(defineProps<LinkProps>(), {
   target: "_self"

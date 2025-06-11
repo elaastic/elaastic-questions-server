@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useI18n} from 'vue-i18n'
-import {computed, ref} from "vue";
+import {ref} from "vue";
+import Link from '@/components/util/Link.vue'
 
 const {t} = useI18n()
 
@@ -13,10 +14,28 @@ export interface SequenceConfigurationProps {
    */
   maxResponseToEvaluate: number
 }
-
+export interface SequenceConfigurationEvents {
+  /**
+   * Fires when the user clicks on the submit button
+   */
+  (event: 'submitSequenceConfiguration', configuration: {
+    executionContext: ExecutionContext,
+    studentGiveExplanation: boolean,
+    confrontingViewsPhase?: {
+      nbResponseToEvaluate: number,
+      evaluationMethod: EvaluationMethod,
+      evaluationByIA: boolean
+    }
+  }): void;
+  /**
+   * Fires when the user clicks on the cancel button
+   */
+  (event: 'cancelSequenceConfiguration'): void;
+}
 const props = withDefaults(defineProps<SequenceConfigurationProps>(), {
   maxResponseToEvaluate: 5
 })
+const emit = defineEmits<SequenceConfigurationEvents>()
 
 const ECOption: ExecutionContext[] = [
   'FaceToFace',
@@ -42,10 +61,22 @@ const executionContext = ref<ExecutionContext>(ECOption[0])
 const studentGiveExplanation = ref<boolean>(true)
 const nbResponseToEvaluate = ref<number>(props.maxResponseToEvaluate)
 const evaluationMethod = ref<EvaluationMethod>(EMOption[0])
+const evaluationByIA = ref<boolean>(false)
 
-const readyToSend = computed(() => {
-  return executionContext.value !== undefined
-})
+const onSubmit = () => {
+  emit('submitSequenceConfiguration', {
+    executionContext: executionContext.value,
+    studentGiveExplanation: studentGiveExplanation.value,
+    confrontingViewsPhase: studentGiveExplanation.value ? {
+      nbResponseToEvaluate: nbResponseToEvaluate.value,
+      evaluationMethod: evaluationMethod.value,
+      evaluationByIA: evaluationByIA.value
+    } : undefined
+  })
+}
+const onCancel = () => {
+  emit('cancelSequenceConfiguration')
+}
 </script>
 
 <template>
@@ -54,26 +85,31 @@ const readyToSend = computed(() => {
     :title="t('sequenceConfiguration.title')"
   >
     <v-card-text>
-      <v-radio-group inline
-                     :label="t('sequenceConfiguration.executionContext.title')"
-                     v-model="executionContext"
-      >
-        <v-radio
-          v-for="option in ECOption"
-          :key="option"
-          :label="labelForEC(option)"
-          :value="option"></v-radio>
-      </v-radio-group>
-      <v-alert
-        v-if="executionContext !== undefined"
-        :text="noticeForEC(executionContext)"
-        type="info"
-        variant="tonal"
-        style="white-space: pre-line"
-      >
-      </v-alert>
+      <!-- Execution Context -->
+      <div class="mb-4">
+        <v-radio-group inline
+                       :label="t('sequenceConfiguration.executionContext.title')"
+                       v-model="executionContext"
+        >
+          <v-radio
+            v-for="option in ECOption"
+            :key="option"
+            :label="labelForEC(option)"
+            :value="option"></v-radio>
+        </v-radio-group>
+        <v-alert
+          v-if="executionContext !== undefined"
+          :text="noticeForEC(executionContext)"
+          type="info"
+          variant="tonal"
+          style="white-space: pre-line"
+        >
+        </v-alert>
+      </div>
 
       <v-divider></v-divider>
+
+      <!-- Student give a textual explanation -->
       <v-checkbox
         v-model="studentGiveExplanation"
         :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
@@ -81,8 +117,10 @@ const readyToSend = computed(() => {
       >
       </v-checkbox>
 
+      <!-- Confronting View Phase -->
       <v-expand-transition>
         <v-sheet v-if="studentGiveExplanation">
+          <!-- Number of Responses to Evaluate -->
           <v-row align="center" justify="start">
             <v-col cols="auto">
               <v-checkbox
@@ -111,6 +149,7 @@ const readyToSend = computed(() => {
             </v-col>
           </v-row>
 
+          <!-- Evaluation Method -->
           <div class="d-flex flex-column align-start">
             <v-radio-group
               :label="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.title')"
@@ -123,29 +162,57 @@ const readyToSend = computed(() => {
                 :value="option"></v-radio>
             </v-radio-group>
             <v-alert type="info" variant="outlined" class="align-self-end " density="compact">
-              <a href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO">
-                {{ t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.draxoDocumentation') }}
-              </a>
+              <Link
+                href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
+                :text="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.draxoDocumentation')"
+                target="_blank"
+              />
             </v-alert>
           </div>
+
+          <!-- IA Evaluation -->
+          <v-row align="center" justify="start">
+            <v-col cols="auto">
+              <v-checkbox
+                v-model="evaluationByIA"
+                :label="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.label')"
+                class="mt-4"
+              >
+              </v-checkbox>
+            </v-col>
+            <v-col cols="auto">
+              <v-tooltip
+                :text="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.notice')"
+                location="top"
+              >
+                <template v-slot:activator="{ props }">
+                  <v-icon v-bind="props" icon="mdi-help-circle">
+                  </v-icon>
+                </template>
+              </v-tooltip>
+
+            </v-col>
+          </v-row>
         </v-sheet>
       </v-expand-transition>
 
 
     </v-card-text>
 
-    <v-card-actions>
+    <v-card-actions class="justify-end">
       <v-btn
-        :disabled="!readyToSend"
         class="text-none text-subtitle-1 text-white"
         color="#95c155"
         variant="flat"
+        @click="onSubmit"
       >
         {{ t('submit') }}
       </v-btn>
       <v-btn
         class="text-none text-subtitle-1"
         text="Cancel"
+        variant="outlined"
+        @click="onCancel"
       ></v-btn>
     </v-card-actions>
   </v-card>
@@ -188,6 +255,10 @@ const readyToSend = computed(() => {
             "ALL_AT_ONCE": "Single evaluation criterion \"Degree of agreement\" without textual feedback",
             "DRAXO": "DRAXO criteria grid with textual feedback",
             "draxoDocumentation": "More information on the DRAXO evaluation grid"
+          },
+          "IAEvaluation": {
+            "label": "ChatGPT Explanations",
+            "notice": "For each student explanation, ChatGPT automatically produces a justified evaluation based on the explanation provided by the teacher."
           }
         }
       }
@@ -224,6 +295,10 @@ const readyToSend = computed(() => {
             "ALL_AT_ONCE": "Critère d'évaluation unique \"Degré d'accord\" sans feedback textuel",
             "DRAXO": "Grille de critères DRAXO avec feedback textuel possible",
             "draxoDocumentation": "Plus d'informations sur la grille d'évaluation DRAXO"
+          },
+          "IAEvaluation": {
+            "label": "Explications de ChatGPT",
+            "notice": "Pour chaque explication d'étudiant, ChatGPT produit automatiquement une évaluation argumentée basée sur l'explication fournie par l'enseignant."
           }
         }
       }
