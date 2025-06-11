@@ -14,24 +14,26 @@ export interface SequenceConfigurationProps {
    */
   maxResponseToEvaluate: number
 }
+
 export interface SequenceConfigurationEvents {
   /**
    * Fires when the user clicks on the submit button
    */
-  (event: 'submitSequenceConfiguration', configuration: {
-    executionContext: ExecutionContext,
-    studentGiveExplanation: boolean,
-    confrontingViewsPhase?: {
-      nbResponseToEvaluate: number,
-      evaluationMethod: EvaluationMethod,
-      evaluationByIA: boolean
-    }
-  }): void;
+  (event: 'submitSequenceConfiguration',
+   executionContext: ExecutionContext,
+   studentGiveExplanation: boolean,
+   confrontingViewsPhase?: {
+     nbResponseToEvaluate: number,
+     evaluationMethod: EvaluationMethod,
+     evaluationByIA: boolean
+   }): void;
+
   /**
    * Fires when the user clicks on the cancel button
    */
   (event: 'cancelSequenceConfiguration'): void;
 }
+
 const props = withDefaults(defineProps<SequenceConfigurationProps>(), {
   maxResponseToEvaluate: 5
 })
@@ -64,15 +66,15 @@ const evaluationMethod = ref<EvaluationMethod>(EMOption[0])
 const evaluationByIA = ref<boolean>(false)
 
 const onSubmit = () => {
-  emit('submitSequenceConfiguration', {
-    executionContext: executionContext.value,
-    studentGiveExplanation: studentGiveExplanation.value,
-    confrontingViewsPhase: studentGiveExplanation.value ? {
+  emit('submitSequenceConfiguration',
+    executionContext.value,
+    studentGiveExplanation.value,
+    studentGiveExplanation.value ? {
       nbResponseToEvaluate: nbResponseToEvaluate.value,
       evaluationMethod: evaluationMethod.value,
       evaluationByIA: evaluationByIA.value
     } : undefined
-  })
+  )
 }
 const onCancel = () => {
   emit('cancelSequenceConfiguration')
