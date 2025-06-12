@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestMapping
 class SequenceUiController {
 
     @GetMapping("/sequence-configuration")
-    fun sequenceConfiguration() = "player/assignment/sequence/components/command/sequence-config"
+    fun sequenceConfiguration() = "player/assignment/sequence/components/command/ui-sequence-config"
 }
