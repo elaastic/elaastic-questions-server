@@ -29,18 +29,18 @@
         <meta name="_csrf" th:content="${_csrf.token}"/>
         <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
         <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
-        <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
         <title th:replace="${title}">elaastic</title>
-        <script th:src="@{/semantic/dist/semantic.min.js}"></script>
         <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vuetify@3.7.3/dist/vuetify.min.js"></script>
         <script src="https://unpkg.com/vue-i18n@10"></script>
         <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/child@5.3.2"></script>
         <script th:src="@{'/vue-components/elaastic-vue-components-v' + ${uiComponentsVersion} + '.umd.min.js'}"></script>
+        <script th:src="@{/semantic/dist/semantic.min.js}"></script>
         <link th:href="@{'/vue-components/style-v' + ${uiComponentsVersion} + '.css'}" type="text/css" rel="stylesheet" media="screen, projection">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
         <link href="https://cdn.jsdelivr.net/npm/vuetify@3.7.3/dist/vuetify.min.css" type="text/css" rel="stylesheet">
         <link th:href="@{/css/ui-app.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
+        <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
         <style th:replace="${style}"></style>
     </head>
 

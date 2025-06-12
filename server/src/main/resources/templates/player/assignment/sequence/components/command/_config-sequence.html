@@ -19,35 +19,29 @@
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns="http://www.w3.org/1999/html"
      th:fragment="configSequence(sequenceId, statementId, questionType, hasExpectedExplanation)"
-     class="ui modal long"
+     class="ui modal"
      th:id="|sequenceSpec_${sequenceId}|">
 
-    <!--/* Content of the modal */-->
-    <div>
+    <form class="ui form" th:id="|sequenceSpec_${sequenceId}_form|"
+          th:action="@{/player/sequence/{sequenceId}/start(sequenceId=${sequenceId})}">
+        <!--/* Hidden input to send the sequence id */-->
+        <input name="id" th:value="${sequenceId}" type="hidden">
+        <!--/* Execution context */-->
+        <input name="executionContext" type="hidden"/>
 
-        <form class="ui form" th:id="|sequenceSpec_${sequenceId}_form|"
-              th:action="@{/player/sequence/{sequenceId}/start(sequenceId=${sequenceId})}">
-            <!--/* Hidden input to send the sequence id */-->
-            <input name="id" th:value="${sequenceId}" type="hidden">
-            <!--/* Execution context */-->
-            <input name="executionContext" type="hidden"/>
-
-            <div th:id="|configuration_${sequenceId}|">
-                <!--/* Input for if students have to provide an explanation */-->
-                <input name="studentsProvideExplanation" type="hidden"/>
-                <!--/* Checkbox to enable the evaluation of the student's answers, always true and unchangeable */-->
-                <input type="hidden">
-                <!--/* Select to set how many answers the students have to evaluate */-->
-                <input name="responseToEvaluateCount" type="hidden"/>
-                <!--/* Evaluation method */-->
-                <input name="evaluationPhaseConfig" type="hidden"/>
-                <!--/* ChatGPT evaluation */-->
-                <input name="chatGptEvaluation" type="hidden"/>
-            </div>
-        </form>
-
-
-    </div>
+        <div th:id="|configuration_${sequenceId}|">
+            <!--/* Input for if students have to provide an explanation */-->
+            <input name="studentsProvideExplanation" type="hidden"/>
+            <!--/* Checkbox to enable the evaluation of the student's answers, always true and unchangeable */-->
+            <input type="hidden">
+            <!--/* Select to set how many answers the students have to evaluate */-->
+            <input name="responseToEvaluateCount" type="hidden"/>
+            <!--/* Evaluation method */-->
+            <input name="evaluationPhaseConfig" type="hidden"/>
+            <!--/* ChatGPT evaluation */-->
+            <input name="chatGptEvaluation" type="hidden"/>
+        </div>
+    </form>
 
     <iframe
             th:id="|sequenceConfiguration_${sequenceId}|"
@@ -61,10 +55,13 @@
             let modalId = 'sequenceSpec_' + [[${sequenceId}]]
             const configSequenceForm = $('#' + modalId + '_form');
 
-            $('#' + modalId).modal({
+            const $modalConfigSequence = $('#' + modalId);
+            $modalConfigSequence.modal({
                 centered: false,
                 closable: true,
             })
+
+            $modalConfigSequence.css({'margin-top': '2vh', 'top': 'auto'});
 
             const iframe = document.getElementById('sequenceConfiguration_' + [[${sequenceId}]]);
             iframe.onload = () => {
@@ -73,7 +70,7 @@
 
             window.addEventListener('message', (event) => {
                 if (event.data.command === 'sequence-configuration-cancelled') {
-                    $('#' + modalId).modal('hide');
+                    $modalConfigSequence.modal('hide');
                 } else if (event.data.command === 'sequence-configuration-submitted') {
                     const data = event.data;
                     console.log(data)
@@ -94,7 +91,7 @@
                         configSequenceForm.find('input[name="chatGptEvaluation"]').val("");
                     }
 
-                    $('#' + modalId).modal('hide');
+                    $modalConfigSequence.modal('hide');
 
                     // A Form serialized is a string like 'key1=value1&key2=value2',
                     // very handy when you send data with a GET request
