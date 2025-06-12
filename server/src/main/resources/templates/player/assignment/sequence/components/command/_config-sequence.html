@@ -59,21 +59,11 @@
     <script th:inline="javascript">
         $(function () {
             let modalId = 'sequenceSpec_' + [[${sequenceId}]]
+            const configSequenceForm = $('#' + modalId + '_form');
 
             $('#' + modalId).modal({
                 centered: false,
-                onApprove: function () {
-                    const form = $('#' + modalId + '_form');
-
-                    // A Form serialized is a string like 'key1=value1&key2=value2',
-                    // very handy when you send data with a GET request
-                    const data = form.serialize();
-
-                    $.get(form.attr('action'), data)
-                            .done(function () {
-                                window.location.reload();
-                            })
-                }
+                closable: true,
             })
 
             const iframe = document.getElementById('sequenceConfiguration_' + [[${sequenceId}]]);
@@ -83,10 +73,40 @@
 
             window.addEventListener('message', (event) => {
                 if (event.data.command === 'sequence-configuration-cancelled') {
-                    console.log(event.data)
+                    $('#' + modalId).modal('hide');
                 } else if (event.data.command === 'sequence-configuration-submitted') {
                     const data = event.data;
                     console.log(data)
+
+                    // Update the form with the data received from the iframe
+                    configSequenceForm.find('input[name="executionContext"]').val(data.executionContext);
+
+                    const studentGiveExplanation = data.studentGiveExplanation;
+                    const confrontingViewsPhase = data.confrontingViewsPhase;
+                    configSequenceForm.find('input[name="studentsProvideExplanation"]').val(studentGiveExplanation);
+                    if (studentGiveExplanation && confrontingViewsPhase) {
+                        configSequenceForm.find('input[name="responseToEvaluateCount"]').val(confrontingViewsPhase.nbResponseToEvaluate);
+                        configSequenceForm.find('input[name="evaluationPhaseConfig"]').val(confrontingViewsPhase.evaluationMethod);
+                        configSequenceForm.find('input[name="chatGptEvaluation"]').val(confrontingViewsPhase.evaluationByIA);
+                    } else {
+                        configSequenceForm.find('input[name="responseToEvaluateCount"]').val("");
+                        configSequenceForm.find('input[name="evaluationPhaseConfig"]').val("");
+                        configSequenceForm.find('input[name="chatGptEvaluation"]').val("");
+                    }
+
+                    $('#' + modalId).modal('hide');
+
+                    // A Form serialized is a string like 'key1=value1&key2=value2',
+                    // very handy when you send data with a GET request
+                    const formData = configSequenceForm.serialize();
+
+                    console.log("data :");
+                    console.log(formData);
+
+                    $.get(configSequenceForm.attr('action'), formData)
+                            .done(function () {
+                                window.location.reload();
+                            })
                 }
             })
 

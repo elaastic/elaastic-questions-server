@@ -29,7 +29,9 @@
         <meta name="_csrf" th:content="${_csrf.token}"/>
         <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
         <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+        <link th:href="@{/semantic/dist/semantic.min.css}" type="text/css" rel="stylesheet" media="screen, projection"/>
         <title th:replace="${title}">elaastic</title>
+        <script th:src="@{/semantic/dist/semantic.min.js}"></script>
         <script src="https://unpkg.com/vue@3.5.12/dist/vue.global.prod.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vuetify@3.7.3/dist/vuetify.min.js"></script>
         <script src="https://unpkg.com/vue-i18n@10"></script>

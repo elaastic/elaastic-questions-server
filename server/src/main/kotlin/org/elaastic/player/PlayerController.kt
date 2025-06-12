@@ -338,7 +338,6 @@ class PlayerController(
     @GetMapping("/sequence/{sequenceId}/start")
     fun startSequence(
         authentication: Authentication,
-        model: Model,
         @PathVariable sequenceId: Long,
         @RequestParam executionContext: ExecutionContext,
         @RequestParam studentsProvideExplanation: Boolean?,
