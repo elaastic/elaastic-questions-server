@@ -5,20 +5,33 @@ import ChoiceFrame from "@/components/results/ChoiceFrame.vue";
 import ElExplanation from "@/components/results/ElExplanation.vue";
 import {onMounted, type PropType, ref} from "vue";
 import type {AnyResponse} from "@/models/Response";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
+  /**
+   * All possible answers.
+   */
   answers: {
     type: Array<{itemIndex: number, isCorrect: boolean}>,
     default: () => []
   },
+  /**
+   * Student's explanation at his first attempt.
+   */
   explanationFirstAttempt: {
     type: Object as PropType<{answer: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean}>,
     default: () => []
   },
+  /**
+   * Student's explanation at his second attempt.
+   */
   explanationSecondAttempt: {
     type: Object as PropType<{answer: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean}>,
     default: () => []
   },
+  /**
+   * A boolean. True if the panel is open. False if not.
+   */
   open: {
     type: Boolean,
     default: true
@@ -52,13 +65,14 @@ onMounted(() => {
   }
 })
 
+const { t } = useI18n()
 </script>
 
 <template>
-  <ContentBlock :title="'Mes résultats'" :collapsible="true" v-model:open="openLocal" :is-subtitle-hidden="true">
-    <h2>Phase 1</h2>
+  <ContentBlock :title="t('my-results')" :collapsible="true" v-model:open="openLocal" :is-subtitle-hidden="true">
+    <h2>{{t('step')}} 1</h2>
     <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
-      <h4>Choix</h4>
+      <h4>{{t('choice')}}</h4>
       <div class="groupChoiceFrame">
         <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedFirstAttempt.includes(a.itemIndex)"/>
       </div>
@@ -70,9 +84,9 @@ onMounted(() => {
       </v-card>
     </div>
     <ElExplanation :response="props.explanationFirstAttempt.answer" :number-of-peer-review="props.explanationFirstAttempt.nbPeer" :grade="explanationFirstAttempt.grade"/>
-    <h2 style="margin-top: 2%">Phase 2</h2>
+    <h2 style="margin-top: 2%">{{t('step')}} 2</h2>
     <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
-      <h4>Choix</h4>
+      <h4>{{t('choice')}}</h4>
       <div class="groupChoiceFrame">
         <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedSecondAttempt.includes(a.itemIndex)"/>
       </div>
@@ -95,3 +109,17 @@ onMounted(() => {
   flex-wrap: wrap;
 }
 </style>
+<i18n>
+{
+  "en": {
+    "my-results": "My results",
+    "step": "Step",
+    "choice": "Choice"
+  },
+  "fr": {
+    "my-results": "Mes résultats",
+    "step": "Phase",
+    "choice": "Choix"
+  }
+}
+</i18n>
