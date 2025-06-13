@@ -137,7 +137,7 @@ class SequenceService(
         executionContext: ExecutionContext,
         studentsProvideExplanation: Boolean,
         nbResponseToEvaluate: Int,
-        evaluationPhaseConfig: EvaluationPhaseConfig?,
+        evaluationPhaseConfig: EvaluationPhaseConfig,
         chatGptEvaluationEnable: Boolean = false
     ): Sequence {
 
@@ -157,14 +157,13 @@ class SequenceService(
             sequence.selectActiveInteraction(InteractionType.ResponseSubmission)
         else sequence.selectActiveInteraction(InteractionType.Read)
 
-        sequence.let {
+        sequence.also {
             it.state = State.show
             it.executionContext = executionContext
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
-            it.evaluationPhaseConfig = evaluationPhaseConfig ?: EvaluationPhaseConfig.ALL_AT_ONCE
+            it.evaluationPhaseConfig = evaluationPhaseConfig
             it.chatGptEvaluationEnabled = chatGptEvaluationEnable
-            sequenceRepository.save(it)
-        }
+        }.let(sequenceRepository::save)
         if (studentsProvideExplanation) {
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
                 sequence = sequence,
@@ -213,7 +212,6 @@ class SequenceService(
                     ExecutionContext.FaceToFace, ExecutionContext.Blended -> State.beforeStart
                     ExecutionContext.Distance -> State.show
                 }
-
             )
         return sequence
     }

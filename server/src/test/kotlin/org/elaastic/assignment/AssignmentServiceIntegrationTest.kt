@@ -32,6 +32,7 @@ import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tExpect
@@ -112,7 +113,7 @@ internal class AssignmentServiceIntegrationTest(
         (1..n).forEach {
             assignmentService.save(
                 Assignment(
-                    title = "Assignment n°$it",
+                    title = "Assignment nï¿½$it",
                     owner = owner
                 )
             )
@@ -239,7 +240,7 @@ internal class AssignmentServiceIntegrationTest(
             ExecutionContext.FaceToFace,
             false,
             0,
-            null
+            EvaluationPhaseConfig.ALL_AT_ONCE
         )
 
         val interaction =
@@ -396,7 +397,7 @@ internal class AssignmentServiceIntegrationTest(
             subjectService.addStatement(
                 subject,
                 Statement.createDefaultStatement(subject.owner)
-                    .title("Sequence n°1")
+                    .title("Sequence nï¿½1")
                     .content("Content 1")
             )
         }.tThen {
@@ -419,7 +420,7 @@ internal class AssignmentServiceIntegrationTest(
         val statement1 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(subject.owner)
-                .title("Sequence n°1")
+                .title("Sequence nï¿½1")
                 .content("Content 1")
         )
         val assignment = subjectService.addAssignment(
