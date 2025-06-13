@@ -44,6 +44,68 @@ export const Default: Story = {
     scoreSecondAttempt: 0
   },
 }
+export const ExclusiveChoiceIdenticalAnswers: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: false}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}, {itemIndex: 6, isCorrect: false}, {itemIndex: 7, isCorrect: false}, {itemIndex: 8, isCorrect: false}, {itemIndex: 9, isCorrect: false}, {itemIndex: 10, isCorrect: false}],
+    explanationFirstAttempt: {
+      answer: {
+        id: 1,
+        questionType: 'ExclusiveChoice',
+        explanation: 'Ma réponse',
+        choice: 2,
+        confidence: 'Confiant(e)',
+      } satisfies ExclusiveChoiceResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    explanationSecondAttempt: {
+      answer: {
+        id: 2,
+        questionType: 'ExclusiveChoice',
+        explanation: 'Ma réponse',
+        choice: 2,
+        confidence: 'Confiant(e)'
+      } satisfies ExclusiveChoiceResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    scoreFirstAttempt: 0,
+    scoreSecondAttempt: 0
+  },
+}
+export const ExclusiveChoiceAnswersWithoutExplanation: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: false}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}, {itemIndex: 6, isCorrect: false}, {itemIndex: 7, isCorrect: false}, {itemIndex: 8, isCorrect: false}, {itemIndex: 9, isCorrect: false}, {itemIndex: 10, isCorrect: false}],
+    explanationFirstAttempt: {
+      answer: {
+        id: 1,
+        questionType: 'ExclusiveChoice',
+        explanation: '',
+        choice: 2,
+        confidence: 'Confiant(e)',
+      } satisfies ExclusiveChoiceResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    explanationSecondAttempt: {
+      answer: {
+        id: 2,
+        questionType: 'ExclusiveChoice',
+        explanation: '',
+        choice: 2,
+        confidence: 'Confiant(e)'
+      } satisfies ExclusiveChoiceResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    scoreFirstAttempt: 0,
+    scoreSecondAttempt: 0
+  },
+}
 export const MultipleChoice: Story = {
   args: {
     answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
@@ -73,6 +135,37 @@ export const MultipleChoice: Story = {
     },
     scoreFirstAttempt: 50,
     scoreSecondAttempt: 100
+  },
+}
+export const MultipleChoiceIdenticalAnswers: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
+    explanationFirstAttempt: {
+      answer: {
+        id: 1,
+        questionType: 'MultipleChoice',
+        explanation: 'Ma réponse',
+        choices: [1],
+        confidence: 'Confiant(e)',
+      } satisfies MultipleChoiceResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    explanationSecondAttempt: {
+      answer: {
+        id: 2,
+        questionType: 'MultipleChoice',
+        explanation: 'Ma réponse',
+        choices: [1],
+        confidence: 'Confiant(e)'
+      } satisfies MultipleChoiceResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    scoreFirstAttempt: 50,
+    scoreSecondAttempt: 50
   },
 }
 export const MultipleChoiceWithoutExplanation: Story = {
@@ -137,7 +230,7 @@ export const MultipleChoiceImproveScore: Story = {
     scoreSecondAttempt: 50
   },
 }
-export const Open: Story = {
+export const OpenQuestion: Story = {
   args: {
     answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
     explanationFirstAttempt: {
@@ -164,7 +257,66 @@ export const Open: Story = {
     }
   },
 }
-export const OpenWithExplanationGraded: Story = {
+export const OpenQuestionIdenticalAnswers: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
+    explanationFirstAttempt: {
+      answer: {
+        id: 1,
+        questionType: 'OpenEnded',
+        explanation: 'Ma réponse',
+        confidence: 'Confiant(e)',
+      } satisfies OpenEndedResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    explanationSecondAttempt: {
+      answer: {
+        id: 2,
+        questionType: 'OpenEnded',
+        explanation: 'Ma réponse',
+        confidence: 'Confiant(e)'
+      } satisfies OpenEndedResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    }
+  },
+}
+export const OpenQuestionOnlyFirstExplanation: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
+    explanationFirstAttempt: {
+      answer: {
+        id: 1,
+        questionType: 'OpenEnded',
+        explanation: 'Ma réponse',
+        confidence: 'Confiant(e)'
+      } satisfies OpenEndedResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    }
+  },
+}
+export const OpenQuestionOnlySecondExplanation: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
+    explanationSecondAttempt: {
+      answer: {
+        id: 1,
+        questionType: 'OpenEnded',
+        explanation: 'Ma réponse',
+        confidence: 'Confiant(e)'
+      } satisfies OpenEndedResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    }
+  },
+}
+export const OpenQuestionWithExplanationGraded: Story = {
   args: {
     answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
     explanationFirstAttempt: {
@@ -176,6 +328,33 @@ export const OpenWithExplanationGraded: Story = {
       } satisfies OpenEndedResponse,
       grade: 3.5,
       nbPeer: 3,
+      isTeacher: false,
+    },
+    explanationSecondAttempt: {
+      answer: {
+        id: 2,
+        questionType: 'OpenEnded',
+        explanation: 'Mon autre réponse',
+        confidence: 'Confiant(e)'
+      } satisfies OpenEndedResponse,
+      grade: 4,
+      nbPeer: 1,
+      isTeacher: false,
+    }
+  },
+}
+export const OpenQuestionOnlySecondExplanationGraded: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
+    explanationFirstAttempt: {
+      answer: {
+        id: 1,
+        questionType: 'OpenEnded',
+        explanation: 'Ma réponse',
+        confidence: 'Confiant(e)',
+      } satisfies OpenEndedResponse,
+      grade: 0,
+      nbPeer: 0,
       isTeacher: false,
     },
     explanationSecondAttempt: {

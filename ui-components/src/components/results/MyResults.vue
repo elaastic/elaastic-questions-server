@@ -71,9 +71,10 @@ const defineColor =  () => {
 
 <template>
   <ContentBlock :title="t('my-results')" :collapsible="true" v-model:open="openLocal" :is-subtitle-hidden="true">
-    <div v-if="props.explanationFirstAttempt != null && props.explanationSecondAttempt != null">
+    <div v-if="props.explanationFirstAttempt != null || props.explanationSecondAttempt != null">
+      <div v-if="props.explanationFirstAttempt">
       <h2>{{t('step')}} 1</h2>
-      <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
+      <div v-if="props.explanationFirstAttempt?.answer.questionType !== 'OpenEnded'">
         <h4>{{t('choice')}}</h4>
         <div class="groupChoiceFrame">
           <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedFirstAttempt.includes(a.itemIndex)"/>
@@ -85,9 +86,11 @@ const defineColor =  () => {
           </v-card-title>
         </v-card>
       </div>
-      <ElExplanation v-if="props.explanationFirstAttempt.answer.explanation !== ''" :response="props.explanationFirstAttempt.answer" :number-of-peer-review="props.explanationFirstAttempt.nbPeer" :grade="explanationFirstAttempt?.grade"/>
+        <ElExplanation v-if="props.explanationFirstAttempt?.answer.explanation !== ''" :response="props.explanationFirstAttempt?.answer" :number-of-peer-review="props.explanationFirstAttempt?.nbPeer" :grade="explanationFirstAttempt?.grade"/>
+      </div>
+      <div v-if="props.explanationSecondAttempt">
       <h2 style="margin-top: 2%">{{t('step')}} 2</h2>
-      <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
+      <div v-if="props.explanationSecondAttempt?.answer.questionType !== 'OpenEnded'">
         <h4>{{t('choice')}}</h4>
         <div class="groupChoiceFrame">
           <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedSecondAttempt.includes(a.itemIndex)"/>
@@ -99,7 +102,8 @@ const defineColor =  () => {
           </v-card-title>
         </v-card>
       </div>
-      <ElExplanation v-if="props.explanationSecondAttempt?.answer.explanation !== ''" :response="props.explanationSecondAttempt?.answer" :number-of-peer-review="props.explanationSecondAttempt?.nbPeer" :grade="props.explanationSecondAttempt?.grade"/>
+        <ElExplanation v-if="props.explanationSecondAttempt?.answer.explanation !== ''" :response="props.explanationSecondAttempt?.answer" :number-of-peer-review="props.explanationSecondAttempt?.nbPeer" :grade="props.explanationSecondAttempt?.grade"/>
+      </div>
     </div>
     <div v-else>
       <v-alert :title="t('no-answer')" :text="t('v-alert-title')" :type="'warning'"></v-alert>
