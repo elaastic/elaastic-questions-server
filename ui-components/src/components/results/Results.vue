@@ -153,7 +153,7 @@ const { t } = useI18n()
                        @update:is-best-answer="changeBestAnswers"
                        @update:is-hidden="hideAnswerTeacher"
         />
-        <v-divider class="line" thickness="2"></v-divider>
+        <v-divider v-if="studentExplanations.length > 0" class="line" thickness="2"></v-divider>
       </div>
       <ElExplanation class="exp"
                      v-for="item in studentExplanations"
@@ -165,7 +165,7 @@ const { t } = useI18n()
                      @update:is-best-answer="changeBestAnswers"
                      @update:is-hidden="hideAnswerStudent"
       />
-      <v-btn class="button text-none">{{t('see-all-explanations')}}</v-btn>
+      <v-btn v-if="props.explanations.length > 2" class="button text-none">{{t('see-all-explanations')}}</v-btn>
     </div>
   </ContentBlock>
 
