@@ -39,7 +39,9 @@ export const Default: Story = {
       grade: 0,
       nbPeer: 0,
       isTeacher: false,
-    }
+    },
+    scoreFirstAttempt: 100,
+    scoreSecondAttempt: 0
   },
 }
 export const MultipleChoice: Story = {
@@ -68,7 +70,9 @@ export const MultipleChoice: Story = {
       grade: 0,
       nbPeer: 0,
       isTeacher: false,
-    }
+    },
+    scoreFirstAttempt: 50,
+    scoreSecondAttempt: 100
   },
 }
 export const MultipleChoiceImproveScore: Story = {
@@ -97,7 +101,9 @@ export const MultipleChoiceImproveScore: Story = {
       grade: 0,
       nbPeer: 0,
       isTeacher: false,
-    }
+    },
+    scoreFirstAttempt: 0,
+    scoreSecondAttempt: 50
   },
 }
 export const Open: Story = {

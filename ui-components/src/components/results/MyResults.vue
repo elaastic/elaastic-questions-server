@@ -3,7 +3,7 @@
 import ContentBlock from "@/components/player/ContentBlock.vue";
 import ChoiceFrame from "@/components/results/ChoiceFrame.vue";
 import ElExplanation from "@/components/results/ElExplanation.vue";
-import {onMounted, type PropType, ref} from "vue";
+import {type PropType, ref} from "vue";
 import type {AnyResponse} from "@/models/Response";
 import {useI18n} from "vue-i18n";
 
@@ -36,36 +36,39 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  /**
+   * The student's score at the first attempt.
+   */
+  scoreFirstAttempt: {
+    type: Number,
+  },
+  /**
+   * The student's score at the second attempt.
+   */
+  scoreSecondAttempt: {
+    type: Number,
+  }
 
 })
 const openLocal = ref(props.open);
-const correctAnswer = props.answers.filter(answer => answer.isCorrect);
-const wrongAnswer = props.answers.filter(answer => !answer.isCorrect)
 const answersCheckedFirstAttempt: number[] = props.explanationFirstAttempt.answer.questionType === "MultipleChoice" ? props.explanationFirstAttempt.answer.choices : props.explanationFirstAttempt.answer.questionType === "ExclusiveChoice" ? [props.explanationFirstAttempt.answer.choice] : [];
 const answersCheckedSecondAttempt: number[] = props.explanationSecondAttempt.answer.questionType === "MultipleChoice" ? props.explanationSecondAttempt.answer.choices : props.explanationSecondAttempt.answer.questionType === "ExclusiveChoice"? [props.explanationSecondAttempt.answer.choice] : [];
-const scoreFirstAttempt = ref(0);
-const scoreSecondAttempt = ref(0);
-
-onMounted(() => {
-  for (const answer of correctAnswer) {
-    scoreFirstAttempt.value = answersCheckedFirstAttempt.includes(answer.itemIndex) ? scoreFirstAttempt.value + 1 : scoreFirstAttempt.value;
-    scoreSecondAttempt.value = answersCheckedSecondAttempt.includes(answer.itemIndex) ? scoreSecondAttempt.value + 1 : scoreSecondAttempt.value;
-  }
-  for (const answer of wrongAnswer) {
-    scoreFirstAttempt.value = answersCheckedFirstAttempt.includes(answer.itemIndex) ? scoreFirstAttempt.value - 1 : scoreFirstAttempt.value;
-    scoreSecondAttempt.value = answersCheckedSecondAttempt.includes(answer.itemIndex) ? scoreSecondAttempt.value - 1 : scoreSecondAttempt.value;
-  }
-  scoreFirstAttempt.value = (scoreFirstAttempt.value / correctAnswer.length) * 100;
-  scoreSecondAttempt.value = (scoreSecondAttempt.value / correctAnswer.length) * 100;
-  if(scoreFirstAttempt.value < 0) {
-    scoreFirstAttempt.value = 0;
-  }
-  if(scoreSecondAttempt.value < 0){
-    scoreSecondAttempt.value = 0;
-  }
-})
 
 const { t } = useI18n()
+
+const defineColor =  () => {
+    if(props.scoreSecondAttempt === 100){
+      return '#2E7D32';
+    }
+    else{
+      if(props.scoreFirstAttempt !== undefined && props.scoreSecondAttempt !== undefined && props.scoreSecondAttempt > props.scoreFirstAttempt){
+        return '#FF8A65';
+      }
+      else{
+        return '#AD1457';
+      }
+    }
+}
 </script>
 
 <template>
@@ -77,9 +80,9 @@ const { t } = useI18n()
         <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedFirstAttempt.includes(a.itemIndex)"/>
       </div>
       <h4>Score</h4>
-      <v-card style="width: 100px; margin-bottom: 2%" :color="scoreFirstAttempt === 100 ? '#2E7D32' : '#AD1457'">
+      <v-card style="width: 100px; margin-bottom: 2%" :color="props.scoreFirstAttempt === 100 ? '#2E7D32' : '#AD1457'">
         <v-card-title>
-          {{scoreFirstAttempt}}%
+          {{props.scoreFirstAttempt}}%
         </v-card-title>
       </v-card>
     </div>
@@ -91,9 +94,9 @@ const { t } = useI18n()
         <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedSecondAttempt.includes(a.itemIndex)"/>
       </div>
       <h4>Score</h4>
-      <v-card style="width: 100px; margin-bottom: 2%; color: white" :color="scoreSecondAttempt === 100 ? '#2E7D32' : scoreSecondAttempt > scoreFirstAttempt ? '#FF8A65' :'#AD1457'">
+      <v-card style="width: 100px; margin-bottom: 2%; color: white" :color="defineColor()">
         <v-card-title>
-          {{scoreSecondAttempt}}%
+          {{props.scoreSecondAttempt}}%
         </v-card-title>
       </v-card>
     </div>
