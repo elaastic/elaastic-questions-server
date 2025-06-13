@@ -26,4 +26,4 @@ jobs:
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          storybookBaseDir: ./ui-components
+          workingDir: ./ui-components
