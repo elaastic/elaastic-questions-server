@@ -28,6 +28,7 @@ import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.LearnerAssignment
+import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
@@ -106,8 +107,10 @@ class PlayerController(
 
         // TODO N+1 SELECT (Assignment => Course)
         val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
-        val mapCourseAssignments: Map<Course, List<Assignment>> = assignmentService.getCoursesAssignmentsMap(assignments)
-        val assignmentsWithoutCourse: List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
+        val mapCourseAssignments: Map<Course, List<Assignment>> =
+            assignmentService.getCoursesAssignmentsMap(assignments)
+        val assignmentsWithoutCourse: List<Assignment> =
+            assignments.filter { assignment -> assignment.subject?.course == null }
 
         model["user"] = user
         model["mapCourseAssignments"] = mapCourseAssignments
@@ -356,7 +359,8 @@ class PlayerController(
                     studentsProvideExplanation ?: false,
                     responseToEvaluateCount ?: 0,
                     evaluationPhaseConfig,
-                    chatGptEvaluation ?: false && studentsProvideExplanation ?: false
+                    ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
+                            (chatGptEvaluation ?: false && studentsProvideExplanation ?: false)
                 )
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)

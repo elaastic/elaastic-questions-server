@@ -34,12 +34,14 @@
         </div>
     </div>
     <script th:inline="javascript">
+        const AIExplanationActived = /*[[${IAExplanationIsEnabled}]]*/ false;
         window.elaastic = {
             initializeSequenceConfiguration: () => {
                 const app = Vue.createApp(
                         ElaasticVueComponents.SequenceConfiguration,
                         {
                             maxResponseToEvaluate: 5,
+                            AIIsActivated: AIExplanationActived,
                             onCancelSequenceConfiguration: () => {
                                 window.parent.postMessage({command: 'sequence-configuration-cancelled'}, '*')
                             },
