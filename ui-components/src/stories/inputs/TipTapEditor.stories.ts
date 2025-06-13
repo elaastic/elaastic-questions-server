@@ -3,7 +3,7 @@ import TipTap from '@/components/inputs/TipTapEditor.vue'
 
 
 const meta = {
-  title: 'response/TipTapEditor',
+  title: 'inputs/TipTapEditor',
   component: TipTap,
   tags: ['autodocs'],
 } satisfies Meta<typeof TipTap>

@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import ProgressBar from '@/components/progressBar/ProgressBar.vue'
+import Steps from '@/components/sequence/Steps.vue'
 
 
 const meta = {
-  title: 'progressBar/ProgressBar',
-  component: ProgressBar,
+  title: 'Steps/Steps',
+  component: Steps,
   tags: ['autodocs'],
-} satisfies Meta<typeof ProgressBar>
+} satisfies Meta<typeof Steps>
 
 export default meta
 

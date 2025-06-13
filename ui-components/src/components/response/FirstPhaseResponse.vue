@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import ProgressBar from "@/components/progressBar/ProgressBar.vue";
+import Steps from "@/components/sequence/Steps.vue";
 import ContentBlock from "@/components/player/ContentBlock.vue";
 import {type PropType, ref} from "vue";
 import type {AnyResponse} from "@/models/Response";
@@ -63,7 +63,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <ProgressBar responseSubmissionState="ACTIVE"
+  <Steps responseSubmissionState="ACTIVE"
                evaluationState="DISABLED"
                readState="DISABLED"/>
   <v-alert :title="props.sequenceInProgress ? t('the-sequence-is-in-progress') : t('sequence-is-closed')" :color="props.sequenceInProgress ? '#BBDEFB' : 'white'" style="color: #1976D2; margin-bottom: 4%" elevation="1"/>

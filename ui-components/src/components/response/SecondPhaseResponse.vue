@@ -6,7 +6,7 @@ import ResponseForm from "@/components/response/ResponseForm.vue";
 import {onMounted, type PropType, ref} from "vue";
 import type {AnyResponse} from "@/models/Response";
 import type {LikertValue} from "@/components/evaluation/Likert";
-import ProgressBar from "@/components/progressBar/ProgressBar.vue";
+import Steps from "@/components/sequence/Steps.vue";
 import {useI18n} from "vue-i18n";
 const props = defineProps({
   /**
@@ -85,7 +85,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <ProgressBar
+  <Steps
           responseSubmissionState="COMPLETED"
           evaluationState="ACTIVE"
           readState="DISABLED"/>
