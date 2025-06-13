@@ -44,29 +44,27 @@ class LearnerPhaseService(
         phaseDescriptor: PhaseDescriptor,
         phaseIndex: Int,
         active: Boolean,
-    ): LearnerPhase =
-        run {
+    ): LearnerPhase {
+        val learnerPhase =
+            learnerPhaseFactory.build(
+                phaseDescriptor,
+                learnerSequence,
+                phaseIndex = phaseIndex,
+                active = active,
+                state = if (learnerSequence.isNotStarted())
+                    State.beforeStart
+                else learnerSequence.sequence.getInteractionAt(phaseIndex).state,
+            )
 
-            val learnerPhase =
-                learnerPhaseFactory.build(
-                    phaseDescriptor,
-                    learnerSequence,
-                    phaseIndex = phaseIndex,
-                    active = active,
-                    state = if (learnerSequence.isNotStarted())
-                        State.beforeStart
-                    else learnerSequence.sequence.getInteractionAt(phaseIndex).state,
-                )
-
-            if (learnerSequence.hasStarted() && learnerPhase.isVisible()) {
-                learnerPhase.loadPhaseExecution(
-                    ctx.getBean<LearnerPhaseExecutionLoader>(
-                        learnerPhase.getLearnerPhaseExecutionLoaderName()
-                    ).build(learnerPhase)
-                )
-            }
-
-            learnerPhase
+        if (learnerSequence.hasStarted() && learnerPhase.isVisible()) {
+            learnerPhase.loadPhaseExecution(
+                ctx.getBean<LearnerPhaseExecutionLoader>(
+                    learnerPhase.getLearnerPhaseExecutionLoaderName()
+                ).build(learnerPhase)
+            )
         }
+
+        return learnerPhase
+    }
 
 }

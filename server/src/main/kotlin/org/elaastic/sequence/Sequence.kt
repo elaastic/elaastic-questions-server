@@ -106,7 +106,7 @@ class Sequence(
      * The state of the sequence.
      */
     @field:Enumerated(EnumType.STRING)
-    var state: State = State.beforeStart,
+    var state: State = beforeStart,
 
     var resultsArePublished: Boolean = false,
 

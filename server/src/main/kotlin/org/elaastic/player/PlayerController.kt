@@ -349,10 +349,10 @@ class PlayerController(
                 sequenceService.start(
                     user,
                     it,
-                    request.executionContext,
-                    request.studentsProvideExplanation ?: false,
-                    request.responseToEvaluateCount ?: 0,
-                    request.evaluationPhaseConfig,
+                    executionContext,
+                    studentsProvideExplanation ?: false,
+                    responseToEvaluateCount ?: 0,
+                    evaluationPhaseConfig ?: EvaluationPhaseConfig.ALL_AT_ONCE,
                     ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
                             (request.evaluationByIA ?: false && request.studentsProvideExplanation ?: false)
                 )
