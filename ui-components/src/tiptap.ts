@@ -2,7 +2,7 @@ import { markRaw } from 'vue'
 import { VuetifyTiptap, VuetifyViewer, createVuetifyProTipTap } from 'vuetify-pro-tiptap'
 import { BaseKit, Bold, Italic, Underline, Strike, Color, Highlight, Heading, TextAlign, FontFamily, FontSize, SubAndSuperScript, BulletList, OrderedList, TaskList, Indent, Link, Image, Video, Table, Blockquote, HorizontalRule, Code, CodeBlock, Clear, Fullscreen, History } from 'vuetify-pro-tiptap'
 import 'vuetify-pro-tiptap/style.css'
-import SelectImage from './components/selectImage/SelectImage.vue'
+import SelectImage from './components/inputs/SelectImage.vue'
 
 export const vuetifyProTipTap = createVuetifyProTipTap({
   lang: 'zhHans',

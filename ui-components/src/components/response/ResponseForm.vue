@@ -4,7 +4,7 @@ import SelectorResponsive from "@/components/util/SelectorResponsive.vue";
 import {type PropType, ref, watch} from "vue";
 import type {Selection} from "@/components/util/SelectorResponsive.vue";
 import {useI18n} from "vue-i18n";
-import TipTapEditor from "@/components/response/TipTapEditor.vue";
+import TipTapEditor from "@/components/inputs/TipTapEditor.vue";
 import type {AnyResponse, ExclusiveChoiceResponse, MultipleChoiceResponse} from "@/models/Response";
 import ExclusiveChoiceResponseItem from "@/components/response/ExclusiveChoiceResponseItem.vue";
 

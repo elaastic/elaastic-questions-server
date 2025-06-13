@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
-import TipTap from '@/components/response/TipTapEditor.vue'
+import TipTap from '@/components/inputs/TipTapEditor.vue'
 
 
 const meta = {
