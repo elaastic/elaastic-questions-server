@@ -19,6 +19,7 @@
 package org.elaastic.assignment
 
 import org.elaastic.activity.response.ResponseService
+import org.elaastic.common.util.requireAccessThrowDenied
 import org.elaastic.common.util.toDate
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.material.instructional.question.attachment.AttachmentService
@@ -28,6 +29,7 @@ import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceRepository
 import org.elaastic.user.User
+import org.elaastic.user.own
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -80,15 +82,15 @@ class AssignmentService(
 
     fun get(user: User, id: Long, fetchSequences: Boolean = false): Assignment {
         get(id, fetchSequences).let {
-            if (it.owner != user) {
-                throw AccessDeniedException("You are not authorized to access to this assignment")
+            requireAccessThrowDenied(user own it) {
+                "You are not authorized to access this assignment"
             }
             return it
         }
     }
 
     fun delete(user: User, assignment: Assignment) {
-        require(user == assignment.owner) {
+        require(user own assignment) {
             "Only the owner can delete an assignment"
         }
         assignmentRepository.delete(assignment) // all other linked entities are deletes by DB cascade
@@ -126,7 +128,7 @@ class AssignmentService(
     }
 
     fun removeSequence(user: User, sequence: Sequence) {
-        require(user == sequence.owner) {
+        require(user own sequence) {
             "Only the owner can delete a sequence"
         }
         val assignment = sequence.assignment!!
@@ -200,7 +202,7 @@ class AssignmentService(
     }
 
     fun registerUser(user: User, assignment: Assignment): LearnerAssignment? {
-        if (assignment.owner == user) {
+        if (user own assignment) {
             return null
         }
 

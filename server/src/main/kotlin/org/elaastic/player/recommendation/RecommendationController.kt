@@ -4,6 +4,7 @@ import org.elaastic.common.util.requireAccessThrowDenied
 import org.elaastic.player.sequence.SequenceModelFactory
 import org.elaastic.sequence.SequenceService
 import org.elaastic.user.PrincipalUserResolver
+import org.elaastic.user.own
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -26,7 +27,7 @@ class RecommendationController(
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId)
 
-        requireAccessThrowDenied(sequence.owner == user) {
+        requireAccessThrowDenied(user own sequence) {
             "You are not allowed to access this modal"
         }
 

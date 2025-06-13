@@ -44,6 +44,7 @@ import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.sequence.phase.response.ResponsePhaseConfig
 import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.user.User
+import org.elaastic.user.own
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
@@ -140,7 +141,7 @@ class SequenceService(
         sequenceConfig: SequenceConfig
     ): Sequence {
 
-        require(user == sequence.owner) {
+        require(user own sequence) {
             "Only the owner of a sequence is allowed to start it"
         }
 
@@ -229,7 +230,7 @@ class SequenceService(
     }
 
     fun stop(user: User, sequence: Sequence): Sequence {
-        require(user == sequence.owner) {
+        require(user own sequence) {
             "Only the owner of the sequence is allowed to stop it"
         }
 
@@ -242,7 +243,7 @@ class SequenceService(
     }
 
     fun reopen(user: User, sequence: Sequence): Sequence {
-        require(user == sequence.owner) {
+        require(user own sequence) {
             "Only the owner of the sequence is allowed to reopen it"
         }
         require(sequence.isStopped()) {
@@ -304,7 +305,7 @@ class SequenceService(
     }
 
     fun publishResults(user: User, sequence: Sequence): Sequence {
-        require(user == sequence.owner) {
+        require(user own sequence) {
             "Only the owner of the sequence is allowed to publish results"
         }
         require(sequence.resultsCanBePublished()) {
@@ -332,7 +333,7 @@ class SequenceService(
     }
 
     fun unpublishResults(user: User, sequence: Sequence): Sequence {
-        require(user == sequence.owner) {
+        require(user own sequence) {
             "Only the owner of the sequence is allowed to publish results"
         }
         require(sequence.resultsArePublished) {
