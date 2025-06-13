@@ -9,6 +9,7 @@ const meta: any = {
   component: SequenceConfiguration,
   args: {
     maxResponseToEvaluate: 5,
+    AIIsActivated: true,
     onCancelSequenceConfiguration: fn(),
     onSubmitSequenceConfiguration: fn()
   },
@@ -27,11 +28,4 @@ type Story = StoryObj<typeof meta>;
 
 
 export const Primary: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: 'TODO'
-      }
-    }
-  }
 };

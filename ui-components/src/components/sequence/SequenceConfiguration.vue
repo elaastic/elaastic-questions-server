@@ -12,7 +12,11 @@ export interface SequenceConfigurationProps {
   /**
    * Maximal number of responses to evaluate
    */
-  maxResponseToEvaluate: number
+  maxResponseToEvaluate: number,
+  /**
+   * Whether the explanation by AI fonctionality is activated or not
+   */
+  AIIsActivated: boolean
 }
 
 export interface SequenceConfigurationEvents {
@@ -35,7 +39,8 @@ export interface SequenceConfigurationEvents {
 }
 
 const props = withDefaults(defineProps<SequenceConfigurationProps>(), {
-  maxResponseToEvaluate: 5
+  maxResponseToEvaluate: 5,
+  AIIsActivated: false
 })
 const emit = defineEmits<SequenceConfigurationEvents>()
 
@@ -72,7 +77,7 @@ const onSubmit = () => {
     studentGiveExplanation.value ? {
       nbResponseToEvaluate: nbResponseToEvaluate.value,
       evaluationMethod: evaluationMethod.value,
-      evaluationByIA: evaluationByIA.value
+      evaluationByIA: props.AIIsActivated && evaluationByIA.value
     } : undefined
   )
 }
@@ -173,7 +178,7 @@ const onCancel = () => {
           </div>
 
           <!-- IA Evaluation -->
-          <v-row align="center" justify="start">
+          <v-row align="center" justify="start" v-if="props.AIIsActivated">
             <v-col cols="auto">
               <v-checkbox
                 v-model="evaluationByIA"
