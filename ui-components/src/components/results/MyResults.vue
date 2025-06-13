@@ -20,14 +20,12 @@ const props = defineProps({
    */
   explanationFirstAttempt: {
     type: Object as PropType<{answer: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean}>,
-    default: () => []
   },
   /**
    * Student's explanation at his second attempt.
    */
   explanationSecondAttempt: {
     type: Object as PropType<{answer: AnyResponse, grade: number, nbPeer: number, isTeacher: boolean}>,
-    default: () => []
   },
   /**
    * A boolean. True if the panel is open. False if not.
@@ -51,8 +49,8 @@ const props = defineProps({
 
 })
 const openLocal = ref(props.open);
-const answersCheckedFirstAttempt: number[] = props.explanationFirstAttempt.answer.questionType === "MultipleChoice" ? props.explanationFirstAttempt.answer.choices : props.explanationFirstAttempt.answer.questionType === "ExclusiveChoice" ? [props.explanationFirstAttempt.answer.choice] : [];
-const answersCheckedSecondAttempt: number[] = props.explanationSecondAttempt.answer.questionType === "MultipleChoice" ? props.explanationSecondAttempt.answer.choices : props.explanationSecondAttempt.answer.questionType === "ExclusiveChoice"? [props.explanationSecondAttempt.answer.choice] : [];
+const answersCheckedFirstAttempt: number[] = props.explanationFirstAttempt?.answer.questionType === "MultipleChoice" ? props.explanationFirstAttempt.answer.choices : props.explanationFirstAttempt?.answer.questionType === "ExclusiveChoice" ? [props.explanationFirstAttempt.answer.choice] : [];
+const answersCheckedSecondAttempt: number[] = props.explanationSecondAttempt?.answer.questionType === "MultipleChoice" ? props.explanationSecondAttempt.answer.choices : props.explanationSecondAttempt?.answer.questionType === "ExclusiveChoice"? [props.explanationSecondAttempt.answer.choice] : [];
 
 const { t } = useI18n()
 
@@ -73,34 +71,39 @@ const defineColor =  () => {
 
 <template>
   <ContentBlock :title="t('my-results')" :collapsible="true" v-model:open="openLocal" :is-subtitle-hidden="true">
-    <h2>{{t('step')}} 1</h2>
-    <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
-      <h4>{{t('choice')}}</h4>
-      <div class="groupChoiceFrame">
-        <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedFirstAttempt.includes(a.itemIndex)"/>
+    <div v-if="props.explanationFirstAttempt != null && props.explanationSecondAttempt != null">
+      <h2>{{t('step')}} 1</h2>
+      <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
+        <h4>{{t('choice')}}</h4>
+        <div class="groupChoiceFrame">
+          <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedFirstAttempt.includes(a.itemIndex)"/>
+        </div>
+        <h4>Score</h4>
+        <v-card style="width: 100px; margin-bottom: 2%" :color="props.scoreFirstAttempt === 100 ? '#2E7D32' : '#AD1457'">
+          <v-card-title>
+            {{props.scoreFirstAttempt}}%
+          </v-card-title>
+        </v-card>
       </div>
-      <h4>Score</h4>
-      <v-card style="width: 100px; margin-bottom: 2%" :color="props.scoreFirstAttempt === 100 ? '#2E7D32' : '#AD1457'">
-        <v-card-title>
-          {{props.scoreFirstAttempt}}%
-        </v-card-title>
-      </v-card>
-    </div>
-    <ElExplanation v-if="props.explanationFirstAttempt.answer.explanation !== ''" :response="props.explanationFirstAttempt.answer" :number-of-peer-review="props.explanationFirstAttempt.nbPeer" :grade="explanationFirstAttempt.grade"/>
-    <h2 style="margin-top: 2%">{{t('step')}} 2</h2>
-    <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
-      <h4>{{t('choice')}}</h4>
-      <div class="groupChoiceFrame">
-        <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedSecondAttempt.includes(a.itemIndex)"/>
+      <ElExplanation v-if="props.explanationFirstAttempt.answer.explanation !== ''" :response="props.explanationFirstAttempt.answer" :number-of-peer-review="props.explanationFirstAttempt.nbPeer" :grade="explanationFirstAttempt?.grade"/>
+      <h2 style="margin-top: 2%">{{t('step')}} 2</h2>
+      <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
+        <h4>{{t('choice')}}</h4>
+        <div class="groupChoiceFrame">
+          <ChoiceFrame v-for="a in answers" :value="a.itemIndex" :is-correct="a.isCorrect" :is-checked="answersCheckedSecondAttempt.includes(a.itemIndex)"/>
+        </div>
+        <h4>Score</h4>
+        <v-card style="width: 100px; margin-bottom: 2%; color: white" :color="defineColor()">
+          <v-card-title>
+            {{props.scoreSecondAttempt}}%
+          </v-card-title>
+        </v-card>
       </div>
-      <h4>Score</h4>
-      <v-card style="width: 100px; margin-bottom: 2%; color: white" :color="defineColor()">
-        <v-card-title>
-          {{props.scoreSecondAttempt}}%
-        </v-card-title>
-      </v-card>
+      <ElExplanation v-if="props.explanationSecondAttempt?.answer.explanation !== ''" :response="props.explanationSecondAttempt?.answer" :number-of-peer-review="props.explanationSecondAttempt?.nbPeer" :grade="props.explanationSecondAttempt?.grade"/>
     </div>
-    <ElExplanation v-if="props.explanationSecondAttempt.answer.explanation !== ''" :response="props.explanationSecondAttempt.answer" :number-of-peer-review="props.explanationSecondAttempt.nbPeer" :grade="props.explanationSecondAttempt.grade"/>
+    <div v-else>
+      <v-alert :title="t('no-answer')" :text="t('v-alert-title')" :type="'warning'"></v-alert>
+    </div>
   </ContentBlock>
 </template>
 
@@ -117,12 +120,16 @@ const defineColor =  () => {
   "en": {
     "my-results": "My results",
     "step": "Step",
-    "choice": "Choice"
+    "choice": "Choice",
+    "no-answer": "No answer",
+    "v-alert-title": "You didn't provide any answer for this question"
   },
   "fr": {
     "my-results": "Mes résultats",
     "step": "Phase",
-    "choice": "Choix"
+    "choice": "Choix",
+    "no-answer" :"Pas de réponse",
+    "v-alert-title": "Vous n'avez pas fournie de réponse pour cette question."
   }
 }
 </i18n>

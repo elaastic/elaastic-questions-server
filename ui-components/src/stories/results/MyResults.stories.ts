@@ -191,5 +191,9 @@ export const OpenWithExplanationGraded: Story = {
     }
   },
 }
-
+export const NoAnswer: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
+  },
+}
 
