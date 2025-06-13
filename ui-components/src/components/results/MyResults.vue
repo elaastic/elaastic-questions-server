@@ -86,7 +86,7 @@ const defineColor =  () => {
         </v-card-title>
       </v-card>
     </div>
-    <ElExplanation :response="props.explanationFirstAttempt.answer" :number-of-peer-review="props.explanationFirstAttempt.nbPeer" :grade="explanationFirstAttempt.grade"/>
+    <ElExplanation v-if="props.explanationFirstAttempt.answer.explanation !== ''" :response="props.explanationFirstAttempt.answer" :number-of-peer-review="props.explanationFirstAttempt.nbPeer" :grade="explanationFirstAttempt.grade"/>
     <h2 style="margin-top: 2%">{{t('step')}} 2</h2>
     <div v-if="props.explanationFirstAttempt.answer.questionType !== 'OpenEnded'">
       <h4>{{t('choice')}}</h4>
@@ -100,7 +100,7 @@ const defineColor =  () => {
         </v-card-title>
       </v-card>
     </div>
-    <ElExplanation :response="props.explanationSecondAttempt.answer" :number-of-peer-review="props.explanationSecondAttempt.nbPeer" :grade="props.explanationSecondAttempt.grade"/>
+    <ElExplanation v-if="props.explanationSecondAttempt.answer.explanation !== ''" :response="props.explanationSecondAttempt.answer" :number-of-peer-review="props.explanationSecondAttempt.nbPeer" :grade="props.explanationSecondAttempt.grade"/>
   </ContentBlock>
 </template>
 

@@ -75,6 +75,37 @@ export const MultipleChoice: Story = {
     scoreSecondAttempt: 100
   },
 }
+export const MultipleChoiceWithoutExplanation: Story = {
+  args: {
+    answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
+    explanationFirstAttempt: {
+      answer: {
+        id: 1,
+        questionType: 'MultipleChoice',
+        explanation: '',
+        choices: [1],
+        confidence: 'Confiant(e)',
+      } satisfies MultipleChoiceResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    explanationSecondAttempt: {
+      answer: {
+        id: 2,
+        questionType: 'MultipleChoice',
+        explanation: '',
+        choices: [1, 2],
+        confidence: 'Confiant(e)'
+      } satisfies MultipleChoiceResponse,
+      grade: 0,
+      nbPeer: 0,
+      isTeacher: false,
+    },
+    scoreFirstAttempt: 50,
+    scoreSecondAttempt: 100
+  },
+}
 export const MultipleChoiceImproveScore: Story = {
   args: {
     answers: [{itemIndex: 1, isCorrect: true}, {itemIndex: 2, isCorrect: true}, {itemIndex: 3, isCorrect: false}, {itemIndex: 4, isCorrect: false}, {itemIndex: 5, isCorrect: false}],
@@ -160,4 +191,5 @@ export const OpenWithExplanationGraded: Story = {
     }
   },
 }
+
 
