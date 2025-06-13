@@ -4,7 +4,9 @@ import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.material.instructional.statement.Statement
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.sequence.Sequence
+import org.elaastic.user.Ownable
 import org.elaastic.user.User
+import org.elaastic.user.own
 import org.hibernate.annotations.SortNatural
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -46,7 +48,7 @@ class Assignment(
 
     @field:NotNull
     @field:ManyToOne(fetch = FetchType.LAZY)
-    var owner: User,
+    override var owner: User,
 
     @field:NotNull
     @Column(name = "`uuid`", columnDefinition = "BINARY(16)")
@@ -87,7 +89,7 @@ class Assignment(
     @Enumerated(EnumType.STRING)
     var readyForConsolidation: ReadyForConsolidation = ReadyForConsolidation.NotAtAll
 
-) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
+) : AbstractJpaPersistable<Long>(), Comparable<Statement>, Ownable {
 
     @Version
     var version: Long? = null
@@ -146,7 +148,7 @@ class Assignment(
      * @return The added sequence.
      */
     fun addSequence(sequence: Sequence): Sequence {
-        require(sequence.owner == owner) {
+        require(owner own sequence) {
             "The owner of the assignment cannot be different from the owner of sequence"
         }
 

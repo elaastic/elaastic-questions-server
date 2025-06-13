@@ -21,6 +21,7 @@ package org.elaastic.material.instructional.course
 import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.user.User
+import org.elaastic.user.own
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -61,7 +62,7 @@ class CourseService(
     }
 
     fun delete(user: User, course: Course) {
-        require(user == course.owner) {
+        require(user own course) {
             "Only the owner can delete an assignment"
         }
         require(course.subjects.isEmpty()) {
@@ -76,7 +77,7 @@ class CourseService(
     }
 
     fun removeSubject(user: User, subject: Subject) {
-        require(user == subject.owner) {
+        require(user own subject) {
             "Only the owner can delete a subject"
         }
 
@@ -92,7 +93,7 @@ class CourseService(
     }
 
     fun addSubjectToCourse(user: User, subject: Subject, course: Course) {
-        require(user == course.owner) {
+        require(user own course) {
             "Only the owner can add a subject"
         }
         subject.course?.let {

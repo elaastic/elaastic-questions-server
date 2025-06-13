@@ -31,6 +31,7 @@ import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.InteractionSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.user.User
+import org.elaastic.user.own
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -81,7 +82,7 @@ class InteractionService(
         stop(user, interactionRepository.getReferenceById(interactionId))
 
     fun stop(user: User, interaction: Interaction): Interaction {
-        require(user == interaction.owner) {
+        require(user own interaction) {
             "Only its owner can stop an interaction"
         }
 
@@ -131,7 +132,7 @@ class InteractionService(
         restart(user, interactionRepository.getReferenceById(interactionId))
 
     fun start(user: User, interaction: Interaction): Interaction {
-        require(user == interaction.owner) {
+        require(user own interaction) {
             "Only its owner can start an interaction"
         }
 
@@ -148,7 +149,7 @@ class InteractionService(
     }
 
     fun restart(user: User, interaction: Interaction): Interaction {
-        require(user == interaction.owner) {
+        require(user own interaction) {
             "Only its owner can start an interaction"
         }
 

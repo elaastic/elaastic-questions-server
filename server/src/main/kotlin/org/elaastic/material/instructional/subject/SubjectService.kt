@@ -12,6 +12,7 @@ import org.elaastic.material.instructional.statement.StatementService
 import org.elaastic.sequence.FakeExplanationData
 import org.elaastic.sequence.SequenceService
 import org.elaastic.user.User
+import org.elaastic.user.own
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -180,7 +181,7 @@ class SubjectService(
     }
 
     fun delete(user: User, subject: Subject) {
-        require(user == subject.owner) {
+        require(user own subject) {
             "Only the owner can delete an assignment"
         }
         for (statement: Statement in subject.statements) {
@@ -198,7 +199,7 @@ class SubjectService(
     }
 
     fun removeStatementFromSubject(user: User, statement: Statement) {
-        require(user == statement.owner) {
+        require(user own statement) {
             "Only the owner can delete a statement"
         }
         val subject = statement.subject!!
@@ -325,7 +326,7 @@ class SubjectService(
     }
 
     fun removeAssignment(user: User, assignment: Assignment) {
-        require(user == assignment.owner) {
+        require(user own assignment) {
             "Only the owner can delete an assignment"
         }
         val subject = assignment.subject!!
@@ -355,7 +356,7 @@ class SubjectService(
     }
 
     fun sharedToTeacher(user: User, subject: Subject): SharedSubject? {
-        if (subject.owner == user) {
+        if (user own subject) {
             return null
         }
 

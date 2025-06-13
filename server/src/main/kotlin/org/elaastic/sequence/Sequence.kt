@@ -27,6 +27,7 @@ import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
+import org.elaastic.user.Ownable
 import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -56,7 +57,7 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class Sequence(
     @field:ManyToOne(fetch = FetchType.LAZY)
-    var owner: User,
+    override var owner: User,
 
     @field:ManyToOne(fetch = FetchType.EAGER)
     var statement: Statement,
@@ -121,7 +122,7 @@ class Sequence(
 
 
 ) : AbstractJpaPersistable<Long>(),
-    Comparable<Sequence>, SequenceProgress {
+    Comparable<Sequence>, SequenceProgress, Ownable {
 
     @field:OneToOne
     @Access(AccessType.PROPERTY)

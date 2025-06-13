@@ -4,7 +4,9 @@ import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.material.instructional.question.*
 import org.elaastic.material.instructional.question.attachment.Attachment
 import org.elaastic.material.instructional.subject.Subject
+import org.elaastic.user.Ownable
 import org.elaastic.user.User
+import org.elaastic.user.own
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -30,7 +32,7 @@ import javax.validation.constraints.NotNull
 class Statement(
     @field:NotNull
     @field:ManyToOne(fetch = FetchType.LAZY)
-    var owner: User,
+    override var owner: User,
 
     @field:NotBlank
     var title: String = "",
@@ -77,7 +79,7 @@ class Statement(
     @Column(name = "`rank`")
     var rank: Int = 0
 
-) : AbstractJpaPersistable<Long>(), Comparable<Statement> {
+) : AbstractJpaPersistable<Long>(), Comparable<Statement>, Ownable {
 
     @Version
     var version: Long? = null
@@ -175,7 +177,7 @@ class Statement(
      *    different from this statement.
      */
     fun updateFrom(otherStatement: Statement): Statement {
-        require(owner == otherStatement.owner)
+        require(owner own  otherStatement)
         if (id != otherStatement.id) {
             parentStatement = otherStatement
         } else if (version != otherStatement.version) {
