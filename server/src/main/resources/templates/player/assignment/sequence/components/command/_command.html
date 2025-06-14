@@ -23,8 +23,6 @@
 
     <script th:inline="javascript">
         function loadSequence(urlToFetch) {
-            console.log(urlToFetch)
-
             $.get(urlToFetch)
                 .done(function (data) {
                     window.location.reload();
@@ -33,15 +31,25 @@
     </script>
 
     <!--/* Start sequence */-->
-    <a th:if="${commandModel.actionStartSequence.name() == 'ENABLED'}"
-       class="item"
-       href="#"
-       style="width: 100%; text-align: center; display: block; outline: none;"
-       th:id="'start-sequence-' + ${sequenceId}">
+    <th:block th:if="${commandModel.actionStartSequence.name() == 'ENABLED'}">
+        <script>
+            elaastic.startSequence = function (sequenceId) {
+                window.parent.postMessage({
+                    command: "show-config-sequence-modal",
+                    sequenceId: sequenceId
+                }, "*");
+            }
+        </script>
 
-        <i class="green play icon"></i>
-        <span th:text="#{player.sequence.start}">Start sequence</span>
-    </a>
+        <a class="item"
+           href="#"
+           style="width: 100%; text-align: center; display: block; outline: none;"
+           th:id="'start-sequence-' + ${sequenceId}" th:onclick="|elaastic.startSequence(${commandModel.sequenceId})|">
+
+            <i class="green play icon"></i>
+            <span th:text="#{player.sequence.start}">Start sequence</span>
+        </a>
+    </th:block>
 
     <!--/* Start phase (n) */-->
     <a class="item"
@@ -129,18 +137,4 @@
         </a>
 
     </div>
-
-    <script th:inline="javascript" th:if="${commandModel.actionStartSequence.name() == 'ENABLED'}">
-        $(function () {
-            let sequenceId = [[${sequenceId}]];
-
-            $("#start-sequence-" + sequenceId).on("click", function () {
-                // See modal-manager.html for the display logic of the modal
-                window.parent.postMessage({
-                    command: "show-config-sequence-modal",
-                    sequenceId: sequenceId
-                }, "*");
-            });
-        });
-    </script>
 </div>
