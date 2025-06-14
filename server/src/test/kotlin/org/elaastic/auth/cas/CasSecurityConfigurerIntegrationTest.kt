@@ -1,11 +1,12 @@
 package org.elaastic.auth.cas
 
 import org.elaastic.security.CasSecurityConfig
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.hamcrest.MatcherAssert.*
-import org.junit.jupiter.api.Test
-import org.hamcrest.CoreMatchers.*
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

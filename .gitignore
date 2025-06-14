@@ -116,7 +116,7 @@ gradle-app.setting
 
 # Spring boot
 config
-./elaastic
+/elaastic
 
 # Mac OS
 .DS_Store
@@ -125,4 +125,5 @@ config
 paper.pdf
 ui-components/chromatic.config.json
 
+# Environment file
 .env

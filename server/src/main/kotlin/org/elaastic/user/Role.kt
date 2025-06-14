@@ -19,6 +19,7 @@
 package org.elaastic.user
 
 import org.elaastic.common.persistence.AbstractJpaPersistable
+import org.elaastic.user.Role.RoleId
 import org.elaastic.user.Role.RoleId.*
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
@@ -29,16 +30,16 @@ import javax.persistence.Column
 import javax.persistence.Entity
 
 
-/**
- * Role entity
- */
+/** Role entity */
 @Entity
 @Cacheable("roles")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 class Role(
-        @field:Column(name = "authority")
-        var name: String
+    @field:Column(name = "authority")
+    var name: String
 ) : AbstractJpaPersistable<Long>(), Serializable, GrantedAuthority {
+
+    constructor(role: RoleId) : this(role.roleName)
 
     /**
      * All possible roles in the application
@@ -50,13 +51,47 @@ class Role(
     enum class RoleId(val roleName: String) {
         STUDENT("STUDENT_ROLE"),
         TEACHER("TEACHER_ROLE"),
-        ADMIN("ADMIN_ROLE"),
+        ADMIN("ADMIN_ROLE");
     }
 
-    /**
-     * @return the name of the role
-     */
+    /** @return the name of the role */
     override fun getAuthority(): String {
         return name
     }
+
+    /**
+     * Check if the role is equal to another object
+     *
+     * This function will accept a String, a RoleId or another Role object.
+     *
+     * - If the other object is a String, it will check if the name of the role is equal to the string.
+     * - If the other object is a RoleId,
+     * it will check if the name of the role is equal to the [roleName][RoleId.roleName] of the RoleId.
+     *
+     */
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+
+        return when (other) {
+            is String -> this.name == other
+            is RoleId -> this.name == other.roleName
+            is Role -> super.equals(other) && this.name == other.name
+            else -> false
+        }
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + name.hashCode()
+        return result
+    }
+}
+
+/**
+ * Extension function to check if a list of roles contains a [RoleId]
+ *
+ * @see Role.equals
+ */
+fun Collection<Role>.contains(role: RoleId): Boolean {
+    return this.any { it.equals(role) }
 }

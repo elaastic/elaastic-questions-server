@@ -45,5 +45,11 @@ enum class UserSource {
      * Student are able to connect to Elaastic with their ENT (Espace Numérique de Travail) account, for example.
      * @see <a href="https://en.wikipedia.org/wiki/Central_Authentication_Service">CAS</a>
      */
-    CAS
+    CAS,
+
+    /**
+     * The user is created a IAM server using OIDC.
+     * This is intended to be used with a Keycloak Service.
+     */
+    OIDC,
 }

@@ -19,7 +19,7 @@
 package org.elaastic.user
 
 import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.auth.cas.CasUser
+import org.elaastic.auth.UserLink
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.user.validation.PlainTextPasswordIsTooShort
 import org.elaastic.user.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
@@ -72,9 +72,9 @@ class User(
     var casKey: String? = null,
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    val casUser: CasUser? = null
+    val userLink: UserLink? = null
 
-) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource {
+) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource, PrincipalUserResolver {
 
     @Version
     var version: Long? = null
@@ -228,8 +228,25 @@ class User(
         return !accountLocked
     }
 
+    /**
+     * This method implements how to get an Elaastic User from a Principal.
+     * When the Principal is an instance of User, it just returns itself.
+     */
+    override val elaasticUser: User
+        get() = this
+
     override fun toString(): String {
         return username
     }
 
+    /**
+     * Check if the user has a specific role
+     *
+     * @param roleId the role to check
+     * @return true if the user has the role, false otherwise
+     * @see contains
+     */
+    infix fun hasRole(roleId: Role.RoleId): Boolean {
+        return this.roles.contains(roleId)
+    }
 }

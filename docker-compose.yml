@@ -37,3 +37,79 @@ services:
     ports:
       - "8025:8025"
       - "1025:1025"
+  auth-iam:
+      image: quay.io/keycloak/keycloak:25.0.6
+      command:
+          - start-dev
+          - --import-realm
+      labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.auth-iam.rule=Host(`iam.local`)"
+          - "traefik.http.services.auth-iam.loadbalancer.server.port=80"
+          - "traefik.http.routers.auth-iam.entrypoints=web"
+      networks:
+          default:
+              aliases:
+                  - iam.local
+      volumes:
+          - ./authentication/elaastic-iam/realms/:/opt/keycloak/data/import/
+          - ./authentication/elaastic-iam/themes/:/opt/keycloak/themes/
+      environment:
+          KEYCLOAK_ADMIN: admin
+          KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+          #KC_PROXY: 'edge'
+          KC_HTTP_PORT: 80
+          KC_HOSTNAME_URL: http://iam.local
+          KC_HOSTNAME_ADMIN_URL: http://iam.local
+          KC_HOSTNAME_STRICT_BACKCHANNEL: true
+          KC_HTTP_RELATIVE_PATH: /
+          KC_HTTP_ENABLED: true
+          KC_HEALTH_ENABLED: true
+          KC_METRICS_ENABLED: true
+
+  auth-idp-saml2:
+      image: quay.io/keycloak/keycloak:25.0.6
+      command:
+          - start-dev
+          - --import-realm
+      labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.idp.rule=Host(`idp.local`)"
+          - "traefik.http.services.idp.loadbalancer.server.port=80"
+          - "traefik.http.routers.idp.entrypoints=web"
+      networks:
+          default:
+              aliases:
+                    - idp.local
+      volumes:
+          - ./authentication/idp-saml2/realms/:/opt/keycloak/data/import/
+      environment:
+          KEYCLOAK_ADMIN: admin
+          KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+          KC_HTTP_PORT: 80
+          KC_HOSTNAME_URL: http://idp.local
+          KC_HOSTNAME_ADMIN_URL: http://idp.local
+          KC_HOSTNAME_STRICT_BACKCHANNEL: true
+          KC_HTTP_RELATIVE_PATH: /
+          KC_HTTP_ENABLED: true
+          KC_HEALTH_ENABLED: true
+          KC_METRICS_ENABLED: true
+
+  traefik:
+      image: traefik:v3.4
+      command:
+          - --api.dashboard=true
+          - --providers.docker=true
+          - --providers.docker.exposedbydefault=false
+          - --entrypoints.web.address=:80
+          - --log.level=DEBUG
+
+      ports:
+          - "80:80"
+      volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro
+      labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`)"
+          - "traefik.http.routers.dashboard.service=api@internal"
+          - "traefik.http.services.dashboard.loadbalancer.server.port=8080"

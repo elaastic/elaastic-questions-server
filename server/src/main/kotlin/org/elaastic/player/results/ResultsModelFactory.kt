@@ -33,15 +33,12 @@ import org.elaastic.player.explanations.ExplanationData
 import org.elaastic.player.explanations.ExplanationViewerModelFactory
 import org.elaastic.player.recommendation.RecommendationResolver
 import org.elaastic.sequence.Sequence
-import org.togglz.core.Feature
-import org.togglz.core.manager.FeatureManager
 
 object ResultsModelFactory {
 
     fun build(
         teacher: Boolean,
         sequence: Sequence,
-        featureManager: FeatureManager,
         responseSet: ResponseSet,
         userCanRefreshResults: Boolean,
         messageBuilder: MessageBuilder,
@@ -49,7 +46,7 @@ object ResultsModelFactory {
         chatGptEvaluationResponseStore: ChatGptEvaluationResponseStore
     ): ResultsModel =
         if (sequence.statement.hasChoices()) {
-            val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
+            val recommendationIsActive = ElaasticFeatures.RECOMMENDATIONS.isActive()
             val recommendationModel = if (recommendationIsActive)
                 RecommendationResolver.resolve(
                     responseSet,

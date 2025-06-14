@@ -18,21 +18,22 @@
 
 package org.elaastic.sequence.interaction
 
-import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
+import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.*
-import java.math.BigDecimal
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

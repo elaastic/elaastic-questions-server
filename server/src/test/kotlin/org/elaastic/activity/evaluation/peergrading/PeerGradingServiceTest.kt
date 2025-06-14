@@ -19,9 +19,9 @@
 package org.elaastic.activity.evaluation.peergrading
 
 import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
-import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.user.RoleService
 import org.elaastic.user.UserService
 import org.springframework.beans.factory.annotation.Autowired

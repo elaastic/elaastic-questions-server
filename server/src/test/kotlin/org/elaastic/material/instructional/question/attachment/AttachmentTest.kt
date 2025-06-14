@@ -18,12 +18,8 @@
 
 package org.elaastic.material.instructional.question.attachment
 
-import org.elaastic.material.instructional.question.attachment.Attachment
-import org.elaastic.material.instructional.question.attachment.Dimension
-import org.elaastic.material.instructional.question.attachment.MimeType
-import org.elaastic.material.instructional.question.attachment.MimeTypesOfDisplayableImage
-import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.logging.Logger

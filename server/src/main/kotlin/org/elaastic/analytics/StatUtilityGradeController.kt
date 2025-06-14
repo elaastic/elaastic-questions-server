@@ -10,7 +10,7 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.common.util.requireAccess
 import org.elaastic.moderation.ReportCandidate
 import org.elaastic.moderation.UtilityGrade
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
@@ -66,7 +66,7 @@ class StatUtilityGradeController(
         @RequestParam("type") type: EvaluationType? = null,
         @RequestParam("noNull") noNull: Boolean = false,
     ): List<UtilityGradeStat> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         requireAccess(user.isAdmin()) {
             "Only admin can access this endpoint"
@@ -129,7 +129,7 @@ class StatUtilityGradeController(
     fun getMean(
         authentication: Authentication,
     ): List<MeanUtilityGradeStat> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         requireAccess(user.isAdmin()) {
             "Only admin can access this endpoint"

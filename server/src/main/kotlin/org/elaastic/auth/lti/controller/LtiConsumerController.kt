@@ -23,7 +23,7 @@ import org.elaastic.auth.lti.LtiConsumerRepository
 import org.elaastic.auth.lti.LtiConsumerService
 import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.common.web.MessageBuilder
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -57,7 +57,7 @@ class LtiConsumerController(
               model: Model,
               @RequestParam("page") page: Int?,
               @RequestParam("size") size: Int?): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         ltiConsumerRepository.findAll(
                 PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
@@ -79,7 +79,7 @@ class LtiConsumerController(
 
     @GetMapping(value = ["/{id}", "{id}/show"])
     fun show(authentication: Authentication, model: Model, @PathVariable id: String): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         ltiConsumerRepository.findById(id).get().let {
             model.addAttribute("user", user)
@@ -91,7 +91,7 @@ class LtiConsumerController(
 
     @GetMapping("create")
     fun create(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         if (!model.containsAttribute("ltiConsumer")) {
             model.addAttribute("ltiConsumer", LtiConsumerData())
@@ -103,7 +103,7 @@ class LtiConsumerController(
 
     @GetMapping("import")
     fun import(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         if (!model.containsAttribute("ltiConsumersImport")) {
             model.addAttribute("ltiConsumersImport", LtiConsumersImport())
@@ -121,7 +121,7 @@ class LtiConsumerController(
                    model: Model,
                    response: HttpServletResponse,
                    redirectAttributes: RedirectAttributes): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
@@ -159,7 +159,7 @@ class LtiConsumerController(
              model: Model,
              response: HttpServletResponse,
              redirectAttributes: RedirectAttributes): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
@@ -188,7 +188,7 @@ class LtiConsumerController(
     fun edit(authentication: Authentication,
              model: Model,
              @PathVariable id: String): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         ltiConsumerRepository.findById(id).get().let {
             model.addAttribute("user", user)
@@ -206,7 +206,7 @@ class LtiConsumerController(
                @PathVariable id: String,
                response: HttpServletResponse,
                redirectAttributes: RedirectAttributes): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()

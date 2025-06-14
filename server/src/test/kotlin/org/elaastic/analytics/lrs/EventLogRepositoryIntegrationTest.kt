@@ -18,14 +18,11 @@
 
 package org.elaastic.analytics.lrs
 
-import org.elaastic.analytics.lrs.Action
-import org.elaastic.analytics.lrs.EventLog
-import org.elaastic.analytics.lrs.EventLogRepository
-import org.elaastic.analytics.lrs.ObjectOfAction
-import org.elaastic.user.Role
 import org.elaastic.test.IntegrationTestingService
+import org.elaastic.user.Role
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

@@ -3,7 +3,7 @@ package org.elaastic.analytics.lrs
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.sequence.SequenceService
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,7 +27,7 @@ class EventLogController(
         @PathVariable action: String,
         @PathVariable obj: String
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(sequenceService.existsById(sequenceId)){
                     sequenceService.get(sequenceId, false).let {
                         eventLogService.create(sequence = it,

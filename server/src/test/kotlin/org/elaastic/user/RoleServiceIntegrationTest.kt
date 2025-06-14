@@ -18,21 +18,21 @@
 
 package org.elaastic.user
 
-import org.junit.jupiter.api.Test
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.*
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.cache.annotation.EnableCaching
 import javax.transaction.Transactional
 
 
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @EnableCaching
 @Transactional
 internal class RoleServiceIntegrationTest(
-        @Autowired val roleService: RoleService
+    @Autowired val roleService: RoleService
 ) {
 
     @Test

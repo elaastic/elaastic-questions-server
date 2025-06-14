@@ -9,7 +9,7 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.assignment.Assignment
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
@@ -41,7 +41,7 @@ class AllAtOnceEvaluationPhaseExecutionController(
         @ModelAttribute evaluationData: EvaluationData,
         locale: Locale
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment
 
         sequenceService.get(sequenceId, true).let { sequence ->

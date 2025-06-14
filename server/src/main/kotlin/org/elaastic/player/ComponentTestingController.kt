@@ -84,7 +84,6 @@ import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.togglz.core.Feature
 import org.togglz.core.manager.FeatureManager
 import java.math.BigDecimal
 import kotlin.random.Random
@@ -107,7 +106,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         model.addAttribute("user", user)
 
         return "player/test-index"
@@ -124,7 +123,7 @@ class ComponentTestingController(
         @RequestParam showStatistics: Boolean?,
         @RequestParam studentsProvideExplanation: Boolean?
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -147,7 +146,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -452,7 +451,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -610,7 +609,7 @@ class ComponentTestingController(
         @RequestParam hideQuestionType: Boolean?,
         @RequestParam hideStatement: Boolean?
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -633,7 +632,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         model.addAttribute("user", user)
 
         model.addAttribute(
@@ -781,7 +780,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
 
@@ -1613,7 +1612,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
 
@@ -2455,7 +2454,7 @@ class ComponentTestingController(
         model: Model
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -2492,7 +2491,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -2519,7 +2518,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -2555,7 +2554,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute("phaseTemplate", AllAtOnceLearnerEvaluationPhase.TEMPLATE)
@@ -2612,7 +2611,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute("phaseTemplate", DraxoLearnerEvaluationPhase.TEMPLATE)
@@ -2656,7 +2655,7 @@ class ComponentTestingController(
 
     @GetMapping("/recommendations")
     fun testRecommendations(): ResponseEntity<String> {
-        val recommendationIsActive = featureManager.isActive(Feature { ElaasticFeatures.RECOMMENDATIONS.name })
+        val recommendationIsActive = ElaasticFeatures.RECOMMENDATIONS.isActive()
 
         return ResponseEntity.ok("Recommendation feature : ${if (recommendationIsActive) "active" else "Inactive"}")
 
@@ -2668,7 +2667,7 @@ class ComponentTestingController(
         model: Model
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val draxoEvaluation = DraxoEvaluation()
             .addEvaluation(Criteria.D, OptionId.YES)
             .addEvaluation(Criteria.R, OptionId.NO, "Off-topic !")
@@ -2686,7 +2685,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val draxoEvaluation = DraxoEvaluation()
             .addEvaluation(Criteria.D, OptionId.YES)
             .addEvaluation(Criteria.R, OptionId.NO, "Off-topic !")
@@ -2711,7 +2710,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val draxoEvaluationList =
             listOf(
                 DraxoEvaluation()
@@ -2823,7 +2822,7 @@ class ComponentTestingController(
         model: Model
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -2913,7 +2912,7 @@ class ComponentTestingController(
         model: Model
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
         model.addAttribute(
@@ -2962,7 +2961,7 @@ class ComponentTestingController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         /////Function and class use for this test case////
 

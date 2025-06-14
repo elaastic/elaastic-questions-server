@@ -22,6 +22,7 @@ import org.elaastic.common.persistence.pagination.PaginationUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.subject.SubjectController
 import org.elaastic.material.instructional.subject.SubjectService
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -56,7 +57,7 @@ class CourseController(
         @RequestParam("size") size: Int?
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         courseService.findAllWithSubjectsByOwner(
             user,
@@ -81,7 +82,7 @@ class CourseController(
 
     @GetMapping("create")
     fun create(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         if (!model.containsAttribute("course")) {
             model.addAttribute("course", CourseData(owner = user))
@@ -99,7 +100,7 @@ class CourseController(
         @RequestParam("size") size: Int?
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         model.addAttribute("user", user)
 
         if(id != -1L) {
@@ -139,7 +140,7 @@ class CourseController(
         response: HttpServletResponse,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         model.addAttribute("user", user)
 
@@ -177,7 +178,7 @@ class CourseController(
         response: HttpServletResponse,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
@@ -198,7 +199,7 @@ class CourseController(
             @RequestParam("page") page: Int?,
             @RequestParam("size") size: Int?
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         var firstCourse = courseService.findFirstCourseByOwner(user)
         if(firstCourse == null)
             firstCourse = createExampleCourse(user)
@@ -213,7 +214,7 @@ class CourseController(
         @PathVariable id: Long,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val course = courseService.get(user, id)
         courseService.delete(user, course)
@@ -239,7 +240,7 @@ class CourseController(
         @PathVariable courseId: Long
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val course = courseService.get(user, courseId)
 
         model.addAttribute("user", user)

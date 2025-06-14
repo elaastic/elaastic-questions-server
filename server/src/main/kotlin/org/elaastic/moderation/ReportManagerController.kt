@@ -8,7 +8,7 @@ import org.elaastic.assignment.AssignmentService
 import org.elaastic.player.assignmentview.AssignmentOverviewModelFactory
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
 import org.elaastic.sequence.SequenceService
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.http.ResponseEntity
@@ -40,7 +40,7 @@ class ReportManagerController(
         model: Model,
         @PathVariable idSequence: Long
     ): String {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(user, idSequence, true)
 
@@ -154,7 +154,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {
@@ -175,7 +175,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {
@@ -198,7 +198,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {

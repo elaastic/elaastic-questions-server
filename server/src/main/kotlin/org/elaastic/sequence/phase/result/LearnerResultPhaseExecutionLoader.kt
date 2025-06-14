@@ -13,13 +13,11 @@ import org.elaastic.sequence.phase.LearnerPhaseExecution
 import org.elaastic.sequence.phase.LearnerPhaseExecutionLoader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.togglz.core.manager.FeatureManager
 
 @Service("LearnerResultPhaseExecutionLoader")
 class LearnerResultPhaseExecutionLoader(
     @Autowired val resultsService: ResultsService,
     @Autowired val responseService: ResponseService,
-    @Autowired val featureManager: FeatureManager,
     @Autowired val messageBuilder: MessageBuilder,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService
 ) : LearnerPhaseExecutionLoader {
@@ -92,7 +90,6 @@ class LearnerResultPhaseExecutionLoader(
                 learnerPhase.learnerSequence.sequence
             ),
             myResultsModel = myResultsModel,
-            featureManager = featureManager,
             messageBuilder = messageBuilder,
             myChatGptEvaluationModel = myChatGptEvaluationModel,
         )

@@ -20,6 +20,7 @@ package org.elaastic.user.controller
 
 
 import org.elaastic.common.onboarding.OnboardingChapter
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
@@ -63,7 +64,7 @@ class UserAccountController(
 
     @GetMapping("/userAccount/edit")
     fun edit(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
 
         val userToUpdate = userService.get(user.id!!)!!
@@ -108,7 +109,7 @@ class UserAccountController(
 
     @GetMapping("/userAccount/editPassword")
     fun editPassword(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         model.addAttribute("passwordData", PasswordData(user))
         model.addAttribute("user", user)
@@ -150,14 +151,14 @@ class UserAccountController(
     @ResponseBody
     @GetMapping("/userAccount/updateOnboardingChapter/{chapterToUpdate}")
     fun updateOnboardingChapter(authentication: Authentication, @PathVariable chapterToUpdate: String){
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         userService.updateOnboardingChapter(OnboardingChapter.from(chapterToUpdate), user)
     }
 
     @ResponseBody
     @GetMapping("/userAccount/getOnboardingChapter")
     fun getOnboardingChapter(authentication: Authentication): String? {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         return userService.getOnboardingState(user.id).toString()
     }
 

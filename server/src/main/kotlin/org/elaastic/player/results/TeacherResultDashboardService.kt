@@ -7,7 +7,6 @@ import org.elaastic.common.web.MessageBuilder
 import org.elaastic.sequence.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.togglz.core.manager.FeatureManager
 
 /**
  * Service to build the model for the teacher result dashboard.
@@ -20,7 +19,6 @@ class TeacherResultDashboardService(
     @Autowired val responseService: ResponseService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired val messageBuilder: MessageBuilder,
-    @Autowired val featureManager: FeatureManager,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
 ) {
 
@@ -36,7 +34,6 @@ class TeacherResultDashboardService(
         return ResultsModelFactory.build(
             true,
             sequence,
-            featureManager,
             responseSet = responseSet,
             true,
             messageBuilder,

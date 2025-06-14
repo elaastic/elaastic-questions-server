@@ -18,8 +18,12 @@
 
 package org.elaastic.security
 
+import org.elaastic.auth.ElaasticLogoutSuccessHandler
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
+import org.elaastic.auth.oauth.*
 import org.elaastic.user.Role
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -30,29 +34,43 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
+import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-@Order(2)
+@Order(3)
 class WebSecurityConfig(
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val encoder: PasswordEncoder,
+    @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
+    @Autowired val clientRegistrationRepository: ClientRegistrationRepository,
+    private val oidcLoginSuccessHandler: OidcLoginSuccessHandler,
     @Value("\${elaastic.questions.url}") val elaasticUrl: String,
+    @Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
+
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     companion object {
         const val LOGIN_URL = "/login"
@@ -94,16 +112,63 @@ class WebSecurityConfig(
     fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
 
+            if (elaasticOidcEnabled) {
+                oauth2Login {
+                    Customizer.withDefaults<OAuth2LoginConfigurer<HttpSecurity>>()
+                    userInfoEndpoint {
+                        oidcUserService = elaasticOidcUserService
+                    }
+                    authenticationSuccessHandler = oidcLoginSuccessHandler
+                    /**
+                     * Handle authentication failure
+                     *
+                     * @see ElaasticOidcUserService.loadUser
+                     * @see RoleExceptionController.handleRoleException
+                     */
+                    authenticationFailureHandler = AuthenticationFailureHandler { request, response, exception ->
+                        if (exception is RoleException) {
+                            request.session.setAttribute(USER_REQUEST_ATTRIBUTE, exception.userRequest)
+                            response.sendRedirect(
+                                "$ERROR_ROLE_URL?message=${
+                                    URLEncoder.encode(
+                                        exception.message,
+                                        StandardCharsets.UTF_8
+                                    )
+                                }"
+                            )
+                        } else {
+                            response.sendRedirect("/error")
+                        }
+                    }
+                }
+                http.addFilterBefore(
+                    OidcHintFilter(),
+                    UsernamePasswordAuthenticationFilter::class.java
+                )
+            }
+
+            val elaasticUrlLogoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
+                "/",
+                casSecurityConfigurer?.casKeyToServerUrl ?: mapOf(),
+                "/logout?service=${elaasticUrl}"
+            )
+
+            val oidcClientInitiatedLogoutSuccessHandler =
+                OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository)
+                    .also {
+                        it.setPostLogoutRedirectUri(elaasticUrl)
+                    }
+
             logout {
                 logoutRequestMatcher = AntPathRequestMatcher("/logout")
-                logoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
-                    "/",
-                    casSecurityConfigurer?.casKeyToServerUrl ?: mapOf(),
-                    "/logout?service=${elaasticUrl}"
+                logoutSuccessHandler = ElaasticLogoutSuccessHandler(
+                    elaasticUrlLogoutSuccessHandler,
+                    oidcClientInitiatedLogoutSuccessHandler,
                 )
                 clearAuthentication = true
                 deleteCookies("JSESSIONID")
                 invalidateHttpSession = true
+
             }
 
             authorizeRequests {
@@ -112,6 +177,7 @@ class WebSecurityConfig(
                 authorize("/ui/**", permitAll)
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
+                authorize("/error/**", permitAll)
                 authorize(LOGIN_URL, permitAll)
 
                 // Allow access to this URL on which the CAS filter are applied

@@ -24,7 +24,6 @@ import org.elaastic.user.UserService
 import org.elaastic.user.UserSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 import java.util.logging.Logger
 import javax.persistence.EntityManager
 

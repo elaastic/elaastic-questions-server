@@ -1,18 +1,18 @@
 package org.elaastic.ai.evaluation.chatgpt
 
-import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
-import org.elaastic.sequence.ExecutionContext
-import org.elaastic.moderation.ReportReason
-import org.elaastic.moderation.UtilityGrade
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.ResponseRepository
-import org.elaastic.user.User
+import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
+import org.elaastic.moderation.ReportReason
+import org.elaastic.moderation.UtilityGrade
+import org.elaastic.sequence.ExecutionContext
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
 import org.elaastic.test.interpreter.command.Phase
+import org.elaastic.user.User
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Assertions.*

@@ -10,6 +10,7 @@ import org.elaastic.material.instructional.question.explanation.FakeExplanation
 import org.elaastic.material.instructional.question.explanation.FakeExplanationService
 import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.sequence.FakeExplanationData
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -46,7 +47,7 @@ class StatementController(
         @PathVariable id: Long
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val statementBase = statementService.get(user, id)
         val subject = statementBase.subject!!
         val fakeExplanations = fakeExplanationService.findAllByStatement(statementBase)
@@ -88,7 +89,7 @@ class StatementController(
         redirectAttributes: RedirectAttributes
     ): String {
 
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val statementBase = statementService.get(user, id)
         val subject = statementBase.subject
         var newStatement = statementBase
@@ -155,7 +156,7 @@ class StatementController(
         @PathVariable id: Long,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val statement = statementService.get(user, id)
         subjectService.removeStatement(user, statement)
@@ -180,7 +181,7 @@ class StatementController(
         @PathVariable subjectId: Long,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         statementService.get(user, id).let {
             attachmentService.detachAttachmentFromStatement(user, it)
         }
@@ -194,7 +195,7 @@ class StatementController(
         @PathVariable id: Long,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveUpStatement(subject, id)
@@ -209,7 +210,7 @@ class StatementController(
         @PathVariable id: Long,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val subject = subjectService.get(user, subjectId, true)
         subjectService.moveDownStatement(subject, id)
@@ -225,7 +226,7 @@ class StatementController(
         @PathVariable newSubjectId: Long,
         redirectAttributes: RedirectAttributes
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val newSubject = subjectService.get(user, newSubjectId, false)
         var statement = statementService.get(user, id)
         statement = subjectService.importStatementInSubject(statement, newSubject)

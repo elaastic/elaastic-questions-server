@@ -3,6 +3,7 @@ package org.elaastic.common.abtesting
 import org.togglz.core.annotation.ActivationParameter
 import org.togglz.core.annotation.DefaultActivationStrategy
 import org.togglz.core.annotation.EnabledByDefault
+import org.togglz.core.annotation.Label
 import org.togglz.core.context.FeatureContext
 import org.togglz.spring.activation.SpringProfileActivationStrategy
 
@@ -59,8 +60,15 @@ enum class ElaasticFeatures {
     )
     CHATGPT_EVALUATION,
 
-    // Disabled by default, accessible on username strategy
-    REVISION_ASSIGNMENT;
+    /** Disabled by default, accessible on username strategy */
+    REVISION_ASSIGNMENT,
+
+    /**
+     * Hide the OIDC login button in the login page, but keep the OIDC login flow.
+     * This is useful for testing the OIDC login flow without showing the button to users.
+     */
+    @Label("Hide or show OIDC login button")
+    SHOW_OIDC_LOGIN;
 
     fun isActive(): Boolean {
         return FeatureContext.getFeatureManager().isActive { name }

@@ -25,13 +25,13 @@ import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
+import org.hamcrest.CoreMatchers.*
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.*
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
