@@ -22,27 +22,6 @@
      class="ui modal"
      th:id="|sequenceSpec_${sequenceId}|">
 
-    <form class="ui form" th:id="|sequenceSpec_${sequenceId}_form|"
-          th:action="@{/player/sequence/{sequenceId}/start.json(sequenceId=${sequenceId})}">
-        <!--/* Hidden input to send the sequence id */-->
-        <input name="id" th:value="${sequenceId}" type="hidden">
-        <!--/* Execution context */-->
-        <input name="executionContext" type="hidden"/>
-
-        <div th:id="|configuration_${sequenceId}|">
-            <!--/* Input for if students have to provide an explanation */-->
-            <input name="studentsProvideExplanation" type="hidden"/>
-            <!--/* Checkbox to enable the evaluation of the student's answers, always true and unchangeable */-->
-            <input type="hidden">
-            <!--/* Select to set how many answers the students have to evaluate */-->
-            <input name="responseToEvaluateCount" type="hidden"/>
-            <!--/* Evaluation method */-->
-            <input name="evaluationPhaseConfig" type="hidden"/>
-            <!--/* ChatGPT evaluation */-->
-            <input name="chatGptEvaluation" type="hidden"/>
-        </div>
-    </form>
-
     <iframe
             th:id="|sequenceConfiguration_${sequenceId}|"
             class="transparent-iframe"
@@ -53,7 +32,6 @@
     <script th:inline="javascript">
         $(function () {
             let modalId = 'sequenceSpec_' + [[${sequenceId}]]
-            const configSequenceForm = $('#' + modalId + '_form');
 
             const $modalConfigSequence = $('#' + modalId);
             $modalConfigSequence.modal({
@@ -73,31 +51,17 @@
                     $modalConfigSequence.modal('hide');
                 } else if (event.data.command === 'sequence-configuration-submitted') {
                     const data = event.data;
-
-                    // Update the form with the data received from the iframe
-                    configSequenceForm.find('input[name="executionContext"]').val(data.executionContext);
-
                     const studentGiveExplanation = data.studentGiveExplanation;
                     const confrontingViewsPhase = data.confrontingViewsPhase;
-                    configSequenceForm.find('input[name="studentsProvideExplanation"]').val(studentGiveExplanation);
-                    if (studentGiveExplanation && confrontingViewsPhase) {
-                        configSequenceForm.find('input[name="responseToEvaluateCount"]').val(confrontingViewsPhase.nbResponseToEvaluate);
-                        configSequenceForm.find('input[name="evaluationPhaseConfig"]').val(confrontingViewsPhase.evaluationMethod);
-                        configSequenceForm.find('input[name="chatGptEvaluation"]').val(confrontingViewsPhase.evaluationByIA);
-                    } else {
-                        configSequenceForm.find('input[name="responseToEvaluateCount"]').val("");
-                        configSequenceForm.find('input[name="evaluationPhaseConfig"]').val("");
-                        configSequenceForm.find('input[name="chatGptEvaluation"]').val("");
-                    }
 
                     $modalConfigSequence.modal('hide');
 
-                    // A Form serialized is a string like 'key1=value1&key2=value2',
-                    // very handy when you send data with a GET request
-                    const formData = configSequenceForm.serialize();
 
+                    // TODO Step 1. Just send the stringified data to the server (no need to rewrite it ; we should just use the data format within the UI component & the server
+                    // TODO Step 2. Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation
                     $.ajax({
-                        url: configSequenceForm.attr('action'),
+                        // url: ''[['@{/player/sequence/{sequenceId}/start.json(sequenceId=${sequenceId})}]]',
+                        url: '/player/sequence/' + [[ ${sequenceId} ]] + '/start.json',
                         type: 'POST',
                         contentType: 'application/json',
                         headers: {
