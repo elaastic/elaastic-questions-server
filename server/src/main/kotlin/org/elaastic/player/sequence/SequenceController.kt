@@ -9,13 +9,15 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
+@RequestMapping("/sequence")
 class SequenceController(
     private val sequenceService: SequenceService
 ) {
 
-    @GetMapping("/config-sequence/{sequenceId}/modal")
+    @GetMapping("/config/{sequenceId}/modal")
     fun configSequence(
         authentication: Authentication,
         model: Model,

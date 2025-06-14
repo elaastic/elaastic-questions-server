@@ -44,7 +44,7 @@
                         console.log('Config sequence modal');
                         showOrFetchModal(
                                 "#sequenceSpec_" + event.data.sequenceId,
-                                '/config-sequence/' + event.data.sequenceId + '/modal',
+                                '/sequence/config/' + event.data.sequenceId + '/modal',
                                 () => saveAction(event.data.sequenceId, 'open', 'configure_popup')
                         );
                         break;
