@@ -46,6 +46,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGra
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceConfig
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.LearnerPhaseService
@@ -361,6 +362,32 @@ class PlayerController(
                     evaluationPhaseConfig,
                     ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
                             (chatGptEvaluation ?: false && studentsProvideExplanation ?: false)
+                )
+                userService.updateUserActiveSince(user)
+                autoReloadSessionHandler.broadcastReload(sequenceId)
+            }
+    }
+
+    @ResponseBody
+    @PostMapping("/sequence/{sequenceId}/start.json")
+    fun jsonStartSequence(
+        authentication: Authentication,
+        @PathVariable sequenceId: Long,
+        @RequestBody request: SequenceConfig
+    ) {
+        val user: User = authentication.principal as User
+
+        sequenceService.get(user, sequenceId, true)
+            .let {
+                sequenceService.start(
+                    user,
+                    it,
+                    request.executionContext,
+                    request.studentsProvideExplanation ?: false,
+                    request.responseToEvaluateCount ?: 0,
+                    request.evaluationPhaseConfig,
+                    ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
+                            (request.chatGptEvaluation ?: false && request.studentsProvideExplanation ?: false)
                 )
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)

@@ -23,7 +23,7 @@
      th:id="|sequenceSpec_${sequenceId}|">
 
     <form class="ui form" th:id="|sequenceSpec_${sequenceId}_form|"
-          th:action="@{/player/sequence/{sequenceId}/start(sequenceId=${sequenceId})}">
+          th:action="@{/player/sequence/{sequenceId}/start.json(sequenceId=${sequenceId})}">
         <!--/* Hidden input to send the sequence id */-->
         <input name="id" th:value="${sequenceId}" type="hidden">
         <!--/* Execution context */-->
@@ -100,10 +100,23 @@
                     console.log("data :");
                     console.log(formData);
 
-                    $.get(configSequenceForm.attr('action'), formData)
-                            .done(function () {
-                                window.location.reload();
-                            })
+                    $.ajax({
+                        url: configSequenceForm.attr('action'),
+                        type: 'POST',
+                        contentType: 'application/json',
+                        headers: {
+                            'X-CSRF-TOKEN': $("meta[name='_csrf']").attr("content") || $("input[name='_csrf']").val()
+                        },
+                        data: JSON.stringify({
+                            executionContext: data.executionContext,
+                            studentsProvideExplanation: studentGiveExplanation,
+                            responseToEvaluateCount: confrontingViewsPhase.nbResponseToEvaluate,
+                            chatGptEvaluation: confrontingViewsPhase.evaluationByIA,
+                            evaluationPhaseConfig: confrontingViewsPhase.evaluationMethod,
+                        }),
+                    }).done(function () {
+                        window.location.reload();
+                    })
                 }
             })
 
