@@ -73,7 +73,6 @@
                     $modalConfigSequence.modal('hide');
                 } else if (event.data.command === 'sequence-configuration-submitted') {
                     const data = event.data;
-                    console.log(data)
 
                     // Update the form with the data received from the iframe
                     configSequenceForm.find('input[name="executionContext"]').val(data.executionContext);
@@ -96,9 +95,6 @@
                     // A Form serialized is a string like 'key1=value1&key2=value2',
                     // very handy when you send data with a GET request
                     const formData = configSequenceForm.serialize();
-
-                    console.log("data :");
-                    console.log(formData);
 
                     $.ajax({
                         url: configSequenceForm.attr('action'),
