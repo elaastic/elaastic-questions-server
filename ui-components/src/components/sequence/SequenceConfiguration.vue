@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {useI18n} from 'vue-i18n'
-import {ref} from "vue";
+import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 import Link from '@/components/util/Link.vue'
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 type ExecutionContext = 'FaceToFace' | 'Distance' | 'Blended'
 type EvaluationMethod = 'ALL_AT_ONCE' | 'DRAXO'
@@ -74,15 +74,14 @@ const evaluationMethod = ref<EvaluationMethod>(EVALUATION_METHOD_OPTIONS[0])
 const evaluationByIa = ref<boolean>(false)
 
 const onSubmit = () => {
-  const request = {
-    executionContext: executionContext.value,
-    studentsProvideExplanation: studentGiveExplanation.value,
-    responseToEvaluateCount: nbResponseToEvaluate.value,
-    evaluationPhaseConfig: evaluationMethod.value,
-    evaluationByIA: props.aiIsActivated && evaluationByIa.value
-  };
   emit('submitSequenceConfiguration',
-          request
+          {
+            executionContext: executionContext.value,
+            studentsProvideExplanation: studentGiveExplanation.value,
+            responseToEvaluateCount: nbResponseToEvaluate.value,
+            evaluationPhaseConfig: evaluationMethod.value,
+            evaluationByIA: props.aiIsActivated && evaluationByIa.value
+          }
   )
 }
 const onCancel = () => {
