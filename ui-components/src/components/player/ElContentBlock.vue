@@ -54,7 +54,10 @@ const openPanel = computed({
           v-model="openPanel"
   >
     <v-expansion-panel :elevation="2">
-      <v-expansion-panel-title class="title-container">
+      <v-expansion-panel-title class="title-container" >
+        <template v-slot:actions="{ readonly, expanded }">
+          <v-icon :icon="readonly ? '' : expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'"></v-icon>
+        </template>
         <div class="title-side">
           <span class="title">{{ title }}</span>
           <span v-if="!props.isSubtitleHidden" class="side"><strong>[</strong>{{ subtitle }}<strong>]</strong></span>
