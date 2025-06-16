@@ -32,7 +32,7 @@ const props = defineProps({
           }
         }
  )
-const emit = defineEmits(['update:open', 'update:isSubtitleHidden'])
+const emit = defineEmits(['update:open'])
 const openPanel = computed({
   get: () => props.open ? 0 : null,
   set: (val: number | null) => {
