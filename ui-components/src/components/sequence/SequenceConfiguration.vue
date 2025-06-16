@@ -5,8 +5,8 @@ import Link from '@/components/util/Link.vue'
 
 const {t} = useI18n()
 
-type ExecutionContext = string
-type EvaluationMethod = string
+type ExecutionContext = 'FaceToFace' | 'Distance' | 'Blended'
+type EvaluationMethod = 'ALL_AT_ONCE' | 'DRAXO'
 
 export interface SequenceConfigurationProps {
   /**
@@ -14,7 +14,7 @@ export interface SequenceConfigurationProps {
    */
   maxResponseToEvaluate: number,
   /**
-   * Whether the explanation by AI fonctionality is activated or not
+   * Whether the explanation by AI feature is activated or not
    */
   aiIsActivated: boolean,
   /**
@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<SequenceConfigurationProps>(), {
 })
 const emit = defineEmits<SequenceConfigurationEvents>()
 
-const ECOption: ExecutionContext[] = [
+const EXECUTION_CONTEXT_OPTIONS: ExecutionContext[] = [
   'FaceToFace',
   'Distance',
   'Blended'
@@ -59,7 +59,7 @@ const labelForEC = (executionContextKey: ExecutionContext) => {
   return t(`sequenceConfiguration.executionContext.${executionContextKey}.title`)
 }
 
-const EMOption: EvaluationMethod[] = [
+const EVALUATION_METHOD_OPTIONS: EvaluationMethod[] = [
   'ALL_AT_ONCE',
   'DRAXO'
 ]
@@ -67,10 +67,10 @@ const labelForEM = (evaluationMethodKey: EvaluationMethod) => {
   return t(`sequenceConfiguration.phase.confrontingViews.evaluationMethod.${evaluationMethodKey}`)
 }
 
-const executionContext = ref<ExecutionContext>(ECOption[0])
+const executionContext = ref<ExecutionContext>(EXECUTION_CONTEXT_OPTIONS[0])
 const studentGiveExplanation = ref<boolean>(true)
 const nbResponseToEvaluate = ref<number>(props.maxResponseToEvaluate)
-const evaluationMethod = ref<EvaluationMethod>(EMOption[0])
+const evaluationMethod = ref<EvaluationMethod>(EVALUATION_METHOD_OPTIONS[0])
 const evaluationByIa = ref<boolean>(false)
 
 const onSubmit = () => {
@@ -104,7 +104,7 @@ const onCancel = () => {
                        v-on:click="studentGiveExplanation = true"
         >
           <v-radio
-                  v-for="option in ECOption"
+                  v-for="option in EXECUTION_CONTEXT_OPTIONS"
                   :key="option"
                   :label="labelForEC(option)"
                   :value="option"></v-radio>
@@ -132,7 +132,7 @@ const onCancel = () => {
       <v-checkbox
               v-if="!props.questionIsOpen"
               v-model="studentGiveExplanation"
-              :disabled="executionContext !== ECOption[0]"
+              :disabled="executionContext !== EXECUTION_CONTEXT_OPTIONS[0]"
               :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
               class="mt-4"
       >
@@ -177,7 +177,7 @@ const onCancel = () => {
                     v-model="evaluationMethod"
             >
               <v-radio
-                      v-for="option in EMOption"
+                      v-for="option in EVALUATION_METHOD_OPTIONS"
                       :key="option"
                       :label="labelForEM(option)"
                       :value="option"></v-radio>
