@@ -43,15 +43,14 @@ import org.elaastic.player.steps.StepsModel
 import org.elaastic.player.steps.StepsModelFactory
 import org.elaastic.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceConfig
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.LearnerPhaseService
-import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.user.AnonymousUserService
+import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.User
 import org.elaastic.user.UserService
 import org.slf4j.LoggerFactory
@@ -103,7 +102,7 @@ class PlayerController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // TODO N+1 SELECT (Assignment => Course)
         val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
@@ -158,10 +157,9 @@ class PlayerController(
         authentication: Authentication,
         @RequestParam("globalId") globalId: String
     ): String {
-        return doRegister(
-            authentication.principal as User,
-            findAssignment(globalId)
-        )
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
+
+        return doRegister(user, findAssignment(globalId))
     }
 
     /**
@@ -218,7 +216,7 @@ class PlayerController(
         @PathVariable assignmentId: Long,
         @PathVariable sequenceId: Long?,
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val assignment: Assignment = assignmentService.get(assignmentId, true)
         model["user"] = user
 
@@ -302,7 +300,7 @@ class PlayerController(
         model: Model,
         @PathVariable sequenceId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId, true)
         val isTeacher = user == sequence.owner
 
@@ -343,7 +341,7 @@ class PlayerController(
         @PathVariable sequenceId: Long,
         @RequestBody request: SequenceConfig
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         sequenceService.get(user, sequenceId, true)
             .let {
@@ -369,7 +367,7 @@ class PlayerController(
         model: Model,
         @PathVariable interactionId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val interaction = interactionService.restart(user, interactionId)
         autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
     }
@@ -381,7 +379,7 @@ class PlayerController(
         model: Model,
         @PathVariable id: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val interaction = interactionService.start(user, id)
         autoReloadSessionHandler.broadcastReload(interaction.sequence.id!!)
     }
@@ -393,7 +391,7 @@ class PlayerController(
         model: Model,
         @PathVariable interactionId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         interactionService.findById(interactionId).let {
             sequenceService.loadInteractions(it.sequence)
@@ -409,7 +407,7 @@ class PlayerController(
         model: Model,
         @PathVariable interactionId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         interactionService.findById(interactionId).let {
             sequenceService.loadInteractions(it.sequence)
@@ -425,7 +423,7 @@ class PlayerController(
         model: Model,
         @PathVariable interactionId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         interactionService.findById(interactionId).let {
             sequenceService.loadInteractions(it.sequence)
@@ -441,7 +439,7 @@ class PlayerController(
         model: Model,
         @PathVariable sequenceId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         sequenceService.get(user, sequenceId).let {
             sequenceService.stop(user, it)
@@ -456,7 +454,7 @@ class PlayerController(
         model: Model,
         @PathVariable sequenceId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         sequenceService.get(user, sequenceId).let {
             sequenceService.reopen(user, it)
@@ -471,7 +469,7 @@ class PlayerController(
         model: Model,
         @PathVariable sequenceId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         sequenceService.get(user, sequenceId, true).let {
             sequenceService.publishResults(user, it)
@@ -486,7 +484,7 @@ class PlayerController(
         model: Model,
         @PathVariable sequenceId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         sequenceService.get(sequenceId, true).let {
             sequenceService.refreshResults(user, it)
@@ -500,7 +498,7 @@ class PlayerController(
         model: Model,
         @PathVariable sequenceId: Long
     ) {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         sequenceService.get(user, sequenceId, true).let {
             sequenceService.unpublishResults(user, it)
@@ -524,7 +522,7 @@ class PlayerController(
         @PathVariable id: Long,
         locale: Locale
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(id, true)
         val response = sequenceService.submitResponse(user, sequence, responseSubmissionData)
@@ -542,7 +540,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // Get response from the database
         var response = responseService.findById(responseId)
@@ -561,7 +559,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // Get response from the database
         var response = responseService.findById(responseId)
@@ -580,7 +578,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // Get response from the database
         var response = responseService.findById(responseId)
@@ -596,7 +594,7 @@ class PlayerController(
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         // Get response from the database
         var response = responseService.findById(responseId)
@@ -614,7 +612,7 @@ class PlayerController(
         @PathVariable sequenceId: Long,
         locale: Locale
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId, true)
 
         val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
@@ -664,7 +662,7 @@ class PlayerController(
         @PathVariable sequenceId: Long,
         @PathVariable userId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
@@ -695,7 +693,7 @@ class PlayerController(
         @PathVariable sequenceId: Long,
         @PathVariable userId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(sequenceId, true)
         val learner = userService.findById(userId)
