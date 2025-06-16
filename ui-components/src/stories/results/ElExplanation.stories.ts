@@ -75,3 +75,52 @@ export const ShowDetails: Story = {
     showDetails: true
   },
 }
+
+export const BestAnswer: Story = {
+  args: {
+    response: {
+      id: 1,
+      questionType: 'MultipleChoice',
+      explanation: 'Mon explication',
+      choices: [1,3],
+      confidence: "",
+    } satisfies MultipleChoiceResponse,
+    grade: 2,
+    numberOfPeerReview: 1,
+    providedByTeacher: false,
+    showDetails: true,
+    isBestAnswer: true
+  },
+}
+
+export const TeacherExplanationWithoutReview: Story = {
+  args: {
+    response: {
+      id: 1,
+      questionType: 'MultipleChoice',
+      explanation: 'Mon explication',
+      choices: [1,3],
+      confidence: "",
+    } satisfies MultipleChoiceResponse,
+    grade: 0,
+    numberOfPeerReview: 0,
+    providedByTeacher: true,
+    showDetails: false
+  },
+}
+
+export const TeacherExplanationWithReview: Story = {
+  args: {
+    response: {
+      id: 1,
+      questionType: 'MultipleChoice',
+      explanation: 'Mon explication',
+      choices: [1,3],
+      confidence: "",
+    } satisfies MultipleChoiceResponse,
+    grade: 2,
+    numberOfPeerReview: 1,
+    providedByTeacher: true,
+    showDetails: false
+  },
+}
