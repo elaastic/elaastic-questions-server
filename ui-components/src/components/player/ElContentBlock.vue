@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {computed} from "vue";
+import { computed } from 'vue'
 
 const props = defineProps({
   /**
@@ -15,37 +15,37 @@ const props = defineProps({
    */
   collapsible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   /**
    * The state of the block. true if the block is open, false if the block is closed.
    */
   open: {
     type: Boolean,
-    default: true,
+    default: true
   },
   /**
    * The side of the block, which is next to the title but has a smaller size than it.
    */
   subtitle: {
-    type: String,
+    type: String
   },
   /**
-   * A boolean. true if the subtitle is hidden. false if not.
+   * A boolean. true if the subtitle is shown. false if not.
    */
-  isSubtitleHidden: {
+  showSubtitle: {
     type: Boolean,
     default: false
   }
-});
-const emit = defineEmits(["update:open", "update:isSubtitleHidden"]);
+})
+const emit = defineEmits(['update:open', 'update:isSubtitleHidden'])
 const openPanel = computed({
   get: () => props.open ? 0 : null,
   set: (val: number | null) => {
-    const isOpen = val === 0;
-    emit("update:open", isOpen);
-  },
-});
+    const isOpen = val === 0
+    emit('update:open', isOpen)
+  }
+})
 </script>
 
 <template>
@@ -54,13 +54,14 @@ const openPanel = computed({
           v-model="openPanel"
   >
     <v-expansion-panel :elevation="2">
-      <v-expansion-panel-title class="title-container" >
+      <v-expansion-panel-title class="title-container">
         <template v-slot:actions="{ readonly, expanded }">
           <v-icon :icon="readonly ? '' : expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'"></v-icon>
         </template>
         <div class="title-side">
           <span class="title">{{ title }}</span>
-          <span v-if="!props.isSubtitleHidden" class="side"><strong>[</strong>{{ subtitle }}<strong>]</strong></span>
+          <span v-if="props.showSubtitle && subtitle" class="side"><strong>[</strong>{{ subtitle
+            }}<strong>]</strong></span>
         </div>
       </v-expansion-panel-title>
       <v-expansion-panel-text>

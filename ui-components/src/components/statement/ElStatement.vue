@@ -55,7 +55,7 @@ const { t } = useI18n()
                 :subtitle="refQuestionType"
                 :collapsible="true"
                 v-model:open="refpanelOpen"
-                v-model:isSubtitleHidden="refHideQuestionType"
+                v-model:showSubtitle="refHideQuestionType"
   >
     <slot v-if="!refhideStatement"/>
   </ElContentBlock>
