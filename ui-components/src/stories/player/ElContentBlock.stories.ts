@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ElContentBlock from '@/components/player/ElContentBlock.vue'
 import {ref} from "vue";
-import type {AnyResponse} from "@/models/Response";
 const meta = {
   title: 'player/ElContentBlock',
   component: ElContentBlock,
@@ -11,29 +10,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-
-const answer = ref<AnyResponse>({
-  id: 1,
-  questionType: "MultipleChoice",
-  explanation: "",
-  choices: [],
-  confidence: "Confiant(e)"
-});
-
-const validate = ref(false);
-
-function handleAnswer(newAnswer: AnyResponse) {
-  answer.value = newAnswer;
-}
-function sendAnswer() {
-  if (answer.value.questionType === "MultipleChoice") {
-    if (answer.value.choices.length !== 0) {
-      validate.value = true;
-    }
-  } else {
-    validate.value = true;
-  }
-}
 
 export const Default: Story = {
   render: (args) => ({
