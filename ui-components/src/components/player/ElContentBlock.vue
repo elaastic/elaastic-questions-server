@@ -29,9 +29,16 @@ const props = defineProps({
            */
           subtitle: {
             type: String
+          },
+          /**
+           * Display or hide the content of this block.
+           */
+          showContent: {
+            type: Boolean,
+            default: true
           }
         }
- )
+)
 const emit = defineEmits(['update:open'])
 const openPanel = computed({
   get: () => props.open ? 0 : null,
@@ -59,7 +66,7 @@ const openPanel = computed({
         </div>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <slot />
+        <slot v-if="showContent" />
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
