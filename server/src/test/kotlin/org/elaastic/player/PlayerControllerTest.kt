@@ -18,10 +18,7 @@
 
 package org.elaastic.player
 
-import com.nhaarman.mockitokotlin2.atLeastOnce
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
@@ -31,6 +28,7 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
+import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.question.QuestionType
 import org.elaastic.material.instructional.statement.Statement
@@ -44,6 +42,7 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.LearnerPhaseService
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.AnonymousUserService
@@ -131,7 +130,6 @@ internal class PlayerControllerTest(
     @MockBean
     lateinit var dashboardModelFactory: DashboardModelFactory
 
-
     @Test
     fun `consultPlayer is called whenever a student accesses to the player`() {
 
@@ -182,7 +180,75 @@ internal class PlayerControllerTest(
             .andExpect(MockMvcResultMatchers.status().isOk)
 
         verify(eventLogService, atLeastOnce()).consultPlayer(eq(sequence), eq(user), eq(learnerSequence), eq(null))
+    }
 
+    @Test
+    fun `test jsonStartSequence`() {
+        val sequence = Sequence(
+            owner = userDetailsService.loadUserByUsername("teacher") as User,
+            statement = Statement(
+                User("firstName", "lastName", "teacher", "any"),
+                "Title",
+                "content",
+                questionType = QuestionType.OpenEnded
+            ),
+            state = State.beforeStart
+        ).also { it.id = 1L }
+
+        whenever(sequenceService.get(sequence.owner, 1L, true)).thenReturn(sequence)
+        whenever(
+            sequenceService.start(
+                eq(sequence.owner),
+                eq(sequence),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        ).thenReturn(sequence)
+        whenever(userService.updateUserActiveSince(sequence.owner)).thenReturn(sequence.owner)
+        mockkObject(ElaasticFeatures.CHATGPT_EVALUATION)
+        every { ElaasticFeatures.CHATGPT_EVALUATION.isActive() } returns false
+
+
+        val sequenceConfig = SequenceConfig(
+            executionContext = ExecutionContext.FaceToFace,
+            studentsProvideExplanation = true,
+            responseToEvaluateCount = 0,
+            chatGptEvaluation = false,
+            evaluationPhaseConfig = EvaluationPhaseConfig.ALL_AT_ONCE
+        )
+
+        fun SequenceConfig.json(): String {
+            return """{
+                "executionContext": "${this.executionContext}",
+                "studentsProvideExplanation": ${this.studentsProvideExplanation},
+                "responseToEvaluateCount": ${this.responseToEvaluateCount},
+                "chatGptEvaluation": ${this.chatGptEvaluation},
+                "evaluationPhaseConfig": "${this.evaluationPhaseConfig?.name}"
+            }"""
+        }
+
+        // sequence/{sequenceId}/start.json
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/player/sequence/{sequenceId}/start.json", 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType("application/json")
+                .content(sequenceConfig.json())
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+
+        verify(sequenceService).get(sequence.owner, 1L, true)
+        verify(sequenceService).start(
+            eq(sequence.owner),
+            eq(sequence),
+            eq(sequenceConfig.executionContext),
+            eq(sequenceConfig.studentsProvideExplanation ?: false),
+            eq(sequenceConfig.responseToEvaluateCount ?: 0),
+            eq(sequenceConfig.evaluationPhaseConfig),
+            eq(false) // chatGptEvaluation is false in this case
+        )
     }
 
     @AfterEach
