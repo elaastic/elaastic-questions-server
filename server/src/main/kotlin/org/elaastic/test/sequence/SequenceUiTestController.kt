@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("ui/sequence")
 class SequenceUiTestController {
 
-    @GetMapping("/sequence-configuration/test")
+    @GetMapping("/configuration/test")
     fun sequenceConfigurationTest() = "player/assignment/sequence/components/command/test/test-sequence-config"
 }

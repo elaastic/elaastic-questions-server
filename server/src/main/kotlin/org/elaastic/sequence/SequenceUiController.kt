@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("ui/sequence")
 class SequenceUiController {
 
-    @GetMapping("/sequence-configuration")
+    @GetMapping("/configuration")
     fun sequenceConfiguration(
         model: Model
     ): String {
