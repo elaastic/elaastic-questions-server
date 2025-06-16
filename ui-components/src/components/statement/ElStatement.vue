@@ -34,78 +34,22 @@ const props = defineProps({
     default: false
   },
   /**
-   * The state of the first checkbox. false if the checkbox is checked, true if not.
-   */
-  check1: {
-    type: Boolean,
-    default: false
-  },
-  /**
-   * The state of the second checkbox. false if the checkbox is checked, true if not.
-   */
-  check2: {
-    type: Boolean,
-    default: false
-  },
-  /**
-   * The state of the third checkbox. false if the checkbox is checked, true if not.
-   */
-  check3: {
-    type: Boolean,
-    default: false
-  },
-  /**
    * A boolean. true if the type of the question is hidden. false if not.
    */
-  HideQuestionType: {
+  hideQuestionType: {
     type: Boolean,
     default: false
   }
 })
 const refpanelOpen = ref(props.panelOpen);
 const refQuestionType = ref(props.questionType);
-const refHideQuestionType = ref(props.HideQuestionType);
+const refHideQuestionType = ref(props.hideQuestionType);
 const refhideStatement = ref(props.hideStatement);
-const refcheck1 = ref(props.check1);
-const refcheck2= ref(props.check2);
-const refcheck3= ref(props.check3);
-const changeStatement = () => {
-  if (refcheck1.value) {
-    refpanelOpen.value = false;
-  } else {
-    refpanelOpen.value = true;
-  }
-  if(refcheck2.value){
-    refHideQuestionType.value = true;
-  }
-  else{
-    refHideQuestionType.value = false;
-  }
-  refhideStatement.value = refcheck3.value;
-};
 const { t } = useI18n()
 </script>
 
 <template>
   <h1>{{t('statement')}}</h1>
-  <div class="d-sm-flex">
-    <v-checkbox class="mr-1"  v-model="refcheck1">
-      <template #label>
-        <p class="text-black font-weight-bold text-caption">{{ t('panelClosed') }}</p>
-      </template>
-    </v-checkbox>
-    <v-checkbox class="mr-1"  v-model="refcheck2">
-      <template #label>
-        <p class="text-black font-weight-bold text-caption">{{ t('hideQuestionType') }}</p>
-      </template>
-    </v-checkbox>
-    <v-checkbox class="mr-1"  v-model="refcheck3">
-      <template #label>
-        <p class="text-black font-weight-bold text-caption">{{ t('hideStatement') }}</p>
-      </template>
-    </v-checkbox>
-  </div>
-  <v-btn class="mt-n3 mb-10 button" @click="changeStatement">{{t('send')}}</v-btn>
   <ElContentBlock class="cb"
                 :title="title"
                 :subtitle="refQuestionType"
@@ -118,28 +62,14 @@ const { t } = useI18n()
 </template>
 
 <style scoped>
-.button{
-  background-color: lightgray;
-}
-.button:hover{
-  background-color: darkgray;
-}
 </style>
 <i18n>
 {
   "en": {
-     "statement": "Statement",
-     "send": "Send",
-     "panelClosed": "panelClosed",
-     "hideQuestionType": "hideQuestionType",
-     "hideStatement": "hideStatement"
+     "statement": "Statement"
   },
   "fr": {
-     "statement": "Enoncé",
-     "send": "Envoyer",
-     "panelClosed": "Fermer le volet",
-     "hideQuestionType": "Masquer le type de la question",
-     "hideStatement": "Masquer l'énoncé"
+     "statement": "Enoncé"
   }
 }
 </i18n>

@@ -35,9 +35,7 @@ export const Default: Story = {
     questionType: "MultipleChoice",
     panelOpen: true,
     hideStatement: false,
-    check1: false,
-    check2: false,
-    check3: false
+    hideQuestionType: false
   },
 }
 export const PanelClosed: Story = {
@@ -63,11 +61,9 @@ export const PanelClosed: Story = {
   args: {
     title: 'Statement\'s title',
     questionType: "MultipleChoice",
-    panelOpen: true,
+    panelOpen: false,
     hideStatement: false,
-    check1: true,
-    check2: false,
-    check3: false
+    hideQuestionType: false
   },
 }
 export const HiddenQuestionType: Story = {
@@ -95,9 +91,7 @@ export const HiddenQuestionType: Story = {
     questionType: "MultipleChoice",
     panelOpen: true,
     hideStatement: false,
-    check1: false,
-    check2: true,
-    check3: false
+    hideQuestionType: true
   },
 }
 export const HiddenStatement: Story = {
@@ -124,10 +118,8 @@ export const HiddenStatement: Story = {
     title: 'Statement\'s title',
     questionType: "MultipleChoice",
     panelOpen: true,
-    hideStatement: false,
-    check1: false,
-    check2: false,
-    check3: true
+    hideStatement: true,
+    hideQuestionType: false
   },
 }
 
