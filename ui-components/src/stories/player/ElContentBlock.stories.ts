@@ -40,6 +40,123 @@ export const Default: Story = {
     isSubtitleHidden: true
   },
 }
+export const NotCollapsible: Story = {
+  render: (args) => ({
+    components: { ContentBlock: ElContentBlock },
+    setup() {
+      const isOpen = ref(args.open);
+
+      return {
+        args,
+        isOpen,
+        updateOpen: (val: boolean) => isOpen.value = val
+      }
+    },
+    template: `
+      <ContentBlock
+              v-bind="args"
+              :open="isOpen"
+              @update:open="updateOpen"
+      >
+        <p>Contenu</p>
+      </ContentBlock>
+    `,
+  }),
+  args: {
+    title: 'Enoncé',
+    collapsible: false,
+    open: true,
+    isSubtitleHidden: true
+  },
+}
+export const Closed: Story = {
+  render: (args) => ({
+    components: { ContentBlock: ElContentBlock },
+    setup() {
+      const isOpen = ref(args.open);
+
+      return {
+        args,
+        isOpen,
+        updateOpen: (val: boolean) => isOpen.value = val
+      }
+    },
+    template: `
+      <ContentBlock
+              v-bind="args"
+              :open="isOpen"
+              @update:open="updateOpen"
+      >
+        <p>Contenu</p>
+      </ContentBlock>
+    `,
+  }),
+  args: {
+    title: 'Enoncé',
+    collapsible: true,
+    open: false,
+    isSubtitleHidden: true
+  },
+}
+export const SubtitleNotHidden: Story = {
+  render: (args) => ({
+    components: { ContentBlock: ElContentBlock },
+    setup() {
+      const isOpen = ref(args.open);
+
+      return {
+        args,
+        isOpen,
+        updateOpen: (val: boolean) => isOpen.value = val
+      }
+    },
+    template: `
+      <ContentBlock
+              v-bind="args"
+              :open="isOpen"
+              @update:open="updateOpen"
+      >
+        <p>Contenu</p>
+      </ContentBlock>
+    `,
+  }),
+  args: {
+    title: 'Enoncé',
+    collapsible: true,
+    open: true,
+    isSubtitleHidden: false
+  },
+}
+export const WithSubtitle: Story = {
+  render: (args) => ({
+    components: { ContentBlock: ElContentBlock },
+    setup() {
+      const isOpen = ref(args.open);
+
+      return {
+        args,
+        isOpen,
+        updateOpen: (val: boolean) => isOpen.value = val
+      }
+    },
+    template: `
+      <ContentBlock
+              v-bind="args"
+              :open="isOpen"
+              @update:open="updateOpen"
+      >
+        <p>Contenu</p>
+      </ContentBlock>
+    `,
+  }),
+  args: {
+    title: 'Enoncé',
+    collapsible: true,
+    open: true,
+    isSubtitleHidden: false,
+    subtitle: "Subtitle"
+  },
+}
 export const Results: Story = {
   render: (args) => ({
     components: { ContentBlock: ElContentBlock },
