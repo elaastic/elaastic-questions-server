@@ -3,41 +3,35 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  /**
-   * The title of the block.
-   */
-  title: {
-    type: String,
-    required: true
-  },
-  /**
-   * A boolean. true if the block is collapsible. false if not.
-   */
-  collapsible: {
-    type: Boolean,
-    default: true
-  },
-  /**
-   * The state of the block. true if the block is open, false if the block is closed.
-   */
-  open: {
-    type: Boolean,
-    default: true
-  },
-  /**
-   * The side of the block, which is next to the title but has a smaller size than it.
-   */
-  subtitle: {
-    type: String
-  },
-  /**
-   * A boolean. true if the subtitle is shown. false if not.
-   */
-  showSubtitle: {
-    type: Boolean,
-    default: true
-  }
-})
+          /**
+           * The title of the block.
+           */
+          title: {
+            type: String,
+            required: true
+          },
+          /**
+           * A boolean. true if the block is collapsible. false if not.
+           */
+          collapsible: {
+            type: Boolean,
+            default: true
+          },
+          /**
+           * The state of the block. true if the block is open, false if the block is closed.
+           */
+          open: {
+            type: Boolean,
+            default: true
+          },
+          /**
+           * The side of the block, which is next to the title but has a smaller size than it.
+           */
+          subtitle: {
+            type: String
+          }
+        }
+ )
 const emit = defineEmits(['update:open', 'update:isSubtitleHidden'])
 const openPanel = computed({
   get: () => props.open ? 0 : null,
@@ -60,7 +54,7 @@ const openPanel = computed({
         </template>
         <div>
           <span class="title">{{ title }}</span>
-          <span v-if="props.showSubtitle && subtitle" class="subtitle"><strong>&nbsp;[</strong>{{ subtitle
+          <span v-if="subtitle" class="subtitle"><strong>&nbsp;[</strong>{{ subtitle
             }}<strong>]</strong></span>
         </div>
       </v-expansion-panel-title>
@@ -81,6 +75,4 @@ const openPanel = computed({
   font-size: small;
   color: #666;
 }
-
-
 </style>
