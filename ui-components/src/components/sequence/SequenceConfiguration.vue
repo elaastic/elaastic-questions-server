@@ -27,14 +27,13 @@ export interface SequenceConfigurationEvents {
   /**
    * Fires when the user clicks on the submit button
    */
-  (event: 'submitSequenceConfiguration',
-   executionContext: ExecutionContext,
-   studentGiveExplanation: boolean,
-   confrontingViewsPhase?: {
-     nbResponseToEvaluate: number,
-     evaluationMethod: EvaluationMethod,
-     evaluationByIA: boolean
-   }): void;
+  (event: 'submitSequenceConfiguration', request: {
+    executionContext: ExecutionContext,
+    studentsProvideExplanation: boolean,
+    responseToEvaluateCount: number,
+    evaluationPhaseConfig: EvaluationMethod,
+    evaluationByIA: boolean
+  }): void;
 
   /**
    * Fires when the user clicks on the cancel button
@@ -75,14 +74,15 @@ const evaluationMethod = ref<EvaluationMethod>(EMOption[0])
 const evaluationByIa = ref<boolean>(false)
 
 const onSubmit = () => {
+  const request = {
+    executionContext: executionContext.value,
+    studentsProvideExplanation: studentGiveExplanation.value,
+    responseToEvaluateCount: nbResponseToEvaluate.value,
+    evaluationPhaseConfig: evaluationMethod.value,
+    evaluationByIA: props.aiIsActivated && evaluationByIa.value
+  };
   emit('submitSequenceConfiguration',
-          executionContext.value,
-          studentGiveExplanation.value,
-          studentGiveExplanation.value ? {
-            nbResponseToEvaluate: nbResponseToEvaluate.value,
-            evaluationMethod: evaluationMethod.value,
-            evaluationByIA: props.aiIsActivated && evaluationByIa.value
-          } : undefined
+          request
   )
 }
 const onCancel = () => {
@@ -130,11 +130,11 @@ const onCancel = () => {
       If the question is open, the student must give an explanation. So this checkbox isn't relevant and isn't displayed.
       */-->
       <v-checkbox
-        v-if="!props.questionIsOpen"
-        v-model="studentGiveExplanation"
-        :disabled="executionContext !== ECOption[0]"
-        :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
-        class="mt-4"
+              v-if="!props.questionIsOpen"
+              v-model="studentGiveExplanation"
+              :disabled="executionContext !== ECOption[0]"
+              :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
+              class="mt-4"
       >
       </v-checkbox>
 

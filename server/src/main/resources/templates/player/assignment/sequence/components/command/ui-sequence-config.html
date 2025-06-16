@@ -51,15 +51,11 @@
                                 window.parent.postMessage({command: 'sequence-configuration-cancelled'}, '*')
                             },
                             onSubmitSequenceConfiguration: (
-                                    executionContext,
-                                    studentGiveExplanation,
-                                    confrontingViewsPhase
+                                    request
                             ) => {
                                 window.parent.postMessage({
                                     command: 'sequence-configuration-submitted',
-                                    executionContext,
-                                    studentGiveExplanation,
-                                    confrontingViewsPhase
+                                    request
                                 }, '*')
                             }
                         }

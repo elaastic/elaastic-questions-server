@@ -353,7 +353,7 @@ class PlayerController(
                     request.responseToEvaluateCount ?: 0,
                     request.evaluationPhaseConfig,
                     ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
-                            (request.chatGptEvaluation ?: false && request.studentsProvideExplanation ?: false)
+                            (request.evaluationByIA ?: false && request.studentsProvideExplanation ?: false)
                 )
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)

@@ -26,7 +26,7 @@ import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
  * @property executionContext The execution context for the sequence.
  * @property studentsProvideExplanation Whether the students are allowed to provide an explanation for the results.
  * @property responseToEvaluateCount The number of responses to evaluate.
- * @property chatGptEvaluation Whether the evaluation is done by ChatGPT.
+ * @property evaluationByIA Whether the evaluation is done by ChatGPT.
  * @property evaluationPhaseConfig The configuration for the evaluation phase.
  *
  */
@@ -34,7 +34,7 @@ data class SequenceConfig(
     val executionContext: ExecutionContext,
     val studentsProvideExplanation: Boolean? = false,
     val responseToEvaluateCount: Int? = 0,
-    val chatGptEvaluation: Boolean? = false,
+    val evaluationByIA: Boolean? = false,
     val evaluationPhaseConfig: EvaluationPhaseConfig? = null
 
 )

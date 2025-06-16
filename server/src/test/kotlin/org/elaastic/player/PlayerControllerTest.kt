@@ -216,7 +216,7 @@ internal class PlayerControllerTest(
             executionContext = ExecutionContext.FaceToFace,
             studentsProvideExplanation = true,
             responseToEvaluateCount = 0,
-            chatGptEvaluation = false,
+            evaluationByIA = false,
             evaluationPhaseConfig = EvaluationPhaseConfig.ALL_AT_ONCE
         )
 
@@ -225,7 +225,7 @@ internal class PlayerControllerTest(
                 "executionContext": "${this.executionContext}",
                 "studentsProvideExplanation": ${this.studentsProvideExplanation},
                 "responseToEvaluateCount": ${this.responseToEvaluateCount},
-                "chatGptEvaluation": ${this.chatGptEvaluation},
+                "chatGptEvaluation": ${this.evaluationByIA},
                 "evaluationPhaseConfig": "${this.evaluationPhaseConfig?.name}"
             }"""
         }

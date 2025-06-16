@@ -52,12 +52,9 @@
                 if (event.data.command === 'sequence-configuration-cancelled') {
                     $modalConfigSequence.modal('hide');
                 } else if (event.data.command === 'sequence-configuration-submitted') {
-                    const data = event.data;
-                    const studentGiveExplanation = data.studentGiveExplanation;
-                    const confrontingViewsPhase = data.confrontingViewsPhase;
+                    const data = event.data.request;
 
                     $modalConfigSequence.modal('hide');
-
 
                     // TODO Step 1. Just send the stringified data to the server (no need to rewrite it ; we should just use the data format within the UI component & the server
                     // TODO Step 2. Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation
@@ -69,13 +66,7 @@
                         headers: {
                             'X-CSRF-TOKEN': $("meta[name='_csrf']").attr("content") || $("input[name='_csrf']").val()
                         },
-                        data: JSON.stringify({
-                            executionContext: data.executionContext,
-                            studentsProvideExplanation: studentGiveExplanation,
-                            responseToEvaluateCount: confrontingViewsPhase.nbResponseToEvaluate,
-                            chatGptEvaluation: confrontingViewsPhase.evaluationByIA,
-                            evaluationPhaseConfig: confrontingViewsPhase.evaluationMethod,
-                        }),
+                        data: JSON.stringify(data),
                     }).done(function () {
                         window.location.reload();
                     })
