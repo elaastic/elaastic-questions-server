@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ElContentBlock from '@/components/player/ElContentBlock.vue'
+import ElHtmlContent from '@/components/player/ElHtmlContent.vue'
 import exampleImage from '@/stories/assets/statement/Survivorship-bias.png'
 
 const meta = {
@@ -130,7 +131,7 @@ export const Results: Story = {
 
 export const Statement: Story = {
   render: (args) => ({
-    components: { ContentBlock: ElContentBlock },
+    components: { ContentBlock: ElContentBlock, ElHtmlContent },
     setup() {
       return {
         args,
@@ -139,31 +140,33 @@ export const Statement: Story = {
     },
     template: `
       <ContentBlock v-bind="args" v-model:open="args.open">
-        <div class="transition visible" style="display: block !important;">
+        <ElHtmlContent>
+          <div class="transition visible" style="display: block !important;">
 
-          <div xmlns="http://www.w3.org/1999/html">
-            <div>
-              <img height="380" :src="exampleImage" width="510" alt="survivor biais">
+            <div xmlns="http://www.w3.org/1999/html">
+              <div>
+                <img height="380" :src="exampleImage" width="510" alt="survivor biais">
+              </div>
             </div>
+
+            <p></p>
+            <p>Pendant la seconde guerre mondiale, une étude sur les avions de retours de bataille a permis d'identifier
+              les zones de la carlingue les plus touchées par les impacts de balles. Les ingénieurs ont&nbsp;utilisé ces
+              informations pour effectuer des renforcements de la carlingue des avions. D'après vous, quelles zones ont
+              été renforcées :</p>
+
+            <ol>
+              <li>Les zones les plus touchées par les impacts de balle</li>
+              <li>Les zones les moins touchées par les impacts de balle</li>
+              <li>Aucune zone car l'information ne permettait pas de conclure sur les zones à renforcer</li>
+            </ol>
+
+            <p>&nbsp;</p>
+
+            <p><strong>Justifiez</strong>&nbsp;votre choix dans le champ&nbsp;"<em>réponse textuelle</em>" !</p>
+            <p></p>
           </div>
-
-          <p></p>
-          <p>Pendant la seconde guerre mondiale, une étude sur les avions de retours de bataille a permis d'identifier
-            les zones de la carlingue les plus touchées par les impacts de balles. Les ingénieurs ont&nbsp;utilisé ces
-            informations pour effectuer des renforcements de la carlingue des avions. D'après vous, quelles zones ont
-            été renforcées :</p>
-
-          <ol>
-            <li>Les zones les plus touchées par les impacts de balle</li>
-            <li>Les zones les moins touchées par les impacts de balle</li>
-            <li>Aucune zone car l'information ne permettait pas de conclure sur les zones à renforcer</li>
-          </ol>
-
-          <p>&nbsp;</p>
-
-          <p><strong>Justifiez</strong>&nbsp;votre choix dans le champ&nbsp;"<em>réponse textuelle</em>" !</p>
-          <p></p>
-        </div>
+        </ElHtmlContent>
       </ContentBlock>
     `
   }),
