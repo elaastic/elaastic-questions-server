@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import ElContentBlock from '@/components/player/ElContentBlock.vue'
-import { ref } from 'vue'
 
 const meta = {
   title: 'player/ElContentBlock',

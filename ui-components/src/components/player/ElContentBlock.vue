@@ -54,13 +54,13 @@ const openPanel = computed({
           v-model="openPanel"
   >
     <v-expansion-panel :elevation="2">
-      <v-expansion-panel-title class="title-container">
+      <v-expansion-panel-title>
         <template v-slot:actions="{ readonly, expanded }">
           <v-icon :icon="readonly ? '' : expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'"></v-icon>
         </template>
-        <div class="title-side">
+        <div>
           <span class="title">{{ title }}</span>
-          <span v-if="props.showSubtitle && subtitle" class="side"><strong>[</strong>{{ subtitle
+          <span v-if="props.showSubtitle && subtitle" class="subtitle"><strong>&nbsp;[</strong>{{ subtitle
             }}<strong>]</strong></span>
         </div>
       </v-expansion-panel-title>
@@ -72,25 +72,12 @@ const openPanel = computed({
 </template>
 
 <style scoped>
-.title-container {
-  display: flex;
-}
-
-.title-side {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-  width: 100%;
-  text-align: left;
-}
-
 .title {
   font-weight: bold;
   font-size: 1.6em;
 }
 
-.side {
+.subtitle {
   font-size: small;
   color: #666;
 }
