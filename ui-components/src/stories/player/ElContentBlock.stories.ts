@@ -14,16 +14,16 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: (args) => ({
-    components: { ContentBlock: ElContentBlock },
+    components: { ElContentBlock },
     setup() {
       return {
         args
       }
     },
     template: `
-      <ContentBlock v-bind="args" v-model:open="args.open">
+      <ElContentBlock v-bind="args" v-model:open="args.open">
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
-      </ContentBlock>
+      </ElContentBlock>
     `
   }),
   args: {
@@ -34,16 +34,16 @@ export const Default: Story = {
 
 export const NotCollapsible: Story = {
   render: (args) => ({
-    components: { ContentBlock: ElContentBlock },
+    components: { ElContentBlock },
     setup() {
       return {
         args
       }
     },
     template: `
-      <ContentBlock v-bind="args">
+      <ElContentBlock v-bind="args">
         <p>I'm a block of content that can't be folded.</p>
-      </ContentBlock>
+      </ElContentBlock>
     `
   }),
   args: {
@@ -53,16 +53,16 @@ export const NotCollapsible: Story = {
 }
 export const Closed: Story = {
   render: (args) => ({
-    components: { ContentBlock: ElContentBlock },
+    components: { ElContentBlock },
     setup() {
       return {
         args
       }
     },
     template: `
-      <ContentBlock v-bind="args" v-model:open="args.open">
+      <ElContentBlock v-bind="args" v-model:open="args.open">
         <p>I'm a closed content block.</p>
-      </ContentBlock>
+      </ElContentBlock>
     `
   }),
   args: {
@@ -73,19 +73,19 @@ export const Closed: Story = {
 
 export const WithSubtitle: Story = {
   render: (args) => ({
-    components: { ContentBlock: ElContentBlock },
+    components: { ElContentBlock },
     setup() {
       return {
         args
       }
     },
     template: `
-      <ContentBlock
+      <ElContentBlock
               v-bind="args"
               v-model:open="args.open"
       >
         <p>This content block illustrates a title with a subtitle.</p>
-      </ContentBlock>
+      </ElContentBlock>
     `
   }),
   args: {
@@ -98,12 +98,12 @@ export const WithSubtitle: Story = {
 
 export const Results: Story = {
   render: (args) => ({
-    components: { ContentBlock: ElContentBlock },
+    components: { ElContentBlock },
     setup() {
       return { args }
     },
     template: `
-      <ContentBlock v-bind="args" v-model:open="args.open">
+      <ElContentBlock v-bind="args" v-model:open="args.open">
         <div>
           <h3>Choix</h3>
           <div style="display: flex">
@@ -119,7 +119,7 @@ export const Results: Story = {
             <v-card-text style="color: white">50%</v-card-text>
           </v-card>
         </div>
-      </ContentBlock>
+      </ElContentBlock>
     `
   }),
   args: {
@@ -131,7 +131,7 @@ export const Results: Story = {
 
 export const Statement: Story = {
   render: (args) => ({
-    components: { ContentBlock: ElContentBlock, ElHtmlContent },
+    components: { ElContentBlock, ElHtmlContent },
     setup() {
       return {
         args,
@@ -139,7 +139,7 @@ export const Statement: Story = {
       }
     },
     template: `
-      <ContentBlock v-bind="args" v-model:open="args.open">
+      <ElContentBlock v-bind="args" v-model:open="args.open">
         <ElHtmlContent>
           <div class="transition visible" style="display: block !important;">
 
@@ -167,7 +167,7 @@ export const Statement: Story = {
             <p></p>
           </div>
         </ElHtmlContent>
-      </ContentBlock>
+      </ElContentBlock>
     `
   }),
   args: {
