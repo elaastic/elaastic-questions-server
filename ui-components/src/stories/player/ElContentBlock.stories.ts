@@ -11,7 +11,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-
 export const Default: Story = {
   render: (args) => ({
     components: { ContentBlock: ElContentBlock },
@@ -21,16 +20,13 @@ export const Default: Story = {
       }
     },
     template: `
-      <ContentBlock
-              v-bind="args"
-              v-model:open="args.open"
-      >
-        <p>Contenu</p>
+      <ContentBlock v-bind="args" v-model:open="args.open">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
       </ContentBlock>
     `
   }),
   args: {
-    title: 'Enoncé',
+    title: 'Mastering the Art of Productivity: Tips and Tricks for a More Efficient Life',
     open: true
   }
 }
@@ -44,15 +40,13 @@ export const NotCollapsible: Story = {
       }
     },
     template: `
-      <ContentBlock
-              v-bind="args"
-      >
-        <p>Contenu</p>
+      <ContentBlock v-bind="args">
+        <p>I'm a block of content that can't be folded.</p>
       </ContentBlock>
     `
   }),
   args: {
-    title: 'Enoncé',
+    title: 'Not collapsible',
     collapsible: false
   }
 }
@@ -65,16 +59,13 @@ export const Closed: Story = {
       }
     },
     template: `
-      <ContentBlock
-              v-bind="args"
-              v-model:open="args.open"
-      >
-        <p>Contenu</p>
+      <ContentBlock v-bind="args" v-model:open="args.open">
+        <p>I'm a closed content block.</p>
       </ContentBlock>
     `
   }),
   args: {
-    title: 'Enoncé',
+    title: 'Closed content block',
     open: false
   }
 }
@@ -83,8 +74,6 @@ export const WithSubtitle: Story = {
   render: (args) => ({
     components: { ContentBlock: ElContentBlock },
     setup() {
-      const isOpen = ref(args.open)
-
       return {
         args
       }
@@ -94,15 +83,15 @@ export const WithSubtitle: Story = {
               v-bind="args"
               v-model:open="args.open"
       >
-        <p>Contenu</p>
+        <p>This content block illustrates a title with a subtitle.</p>
       </ContentBlock>
     `
   }),
   args: {
-    title: 'Enoncé',
+    title: 'I have a title',
     collapsible: true,
     open: true,
-    subtitle: 'Subtitle'
+    subtitle: 'and a subtitle'
   }
 }
 export const Results: Story = {
