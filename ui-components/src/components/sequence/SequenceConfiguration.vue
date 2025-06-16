@@ -130,7 +130,7 @@ const onCancel = () => {
       If the question is open, the student must give an explanation. So this checkbox isn't relevant and isn't displayed.
       */-->
       <v-checkbox
-              v-if="!props.questionIsOpen"
+              v-if="!questionIsOpen"
               v-model="studentGiveExplanation"
               :disabled="executionContext !== EXECUTION_CONTEXT_OPTIONS[0]"
               :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
@@ -157,7 +157,7 @@ const onCancel = () => {
                       variant="outlined"
                       density="compact"
                       v-model="nbResponseToEvaluate"
-                      :items="props.maxResponseToEvaluate > 0 ? Array.from({length: props.maxResponseToEvaluate}, (_, i) => i + 1) : []"
+                      :items="maxResponseToEvaluate > 0 ? Array.from({length: maxResponseToEvaluate}, (_, i) => i + 1) : []"
                       class="mt-4"
                       style="min-width: 50px;"
               >
@@ -192,7 +192,7 @@ const onCancel = () => {
           </div>
 
           <!-- IA Evaluation -->
-          <v-row align="center" justify="start" v-if="props.aiIsActivated">
+          <v-row align="center" justify="start" v-if="aiIsActivated">
             <v-col cols="auto">
               <v-checkbox
                       v-model="evaluationByIa"
