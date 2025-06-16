@@ -15,19 +15,14 @@ export const Default: Story = {
   render: (args) => ({
     components: { ContentBlock: ElContentBlock },
     setup() {
-      const isOpen = ref(args.open);
-
       return {
         args,
-        isOpen,
-        updateOpen: (val: boolean) => isOpen.value = val
       }
     },
     template: `
       <ContentBlock
               v-bind="args"
-              :open="isOpen"
-              @update:open="updateOpen"
+              v-model:open="args.open"
       >
         <p>Contenu</p>
       </ContentBlock>
@@ -35,11 +30,10 @@ export const Default: Story = {
   }),
   args: {
     title: 'Enoncé',
-    collapsible: true,
-    open: true,
-    isSubtitleHidden: true
+    open: ref(true),
   },
 }
+
 export const NotCollapsible: Story = {
   render: (args) => ({
     components: { ContentBlock: ElContentBlock },

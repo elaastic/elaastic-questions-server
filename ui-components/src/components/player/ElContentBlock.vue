@@ -35,7 +35,7 @@ const props = defineProps({
    */
   showSubtitle: {
     type: Boolean,
-    default: false
+    default: true
   }
 })
 const emit = defineEmits(['update:open', 'update:isSubtitleHidden'])
