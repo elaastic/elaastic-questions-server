@@ -106,11 +106,6 @@ const { t } = useI18n();
     <br/>
     <ResponseForm
             :provided-answers="props.providedAnswers"
-            :confidence-selections="[
-              { label: t('not-confident-at-all'), value: t('not-confident-at-all') },
-              { label: t('not-really-confident'), value: t('not-really-confident') },
-              { label: t('confident'), value: t('confident') },
-              { label: t('completely-confident'), value: t('completely-confident') }]"
             :answer="updatedAnswerLocal"
             @update:answer="handleAnswer"
             :textAlert="t('second-chance')">
@@ -131,20 +126,12 @@ const { t } = useI18n();
     "the-sequence-is-in-progress": "The sequence is in progress.",
     "second-chance": "You have a second chance to change your answer and your confident degree.",
     "save": "Save",
-    "not-confident-at-all": "Not confident at all",
-    "not-really-confident": "Not really confident",
-    "confident": "Confident",
-    "completely-confident": "Completely confident",
     "sequence-is-closed": "The sequence is closed."
   },
   "fr": {
     "the-sequence-is-in-progress": "La séquence est en cours.",
     "second-chance": "Vous disposez d'une deuxième chance pour changer votre réponse et votre degré de confiance.",
     "save": "Enregistrer",
-    "not-confident-at-all": "Pas du tout confiant(e)",
-    "not-really-confident": "Pas vraiment confiant(e)",
-    "confident": "Confiant(e)",
-    "completely-confident": "Tout à fait confiant(e)",
     "sequence-is-closed": "La séquence est close."
   }
 }

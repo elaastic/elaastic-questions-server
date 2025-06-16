@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import FirstPhaseResponse from '@/components/response/FirstPhaseResponse.vue'
+import {ConfidenceDegree} from "@/models/Response";
 
 
 const meta = {
@@ -23,7 +24,7 @@ export const Default: Story = {
               questionType: 'MultipleChoice',
               explanation: '',
               choices: [],
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
     sequenceInProgress: true
   }
@@ -39,7 +40,7 @@ export const Exclusive: Story = {
               questionType: 'ExclusiveChoice',
               explanation: '',
               choice: 1,
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
     sequenceInProgress: true
   }
@@ -54,7 +55,7 @@ export const Open: Story = {
               id: 0,
               questionType: 'OpenEnded',
               explanation: '',
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
     sequenceInProgress: true,
   }
@@ -69,7 +70,7 @@ export const SequenceClosed: Story = {
               id: 0,
               questionType: 'OpenEnded',
               explanation: '',
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
     sequenceInProgress: false,
   }

@@ -6,11 +6,20 @@
 
 export type QuestionType = 'OpenEnded' | 'ExclusiveChoice' | 'MultipleChoice'
 
+export enum ConfidenceDegree{
+  NOT_CONFIDENT_AT_ALL,
+
+  NOT_REALLY_CONFIDENT,
+
+  CONFIDENT,
+
+  TOTALLY_CONFIDENT}
+
 export interface Response {
   id: number
   questionType: QuestionType
   explanation: string,
-  confidence: string
+  confidence: ConfidenceDegree
 }
 
 export interface ExclusiveChoiceResponse extends Response {

@@ -1,9 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type {Meta, StoryObj} from '@storybook/vue3'
 import ContentBlock from '@/components/player/ContentBlock.vue'
 import ResponseForm from "@/components/response/ResponseForm.vue";
 import {ref} from "vue";
-import type {AnyResponse} from "@/models/Response";
+import {type AnyResponse, ConfidenceDegree} from "@/models/Response";
 import ChoiceChip from '@/components/response/ChoiceChip.vue';
+
 const meta = {
     title: 'player/ContentBlock',
     component: ContentBlock,
@@ -19,7 +20,7 @@ const answer = ref<AnyResponse>({
     questionType: "MultipleChoice",
     explanation: "",
     choices: [],
-    confidence: "Confiant(e)"
+    confidence: ConfidenceDegree.CONFIDENT
 });
 
 const validate = ref(false);
@@ -80,12 +81,6 @@ export const responseForm: Story = {
         <div v-if="!validate">
           <ResponseForm
                   :providedAnswers="9"
-                  :confidence-selections=" [
-              { label: 'Pas du tout confiant(e)', value: 'Pas du tout confiant(e)' },
-              { label: 'Pas vraiment confiant(e)', value: 'Pas vraiment confiant(e)' },
-              { label: 'Confiant(e)', value: 'Confiant(e)' },
-              { label: 'Tout à fait confiant(e)', value: 'Tout à fait confiant(e)' },
-              ]"
                   :answer="answer"
                   @update:answer="handleAnswer"
           ></ResponseForm>

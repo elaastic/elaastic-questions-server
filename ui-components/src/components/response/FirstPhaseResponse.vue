@@ -74,11 +74,6 @@ const { t } = useI18n()
               :provided-answers="props.providedAnswers"
               :answer="firstAnswerLocal"
               @update:answer="handleFirstAnswer"
-              :confidence-selections="[
-                { label: t('not-confident-at-all'), value: t('not-confident-at-all') },
-                { label: t('not-really-confident'), value: t('not-really-confident') },
-                { label: t('confident'), value: t('confident') },
-                { label: t('completely-confident'), value: t('completely-confident') }]"
       ></ResponseForm>
       <v-btn style="margin-top: 3%; margin-left:4% " color="secondary" @click="sendAnswer">{{ t('save') }}</v-btn>
     </ContentBlock>
@@ -96,20 +91,12 @@ const { t } = useI18n()
   "en": {
     "the-sequence-is-in-progress": "The sequence is in progress.",
     "save": "Save",
-    "not-confident-at-all": "Not confident at all",
-    "not-really-confident": "Not really confident",
-    "confident": "Confident",
-    "completely-confident": "Completely confident",
     "sequence-is-closed": "The sequence is closed.",
     "answer": "Answer"
   },
   "fr": {
     "the-sequence-is-in-progress": "La séquence est en cours.",
     "save": "Enregistrer",
-    "not-confident-at-all": "Pas du tout confiant(e)",
-    "not-really-confident": "Pas vraiment confiant(e)",
-    "confident": "Confiant(e)",
-    "completely-confident": "Tout à fait confiant(e)",
     "sequence-is-closed": "La séquence est close.",
     "answer": "Réponse"
   }

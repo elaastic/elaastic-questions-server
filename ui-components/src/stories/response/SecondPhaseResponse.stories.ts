@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import SecondPhaseResponse from '@/components/response/SecondPhaseResponse.vue'
+import {ConfidenceDegree} from "@/models/Response";
 
 
 const meta = {
@@ -23,14 +24,14 @@ export const Default: Story = {
               questionType: 'MultipleChoice',
               explanation: 'Une Réponse',
               choices: [1],
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
               {
                 id: 2,
                 questionType: 'MultipleChoice',
                 explanation: 'Une Autre Réponse',
                 choices: [2, 3],
-                confidence: 'Confiant(e)'
+                confidence: ConfidenceDegree.CONFIDENT
               }],
     updatedAnswer:
             {
@@ -38,7 +39,7 @@ export const Default: Story = {
               questionType: 'MultipleChoice',
               explanation: 'Ma réponse',
               choices: [1],
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
     sequenceInProgress: true
   }
@@ -54,14 +55,14 @@ export const Exclusive: Story = {
               questionType: 'ExclusiveChoice',
               explanation: 'Une Réponse',
               choice: 1,
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
               {
                 id: 2,
                 questionType: 'ExclusiveChoice',
                 explanation: 'Une Autre Réponse',
                 choice: 2,
-                confidence: 'Confiant(e)'
+                confidence: ConfidenceDegree.CONFIDENT
               }],
     updatedAnswer:
             {
@@ -69,7 +70,7 @@ export const Exclusive: Story = {
               questionType: 'ExclusiveChoice',
               explanation: 'Ma réponse',
               choice: 3,
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.NOT_CONFIDENT_AT_ALL
             },
     sequenceInProgress: true
   }
@@ -84,20 +85,20 @@ export const Open: Story = {
               id: 1,
               questionType: 'OpenEnded',
               explanation: 'Une Réponse',
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
               {
                 id: 2,
                 questionType: 'OpenEnded',
                 explanation: 'Une Autre Réponse',
-                confidence: 'Confiant(e)'
+                confidence: ConfidenceDegree.CONFIDENT
               }],
     updatedAnswer:
             {
               id: 3,
               questionType: 'OpenEnded',
               explanation: 'Ma réponse',
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.TOTALLY_CONFIDENT
             },
     sequenceInProgress: true
   }
@@ -112,20 +113,20 @@ export const SequenceClosed: Story = {
               id: 1,
               questionType: 'OpenEnded',
               explanation: 'Une Réponse',
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.CONFIDENT
             },
               {
                 id: 2,
                 questionType: 'OpenEnded',
                 explanation: 'Une Autre Réponse',
-                confidence: 'Confiant(e)'
+                confidence: ConfidenceDegree.CONFIDENT
               }],
     updatedAnswer:
             {
               id: 3,
               questionType: 'OpenEnded',
               explanation: 'Ma réponse',
-              confidence: 'Confiant(e)'
+              confidence: ConfidenceDegree.NOT_REALLY_CONFIDENT
             },
     sequenceInProgress: false
   }
