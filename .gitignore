@@ -116,7 +116,7 @@ gradle-app.setting
 
 # Spring boot
 config
-/elaastic
+./elaastic
 
 # Mac OS
 .DS_Store
@@ -126,3 +126,5 @@ paper.pdf
 
 # Environment file
 .env
+
+ui-components/chromatic-diagnostics.json

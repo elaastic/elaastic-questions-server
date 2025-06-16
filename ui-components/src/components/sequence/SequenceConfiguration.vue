@@ -16,7 +16,11 @@ export interface SequenceConfigurationProps {
   /**
    * Whether the explanation by AI fonctionality is activated or not
    */
-  AIIsActivated: boolean
+  aiIsActivated: boolean,
+  /**
+   * The question is open or not.
+   */
+  questionIsOpen: boolean
 }
 
 export interface SequenceConfigurationEvents {
@@ -40,7 +44,7 @@ export interface SequenceConfigurationEvents {
 
 const props = withDefaults(defineProps<SequenceConfigurationProps>(), {
   maxResponseToEvaluate: 5,
-  AIIsActivated: false
+  aiIsActivated: false
 })
 const emit = defineEmits<SequenceConfigurationEvents>()
 
@@ -68,17 +72,17 @@ const executionContext = ref<ExecutionContext>(ECOption[0])
 const studentGiveExplanation = ref<boolean>(true)
 const nbResponseToEvaluate = ref<number>(props.maxResponseToEvaluate)
 const evaluationMethod = ref<EvaluationMethod>(EMOption[0])
-const evaluationByIA = ref<boolean>(false)
+const evaluationByIa = ref<boolean>(false)
 
 const onSubmit = () => {
   emit('submitSequenceConfiguration',
-    executionContext.value,
-    studentGiveExplanation.value,
-    studentGiveExplanation.value ? {
-      nbResponseToEvaluate: nbResponseToEvaluate.value,
-      evaluationMethod: evaluationMethod.value,
-      evaluationByIA: props.AIIsActivated && evaluationByIA.value
-    } : undefined
+          executionContext.value,
+          studentGiveExplanation.value,
+          studentGiveExplanation.value ? {
+            nbResponseToEvaluate: nbResponseToEvaluate.value,
+            evaluationMethod: evaluationMethod.value,
+            evaluationByIA: props.aiIsActivated && evaluationByIa.value
+          } : undefined
   )
 }
 const onCancel = () => {
@@ -88,8 +92,8 @@ const onCancel = () => {
 
 <template>
   <v-card
-    class="d-flex flex-column"
-    :title="t('sequenceConfiguration.title')"
+          class="d-flex flex-column"
+          :title="t('sequenceConfiguration.title')"
   >
     <v-card-text>
       <!-- Execution Context -->
@@ -97,19 +101,20 @@ const onCancel = () => {
         <v-radio-group inline
                        :label="t('sequenceConfiguration.executionContext.title')"
                        v-model="executionContext"
+                       v-on:click="studentGiveExplanation = true"
         >
           <v-radio
-            v-for="option in ECOption"
-            :key="option"
-            :label="labelForEC(option)"
-            :value="option"></v-radio>
+                  v-for="option in ECOption"
+                  :key="option"
+                  :label="labelForEC(option)"
+                  :value="option"></v-radio>
         </v-radio-group>
         <v-alert
-          v-if="executionContext !== undefined"
-          :text="noticeForEC(executionContext)"
-          type="info"
-          variant="tonal"
-          style="white-space: pre-line"
+                v-if="executionContext !== undefined"
+                :text="noticeForEC(executionContext)"
+                type="info"
+                variant="tonal"
+                style="white-space: pre-line"
         >
         </v-alert>
       </div>
@@ -117,8 +122,17 @@ const onCancel = () => {
       <v-divider></v-divider>
 
       <!-- Student give a textual explanation -->
+      <!--/*
+      When the execution context is Distance or Blended, the student must give an explanation.
+      So when this execution context are selected, the user can't update this checkbox.
+      When the execution context is updated, the checkbox is reset to true.
+
+      If the question is open, the student must give an explanation. So this checkbox isn't relevant and isn't displayed.
+      */-->
       <v-checkbox
+        v-if="!props.questionIsOpen"
         v-model="studentGiveExplanation"
+        :disabled="executionContext !== ECOption[0]"
         :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
         class="mt-4"
       >
@@ -131,21 +145,21 @@ const onCancel = () => {
           <v-row align="center" justify="start">
             <v-col cols="auto">
               <v-checkbox
-                v-model="studentGiveExplanation"
-                :label="t('sequenceConfiguration.phase.confrontingViews.studentsEvaluate')"
-                class="mt-4"
-                :disabled="true"
+                      v-model="studentGiveExplanation"
+                      :label="t('sequenceConfiguration.phase.confrontingViews.studentsEvaluate')"
+                      class="mt-4"
+                      :disabled="true"
               >
               </v-checkbox>
             </v-col>
             <v-col cols="auto">
               <v-select
-                variant="outlined"
-                density="compact"
-                v-model="nbResponseToEvaluate"
-                :items="props.maxResponseToEvaluate > 0 ? Array.from({length: props.maxResponseToEvaluate}, (_, i) => i + 1) : []"
-                class="mt-4"
-                style="min-width: 50px;"
+                      variant="outlined"
+                      density="compact"
+                      v-model="nbResponseToEvaluate"
+                      :items="props.maxResponseToEvaluate > 0 ? Array.from({length: props.maxResponseToEvaluate}, (_, i) => i + 1) : []"
+                      class="mt-4"
+                      style="min-width: 50px;"
               >
               </v-select>
             </v-col>
@@ -159,38 +173,38 @@ const onCancel = () => {
           <!-- Evaluation Method -->
           <div class="d-flex flex-column align-start">
             <v-radio-group
-              :label="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.title')"
-              v-model="evaluationMethod"
+                    :label="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.title')"
+                    v-model="evaluationMethod"
             >
               <v-radio
-                v-for="option in EMOption"
-                :key="option"
-                :label="labelForEM(option)"
-                :value="option"></v-radio>
+                      v-for="option in EMOption"
+                      :key="option"
+                      :label="labelForEM(option)"
+                      :value="option"></v-radio>
             </v-radio-group>
             <v-alert type="info" variant="outlined" class="align-self-end " density="compact">
               <Link
-                href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
-                :text="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.draxoDocumentation')"
-                target="_blank"
+                      href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
+                      :text="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.draxoDocumentation')"
+                      target="_blank"
               />
             </v-alert>
           </div>
 
           <!-- IA Evaluation -->
-          <v-row align="center" justify="start" v-if="props.AIIsActivated">
+          <v-row align="center" justify="start" v-if="props.aiIsActivated">
             <v-col cols="auto">
               <v-checkbox
-                v-model="evaluationByIA"
-                :label="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.label')"
-                class="mt-4"
+                      v-model="evaluationByIa"
+                      :label="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.label')"
+                      class="mt-4"
               >
               </v-checkbox>
             </v-col>
             <v-col cols="auto">
               <v-tooltip
-                :text="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.notice')"
-                location="top"
+                      :text="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.notice')"
+                      location="top"
               >
                 <template v-slot:activator="{ props }">
                   <v-icon v-bind="props" icon="mdi-help-circle">
@@ -202,24 +216,22 @@ const onCancel = () => {
           </v-row>
         </v-sheet>
       </v-expand-transition>
-
-
     </v-card-text>
 
     <v-card-actions class="justify-end">
       <v-btn
-        class="text-none text-subtitle-1 text-white"
-        color="#95c155"
-        variant="flat"
-        @click="onSubmit"
+              class="text-none text-subtitle-1 text-white"
+              color="#95c155"
+              variant="flat"
+              @click="onSubmit"
       >
         {{ t('submit') }}
       </v-btn>
       <v-btn
-        class="text-none text-subtitle-1"
-        text="Cancel"
-        variant="outlined"
-        @click="onCancel"
+              class="text-none text-subtitle-1"
+              text="Cancel"
+              variant="outlined"
+              @click="onCancel"
       ></v-btn>
     </v-card-actions>
   </v-card>

@@ -9,7 +9,8 @@ const meta: any = {
   component: SequenceConfiguration,
   args: {
     maxResponseToEvaluate: 5,
-    AIIsActivated: true,
+    aiIsActivated: true,
+    questionIsOpen: false,
     onCancelSequenceConfiguration: fn(),
     onSubmitSequenceConfiguration: fn()
   },
@@ -29,3 +30,15 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
 };
+
+export const WithoutAI: Story = {
+  args: {
+    aiIsActivated: false
+  }
+}
+
+export const QuestionIsOpen: Story = {
+  args: {
+    questionIsOpen: true
+  }
+}
