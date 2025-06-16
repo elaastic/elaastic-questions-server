@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import ElContentBlock from "@/components/player/ElContentBlock.vue";
-import {type PropType, ref} from "vue";
-import {useI18n} from "vue-i18n";
-import type {QuestionType} from "@/models/Response";
+import ElContentBlock from '@/components/player/ElContentBlock.vue'
+import { type PropType, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import type { QuestionType } from '@/models/Response'
 
 const props = defineProps({
   /**
@@ -17,7 +17,7 @@ const props = defineProps({
    * The type of the question.
    */
   questionType: {
-    type: Object as PropType<QuestionType>,
+    type: Object as PropType<QuestionType>
   },
   /**
    * The state of the collapsible block. 0 if the block is open, 1 if the block is closed.
@@ -41,23 +41,22 @@ const props = defineProps({
     default: false
   }
 })
-const refpanelOpen = ref(props.panelOpen);
-const refQuestionType = ref(props.questionType);
-const refHideQuestionType = ref(props.hideQuestionType);
-const refhideStatement = ref(props.hideStatement);
+const refpanelOpen = ref(props.panelOpen)
+const refQuestionType = ref(props.questionType)
+const refHideQuestionType = ref(props.hideQuestionType)
+const refhideStatement = ref(props.hideStatement)
 const { t } = useI18n()
 </script>
 
 <template>
-  <h1>{{t('statement')}}</h1>
-  <ElContentBlock class="cb"
-                :title="title"
-                :subtitle="refQuestionType"
-                :collapsible="true"
-                v-model:open="refpanelOpen"
-                v-model:showSubtitle="refHideQuestionType"
+  <h1>{{ t('statement') }}</h1>
+  <ElContentBlock :title="title"
+                  :subtitle="refQuestionType"
+                  :collapsible="true"
+                  v-model:open="refpanelOpen"
+                  v-model:showSubtitle="refHideQuestionType"
   >
-    <slot v-if="!refhideStatement"/>
+    <slot v-if="!refhideStatement" />
   </ElContentBlock>
 </template>
 
