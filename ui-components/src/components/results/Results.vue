@@ -150,6 +150,7 @@ const { t } = useI18n()
                        :grade="teacherExp.grade"
                        :number-of-peer-review="teacherExp.nbPeer"
                        :providedByTeacher="true"
+                       :show-details="true"
                        @update:is-best-answer="changeBestAnswers"
                        @update:is-hidden="hideAnswerTeacher"
         />
@@ -162,6 +163,7 @@ const { t } = useI18n()
                      :grade="item.grade"
                      :number-of-peer-review="item.nbPeer"
                      :providedByTeacher="false"
+                     :show-details="true"
                      @update:is-best-answer="changeBestAnswers"
                      @update:is-hidden="hideAnswerStudent"
       />

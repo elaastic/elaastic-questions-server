@@ -86,7 +86,12 @@ const defineColor =  () => {
           </v-card-title>
         </v-card>
       </div>
-        <ElExplanation v-if="props.explanationFirstAttempt?.answer.explanation !== ''" :response="props.explanationFirstAttempt?.answer" :number-of-peer-review="props.explanationFirstAttempt?.nbPeer" :grade="explanationFirstAttempt?.grade"/>
+        <ElExplanation v-if="props.explanationFirstAttempt?.answer.explanation !== ''"
+                       :response="props.explanationFirstAttempt?.answer"
+                       :number-of-peer-review="props.explanationFirstAttempt?.nbPeer"
+                       :grade="explanationFirstAttempt?.grade"
+                       :show-details="false"
+        />
       </div>
       <div v-if="props.explanationSecondAttempt">
       <h2 style="margin-top: 2%">{{t('step')}} 2</h2>
@@ -102,7 +107,12 @@ const defineColor =  () => {
           </v-card-title>
         </v-card>
       </div>
-        <ElExplanation v-if="props.explanationSecondAttempt?.answer.explanation !== ''" :response="props.explanationSecondAttempt?.answer" :number-of-peer-review="props.explanationSecondAttempt?.nbPeer" :grade="props.explanationSecondAttempt?.grade"/>
+        <ElExplanation v-if="props.explanationSecondAttempt?.answer.explanation !== ''"
+                       :response="props.explanationSecondAttempt?.answer"
+                       :number-of-peer-review="props.explanationSecondAttempt?.nbPeer"
+                       :grade="props.explanationSecondAttempt?.grade"
+                       :show-details="false"
+        />
       </div>
     </div>
     <div v-else>

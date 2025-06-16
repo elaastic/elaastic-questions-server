@@ -21,6 +21,12 @@ const props=defineProps({
     type: Boolean,
     default: false
   },
+  /**
+   * A Boolean. True if show-details feature is active. False if not.
+   */
+  showDetails: {
+    type: Boolean,
+  },
 });
 const { t } = useI18n()
 </script>
@@ -45,7 +51,7 @@ const { t } = useI18n()
         </div>
       </div>
 
-      <div v-if="!teacher" class="gray">
+      <div v-if="!teacher && showDetails" class="gray">
         <p class="yellow_hover">{{t('see-details')}}</p>
       </div>
     </v-card-text>

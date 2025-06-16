@@ -25,6 +25,7 @@ export const MultipleChoice: Story = {
     grade: 2,
     numberOfPeerReview: 1,
     providedByTeacher: false,
+    showDetails: false
   },
 }
 
@@ -40,6 +41,7 @@ export const SingleChoice: Story = {
     grade: 3.5,
     numberOfPeerReview: 4,
     providedByTeacher: false,
+    showDetails: false
   },
 }
 
@@ -54,5 +56,22 @@ export const OpenQuestion: Story = {
     grade: undefined,
     numberOfPeerReview: 0,
     providedByTeacher: false,
+    showDetails: false
+  },
+}
+
+export const ShowDetails: Story = {
+  args: {
+    response: {
+      id: 1,
+      questionType: 'MultipleChoice',
+      explanation: 'Mon explication',
+      choices: [1,3],
+      confidence: "",
+    } satisfies MultipleChoiceResponse,
+    grade: 2,
+    numberOfPeerReview: 1,
+    providedByTeacher: false,
+    showDetails: true
   },
 }

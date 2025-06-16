@@ -17,13 +17,7 @@ export const Default: Story = {
     grade: 0,
     numberOfPeerReview: 0,
     teacher: false,
-  },
-}
-export const Teacher: Story = {
-  args: {
-    grade: 0,
-    numberOfPeerReview: 0,
-    teacher: true,
+    showDetails: false
   },
 }
 export const PeerReview: Story = {
@@ -31,6 +25,23 @@ export const PeerReview: Story = {
     grade: 2,
     numberOfPeerReview: 3,
     teacher: false,
+    showDetails: false
+  },
+}
+export const PeerReviewAndShowDetails: Story = {
+  args: {
+    grade: 2,
+    numberOfPeerReview: 3,
+    teacher: false,
+    showDetails: true
+  },
+}
+export const Teacher: Story = {
+  args: {
+    grade: 0,
+    numberOfPeerReview: 0,
+    teacher: true,
+    showDetails: false
   },
 }
 export const PeerReviewAndTeacher: Story = {
@@ -38,5 +49,6 @@ export const PeerReviewAndTeacher: Story = {
     grade: 2,
     numberOfPeerReview: 3,
     teacher: true,
+    showDetails: false
   },
 }

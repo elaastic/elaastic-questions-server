@@ -45,6 +45,12 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * A Boolean. True if show-details feature is active. False if not.
+   */
+  showDetails: {
+    type: Boolean,
+  },
 })
 const emit = defineEmits(['update:is-best-answer', 'update:is-hidden'])
 const { t } = useI18n()
@@ -89,6 +95,7 @@ const hide = () => {
               :grade="grade"
               :number-of-peer-review="numberOfPeerReview"
               :teacher="providedByTeacher"
+              :show-details="props.showDetails"
       />
 
       <div class="ms-auto">
