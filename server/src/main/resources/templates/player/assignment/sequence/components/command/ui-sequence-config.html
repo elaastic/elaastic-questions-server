@@ -50,9 +50,7 @@
                             onCancelSequenceConfiguration: () => {
                                 window.parent.postMessage({command: 'sequence-configuration-cancelled'}, '*')
                             },
-                            onSubmitSequenceConfiguration: (
-                                    request
-                            ) => {
+                            onSubmitSequenceConfiguration: (request) => {
                                 window.parent.postMessage({
                                     command: 'sequence-configuration-submitted',
                                     request
