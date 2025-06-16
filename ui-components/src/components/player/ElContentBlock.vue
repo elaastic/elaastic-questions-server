@@ -15,7 +15,7 @@ const props = defineProps({
    */
   collapsible: {
     type: Boolean,
-    default: false
+    default: true
   },
   /**
    * The state of the block. true if the block is open, false if the block is closed.
