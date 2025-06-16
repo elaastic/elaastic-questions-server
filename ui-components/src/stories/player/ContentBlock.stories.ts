@@ -15,7 +15,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 
-const answer = ref<AnyResponse>({
+const response = ref<AnyResponse>({
     id: 1,
     questionType: "MultipleChoice",
     explanation: "",
@@ -25,12 +25,12 @@ const answer = ref<AnyResponse>({
 
 const validate = ref(false);
 
-function handleAnswer(newAnswer: AnyResponse) {
-    answer.value = newAnswer;
+function handleResponse(newResponse: AnyResponse) {
+    response.value = newResponse;
 }
-function sendAnswer() {
-    if (answer.value.questionType === "MultipleChoice") {
-        if (answer.value.choices.length !== 0) {
+function sendResponse() {
+    if (response.value.questionType === "MultipleChoice") {
+        if (response.value.choices.length !== 0) {
             validate.value = true;
         }
     } else {
@@ -72,7 +72,7 @@ export const responseForm: Story = {
         components: { ContentBlock, ResponseForm, ChoiceChip },
         setup() {
             const isOpen = ref(args.open);
-            return { args, answer, validate, handleAnswer, sendAnswer, isOpen,
+            return { args, response, validate, handleResponse, sendResponse, isOpen,
                 updateOpen: (val: boolean) => isOpen.value = val }
         },
         template: `
@@ -81,22 +81,22 @@ export const responseForm: Story = {
         <div v-if="!validate">
           <ResponseForm
                   :providedAnswers="9"
-                  :answer="answer"
-                  @update:answer="handleAnswer"
+                  :answer="response"
+                  @update:answer="handleResponse"
           ></ResponseForm>
-          <v-btn class="bouton" color="secondary" @click="sendAnswer()" style="margin-top: 5%; margin-bottom: 5%; margin-left: 4%;">Enregistrer</v-btn>
+          <v-btn class="bouton" color="secondary" @click="sendResponse()" style="margin-top: 5%; margin-bottom: 5%; margin-left: 4%;">Enregistrer</v-btn>
         </div>
         <div v-if="validate">
           <v-alert text="Réponse Envoyée" type="success" class="mb-4"></v-alert>
           <ul class="ml-9">
             <li>
-              {{ answer.choices.length === 1 ? 'Votre Réponse :' : 'Vos Réponses' }} <ChoiceChip v-for="a in answer.choices" :value="a" color="gray"/>
+              {{ response.choices.length === 1 ? 'Votre Réponse :' : 'Vos Réponses' }} <ChoiceChip v-for="a in response.choices" :value="a" color="gray"/>
             </li>
             <li>
-              Votre explication : {{answer.explanation}}
+              Votre explication : {{response.explanation}}
             </li>
             <li>
-              Votre degré de confiance : {{answer.confidence}}
+              Votre degré de confiance : {{response.confidence}}
             </li>
           </ul>
         </div>
