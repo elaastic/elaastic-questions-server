@@ -36,12 +36,17 @@
     <script th:inline="javascript">
         const AIExplanationActived = /*[[${IAExplanationIsEnabled}]]*/ false;
         window.elaastic = {
-            initializeSequenceConfiguration: () => {
+            /**
+             * Initialize the sequence configuration Vue app.
+             * @param questionIsOpen {boolean} - Indicates if the question is open or not.
+             */
+            initializeSequenceConfiguration: (questionIsOpen) => {
                 const app = Vue.createApp(
                         ElaasticVueComponents.SequenceConfiguration,
                         {
                             maxResponseToEvaluate: 5,
-                            AIIsActivated: AIExplanationActived,
+                            aiIsActivated: AIExplanationActived,
+                            questionIsOpen,
                             onCancelSequenceConfiguration: () => {
                                 window.parent.postMessage({command: 'sequence-configuration-cancelled'}, '*')
                             },

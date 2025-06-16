@@ -22,21 +22,28 @@
     <!--/* script for activating @iframe-resizer that allow us to smoothly integrate the previous iframe within the page layout */-->
     <script src="https://cdn.jsdelivr.net/npm/@iframe-resizer/parent@5.3.2"></script>
 
+    <h1>Choice question</h1>
     <iframe
-            id="sequence-configuration-app"
+            id="sequence-configuration-app-choice"
+            class="transparent-iframe"
+            th:src="@{/ui/sequence/sequence-configuration}"
+            width="100%"
+    ></iframe>
+    <h1>Open question</h1>
+    <iframe
+            id="sequence-configuration-app-open"
             class="transparent-iframe"
             th:src="@{/ui/sequence/sequence-configuration}"
             width="100%"
     ></iframe>
 
     <script th:inline="javascript">
-        const iframe = document.getElementById('sequence-configuration-app');
-
+        const iframeChoice = document.getElementById('sequence-configuration-app-choice');
+        const iframeOpen = document.getElementById('sequence-configuration-app-open');
 
         /*[- Trigger the app init function on iframe loading -]*/
-        iframe.onload = () => {
-            iframe.contentWindow.elaastic.initializeSequenceConfiguration()
-        }
+        iframeChoice.onload = () => iframeChoice.contentWindow.elaastic.initializeSequenceConfiguration(false)
+        iframeOpen.onload = () => iframeOpen.contentWindow.elaastic.initializeSequenceConfiguration(true)
 
         window.addEventListener('message', (event) => {
             if (event.data.command === 'sequence-configuration-cancelled') {

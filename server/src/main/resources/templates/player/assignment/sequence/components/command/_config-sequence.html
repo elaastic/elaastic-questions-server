@@ -43,7 +43,9 @@
 
             const iframe = document.getElementById('sequenceConfiguration_' + [[${sequenceId}]]);
             iframe.onload = () => {
-                iframe.contentWindow.elaastic.initializeSequenceConfiguration()
+                iframe.contentWindow.elaastic.initializeSequenceConfiguration(
+                        questionIsOpen = [[${questionType == T(org.elaastic.material.instructional.question.QuestionType).OpenEnded}]]
+                )
             }
 
             window.addEventListener('message', (event) => {

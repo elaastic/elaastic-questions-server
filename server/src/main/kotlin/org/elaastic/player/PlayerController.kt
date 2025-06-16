@@ -336,37 +336,6 @@ class PlayerController(
         return "player/assignment/sequence/play-sequence-learner"
     }
 
-
-    @ResponseBody
-    @GetMapping("/sequence/{sequenceId}/start")
-    fun startSequence(
-        authentication: Authentication,
-        @PathVariable sequenceId: Long,
-        @RequestParam executionContext: ExecutionContext,
-        @RequestParam studentsProvideExplanation: Boolean?,
-        @RequestParam responseToEvaluateCount: Int?,
-        @RequestParam chatGptEvaluation: Boolean?,
-        @RequestParam evaluationPhaseConfig: EvaluationPhaseConfig?,
-    ) {
-        val user: User = authentication.principal as User
-
-        sequenceService.get(user, sequenceId, true)
-            .let {
-                sequenceService.start(
-                    user,
-                    it,
-                    executionContext,
-                    studentsProvideExplanation ?: false,
-                    responseToEvaluateCount ?: 0,
-                    evaluationPhaseConfig,
-                    ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
-                            (chatGptEvaluation ?: false && studentsProvideExplanation ?: false)
-                )
-                userService.updateUserActiveSince(user)
-                autoReloadSessionHandler.broadcastReload(sequenceId)
-            }
-    }
-
     @ResponseBody
     @PostMapping("/sequence/{sequenceId}/start.json")
     fun jsonStartSequence(
