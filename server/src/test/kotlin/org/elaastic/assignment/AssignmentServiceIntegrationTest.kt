@@ -33,6 +33,7 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tExpect
@@ -239,8 +240,10 @@ internal class AssignmentServiceIntegrationTest(
             assignment.sequences.first(),
             ExecutionContext.FaceToFace,
             false,
-            0,
-            EvaluationMethod.ALL_AT_ONCE
+            EvaluationPhaseConfig(
+                0,
+                evaluationMethod = EvaluationMethod.ALL_AT_ONCE
+            )
         )
 
         val interaction =

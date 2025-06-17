@@ -151,8 +151,8 @@ class SequenceService(
         initializeInteractionsForSequence(
             sequence,
             studentsProvideExplanation,
-            confrontingViewsPhaseConfig?.responseToEvaluateCount ?: 0,
-            executionContext
+            executionContext,
+            confrontingViewsPhaseConfig
         )
 
         eventLogService.saveActionsAfterClosingConfigurePopup(sequence)
@@ -183,8 +183,8 @@ class SequenceService(
     internal fun initializeInteractionsForSequence(
         sequence: Sequence,
         studentsProvideExplanation: Boolean,
-        nbResponseToEvaluate: Int,
         executionContext: ExecutionContext,
+        evalutionPhaseConfig: EvaluationPhaseConfig?,
     ): Sequence {
         sequence.interactions[InteractionType.ResponseSubmission] =
             interactionService.create(
@@ -197,17 +197,19 @@ class SequenceService(
                 State.show
             )
 
-        sequence.interactions[InteractionType.Evaluation] =
-            interactionService.create(
-                sequence,
-                EvaluationSpecification(
-                    nbResponseToEvaluate
-                ),
-                2,
-                if (executionContext == ExecutionContext.FaceToFace)
-                    State.beforeStart
-                else State.show
-            )
+        if (evalutionPhaseConfig != null) {
+            sequence.interactions[InteractionType.Evaluation] =
+                interactionService.create(
+                    sequence,
+                    EvaluationSpecification(
+                        evalutionPhaseConfig.responseToEvaluateCount
+                    ),
+                    2,
+                    if (executionContext == ExecutionContext.FaceToFace)
+                        State.beforeStart
+                    else State.show
+                )
+        }
 
         sequence.interactions[InteractionType.Read] =
             interactionService.create(

@@ -27,6 +27,7 @@ import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGra
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tThen
@@ -134,9 +135,11 @@ internal class SequenceServiceIntegrationTest(
                 testingSequence,
                 ExecutionContext.Distance,
                 true,
-                1,
-                EvaluationMethod.DRAXO,
-                false,
+                EvaluationPhaseConfig(
+                    1,
+                    false,
+                    EvaluationMethod.DRAXO,
+                )
             )
         }
     }
@@ -166,9 +169,11 @@ internal class SequenceServiceIntegrationTest(
                 testingSequence,
                 executionContext = ExecutionContext.Distance,
                 studentsProvideExplanation = true,
-                nbResponseToEvaluate = 1,
-                evaluationMethod = EvaluationMethod.DRAXO,
-                chatGptEvaluationEnable = false,
+                EvaluationPhaseConfig(
+                    1,
+                    false,
+                    EvaluationMethod.DRAXO,
+                )
             )
         }
     }
