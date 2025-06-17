@@ -30,9 +30,11 @@ export interface SequenceConfigurationEvents {
   (event: 'submitSequenceConfiguration', request: {
     executionContext: ExecutionContext,
     studentsProvideExplanation: boolean,
-    responseToEvaluateCount: number,
-    evaluationPhaseConfig: EvaluationMethod,
-    evaluationByIA: boolean
+    confrontingViewsPhaseConfig: {
+      responseToEvaluateCount: number,
+      evaluationPhaseConfig: EvaluationMethod,
+      evaluationByIA: boolean
+    } | undefined
   }): void;
 
   /**
@@ -76,13 +78,15 @@ const evaluationByIa = ref<boolean>(false)
 
 const onSubmit = () => {
   emit('submitSequenceConfiguration',
-          {
-            executionContext: executionContext.value,
-            studentsProvideExplanation: studentGiveExplanation.value,
-            responseToEvaluateCount: confrontingViewsPhaseActive.value ? nbResponseToEvaluate.value : undefined,
-            evaluationPhaseConfig: confrontingViewsPhaseActive.value ? evaluationMethod.value : undefined,
-            evaluationByIA: confrontingViewsPhaseActive.value ? props.aiIsActivated && evaluationByIa.value : undefined
-          }
+    {
+      executionContext: executionContext.value,
+      studentsProvideExplanation: studentGiveExplanation.value,
+      confrontingViewsPhaseConfig: confrontingViewsPhaseActive.value ? {
+        responseToEvaluateCount: nbResponseToEvaluate.value,
+        evaluationPhaseConfig: evaluationMethod.value,
+        evaluationByIA: props.aiIsActivated && evaluationByIa.value
+      } : undefined
+    }
   )
 }
 const onCancel = () => {
@@ -98,10 +102,11 @@ const onCancel = () => {
     <v-card-text>
       <!-- Execution Context -->
       <div class="mb-4">
-        <v-radio-group inline
-                       :label="t('sequenceConfiguration.executionContext.title')"
-                       v-model="executionContext"
-                       v-on:click="studentGiveExplanation = true"
+        <v-radio-group
+          inline
+          :label="t('sequenceConfiguration.executionContext.title')"
+          v-model="executionContext"
+          v-on:click="studentGiveExplanation = true"
         >
           <v-radio
             v-for="option in EXECUTION_CONTEXT_OPTIONS"
@@ -146,9 +151,10 @@ const onCancel = () => {
       <v-divider thickness="0" class="mt-4 mb-4"></v-divider>
 
       <!-- Confronting View Phase -->
-      <v-card elevation="6" :title="t('sequenceConfiguration.phase.n', {n: 2})"
-              :subtitle="t('sequenceConfiguration.phase.confrontingViews.title')"
-              prepend-icon="mdi-comment-multiple">
+      <v-card
+        elevation="6" :title="t('sequenceConfiguration.phase.n', {n: 2})"
+        :subtitle="t('sequenceConfiguration.phase.confrontingViews.title')"
+        prepend-icon="mdi-comment-multiple">
         <template v-slot:text class="ps-2">
           <v-switch v-model="confrontingViewsPhaseActive" class="mb-n4" color="primary">
             <template v-slot:label>
