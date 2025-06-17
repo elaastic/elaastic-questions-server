@@ -16,10 +16,11 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div
-        th:fragment="steps(stepsModel, sequenceStatistics)"
-        th:remove="tag"
-        xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<!--/*@thymesVar id="stepsModel" type="org.elaastic.player.steps.StepsModel"*/-->
+<!--/*@thymesVar id="sequenceStatistics" type="org.elaastic.player.steps.SequenceStatistics"*/-->
+<div th:fragment="steps(stepsModel, sequenceStatistics)"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
     <!--/* Steps of the sequence */-->
     <div class="ui three top attached steps ob-start-sequence-3">
@@ -53,6 +54,7 @@
 
         <!--/* Evaluation phase */-->
         <div class="step"
+             th:if="${stepsModel.evaluationState.name() != 'NONE'}"
              th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.evaluationState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.evaluationState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
 
             <!--/* Statistics */-->

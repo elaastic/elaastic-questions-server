@@ -46,6 +46,7 @@ object StepsModelFactory {
             State.beforeStart -> PhaseState.DISABLED
             State.show -> PhaseState.ACTIVE
             State.afterStop -> PhaseState.COMPLETED
+            State.None -> PhaseState.NONE
         }
 
 }

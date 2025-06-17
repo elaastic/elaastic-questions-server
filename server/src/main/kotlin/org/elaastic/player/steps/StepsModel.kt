@@ -24,7 +24,7 @@ data class StepsModel(
          * @return the converted state in DashboardPhaseState
          * @see DashboardPhaseState
          */
-        fun getDashboardState(): DashboardPhaseState {
+        fun toDashboardState(): DashboardPhaseState {
             return when (this) {
                 DISABLED -> DashboardPhaseState.NOT_STARTED
                 ACTIVE -> DashboardPhaseState.IN_PROGRESS

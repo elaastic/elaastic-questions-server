@@ -322,10 +322,12 @@ class Sequence(
  * @property beforeStart The phase is not started yet.
  * @property show The phase is in progress.
  * @property afterStop The phase is stopped.
+ * @property None The phase isn't displayed
  */
 enum class State {
     beforeStart,
     show,
-    afterStop
+    afterStop,
+    None
 }
 

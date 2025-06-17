@@ -197,19 +197,19 @@ class SequenceService(
                 State.show
             )
 
-        if (evalutionPhaseConfig != null) {
-            sequence.interactions[InteractionType.Evaluation] =
-                interactionService.create(
-                    sequence,
-                    EvaluationSpecification(
-                        evalutionPhaseConfig.responseToEvaluateCount
-                    ),
-                    2,
-                    if (executionContext == ExecutionContext.FaceToFace)
-                        State.beforeStart
-                    else State.show
-                )
-        }
+        sequence.interactions[InteractionType.Evaluation] =
+            interactionService.create(
+                sequence,
+                EvaluationSpecification(
+                    evalutionPhaseConfig?.responseToEvaluateCount ?: 0
+                ),
+                2,
+                when {
+                    evalutionPhaseConfig == null -> State.None
+                    executionContext == ExecutionContext.FaceToFace -> State.beforeStart
+                    else -> State.show
+                }
+            )
 
         sequence.interactions[InteractionType.Read] =
             interactionService.create(

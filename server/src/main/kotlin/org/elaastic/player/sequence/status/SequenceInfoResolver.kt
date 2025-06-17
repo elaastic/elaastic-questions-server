@@ -72,6 +72,10 @@ object SequenceInfoResolver {
                                     color = "blue",
                                     refreshable = !isTeacher
                                 )
+
+                            State.None -> SequenceInfoModel(
+                                "This phase is not available."
+                            )
                         }
                     }
 
@@ -83,6 +87,10 @@ object SequenceInfoResolver {
                     )
                 }
             }
+
+        State.None -> SequenceInfoModel(
+            "This sequence is not available."
+        )
     }
 
     /**

@@ -61,16 +61,18 @@ class DashboardModelFactory(
 
         val sequenceMonitoringModel = SequenceMonitoringModel(
             sequence.executionContext,
-            learnerStepsModel.responseSubmissionState.getDashboardState(),
-            learnerStepsModel.evaluationState.getDashboardState(),
+            learnerStepsModel.responseSubmissionState.toDashboardState(),
+            learnerStepsModel.evaluationState.toDashboardState(),
             sequenceId = sequence.id
+
         )
 
-        val learners: MutableList<LearnerMonitoringModel> = getLearnerMonitoringModels(
-            sequenceMonitoringModel,
-            sequence,
+        sequenceMonitoringModel.setLearners(
+            getLearnerMonitoringModels(
+                sequenceMonitoringModel,
+                sequence,
+            )
         )
-        sequenceMonitoringModel.setLearners(learners)
 
         val previousSequence: Sequence? = sequenceService.findPreviousSequence(sequence)
         val nextSequence: Sequence? = sequenceService.findNextSequence(sequence)

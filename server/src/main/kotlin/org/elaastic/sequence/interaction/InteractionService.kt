@@ -108,7 +108,7 @@ class InteractionService(
                         interaction.peerEvaluationMapping =
                             responseRecommendationService.computeRecommendations(
                                 responses,
-                                (interaction.sequence.getEvaluationInteraction().specification as EvaluationSpecification)
+                                interaction.sequence.getEvaluationSpecification()
                                     .responseToEvaluateCount
                             )
                     }

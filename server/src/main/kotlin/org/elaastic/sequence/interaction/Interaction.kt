@@ -117,6 +117,7 @@ class Interaction(
 
     @Transient
     fun stateForRegisteredUsers(): State = when {
+        state == State.None -> State.None
         isRead() && sequence.resultsArePublished -> State.show
 
         sequence.isStopped() ->
