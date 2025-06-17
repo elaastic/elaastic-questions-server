@@ -3,7 +3,7 @@ package org.elaastic.sequence.phase
 import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.State
 import org.elaastic.sequence.phase.descriptor.PhaseDescriptor
-import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
 import org.elaastic.sequence.phase.response.LearnerResponsePhase
@@ -23,15 +23,15 @@ class LearnerPhaseFactory {
     ): LearnerPhase = when (phaseDescriptor.type) {
         LearnerPhaseType.RESPONSE -> LearnerResponsePhase(learnerSequence, phaseIndex, active, state)
         LearnerPhaseType.EVALUATION ->
-            when (learnerSequence.sequence.evaluationPhaseConfig) {
-                EvaluationPhaseConfig.ALL_AT_ONCE -> AllAtOnceLearnerEvaluationPhase(
+            when (learnerSequence.sequence.evaluationMethod) {
+                EvaluationMethod.ALL_AT_ONCE -> AllAtOnceLearnerEvaluationPhase(
                     learnerSequence,
                     phaseIndex,
                     active,
                     state,
                 )
 
-                EvaluationPhaseConfig.DRAXO -> DraxoLearnerEvaluationPhase(
+                EvaluationMethod.DRAXO -> DraxoLearnerEvaluationPhase(
                     learnerSequence,
                     phaseIndex,
                     active,

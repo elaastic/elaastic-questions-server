@@ -42,7 +42,7 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.LearnerPhaseService
-import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.AnonymousUserService
@@ -217,7 +217,7 @@ internal class PlayerControllerTest(
             studentsProvideExplanation = true,
             responseToEvaluateCount = 0,
             evaluationByIA = false,
-            evaluationPhaseConfig = EvaluationPhaseConfig.ALL_AT_ONCE
+            evaluationMethod = EvaluationMethod.ALL_AT_ONCE
         )
 
         fun SequenceConfig.json(): String {
@@ -226,7 +226,7 @@ internal class PlayerControllerTest(
                 "studentsProvideExplanation": ${this.studentsProvideExplanation},
                 "responseToEvaluateCount": ${this.responseToEvaluateCount},
                 "chatGptEvaluation": ${this.evaluationByIA},
-                "evaluationPhaseConfig": "${this.evaluationPhaseConfig?.name}"
+                "evaluationPhaseConfig": "${this.evaluationMethod?.name}"
             }"""
         }
 
@@ -246,7 +246,7 @@ internal class PlayerControllerTest(
             eq(sequenceConfig.executionContext),
             eq(sequenceConfig.studentsProvideExplanation ?: false),
             eq(sequenceConfig.responseToEvaluateCount ?: 0),
-            eq(sequenceConfig.evaluationPhaseConfig),
+            eq(sequenceConfig.evaluationMethod),
             eq(false) // chatGptEvaluation is false in this case
         )
     }

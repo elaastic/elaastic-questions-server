@@ -26,7 +26,7 @@ import org.elaastic.sequence.config.EvaluationSpecification
 import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -87,10 +87,11 @@ class Sequence(
     /**
      * The evaluation phase configuration.
      *
-     * @see EvaluationPhaseConfig
+     * @see EvaluationMethod
      */
     @field:Enumerated(EnumType.STRING)
-    var evaluationPhaseConfig: EvaluationPhaseConfig = EvaluationPhaseConfig.ALL_AT_ONCE,
+    @Column(name = "evaluation_phase_config")
+    var evaluationMethod: EvaluationMethod = EvaluationMethod.ALL_AT_ONCE,
 
     activeInteraction: Interaction? = null,
 

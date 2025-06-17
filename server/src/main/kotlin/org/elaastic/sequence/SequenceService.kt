@@ -39,6 +39,7 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionRepository
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -70,10 +71,10 @@ class SequenceService(
      * Get a sequence by its id.
      *
      * If the user is not the owner of the sequence, an [AccessDeniedException] is thrown
+     *
      * @param user [User] the user requesting the sequence
      * @param id [Long] the id of the sequence
      * @param fetchInteractions [Boolean] if true, fetch the interactions of the sequence
-     *
      * @throws [AccessDeniedException] if the user is not the owner of the sequence
      */
     fun get(user: User, id: Long, fetchInteractions: Boolean = false): Sequence =
@@ -136,9 +137,7 @@ class SequenceService(
         sequence: Sequence,
         executionContext: ExecutionContext,
         studentsProvideExplanation: Boolean,
-        nbResponseToEvaluate: Int,
-        evaluationPhaseConfig: EvaluationPhaseConfig,
-        chatGptEvaluationEnable: Boolean = false
+        confrontingViewsPhaseConfig: EvaluationPhaseConfig? = null,
     ): Sequence {
 
         require(user == sequence.owner) {
@@ -149,7 +148,12 @@ class SequenceService(
             "The sequence has already been started"
         }
 
-        initializeInteractionsForSequence(sequence, studentsProvideExplanation, nbResponseToEvaluate, executionContext)
+        initializeInteractionsForSequence(
+            sequence,
+            studentsProvideExplanation,
+            confrontingViewsPhaseConfig?.responseToEvaluateCount ?: 0,
+            executionContext
+        )
 
         eventLogService.saveActionsAfterClosingConfigurePopup(sequence)
 
@@ -157,12 +161,14 @@ class SequenceService(
             sequence.selectActiveInteraction(InteractionType.ResponseSubmission)
         else sequence.selectActiveInteraction(InteractionType.Read)
 
+
         sequence.also {
             it.state = State.show
             it.executionContext = executionContext
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
-            it.evaluationPhaseConfig = evaluationPhaseConfig
-            it.chatGptEvaluationEnabled = chatGptEvaluationEnable
+            it.evaluationMethod = confrontingViewsPhaseConfig?.evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE
+            it.chatGptEvaluationEnabled =
+                studentsProvideExplanation && confrontingViewsPhaseConfig?.evaluationByIA ?: false
         }.let(sequenceRepository::save)
         if (studentsProvideExplanation) {
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
@@ -387,7 +393,7 @@ class SequenceService(
             return 0
         }
 
-        val nbDRAXOEvaluationReported: Int = if (sequence.evaluationPhaseConfig == EvaluationPhaseConfig.DRAXO) {
+        val nbDRAXOEvaluationReported: Int = if (sequence.evaluationMethod == EvaluationMethod.DRAXO) {
             draxoPeerGradingService.countAllDraxoPeerGradingReported(sequence, isRemoved)
         } else {
             0
@@ -416,8 +422,8 @@ class SequenceService(
         val nbRemovedReport = countReportedEvaluation(sequenceInteractionsFetched, isTeacher, true)
         val nbNotRemovedReport = countReportedEvaluation(sequenceInteractionsFetched, isTeacher, false)
         return ReportInformation(
-                nbReportTotal = nbRemovedReport + nbNotRemovedReport,
-                nbReportToModerate = nbNotRemovedReport
+            nbReportTotal = nbRemovedReport + nbNotRemovedReport,
+            nbReportToModerate = nbNotRemovedReport
         )
     }
 }

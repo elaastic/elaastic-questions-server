@@ -32,6 +32,7 @@ import org.elaastic.moderation.UtilityGrade
 import org.elaastic.player.PlayerController
 import org.elaastic.sequence.*
 import org.elaastic.sequence.interaction.InteractionService
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.interpreter.command.*
 import org.elaastic.user.Role
@@ -227,9 +228,11 @@ class FunctionalTestingService(
             sequence,
             executionContext,
             studentsProvideExplanation,
-            nbResponseToEvaluate,
-            sequence.evaluationPhaseConfig,
-            sequence.chatGptEvaluationEnabled
+            EvaluationPhaseConfig(
+                nbResponseToEvaluate,
+                sequence.chatGptEvaluationEnabled,
+                sequence.evaluationMethod
+            )
         )
 
     fun submitResponse(
@@ -626,13 +629,13 @@ class FunctionalTestingService(
      * The sequence is saved in the database
      *
      * @param teacher the teacher who owns the sequence
-     * @param evaluationPhaseConfig the evaluation phase config of the sequence
+     * @param evaluationMethod the evaluation phase config of the sequence
      * @param executionContext the execution context of the sequence
      * @param chatGptEvaluationEnabled the ChatGPT evaluation enabled status of the sequence
      */
     fun createSequence(
         teacher: User,
-        evaluationPhaseConfig: EvaluationPhaseConfig,
+        evaluationMethod: EvaluationMethod,
         executionContext: ExecutionContext = ExecutionContext.FaceToFace,
         chatGptEvaluationEnabled: Boolean = false
     ): Sequence {
@@ -651,7 +654,7 @@ class FunctionalTestingService(
             statement = subject.statements.first(),
             assignment = assignment,
             executionContext = executionContext,
-            evaluationPhaseConfig = evaluationPhaseConfig,
+            evaluationMethod = evaluationMethod,
             chatGptEvaluationEnabled = chatGptEvaluationEnabled,
         ).let {
             return sequenceRepository.save(it)
