@@ -14,7 +14,8 @@ data class StepsModel(
     enum class PhaseState {
         DISABLED,
         ACTIVE,
-        COMPLETED;
+        COMPLETED,
+        NONE;
 
         /**
          * Since The [StepsModel] use different state phase than the [SequenceMonitoringModel], we need to convert the
@@ -28,6 +29,7 @@ data class StepsModel(
                 DISABLED -> DashboardPhaseState.NOT_STARTED
                 ACTIVE -> DashboardPhaseState.IN_PROGRESS
                 COMPLETED -> DashboardPhaseState.STOPPED
+                NONE -> DashboardPhaseState.NONE
             }
         }
     }

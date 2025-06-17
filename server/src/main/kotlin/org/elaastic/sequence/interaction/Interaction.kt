@@ -120,7 +120,7 @@ class Interaction(
         isRead() && sequence.resultsArePublished -> State.show
 
         sequence.isStopped() ->
-            if (rank <= sequence.activeInteraction?.rank ?: 0)
+            if (rank <= (sequence.activeInteraction?.rank ?: 0))
                 state
             else State.beforeStart
 

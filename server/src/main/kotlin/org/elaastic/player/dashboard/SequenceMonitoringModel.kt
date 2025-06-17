@@ -309,14 +309,19 @@ enum class DashboardPhaseState {
      *
      * Only applicable to phase 1 and 2.
      */
-    STOPPED,                                // UNUSED
+    STOPPED,
 
     /**
      * The phase has been completed
      *
      * Applicable to all phases.
      */
-    COMPLETED
+    COMPLETED,
+
+    /**
+     * The phase is not enabled
+     */
+    NONE
 }
 
 /**
