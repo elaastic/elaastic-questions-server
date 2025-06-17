@@ -47,6 +47,7 @@ import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.InteractionService
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
@@ -476,9 +477,11 @@ class BootstrapService(
                 it,
                 mode,
                 true,
-                2,
-                EvaluationPhaseConfig.ALL_AT_ONCE,
-                false
+                EvaluationPhaseConfig(
+                    2,
+                    false,
+                    EvaluationMethod.ALL_AT_ONCE
+                )
             )
         }
     }

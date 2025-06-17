@@ -28,14 +28,12 @@ import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.player.dashboard.DashboardModelFactory
 import org.elaastic.player.dashboard.SequenceMonitoringModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
-import org.elaastic.player.results.TeacherResultDashboardService
 import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.results.learner.LearnerResultsModelFactory
 import org.elaastic.player.results.learner.LearnerSequenceResponses
@@ -349,12 +347,9 @@ class PlayerController(
                 sequenceService.start(
                     user,
                     it,
-                    executionContext,
-                    studentsProvideExplanation ?: false,
-                    responseToEvaluateCount ?: 0,
-                    evaluationPhaseConfig ?: EvaluationPhaseConfig.ALL_AT_ONCE,
-                    ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
-                            (request.evaluationByIA ?: false && request.studentsProvideExplanation ?: false)
+                    request.executionContext,
+                    request.studentsProvideExplanation ?: false,
+                    request.confrontingViewsPhaseConfig
                 )
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)
