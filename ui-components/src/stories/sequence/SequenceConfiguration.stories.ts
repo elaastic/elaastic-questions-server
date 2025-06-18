@@ -42,3 +42,9 @@ export const QuestionIsOpen: Story = {
     questionIsOpen: true
   }
 }
+
+export const NotPossibleToModifyFirstAnswer: Story = {
+  args: {
+    modificationFirstAnswer: false
+  }
+}
