@@ -30,13 +30,20 @@ class SequenceMonitoringModel(
 
     init {
         // Check coherence of the model
-        if (executionContext == ExecutionContext.FaceToFace) {
-            if (phase1State == DashboardPhaseState.IN_PROGRESS) {
-                require(phase2State == DashboardPhaseState.NOT_STARTED || phase2State == DashboardPhaseState.NONE) {
-                    "In FaceToFace mode phase 2 must be not started when phase 1 is started"
+        when (executionContext) {
+            ExecutionContext.FaceToFace -> {
+                if (phase1State == DashboardPhaseState.IN_PROGRESS) {
+                    require(phase2State == DashboardPhaseState.NOT_STARTED || phase2State == DashboardPhaseState.NONE) {
+                        "In FaceToFace mode phase 2 must be not started when phase 1 is started"
+                    }
+                }
+                if (phase2State == DashboardPhaseState.IN_PROGRESS) {
+                    require(phase1State == DashboardPhaseState.STOPPED) { "In FaceToFace mode phase 1 must be completed when phase 2 is started" }
                 }
             }
-            if (phase2State == DashboardPhaseState.IN_PROGRESS) require(phase1State == DashboardPhaseState.STOPPED) { "In FaceToFace mode phase 1 must be completed when phase 2 is started" }
+            else -> require(phase1State == phase2State || phase2State == DashboardPhaseState.NONE) {
+                "In Blended or Remote mode, phase 1 and phase 2 must be in the same state or phase 2 must be NONE"
+            }
         }
     }
 

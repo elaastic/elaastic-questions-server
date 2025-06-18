@@ -155,8 +155,17 @@ class Sequence(
             return field
         }
 
+    fun getNextInteraction(interaction: Interaction): Interaction {
+        return interactions.values
+            .filter { it.state != None }
+            .filter { it.rank > interaction.rank }
+            .minByOrNull { it.rank }
+            ?: error("There is no next interaction after interaction ${interaction.id} in this sequence")
+    }
+
     fun getInteractionAt(rank: Int): Interaction {
-        return interactions.values.find { it.rank == rank }
+        return interactions.values
+            .find { it.rank == rank }
             ?: error("There is no interaction for rank $rank in this sequence")
     }
 
@@ -267,6 +276,7 @@ class Sequence(
         executionContext == ExecutionContext.Distance
 
     @Transient
+    // TODO update
     fun resultsCanBePublished() =
         !resultsArePublished && (
                 isStopped() ||

@@ -25,51 +25,61 @@ import org.elaastic.user.User
 object CommandModelFactory {
 
     fun build(user: User, sequence: Sequence): CommandModel =
-            sequence.activeInteraction.let { interaction ->
-                CommandModel(
-                        sequenceId = sequence.id ?: throw IllegalStateException("This sequence has no ID"),
-                        statementId = sequence.statement.id ?: throw IllegalStateException("This statement has no ID"),
-                        interactionId = interaction?.id,
-                        interactionRank = interaction?.rank,
-                        questionType = sequence.statement.questionType,
-                        hasExpectedExplanation = !sequence.statement.expectedExplanation.isNullOrBlank(),
+        sequence.activeInteraction.let { interaction ->
+            CommandModel(
+                sequenceId = sequence.id ?: throw IllegalStateException("This sequence has no ID"),
+                statementId = sequence.statement.id ?: throw IllegalStateException("This statement has no ID"),
+                interactionId = interaction?.id,
+                interactionRank = interaction?.rank,
+                questionType = sequence.statement.questionType,
+                hasExpectedExplanation = !sequence.statement.expectedExplanation.isNullOrBlank(),
 
-                        actionStartSequence =
-                        if (sequence.state == State.beforeStart)
-                            CommandModel.ActionStatus.ENABLED
-                        else CommandModel.ActionStatus.HIDDEN,
-                        actionStartInteraction = when {
-                            interaction == null || sequence.isStopped() -> CommandModel.ActionStatus.HIDDEN
-                            interaction.isRead() || interaction.getStateForTeacher(user) == State.afterStop -> CommandModel.ActionStatus.HIDDEN
-                            interaction.getStateForTeacher(user) == State.show -> CommandModel.ActionStatus.DISABLED
-                            else -> CommandModel.ActionStatus.ENABLED
-                        },
-                        actionStopInteraction =
-                        if (interaction == null || sequence.isStopped() || interaction.getStateForTeacher(user) != State.show || interaction.isRead())
-                            CommandModel.ActionStatus.HIDDEN
-                        else CommandModel.ActionStatus.ENABLED,
-                        actionStartNextInteraction =
-                        if (interaction == null || sequence.isStopped() || interaction.getStateForTeacher(user) != State.afterStop || !interaction.isResponseSubmission())
-                            CommandModel.ActionStatus.HIDDEN
-                        else CommandModel.ActionStatus.ENABLED,
-                        actionReopenInteraction =
-                        if (interaction == null || sequence.isStopped() || interaction.getStateForTeacher(user) != State.afterStop || interaction.isRead())
-                            CommandModel.ActionStatus.HIDDEN
-                        else CommandModel.ActionStatus.ENABLED,
-                        actionReopenSequence = when {
-                            !sequence.isStopped() -> CommandModel.ActionStatus.HIDDEN
-                            sequence.executionIsFaceToFace() && (interaction?.isRead() == true) -> CommandModel.ActionStatus.HIDDEN
-                            else -> CommandModel.ActionStatus.ENABLED
-                        },
-                        actionStopSequence = if (sequence.state != State.show)
-                            CommandModel.ActionStatus.HIDDEN
-                        else CommandModel.ActionStatus.ENABLED,
-                        actionPublishResults = if (!sequence.resultsCanBePublished())
-                            CommandModel.ActionStatus.HIDDEN
-                        else CommandModel.ActionStatus.ENABLED,
-                        actionUnpublishResults = if (!sequence.resultsArePublished)
-                            CommandModel.ActionStatus.HIDDEN
-                        else CommandModel.ActionStatus.ENABLED
-                )
-            }
+                actionStartSequence =
+                    if (sequence.state == State.beforeStart)
+                        CommandModel.ActionStatus.ENABLED
+                    else CommandModel.ActionStatus.HIDDEN,
+
+                actionStartInteraction = when {
+                    interaction == null || sequence.isStopped() -> CommandModel.ActionStatus.HIDDEN
+                    interaction.isRead() || interaction.getStateForTeacher(user) == State.afterStop -> CommandModel.ActionStatus.HIDDEN
+                    interaction.getStateForTeacher(user) == State.show -> CommandModel.ActionStatus.DISABLED
+                    else -> CommandModel.ActionStatus.ENABLED
+                },
+
+                actionStopInteraction =
+                    when {
+                        interaction == null || sequence.isStopped() || interaction.getStateForTeacher(user) != State.show || interaction.isRead()
+                            -> CommandModel.ActionStatus.HIDDEN
+                        else -> CommandModel.ActionStatus.ENABLED
+                    },
+
+                actionStartNextInteraction =
+                    if (interaction == null || sequence.isStopped() || interaction.getStateForTeacher(user) != State.afterStop || !interaction.isResponseSubmission())
+                        CommandModel.ActionStatus.HIDDEN
+                    else CommandModel.ActionStatus.ENABLED,
+
+                actionReopenInteraction =
+                    if (interaction == null || sequence.isStopped() || interaction.getStateForTeacher(user) != State.afterStop || interaction.isRead())
+                        CommandModel.ActionStatus.HIDDEN
+                    else CommandModel.ActionStatus.ENABLED,
+
+                actionReopenSequence = when {
+                    !sequence.isStopped() -> CommandModel.ActionStatus.HIDDEN
+                    sequence.executionIsFaceToFace() && (interaction?.isRead() == true) -> CommandModel.ActionStatus.HIDDEN
+                    else -> CommandModel.ActionStatus.ENABLED
+                },
+
+                actionStopSequence = if (sequence.state != State.show)
+                    CommandModel.ActionStatus.HIDDEN
+                else CommandModel.ActionStatus.ENABLED,
+
+                actionPublishResults = if (!sequence.resultsCanBePublished())
+                    CommandModel.ActionStatus.HIDDEN
+                else CommandModel.ActionStatus.ENABLED,
+
+                actionUnpublishResults = if (!sequence.resultsArePublished)
+                    CommandModel.ActionStatus.HIDDEN
+                else CommandModel.ActionStatus.ENABLED
+            )
+        }
 }

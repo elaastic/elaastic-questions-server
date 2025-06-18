@@ -84,34 +84,30 @@ class InteractionService(
         require(user == interaction.owner) {
             "Only its owner can stop an interaction"
         }
-
         require(interaction.state == State.show) {
             "This interaction is not running... Can't be stopped"
         }
 
         interaction.state = State.afterStop
 
-        val specification = interaction.specification
-        when (specification) {
+        when (val specification = interaction.specification) {
             is ResponseSubmissionSpecification -> specification.let {
                 if (interaction.sequence.statement.hasChoices()) {
-                    resultsService.updateResponsesDistribution(
-                        user,
-                        interaction.sequence
-                    )
+                    resultsService
+                        .updateResponsesDistribution(user, interaction.sequence)
                 }
                 if (it.studentsProvideExplanation) {
-                    responseRepository.findAllByInteractionAndAttempt(
-                        interaction,
-                        1
-                    ).let { responses ->
-                        interaction.peerEvaluationMapping =
-                            responseRecommendationService.computeRecommendations(
-                                responses,
-                                interaction.sequence.getEvaluationSpecification()
-                                    .responseToEvaluateCount
-                            )
-                    }
+                    responseRepository
+                        .findAllByInteractionAndAttempt(interaction, 1)
+                        .let { responses ->
+                            interaction.peerEvaluationMapping =
+                                responseRecommendationService
+                                    .computeRecommendations(
+                                        responses,
+                                        interaction.sequence
+                                            .getEvaluationSpecification().responseToEvaluateCount
+                                    )
+                        }
                 }
             }
 
@@ -165,13 +161,18 @@ class InteractionService(
     }
 
     fun startNext(user: User, interaction: Interaction): Interaction =
-        start(user, interaction.sequence.getInteractionAt(interaction.rank + 1))
+        start(user, interaction.sequence.getNextInteraction(interaction))
 
     fun skipNext(user: User, interaction: Interaction): Interaction {
         val sequence = interaction.sequence
         sequence.phase2Skipped = true
         sequenceRepository.save(sequence)
         eventLogService.skipPhase(sequence, 2)
-        return start(user, interaction.sequence.getInteractionAt(interaction.rank + 2))
+        return start(
+            user,
+            interaction.sequence.let {
+                it.getNextInteraction(it.getNextInteraction(interaction))
+            }
+        )
     }
 }

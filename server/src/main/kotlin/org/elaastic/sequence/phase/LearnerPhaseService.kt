@@ -51,9 +51,14 @@ class LearnerPhaseService(
                 learnerSequence,
                 phaseIndex = phaseIndex,
                 active = active,
-                state = if (learnerSequence.isNotStarted())
+                state = if (
+                    learnerSequence.sequence.getInteractionAt(phaseIndex).state != State.None
+                    && learnerSequence.isNotStarted()
+                ) {
                     State.beforeStart
-                else learnerSequence.sequence.getInteractionAt(phaseIndex).state,
+                } else {
+                    learnerSequence.sequence.getInteractionAt(phaseIndex).state
+                },
             )
 
         if (learnerSequence.hasStarted() && learnerPhase.isVisible()) {

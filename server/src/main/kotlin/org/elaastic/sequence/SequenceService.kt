@@ -350,13 +350,14 @@ class SequenceService(
         else learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).activeInteraction
 
     fun nextInteractionForLearner(sequence: Sequence, learner: User) {
-        learnerSequenceService.findOrCreateLearnerSequence(learner, sequence).let { learnerSequence ->
-            learnerSequence.activeInteraction = sequence.getInteractionAt(
-                (learnerSequence.activeInteraction
-                    ?: error("No active interaction, cannot select the next one")).rank + 1
-            )
-            learnerSequenceRepository.save(learnerSequence)
-        }
+        learnerSequenceService
+            .findOrCreateLearnerSequence(learner, sequence)
+            .also {
+                it.activeInteraction = sequence.getNextInteraction(
+                    (it.activeInteraction ?: error("No active interaction, cannot select the next one"))
+                )
+            }
+            .let(learnerSequenceRepository::save)
     }
 
     fun getStatistics(sequence: Sequence) = SequenceStatistics(
@@ -364,8 +365,18 @@ class SequenceService(
         if (sequence.isNotStarted()) 0 else responseService.count(
             sequence,
             2
-        ), // TODO should only compute this data if phase2 open or done
-        if (sequence.isNotStarted()) 0 else peerGradingService.countEvaluations(sequence) // TODO should only compute this data if phase2 open or done
+        ),
+        if (
+            sequence.isNotStarted() ||
+            when (sequence.getEvaluationInteractionOrNull()?.state) {
+                null, State.None, State.beforeStart -> true
+                State.show, State.afterStop -> false
+            }
+        ) {
+            0
+        } else {
+            peerGradingService.countEvaluations(sequence)
+        }
     )
 
     fun findAllNotTerminatedSequencesByStatement(statement: Statement): List<Sequence> {

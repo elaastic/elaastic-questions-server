@@ -301,13 +301,13 @@ class SequenceMonitoringModelTest(
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             assertEquals(
-                listOf(4L,3L,1L,2L),
+                listOf(4L, 3L, 1L, 2L),
                 learnersMonitoringModel.learners.map { it.userId },
                 "This is the expected order of the learners"
             )
             assertEquals(
                 listOf(2, 1, 0, 0),
-                learnersMonitoringModel.learners.map { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) },
+                learnersMonitoringModel.learners.map { it.getLevelByStateCell(StateCell.IN_PROGRESS) },
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
             )
         }
@@ -351,11 +351,11 @@ class SequenceMonitoringModelTest(
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             assertEquals(
                 listOf(2, 1, 0),
-                learnersMonitoringModel.learners.map {it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS)},
+                learnersMonitoringModel.learners.map { it.getLevelByStateCell(StateCell.IN_PROGRESS) },
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
             )
             assertEquals(
-                listOf(3L,2L,1L),
+                listOf(3L, 2L, 1L),
                 learnersMonitoringModel.learners.map { it.userId },
                 "This is the expected order of the learners"
             )
@@ -410,7 +410,7 @@ class SequenceMonitoringModelTest(
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             val learnersSorted = learnersMonitoringModel.learners.map {
-                it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS)
+                it.getLevelByStateCell(StateCell.IN_PROGRESS)
             }
             assertEquals(
                 listOf(1, 1, 0, 0),
@@ -606,7 +606,7 @@ class SequenceMonitoringModelTest(
             )
 
             val learnerWhoHaveJustFinishOnePhase = learnersMonitoringModel.learners.find {
-                it.getLevelByStateCell(LearnerMonitoringModel.StateCell.NOT_TERMINATED) == 1
+                it.getLevelByStateCell(StateCell.NOT_TERMINATED) == 1
             }
             assertEquals(
                 "Alice",
