@@ -25,6 +25,7 @@ data class CommandModel(
     val statementId: Long,
     val interactionId: Long?,
     val interactionRank: Int?,
+    val nextInteractionRank: Int?,
     val questionType: QuestionType,
     val hasExpectedExplanation: Boolean,
 

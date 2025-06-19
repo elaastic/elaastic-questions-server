@@ -171,6 +171,7 @@ class InteractionService(
         return start(
             user,
             interaction.sequence.let {
+                // TODO check for NPE
                 it.getNextInteraction(it.getNextInteraction(interaction))
             }
         )

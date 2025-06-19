@@ -84,7 +84,7 @@ class Interaction(
     var lastUpdated: Date? = null
 
     @Transient
-    fun getStateForTeacher(user: User) =
+    fun getStateForTeacher() =
         when (sequence.executionContext) {
             ExecutionContext.Distance -> State.afterStop
             ExecutionContext.Blended ->
@@ -136,6 +136,7 @@ class Interaction(
 
     @Transient
     fun stateForLearner(learnerActiveInteraction: Interaction): State = when {
+        state == State.None -> State.None
         sequence.isStopped() -> when {
             isRead() && sequence.resultsArePublished -> State.show
             rank <= sequence.activeInteraction!!.rank -> State.afterStop

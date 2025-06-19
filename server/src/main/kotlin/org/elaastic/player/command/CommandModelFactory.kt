@@ -26,12 +26,15 @@ object CommandModelFactory {
 
     fun build(user: User, sequence: Sequence): CommandModel =
         sequence.activeInteraction.let { interaction ->
-            val interactionStateForTeacher = interaction?.getStateForTeacher(user)
+            val nextInteraction = runCatching{ interaction?.let { sequence.getNextInteraction(it) } }.getOrNull()
+
+            val interactionStateForTeacher = interaction?.getStateForTeacher()
             CommandModel(
                 sequenceId = sequence.id ?: throw IllegalStateException("This sequence has no ID"),
                 statementId = sequence.statement.id ?: throw IllegalStateException("This statement has no ID"),
                 interactionId = interaction?.id,
                 interactionRank = interaction?.rank,
+                nextInteractionRank = nextInteraction?.rank,
                 questionType = sequence.statement.questionType,
                 hasExpectedExplanation = !sequence.statement.expectedExplanation.isNullOrBlank(),
 

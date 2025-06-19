@@ -313,13 +313,15 @@ class SequenceService(
             it.resultsArePublished = true
 
             // Set Read active and close all other interactions
-            it.interactions.forEach { type, interaction ->
-                interaction.state = when (type) {
-                    InteractionType.Read -> State.show
-                    else -> State.afterStop
+            it.interactions
+                .filter { (_, interaction) -> interaction.state != State.None }
+                .forEach { type, interaction ->
+                    interaction.state = when (type) {
+                        InteractionType.Read -> State.show
+                        else -> State.afterStop
+                    }
+                    interactionRepository.save(interaction)
                 }
-                interactionRepository.save(interaction)
-            }
             sequence.activeInteraction = sequence.getReadInteraction()
             eventLogService.publishResults(it)
             sequenceRepository.save(it)

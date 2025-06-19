@@ -46,8 +46,6 @@
             <th:block
                     th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInResponsePhase().name})">
             </th:block>
-            <p th:text="${sequenceMonitoringModel.phase2State.name() != 'NONE'}"></p>
-            <p th:text="${learner.getStateCellInEvaluationPhase().name}"></p>
             <th:block th:if="${sequenceMonitoringModel.phase2State.name() != 'NONE'}">
                 <th:block
                         th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInEvaluationPhase().name})">
