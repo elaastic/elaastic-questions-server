@@ -22,7 +22,7 @@ elaastic.autoReload = {
     createAutoReloader: function (url) {
         const socket = new WebSocket(url);
         socket.onmessage = function (event) {
-            if (event.data == "reload") {
+            if (event.data === "reload") {
                 setTimeout(() => location.reload(), 1000);
             }
         };

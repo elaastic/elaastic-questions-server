@@ -22,6 +22,7 @@
     <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
           th:action="@{/player/sequence/{sequenceId}/phase/evaluation/all-at-once/submit-evaluation(sequenceId=${model.sequenceId})}"
           class="ui form"
+          th:id="|evaluation-form-${model.sequenceId}|"
           method="post">
         <input type="hidden" name="id" th:value="${model.interactionId}"/>
         <th:block th:if="${!#lists.isEmpty(model.responsesToGrade) && !model.userHasPerformedEvaluation}">
@@ -42,25 +43,27 @@
 
             <!--/* Initialise the <confronting-viewpoint app & interact with it */-->
             <script th:inline="javascript">
-                /*[- Expose server model as JSON -]*/
-                const responses = /*[[${model.responsesToGrade}]]*/ ''
+                $(function () {
+                    /*[- Expose server model as JSON -]*/
+                    const responses = /*[[${model.responsesToGrade}]]*/ ''
 
-                /*[- Trigger the app init function on iframe loading -]*/
-                const iframe = document.getElementById('confronting-viewpoints-app')
-                iframe.onload = () => {
-                    iframe.contentWindow.elaastic.initializeConfrontingViewpoint(responses)
-                }
+                    /*[- Trigger the app init function on iframe loading -]*/
+                    const iframe = document.getElementById('confronting-viewpoints-app')
+                    iframe.onload = () => {
+                        iframe.contentWindow.elaastic.initializeConfrontingViewpoint(responses)
+                    }
 
-                /*[- Init iframe resize -]*/
-                iframeResize({
-                    license: 'GPLv3',
-                    waitForLoad: true
-                }, '#confronting-viewpoints-app')
+                    /*[- Init iframe resize -]*/
+                    iframeResize({
+                        license: 'GPLv3',
+                        waitForLoad: true
+                    }, '#confronting-viewpoints-app')
 
-                /*[-  Observe messages sent by the iframe to keep the form input synchronized -]*/
-                window.addEventListener('message', (event) => {
-                    document.getElementById(`grades[${event.data.responseId}]`).value = event.data.value || -1
-                })
+                    /*[-  Observe messages sent by the iframe to keep the form input synchronized -]*/
+                    window.addEventListener('message', (event) => {
+                        document.getElementById(`grades[${event.data.responseId}]`).value = event.data.value || -1
+                    })
+                });
             </script>
 
         </th:block>
@@ -84,10 +87,23 @@
                 </div>
             </th:block>
         </th:block>
-        <input type="submit"
-               class="ui primary button"
-               onclick="onSubmitResponse()"
+        <input class="ui primary button"
+               onclick="submitForm()"
                th:value="#{player.sequence.interaction.submitResponse}"/>
+
+        <script th:inline="javascript">
+            function submitForm() {
+                onSubmitResponse()
+
+                const $form = $('#evaluation-form-[[${model.sequenceId}]]');
+
+                $.post($form.attr('action'), $form.serialize())
+                        .done(function (data) {
+                            window.location.reload();
+                        });
+            }
+
+        </script>
     </form>
 
     <div th:if="${model.userHasCompletedPhase2}"
