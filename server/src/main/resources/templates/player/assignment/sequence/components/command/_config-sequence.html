@@ -19,66 +19,69 @@
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns="http://www.w3.org/1999/html"
      th:fragment="configSequence(sequenceId, statementId, questionType, hasExpectedExplanation)"
-     class="ui modal"
+     class="ui modal longer"
      th:id="|sequenceSpec_${sequenceId}|">
 
-    <iframe
-            th:id="|sequenceConfiguration_${sequenceId}|"
-            class="transparent-iframe"
-            th:src="@{/ui/sequence/configuration}"
-            width="100%"
-    ></iframe>
+    <div class="scrolling content">
+        <iframe
+                th:id="|sequenceConfiguration_${sequenceId}|"
+                class="transparent-iframe"
+                th:src="@{/ui/sequence/configuration}"
+                width="100%"
+        ></iframe>
 
-    <script th:inline="javascript">
-        $(function () {
-            let modalId = 'sequenceSpec_' + [[${sequenceId}]]
+        <script th:inline="javascript">
+            $(function () {
+                let modalId = 'sequenceSpec_' + [[${sequenceId}]]
 
-            const $modalConfigSequence = $('#' + modalId);
-            $modalConfigSequence.modal({
-                centered: false,
-                closable: true
-            })
+                const $modalConfigSequence = $('#' + modalId);
+                $modalConfigSequence.modal({
+                    centered: false,
+                    closable: true
+                })
 
-            // As the content of the modal is loaded dynamically,
-            // the modal height is not known at the time of the modal opening,
-            // so semantic think the modal is small and display it at the center of the page.
-            // But when the content is loaded, the bottom of the modal is below the bottom of the page,
-            // so we force it to the top.
-            $modalConfigSequence.css({'margin-top': '2vh', 'top': 'auto'});
-
-            const iframe = document.getElementById('sequenceConfiguration_' + [[${sequenceId}]]);
-            iframe.onload = () => {
-                iframe.contentWindow.elaastic.initializeSequenceConfiguration(
-                        questionIsOpen = [[${questionType == T(org.elaastic.material.instructional.question.QuestionType).OpenEnded}]]
+                const iframe = document.getElementById('sequenceConfiguration_' + [[${sequenceId}]]);
+                iframe.onload = () => {
+                    // As the content of the modal is loaded dynamically,
+                    // the modal height is not known at the time of the modal opening,
+                    // so semantic think the modal is small and display it at the center of the page.
+                    // But when the content is loaded, the bottom of the modal is below the bottom of the page,
+                    // so we force it to the top.
+                    $modalConfigSequence.css({'margin-top': '2vh', 'top': 'auto'});
+                    
+                    iframe.contentWindow.elaastic.initializeSequenceConfiguration(
+                            questionIsOpen = [[${questionType == T(org.elaastic.material.instructional.question.QuestionType).OpenEnded
+                }]]
                 )
-            }
-
-            window.addEventListener('message', (event) => {
-                if (event.data.command === 'sequence-configuration-cancelled') {
-                    $modalConfigSequence.modal('hide');
-                } else if (event.data.command === 'sequence-configuration-submitted') {
-                    $modalConfigSequence.modal('hide');
-
-                    // TODO Step 2. Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation
-                    $.ajax({
-                        url: '/player/sequence/' + [[${sequenceId}]] + '/start.json',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        headers: {
-                            'X-CSRF-TOKEN': $("meta[name='_csrf']").attr("content") || $("input[name='_csrf']").val()
-                        },
-                        data: JSON.stringify(event.data.request),
-                    }).done(function () {
-                        window.location.reload();
-                    })
                 }
-            })
 
-            const optionIframeResiser = {
-                license: 'GPLv3',
-                waitForLoad: true
-            };
-            iframeResize(optionIframeResiser, '#sequenceConfiguration_' + [[${sequenceId}]]);
-        })
-    </script>
+                window.addEventListener('message', (event) => {
+                    if (event.data.command === 'sequence-configuration-cancelled') {
+                        $modalConfigSequence.modal('hide');
+                    } else if (event.data.command === 'sequence-configuration-submitted') {
+                        $modalConfigSequence.modal('hide');
+
+                        // TODO Step 2. Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation
+                        $.ajax({
+                            url: '/player/sequence/' + [[${sequenceId}]] + '/start.json',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            headers: {
+                                'X-CSRF-TOKEN': $("meta[name='_csrf']").attr("content") || $("input[name='_csrf']").val()
+                            },
+                            data: JSON.stringify(event.data.request),
+                        }).done(function () {
+                            window.location.reload();
+                        })
+                    }
+                })
+
+                const optionIframeResiser = {
+                    license: 'GPLv3',
+                    waitForLoad: true
+                };
+                iframeResize(optionIframeResiser, '#sequenceConfiguration_' + [[${sequenceId}]]);
+            })
+        </script>
+    </div>
 </div>
