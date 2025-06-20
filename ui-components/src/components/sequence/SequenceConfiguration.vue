@@ -91,146 +91,158 @@ const onCancel = () => {
 
 <template>
   <v-card
-          class="d-flex flex-column"
-          :title="t('sequenceConfiguration.title')"
+    class="d-flex flex-column"
+    :title="t('sequenceConfiguration.title')"
   >
     <v-card-text>
       <!-- Execution Context -->
       <div class="mb-4">
-        <v-radio-group inline
-                       :label="t('sequenceConfiguration.executionContext.title')"
-                       v-model="executionContext"
-                       v-on:click="studentGiveExplanation = true"
+        <v-radio-group
+          inline
+          :label="t('sequenceConfiguration.executionContext.title')"
+          v-model="executionContext"
+          v-on:click="studentGiveExplanation = true"
         >
           <v-radio
-                  v-for="option in EXECUTION_CONTEXT_OPTIONS"
-                  :key="option"
-                  :label="labelForEC(option)"
-                  :value="option"></v-radio>
+            v-for="option in EXECUTION_CONTEXT_OPTIONS"
+            :key="option"
+            :label="labelForEC(option)"
+            :value="option"></v-radio>
         </v-radio-group>
         <v-alert
-                v-if="executionContext !== undefined"
-                :text="noticeForEC(executionContext)"
-                type="info"
-                variant="tonal"
-                style="white-space: pre-line"
+          v-if="executionContext !== undefined"
+          :text="noticeForEC(executionContext)"
+          type="info"
+          variant="tonal"
+          style="white-space: pre-line"
         >
         </v-alert>
       </div>
 
-      <v-divider></v-divider>
+      <v-divider class="mt-2 mb-4"></v-divider>
 
-      <!-- Student give a textual explanation -->
-      <!--/*
-      When the execution context is Distance or Blended, the student must give an explanation.
-      So when this execution context are selected, the user can't update this checkbox.
-      When the execution context is updated, the checkbox is reset to true.
+      <v-card
+        elevation="6" class="" :title="t('sequenceConfiguration.phase.n', {n: 1})"
+        :subtitle="t('sequenceConfiguration.phase.response.title')"
+        prepend-icon="mdi-comment-outline">
+        <template v-slot:text class="ps-2">
+          <!-- Student give a textual explanation -->
+          <!--/*
+          When the execution context is Distance or Blended, the student must give an explanation.
+          So when this execution context are selected, the user can't update this checkbox.
+          When the execution context is updated, the checkbox is reset to true.
 
-      If the question is open, the student must give an explanation. So this checkbox isn't relevant and isn't displayed.
-      */-->
-      <v-checkbox
-              v-if="!questionIsOpen"
-              v-model="studentGiveExplanation"
-              :disabled="executionContext !== EXECUTION_CONTEXT_OPTIONS[0]"
-              :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
-              class="mt-4"
-      >
-      </v-checkbox>
+          If the question is open, the student must give an explanation. So this checkbox isn't relevant and isn't displayed.
+          */-->
+          <v-checkbox
+            v-if="!questionIsOpen"
+            v-model="studentGiveExplanation"
+            :disabled="executionContext !== EXECUTION_CONTEXT_OPTIONS[0]"
+            :label="t('sequenceConfiguration.phase.response.studentsProvideAtextualExplanation')"
+          >
+          </v-checkbox>
+        </template>
+      </v-card>
+
+      <v-divider thickness="0" class="mt-4 mb-4"></v-divider>
 
       <!-- Confronting View Phase -->
-      <v-expand-transition>
-        <v-sheet v-if="studentGiveExplanation">
-          <!-- Number of Responses to Evaluate -->
-          <v-row align="center" justify="start">
-            <v-col cols="auto">
-              <v-checkbox
-                      v-model="studentGiveExplanation"
-                      :label="t('sequenceConfiguration.phase.confrontingViews.studentsEvaluate')"
-                      class="mt-4"
-                      :disabled="true"
-              >
-              </v-checkbox>
-            </v-col>
-            <v-col cols="auto">
-              <v-select
-                      variant="outlined"
-                      density="compact"
-                      v-model="nbResponseToEvaluate"
-                      :items="maxResponseToEvaluate > 0 ? Array.from({length: maxResponseToEvaluate}, (_, i) => i + 1) : []"
-                      class="mt-4"
-                      style="min-width: 50px;"
-              >
-              </v-select>
-            </v-col>
-            <v-col cols="auto">
-              <p>
-                {{ t('sequenceConfiguration.phase.confrontingViews.answers') }}
-              </p>
-            </v-col>
-          </v-row>
+      <v-card elevation="6" :title="t('sequenceConfiguration.phase.n', {n: 2})"
+              :subtitle="t('sequenceConfiguration.phase.confrontingViews.title')"
+              prepend-icon="mdi-comment-multiple">
+        <template v-slot:text class="ps-2">
 
-          <!-- Evaluation Method -->
-          <div class="d-flex flex-column align-start">
-            <v-radio-group
-                    :label="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.title')"
-                    v-model="evaluationMethod"
-            >
-              <v-radio
-                      v-for="option in EVALUATION_METHOD_OPTIONS"
-                      :key="option"
-                      :label="labelForEM(option)"
-                      :value="option"></v-radio>
-            </v-radio-group>
-            <v-alert type="info" variant="outlined" class="align-self-end " density="compact">
-              <Link
-                      href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
-                      :text="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.draxoDocumentation')"
-                      target="_blank"
-              />
-            </v-alert>
-          </div>
+          <v-expand-transition>
+            <div>
+              <!-- Number of Responses to Evaluate -->
+              <v-row align="center" justify="start">
+                <v-col cols="auto">
+                  <p>
+                    {{ t('sequenceConfiguration.phase.confrontingViews.studentsEvaluate') }}
+                  </p>
+                </v-col>
+                <v-col cols="auto">
+                  <v-select
+                    variant="outlined"
+                    density="compact"
+                    v-model="nbResponseToEvaluate"
+                    :items="maxResponseToEvaluate > 0 ? Array.from({length: maxResponseToEvaluate}, (_, i) => i + 1) : []"
+                    class="mt-4"
+                    style="min-width: 50px;"
+                  >
+                  </v-select>
+                </v-col>
+                <v-col cols="auto">
+                  <p>
+                    {{ t('sequenceConfiguration.phase.confrontingViews.answers') }}
+                  </p>
+                </v-col>
+              </v-row>
 
-          <!-- IA Evaluation -->
-          <v-row align="center" justify="start" v-if="aiIsActivated">
-            <v-col cols="auto">
-              <v-checkbox
-                      v-model="evaluationByIa"
-                      :label="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.label')"
-                      class="mt-4"
-              >
-              </v-checkbox>
-            </v-col>
-            <v-col cols="auto">
-              <v-tooltip
-                      :text="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.notice')"
-                      location="top"
-              >
-                <template v-slot:activator="{ props }">
-                  <v-icon v-bind="props" icon="mdi-help-circle">
-                  </v-icon>
-                </template>
-              </v-tooltip>
+              <!-- Evaluation Method -->
+              <div class="d-flex flex-column align-start pr-4">
+                <v-radio-group
+                  :label="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.title')"
+                  v-model="evaluationMethod"
+                >
+                  <v-radio
+                    v-for="option in EVALUATION_METHOD_OPTIONS"
+                    :key="option"
+                    :label="labelForEM(option)"
+                    :value="option"></v-radio>
+                </v-radio-group>
+                <v-alert type="info" variant="outlined" class="align-self-end " density="compact">
+                  <Link
+                    href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
+                    :text="t('sequenceConfiguration.phase.confrontingViews.evaluationMethod.draxoDocumentation')"
+                    target="_blank"
+                  />
+                </v-alert>
+              </div>
 
-            </v-col>
-          </v-row>
-        </v-sheet>
-      </v-expand-transition>
+              <!-- IA Evaluation -->
+              <v-row align="center" justify="start" v-if="aiIsActivated">
+                <v-col cols="auto">
+                  <v-checkbox
+                    v-model="evaluationByIa"
+                    :label="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.label')"
+                    class="mt-4"
+                  >
+                  </v-checkbox>
+                </v-col>
+                <v-col cols="auto">
+                  <v-tooltip
+                    :text="t('sequenceConfiguration.phase.confrontingViews.IAEvaluation.notice')"
+                    location="top"
+                  >
+                    <template v-slot:activator="{ props }">
+                      <v-icon v-bind="props" icon="mdi-help-circle">
+                      </v-icon>
+                    </template>
+                  </v-tooltip>
+
+                </v-col>
+              </v-row>
+            </div>
+          </v-expand-transition>
+        </template>
+      </v-card>
     </v-card-text>
 
     <v-card-actions class="justify-end">
       <v-btn
-              class="text-none text-subtitle-1 text-white"
-              color="#95c155"
-              variant="flat"
-              @click="onSubmit"
+        class="text-none text-subtitle-1 text-white"
+        color="#95c155"
+        variant="flat"
+        @click="onSubmit"
       >
         {{ t('submit') }}
       </v-btn>
       <v-btn
-              class="text-none text-subtitle-1"
-              text="Cancel"
-              variant="outlined"
-              @click="onCancel"
+        class="text-none text-subtitle-1"
+        text="Cancel"
+        variant="outlined"
+        @click="onCancel"
       ></v-btn>
     </v-card-actions>
   </v-card>
@@ -262,10 +274,13 @@ const onCancel = () => {
         }
       },
       "phase": {
+        "n": "Phase {n}",
         "response": {
+          "title": "Well-argued Response",
           "studentsProvideAtextualExplanation": "Students provide a textual explanation"
         },
         "confrontingViews": {
+          "title": "Comparing viewpoints",
           "studentsEvaluate": "Students evaluate",
           "answers": "answers",
           "evaluationMethod": {
@@ -280,7 +295,9 @@ const onCancel = () => {
           }
         }
       }
-    }
+    },
+    "active": "The phase is actived",
+    "deactive": "The phase is deactived"
   },
   "fr": {
     "submit": "Démarrer la séquence",
@@ -302,10 +319,13 @@ const onCancel = () => {
         }
       },
       "phase": {
+        "n": "Phase {n}",
         "response": {
+          "title": "Réponse argumentée",
           "studentsProvideAtextualExplanation": "Les étudiants fournissent une explication"
         },
         "confrontingViews": {
+          "title": "Confrontation de points de vue",
           "studentsEvaluate": "Les étudiants évaluent",
           "answers": "réponses",
           "evaluationMethod": {
@@ -320,7 +340,9 @@ const onCancel = () => {
           }
         }
       }
-    }
+    },
+    "active": "La phase est activée",
+    "deactive": "La phase est désactivée"
   }
 }
 </i18n>
