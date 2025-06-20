@@ -25,6 +25,7 @@
     <div class="ui three top attached steps ob-start-sequence-3">
         <!--/* ResponseSubmission phase */-->
         <div class="step"
+             th:if="${stepsModel.responseSubmissionState.name() != 'NONE'}"
              th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.responseSubmissionState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.responseSubmissionState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
             <!--/* Statistics */-->
             <div th:if="${stepsModel.showStatistics == true && stepsModel.responseSubmissionState.name() != 'DISABLED'}"
@@ -53,6 +54,7 @@
 
         <!--/* Evaluation phase */-->
         <div class="step"
+             th:if="${stepsModel.evaluationState.name() != 'NONE'}"
              th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.evaluationState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.evaluationState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
 
             <!--/* Statistics */-->
@@ -90,6 +92,7 @@
 
         <!--/* Results phase */-->
         <div class="step"
+             th:if="${stepsModel.readState.name() != 'NONE'}"
              th:classappend="|${stepsModel.readState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.readState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.readState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
 
             <!--/* Phase icon */-->

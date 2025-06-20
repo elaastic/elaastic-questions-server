@@ -43,6 +43,7 @@ import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.LearnerPhaseService
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.AnonymousUserService
@@ -203,8 +204,6 @@ internal class PlayerControllerTest(
                 any(),
                 any(),
                 any(),
-                any(),
-                any()
             )
         ).thenReturn(sequence)
         whenever(userService.updateUserActiveSince(sequence.owner)).thenReturn(sequence.owner)
@@ -212,21 +211,29 @@ internal class PlayerControllerTest(
         every { ElaasticFeatures.CHATGPT_EVALUATION.isActive() } returns false
 
 
-        val sequenceConfig = SequenceConfig(
+         val sequenceConfig = SequenceConfig(
             executionContext = ExecutionContext.FaceToFace,
             studentsProvideExplanation = true,
-            responseToEvaluateCount = 0,
-            evaluationByIA = false,
-            evaluationMethod = EvaluationMethod.ALL_AT_ONCE
+             EvaluationPhaseConfig(
+                 responseToEvaluateCount = 0,
+                 evaluationByIA = false,
+                 evaluationMethod = EvaluationMethod.ALL_AT_ONCE
+             )
         )
+
+        fun EvaluationPhaseConfig.json() : String {
+            return """{
+                "responseToEvaluateCount": ${this.responseToEvaluateCount},
+                "evaluationByIA": ${this.evaluationByIA},
+                "evaluationMethod": "${this.evaluationMethod.name}"
+            }"""
+        }
 
         fun SequenceConfig.json(): String {
             return """{
                 "executionContext": "${this.executionContext}",
                 "studentsProvideExplanation": ${this.studentsProvideExplanation},
-                "responseToEvaluateCount": ${this.responseToEvaluateCount},
-                "chatGptEvaluation": ${this.evaluationByIA},
-                "evaluationPhaseConfig": "${this.evaluationMethod?.name}"
+                "confrontingViewsPhaseConfig": ${this.confrontingViewsPhaseConfig?.json()}
             }"""
         }
 
@@ -245,9 +252,7 @@ internal class PlayerControllerTest(
             eq(sequence),
             eq(sequenceConfig.executionContext),
             eq(sequenceConfig.studentsProvideExplanation ?: false),
-            eq(sequenceConfig.responseToEvaluateCount ?: 0),
-            eq(sequenceConfig.evaluationMethod),
-            eq(false) // chatGptEvaluation is false in this case
+            any<EvaluationPhaseConfig>()
         )
     }
 

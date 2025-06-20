@@ -8,7 +8,7 @@ import org.elaastic.sequence.phase.descriptor.PhaseConfig
  * @property ALL_AT_ONCE Show all the response to evaluate with a Likert scale
  * @property DRAXO Evaluate a response with DRAXO method
  */
-enum class EvaluationMethod : PhaseConfig {
+enum class EvaluationMethod {
     /** Show all the response to evaluate with a Likert scale */
     ALL_AT_ONCE,
 

@@ -2,7 +2,7 @@ package org.elaastic.sequence.phase
 
 import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.State
-import org.elaastic.sequence.phase.descriptor.PhaseDescriptor
+import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service
 class LearnerPhaseFactory {
 
     fun build(
-        phaseDescriptor: PhaseDescriptor,
+        interactionType: InteractionType,
         learnerSequence: ILearnerSequence,
         phaseIndex: Int,
         active: Boolean,
         state: State,
-    ): LearnerPhase = when (phaseDescriptor.type) {
-        LearnerPhaseType.RESPONSE -> LearnerResponsePhase(learnerSequence, phaseIndex, active, state)
-        LearnerPhaseType.EVALUATION ->
+    ): LearnerPhase = when (interactionType) {
+        InteractionType.ResponseSubmission -> LearnerResponsePhase(learnerSequence, phaseIndex, active, state)
+        InteractionType.Evaluation ->
             when (learnerSequence.sequence.evaluationMethod) {
                 EvaluationMethod.ALL_AT_ONCE -> AllAtOnceLearnerEvaluationPhase(
                     learnerSequence,
@@ -39,6 +39,6 @@ class LearnerPhaseFactory {
                 )
             }
 
-        LearnerPhaseType.RESULT -> LearnerResultPhase(learnerSequence, phaseIndex, active, state)
+        InteractionType.Read -> LearnerResultPhase(learnerSequence, phaseIndex, active, state)
     }
 }

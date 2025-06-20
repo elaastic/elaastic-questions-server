@@ -19,12 +19,13 @@
 package org.elaastic.sequence.phase.evaluation
 
 import org.elaastic.common.abtesting.ElaasticFeatures
+import org.elaastic.sequence.phase.descriptor.PhaseConfig
 
 class EvaluationPhaseConfig(
     responseToEvaluateCount: Int? = 0,
     evaluationByIA: Boolean? = false,
     evaluationMethod: EvaluationMethod? = null
-) {
+) : PhaseConfig {
     val responseToEvaluateCount: Int = responseToEvaluateCount ?: 0
     val evaluationByIA: Boolean = ElaasticFeatures.CHATGPT_EVALUATION.isActive() && evaluationByIA ?: false
     val evaluationMethod: EvaluationMethod = evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE

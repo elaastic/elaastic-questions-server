@@ -423,7 +423,7 @@ internal class AssignmentServiceIntegrationTest(
         val statement1 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(subject.owner)
-                .title("Sequence n�1")
+                .title("Sequence n°1")
                 .content("Content 1")
         )
         val assignment = subjectService.addAssignment(

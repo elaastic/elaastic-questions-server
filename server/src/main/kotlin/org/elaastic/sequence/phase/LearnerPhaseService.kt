@@ -3,8 +3,10 @@ package org.elaastic.sequence.phase
 import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.State
-import org.elaastic.sequence.phase.descriptor.PhaseDescriptor
+import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.descriptor.SequenceDescriptor
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext
@@ -15,23 +17,35 @@ import org.springframework.stereotype.Service
 class LearnerPhaseService(
     @Autowired val learnerSequenceService: LearnerSequenceService,
     @Autowired val learnerPhaseFactory: LearnerPhaseFactory,
-    @Autowired val sequenceDescriptor: SequenceDescriptor,
     @Autowired val ctx: ApplicationContext,
 ) {
 
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
     fun loadPhaseList(learnerSequence: ILearnerSequence) {
+        val sequence = learnerSequence.sequence
         // Get the active phase
         // TODO We use interaction now, but we should get this info from a Phase in the end...
         val activeInteractionForLearner = learnerSequenceService.getActiveInteractionForLearner(
             learnerSequence.learner,
-            learnerSequence.sequence
+            sequence
         )
 
-        sequenceDescriptor.phaseDescriptorList.forEachIndexed() { index, phaseDescriptor ->
+        if (sequence.interactions.isEmpty()) {
+            logger.warn("This sequence (${sequence.id}, has no interactions defined.")
+        }
+
+        sequence.interactions.keys.forEachIndexed { index, interactionType ->
+            logger.debug(
+                "Loading phase for interaction type: {}, index: {}, active: {}",
+                interactionType,
+                index,
+                activeInteractionForLearner?.rank == (index + 1)
+            )
             learnerSequence.loadPhase(
                 buildPhase(
                     learnerSequence,
-                    phaseDescriptor,
+                    interactionType,
                     index + 1,
                     active = activeInteractionForLearner?.rank == (index + 1),
                 )
@@ -41,13 +55,13 @@ class LearnerPhaseService(
 
     fun buildPhase(
         learnerSequence: ILearnerSequence,
-        phaseDescriptor: PhaseDescriptor,
+        interactionType: InteractionType,
         phaseIndex: Int,
         active: Boolean,
     ): LearnerPhase {
         val learnerPhase =
             learnerPhaseFactory.build(
-                phaseDescriptor,
+                interactionType,
                 learnerSequence,
                 phaseIndex = phaseIndex,
                 active = active,

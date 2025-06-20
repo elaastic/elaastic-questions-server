@@ -16,21 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.config
+package org.elaastic.player.dashboard
 
-import org.springframework.cache.annotation.EnableCaching
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing
-import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.web.client.RestTemplate
+import org.elaastic.player.dashboard.StateCell.*
 
 
-@Configuration
-@EnableCaching
-@EnableJpaAuditing
-@EnableScheduling
-class ApplicationConfig {
-    @Bean
-    fun restTemplate() = RestTemplate()
+/**
+ * Enum defining states of a cell for a learner
+ *
+ * @property LOCKED the learner can't access the phase
+ * @property IN_PROGRESS the learner is currently working on the phase
+ * @property NOT_TERMINATED the learner has not terminated the phase
+ * @property TERMINATED the learner has terminated the phase
+ * @property NONE the phase is not visible
+ */
+enum class StateCell {
+    LOCKED,
+    IN_PROGRESS,
+    NOT_TERMINATED,
+    TERMINATED,
+    NONE
 }

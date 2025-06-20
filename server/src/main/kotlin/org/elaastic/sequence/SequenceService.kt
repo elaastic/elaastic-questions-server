@@ -186,6 +186,7 @@ class SequenceService(
         executionContext: ExecutionContext,
         evalutionPhaseConfig: EvaluationPhaseConfig?,
     ): Sequence {
+        var rank = 1
         sequence.interactions[InteractionType.ResponseSubmission] =
             interactionService.create(
                 sequence,
@@ -193,7 +194,7 @@ class SequenceService(
                     studentsProvideExplanation,
                     studentsProvideConfidenceDegree = studentsProvideExplanation
                 ),
-                1,
+                rank++,
                 State.show
             )
 
@@ -204,7 +205,7 @@ class SequenceService(
                     EvaluationSpecification(
                         evalutionPhaseConfig.responseToEvaluateCount
                     ),
-                    2,
+                    rank++,
                     if (executionContext == ExecutionContext.FaceToFace)
                         State.beforeStart
                     else State.show
@@ -215,7 +216,7 @@ class SequenceService(
             interactionService.create(
                 sequence,
                 ReadSpecification(),
-                3,
+                rank,
                 when (executionContext) {
                     ExecutionContext.FaceToFace, ExecutionContext.Blended -> State.beforeStart
                     ExecutionContext.Distance -> State.show

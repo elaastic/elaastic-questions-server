@@ -187,7 +187,7 @@ class CasAuthenticationUserDetailServiceTest(
         ).also {
             it.username = generateUsername(it.firstName, it.lastName)
         }.let(userService::addUser)
-        val userLink = UserLink(
+        UserLink(
             providerId = casKey,
             providerUserId = user.username,
             user = user

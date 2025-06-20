@@ -95,7 +95,6 @@ internal class SequenceServiceIntegrationTest(
     @Test
     fun findPreviousSequenceTest() {
         val assignment = integrationTestingService.getTestAssignment()
-        val user = assignment.owner
 
         // Precondition
         assertEquals(2, assignment.sequences.size, "The testing data are corrupted")

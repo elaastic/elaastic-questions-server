@@ -95,7 +95,6 @@ internal class ChatGptEvaluationServiceIntegrationTest(
         val response = integrationTestingService.getAnyResponse()
         response.explanation =
             "Git est le meilleur système de gestion de version, il coche donc toutes les bonnes options."
-        val promptFr = chatGptPromptService.getPrompt("fr")
 
         response.statement.expectedExplanation = null
 
@@ -119,7 +118,6 @@ internal class ChatGptEvaluationServiceIntegrationTest(
 
         val response = integrationTestingService.getAnyResponse()
         response.explanation = null
-        val promptFr = chatGptPromptService.getPrompt("fr")
 
         tWhen {
             val block: () -> Unit = {

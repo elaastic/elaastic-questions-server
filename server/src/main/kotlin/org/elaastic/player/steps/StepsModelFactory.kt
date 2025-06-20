@@ -42,7 +42,7 @@ object StepsModelFactory {
 
     private fun State?.toPhaseState(): PhaseState =
         when (this) {
-            null -> PhaseState.DISABLED
+            null -> PhaseState.NONE
             State.beforeStart -> PhaseState.DISABLED
             State.show -> PhaseState.ACTIVE
             State.afterStop -> PhaseState.COMPLETED
