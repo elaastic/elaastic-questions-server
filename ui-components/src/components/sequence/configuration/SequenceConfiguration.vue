@@ -18,27 +18,13 @@
 
 <script setup lang="ts">
 import {useI18n} from 'vue-i18n'
-import {computed, ref} from 'vue'
-import ResponsePhaseConfiguration, {
-  type ResponsePhaseConfig
-} from "@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue";
-import ConfrontingViewPhaseConfiguration, {
-  type ConfrontingViewPhaseConfig
-} from "@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue";
-import ResultPhaseConfiguration, {
-  type ResultPhaseConfig
-} from "@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue";
+import {computed, ref, watch} from 'vue'
+import ResponsePhaseConfiguration from "@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue";
+import ConfrontingViewPhaseConfiguration from "@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue";
+import ResultPhaseConfiguration from "@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue";
+import type {SequenceConfiguration} from "@/models/SequenceConfiguration";
 
 const {t} = useI18n()
-
-type ExecutionContext = 'FaceToFace' | 'Distance' | 'Blended'
-
-export interface SequenceConfiguration {
-  executionContext: ExecutionContext,
-  responsePhaseConfig?: ResponsePhaseConfig | undefined,
-  confrontingViewsPhaseConfig: ConfrontingViewPhaseConfig | undefined,
-  resultPhaseConfig?: ResultPhaseConfig | undefined
-}
 
 export interface SequenceConfigurationProps {
   /**
@@ -64,6 +50,11 @@ export interface SequenceConfigurationEvents {
    * Fires when the user clicks on the submit button
    */
   (event: 'submitSequenceConfiguration', request: SequenceConfiguration): void;
+
+  /**
+   * Fires when the user clicks on the save button. So he just wants to save the sequence configuration, not start it yet.
+   */
+  (event: 'saveSequenceConfiguration', request: SequenceConfiguration): void;
 
   /**
    * Fires when the user clicks on the cancel button
@@ -93,6 +84,13 @@ const executionContext = ref<ExecutionContext>(props.modelValue?.executionContex
 const responsePhaseConfig = ref(props.modelValue?.responsePhaseConfig ?? {studentGiveExplanation: true});
 const confrontingViewConfig = ref(props.modelValue?.confrontingViewsPhaseConfig);
 const resultPhaseConfig = ref(props.modelValue?.resultPhaseConfig ?? {evaluationByIa: false});
+const snackBar = ref<boolean>(false)
+const configSaved = ref(false)
+
+watch(executionContext, () => configSaved.value = false);
+watch(responsePhaseConfig, () => configSaved.value = false, {deep: true});
+watch(confrontingViewConfig, () => configSaved.value = false, {deep: true});
+watch(resultPhaseConfig, () => configSaved.value = false, {deep: true});
 
 const sequenceConfig = computed(() => {
   return {
@@ -106,6 +104,11 @@ const sequenceConfig = computed(() => {
 const onSubmit = () => {
   emit('submitSequenceConfiguration', sequenceConfig.value)
 }
+const onSave = () => {
+  emit('saveSequenceConfiguration', sequenceConfig.value);
+  snackBar.value = true;
+  configSaved.value = true;
+}
 const onCancel = () => {
   emit('cancelSequenceConfiguration')
 }
@@ -113,31 +116,31 @@ const onCancel = () => {
 
 <template>
   <v-card
-          class="d-flex flex-column"
-          :title="t('sequenceConfiguration.title')"
+    class="d-flex flex-column"
+    :title="t('sequenceConfiguration.title')"
   >
     <v-card-text>
       <!-- Execution Context -->
       <div class="mb-4">
         <v-radio-group
-                inline
-                :label="t('sequenceConfiguration.executionContext.title')"
-                v-model="executionContext"
+          inline
+          :label="t('sequenceConfiguration.executionContext.title')"
+          v-model="executionContext"
         >
           <v-radio
-                  v-for="option in EXECUTION_CONTEXT_OPTIONS"
-                  :key="option"
-                  :label="labelForEC(option)"
-                  :value="option"></v-radio>
+            v-for="option in EXECUTION_CONTEXT_OPTIONS"
+            :key="option"
+            :label="labelForEC(option)"
+            :value="option"></v-radio>
         </v-radio-group>
         <v-alert
-                v-if="executionContext !== undefined"
-                :text="noticeForEC(executionContext)"
-                variant="tonal"
-                icon="$info"
-                border="start"
-                border-color="info"
-                style="white-space: pre-line"
+          v-if="executionContext !== undefined"
+          :text="noticeForEC(executionContext)"
+          variant="tonal"
+          icon="$info"
+          border="start"
+          border-color="info"
+          style="white-space: pre-line"
         >
         </v-alert>
       </div>
@@ -147,44 +150,66 @@ const onCancel = () => {
       <!-- Response Phase -->
       <v-card :elevation="6" class="mt-4">
         <ResponsePhaseConfiguration
-                v-model="responsePhaseConfig"
-                :explanationMandatory="executionContext !== EXECUTION_CONTEXT_OPTIONS[0] || questionIsOpen"
+          v-model="responsePhaseConfig"
+          :explanationMandatory="executionContext !== EXECUTION_CONTEXT_OPTIONS[0] || questionIsOpen"
         ></ResponsePhaseConfiguration>
       </v-card>
 
       <!-- Confronting View Phase -->
       <v-card elevation="6" class="mt-4">
         <ConfrontingViewPhaseConfiguration
-                v-model="confrontingViewConfig"
-                :studentGiveExplanation="responsePhaseConfig.studentGiveExplanation"
-                :aiIsActivated
-                :maxResponseToEvaluate
+          v-model="confrontingViewConfig"
+          :studentGiveExplanation="responsePhaseConfig.studentGiveExplanation"
+          :aiIsActivated
+          :maxResponseToEvaluate
         ></ConfrontingViewPhaseConfiguration>
       </v-card>
 
       <!-- Result Phase -->
       <v-card elevation="6" class="mt-4">
         <ResultPhaseConfiguration
-                v-model="resultPhaseConfig"
-                :aiIsActivated="props.aiIsActivated"
+          v-model="resultPhaseConfig"
+          :aiIsActivated="props.aiIsActivated"
         ></ResultPhaseConfiguration>
       </v-card>
     </v-card-text>
 
     <v-card-actions class="justify-end">
       <v-btn
-              class="text-none text-subtitle-1 text-white"
-              color="#95c155"
-              variant="flat"
-              @click="onSubmit"
+        class="text-none text-subtitle-1 text-white"
+        color="#95c155"
+        variant="flat"
+        @click="onSubmit"
       >
         {{ t('submit') }}
       </v-btn>
       <v-btn
-              class="text-none text-subtitle-1"
-              text="Cancel"
-              variant="outlined"
-              @click="onCancel"
+        class="text-none text-subtitle-1"
+        :text="t('save-sequence')"
+        color="#263238"
+        :variant="!configSaved ? 'flat' : 'outlined'"
+        @click="onSave"
+        :disabled="configSaved">
+      </v-btn>
+      <v-snackbar
+        v-model="snackBar"
+        :location="'right'"
+        :timeout="2000">
+        {{ t('sequence-updated') }}
+        <template v-slot:actions>
+          <v-btn
+            @click="snackBar = false"
+            color="red"
+            variant="text">
+            {{ t('close') }}
+          </v-btn>
+        </template>
+      </v-snackbar>
+      <v-btn
+        class="text-none text-subtitle-1"
+        :text="t('cancel')"
+        variant="outlined"
+        @click="onCancel"
       ></v-btn>
     </v-card-actions>
   </v-card>
@@ -198,6 +223,10 @@ const onCancel = () => {
 {
   "en": {
     "submit": "Start sequence",
+    "save-sequence": "Save sequence",
+    "cancel": "Cancel",
+    "sequence-updated": "Sequence updated",
+    "close": "Close",
     "sequenceConfiguration": {
       "title": "Sequence Configuration",
       "executionContext": {
@@ -219,6 +248,10 @@ const onCancel = () => {
   },
   "fr": {
     "submit": "Démarrer la séquence",
+    "save-sequence": "Enregistrer la séquence",
+    "cancel": "Annuler",
+    "sequence-updated": "Séquence mise à jour",
+    "close": "Fermer",
     "sequenceConfiguration": {
       "title": "Configuration de la séquence",
       "executionContext": {

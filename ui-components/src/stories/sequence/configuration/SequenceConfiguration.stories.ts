@@ -31,6 +31,7 @@ const meta: any = {
     questionIsOpen: false,
     onCancelSequenceConfiguration: fn(),
     onSubmitSequenceConfiguration: fn(),
+    onSaveSequenceConfiguration: fn()
   },
   tags: ['autodocs', 'pages'],
   parameters: {
