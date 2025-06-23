@@ -61,16 +61,14 @@ class DashboardModelFactory(
 
         val sequenceMonitoringModel = SequenceMonitoringModel(
             sequence.executionContext,
-            learnerStepsModel.responseSubmissionState.getDashboardState(),
-            learnerStepsModel.evaluationState.getDashboardState(),
+            learnerStepsModel.responseSubmission?.state?.getDashboardState() ?: DashboardPhaseState.NONE,
+            learnerStepsModel.evaluation?.state?.getDashboardState() ?: DashboardPhaseState.NONE,
             sequenceId = sequence.id
         )
 
-        val learners: MutableList<LearnerMonitoringModel> = getLearnerMonitoringModels(
-            sequenceMonitoringModel,
-            sequence,
+        sequenceMonitoringModel.setLearners(
+            getLearnerMonitoringModels(sequenceMonitoringModel, sequence)
         )
-        sequenceMonitoringModel.setLearners(learners)
 
         val previousSequence: Sequence? = sequenceService.findPreviousSequence(sequence)
         val nextSequence: Sequence? = sequenceService.findNextSequence(sequence)
@@ -163,12 +161,10 @@ class DashboardModelFactory(
         learnerHasAnswered: Boolean,
         responsePhaseState: DashboardPhaseState
     ): LearnerStateOnPhase {
-        return if (responsePhaseState == DashboardPhaseState.NOT_STARTED) {
-            LearnerStateOnPhase.WAITING
-        } else if (learnerHasAnswered) {
-            LearnerStateOnPhase.ACTIVITY_TERMINATED
-        } else {
-            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+        return when {
+            responsePhaseState == DashboardPhaseState.NOT_STARTED || responsePhaseState == DashboardPhaseState.NONE -> LearnerStateOnPhase.WAITING
+            learnerHasAnswered -> LearnerStateOnPhase.ACTIVITY_TERMINATED
+            else -> LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
         }
     }
 

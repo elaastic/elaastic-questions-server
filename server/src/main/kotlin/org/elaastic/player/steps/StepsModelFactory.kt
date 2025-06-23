@@ -8,35 +8,29 @@ import org.elaastic.sequence.interaction.Interaction
 object StepsModelFactory {
 
     fun buildForTeacher(sequence: Sequence) = StepsModel(
-        responseSubmissionState = sequence
+        responseSubmission = sequence
             .getResponseSubmissionInteractionOrNull()
-            ?.stateForRegisteredUsers()
-            .toPhaseState(),
-        evaluationState = sequence
+            ?.let { PhaseStep(it.stateForRegisteredUsers().toPhaseState(), it.rank) },
+        evaluation = sequence
             .getEvaluationInteractionOrNull()
-            ?.stateForRegisteredUsers()
-            .toPhaseState(),
-        readState = sequence
+            ?.let { PhaseStep(it.stateForRegisteredUsers().toPhaseState(), it.rank) },
+        read = sequence
             .getReadInteractionOrNull()
-            ?.stateForRegisteredUsers()
-            .toPhaseState(),
+            ?.let { PhaseStep(it.stateForRegisteredUsers().toPhaseState(), it.rank) },
         showStatistics = true,
         phase2Skipped = sequence.phase2Skipped
     )
 
     fun buildForLearner(sequence: Sequence, learnerActiveInteraction: Interaction?) = StepsModel(
-        responseSubmissionState = sequence
+        responseSubmission = sequence
             .getResponseSubmissionInteractionOrNull()
-            ?.stateForLearner(learnerActiveInteraction!!)
-            .toPhaseState(),
-        evaluationState = sequence
+            ?.let { PhaseStep(it.stateForLearner(learnerActiveInteraction!!).toPhaseState(), it.rank) },
+        evaluation = sequence
             .getEvaluationInteractionOrNull()
-            ?.stateForLearner(learnerActiveInteraction!!)
-            .toPhaseState(),
-        readState = sequence
+            ?.let { PhaseStep(it.stateForLearner(learnerActiveInteraction!!).toPhaseState(), it.rank) },
+        read = sequence
             .getReadInteractionOrNull()
-            ?.stateForLearner(learnerActiveInteraction!!)
-            .toPhaseState(),
+            ?.let { PhaseStep(it.stateForLearner(learnerActiveInteraction!!).toPhaseState(), it.rank) },
         phase2Skipped = sequence.phase2Skipped
     )
 

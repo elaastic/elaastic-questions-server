@@ -27,6 +27,6 @@ class EvaluationPhaseConfig(
     evaluationMethod: EvaluationMethod? = null
 ) : PhaseConfig {
     val responseToEvaluateCount: Int = responseToEvaluateCount ?: 0
-    val evaluationByIA: Boolean = ElaasticFeatures.CHATGPT_EVALUATION.isActive() && evaluationByIA ?: false
+    val evaluationByIA: Boolean = (evaluationByIA ?: false) && ElaasticFeatures.CHATGPT_EVALUATION.isActive()
     val evaluationMethod: EvaluationMethod = evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE
 }

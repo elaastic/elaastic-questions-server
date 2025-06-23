@@ -695,8 +695,8 @@ class PlayerController(
 
         val sequenceMonitoringModel = SequenceMonitoringModel(
             sequence.executionContext,
-            learnerStepsModel.responseSubmissionState.getDashboardState(),
-            learnerStepsModel.evaluationState.getDashboardState(),
+            learnerStepsModel.responseSubmission!!.state.getDashboardState(),
+            learnerStepsModel.evaluation!!.state.getDashboardState(),
             sequenceId = sequence.id
         )
 

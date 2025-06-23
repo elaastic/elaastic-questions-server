@@ -24,7 +24,8 @@
         <thead>
         <tr>
             <th></th>
-            <th class="center aligned" th:text="#{attendee.phase(${1})}">first_phase_label</th>
+            <th class="center aligned" th:text="#{attendee.phase(${1})}"
+                th:if="${sequenceMonitoringModel.phase1State.name() != 'NONE'}">first_phase_label</th>
             <th class="center aligned" th:text="#{attendee.phase(${2})}"
                 th:if="${sequenceMonitoringModel.phase2State.name() != 'NONE'}">second_phase_label
             </th>
@@ -43,11 +44,11 @@
             </td>
 
             <!--/* States of the learner */-->
-            <th:block
-                    th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInResponsePhase().name})">
+            <th:block th:if="${sequenceMonitoringModel.phase1State.name() != 'NONE'}">
+                <th:block
+                        th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInResponsePhase().name})">
+                </th:block>
             </th:block>
-            <p th:text="${sequenceMonitoringModel.phase2State.name() != 'NONE'}"></p>
-            <p th:text="${learner.getStateCellInEvaluationPhase().name}"></p>
             <th:block th:if="${sequenceMonitoringModel.phase2State.name() != 'NONE'}">
                 <th:block
                         th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInEvaluationPhase().name})">

@@ -25,6 +25,8 @@ data class CommandModel(
     val statementId: Long,
     val interactionId: Long?,
     val interactionRank: Int?,
+    val nextInteractionRank: Int?,
+    val nextNextInteractionRank: Int?,
     val questionType: QuestionType,
     val hasExpectedExplanation: Boolean,
 
@@ -32,6 +34,7 @@ data class CommandModel(
     val actionStartInteraction: ActionStatus,
     val actionStopInteraction: ActionStatus,
     val actionStartNextInteraction: ActionStatus,
+    val actionSkipNextInteraction: ActionStatus,
     val actionReopenInteraction: ActionStatus,
     val actionReopenSequence: ActionStatus,
     val actionStopSequence: ActionStatus,

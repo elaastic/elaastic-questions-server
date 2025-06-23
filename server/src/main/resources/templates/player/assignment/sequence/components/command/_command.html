@@ -77,21 +77,20 @@
        th:onclick="|loadSequence('@{/player/interaction/{interactionId}/startNext(interactionId=${commandModel.interactionId})}')|">
 
         <i class="green play icon"></i>
-        <span th:text="#{player.sequence.interaction.start(${commandModel.InteractionRank + 1})}"></span>
+        <span th:text="#{player.sequence.interaction.start(${commandModel.nextInteractionRank})}"></span>
     </a>
 
     <!--/* Skip next phase */-->
     <a class="item"
-       th:unless="${commandModel.actionStartNextInteraction.name() == 'HIDDEN'}"
+       th:unless="${commandModel.actionSkipNextInteraction.name() == 'HIDDEN'}"
        th:onclick="|loadSequence('@{/player/interaction/{interactionId}/skipNext(interactionId=${commandModel.interactionId})}')|">
 
         <i class="green forward icon"></i>
-        <span th:text="#{player.sequence.interaction.start(${commandModel.InteractionRank + 2})}"></span>
+        <span th:text="#{player.sequence.interaction.start(${commandModel.nextNextInteractionRank})}"></span>
     </a>
 
     <!--/* Reopen phase (n) */-->
     <a class="item"
-       href="#"
        th:unless="${commandModel.actionReopenInteraction.name() == 'HIDDEN'}"
        th:onclick="|loadSequence('@{/player/interaction/{interactionId}/restart(interactionId=${commandModel.interactionId})}')|">
 

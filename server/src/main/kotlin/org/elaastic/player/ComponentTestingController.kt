@@ -60,6 +60,7 @@ import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.sequence.status.SequenceInfoModel
 import org.elaastic.player.sequence.status.SequenceInfoResolver
 import org.elaastic.player.statement.StatementInfoPanelModel
+import org.elaastic.player.steps.PhaseStep
 import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.player.steps.StepsModel
 import org.elaastic.sequence.ExecutionContext
@@ -129,9 +130,9 @@ class ComponentTestingController(
         model.addAttribute(
             "stepsModel",
             StepsModel(
-                responseSubmissionState = responseSubmissionState ?: StepsModel.PhaseState.COMPLETED,
-                evaluationState = evaluationState ?: StepsModel.PhaseState.ACTIVE,
-                readState = readState ?: StepsModel.PhaseState.DISABLED,
+                responseSubmission = PhaseStep(responseSubmissionState ?: StepsModel.PhaseState.COMPLETED, 1),
+                evaluation = PhaseStep(evaluationState ?: StepsModel.PhaseState.ACTIVE, 2),
+                read = PhaseStep(readState ?: StepsModel.PhaseState.DISABLED, 3),
                 showStatistics = showStatistics ?: false,
                 studentsProvideExplanation = studentsProvideExplanation ?: true
             )

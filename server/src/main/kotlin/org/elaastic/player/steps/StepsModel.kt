@@ -4,13 +4,15 @@ import org.elaastic.player.dashboard.DashboardPhaseState
 import org.elaastic.player.dashboard.SequenceMonitoringModel
 
 data class StepsModel(
-    val responseSubmissionState: PhaseState,
-    val evaluationState: PhaseState,
-    val readState: PhaseState,
+    val responseSubmission: PhaseStep?,
+    val evaluation: PhaseStep?,
+    val read: PhaseStep?,
     val showStatistics: Boolean = false,
     val studentsProvideExplanation: Boolean = true,
     val phase2Skipped: Boolean = false
 ) {
+    val sequenceStarted = responseSubmission != null || evaluation != null || read != null
+
     enum class PhaseState {
         DISABLED,
         ACTIVE,
@@ -34,3 +36,8 @@ data class StepsModel(
         }
     }
 }
+
+data class PhaseStep(
+    val state: StepsModel.PhaseState,
+    val rank: Int,
+)
