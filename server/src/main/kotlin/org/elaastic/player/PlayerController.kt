@@ -32,6 +32,7 @@ import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.player.dashboard.DashboardModelFactory
+import org.elaastic.player.dashboard.DashboardPhaseState
 import org.elaastic.player.dashboard.SequenceMonitoringModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.player.results.learner.LearnerResultsModel
@@ -695,8 +696,8 @@ class PlayerController(
 
         val sequenceMonitoringModel = SequenceMonitoringModel(
             sequence.executionContext,
-            learnerStepsModel.responseSubmission!!.state.getDashboardState(),
-            learnerStepsModel.evaluation!!.state.getDashboardState(),
+            learnerStepsModel.responseSubmission?.state?.getDashboardState() ?: DashboardPhaseState.NONE,
+            learnerStepsModel.evaluation?.state?.getDashboardState() ?: DashboardPhaseState.NONE,
             sequenceId = sequence.id
         )
 

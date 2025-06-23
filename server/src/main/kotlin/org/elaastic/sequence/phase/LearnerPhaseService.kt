@@ -36,12 +36,6 @@ class LearnerPhaseService(
         }
 
         sequence.interactions.keys.forEachIndexed { index, interactionType ->
-            logger.debug(
-                "Loading phase for interaction type: {}, index: {}, active: {}",
-                interactionType,
-                index,
-                activeInteractionForLearner?.rank == (index + 1)
-            )
             learnerSequence.loadPhase(
                 buildPhase(
                     learnerSequence,

@@ -114,7 +114,7 @@ internal class AssignmentServiceIntegrationTest(
         (1..n).forEach {
             assignmentService.save(
                 Assignment(
-                    title = "Assignment n�$it",
+                    title = "Assignment n°$it",
                     owner = owner
                 )
             )
@@ -400,7 +400,7 @@ internal class AssignmentServiceIntegrationTest(
             subjectService.addStatement(
                 subject,
                 Statement.createDefaultStatement(subject.owner)
-                    .title("Sequence n�1")
+                    .title("Sequence n°1")
                     .content("Content 1")
             )
         }.tThen {
