@@ -20,6 +20,7 @@ package org.elaastic.sequence
 
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.moderation.ReportCandidateService
 import org.elaastic.moderation.ReportInformation
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingRepository
@@ -44,16 +45,16 @@ import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-internal class SequenceServiceIntegrationTest(
-    @Autowired val sequenceService: SequenceService,
-    @Autowired val integrationTestingService: IntegrationTestingService,
-    @Autowired val sequenceRepository: SequenceRepository,
-    @Autowired val functionalTestingService: FunctionalTestingService,
-    @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
-    @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
-    @Autowired val draxoPeerGradingRepository: DraxoPeerGradingRepository,
-    @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
-    @Autowired val reportCandidateService: ReportCandidateService,
+internal class SequenceServiceIntegrationTest @Autowired constructor(
+    val sequenceService: SequenceService,
+    val integrationTestingService: IntegrationTestingService,
+    val sequenceRepository: SequenceRepository,
+    val functionalTestingService: FunctionalTestingService,
+    val chatGptEvaluationRepository: ChatGptEvaluationRepository,
+    val chatGptEvaluationService: ChatGptEvaluationService,
+    val draxoPeerGradingRepository: DraxoPeerGradingRepository,
+    val draxoPeerGradingService: DraxoPeerGradingService,
+    val reportCandidateService: ReportCandidateService,
 ) {
 
     @Test
@@ -240,7 +241,15 @@ internal class SequenceServiceIntegrationTest(
 
     @Test
     fun `countReportedEvaluation and countReportBySequence test`() {
-        // Given a sequence freshly generated
+
+        ElaasticFeatures.CHATGPT_EVALUATION.setActive(true)
+
+
+        assertTrue(
+            ElaasticFeatures.CHATGPT_EVALUATION.isActive(),
+            "This test requires the ChatGPT evaluation feature to be active"
+        )
+        // Given a sequence
         val teacher = integrationTestingService.getTestTeacher()
         val students = integrationTestingService.getNLearners(3)
         val grader = students[0]
@@ -249,6 +258,7 @@ internal class SequenceServiceIntegrationTest(
             evaluationMethod = EvaluationMethod.DRAXO,
             chatGptEvaluationEnabled = true
         )
+        assertTrue(sequence.chatGptEvaluationEnabled)
 
         /** Check that the count of reported evaluation is 0 for the given sequence when the teacher is false */
         val checkAlways0WhenIsntTeacher = {
@@ -264,14 +274,17 @@ internal class SequenceServiceIntegrationTest(
         checkAlways0WhenIsntTeacher()
 
         functionalTestingService.startSequence(sequence)
+        assertTrue(sequence.chatGptEvaluationEnabled, "The sequence should have the ChatGPT evaluation enabled")
+        assertTrue(sequence.responseSubmissionInteractionIsInitialized())
 
         tWhen("We add a reported evaluation") {
             val student = students[1]
-            functionalTestingService.createResponse(sequence, student).let { response ->
-                functionalTestingService.createDRAXOEvaluation(response, grader).let { draxoPeerGrading ->
+            functionalTestingService.createResponse(sequence, student)
+                .let { response ->
+                    functionalTestingService.createDRAXOEvaluation(response, grader)
+                }.let { draxoPeerGrading ->
                     functionalTestingService.reportReportCandidate(student, draxoPeerGrading)
                 }
-            }
         }.tThen {
             assertEquals(0, sequenceService.countReportedEvaluation(sequence, teacher = true, isRemoved = true))
             assertEquals(1, sequenceService.countReportedEvaluation(sequence, teacher = true, isRemoved = false))
@@ -280,11 +293,12 @@ internal class SequenceServiceIntegrationTest(
 
         }.tWhen("We add a ChatGPT reported evaluation") {
             val student = students[2]
-            functionalTestingService.createResponse(sequence, student).let { response ->
-                functionalTestingService.createChatGPTEvaluation(response).let { draxoPeerGrading ->
-                    functionalTestingService.reportReportCandidate(student, draxoPeerGrading)
+            functionalTestingService.createResponse(sequence, student)
+                .let { response ->
+                    functionalTestingService.createChatGPTEvaluation(response)
+                }.let { chatGptEvaluation ->
+                    functionalTestingService.reportReportCandidate(student, chatGptEvaluation)
                 }
-            }
         }.tThen {
             assertEquals(0, sequenceService.countReportedEvaluation(sequence, teacher = true, isRemoved = true))
             assertEquals(2, sequenceService.countReportedEvaluation(sequence, teacher = true, isRemoved = false))
@@ -292,16 +306,19 @@ internal class SequenceServiceIntegrationTest(
             checkAlways0WhenIsntTeacher()
 
         }.tWhen("The teacher removed a DRAXOEvaluation") {
-            draxoPeerGradingService.findAllDraxo(sequence).first { it.reportReasons != null }.let { draxoPeerGrading ->
-                reportCandidateService.markAsRemoved(draxoPeerGrading, draxoPeerGradingRepository)
-            }
+            draxoPeerGradingService.findAllDraxo(sequence)
+                .first { it.reportReasons != null }
+                .let { draxoPeerGrading ->
+                    reportCandidateService.markAsRemoved(draxoPeerGrading, draxoPeerGradingRepository)
+                }
         }.tThen {
             assertEquals(1, sequenceService.countReportedEvaluation(sequence, teacher = true, isRemoved = true))
             assertEquals(1, sequenceService.countReportedEvaluation(sequence, teacher = true, isRemoved = false))
             assertEquals(ReportInformation(2, 1), sequenceService.countReportBySequence(sequence, isTeacher = true))
             checkAlways0WhenIsntTeacher()
         }.tWhen("The teacher removed the ChatGPT evaluation") {
-            chatGptEvaluationService.findAllBySequence(sequence).first { it.reportReasons != null }
+            chatGptEvaluationService.findAllBySequence(sequence)
+                .first { it.reportReasons != null }
                 .let { chatGptEvaluation ->
                     reportCandidateService.markAsRemoved(chatGptEvaluation, chatGptEvaluationRepository)
                 }
@@ -310,7 +327,6 @@ internal class SequenceServiceIntegrationTest(
             assertEquals(0, sequenceService.countReportedEvaluation(sequence, teacher = true, isRemoved = false))
             assertEquals(ReportInformation(2, 0), sequenceService.countReportBySequence(sequence, isTeacher = true))
             checkAlways0WhenIsntTeacher()
-
         }
     }
 
