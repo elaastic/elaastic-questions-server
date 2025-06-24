@@ -20,13 +20,12 @@ package org.elaastic.player.command
 
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State
-import org.elaastic.user.User
 
 object CommandModelFactory {
 
-    fun build(user: User, sequence: Sequence): CommandModel =
+    fun build(sequence: Sequence): CommandModel =
         sequence.activeInteraction.let { interaction ->
-            val interactionStateForTeacher = interaction?.getStateForTeacher(user)
+            val interactionStateForTeacher = interaction?.getStateForTeacher()
 
             val nextInteraction = runCatching { interaction?.let { sequence.getInteractionAt(it.rank + 1) } }
                 .getOrNull()

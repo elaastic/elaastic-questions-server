@@ -2501,7 +2501,7 @@ class ComponentTestingController(
                 .map {
                     CommandSituation(
                         describeSequence(it),
-                        CommandModelFactory.build(user, it)
+                        CommandModelFactory.build(it)
                     )
                 }
         )

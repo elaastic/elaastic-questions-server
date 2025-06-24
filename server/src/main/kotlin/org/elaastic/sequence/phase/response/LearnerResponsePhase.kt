@@ -25,16 +25,15 @@ class LearnerResponsePhase(
     override var learnerPhaseExecution: LearnerResponsePhaseExecution? = null
 
     override fun loadPhaseExecution(learnerPhaseExecution: LearnerPhaseExecution) {
-        if (learnerPhaseExecution is LearnerResponsePhaseExecution)
-            this.learnerPhaseExecution = learnerPhaseExecution
-        else throw IllegalArgumentException()
+        require(learnerPhaseExecution is LearnerResponsePhaseExecution)
+        this.learnerPhaseExecution = learnerPhaseExecution
     }
 
-    override fun getViewModel(): PhaseViewModel = run {
+    override fun getViewModel(): PhaseViewModel {
         // TODO we should get rid of interaction here
         val interaction = learnerSequence.sequence.getResponseSubmissionInteraction()
 
-        LearnerResponsePhaseViewModel(
+        return LearnerResponsePhaseViewModel(
             sequenceId = learnerSequence.sequence.id ?: error("Sequence must have an ID to get a response"),
             interactionId = interaction.id ?: error("Interaction must have an ID to get response"),
             learnerPhaseState = state,

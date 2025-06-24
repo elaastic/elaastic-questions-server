@@ -19,14 +19,12 @@ class SequenceController(
 
     @GetMapping("/config/{sequenceId}/modal")
     fun configSequence(
-        authentication: Authentication,
         model: Model,
         @PathVariable sequenceId: Long,
     ): String {
-        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId)
 
-        val commandModel = CommandModelFactory.build(user, sequence)
+        val commandModel = CommandModelFactory.build(sequence)
 
         model["sequenceId"] = commandModel.sequenceId
         model["statementId"] = commandModel.statementId

@@ -3,7 +3,8 @@ package org.elaastic.sequence.phase
 import org.elaastic.sequence.ILearnerSequence
 import org.elaastic.sequence.State
 import org.elaastic.sequence.interaction.InteractionType
-import org.elaastic.sequence.phase.evaluation.EvaluationMethod
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod.ALL_AT_ONCE
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod.DRAXO
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
 import org.elaastic.sequence.phase.response.LearnerResponsePhase
@@ -24,19 +25,8 @@ class LearnerPhaseFactory {
         InteractionType.ResponseSubmission -> LearnerResponsePhase(learnerSequence, phaseIndex, active, state)
         InteractionType.Evaluation ->
             when (learnerSequence.sequence.evaluationMethod) {
-                EvaluationMethod.ALL_AT_ONCE -> AllAtOnceLearnerEvaluationPhase(
-                    learnerSequence,
-                    phaseIndex,
-                    active,
-                    state,
-                )
-
-                EvaluationMethod.DRAXO -> DraxoLearnerEvaluationPhase(
-                    learnerSequence,
-                    phaseIndex,
-                    active,
-                    state
-                )
+                ALL_AT_ONCE -> AllAtOnceLearnerEvaluationPhase(learnerSequence, phaseIndex, active, state)
+                DRAXO -> DraxoLearnerEvaluationPhase(learnerSequence, phaseIndex, active, state)
             }
 
         InteractionType.Read -> LearnerResultPhase(learnerSequence, phaseIndex, active, state)

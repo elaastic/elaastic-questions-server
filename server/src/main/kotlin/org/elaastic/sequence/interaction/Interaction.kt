@@ -84,7 +84,7 @@ class Interaction(
     var lastUpdated: Date? = null
 
     @Transient
-    fun getStateForTeacher(user: User) =
+    fun getStateForTeacher() =
         when (sequence.executionContext) {
             ExecutionContext.Distance -> State.afterStop
             ExecutionContext.Blended ->
@@ -101,10 +101,6 @@ class Interaction(
     @Convert(converter = PeerEvaluationMappingConverter::class)
     @Column(name = "explanation_recommendation_mapping")
     var peerEvaluationMapping: PeerEvaluationMapping? = null
-
-    @Transient
-    fun hasAnyResult(): Boolean =
-        results?.hasAnyResult() ?: false
 
     @Transient
     fun isRead() = interactionType == InteractionType.Read

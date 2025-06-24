@@ -28,9 +28,8 @@ class LearnerResultPhase(
     override var learnerPhaseExecution: LearnerResultPhaseExecution? = null
 
     override fun loadPhaseExecution(learnerPhaseExecution: LearnerPhaseExecution) {
-        if (learnerPhaseExecution is LearnerResultPhaseExecution)
-            this.learnerPhaseExecution = learnerPhaseExecution
-        else throw IllegalArgumentException()
+        require(learnerPhaseExecution is LearnerResultPhaseExecution)
+        this.learnerPhaseExecution = learnerPhaseExecution
     }
 
     override fun getViewModel(): LearnerResultPhaseViewModel {

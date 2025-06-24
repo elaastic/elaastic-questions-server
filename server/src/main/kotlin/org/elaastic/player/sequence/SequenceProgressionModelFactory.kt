@@ -26,7 +26,7 @@ class SequenceProgressionModelFactory(
         stepsModel = StepsModelFactory.buildForTeacher(sequence),
         sequenceInfoModel = getSequenceInfoModel(sequence, teacher),
         sequenceStatistics = getSequenceStatistics(sequence),
-        commandModel = CommandModelFactory.build(teacher, sequence),
+        commandModel = CommandModelFactory.build(sequence),
     )
 
     fun buildForLearner(

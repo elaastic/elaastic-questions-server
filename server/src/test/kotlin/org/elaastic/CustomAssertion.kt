@@ -18,6 +18,10 @@ fun assertIsEmpty(emptyCollection: Collection<*>, message: String = "Collection 
     assertTrue(emptyCollection.isEmpty(), message)
 }
 
+fun assertIsEmpty(emptyCollection: Map<*, *>, message: String = "Map is not empty") {
+    assertTrue(emptyCollection.isEmpty(), message)
+}
+
 /**
  * Assert that the given Object is of the expected type.
  *

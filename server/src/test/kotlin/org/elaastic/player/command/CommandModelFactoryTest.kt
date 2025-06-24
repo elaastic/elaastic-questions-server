@@ -32,10 +32,8 @@ import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
 import org.elaastic.user.User
-import org.junit.Assert.assertThrows
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -48,7 +46,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .also { it.id = null }
         }.tWhen("We try to build the command model") {
-            { CommandModelFactory.build(mockk<User>(), it) }
+            { CommandModelFactory.build(it) }
         }.tThen("An error occurs") {
             assertThrows<IllegalStateException> {
                 it()
@@ -59,7 +57,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .also { it.statement.id = null }
         }.tWhen("We try to build the command model") {
-            { CommandModelFactory.build(mockk<User>(), it) }
+            { CommandModelFactory.build(it) }
         }.tThen("An error occurs") {
             assertThrows<IllegalStateException> {
                 it()
@@ -73,7 +71,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .also { it.statement.expectedExplanation = "Expected explanation" }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertTrue(it.hasExpectedExplanation)
         }
@@ -82,7 +80,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .also { it.statement.expectedExplanation = "" }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertFalse(it.hasExpectedExplanation)
         }
@@ -91,7 +89,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .also { it.statement.expectedExplanation = null }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertFalse(it.hasExpectedExplanation)
         }
@@ -103,7 +101,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .also { it.state = State.beforeStart }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen("The command model should allow starting starting the sequence only") {
             assertEquals(ActionStatus.ENABLED, it.actionStartSequence)
 
@@ -126,7 +124,7 @@ class CommandModelFactoryTest {
                 .also { it.executionContext = ExecutionContext.FaceToFace }
                 .also { it.state = State.show }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen("The command model should allow stopping the interaction and sequence") {
             assertEquals(ActionStatus.DISABLED, it.actionStartInteraction)
             assertEquals(ActionStatus.ENABLED, it.actionStopInteraction)
@@ -149,7 +147,7 @@ class CommandModelFactoryTest {
                 .also { it.executionContext = ExecutionContext.FaceToFace }
                 .also { it.state = State.show }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertEquals(ActionStatus.ENABLED, it.actionStartInteraction)
             assertEquals(ActionStatus.ENABLED, it.actionStopSequence)
@@ -172,7 +170,7 @@ class CommandModelFactoryTest {
                 .also { it.executionContext = ExecutionContext.FaceToFace }
                 .also { it.state = State.show }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertEquals(ActionStatus.ENABLED, it.actionStopSequence)
             assertEquals(ActionStatus.ENABLED, it.actionStartNextInteraction)
@@ -195,7 +193,7 @@ class CommandModelFactoryTest {
                 .also { it.executionContext = ExecutionContext.FaceToFace }
                 .also { it.state = State.afterStop }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertEquals(ActionStatus.HIDDEN, it.actionReopenSequence)
             assertEquals(ActionStatus.ENABLED, it.actionPublishResults)
@@ -218,7 +216,7 @@ class CommandModelFactoryTest {
                 .also { it.executionContext = ExecutionContext.Distance }
                 .also { it.state = State.afterStop }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertEquals(ActionStatus.ENABLED, it.actionReopenSequence)
             assertEquals(ActionStatus.ENABLED, it.actionPublishResults)
@@ -239,7 +237,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .also { it.state = State.show }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertEquals(ActionStatus.ENABLED, it.actionStopSequence)
 
@@ -260,7 +258,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .also { it.resultsArePublished = true }
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertEquals(ActionStatus.ENABLED, it.actionUnpublishResults)
 
@@ -281,7 +279,7 @@ class CommandModelFactoryTest {
             getASequence()
                 .addDefaultInteraction(InteractionType.Read, State.afterStop)
         }.tWhen("We build the command model") {
-            CommandModelFactory.build(mockk<User>(), it)
+            CommandModelFactory.build(it)
         }.tThen {
             assertEquals(ActionStatus.HIDDEN, it.actionStartInteraction)
             assertEquals(ActionStatus.ENABLED, it.actionStartSequence)

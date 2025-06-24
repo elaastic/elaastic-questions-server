@@ -32,7 +32,7 @@ class LearnerPhaseService(
         )
 
         if (sequence.interactions.isEmpty()) {
-            logger.warn("This sequence (${sequence.id}, has no interactions defined.")
+            logger.warn("This sequence (${sequence.id}), has no interactions defined.")
         }
 
         sequence.interactions.keys.forEachIndexed { index, interactionType ->
