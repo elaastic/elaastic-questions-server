@@ -627,21 +627,16 @@ class PlayerController(
     @GetMapping("sequence/{responseId}/chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun viewChatGptEvaluation(
-        authentication: Authentication,
         model: Model,
         @PathVariable responseId: Long
     ): String {
-        authentication.principal as User
 
         val response = responseService.findById(responseId)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
-        model.addAttribute(
-            "chatGptEvaluationModel",
-            ChatGptEvaluationModelFactory.build(
-                chatGptEvaluation,
-                response.interaction.sequence,
-                responseId = response.id
-            )
+        model["chatGptEvaluationModel"] = ChatGptEvaluationModelFactory.build(
+            chatGptEvaluation,
+            response.interaction.sequence,
+            responseId = response.id
         )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
     }

@@ -22,7 +22,6 @@ package org.elaastic.user.controller
 import org.elaastic.common.onboarding.OnboardingChapter
 import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.RoleService
-import org.elaastic.user.User
 import org.elaastic.user.UserService
 import org.elaastic.user.controller.command.PasswordData
 import org.elaastic.user.controller.command.UserData
@@ -47,7 +46,7 @@ import javax.validation.Valid
 @Controller
 class UserAccountController(
     @Value("\${elaastic.auth.check_user_email:true}")
-        val checkEmail: Boolean,
+    val checkEmail: Boolean,
     @Autowired val userService: UserService,
     @Autowired val roleService: RoleService,
     @Autowired val termsService: TermsService,
@@ -65,7 +64,7 @@ class UserAccountController(
     @GetMapping("/userAccount/edit")
     fun edit(authentication: Authentication, model: Model): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
-        if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+        if (user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
 
         val userToUpdate = userService.get(user.id!!)!!
         model.addAttribute("userData", UserData(userToUpdate, userHasGivenConsent = true))
@@ -75,15 +74,17 @@ class UserAccountController(
 
 
     @PostMapping("/userAccount/update")
-    fun update(authentication: Authentication,
-               @Valid @ModelAttribute userData: UserData,
-               result: BindingResult,
-               model: Model,
-               response: HttpServletResponse,
-               redirectAttributes: RedirectAttributes,
-               locale: Locale): String {
-        val authUser: User = authentication.principal as User
-        if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+    fun update(
+        authentication: Authentication,
+        @Valid @ModelAttribute userData: UserData,
+        result: BindingResult,
+        model: Model,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes,
+        locale: Locale
+    ): String {
+        val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
+        if (authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         if (!result.hasErrors()) {
             val updatedUser = userService.get(userData.id!!)!!
             userData.populateUser(updatedUser, roleService)
@@ -110,27 +111,30 @@ class UserAccountController(
     @GetMapping("/userAccount/editPassword")
     fun editPassword(authentication: Authentication, model: Model): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
-        if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+        if (user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         model.addAttribute("passwordData", PasswordData(user))
         model.addAttribute("user", user)
         return "userAccount/editPassword"
     }
 
     @PostMapping("/userAccount/updatePassword")
-    fun  updatePassword(authentication: Authentication,
-                        @Valid @ModelAttribute passwordData: PasswordData,
-                        result: BindingResult,
-                        model: Model,
-                        response: HttpServletResponse,
-                        redirectAttributes: RedirectAttributes,
-                        locale: Locale): String {
-        val authUser: User = authentication.principal as User
-        if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+    fun updatePassword(
+        authentication: Authentication,
+        @Valid @ModelAttribute passwordData: PasswordData,
+        result: BindingResult,
+        model: Model,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes,
+        locale: Locale
+    ): String {
+        val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
+        if (authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         if (!result.hasErrors()) {
             val updatedUser = userService.get(authUser, passwordData.id!!)
             try {
                 userService.changePasswordForUserWithCurrentPasswordChecking(
-                        updatedUser, passwordData.password!!, passwordData.password1!!)
+                    updatedUser, passwordData.password!!, passwordData.password1!!
+                )
             } catch (e: SecurityException) {
                 passwordData.catchSecurityException(e, result)
             }
@@ -150,7 +154,7 @@ class UserAccountController(
 
     @ResponseBody
     @GetMapping("/userAccount/updateOnboardingChapter/{chapterToUpdate}")
-    fun updateOnboardingChapter(authentication: Authentication, @PathVariable chapterToUpdate: String){
+    fun updateOnboardingChapter(authentication: Authentication, @PathVariable chapterToUpdate: String) {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         userService.updateOnboardingChapter(OnboardingChapter.from(chapterToUpdate), user)
     }
@@ -163,7 +167,11 @@ class UserAccountController(
     }
 
     @GetMapping("/userAccount/activate")
-    fun doEnableUser(@RequestParam("actKey") activationKey: String, redirectAttributes: RedirectAttributes, locale: Locale): String {
+    fun doEnableUser(
+        @RequestParam("actKey") activationKey: String,
+        redirectAttributes: RedirectAttributes,
+        locale: Locale
+    ): String {
         userService.enableUserWithActivationKey(activationKey).let {
             when (it) {
                 null -> {
@@ -171,6 +179,7 @@ class UserAccountController(
                         redirectAttributes.addFlashAttribute("message", mess)
                     }
                 }
+
                 else -> {
                     messageSource.getMessage("useraccount.activation.success", emptyArray(), locale).let { mess ->
                         redirectAttributes.addFlashAttribute("message", mess)
@@ -183,9 +192,9 @@ class UserAccountController(
 
 
     @GetMapping("/userAccount/unsubscribe")
-    fun unsubscribe(authentication: Authentication, model: Model, locale: Locale):String {
-        val authUser: User = authentication.principal as User
-        if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+    fun unsubscribe(authentication: Authentication, model: Model, locale: Locale): String {
+        val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
+        if (authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
 
         model.addAttribute("user", authUser)
         messageSource.getMessage("UnsubscribtionWarning.user", emptyArray(), locale).let {
@@ -196,20 +205,24 @@ class UserAccountController(
     }
 
     @GetMapping("/userAccount/processUnsubscription")
-    fun processUnsubscription(authentication: Authentication, redirectAttributes: RedirectAttributes, locale: Locale):String {
+    fun processUnsubscription(
+        authentication: Authentication,
+        redirectAttributes: RedirectAttributes,
+        locale: Locale
+    ): String {
         messageSource.getMessage("useraccount.unsubscribe.success", emptyArray(), locale).let {
             redirectAttributes.addFlashAttribute("message", it)
         }
-        val authUser: User = authentication.principal as User
-        if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
+        val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
+        if (authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
 
         userService.disableUser(authUser)
         return "redirect:/logout"
     }
 
     @GetMapping("/terms")
-    fun terms(model: Model, locale: Locale):String {
-        model.addAttribute("termsContent",termsService.getTermsContentByLanguage(locale.language))
+    fun terms(model: Model, locale: Locale): String {
+        model.addAttribute("termsContent", termsService.getTermsContentByLanguage(locale.language))
         return "terms/terms"
     }
 
