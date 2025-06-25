@@ -1,5 +1,5 @@
-import {expect, fn, userEvent, waitFor} from '@storybook/test';
-import type {Meta, StoryObj} from '@storybook/vue3';
+import {expect, fn, userEvent, waitFor} from 'storybook/test';
+import type {Meta, StoryObj} from '@storybook/vue3-vite';
 
 import UtilityGrade from '@/components/moderation/UtilityGrade.vue';
 
@@ -13,7 +13,7 @@ const meta: any = {
     // Has to have the name of the event with `on` in front and in camelCase
     onSubmitUtilityGrade: fn(),
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', 'molecules'],
   parameters: {
     docs: {
       description: {

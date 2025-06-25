@@ -28,6 +28,7 @@ import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.LearnerAssignment
+import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
@@ -42,13 +43,12 @@ import org.elaastic.player.steps.StepsModel
 import org.elaastic.player.steps.StepsModelFactory
 import org.elaastic.player.websocket.AutoReloadSessionHandler
 import org.elaastic.questions.assignment.sequence.peergrading.draxo.DraxoPeerGradingService
-import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceConfig
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.LearnerPhaseService
-import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.user.AnonymousUserService
 import org.elaastic.user.PrincipalUserResolver
 import org.elaastic.user.User
@@ -106,8 +106,10 @@ class PlayerController(
 
         // TODO N+1 SELECT (Assignment => Course)
         val assignments: List<Assignment> = assignmentService.findAllAssignmentsForLearner(user)
-        val mapCourseAssignments: Map<Course, List<Assignment>> = assignmentService.getCoursesAssignmentsMap(assignments)
-        val assignmentsWithoutCourse: List<Assignment> = assignments.filter { assignment -> assignment.subject?.course == null }
+        val mapCourseAssignments: Map<Course, List<Assignment>> =
+            assignmentService.getCoursesAssignmentsMap(assignments)
+        val assignmentsWithoutCourse: List<Assignment> =
+            assignments.filter { assignment -> assignment.subject?.course == null }
 
         model["user"] = user
         model["mapCourseAssignments"] = mapCourseAssignments
@@ -214,7 +216,6 @@ class PlayerController(
         @PathVariable assignmentId: Long,
         @PathVariable sequenceId: Long?,
     ): String {
-
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val assignment: Assignment = assignmentService.get(assignmentId, true)
         model["user"] = user
@@ -333,18 +334,12 @@ class PlayerController(
         return "player/assignment/sequence/play-sequence-learner"
     }
 
-
     @ResponseBody
-    @GetMapping("/sequence/{sequenceId}/start")
-    fun startSequence(
+    @PostMapping("/sequence/{sequenceId}/start.json")
+    fun jsonStartSequence(
         authentication: Authentication,
-        model: Model,
         @PathVariable sequenceId: Long,
-        @RequestParam executionContext: ExecutionContext,
-        @RequestParam studentsProvideExplanation: Boolean?,
-        @RequestParam responseToEvaluateCount: Int?,
-        @RequestParam chatGptEvaluation: Boolean?,
-        @RequestParam evaluationPhaseConfig: EvaluationPhaseConfig?,
+        @RequestBody request: SequenceConfig
     ) {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
@@ -353,11 +348,12 @@ class PlayerController(
                 sequenceService.start(
                     user,
                     it,
-                    executionContext,
-                    studentsProvideExplanation ?: false,
-                    responseToEvaluateCount ?: 0,
-                    evaluationPhaseConfig,
-                    chatGptEvaluation ?: false && studentsProvideExplanation ?: false
+                    request.executionContext,
+                    request.studentsProvideExplanation ?: false,
+                    request.responseToEvaluateCount ?: 0,
+                    request.evaluationPhaseConfig,
+                    ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
+                            (request.evaluationByIA ?: false && request.studentsProvideExplanation ?: false)
                 )
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)
@@ -631,19 +627,16 @@ class PlayerController(
     @GetMapping("sequence/{responseId}/chat-gpt-evaluation")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))")
     fun viewChatGptEvaluation(
-        authentication: Authentication,
         model: Model,
         @PathVariable responseId: Long
     ): String {
+
         val response = responseService.findById(responseId)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
-        model.addAttribute(
-            "chatGptEvaluationModel",
-            ChatGptEvaluationModelFactory.build(
-                chatGptEvaluation,
-                response.interaction.sequence,
-                responseId = response.id
-            )
+        model["chatGptEvaluationModel"] = ChatGptEvaluationModelFactory.build(
+            chatGptEvaluation,
+            response.interaction.sequence,
+            responseId = response.id
         )
         return "player/assignment/sequence/components/chat-gpt-evaluation/_chat-gpt-evaluation-viewer"
     }

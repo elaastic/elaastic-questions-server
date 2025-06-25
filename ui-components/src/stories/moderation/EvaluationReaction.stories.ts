@@ -1,5 +1,5 @@
-import {expect, fn, waitFor} from '@storybook/test'
-import type { Meta, StoryObj } from '@storybook/vue3'
+import {expect, fn, waitFor} from 'storybook/test'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import EvaluationReaction from '@/components/moderation/EvaluationReaction.vue'
 
@@ -11,7 +11,7 @@ const meta: any = {
     onSubmitReport: fn(),
     onSubmitUtilityGrade: fn(),
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', "organisms"],
   parameters: {
     docs: {
       description: {

@@ -1,8 +1,8 @@
-import type {Meta, StoryObj} from '@storybook/vue3';
+import type {Meta, StoryObj} from '@storybook/vue3-vite';
 import type {Selection} from "@/components/util/SelectorResponsive.vue";
 
 import SelectorResponsive from "@/components/util/SelectorResponsive.vue";
-import {expect, fn, userEvent, waitFor, within} from "@storybook/test";
+import {expect, fn, userEvent, waitFor, within} from "storybook/test";
 
 // Define the interface for args
 interface Args {
@@ -17,7 +17,7 @@ const meta: any = {
   args: {
     onChangeSelection: fn(),
   },
-  tags: ['autodocs'],
+  tags: ['autodocs', 'molecules'],
   parameters: {
     docs: {
       description: {

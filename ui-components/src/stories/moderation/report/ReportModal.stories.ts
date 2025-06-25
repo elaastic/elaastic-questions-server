@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import ReportModal from '@/components/moderation/report/ReportModal.vue'
-import { fn } from '@storybook/test'
+import { fn } from 'storybook/test'
 
 const lorem =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tincidunt elementum dapibus. Mauris sed auctor sem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut egestas sapien nec feugiat consectetur. Proin hendrerit sem finibus, iaculis lectus non, consequat odio.'
@@ -9,7 +9,7 @@ const lorem =
 const meta: any = {
   title: 'Moderation/ReportModal',
   component: ReportModal,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'molecules'],
   args: {
     onSubmitReport: fn(),
   },

@@ -5,10 +5,11 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-onboarding',
     '@storybook/addon-links',
-    '@storybook/addon-essentials',
     '@chromatic-com/storybook',
-    '@storybook/addon-interactions',
-    '@storybook/addon-a11y'
+    '@storybook/addon-a11y',
+    '@storybook/addon-docs',
+    'storybook-addon-test-codegen',
+    'storybook-addon-tag-badges'
   ],
   framework: {
     name: '@storybook/vue3-vite',

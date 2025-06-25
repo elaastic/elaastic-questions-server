@@ -18,352 +18,67 @@
 <!--/* Modal to configure a sequence */-->
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns="http://www.w3.org/1999/html"
-     xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz"
      th:fragment="configSequence(sequenceId, statementId, questionType, hasExpectedExplanation)"
-     class="ui small modal"
+     class="ui modal"
      th:id="|sequenceSpec_${sequenceId}|">
 
-    <!--/* Header of the modal */-->
-    <div class="header"
-         style="border-bottom: 1px solid rgba(14, 110, 184, .15);"
-         th:text="#{sequence.interaction.configure.title}"
-    >
-        Configure the sequence
-    </div>
-
-    <!--/* Content of the modal */-->
-    <div class="content">
-
-        <form class="ui form"
-              th:id="|sequenceSpec_${sequenceId}_form|"
-              th:action="@{/player/sequence/{sequenceId}/start(sequenceId=${sequenceId})}"
-        >
-            <!--/* Hidden input to send the sequence id */-->
-            <input type="hidden" name="id" th:value="${sequenceId}">
-
-            <!--/* Execution context */-->
-            <div class="ob-start-sequence-6">
-
-                <!--/* Execution context Input */-->
-                <div class="inline fields">
-                    <label th:text="|#{sequence.interaction.executionContext} :|">
-                        Execution context :
-                    </label>
-
-                    <!--/* Face to face context */-->
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio"
-                                   name="executionContext"
-                                   th:id="|executionContext_${sequenceId}_${questionType}|"
-                                   value="FaceToFace" checked="checked"/>
-                            <label th:for="|executionContext_${sequenceId}_${questionType}|"
-                                   th:text="#{sequence.interaction.executionContext.faceToFace}">
-                                sequence.interaction.executionContext.faceToFace=Face to face
-                            </label>
-                        </div>
-                    </div>
-
-                    <!--/* Distance context */-->
-                    <div class="field">
-                        <div class="ui radio checkbox fieldExecutionContext">
-                            <input type="radio"
-                                   name="executionContext"
-                                   th:id="|executionContext_${sequenceId}_${questionType}|"
-                                   value="Distance"/>
-                            <label th:for="|executionContext_${sequenceId}_${questionType}|"
-                                   th:text="#{sequence.interaction.executionContext.distance}">
-                                Distance
-                            </label>
-                        </div>
-                    </div>
-
-                    <!--/* Blended context */-->
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio"
-                                   name="executionContext"
-                                   th:id="|executionContext_${sequenceId}_${questionType}|"
-                                   value="Blended">
-                            <label th:for="|executionContext_${sequenceId}_${questionType}|"
-                                   th:utext="#{sequence.interaction.executionContext.blended}">
-                                Blended
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!--/* Notice for the Face to Face execution context */-->
-                <div class="ui info message"
-                     id="context-faceToFace-notice"
-                     th:utext="#{sequence.interaction.executionContext.faceToFace.notice}">
-                    The "<strong>Face to face</strong>" context corresponds to a pedagogical situation taking place in
-                    class
-                    or in
-                    amphitheater.<br/>\
-                    The teacher controls the start of the sequence and then the transition to the next phases.<br/>\
-                    Learners should complete each phase in the dedicated time and wait until the next phase opens.
-                </div>
-
-                <!--/* Notice for the Distance execution context */-->
-                <div class="ui info message"
-                     id="context-distance-notice"
-                     style="display: none"
-                     th:utext="#{sequence.interaction.executionContext.distance.notice}">
-                    The "<strong>Distance</strong>" context corresponds to a pedagogical situation for which learners
-                    are in
-                    a
-                    situation of autonomy.<br/>\
-                    The teacher controls only the opening and closing of the sequence.<br/>\
-                    Each learner has the opportunity to do one phase after the other at his own pace, and then
-                    immediately
-                    discover the results.
-                </div>
-
-                <!--/* Notice for the Blended execution context */-->
-                <div class="ui info message"
-                     id="context-blended-notice"
-                     style="display: none"
-                     th:utext="#{sequence.interaction.executionContext.blended.notice}">
-                    The "<strong>Hybrid</strong>" context corresponds to a pedagogical situation taking place at a
-                    distance
-                    followed by a presentation of the results in face-to-face.<br/>\
-                    The teacher controls the opening of the sequence and the publication of the results.<br/>\
-                    Learners can follow the first two phases at their own pace, but will not discover the results until
-                    they
-                    are
-                    published.
-                </div>
-            </div>
-            <div class="ui divider"></div>
-
-
-            <div th:id="|configuration_${sequenceId}|" class="ob-start-sequence-7">
-
-                <!--/* Input for if students have to provide an explanation */-->
-                <div class="ui field">
-                    <div class="ui checkbox" th:id="|phaseFirstSubmission_${sequenceId}|">
-                        <input type="checkbox"
-                               class="hidden"
-                               name="studentsProvideExplanation"
-                               th:id="|studentsProvideExplanation_${sequenceId}_${questionType}|"
-                               value="true" checked/>
-                        <label th:text="#{sequence.interaction.studentsProvideAtextualExplanation}">
-                            Students provide a textual explanation
-                        </label>
-                    </div>
-                </div>
-
-                <div th:id="|phaseConfrontation_${sequenceId}|">
-
-                    <!--/* How many answer the students have to evaluate */-->
-                    <div class="ui inline fields">
-
-                        <!--/* Checkbox to enable the evaluation of the student's answers, always true and unchangeable */-->
-                        <div class="field">
-                            <div class="ui checkbox">
-                                <input type="checkbox" checked disabled value="true">
-
-                                <label th:text="#{sequence.interaction.studentsEvaluate}">
-                                    Students evaluate
-                                </label>
-                            </div>
-                        </div>
-
-                        <!--/* Select to set how many answers the students have to evaluate */-->
-                        <div class="field">
-                            <select th:id="|responseToEvaluateCount_${sequenceId}|"
-                                    name="responseToEvaluateCount"
-                                    class="compact"
-                            >
-                                <option th:each="i : ${#numbers.sequence(5, 1)}" th:text="${i}" th:value="${i}">
-                                </option>
-                            </select>
-                            <span th:text="#{sequence.interaction.answers}"></span>
-                        </div>
-                    </div>
-
-                    <!--/* Evaluation method */-->
-                    <div class=" grouped fields">
-                        <label th:for="|evaluationPhaseConfig_${sequenceId}|"
-                               th:text="#{player.sequence.interaction.evaluation.method.label}">
-                            Evaluation method:
-                        </label>
-                        <div class="field"
-                             th:each="method, it : ${T(org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig).values()}">
-                            <div class="ui radio checkbox">
-                                <input type="radio" name="evaluationPhaseConfig" th:value="${method}" th:checked="${it.index == 0}"/>
-                                <label th:text="#{${'player.sequence.interaction.evaluation.method.'+method.name()}}"></label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--/* Link to the evaluation method documentation */-->
-                    <span style="float: right" th:if="${@environment.getProperty('elaastic.draxo.help.url')}">
-                        <a th:href="${@environment.getProperty('elaastic.draxo.help.url')}" target="_blank">
-                            <i class="question circle outline ui icon"></i>
-                            <span th:text="#{draxo.help.title}">
-                                Link to the detailed explanation of the DRAXO grid
-                            </span>
-                        </a>
-                    </span>
-
-                    <!--/* ChatGPT evaluation */-->
-                    <div class="field" togglz:active="'CHATGPT_EVALUATION'">
-                        <label for="chat-gpt-checkbox"
-                               th:text="#{sequence.interaction.toggleChatGptEvaluations.section.label}">
-                            Automatic feedback:
-                        </label>
-
-                        <div id="chat-gpt-checkbox"
-                             class="ui checkbox"
-                             style="display: flex; align-items: center; width: fit-content"
-                        >
-                            <input type="checkbox" name="chatGptEvaluation" th:value="false"/>
-                            <label th:text="#{sequence.interaction.toggleChatGptEvaluations.label}"></label>
-
-                            <span style="margin-left: 2px;"
-                                  data-position="top center"
-                                  data-inverted=""
-                                  th:attr="data-tooltip=#{sequence.interaction.toggleChatGptEvaluations.tooltip}">
-                            <i class="question circle icon"></i>
-                        </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--/* Hidden divider to make some space */-->
-            <div class="ui hidden divider"></div>
-
-            <div>
-                <input type="hidden" name="reloadPage" th:value="${true}"/>
-            </div>
-        </form>
-    </div>
-
-    <!--/* Actions of the modal */-->
-    <div class="actions">
-
-        <!--/* Button to start the sequence */-->
-        <div class="ui approve primary button ob-start-sequence-8"
-             th:text="#{player.sequence.start}"
-        >
-            Start sequence
-        </div>
-
-        <!--/* Button to cancel the configuration */-->
-        <div class="ui cancel button"
-             th:text="#{common.cancel}"
-             th:onclick="|saveAction(${sequenceId}, 'close', 'configure_popup')|"
-        >
-            Cancel
-        </div>
-    </div>
+    <iframe
+            th:id="|sequenceConfiguration_${sequenceId}|"
+            class="transparent-iframe"
+            th:src="@{/ui/sequence/configuration}"
+            width="100%"
+    ></iframe>
 
     <script th:inline="javascript">
         $(function () {
             let modalId = 'sequenceSpec_' + [[${sequenceId}]]
 
-            $('#' + modalId).modal({
-                onApprove: function () {
-                    const form = $('#' + modalId + '_form');
-
-                    // A Form serialized is a string like 'key1=value1&key2=value2',
-                    // very handy when you send data with a GET request
-                    const data = form.serialize();
-
-                    $.get(form.attr('action'), data)
-                        .done(function () {
-                            window.location.reload();
-                        })
-                }
+            const $modalConfigSequence = $('#' + modalId);
+            $modalConfigSequence.modal({
+                centered: false,
+                closable: true
             })
 
-            $('.ui.checkbox').checkbox()
+            // As the content of the modal is loaded dynamically,
+            // the modal height is not known at the time of the modal opening,
+            // so semantic think the modal is small and display it at the center of the page.
+            // But when the content is loaded, the bottom of the modal is below the bottom of the page,
+            // so we force it to the top.
+            $modalConfigSequence.css({'margin-top': '2vh', 'top': 'auto'});
 
-            $('#chat-gpt-checkbox').checkbox({
-                onChange: function () {
-                    const isChecked = $(this).is(':checked');
-                    $(this).val(isChecked);
-                }
-            })
-
-            const faceToFaceNotice = $('#context-faceToFace-notice');
-            const distanceNotice = $('#context-distance-notice');
-            const blendedNotice = $('#context-blended-notice');
-
-            /**
-             * Manage the configuration change
-             *
-             * @param sequenceId The id of the sequence
-             * @param questionType The type of the question (OpenEnded, MultipleChoice or ExclusiveChoice)
-             * @param sourceEvent The event that triggered the change.
-             *                    It must be the studentsProvideExplanation checkbox
-             */
-            function manageConfigurationChange(sequenceId, questionType, sourceEvent) {
-                // PhaseConfrontation = Number of answers to evaluate, Evaluation method and ChatGPT evaluation
-                const phaseConfrontationPanel = $('#phaseConfrontation_' + sequenceId);
-                // PhaseFirstSubmission = The studentsProvideExplanation input parent div
-                const phaseFirstSubmission = $('#phaseFirstSubmission_' + sequenceId);
-
-                if (questionType === 'OpenEnded') {
-                    // If the question is an OpenEnded question, the student must provide an explanation.
-                    // So the checkbox is checked and hidden.
-                    sourceEvent.prop('checked', true);
-                    phaseFirstSubmission.hide();
-                }
-
-                const studentsHaveToProvideExplanation = sourceEvent.is(':checked');
-                sourceEvent.val(studentsHaveToProvideExplanation);
-                phaseConfrontationPanel.toggle(studentsHaveToProvideExplanation);
+            const iframe = document.getElementById('sequenceConfiguration_' + [[${sequenceId}]]);
+            iframe.onload = () => {
+                iframe.contentWindow.elaastic.initializeSequenceConfiguration(
+                        questionIsOpen = [[${questionType == T(org.elaastic.material.instructional.question.QuestionType).OpenEnded}]]
+                )
             }
 
-            function manageExecutionContext(sequenceId, questionType, sourceEvent) {
-                // The configuration panel = All the input except the execution context
-                const configurationPanel = $('#configuration_' + sequenceId);
-                // The studentsProvideExplanation input
-                const studentsProvideExplanation = $('#studentsProvideExplanation_' + sequenceId + '_' + questionType);
-                const contextExecution = sourceEvent.val();
+            window.addEventListener('message', (event) => {
+                if (event.data.command === 'sequence-configuration-cancelled') {
+                    $modalConfigSequence.modal('hide');
+                } else if (event.data.command === 'sequence-configuration-submitted') {
+                    $modalConfigSequence.modal('hide');
 
-                // Update the notice visibility depending on the context
-                blendedNotice.toggle(contextExecution === 'Blended');
-                distanceNotice.toggle(contextExecution === 'Distance');
-                faceToFaceNotice.toggle(contextExecution === 'FaceToFace');
-                // If the context doesn't exist, throw an error
-                if (contextExecution !== 'FaceToFace' && contextExecution !== 'Distance' && contextExecution !== 'Blended') {
-                    throw ('Unknown execution context');
+                    // TODO Step 2. Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation
+                    $.ajax({
+                        url: '/player/sequence/' + [[${sequenceId}]] + '/start.json',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        headers: {
+                            'X-CSRF-TOKEN': $("meta[name='_csrf']").attr("content") || $("input[name='_csrf']").val()
+                        },
+                        data: JSON.stringify(event.data.request),
+                    }).done(function () {
+                        window.location.reload();
+                    })
                 }
-
-                if (contextExecution === 'FaceToFace') {
-                    configurationPanel.show();
-                    studentsProvideExplanation.prop('readonly', false);
-                } else {
-                    studentsProvideExplanation.prop('checked', true);
-                    studentsProvideExplanation.prop('readonly', true);
-                }
-                manageConfigurationChange(sequenceId, questionType, studentsProvideExplanation);
-            }
-
-            $('input[name=studentsProvideExplanation]').on('change', function () {
-                // Get infos from the id of the input
-                const infos = this.id.split('_');
-                const sequenceId = infos[1];
-                const questionType = infos[2];
-                // Update the form as some input are now irrelevant, depending on the context
-                manageConfigurationChange(sequenceId, questionType, $(this));
             })
 
-            $('input[type=radio][name=\'executionContext\']').on('change', function () {
-                const infos = this.id.split('_');
-                const sequenceId = infos[1];
-                const questionType = infos[2];
-                manageExecutionContext(sequenceId, questionType, $(this));
-            })
-
-            manageConfigurationChange('[[${sequenceId}]]', [[${questionType}]], $('#studentsProvideExplanation_[[${sequenceId}]]_' + [[${questionType}]]));
+            const optionIframeResiser = {
+                license: 'GPLv3',
+                waitForLoad: true
+            };
+            iframeResize(optionIframeResiser, '#sequenceConfiguration_' + [[${sequenceId}]]);
         })
-
-
     </script>
 </div>

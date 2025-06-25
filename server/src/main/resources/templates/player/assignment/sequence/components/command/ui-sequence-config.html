@@ -1,0 +1,67 @@
+<!--
+  ~ Elaastic - formative assessment system
+  ~ Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html lang="en" th:replace="layout/vuejs-app :: vueJsAppLayout(title=~{::title}, content=~{::body}, style=~{})"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Sequence Configuration</title>
+    </head>
+
+    <body>
+    <div id="sequence-configuration-app" class="ui-app">
+        <!-- Loader -->
+        <div class="loading ui segment">
+            <br>
+            <br>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        const AIExplanationActived = /*[[${IAExplanationIsEnabled}]]*/ false;
+        window.elaastic = {
+            /**
+             * Initialize the sequence configuration Vue app.
+             * @param questionIsOpen {boolean} - Indicates if the question is open or not.
+             */
+            initializeSequenceConfiguration: (questionIsOpen) => {
+                const app = Vue.createApp(
+                        ElaasticVueComponents.SequenceConfiguration,
+                        {
+                            maxResponseToEvaluate: 5,
+                            aiIsActivated: AIExplanationActived,
+                            questionIsOpen,
+                            onCancelSequenceConfiguration: () => {
+                                window.parent.postMessage({command: 'sequence-configuration-cancelled'}, '*')
+                            },
+                            onSubmitSequenceConfiguration: (request) => {
+                                window.parent.postMessage({
+                                    command: 'sequence-configuration-submitted',
+                                    request
+                                }, '*')
+                            }
+                        }
+                )
+                ElaasticVueComponents.registerPlugins(app)
+                app.mount(`#sequence-configuration-app`)
+            }
+        }
+    </script>
+    </body>
+</html>

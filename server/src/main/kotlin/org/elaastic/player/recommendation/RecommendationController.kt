@@ -3,7 +3,7 @@ package org.elaastic.player.recommendation
 import org.elaastic.common.util.requireAccessThrowDenied
 import org.elaastic.player.sequence.SequenceModelFactory
 import org.elaastic.sequence.SequenceService
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -23,7 +23,7 @@ class RecommendationController(
         model: Model,
         @PathVariable sequenceId: Long
     ): String {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId)
 
         requireAccessThrowDenied(sequence.owner == user) {

@@ -7,7 +7,7 @@ import org.elaastic.sequence.phase.LearnerPhaseService
 import org.elaastic.sequence.phase.LearnerPhaseType
 import org.elaastic.sequence.phase.descriptor.SequenceDescriptor
 import org.elaastic.sequence.phase.result.LearnerResultPhaseViewModel
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -29,7 +29,7 @@ class ExplanationController(
         model: Model,
         @PathVariable sequenceId: Long,
     ): String {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId)
         val isTeacher = sequence.owner == user
 

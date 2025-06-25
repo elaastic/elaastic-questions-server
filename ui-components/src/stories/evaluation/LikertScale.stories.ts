@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import LikertScale from '@/components/evaluation/LikertScale.vue'
 import { ref } from 'vue'
@@ -7,7 +7,7 @@ import type { LikertValue } from '@/components/evaluation/Likert'
 const meta = {
   title: 'Evaluation/Likert',
   component: LikertScale,
-  tags: ['autodocs'],
+  tags: ['autodocs', 'molecules'],
   argTypes: {
     color: { control: 'text' },
   },

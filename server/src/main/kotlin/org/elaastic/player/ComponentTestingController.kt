@@ -2789,7 +2789,7 @@ class ComponentTestingController(
                 EvaluationModel(
                     listOf(
                         DraxoEvaluationModel(
-                            "${ i + 1 }",
+                            "${i + 1}",
                             (i + 1),
                             DraxoGrading.computeGrade(draxoEvaluation),
                             draxoEvaluation,
@@ -2798,7 +2798,7 @@ class ComponentTestingController(
                             draxoPeerGradingId = (i + 100000L),
                         ),
                         DraxoEvaluationModel(
-                            "${ i + 1 }",
+                            "${i + 1}",
                             (i + 1),
                             DraxoGrading.computeGrade(draxoEvaluation),
                             draxoEvaluation,
@@ -3358,7 +3358,7 @@ class ComponentTestingController(
             }*/
         }
 
-        model["user"] = authentication.principal as User
+        model["user"] = (authentication.principal as PrincipalUserResolver).elaasticUser
         model["newUsersString"] = existingUsers.joinToString("\n")
         model["nbNewUser"] = existingUsers.size
 

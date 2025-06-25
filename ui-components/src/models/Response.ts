@@ -5,12 +5,13 @@
  */
 
 export type QuestionType = 'OpenEnded' | 'ExclusiveChoice' | 'MultipleChoice'
+export type ConfidenceDegree = 'NotConfidentAtAll' | 'NotReallyConfident' | 'Confident' | 'TotallyConfident'
 
 export interface Response {
   id: number
   questionType: QuestionType
   explanation: string,
-  confidence: string
+  confidence: ConfidenceDegree
 }
 
 export interface ExclusiveChoiceResponse extends Response {
