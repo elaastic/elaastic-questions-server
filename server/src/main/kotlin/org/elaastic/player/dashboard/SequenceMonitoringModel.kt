@@ -134,21 +134,21 @@ class SequenceMonitoringModel(
  * Represents a learner's state in each phase, a line in the table. The model contains the following information:
  * - The id of the learner
  * - The name of the learner
- * - The [LearnerStateOnPhase] of the learner on phase 1
- * - The [LearnerStateOnPhase] of the learner on phase 2
+ * - The [LearnerPhaseState] of the learner on phase 1
+ * - The [LearnerPhaseState] of the learner on phase 2
  *
  * @property userId the user id of the learner
  * @property learnerName the learner's name
- * @property learnerStateOnPhase1 the learner's state on phase 1
- * @property learnerStateOnPhase2 the learner's state on phase 2
- * @property learnerStateOnPhase3 the learner's state on phase 3
+ * @property learnerPhaseState1 the learner's state on phase 1
+ * @property learnerPhaseState2 the learner's state on phase 2
+ * @property learnerPhaseState3 the learner's state on phase 3
  */
 class LearnerMonitoringModel(
     val userId: Long,
     val learnerName: String,
-    val learnerStateOnPhase1: LearnerStateOnPhase,
-    val learnerStateOnPhase2: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-    private val learnerStateOnPhase3: LearnerStateOnPhase = LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+    val learnerPhaseState1: LearnerPhaseState,
+    val learnerPhaseState2: LearnerPhaseState = LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+    private val learnerPhaseState3: LearnerPhaseState = LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
     val sequenceMonitoringModel: SequenceMonitoringModel
 ) {
 
@@ -159,13 +159,13 @@ class LearnerMonitoringModel(
      * @return the StateCell of the phase
      * @see StateCell
      * @see LearnerPhaseType
-     * @see LearnerStateOnPhase
+     * @see LearnerPhaseState
      */
     fun getStateCell(phase: LearnerPhaseType): StateCell {
         val phaseState: DashboardPhaseState = this.getPhaseStateByType(phase)
 
         return when (this.getLearnerPhaseStateByType(phase)) {
-            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED -> {
+            LearnerPhaseState.ACTIVITY_NOT_TERMINATED -> {
                 when (phaseState) {
                     DashboardPhaseState.IN_PROGRESS -> {
                         StateCell.IN_PROGRESS
@@ -181,8 +181,8 @@ class LearnerMonitoringModel(
                 }
             }
 
-            LearnerStateOnPhase.ACTIVITY_TERMINATED -> StateCell.TERMINATED
-            LearnerStateOnPhase.WAITING -> {
+            LearnerPhaseState.ACTIVITY_TERMINATED -> StateCell.TERMINATED
+            LearnerPhaseState.WAITING -> {
                 if (phaseState == DashboardPhaseState.IN_PROGRESS) {
                     StateCell.IN_PROGRESS
                 } else {
@@ -190,7 +190,7 @@ class LearnerMonitoringModel(
                 }
             }
 
-            LearnerStateOnPhase.NONE -> StateCell.NONE
+            LearnerPhaseState.NONE -> StateCell.NONE
         }
     }
 
@@ -224,11 +224,11 @@ class LearnerMonitoringModel(
      * @param phase The type of the phase
      * @see LearnerPhaseType
      */
-    private fun getLearnerPhaseStateByType(phase: LearnerPhaseType): LearnerStateOnPhase {
+    private fun getLearnerPhaseStateByType(phase: LearnerPhaseType): LearnerPhaseState {
         return when (phase) {
-            LearnerPhaseType.RESPONSE -> this.learnerStateOnPhase1
-            LearnerPhaseType.EVALUATION -> this.learnerStateOnPhase2
-            LearnerPhaseType.RESULT -> this.learnerStateOnPhase3
+            LearnerPhaseType.RESPONSE -> this.learnerPhaseState1
+            LearnerPhaseType.EVALUATION -> this.learnerPhaseState2
+            LearnerPhaseType.RESULT -> this.learnerPhaseState3
         }
     }
 
@@ -260,6 +260,6 @@ class LearnerMonitoringModel(
     }
 
     fun hasAnswered(): Boolean {
-        return this.learnerStateOnPhase1 == LearnerStateOnPhase.ACTIVITY_TERMINATED
+        return this.learnerPhaseState1 == LearnerPhaseState.ACTIVITY_TERMINATED
     }
 }

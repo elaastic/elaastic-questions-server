@@ -221,18 +221,15 @@ class FunctionalTestingService(
         sequence: Sequence,
         executionContext: ExecutionContext = ExecutionContext.FaceToFace,
         studentsProvideExplanation: Boolean = true,
-        nbResponseToEvaluate: Int = 3
+        evaluationPhaseConfig: EvaluationPhaseConfig =
+            EvaluationPhaseConfig(3, false, EvaluationMethod.ALL_AT_ONCE),
     ) =
         sequenceService.start(
             sequence.owner,
             sequence,
             executionContext,
             studentsProvideExplanation,
-            EvaluationPhaseConfig(
-                nbResponseToEvaluate,
-                sequence.chatGptEvaluationEnabled,
-                sequence.evaluationMethod
-            )
+            evaluationPhaseConfig
         )
 
     fun submitResponse(
@@ -455,7 +452,11 @@ class FunctionalTestingService(
                     sequence,
                     command.executionContext,
                     command.studentsProvideExplanation,
-                    command.nbResponseToEvaluate
+                    EvaluationPhaseConfig(
+                        command.nbResponseToEvaluate,
+                        sequence.chatGptEvaluationEnabled,
+                        sequence.evaluationMethod
+                    )
                 )
 
                 is SubmitResponse -> submitResponse(
@@ -683,7 +684,10 @@ class FunctionalTestingService(
                     User(
                         firstName = "FirstName${LocalDate.now()}-$i",
                         lastName = "LastName${LocalDate.now()}-$i",
-                        username = userService.generateUsername("FirstName${LocalDate.now()}-$i", "LastName${LocalDate.now()}-$i"),
+                        username = userService.generateUsername(
+                            "FirstName${LocalDate.now()}-$i",
+                            "LastName${LocalDate.now()}-$i"
+                        ),
                         plainTextPassword = "1234",
                         email = "email@elaastic.org"
                     ).also {

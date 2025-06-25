@@ -18,7 +18,7 @@
 
 package org.elaastic.player.dashboard
 
-import org.elaastic.player.dashboard.LearnerStateOnPhase.*
+import org.elaastic.player.dashboard.LearnerPhaseState.*
 
 
 /**
@@ -29,7 +29,7 @@ import org.elaastic.player.dashboard.LearnerStateOnPhase.*
  * @property WAITING the learner is waiting for the next phase
  * @property NONE the selected phase isn't enabled, so the learner can't access it
  */
-enum class LearnerStateOnPhase {
+enum class LearnerPhaseState {
     /** The learner has not terminated the activity. */
     ACTIVITY_NOT_TERMINATED,
 

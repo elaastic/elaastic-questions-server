@@ -184,7 +184,7 @@ class SequenceService(
         sequence: Sequence,
         studentsProvideExplanation: Boolean,
         executionContext: ExecutionContext,
-        evalutionPhaseConfig: EvaluationPhaseConfig?,
+        evaluationPhaseConfig: EvaluationPhaseConfig?,
     ): Sequence {
         var rank = 1
         sequence.interactions[InteractionType.ResponseSubmission] =
@@ -198,12 +198,12 @@ class SequenceService(
                 State.show
             )
 
-        if (evalutionPhaseConfig != null) {
+        if (evaluationPhaseConfig != null) {
             sequence.interactions[InteractionType.Evaluation] =
                 interactionService.create(
                     sequence,
                     EvaluationSpecification(
-                        evalutionPhaseConfig.responseToEvaluateCount
+                        evaluationPhaseConfig.responseToEvaluateCount,
                     ),
                     rank++,
                     if (executionContext == ExecutionContext.FaceToFace)
