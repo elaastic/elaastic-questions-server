@@ -65,7 +65,7 @@ class ElaasticOidcUserService(
             val user = userLinkService.loadUserLinkByUsername(
                 userLinkService.oidcProvider,
                 oidcUser.name
-            )?.alsoThrowIfFalse(RoleException::class.java, { it.user hasRole role }) {
+            )?.alsoThrowIf({ !(it.user hasRole role) }, RoleException::class.java) {
                 createMessageRoleMismap(it, role, oidcUser)
             }?.user?.let {
                 userLinkService.updateUserWithOidcUser(it, oidcUser)

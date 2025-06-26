@@ -232,7 +232,6 @@ class UserAccountController(
         locale: Locale
     ): String {
         val authUser = (authentication.principal as PrincipalUserResolver).elaasticUser
-        val authUser: User = authentication.principal as User
 
         check(!authUser.isAnonymous()) { NOT_ALLOWED_TO_ANONYMOUS_USER }
 
