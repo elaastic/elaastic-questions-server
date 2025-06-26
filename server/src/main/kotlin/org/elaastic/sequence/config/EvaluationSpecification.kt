@@ -16,4 +16,12 @@ data class EvaluationSpecification(
     override fun getType(): InteractionType {
         return InteractionType.Evaluation
     }
+
+    /**
+     * Set the type of the interaction to Evaluation.
+     * This method is used by [InteractionSpecificationConverter].
+     */
+    fun setType(value: InteractionType) {
+        assert(value == InteractionType.Evaluation)
+    }
 }

@@ -222,7 +222,11 @@ class FunctionalTestingService(
         executionContext: ExecutionContext = ExecutionContext.FaceToFace,
         studentsProvideExplanation: Boolean = true,
         evaluationPhaseConfig: EvaluationPhaseConfig =
-            EvaluationPhaseConfig(3, false, EvaluationMethod.ALL_AT_ONCE),
+            EvaluationPhaseConfig(
+                3,
+                sequence.chatGptEvaluationEnabled,
+                sequence.evaluationMethod
+            ),
     ) =
         sequenceService.start(
             sequence.owner,
