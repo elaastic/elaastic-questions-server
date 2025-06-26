@@ -1,7 +1,7 @@
 import ConfrontingViewpoint from '@/components/evaluation/ConfrontingViewpoint.vue'
 import UtilityGrade from '@/components/moderation/UtilityGrade.vue';
 import EvaluationReaction from '@/components/moderation/EvaluationReaction.vue';
-import SequenceConfiguration from "@/components/sequence/SequenceConfiguration.vue";
+import SequenceConfiguration from "@/components/sequence/configuration/SequenceConfiguration.vue";
 import {registerPlugins} from '@/plugins'
 
 export {
