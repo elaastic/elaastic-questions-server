@@ -13,33 +13,37 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    course: "Geography",
-    subject: "Capitals",
+    id: 1256,
+    course: {title: "Geography", id: 23},
+    subject: {title: "Capitals", id: 530},
     audience: "E.Le",
     scholarYear: "2022 - 2023",
   }
 }
 export const WithoutDirectory: Story = {
   args: {
-    subject: "Capitals",
+    id: 1256,
+    subject: {title: "Capitals", id: 530},
     audience: "E.Le",
     scholarYear: "2022 - 2023",
   }
 }
 export const WithQuestionCurrent: Story = {
   args: {
-    subject: "Capitals",
+    id: 1256,
+    subject: {title: "Capitals", id: 530},
     audience: "E.Le",
     scholarYear: "2022 - 2023",
-    questionCurrent: "Capitale de la France ?"
+    questionCurrent: {title: "Capitale de la France ?", id: 2688}
   }
 }
 export const WithDirectoryAndQuestionCurrent: Story = {
   args: {
-    course: "Geography",
-    subject: "Capitals",
+    id: 1256,
+    course: {title: "Geography", id: 23},
+    subject: {title: "Capitals", id: 530},
     audience: "E.Le",
     scholarYear: "2022 - 2023",
-    questionCurrent: "Capitale de la France ?"
+    questionCurrent: {title: "Capitale de la France ?", id: 2688}
   }
 }

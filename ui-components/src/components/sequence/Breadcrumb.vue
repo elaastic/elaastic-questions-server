@@ -2,19 +2,23 @@
 
 import Link from "@/components/util/Link.vue";
 import {useI18n} from "vue-i18n";
+import type {PropType} from "vue";
 
 const props = defineProps({
+  id: {
+    type: Number
+  },
   /**
    * The course to which the assignment belongs.
    */
   course: {
-    type: String
+    type: Object as PropType<{title: string, id: number}>
   },
   /**
    * The subject to which the assignment belongs.
    */
   subject: {
-    type: String,
+    type: Object as PropType<{title: string, id: number}>,
     required: true
   },
   /**
@@ -35,7 +39,7 @@ const props = defineProps({
    * The question selected by the user. If none is provided, nothing is displayed.
    */
   questionCurrent: {
-    type: String
+    type: Object as PropType<{title: string, id: number}>
   }
 })
 
@@ -47,14 +51,14 @@ const { t } = useI18n()
     <v-card-text>
       <!-- Links currently don't work. They are just examples. -->
       <span v-if="course">
-        <Link class="mr-2" :href="'https://elaastic.irit.fr/course/' + course" :text="'📁' + course" />
+        <Link class="mr-2" :href="'https://elaastic.irit.fr/course/' + course.id" :text="'📁' + course.title" />
         <span>/</span>
       </span>
 
       <Link
               class="mr-2 ml-2 font-weight-bold"
-              :href="'https://elaastic.irit.fr/subject/' + subject"
-              :text="'📄' + subject"
+              :href="'https://elaastic.irit.fr/subject/' + subject.id"
+              :text="'📄' + subject.title"
       />
       <span>/</span>
 
@@ -63,7 +67,7 @@ const { t } = useI18n()
           <span v-bind="tooltipProps">
             <Link
                     class="ml-2"
-                    :href="'https://elaastic.irit.fr/subject/' + audience + '?activeTab=assignments'"
+                    :href="'https://elaastic.irit.fr/subject/' + subject.id + '?activeTab=assignments'"
                     :text="'📡' + audience + ' (' + scholarYear + ')'"
             />
           </span>
@@ -75,7 +79,7 @@ const { t } = useI18n()
       <v-tooltip location="top">
         <template #activator="{ props: tooltipProps }">
           <span v-bind="tooltipProps">
-            <Link :href="'https://elaastic.irit.fr/assignment/edit/'" :text="'📝'" />
+            <Link :href="'https://elaastic.irit.fr/assignment/' + id + '/edit'" :text="'📝'" />
           </span>
         </template>
         <span>{{ t('edit-properties') }}</span>
@@ -86,8 +90,8 @@ const { t } = useI18n()
         <span>/</span>
         <Link
                 class="ml-2"
-                :href="'https://elaastic.irit.fr/player/assignment/play/sequence/' + questionCurrent"
-                :text="questionCurrent"
+                :href="'https://elaastic.irit.fr/player/assignment/' + id +'/play/sequence/' + questionCurrent.id"
+                :text="questionCurrent.title"
         />
       </span>
     </v-card-text>
