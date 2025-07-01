@@ -47,3 +47,12 @@ export const WithDirectoryAndQuestionCurrent: Story = {
     questionCurrent: {title: "Capitale de la France ?", id: 2688}
   }
 }
+export const AudienceNotProvided: Story = {
+  args: {
+    id: 1256,
+    course: {title: "Geography", id: 23},
+    subject: {title: "Capitals", id: 530},
+    scholarYear: "2022 - 2023",
+    questionCurrent: {title: "Capitale de la France ?", id: 2688}
+  }
+}

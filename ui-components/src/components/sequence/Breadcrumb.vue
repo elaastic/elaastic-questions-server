@@ -26,7 +26,6 @@ const props = defineProps({
    */
   audience: {
     type: String,
-    required: true
   },
   /**
    * The scholar year of the assignment.
@@ -42,7 +41,7 @@ const props = defineProps({
     type: Object as PropType<{title: string, id: number}>
   }
 })
-
+const audienceLocal = props.audience ? props.audience : 'na';
 const { t } = useI18n()
 </script>
 
@@ -68,7 +67,7 @@ const { t } = useI18n()
             <Link
                     class="ml-2"
                     :href="'https://elaastic.irit.fr/subject/' + subject.id + '?activeTab=assignments'"
-                    :text="'📡' + audience + ' (' + scholarYear + ')'"
+                    :text="'📡' + audienceLocal + ' (' + scholarYear + ')'"
             />
           </span>
         </template>
