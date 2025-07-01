@@ -37,7 +37,7 @@ services:
     labels:
       - "traefik.enable=true"
       # Configuration for web interface
-      - "traefik.http.routers.mailhog.rule=Host(`mailhog.local`)"
+      - "traefik.http.routers.mailhog.rule=Host(`mailhog.localhost`)"
       - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
       - "traefik.http.routers.mailhog.entrypoints=web"
       # Configuration for SMTP server
