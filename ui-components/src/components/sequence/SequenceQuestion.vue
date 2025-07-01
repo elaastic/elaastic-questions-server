@@ -36,7 +36,7 @@ const color = computed(() => {
 <template>
   <v-card class="border-sm rounded-0" :max-height="125" :elevation="0" :style="'background-color: ' + color">
     <v-card-title class="font-weight-bold">
-      <choice-chip :value="props.question?.questionNumber" color="#ECEFF1" class="elevation-0" />
+      <v-chip label>{{ question?.questionNumber }}</v-chip>
       {{ props.question.title }}
 
       <span v-show="!isSelected">
