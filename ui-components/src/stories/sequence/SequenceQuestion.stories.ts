@@ -12,132 +12,144 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: (args) => ({
-    components: {SequenceQuestion},
-    setup(){
-      return{
-        args
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
       }
     },
     template: `
       <SequenceQuestion v-bind="args">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et
+          venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus
+          vitae risus neque. Duis ultrices dui ut.</p>
       </SequenceQuestion>
-    `
+    `,
   }),
   args: {
-    question: {title: "Question 1", questionNumber: 1},
-    sequenceState: 'NOT_STARTED'
-  }
+    question: { title: 'Question 1', questionNumber: 1 },
+    sequenceState: 'NOT_STARTED',
+  },
 }
 export const Closed: Story = {
-  render: (args) => ({
-    components: {SequenceQuestion},
-    setup(){
-      return{
-        args
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
       }
     },
     template: `
       <SequenceQuestion v-bind="args">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et
+          venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus
+          vitae risus neque. Duis ultrices dui ut.</p>
       </SequenceQuestion>
-    `
+    `,
   }),
   args: {
-    question: {title: "Question 1", questionNumber: 1},
-    sequenceState: 'CLOSED'
-  }
+    question: { title: 'Question 1', questionNumber: 1 },
+    sequenceState: 'CLOSED',
+  },
 }
 export const ResponsePhase: Story = {
-  render: (args) => ({
-    components: {SequenceQuestion},
-    setup(){
-      return{
-        args
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
       }
     },
     template: `
       <SequenceQuestion v-bind="args">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et
+          venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus
+          vitae risus neque. Duis ultrices dui ut.</p>
       </SequenceQuestion>
-    `
+    `,
   }),
   args: {
-    question: {title: "Question 1", questionNumber: 1},
-    sequenceState: 'RESPONSE_PHASE'
-  }
+    question: { title: 'Question 1', questionNumber: 1 },
+    sequenceState: 'RESPONSE_PHASE',
+  },
 }
 export const ConfrontingViewpoint: Story = {
-  render: (args) => ({
-    components: {SequenceQuestion},
-    setup(){
-      return{
-        args
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
       }
     },
     template: `
       <SequenceQuestion v-bind="args">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et
+          venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus
+          vitae risus neque. Duis ultrices dui ut.</p>
       </SequenceQuestion>
-    `
+    `,
   }),
   args: {
-    question: {title: "Question 1", questionNumber: 1},
-    sequenceState: 'CONFRONTING_VIEWPOINT'
-  }
+    question: { title: 'Question 1', questionNumber: 1 },
+    sequenceState: 'CONFRONTING_VIEWPOINT',
+  },
 }
 export const ResultsPhase: Story = {
-  render: (args) => ({
-    components: {SequenceQuestion},
-    setup(){
-      return{
-        args
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
       }
     },
     template: `
       <SequenceQuestion v-bind="args">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et
+          venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus
+          vitae risus neque. Duis ultrices dui ut.</p>
       </SequenceQuestion>
-    `
+    `,
   }),
   args: {
-    question: {title: "Question 1", questionNumber: 1},
-    sequenceState: 'RESULTS_PHASE'
-  }
+    question: { title: 'Question 1', questionNumber: 1 },
+    sequenceState: 'RESULTS_PHASE',
+  },
 }
 export const IsSelected: Story = {
-  render: (args) => ({
-    components: {SequenceQuestion},
-    setup(){
-      return{
-        args
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
       }
     },
     template: `
       <SequenceQuestion v-bind="args">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et
+          venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus
+          vitae risus neque. Duis ultrices dui ut.</p>
       </SequenceQuestion>
-    `
+    `,
   }),
   args: {
-    question: {title: "Question 1", questionNumber: 1},
+    question: { title: 'Question 1', questionNumber: 1 },
     isSelected: true,
-    sequenceState: 'CLOSED'
-  }
+    sequenceState: 'CLOSED',
+  },
 }
 export const ConcreteExample: Story = {
-  render: (args) => ({
-    components: {SequenceQuestion},
-    setup(){
-      return{
-        args
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
       }
     },
     template: `
       <SequenceQuestion v-bind="args">
         <p>Quelle est la capitale de la France ?</p>
-        <br/>
+        <br />
         <p>A)Lille</p>
         <p>B)Nantes</p>
         <p>C)Lyon</p>
@@ -147,11 +159,11 @@ export const ConcreteExample: Story = {
         <p>G)Strasbourg</p>
         <p>H)Marseille</p>
       </SequenceQuestion>
-    `
+    `,
   }),
   args: {
-    question: {title: "Capitale de la France ?", questionNumber: 1},
+    question: { title: 'Capitale de la France ?', questionNumber: 1 },
     isSelected: true,
-    sequenceState: 'CLOSED'
-  }
+    sequenceState: 'CLOSED',
+  },
 }
