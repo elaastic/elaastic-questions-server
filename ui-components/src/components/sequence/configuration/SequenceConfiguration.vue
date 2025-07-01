@@ -62,7 +62,7 @@ export interface SequenceConfigurationEvents {
    */
   (event: 'submitSequenceConfiguration', request: {
     executionContext: ExecutionContext,
-    reponsePhaseConfig?: ResponsePhaseConfig | undefined,
+    responsePhaseConfig?: ResponsePhaseConfig | undefined,
     confrontingViewsPhaseConfig: ConfrontingViewPhaseConfig | undefined,
     resultPhaseConfig?: ResultPhaseConfig | undefined
   }): void;
@@ -99,7 +99,7 @@ const resultPhaseConfig = ref(props.resultPhaseConfig ?? {evaluationByIa: false}
 const sequenceConfig = () => {
   return {
     executionContext: executionContext.value,
-    reponsePhaseConfig: responsePhaseConfig.value,
+    responsePhaseConfig: responsePhaseConfig.value,
     confrontingViewsPhaseConfig: confrontingViewConfig.value,
     resultPhaseConfig: resultPhaseConfig.value
   }
