@@ -116,6 +116,48 @@ export const ResultsPhase: Story = {
     sequenceState: 'RESULTS_PHASE',
   },
 }
+export const Blended: Story = {
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
+      }
+    },
+    template: `
+      <SequenceQuestion v-bind="args">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et
+          venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus
+          vitae risus neque. Duis ultrices dui ut.</p>
+      </SequenceQuestion>
+    `,
+  }),
+  args: {
+    question: { title: 'Question 1', questionNumber: 1 },
+    sequenceState: 'BLENDED',
+  },
+}
+export const Distant: Story = {
+  render: args => ({
+    components: { SequenceQuestion },
+    setup() {
+      return {
+        args,
+      }
+    },
+    template: `
+      <SequenceQuestion v-bind="args">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et
+          venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus
+          vitae risus neque. Duis ultrices dui ut.</p>
+      </SequenceQuestion>
+    `,
+  }),
+  args: {
+    question: { title: 'Question 1', questionNumber: 1 },
+    sequenceState: 'DISTANT',
+  },
+}
 export const IsSelected: Story = {
   render: args => ({
     components: { SequenceQuestion },
