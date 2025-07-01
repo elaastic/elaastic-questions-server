@@ -41,6 +41,8 @@ import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -139,6 +141,23 @@ class SequenceService(
         studentsProvideExplanation: Boolean,
         confrontingViewsPhaseConfig: EvaluationPhaseConfig? = null,
     ): Sequence {
+        return start(
+            user,
+            sequence,
+            SequenceConfig(
+                executionContext = executionContext,
+                responsePhaseConfig = ResponsePhaseConfig(studentsProvideExplanation),
+                confrontingViewsPhaseConfig = confrontingViewsPhaseConfig ?: EvaluationPhaseConfig(false),
+                resultPhaseConfig = ResultPhaseConfig()
+            )
+        )
+    }
+
+    fun start(
+        user: User,
+        sequence: Sequence,
+        sequenceConfig: SequenceConfig
+    ): Sequence {
 
         require(user == sequence.owner) {
             "Only the owner of a sequence is allowed to start it"
@@ -148,11 +167,14 @@ class SequenceService(
             "The sequence has already been started"
         }
 
+        val executionContext = sequenceConfig.executionContext
+        val studentGiveExplanation = sequenceConfig.responsePhaseConfig.studentGiveExplanation
+
         initializeInteractionsForSequence(
             sequence,
-            studentsProvideExplanation,
+            studentGiveExplanation,
             executionContext,
-            confrontingViewsPhaseConfig
+            sequenceConfig.confrontingViewsPhaseConfig
         )
 
         eventLogService.saveActionsAfterClosingConfigurePopup(sequence)
@@ -166,11 +188,11 @@ class SequenceService(
             it.state = State.show
             it.executionContext = executionContext
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
-            it.evaluationMethod = confrontingViewsPhaseConfig?.evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE
+            it.evaluationMethod = sequenceConfig.confrontingViewsPhaseConfig.evaluationMethod
             it.chatGptEvaluationEnabled =
-                studentsProvideExplanation && confrontingViewsPhaseConfig?.evaluationByIA ?: false
+                studentGiveExplanation && sequenceConfig.resultPhaseConfig.evaluationByIA
         }.let(sequenceRepository::save)
-        if (studentsProvideExplanation) {
+        if (studentGiveExplanation) {
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(
                 sequence = sequence,
                 teacher = sequence.owner
@@ -184,7 +206,7 @@ class SequenceService(
         sequence: Sequence,
         studentsProvideExplanation: Boolean,
         executionContext: ExecutionContext,
-        evaluationPhaseConfig: EvaluationPhaseConfig?,
+        evaluationPhaseConfig: EvaluationPhaseConfig,
     ): Sequence {
         var rank = 1
         sequence.interactions[InteractionType.ResponseSubmission] =
@@ -198,12 +220,12 @@ class SequenceService(
                 State.show
             )
 
-        if (evaluationPhaseConfig != null) {
+        if (evaluationPhaseConfig.phaseActive) {
             sequence.interactions[InteractionType.Evaluation] =
                 interactionService.create(
                     sequence,
                     EvaluationSpecification(
-                        evaluationPhaseConfig.responseToEvaluateCount,
+                        evaluationPhaseConfig.nbResponseToEvaluate,
                     ),
                     rank++,
                     if (executionContext == ExecutionContext.FaceToFace)

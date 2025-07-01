@@ -53,7 +53,7 @@
                             onSubmitSequenceConfiguration: (request) => {
                                 window.parent.postMessage({
                                     command: 'sequence-configuration-submitted',
-                                    request
+                                    request: JSON.parse(JSON.stringify(request))
                                 }, '*')
                             }
                         }

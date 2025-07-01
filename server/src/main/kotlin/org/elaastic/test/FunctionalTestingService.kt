@@ -34,6 +34,8 @@ import org.elaastic.sequence.*
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.test.interpreter.command.*
 import org.elaastic.user.Role
 import org.elaastic.user.User
@@ -223,17 +225,20 @@ class FunctionalTestingService(
         studentsProvideExplanation: Boolean = true,
         evaluationPhaseConfig: EvaluationPhaseConfig =
             EvaluationPhaseConfig(
+                true,
                 3,
-                sequence.chatGptEvaluationEnabled,
                 sequence.evaluationMethod
             ),
     ) =
         sequenceService.start(
             sequence.owner,
             sequence,
-            executionContext,
-            studentsProvideExplanation,
-            evaluationPhaseConfig
+            SequenceConfig(
+                executionContext,
+                ResponsePhaseConfig(studentsProvideExplanation),
+                evaluationPhaseConfig,
+                ResultPhaseConfig(sequence.chatGptEvaluationEnabled)
+            )
         )
 
     fun submitResponse(
@@ -457,8 +462,8 @@ class FunctionalTestingService(
                     command.executionContext,
                     command.studentsProvideExplanation,
                     EvaluationPhaseConfig(
+                        true,
                         command.nbResponseToEvaluate,
-                        sequence.chatGptEvaluationEnabled,
                         sequence.evaluationMethod
                     )
                 )

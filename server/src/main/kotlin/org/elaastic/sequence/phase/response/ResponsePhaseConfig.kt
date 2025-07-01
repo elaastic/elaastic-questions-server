@@ -16,16 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.phase.evaluation
+package org.elaastic.sequence.phase.response
 
-import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.sequence.phase.descriptor.PhaseConfig
 
-class EvaluationPhaseConfig(
-    val phaseActive: Boolean,
-    nbResponseToEvaluate: Int? = 0,
-    evaluationMethod: EvaluationMethod? = null
-) : PhaseConfig {
-    val nbResponseToEvaluate: Int = nbResponseToEvaluate ?: 0
-    val evaluationMethod: EvaluationMethod = evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE
+class ResponsePhaseConfig(
+    val studentGiveExplanation: Boolean,
+): PhaseConfig {
+
 }

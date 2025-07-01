@@ -17,22 +17,24 @@
  */
 package org.elaastic.sequence
 
-import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 
 /**
  * Configuration for a sequence.
- * @author John Tranier
  *
  * @property executionContext The execution context for the sequence.
- * @property studentsProvideExplanation Whether the students are allowed to provide an explanation for the results.
- * @property responseToEvaluateCount The number of responses to evaluate.
- * @property evaluationByIA Whether the evaluation is done by ChatGPT.
- * @property evaluationMethod The configuration for the evaluation phase.
- *
+ * @property responsePhaseConfig Configuration for the response phase.
+ * @property confrontingViewsPhaseConfig Configuration for the evaluation phase.
+ * @property resultPhaseConfig Configuration for the result phase.
+ * @see EvaluationPhaseConfig
+ * @see ResponsePhaseConfig
+ * @see ResultPhaseConfig
  */
 data class SequenceConfig(
     val executionContext: ExecutionContext,
-    val studentsProvideExplanation: Boolean? = false,
-    val confrontingViewsPhaseConfig: EvaluationPhaseConfig? = null,
+    val responsePhaseConfig: ResponsePhaseConfig,
+    val confrontingViewsPhaseConfig: EvaluationPhaseConfig,
+    val resultPhaseConfig: ResultPhaseConfig,
 )

@@ -16,16 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.sequence.phase.evaluation
+package org.elaastic.sequence.phase.result
 
 import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.sequence.phase.descriptor.PhaseConfig
 
-class EvaluationPhaseConfig(
-    val phaseActive: Boolean,
-    nbResponseToEvaluate: Int? = 0,
-    evaluationMethod: EvaluationMethod? = null
-) : PhaseConfig {
-    val nbResponseToEvaluate: Int = nbResponseToEvaluate ?: 0
-    val evaluationMethod: EvaluationMethod = evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE
+class ResultPhaseConfig(
+    evaluationByIA: Boolean = false,
+): PhaseConfig {
+    val evaluationByIA: Boolean = evaluationByIA && ElaasticFeatures.CHATGPT_EVALUATION.isActive()
 }

@@ -241,7 +241,7 @@ internal class AssignmentServiceIntegrationTest(
             ExecutionContext.FaceToFace,
             false,
             EvaluationPhaseConfig(
-                0,
+                true, 0,
                 evaluationMethod = EvaluationMethod.ALL_AT_ONCE
             )
         )

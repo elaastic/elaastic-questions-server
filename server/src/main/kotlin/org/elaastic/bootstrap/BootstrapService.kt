@@ -478,8 +478,8 @@ class BootstrapService(
                 mode,
                 true,
                 EvaluationPhaseConfig(
+                    true,
                     2,
-                    false,
                     EvaluationMethod.ALL_AT_ONCE
                 )
             )

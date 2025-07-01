@@ -348,9 +348,7 @@ class PlayerController(
                 sequenceService.start(
                     user,
                     it,
-                    request.executionContext,
-                    request.studentsProvideExplanation ?: false,
-                    request.confrontingViewsPhaseConfig
+                    request
                 )
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)

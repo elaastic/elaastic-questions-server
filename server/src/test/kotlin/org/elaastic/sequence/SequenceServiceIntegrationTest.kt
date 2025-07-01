@@ -136,8 +136,7 @@ internal class SequenceServiceIntegrationTest @Autowired constructor(
                 ExecutionContext.Distance,
                 true,
                 EvaluationPhaseConfig(
-                    1,
-                    false,
+                    true, 1,
                     EvaluationMethod.DRAXO,
                 )
             )
@@ -170,8 +169,7 @@ internal class SequenceServiceIntegrationTest @Autowired constructor(
                 executionContext = ExecutionContext.Distance,
                 studentsProvideExplanation = true,
                 EvaluationPhaseConfig(
-                    1,
-                    false,
+                    true, 1,
                     EvaluationMethod.DRAXO,
                 )
             )

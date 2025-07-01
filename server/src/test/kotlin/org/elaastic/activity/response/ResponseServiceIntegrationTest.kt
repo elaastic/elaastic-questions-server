@@ -83,7 +83,7 @@ internal class ResponseServiceIntegrationTest(
                     it,
                     true,
                     ExecutionContext.Blended,
-                    EvaluationPhaseConfig(3)
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -126,7 +126,7 @@ internal class ResponseServiceIntegrationTest(
                     it,
                     true,
                     ExecutionContext.Blended,
-                    EvaluationPhaseConfig(3)
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -169,7 +169,7 @@ internal class ResponseServiceIntegrationTest(
                     it,
                     true,
                     ExecutionContext.Blended,
-                    EvaluationPhaseConfig(3)
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -228,7 +228,7 @@ internal class ResponseServiceIntegrationTest(
                     it,
                     true,
                     ExecutionContext.Blended,
-                    EvaluationPhaseConfig(3)
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -291,7 +291,7 @@ internal class ResponseServiceIntegrationTest(
                     it,
                     true,
                     ExecutionContext.FaceToFace,
-                    EvaluationPhaseConfig(3)
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -359,7 +359,7 @@ internal class ResponseServiceIntegrationTest(
                 it,
                 true,
                 ExecutionContext.Blended,
-                EvaluationPhaseConfig(3)
+                EvaluationPhaseConfig(true, 3)
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.Blended
                 sequenceRepository.save(sequence)
@@ -430,7 +430,7 @@ internal class ResponseServiceIntegrationTest(
                 it,
                 true,
                 ExecutionContext.Blended,
-                EvaluationPhaseConfig(3)
+                EvaluationPhaseConfig(true, 3)
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.Blended
                 sequenceRepository.save(sequence)
@@ -507,7 +507,7 @@ internal class ResponseServiceIntegrationTest(
                 it,
                 true,
                 ExecutionContext.FaceToFace,
-                EvaluationPhaseConfig(3)
+                EvaluationPhaseConfig(true, 3)
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.FaceToFace
                 sequenceRepository.save(sequence)
@@ -561,7 +561,7 @@ internal class ResponseServiceIntegrationTest(
                     it,
                     true,
                     ExecutionContext.FaceToFace,
-                    EvaluationPhaseConfig(3)
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -628,7 +628,7 @@ internal class ResponseServiceIntegrationTest(
                     it,
                     true,
                     ExecutionContext.FaceToFace,
-                    EvaluationPhaseConfig(3)
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -673,7 +673,7 @@ internal class ResponseServiceIntegrationTest(
                     it,
                     true,
                     ExecutionContext.Blended,
-                    EvaluationPhaseConfig(3)
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
