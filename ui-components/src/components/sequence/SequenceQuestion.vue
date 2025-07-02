@@ -3,11 +3,11 @@
 import { computed, type PropType } from 'vue'
 import LogoSVG, {type SequenceState} from "@/components/sequence/LogoSVG.vue";
 
-export type Question = { title: string; content: string; questionNumber: number }
+export type Question = { title: string; statement: string; questionNumber: number }
 
 const props = defineProps({
   /**
-   * The question of the sequence. It is composed of the title and the number of the question.
+   * The question of the sequence. It is composed of a title, the statement and the number of the question.
    */
   question: {
     type: Object as PropType<Question>,
@@ -45,7 +45,7 @@ const color = computed(() => {
     <v-card-text
             :style="props.isSelected ? 'color: #5D4037; ' : 'color: black; '"
             style="margin-right: 280px"
-            v-html="question.content"
+            v-html="question.statement"
     >
     </v-card-text>
   </v-card>
