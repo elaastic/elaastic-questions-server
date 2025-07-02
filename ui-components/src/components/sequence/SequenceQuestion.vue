@@ -31,19 +31,24 @@ const props = defineProps({
 </script>
 
 <template>
-  <v-card class="border-sm rounded-0" :max-height="125" :elevation="0" :style="props.isSelected ? 'background-color: #f9fbe7' : 'background-color:white'">
+  <v-card
+          :class="['border-sm','rounded-0', props.isSelected ? 'background_orange' : 'background_black']"
+          :max-height="125"
+          :elevation="0"
+  >
     <v-card-title class="font-weight-bold">
       <v-chip label>{{ question?.questionNumber }}</v-chip>
-      {{ question.title }}
-      <span  class="position-absolute right-0 mt-7" >
-        <LogoSVG v-if="!isSelected" :state="props.sequenceState" />
-      </span>
+      <span class="ml-4">{{ question.title }}</span>
     </v-card-title>
+
     <v-card-text
-            :class="props.isSelected ? 'text_orange' : 'text_black'"
-            style="margin-right: 280px"
-            v-html="question.statement"
+            :class="['d-flex', props.isSelected ? 'text_orange' : 'text_black']"
     >
+      <div class="flex-1-1-0 mr-4" v-html="question.statement" />
+      <LogoSVG
+              v-if="!isSelected"
+              :state="props.sequenceState"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -54,5 +59,11 @@ const props = defineProps({
 }
 .text_orange{
   color: #5D4037;
+}
+.background_white{
+  background-color:white;
+}
+.background_orange{
+  background-color: #f9fbe7;
 }
 </style>

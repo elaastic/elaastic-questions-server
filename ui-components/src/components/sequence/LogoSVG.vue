@@ -15,7 +15,7 @@ const props = defineProps({
 
 <template>
     <svg
-      class="mt-3" v-if="props.state === 'RESPONSE_PHASE' || props.state === 'BLENDED' || props.state === 'DISTANT'"
+      class="mt-2" v-if="props.state === 'RESPONSE_PHASE' || props.state === 'BLENDED' || props.state === 'DISTANT'"
       xmlns="http://www.w3.org/2000/svg"
       width="100"
       height="50"
