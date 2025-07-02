@@ -18,18 +18,33 @@
 
 <script setup lang="ts">
 import {useI18n} from 'vue-i18n'
-import {ref} from 'vue'
-import ResponsePhaseConfiguration, {type ResponsePhaseConfig} from "@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue";
+import {computed, ref} from 'vue'
+import ResponsePhaseConfiguration, {
+  type ResponsePhaseConfig
+} from "@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue";
 import ConfrontingViewPhaseConfiguration, {
   type ConfrontingViewPhaseConfig
 } from "@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue";
-import ResultPhaseConfiguration, {type ResultPhaseConfig} from "@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue";
+import ResultPhaseConfiguration, {
+  type ResultPhaseConfig
+} from "@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue";
 
 const {t} = useI18n()
 
 type ExecutionContext = 'FaceToFace' | 'Distance' | 'Blended'
 
+export interface SequenceConfiguration {
+  executionContext: ExecutionContext,
+  responsePhaseConfig?: ResponsePhaseConfig | undefined,
+  confrontingViewsPhaseConfig: ConfrontingViewPhaseConfig | undefined,
+  resultPhaseConfig?: ResultPhaseConfig | undefined
+}
+
 export interface SequenceConfigurationProps {
+  /**
+   * Configuration of the sequence
+   */
+  modelValue?: SequenceConfiguration,
   /**
    * Maximal number of responses to evaluate
    */
@@ -42,30 +57,13 @@ export interface SequenceConfigurationProps {
    * The question is open or not.
    */
   questionIsOpen: boolean,
-  /**
-   * The previous configuration of the response phase. If any.
-   */
-  responsePhaseConfig: ResponsePhaseConfig | undefined,
-  /**
-   * The previous configuration of the confronting views phase. If any.
-   */
-  confrontingViewsPhaseConfig?: ConfrontingViewPhaseConfig | undefined,
-  /**
-   * The previous configuration of the result phase. If any.
-   */
-  resultPhaseConfig?: ResultPhaseConfig | undefined
 }
 
 export interface SequenceConfigurationEvents {
   /**
    * Fires when the user clicks on the submit button
    */
-  (event: 'submitSequenceConfiguration', request: {
-    executionContext: ExecutionContext,
-    responsePhaseConfig?: ResponsePhaseConfig | undefined,
-    confrontingViewsPhaseConfig: ConfrontingViewPhaseConfig | undefined,
-    resultPhaseConfig?: ResultPhaseConfig | undefined
-  }): void;
+  (event: 'submitSequenceConfiguration', request: SequenceConfiguration): void;
 
   /**
    * Fires when the user clicks on the cancel button
@@ -91,21 +89,23 @@ const labelForEC = (executionContextKey: ExecutionContext) => {
   return t(`sequenceConfiguration.executionContext.${executionContextKey}.title`)
 }
 
-const executionContext = ref<ExecutionContext>(EXECUTION_CONTEXT_OPTIONS[0])
-const responsePhaseConfig = ref(props.responsePhaseConfig ?? {studentGiveExplanation: true});
-const confrontingViewConfig = ref(props.confrontingViewsPhaseConfig);
-const resultPhaseConfig = ref(props.resultPhaseConfig ?? {evaluationByIa: false});
+const executionContext = ref<ExecutionContext>(props.modelValue?.executionContext ?? EXECUTION_CONTEXT_OPTIONS[0])
+const responsePhaseConfig = ref(props.modelValue?.responsePhaseConfig ?? {studentGiveExplanation: true});
+const confrontingViewConfig = ref(props.modelValue?.confrontingViewsPhaseConfig);
+const resultPhaseConfig = ref(props.modelValue?.resultPhaseConfig ?? {evaluationByIa: false});
 
-const sequenceConfig = () => {
+const sequenceConfig = computed(() => {
   return {
     executionContext: executionContext.value,
     responsePhaseConfig: responsePhaseConfig.value,
     confrontingViewsPhaseConfig: confrontingViewConfig.value,
     resultPhaseConfig: resultPhaseConfig.value
   }
-};
+});
 
-const onSubmit = () => emit('submitSequenceConfiguration', sequenceConfig());
+const onSubmit = () => {
+  emit('submitSequenceConfiguration', sequenceConfig.value)
+}
 const onCancel = () => {
   emit('cancelSequenceConfiguration')
 }
@@ -133,8 +133,10 @@ const onCancel = () => {
         <v-alert
                 v-if="executionContext !== undefined"
                 :text="noticeForEC(executionContext)"
-                type="info"
                 variant="tonal"
+                icon="$info"
+                border="start"
+                border-color="info"
                 style="white-space: pre-line"
         >
         </v-alert>
@@ -145,28 +147,26 @@ const onCancel = () => {
       <!-- Response Phase -->
       <v-card :elevation="6" class="mt-4">
         <ResponsePhaseConfiguration
-                :studentGiveExplanation="responsePhaseConfig.studentGiveExplanation"
+                v-model="responsePhaseConfig"
                 :explanationMandatory="executionContext !== EXECUTION_CONTEXT_OPTIONS[0] || questionIsOpen"
-                @update:responsePhaseConfig="responsePhaseConfig = $event"
         ></ResponsePhaseConfiguration>
       </v-card>
 
       <!-- Confronting View Phase -->
       <v-card elevation="6" class="mt-4">
         <ConfrontingViewPhaseConfiguration
+                v-model="confrontingViewConfig"
+                :studentGiveExplanation="responsePhaseConfig.studentGiveExplanation"
                 :aiIsActivated
                 :maxResponseToEvaluate
-                :previousConfig="confrontingViewConfig"
-                @update:confrontingViewsPhaseConfig="confrontingViewConfig = $event"
         ></ConfrontingViewPhaseConfiguration>
       </v-card>
 
       <!-- Result Phase -->
       <v-card elevation="6" class="mt-4">
         <ResultPhaseConfiguration
+                v-model="resultPhaseConfig"
                 :aiIsActivated="props.aiIsActivated"
-                :evaluationByIa="resultPhaseConfig.evaluationByIa"
-                @update:evaluationByIa="resultPhaseConfig = $event"
         ></ResultPhaseConfiguration>
       </v-card>
     </v-card-text>
@@ -233,7 +233,7 @@ const onCancel = () => {
         },
         "Blended": {
           "title": "Hybride",
-          "notice": "Le contexte \"Hybride\" correspond à une situation pédagogique se déroulant à distance suivie d'une restitution des résultats en présentiel.\nL'enseignant contrôle l'ouverture de la séquence et la publication des résultats.\nLes apprenants peuvent enchaîner les deux premières phases à leur rythme mais ne découvriront les résultats qu'au moment de leur publication."
+          "notice": "Le contexte \"Hybride\" correspond à une situation pédagique se déroulant à distance suivie d'une restitution des résultats en présentiel.\nL'enseignant contrôle l'ouverture de la séquence et la publication des résultats.\nLes apprenants peuvent enchaîner les deux premières phases à leur rythme mais ne découvriront les résultats qu'au moment de leur publication."
         }
       }
     }

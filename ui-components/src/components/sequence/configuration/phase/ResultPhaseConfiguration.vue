@@ -28,28 +28,34 @@ export interface ResultPhaseConfig {
 }
 
 export interface ResultPhaseProps {
-  aiIsActivated: boolean;
-  evaluationByIa: boolean;
+  modelValue?: ResultPhaseConfig,
+  aiIsActivated?: boolean;
 }
 
-export interface ResultPhaseEvent {
-  (event: 'update:evaluationByIa', value: ResultPhaseConfig): void;
-}
+export type ResultPhaseEvent = (event: 'update:modelValue', value: ResultPhaseConfig) => void;
 
 const props = withDefaults(defineProps<ResultPhaseProps>(), {
-  aiIsActivated: false,
-  evaluationByIa: false
+  aiIsActivated: false
 });
 const emit = defineEmits<ResultPhaseEvent>();
 
-const evaluationByIa = ref<boolean>(props.evaluationByIa);
+const evaluationByIa = ref<boolean>(props.modelValue?.evaluationByIa ?? false);
 
 watch(() => evaluationByIa.value, () => configUpdate());
 
-const configUpdate = () => emit('update:evaluationByIa', {
-  "evaluationByIa": evaluationByIa.value
-});
+watch(() => props.modelValue, (newValue) => {
+  if (newValue && newValue.evaluationByIa !== evaluationByIa.value) {
+    evaluationByIa.value = newValue.evaluationByIa;
+  }
+}, { deep: true });
 
+const configUpdate = () => {
+  emit('update:modelValue', {
+    "evaluationByIa": evaluationByIa.value
+  });
+};
+
+configUpdate()
 </script>
 
 <template>
@@ -85,7 +91,6 @@ const configUpdate = () => emit('update:evaluationByIa', {
 <style scoped>
 
 </style>
-
 
 <i18n>
 {

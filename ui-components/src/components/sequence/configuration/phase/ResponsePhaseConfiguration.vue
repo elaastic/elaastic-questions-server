@@ -28,31 +28,35 @@ export interface ResponsePhaseConfig {
 }
 
 export interface ResponsePhaseProps {
-  studentGiveExplanation: boolean,
-  explanationMandatory: boolean
+  modelValue?: ResponsePhaseConfig,
+  explanationMandatory?: boolean
 }
 
-export interface ResponsePhaseEvent {
-  (event: 'update:responsePhaseConfig', value: ResponsePhaseConfig): void;
-}
+export type ResponsePhaseEvent = (event: 'update:modelValue', value: ResponsePhaseConfig) => void;
 
 const props = withDefaults(defineProps<ResponsePhaseProps>(), {
-  studentGiveExplanation: false,
   explanationMandatory: false
 });
 const emit = defineEmits<ResponsePhaseEvent>();
 
-const studentGiveExplanation = ref<boolean>(props.studentGiveExplanation);
+const studentGiveExplanation = ref<boolean>(props.modelValue?.studentGiveExplanation ?? false);
 
-watch(() => studentGiveExplanation.value, () => updateConfig());
-watch(() => props.explanationMandatory, () => updateConfig());
-watch(() => props.studentGiveExplanation, (newValue) => studentGiveExplanation.value = newValue);
+const updateConfig = () => {
+  emit('update:modelValue', {
+    "studentGiveExplanation": studentGiveExplanation.value || props.explanationMandatory
+  });
+};
 
-const updateConfig = () => emit('update:responsePhaseConfig', {
-  "studentGiveExplanation": studentGiveExplanation.value || props.explanationMandatory
-});
+// Watchers
+watch(() => studentGiveExplanation.value, updateConfig);
+watch(() => props.explanationMandatory, updateConfig);
+watch(() => props.modelValue, (newValue) => {
+  if (newValue && newValue.studentGiveExplanation !== studentGiveExplanation.value) {
+    studentGiveExplanation.value = newValue.studentGiveExplanation;
+  }
+}, {deep: true});
 
-// Emit the initial value of studentGiveExplanation when the component is mounted
+// Emit the initial value when the component is mounted
 updateConfig()
 </script>
 
