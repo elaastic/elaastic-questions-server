@@ -28,13 +28,10 @@ const props = defineProps({
     required: true,
   },
 })
-const color = computed(() => {
-  return props.isSelected ? '#f9fbe7' : 'white'
-})
 </script>
 
 <template>
-  <v-card class="border-sm rounded-0" :max-height="125" :elevation="0" :style="'background-color: ' + color">
+  <v-card class="border-sm rounded-0" :max-height="125" :elevation="0" :style="props.isSelected ? 'background-color: #f9fbe7' : 'background-color:white'">
     <v-card-title class="font-weight-bold">
       <v-chip label>{{ question?.questionNumber }}</v-chip>
       {{ props.question.title }}
@@ -43,7 +40,7 @@ const color = computed(() => {
       </span>
     </v-card-title>
     <v-card-text
-            :style="props.isSelected ? 'color: #5D4037; ' : 'color: black; '"
+            :class="props.isSelected ? 'text_orange' : 'text_black'"
             style="margin-right: 280px"
             v-html="question.statement"
     >
@@ -51,4 +48,11 @@ const color = computed(() => {
   </v-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.text_black{
+  color: black;
+}
+.text_orange{
+  color: #5D4037;
+}
+</style>
