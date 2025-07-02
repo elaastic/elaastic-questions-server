@@ -34,7 +34,7 @@ const props = defineProps({
   <v-card class="border-sm rounded-0" :max-height="125" :elevation="0" :style="props.isSelected ? 'background-color: #f9fbe7' : 'background-color:white'">
     <v-card-title class="font-weight-bold">
       <v-chip label>{{ question?.questionNumber }}</v-chip>
-      {{ props.question.title }}
+      {{ question.title }}
       <span  class="position-absolute right-0 mt-7" >
         <LogoSVG v-if="!isSelected" :state="props.sequenceState" />
       </span>
