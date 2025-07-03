@@ -134,7 +134,18 @@ class SequenceService(
         )
     }
 
-    fun start( // TODO the signature should (User, Sequence, SequenceConfig)
+    fun saveConfiguration(
+        user: User,
+        sequence: Sequence,
+        sequenceConfig: SequenceConfig
+    ) {
+        sequence
+            .saveConfiguration(user, sequenceConfig)
+            .also { interactionRepository.saveAll(it.interactions.values) }
+            .let(sequenceRepository::save)
+    }
+
+    fun start(
         user: User,
         sequence: Sequence,
         sequenceConfig: SequenceConfig

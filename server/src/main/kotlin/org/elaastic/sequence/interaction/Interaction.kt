@@ -25,9 +25,9 @@ import org.elaastic.activity.results.ResponsesDistribution
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceConfig
 import org.elaastic.sequence.State
-import org.elaastic.sequence.config.InteractionSpecification
-import org.elaastic.sequence.config.InteractionSpecificationConverter
+import org.elaastic.sequence.config.*
 import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -147,6 +147,55 @@ class Interaction(
             else State.afterStop
 
         else -> state
+    }
+
+    constructor(
+        sequence: Sequence,
+        interactionSpecification: InteractionSpecification,
+        rank: Int,
+        state: State = State.beforeStart
+    ) : this(
+        interactionType = interactionSpecification.getType(),
+        rank = rank,
+        specification = interactionSpecification,
+        owner = sequence.owner,
+        sequence = sequence,
+        state = state
+    )
+
+    companion object {
+        fun createInteractions(
+            sequence: Sequence,
+            sequenceConfig: SequenceConfig
+        ): List<Interaction> {
+            var rank = 1
+            val interactions = mutableListOf(
+                Interaction(
+                    sequence,
+                    ResponseSubmissionSpecification(
+                        sequenceConfig.responsePhaseConfig.studentGiveExplanation,
+                        sequenceConfig.responsePhaseConfig.studentGiveExplanation
+                    ),
+                    rank++
+                ),
+
+                if (sequenceConfig.confrontingViewsPhaseConfig.phaseActive) {
+                    Interaction(
+                        sequence,
+                        EvaluationSpecification(
+                            sequenceConfig.confrontingViewsPhaseConfig.nbResponseToEvaluate
+                        ),
+                        rank++,
+                    )
+                } else {
+                    null
+                },
+
+                Interaction(sequence, ReadSpecification(), rank)
+            )
+
+            return interactions.filterNotNull()
+        }
     }
 
 }

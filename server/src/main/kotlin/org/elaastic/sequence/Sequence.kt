@@ -103,9 +103,7 @@ class Sequence(
     @field:Enumerated(EnumType.STRING)
     var activeInteractionType: InteractionType? = activeInteraction?.interactionType,
 
-    /**
-     * The state of the sequence.
-     */
+    /** The state of the sequence. */
     @field:Enumerated(EnumType.STRING)
     var state: State = beforeStart,
 
@@ -314,6 +312,31 @@ class Sequence(
 
                 || (activeInteraction?.state == State.beforeStart && activeInteraction?.rank == 3))
 
+    /**
+     * Configures the sequence with the given execution context, interactions and evaluation phase configuration. Does
+     * not start the sequence, it only saves the configuration.
+     *
+     * Only the owner of the sequence can save its configuration. It must be in the `beforeStart` state. And it must not
+     * have any interactions defined yet.
+     */
+    @Transient
+    fun saveConfiguration(
+        user: User,
+        sequenceConfig: SequenceConfig
+    ): Sequence {
+        require(user == owner) { "Only the owner can save the configuration of a sequence" }
+        require(state == beforeStart) { "The sequence must be in the beforeStart state to save its configuration" }
+
+        this.executionContext = sequenceConfig.executionContext
+        this.evaluationMethod = sequenceConfig.confrontingViewsPhaseConfig.evaluationMethod
+        this.chatGptEvaluationEnabled = sequenceConfig.resultPhaseConfig.evaluationByIA
+        this.interactions = Interaction
+            .createInteractions(this, sequenceConfig)
+            .associateBy { it.interactionType }
+            .toMutableMap()
+
+        return this
+    }
 }
 
 /**
