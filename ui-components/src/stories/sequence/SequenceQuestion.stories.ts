@@ -87,6 +87,18 @@ export const IsSelected: Story = {
     sequenceState: 'CLOSED',
   },
 }
+export const StatementHidden: Story = {
+  args: {
+    question: {
+      title: 'Question 1',
+      statement: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>`,
+      questionNumber: 1,
+    },
+    isSelected: true,
+    sequenceState: 'CLOSED',
+    hideStatement: true
+  },
+}
 export const ConcreteExample: Story = {
   args: {
     question: {

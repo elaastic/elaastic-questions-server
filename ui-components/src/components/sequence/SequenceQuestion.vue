@@ -27,6 +27,13 @@ const props = defineProps({
     type: Object as PropType<SequenceState>,
     required: true,
   },
+  /**
+   * A boolean. True if the statement is hidden. False if it's displayed.
+   */
+  hideStatement: {
+    type: Boolean,
+    default: false
+  }
 })
 const filteredStatement = computed(() => {
   if (!props.question?.statement) return '';
@@ -40,7 +47,7 @@ const filteredStatement = computed(() => {
           :max-height="125"
           :elevation="0"
   >
-    <v-card-title class="font-weight-bold">
+    <v-card-title class="font-weight-bold mt-4">
       <v-chip label>{{ question?.questionNumber }}</v-chip>
       <span class="ml-4">{{ question.title }}</span>
     </v-card-title>
@@ -48,9 +55,9 @@ const filteredStatement = computed(() => {
     <v-card-text
             :class="['d-flex', props.isSelected ? 'text_orange' : 'text_black']"
     >
-      <div class="flex-1-1-0 mr-4" v-html="filteredStatement" />
+      <div v-if="!hideStatement" class="flex-1-1-0 mr-4" v-html="filteredStatement" />
       <LogoSVG
-              v-if="!isSelected"
+              v-if="!isSelected && !hideStatement"
               :state="props.sequenceState"
       />
     </v-card-text>
