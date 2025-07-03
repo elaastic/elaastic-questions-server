@@ -41,8 +41,6 @@ import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
-import org.elaastic.sequence.phase.response.ResponsePhaseConfig
-import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.user.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -139,6 +137,10 @@ class SequenceService(
         sequence: Sequence,
         sequenceConfig: SequenceConfig
     ) {
+        if (sequence.interactions.values.isNotEmpty()) {
+            interactionRepository.deleteAll(sequence.interactions.values)
+        }
+
         sequence
             .saveConfiguration(user, sequenceConfig)
             .also { interactionRepository.saveAll(it.interactions.values) }
@@ -182,7 +184,7 @@ class SequenceService(
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
             it.evaluationMethod = sequenceConfig.confrontingViewsPhaseConfig.evaluationMethod
             it.chatGptEvaluationEnabled =
-                studentGiveExplanation && sequenceConfig.resultPhaseConfig.evaluationByIA
+                studentGiveExplanation && sequenceConfig.resultPhaseConfig.evaluationByIa
         }.let(sequenceRepository::save)
         if (studentGiveExplanation) {
             responseService.buildResponseBasedOnTeacherExpectedExplanationForASequence(

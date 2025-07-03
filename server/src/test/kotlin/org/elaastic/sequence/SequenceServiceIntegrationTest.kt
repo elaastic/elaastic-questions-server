@@ -180,6 +180,36 @@ internal class SequenceServiceIntegrationTest @Autowired constructor(
     }
 
     @Test
+    fun `start a sequence`() {
+        val assignment = integrationTestingService.getTestAssignment()
+        val user = assignment.owner
+
+        // Precondition
+        assertEquals(2, assignment.sequences.size, "The testing data are corrupted")
+
+        tGiven("a sequence") {
+            assignment.sequences.first()
+        }.tWhen("we start the sequence") { sequence ->
+            sequenceService.start(
+                user,
+                sequence,
+                SequenceConfig(
+                    ExecutionContext.Distance,
+                    ResponsePhaseConfig(true),
+                    EvaluationPhaseConfig(true, 1, EvaluationMethod.DRAXO),
+                    ResultPhaseConfig(false)
+                )
+            )
+        }.tThen {
+            assertEquals(InteractionType.Read, it.activeInteractionType)
+            assertEquals(State.show, it.state)
+            assertEquals(ExecutionContext.Distance, it.executionContext)
+            assertTrue(it.resultsArePublished)
+            assertEquals(EvaluationMethod.DRAXO, it.evaluationMethod)
+        }
+    }
+
+    @Test
     fun `stop a sequence without the owner`() {
         val assignment = integrationTestingService.getTestAssignment()
         val user = integrationTestingService.getTestStudent()

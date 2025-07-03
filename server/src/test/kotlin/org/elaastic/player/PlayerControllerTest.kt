@@ -222,7 +222,7 @@ internal class PlayerControllerTest(
                 evaluationMethod = EvaluationMethod.ALL_AT_ONCE
             ),
             resultPhaseConfig = ResultPhaseConfig(
-                evaluationByIA = false
+                evaluationByIa = false
             ),
         )
 
@@ -241,7 +241,7 @@ internal class PlayerControllerTest(
         }
 
         fun ResultPhaseConfig.json(): String {
-            return """{"evaluationByIA": ${this.evaluationByIA}}"""
+            return """{"evaluationByIA": ${this.evaluationByIa}}"""
         }
 
         fun SequenceConfig.json(): String {

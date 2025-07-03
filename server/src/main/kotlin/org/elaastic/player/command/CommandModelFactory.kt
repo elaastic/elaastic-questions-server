@@ -41,6 +41,7 @@ object CommandModelFactory {
                 nextNextInteractionRank = nextNextInteraction?.rank,
                 questionType = sequence.statement.questionType,
                 hasExpectedExplanation = !sequence.statement.expectedExplanation.isNullOrBlank(),
+                previousSequenceConfiguration = sequence.getSequenceConfig(),
 
                 actionStartSequence =
                     if (sequence.state == State.beforeStart)

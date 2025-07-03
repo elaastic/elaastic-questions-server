@@ -27,6 +27,9 @@ import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -329,13 +332,54 @@ class Sequence(
 
         this.executionContext = sequenceConfig.executionContext
         this.evaluationMethod = sequenceConfig.confrontingViewsPhaseConfig.evaluationMethod
-        this.chatGptEvaluationEnabled = sequenceConfig.resultPhaseConfig.evaluationByIA
+        this.chatGptEvaluationEnabled = sequenceConfig.resultPhaseConfig.evaluationByIa
         this.interactions = Interaction
             .createInteractions(this, sequenceConfig)
             .associateBy { it.interactionType }
             .toMutableMap()
 
         return this
+    }
+
+    /**
+     * Checks if the sequence is configured, meaning it has interactions defined and no active interaction.
+     *
+     * @return true if the sequence is configured, false otherwise.
+     */
+    @Transient
+    fun isConfigured(): Boolean {
+        return interactions.isNotEmpty() && activeInteraction == null
+    }
+
+    /**
+     * Returns the sequence configuration if the sequence is configured, otherwise returns null.
+     *
+     * @return the sequence configuration or null if not configured.
+     */
+    // TODO when the InteractionSPecifications will be refactored, we need to improve this
+    // Maybe with `InteractionSpecification.getPhaseConfig()`
+    @Transient
+    fun getSequenceConfig(): SequenceConfig? {
+        return if (isConfigured()) {
+            SequenceConfig(
+                this.executionContext,
+                ResponsePhaseConfig(getResponseSubmissionSpecification().studentsProvideExplanation),
+                getEvaluationInteractionOrNull().let {
+                    if (it == null) {
+                        EvaluationPhaseConfig(false)
+                    } else {
+                        EvaluationPhaseConfig(
+                            true,
+                            (it.specification as EvaluationSpecification).responseToEvaluateCount,
+                            evaluationMethod
+                        )
+                    }
+                },
+                ResultPhaseConfig(chatGptEvaluationEnabled)
+            )
+        } else {
+            null
+        }
     }
 }
 

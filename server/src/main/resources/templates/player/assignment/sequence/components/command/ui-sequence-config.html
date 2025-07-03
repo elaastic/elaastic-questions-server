@@ -39,11 +39,13 @@
             /**
              * Initialize the sequence configuration Vue app.
              * @param questionIsOpen {boolean} - Indicates if the question is open or not.
+             * @param previousSequenceConfig {Object} - The previous sequence configuration to load.
              */
-            initializeSequenceConfiguration: (questionIsOpen) => {
+            initializeSequenceConfiguration: (questionIsOpen, previousSequenceConfig) => {
                 const app = Vue.createApp(
                         ElaasticVueComponents.SequenceConfiguration,
                         {
+                            modelValue: previousSequenceConfig,
                             maxResponseToEvaluate: 5,
                             aiIsActivated: AIExplanationActived,
                             questionIsOpen,
@@ -59,7 +61,7 @@
                             onSaveSequenceConfiguration: (request) => {
                                 window.parent.postMessage({
                                     command: 'sequence-configuration-saved',
-                                    request
+                                    request: JSON.parse(JSON.stringify(request))
                                 }, '*')
                             }
                         }

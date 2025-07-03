@@ -19,6 +19,7 @@
 package org.elaastic.player.command
 
 import org.elaastic.material.instructional.question.QuestionType
+import org.elaastic.sequence.SequenceConfig
 
 data class CommandModel(
     val sequenceId: Long,
@@ -29,6 +30,7 @@ data class CommandModel(
     val nextNextInteractionRank: Int?,
     val questionType: QuestionType,
     val hasExpectedExplanation: Boolean,
+    val previousSequenceConfiguration: SequenceConfig? = null,
 
     val actionStartSequence: ActionStatus,
     val actionStartInteraction: ActionStatus,

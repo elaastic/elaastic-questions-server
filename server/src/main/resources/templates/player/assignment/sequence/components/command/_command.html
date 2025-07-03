@@ -22,6 +22,8 @@
      th:remove="tag"
 >
 
+    <!--/*@thymesVar id="commandModel" type="org.elaastic.player.command.CommandModel"*/-->
+
     <div class="ui loading segment attached" th:id="|loading-sequence_${sequenceId}|" style="display: none">
             <p>&amp;nbsp;</p>
             <p>&amp;nbsp;</p>
@@ -161,7 +163,7 @@
     </div>
 
     <!--/* Start sequence form */-->
-    <div class="ui top attached segment" th:id="sequenceConfig" th:if="${commandModel.actionStartSequence.name() == 'ENABLED'}">
-        <div th:replace="player/assignment/sequence/components/command/_config-sequence.html :: configSequence(${commandModel.sequenceId}, ${commandModel.questionType})"></div>
+    <div class="ui top attached segment" th:id="sequenceConfig" th:if="${commandModel.actionStartSequence.name() == 'ENABLED'}" style="display: none">
+        <div th:replace="player/assignment/sequence/components/command/_config-sequence.html :: configSequence(${commandModel.sequenceId}, ${commandModel.questionType}, ${commandModel.previousSequenceConfiguration})"></div>
     </div>
 </div>

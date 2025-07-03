@@ -335,6 +335,23 @@ class PlayerController(
     }
 
     @ResponseBody
+    @PostMapping("/sequence/{sequenceId}/save")
+    fun saveSequence(
+        authentication: Authentication,
+        @PathVariable sequenceId: Long,
+        @RequestBody request: SequenceConfig
+    ) {
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
+
+        sequenceService
+            .get(user, sequenceId, true)
+            .let {
+                sequenceService.saveConfiguration(user, it, request)
+                userService.updateUserActiveSince(user)
+            }
+    }
+
+    @ResponseBody
     @PostMapping("/sequence/{sequenceId}/start.json")
     fun jsonStartSequence(
         authentication: Authentication,
@@ -343,13 +360,10 @@ class PlayerController(
     ) {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
-        sequenceService.get(user, sequenceId, true)
+        sequenceService
+            .get(user, sequenceId, true)
             .let {
-                sequenceService.start(
-                    user,
-                    it,
-                    request
-                )
+                sequenceService.start(user, it, request)
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)
             }

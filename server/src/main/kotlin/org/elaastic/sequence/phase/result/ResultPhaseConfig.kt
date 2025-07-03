@@ -22,7 +22,7 @@ import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.sequence.phase.descriptor.PhaseConfig
 
 class ResultPhaseConfig(
-    evaluationByIA: Boolean = false,
+    evaluationByIa: Boolean = false,
 ): PhaseConfig {
-    val evaluationByIA: Boolean = evaluationByIA && ElaasticFeatures.CHATGPT_EVALUATION.isActive()
+    val evaluationByIa: Boolean = evaluationByIa && ElaasticFeatures.CHATGPT_EVALUATION.isActive()
 }

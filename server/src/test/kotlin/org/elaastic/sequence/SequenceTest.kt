@@ -33,7 +33,7 @@ import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
 import org.elaastic.user.User
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -59,6 +59,7 @@ class SequenceTest {
                 owner = mockk<User>(),
                 statement = mockk<Statement>(),
             )
+            assertFalse(sequence.isConfigured())
 
             tGiven("a sequence configuration") {
                 SequenceConfig(
@@ -73,9 +74,10 @@ class SequenceTest {
                     it
                 )
             }.tThen {
+                assertTrue(sequence.isConfigured())
                 assertEquals(executionContext, it.executionContext)
                 assertEquals(evaluationPhaseConfig.evaluationMethod, it.evaluationMethod)
-                assertEquals(resultPhaseConfig.evaluationByIA, it.chatGptEvaluationEnabled)
+                assertEquals(resultPhaseConfig.evaluationByIa, it.chatGptEvaluationEnabled)
 
                 // Check for each interaction if its correctly configured
                 it.getResponseSubmissionInteraction().let { response ->

@@ -18,9 +18,12 @@
 <!--/* Modal to configure a sequence */-->
 <div xmlns:th="http://www.thymeleaf.org"
      xmlns="http://www.w3.org/1999/html"
-     th:fragment="configSequence(sequenceId, questionType)"
+     th:fragment="configSequence(sequenceId, questionType, previousSequenceConfiguration)"
      th:id="|sequenceSpec_${sequenceId}|"
 >
+    <!--/*@thymesVar id="sequenceId" type="kotlin.Int"*/-->
+    <!--/*@thymesVar id="questionType" type="org.elaastic.material.instructional.question.QuestionType"*/-->
+    <!--/*@thymesVar id="previousSequenceConfiguration" type="org.elaastic.sequence.SequenceConfig"*/-->
 
     <iframe
             th:id="|sequenceConfiguration_${sequenceId}|"
@@ -32,21 +35,23 @@
     <script th:inline="javascript">
         $(function () {
             const iframe = document.getElementById('sequenceConfiguration_' + [[${sequenceId}]]);
+            const questionIsOpen = /*[[${questionType == T(org.elaastic.material.instructional.question.QuestionType).OpenEnded}]]*/ false;
+            const previousSequenceConfiguration = /*[[${previousSequenceConfiguration}]]*/ null;
             iframe.onload = () => {
                 iframe.contentWindow.elaastic.initializeSequenceConfiguration(
-                        questionIsOpen = [[${questionType == T(org.elaastic.material.instructional.question.QuestionType).OpenEnded
-            }]]
-            )
+                        questionIsOpen,
+                        previousSequenceConfiguration
+                )
             }
 
             window.addEventListener('message', (event) => {
+                console.log('Received message from iframe:', event.data);
+                console.log(event.data.request)
                 if (event.data.command === 'sequence-configuration-submitted') {
-                    const $loadingSegment = $('#loading-sequence_' + [[${commandModel.sequenceId}]]);
+                    const $loadingSegment = $('#loading-sequence_' + [[${sequenceId}]]);
                     $loadingSegment.slideDown();
                     // TODO Step 2. Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation
-                    console.log($("meta[name='_csrf']").attr("content") || $("input[name='_csrf']").val())
-                    console.log(event.data);
-                    console.log(event.data.request);
+                    elaastic.closeSequenceConfig([[${sequenceId}]]);
                     $.ajax({
                         url: '/player/sequence/' + [[${sequenceId}]] + '/start.json',
                         type: 'POST',
@@ -58,8 +63,26 @@
                     }).done(function () {
                         window.location.reload();
                     })
+                } else if (event.data.command === 'sequence-configuration-saved') {
+                    const $loadingSegment = $('#loading-sequence_' + [[${sequenceId}]]);
+                    $loadingSegment.slideDown();
+                    // TODO Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation
+                    $.ajax({
+                        url: '/player/sequence/' + [[${sequenceId}]] + '/save',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        headers: {
+                            'X-CSRF-TOKEN': $("meta[name='_csrf']").attr("content") || $("input[name='_csrf']").val()
+                        },
+                        data: JSON.stringify(event.data.request),
+                    }).done(function () {
+                        $loadingSegment.slideUp();
+                        elaastic.closeSequenceConfig([[${sequenceId}]]);
+                    })
+                } else if (event.data.command === 'sequence-configuration-cancelled') {
+                    elaastic.closeSequenceConfig([[${sequenceId}]]);
                 }
-                elaastic.closeSequenceConfig([[${sequenceId}]]);
+
             })
 
             const optionIframeResiser = {
