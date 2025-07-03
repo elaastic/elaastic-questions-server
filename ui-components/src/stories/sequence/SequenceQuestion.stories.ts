@@ -142,3 +142,60 @@ export const ExampleWithImageFiltered: Story = {
     sequenceState: 'CLOSED',
   },
 }
+export const ExampleWithLongTitle: Story = {
+  args: {
+    question: {
+      title: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+      statement: `
+        <p>Quelle est la capitale de la France ?</p>
+        <p>A) Lille</p>
+        <p>B) Nantes</p>
+        <p>C) Lyon</p>
+        <p>D) La réponse D</p>
+        <p>E) Paris</p>
+        <p>F) Toulouse</p>
+        <p>G) Strasbourg</p>
+        <p>H) Marseille</p>
+        `,
+      questionNumber: 1,
+    },
+    isSelected: true,
+    sequenceState: 'CLOSED',
+  },
+}
+export const ExampleWithSmallerWidth: Story = {
+  render: (args) => ({
+    components: {SequenceQuestion},
+    setup(){
+      return{
+        args
+      }
+    },
+    template: `
+      <v-card :max-width="500">
+        <v-card-item>
+          <SequenceQuestion v-bind="args" ></SequenceQuestion>
+        </v-card-item>
+      </v-card>
+    `
+  }),
+  args: {
+    question: {
+      title: 'Capitale de la France ?',
+      statement: `
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>
+        <p>A) Lille</p>
+        <p>B) Nantes</p>
+        <p>C) Lyon</p>
+        <p>D) La réponse D</p>
+        <p>E) Paris</p>
+        <p>F) Toulouse</p>
+        <p>G) Strasbourg</p>
+        <p>H) Marseille</p>
+        `,
+      questionNumber: 1,
+    },
+    isSelected: true,
+    sequenceState: 'CLOSED',
+  },
+}
