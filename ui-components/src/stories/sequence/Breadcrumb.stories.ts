@@ -28,31 +28,11 @@ export const WithoutDirectory: Story = {
     scholarYear: "2022 - 2023",
   }
 }
-export const WithQuestionCurrent: Story = {
-  args: {
-    id: 1256,
-    subject: {title: "Capitals", id: 530},
-    audience: "E.Le",
-    scholarYear: "2022 - 2023",
-    questionCurrent: {title: "Capitale de la France ?", id: 2688}
-  }
-}
-export const WithDirectoryAndQuestionCurrent: Story = {
-  args: {
-    id: 1256,
-    course: {title: "Geography", id: 23},
-    subject: {title: "Capitals", id: 530},
-    audience: "E.Le",
-    scholarYear: "2022 - 2023",
-    questionCurrent: {title: "Capitale de la France ?", id: 2688}
-  }
-}
 export const AudienceNotProvided: Story = {
   args: {
     id: 1256,
     course: {title: "Geography", id: 23},
     subject: {title: "Capitals", id: 530},
     scholarYear: "2022 - 2023",
-    questionCurrent: {title: "Capitale de la France ?", id: 2688}
   }
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import Link from "@/components/util/Link.vue";
 import {useI18n} from "vue-i18n";
 import type {PropType} from "vue";
 
@@ -34,14 +33,11 @@ const props = defineProps({
     type: String,
     required: true
   },
-  /**
-   * The question selected by the user. If none is provided, nothing is displayed.
-   */
-  questionCurrent: {
-    type: Object as PropType<{title: string, id: number}>
-  }
 })
 const audienceLocal = props.audience ? props.audience : 'na';
+
+const emits = defineEmits(['goToCourse', 'goToSubject', 'goToDiffusion', 'editProperties'])
+
 const { t } = useI18n()
 </script>
 
@@ -49,26 +45,14 @@ const { t } = useI18n()
   <v-card class="border-sm rounded-0" :elevation="0">
     <v-card-text>
       <!-- Links currently don't work. They are just examples. -->
-      <span v-if="course">
-        <Link class="mr-2" :href="'https://elaastic.irit.fr/course/' + course.id" :text="'📁' + course.title" />
-        <span>/</span>
-      </span>
+      <span v-if="course" class="cursor-pointer text-primary" @click="emits('goToCourse','https://elaastic.irit.fr/course/' + course.id)">📁{{ course.title }}  /</span>
 
-      <Link
-              class="mr-2 ml-2 font-weight-bold"
-              :href="'https://elaastic.irit.fr/subject/' + subject.id"
-              :text="'📄' + subject.title"
-      />
-      <span>/</span>
+      <span class="cursor-pointer text-primary font-weight-bold" @click="emits('goToSubject', 'https://elaastic.irit.fr/subject/' + subject.id)">  📄{{ subject.title }}  /</span>
 
       <v-tooltip location="top">
         <template #activator="{ props: tooltipProps }">
           <span v-bind="tooltipProps">
-            <Link
-                    class="ml-2"
-                    :href="'https://elaastic.irit.fr/subject/' + subject.id + '?activeTab=assignments'"
-                    :text="'📡' + audienceLocal + ' (' + scholarYear + ')'"
-            />
+            <span class="cursor-pointer text-primary" @click="emits('goToDiffusion', 'https://elaastic.irit.fr/subject/' + subject.id + '?activeTab=assignments')">  📡{{ audienceLocal }} ({{ scholarYear }})  </span>
           </span>
         </template>
         <span>{{ t('change-assignment') }}</span>
@@ -78,28 +62,17 @@ const { t } = useI18n()
       <v-tooltip location="top">
         <template #activator="{ props: tooltipProps }">
           <span v-bind="tooltipProps">
-            <Link :href="'https://elaastic.irit.fr/assignment/' + id + '/edit'" :text="'📝'" />
+            <span class="cursor-pointer text-primary" @click="emits('goToDiffusion', 'https://elaastic.irit.fr/assignment/' + id + '/edit')">  📝  </span>
           </span>
         </template>
         <span>{{ t('edit-properties') }}</span>
       </v-tooltip>
       <span>]     </span>
-
-      <span v-if="questionCurrent">
-        <span>/</span>
-        <Link
-                class="ml-2"
-                :href="'https://elaastic.irit.fr/player/assignment/' + id +'/play/sequence/' + questionCurrent.id"
-                :text="questionCurrent.title"
-        />
-      </span>
     </v-card-text>
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 
 <i18n>
 {
