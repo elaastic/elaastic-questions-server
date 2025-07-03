@@ -4,6 +4,9 @@ import {useI18n} from "vue-i18n";
 import type {PropType} from "vue";
 
 const props = defineProps({
+  /**
+   * The id of the assignment.
+   */
   id: {
     type: Number
   },
