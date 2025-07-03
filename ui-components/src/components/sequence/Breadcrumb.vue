@@ -2,6 +2,7 @@
 
 import {useI18n} from "vue-i18n";
 import type {PropType} from "vue";
+import Link from "@/components/util/Link.vue";
 
 const props = defineProps({
   id: {
@@ -45,14 +46,14 @@ const { t } = useI18n()
   <v-card class="border-sm rounded-0" :elevation="0">
     <v-card-text>
       <!-- Links currently don't work. They are just examples. -->
-      <span v-if="course" class="cursor-pointer text-primary" @click="emits('goToCourse','https://elaastic.irit.fr/course/' + course.id)">📁{{ course.title }}  /</span>
+      <span v-if="course" class="cursor-pointer text-primary" @click="emits('goToCourse','course/' + course.id)">📁{{ course.title }}  /</span>
 
-      <span class="cursor-pointer text-primary font-weight-bold" @click="emits('goToSubject', 'https://elaastic.irit.fr/subject/' + subject.id)">  📄{{ subject.title }}  /</span>
+      <span class="cursor-pointer text-primary font-weight-bold" @click="emits('goToSubject', 'subject/' + subject.id)">  📄{{ subject.title }}  /</span>
 
       <v-tooltip location="top">
         <template #activator="{ props: tooltipProps }">
           <span v-bind="tooltipProps">
-            <span class="cursor-pointer text-primary" @click="emits('goToDiffusion', 'https://elaastic.irit.fr/subject/' + subject.id + '?activeTab=assignments')">  📡{{ audienceLocal }} ({{ scholarYear }})  </span>
+            <span class="cursor-pointer text-primary" @click="emits('goToDiffusion', 'subject/' + subject.id + '?activeTab=assignments')">  📡{{ audienceLocal }} ({{ scholarYear }})  </span>
           </span>
         </template>
         <span>{{ t('change-assignment') }}</span>
@@ -62,7 +63,7 @@ const { t } = useI18n()
       <v-tooltip location="top">
         <template #activator="{ props: tooltipProps }">
           <span v-bind="tooltipProps">
-            <span class="cursor-pointer text-primary" @click="emits('goToDiffusion', 'https://elaastic.irit.fr/assignment/' + id + '/edit')">  📝  </span>
+            <span class="cursor-pointer text-primary" @click="emits('editProperties', 'assignment/' + id + '/edit')">  📝  </span>
           </span>
         </template>
         <span>{{ t('edit-properties') }}</span>
