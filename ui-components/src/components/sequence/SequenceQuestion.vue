@@ -37,8 +37,13 @@ const props = defineProps({
 })
 const filteredStatement = computed(() => {
   if (!props.question?.statement) return '';
-  return props.question.statement.replace(/<img[^>]*>/gi, '');
+  return truncateText(props.question.statement);
 });
+function truncateText(statement: string): string {
+  const withoutImages = statement.replace(/<img[^>]*>/gi, '');
+  const match = withoutImages.match(/<p[^>]*>(.*?)<\/p>/i);
+  return match ? match[1].trim() : '';
+}
 </script>
 
 <template>
@@ -55,7 +60,7 @@ const filteredStatement = computed(() => {
     <v-card-text
             :class="['d-flex', props.isSelected ? 'text_orange' : 'text_black']"
     >
-      <div v-if="!hideStatement" class="flex-1-1-0 mr-4" v-html="filteredStatement" />
+      <div v-if="!hideStatement" class="flex-1-1-0 mr-4 text-truncate" v-html="filteredStatement" />
       <LogoSVG
               v-if="!isSelected && !hideStatement"
               :state="props.sequenceState"
