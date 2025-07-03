@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import SequenceQuestion from '@/components/sequence/SequenceQuestion.vue'
+import franceMap from '../assets/france_map.jpg';
 
 const meta = {
   title: 'sequence/SequenceQuestion',
@@ -92,6 +93,28 @@ export const ConcreteExample: Story = {
       title: 'Capitale de la France ?',
       statement: `
         <p>Quelle est la capitale de la France ?</p>
+        <p>A) Lille</p>
+        <p>B) Nantes</p>
+        <p>C) Lyon</p>
+        <p>D) La réponse D</p>
+        <p>E) Paris</p>
+        <p>F) Toulouse</p>
+        <p>G) Strasbourg</p>
+        <p>H) Marseille</p>
+        `,
+      questionNumber: 1,
+    },
+    isSelected: true,
+    sequenceState: 'CLOSED',
+  },
+}
+export const ExampleWithImageFiltered: Story = {
+  args: {
+    question: {
+      title: 'Capitale de la France ?',
+      statement: `
+        <p>Quelle est la capitale de la France ?</p>
+        <img src="${franceMap}" alt="France map"/>
         <p>A) Lille</p>
         <p>B) Nantes</p>
         <p>C) Lyon</p>

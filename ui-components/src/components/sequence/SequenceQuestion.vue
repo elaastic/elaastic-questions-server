@@ -28,6 +28,10 @@ const props = defineProps({
     required: true,
   },
 })
+const filteredStatement = computed(() => {
+  if (!props.question?.statement) return '';
+  return props.question.statement.replace(/<img[^>]*>/gi, '');
+});
 </script>
 
 <template>
@@ -44,7 +48,7 @@ const props = defineProps({
     <v-card-text
             :class="['d-flex', props.isSelected ? 'text_orange' : 'text_black']"
     >
-      <div class="flex-1-1-0 mr-4" v-html="question.statement" />
+      <div class="flex-1-1-0 mr-4" v-html="filteredStatement" />
       <LogoSVG
               v-if="!isSelected"
               :state="props.sequenceState"
