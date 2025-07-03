@@ -22,7 +22,7 @@ import {computed, ref, watch} from 'vue'
 import ResponsePhaseConfiguration from "@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue";
 import ConfrontingViewPhaseConfiguration from "@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue";
 import ResultPhaseConfiguration from "@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue";
-import type {SequenceConfiguration} from "@/models/SequenceConfiguration";
+import type {ExecutionContext, SequenceConfiguration} from "@/models/SequenceConfiguration";
 
 const {t} = useI18n()
 

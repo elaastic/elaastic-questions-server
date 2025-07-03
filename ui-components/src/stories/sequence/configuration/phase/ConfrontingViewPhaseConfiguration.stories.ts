@@ -25,7 +25,7 @@ const meta: any = {
   title: 'sequence/configuration/phase/ConfrontingViewPhaseConfiguration',
   component: ConfrontingViewPhaseConfiguration,
   args: {
-    "onUpdate:confrontingViewsPhaseConfig": fn(),
+    "onUpdate:modelValue": fn(),
     studentGiveExplanation: true,
   },
   tags: ['autodocs', 'organisms'],
