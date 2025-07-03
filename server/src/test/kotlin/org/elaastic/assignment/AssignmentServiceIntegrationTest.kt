@@ -28,12 +28,15 @@ import org.elaastic.material.instructional.statement.StatementRepository
 import org.elaastic.material.instructional.statement.StatementService
 import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.sequence.ExecutionContext
+import org.elaastic.sequence.SequenceConfig
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tExpect
@@ -238,11 +241,14 @@ internal class AssignmentServiceIntegrationTest(
         sequenceService.start(
             teacher,
             assignment.sequences.first(),
-            ExecutionContext.FaceToFace,
-            false,
-            EvaluationPhaseConfig(
-                true, 0,
-                evaluationMethod = EvaluationMethod.ALL_AT_ONCE
+            SequenceConfig(
+                ExecutionContext.FaceToFace,
+                ResponsePhaseConfig(false),
+                EvaluationPhaseConfig(
+                    true, 0,
+                    evaluationMethod = EvaluationMethod.ALL_AT_ONCE
+                ),
+                ResultPhaseConfig(false)
             )
         )
 

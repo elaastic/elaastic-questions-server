@@ -204,8 +204,6 @@ internal class PlayerControllerTest(
                 eq(sequence.owner),
                 eq(sequence),
                 any(),
-                any(),
-                any(),
             )
         ).thenReturn(sequence)
         whenever(userService.updateUserActiveSince(sequence.owner)).thenReturn(sequence.owner)

@@ -29,8 +29,11 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
+import org.elaastic.test.directive.tGiven
 import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
 import org.junit.jupiter.api.Assertions.*
@@ -133,11 +136,11 @@ internal class SequenceServiceIntegrationTest @Autowired constructor(
             sequenceService.start(
                 user,
                 testingSequence,
-                ExecutionContext.Distance,
-                true,
-                EvaluationPhaseConfig(
-                    true, 1,
-                    EvaluationMethod.DRAXO,
+                SequenceConfig(
+                    ExecutionContext.Distance,
+                    ResponsePhaseConfig(true),
+                    EvaluationPhaseConfig(true, 1, EvaluationMethod.DRAXO),
+                    ResultPhaseConfig(false)
                 )
             )
         }
@@ -166,11 +169,11 @@ internal class SequenceServiceIntegrationTest @Autowired constructor(
             sequenceService.start(
                 user,
                 testingSequence,
-                executionContext = ExecutionContext.Distance,
-                studentsProvideExplanation = true,
-                EvaluationPhaseConfig(
-                    true, 1,
-                    EvaluationMethod.DRAXO,
+                SequenceConfig(
+                    ExecutionContext.Distance,
+                    ResponsePhaseConfig(true),
+                    EvaluationPhaseConfig(true, 1, EvaluationMethod.DRAXO),
+                    ResultPhaseConfig(false)
                 )
             )
         }

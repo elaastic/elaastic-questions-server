@@ -45,10 +45,13 @@ import org.elaastic.material.instructional.subject.Subject
 import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
+import org.elaastic.sequence.SequenceConfig
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
@@ -475,12 +478,11 @@ class BootstrapService(
             sequenceService.start(
                 assignment.owner,
                 it,
-                mode,
-                true,
-                EvaluationPhaseConfig(
-                    true,
-                    2,
-                    EvaluationMethod.ALL_AT_ONCE
+                SequenceConfig(
+                    mode,
+                    ResponsePhaseConfig(true),
+                    EvaluationPhaseConfig(true, 2, EvaluationMethod.ALL_AT_ONCE),
+                    ResultPhaseConfig(false)
                 )
             )
         }

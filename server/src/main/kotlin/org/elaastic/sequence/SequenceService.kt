@@ -137,25 +137,6 @@ class SequenceService(
     fun start( // TODO the signature should (User, Sequence, SequenceConfig)
         user: User,
         sequence: Sequence,
-        executionContext: ExecutionContext,
-        studentsProvideExplanation: Boolean,
-        confrontingViewsPhaseConfig: EvaluationPhaseConfig? = null,
-    ): Sequence {
-        return start(
-            user,
-            sequence,
-            SequenceConfig(
-                executionContext = executionContext,
-                responsePhaseConfig = ResponsePhaseConfig(studentsProvideExplanation),
-                confrontingViewsPhaseConfig = confrontingViewsPhaseConfig ?: EvaluationPhaseConfig(false),
-                resultPhaseConfig = ResultPhaseConfig()
-            )
-        )
-    }
-
-    fun start(
-        user: User,
-        sequence: Sequence,
         sequenceConfig: SequenceConfig
     ): Sequence {
 
