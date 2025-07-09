@@ -69,6 +69,12 @@ const props = defineProps({
   }
 })
 
+const emits = defineEmits(["startAllSequences"])
+
+const startAllSequences = () => {
+  emits("startAllSequences");
+}
+
 const { t } = useI18n()
 </script>
 
@@ -93,6 +99,9 @@ const { t } = useI18n()
     <v-card-title class="title_color" >
       <v-icon icon="mdi-note-outline"/>
       <strong class="ml-5">{{ title }}</strong>
+      <v-btn class="position-absolute right-0 mr-4 bg-green-darken-1" @click="startAllSequences" >
+        <v-icon icon="mdi-chevron-double-right" />
+      </v-btn>
     </v-card-title>
     <Breadcrumb :id="idAssignment" :course="course" :subject="subject" :audience="audience" :scholar-year="scholarYear"  />
     <ListSequenceQuestion :questions="questions" :hide-statements="hideStatements" />
