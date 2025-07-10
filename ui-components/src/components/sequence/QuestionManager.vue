@@ -99,9 +99,18 @@ const { t } = useI18n()
     <v-card-title class="title_color" >
       <v-icon icon="mdi-note-outline"/>
       <strong class="ml-5">{{ title }}</strong>
-      <v-btn class="position-absolute right-0 mr-4 bg-green-darken-1" @click="startAllSequences" >
-        <v-icon icon="mdi-chevron-double-right" />
-      </v-btn>
+      <v-tooltip :text="t('start-all-sequences')" location="bottom">
+        <template v-slot:activator="{props: props}">
+          <v-btn
+                  v-bind="props"
+                  class="position-absolute right-0 mr-4 bg-green-darken-1"
+                  @click="startAllSequences"
+          >
+            <v-icon icon="mdi-chevron-double-right" />
+          </v-btn>
+        </template>
+      </v-tooltip>
+
     </v-card-title>
     <Breadcrumb :id="idAssignment" :course="course" :subject="subject" :audience="audience" :scholar-year="scholarYear"  />
     <ListSequenceQuestion :questions="questions" :hide-statements="hideStatements" />
@@ -120,10 +129,12 @@ const { t } = useI18n()
 <i18n>
 {
   "en": {
-    "nb-of-participants": "Number of participants"
+    "nb-of-participants": "Number of participants",
+    "start-all-sequences": "Start all sequences"
   },
   "fr": {
-    "nb-of-participants": "Nombre de participants"
+    "nb-of-participants": "Nombre de participants",
+    "start-all-sequences": "Lancer toutes les séquences"
   }
 }
 </i18n>
