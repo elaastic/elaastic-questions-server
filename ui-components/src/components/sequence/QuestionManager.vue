@@ -87,7 +87,7 @@ const { t } = useI18n()
               height="32"
               size="small"
               v-bind="tooltipProps"
-              class="btn font-weight-bold position-absolute rounded-lg text-white bg-grey-darken-1 ml-6"
+              class="btn font-weight-bold position-static rounded-lg text-white bg-grey-darken-1 ml-6"
               icon>
         <v-icon icon="mdi-account-group" class="mr-2" />
         {{ props.numberOfParticipants }}
