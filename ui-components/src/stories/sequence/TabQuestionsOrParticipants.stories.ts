@@ -11,7 +11,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const NotStarted: Story = {
+export const Default: Story = {
   args: {
     idAssignment: 23,
     course: { title: "Français", id: 8 },
