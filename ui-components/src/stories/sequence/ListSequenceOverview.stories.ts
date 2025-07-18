@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-import ListSequenceQuestion from '@/components/sequence/ListSequenceQuestion.vue'
+import ListSequenceOverview from '@/components/sequence/ListSequenceOverview.vue'
 import {Phase, SequenceStatus} from "@/components/sequence/Sequence.types";
 
 const meta = {
-  title: 'sequence/ListSequenceQuestion',
-  component: ListSequenceQuestion,
+  title: 'sequence/ListSequenceOverview',
+  component: ListSequenceOverview,
   tags: ['autodocs', 'atomic'],
   parameters: {
     docs: {
@@ -15,7 +15,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof ListSequenceQuestion>
+} satisfies Meta<typeof ListSequenceOverview>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -52,7 +52,7 @@ export const Default: Story = {
 }
 export const WidthRestricted: Story = {
   render: (args) => ({
-    components: {ListSequenceQuestion},
+    components: {ListSequenceQuestion: ListSequenceOverview},
     setup(){
       return {
         args
