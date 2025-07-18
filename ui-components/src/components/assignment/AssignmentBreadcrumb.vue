@@ -52,7 +52,7 @@ const items = computed<BreadcrumbItem[]>(() => {
       },
     },
     {
-      icon: 'mdi-antenna',
+      icon: 'mdi-podcast',
       title: `${props.audience ?? 'na'} ${props.scholarYear}`,
       action: () => {
         emits('goToDiffusionList', props.subject.id)
@@ -72,11 +72,11 @@ const items = computed<BreadcrumbItem[]>(() => {
 </script>
 
 <template>
-  <v-breadcrumbs :items="items">
+  <v-breadcrumbs :items="items" density="compact">
     <template #title="{ item }: { item: InternalBreadcrumbItem & BreadcrumbItem }">
-      <v-btn variant="text" size="small" class="text-none mx-0 px-1" @click.prevent="item.action()">
+      <v-btn variant="text" size="small" class="text-none mx-0" @click.prevent="item.action()">
         <v-tooltip v-if="item.tooltip" activator="parent" location="top">{{ item.tooltip }}</v-tooltip>
-        <v-icon start size="18">{{ item.icon }}</v-icon>
+        <v-icon class="">{{ item.icon }}</v-icon>
         {{ item.title }}
       </v-btn>
 
