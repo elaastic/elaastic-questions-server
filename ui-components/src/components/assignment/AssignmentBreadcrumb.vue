@@ -44,7 +44,7 @@ const { t } = useI18n()
           </span>
         </template>
 
-        <span>{{ t('change-assignment') }}</span>
+        {{ t('change-assignment') }}
       </v-tooltip>
 
       <span> [</span>
@@ -56,7 +56,8 @@ const { t } = useI18n()
             </span>
           </span>
         </template>
-        <span>{{ t('edit-properties') }}</span>
+
+        {{ t('edit-properties') }}
       </v-tooltip>
       <span>] </span>
     </v-card-text>
