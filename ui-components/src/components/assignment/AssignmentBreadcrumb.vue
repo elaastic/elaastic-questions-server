@@ -1,8 +1,10 @@
 <script lang="ts">
+import type { Course, Subject } from '@/components/assignment/Assignment.types'
+
 export interface AssignmentBreadcrumbProps {
   id: number
-  course?: { title: string; id: number }
-  subject: { title: string; id: number }
+  course?: Course
+  subject: Subject
   audience?: string
   scholarYear: string
 }
