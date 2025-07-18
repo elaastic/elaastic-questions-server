@@ -7,7 +7,7 @@ export interface AssignmentBreadcrumbProps {
   course?: Course
   subject: Subject
   audience?: string
-  scholarYear: string
+  scholarYear?: string
 }
 </script>
 <script setup lang="ts">
@@ -32,6 +32,8 @@ interface BreadcrumbItem extends InternalBreadcrumbItem {
   }
 }
 
+const diffusionName = computed(() => ((props.audience ?? 'na') + (props.scholarYear ? ` (${props.scholarYear})` : '')))
+
 const items = computed<BreadcrumbItem[]>(() => {
   return [
     ...(props.course
@@ -53,7 +55,7 @@ const items = computed<BreadcrumbItem[]>(() => {
     },
     {
       icon: 'mdi-podcast',
-      title: `${props.audience ?? 'na'} ${props.scholarYear}`,
+      title: diffusionName.value,
       action: () => {
         emits('goToDiffusionList', props.subject.id)
       },
