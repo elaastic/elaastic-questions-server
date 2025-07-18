@@ -14,25 +14,34 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     id: 1256,
-    course: {title: "Geography", id: 23},
-    subject: {title: "Capitals", id: 530},
-    audience: "E.Le",
-    scholarYear: "2022 - 2023",
-  }
+    course: { title: 'Geography', id: 23 },
+    subject: { title: 'Capitals', id: 530 },
+    audience: 'Master',
+    scholarYear: '2022 - 2023',
+  },
 }
 export const WithoutDirectory: Story = {
   args: {
     id: 1256,
-    subject: {title: "Capitals", id: 530},
-    audience: "E.Le",
-    scholarYear: "2022 - 2023",
-  }
+    subject: { title: 'Capitals', id: 530 },
+    audience: 'Master',
+    scholarYear: '2022 - 2023',
+  },
 }
-export const AudienceNotProvided: Story = {
+
+export const UnamedAudience: Story = {
   args: {
     id: 1256,
-    course: {title: "Geography", id: 23},
-    subject: {title: "Capitals", id: 530},
-    scholarYear: "2022 - 2023",
-  }
+    course: { title: 'Geography', id: 23 },
+    subject: { title: 'Capitals', id: 530 },
+    scholarYear: '2022 - 2023',
+  },
+}
+
+export const WithoutScholarYear: Story = {
+  args: {
+    id: 1256,
+    course: { title: 'Geography', id: 23 },
+    subject: { title: 'Capitals', id: 530 },
+  },
 }
