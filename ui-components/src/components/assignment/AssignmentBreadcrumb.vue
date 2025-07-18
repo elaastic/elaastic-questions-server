@@ -22,14 +22,13 @@ const { t } = useI18n()
 <template>
   <v-card class="border-sm rounded-0" :elevation="0">
     <v-card-text>
-      <!-- Links currently don't work. They are just examples. -->
       <span
               v-if="course"
               class="cursor-pointer text-primary"
               @click="emits('goToCourse','course/' + course.id)"
       >
         <v-icon class="text-black" icon="mdi-folder" />
-        {{ course.title }}/
+        {{ course.title }}&nbsp;/
       </span>
 
       <span
@@ -37,7 +36,7 @@ const { t } = useI18n()
               @click="emits('goToSubject', 'subject/' + subject.id)"
       >
         <v-icon class="text-black" icon="mdi-book-open" />
-        {{ subject.title }}  /
+        {{ subject.title }}&nbsp;/
       </span>
 
       <v-tooltip location="top">
