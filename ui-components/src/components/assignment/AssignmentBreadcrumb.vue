@@ -9,12 +9,11 @@ export interface AssignmentBreadcrumbProps {
 </script>
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import type { PropType } from 'vue'
 
 const props = defineProps<AssignmentBreadcrumbProps>()
 const audienceLocal = props.audience ? props.audience : 'na'
 
-const emits = defineEmits(['goToCourse', 'goToSubject', 'goToDiffusion', 'editProperties'])
+const emits = defineEmits(['goToCourse', 'goToSubject', 'goToDiffusionList', 'editProperties'])
 
 const { t } = useI18n()
 </script>
@@ -22,12 +21,12 @@ const { t } = useI18n()
 <template>
   <v-card class="border-sm rounded-0" :elevation="0">
     <v-card-text>
-      <span v-if="course" class="cursor-pointer text-primary" @click="emits('goToCourse', 'course/' + course.id)">
+      <span v-if="course" class="cursor-pointer text-primary" @click="emits('goToCourse', course.id)">
         <v-icon class="text-black" icon="mdi-folder" />
         {{ course.title }}&nbsp;/
       </span>
 
-      <span class="cursor-pointer text-primary font-weight-bold" @click="emits('goToSubject', 'subject/' + subject.id)">
+      <span class="cursor-pointer text-primary font-weight-bold" @click="emits('goToSubject', subject.id)">
         <v-icon class="text-black" icon="mdi-book-open" />
         {{ subject.title }}&nbsp;/
       </span>
@@ -37,13 +36,14 @@ const { t } = useI18n()
           <span v-bind="tooltipProps">
             <span
               class="cursor-pointer text-primary"
-              @click="emits('goToDiffusion', 'subject/' + subject.id + '?activeTab=assignments')"
+              @click="emits('goToDiffusionList', subject.id)"
             >
               <v-icon class="text-black" icon="mdi-antenna" />
               {{ audienceLocal }} ({{ scholarYear }})
             </span>
           </span>
         </template>
+
         <span>{{ t('change-assignment') }}</span>
       </v-tooltip>
 
