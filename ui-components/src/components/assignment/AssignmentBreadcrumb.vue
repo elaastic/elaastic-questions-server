@@ -1,42 +1,17 @@
+<script lang="ts">
+export interface AssignmentBreadcrumbProps {
+  id: number
+  course?: {title: string, id: number}
+  subject: {title: string, id: number}
+  audience?: string
+  scholarYear: string
+}
+</script>
 <script setup lang="ts">
-
 import {useI18n} from "vue-i18n";
 import type {PropType} from "vue";
 
-const props = defineProps({
-  /**
-   * The id of the assignment.
-   */
-  id: {
-    type: Number
-  },
-  /**
-   * The course to which the assignment belongs.
-   */
-  course: {
-    type: Object as PropType<{title: string, id: number}>
-  },
-  /**
-   * The subject to which the assignment belongs.
-   */
-  subject: {
-    type: Object as PropType<{title: string, id: number}>,
-    required: true
-  },
-  /**
-   * The audience of the assignment.
-   */
-  audience: {
-    type: String,
-  },
-  /**
-   * The scholar year of the assignment.
-   */
-  scholarYear: {
-    type: String,
-    required: true
-  },
-})
+const props = defineProps<AssignmentBreadcrumbProps>()
 const audienceLocal = props.audience ? props.audience : 'na';
 
 const emits = defineEmits(['goToCourse', 'goToSubject', 'goToDiffusion', 'editProperties'])
