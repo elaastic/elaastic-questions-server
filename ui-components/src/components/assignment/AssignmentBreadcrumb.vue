@@ -1,18 +1,18 @@
 <script lang="ts">
 export interface AssignmentBreadcrumbProps {
   id: number
-  course?: {title: string, id: number}
-  subject: {title: string, id: number}
+  course?: { title: string; id: number }
+  subject: { title: string; id: number }
   audience?: string
   scholarYear: string
 }
 </script>
 <script setup lang="ts">
-import {useI18n} from "vue-i18n";
-import type {PropType} from "vue";
+import { useI18n } from 'vue-i18n'
+import type { PropType } from 'vue'
 
 const props = defineProps<AssignmentBreadcrumbProps>()
-const audienceLocal = props.audience ? props.audience : 'na';
+const audienceLocal = props.audience ? props.audience : 'na'
 
 const emits = defineEmits(['goToCourse', 'goToSubject', 'goToDiffusion', 'editProperties'])
 
@@ -22,19 +22,12 @@ const { t } = useI18n()
 <template>
   <v-card class="border-sm rounded-0" :elevation="0">
     <v-card-text>
-      <span
-              v-if="course"
-              class="cursor-pointer text-primary"
-              @click="emits('goToCourse','course/' + course.id)"
-      >
+      <span v-if="course" class="cursor-pointer text-primary" @click="emits('goToCourse', 'course/' + course.id)">
         <v-icon class="text-black" icon="mdi-folder" />
         {{ course.title }}&nbsp;/
       </span>
 
-      <span
-              class="cursor-pointer text-primary font-weight-bold"
-              @click="emits('goToSubject', 'subject/' + subject.id)"
-      >
+      <span class="cursor-pointer text-primary font-weight-bold" @click="emits('goToSubject', 'subject/' + subject.id)">
         <v-icon class="text-black" icon="mdi-book-open" />
         {{ subject.title }}&nbsp;/
       </span>
@@ -43,8 +36,8 @@ const { t } = useI18n()
         <template #activator="{ props: tooltipProps }">
           <span v-bind="tooltipProps">
             <span
-                    class="cursor-pointer text-primary"
-                    @click="emits('goToDiffusion', 'subject/' + subject.id + '?activeTab=assignments')"
+              class="cursor-pointer text-primary"
+              @click="emits('goToDiffusion', 'subject/' + subject.id + '?activeTab=assignments')"
             >
               <v-icon class="text-black" icon="mdi-antenna" />
               {{ audienceLocal }} ({{ scholarYear }})
@@ -54,21 +47,18 @@ const { t } = useI18n()
         <span>{{ t('change-assignment') }}</span>
       </v-tooltip>
 
-      <span>     [</span>
+      <span> [</span>
       <v-tooltip location="top">
         <template #activator="{ props: tooltipProps }">
           <span v-bind="tooltipProps">
-            <span
-                    class="cursor-pointer text-primary"
-                    @click="emits('editProperties', 'assignment/' + id + '/edit')"
-            >
+            <span class="cursor-pointer text-primary" @click="emits('editProperties', 'assignment/' + id + '/edit')">
               <v-icon icon="mdi-square-edit-outline" />
             </span>
           </span>
         </template>
         <span>{{ t('edit-properties') }}</span>
       </v-tooltip>
-      <span>]     </span>
+      <span>] </span>
     </v-card-text>
   </v-card>
 </template>
