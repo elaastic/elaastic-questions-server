@@ -1,115 +1,53 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import ListSequenceQuestion from '@/components/sequence/ListSequenceQuestion.vue'
+import {Phase, SequenceStatus} from "@/components/sequence/Sequence.types";
 
 const meta = {
   title: 'sequence/ListSequenceQuestion',
   component: ListSequenceQuestion,
   tags: ['autodocs', 'atomic'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'This component is used to display several SequenceOverview components',
+      },
+    },
+  },
 } satisfies Meta<typeof ListSequenceQuestion>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
+const sequenceExamples = [{
+  id: Date.now(),
+  state: {sequenceStatus: SequenceStatus.IN_PROGRESS, phases: [Phase.RESPONSE]},
+  question: {
+    title: 'A question',
+    statement: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>`,
+  },
+},
+  {
+    id: Date.now(),
+    state: {sequenceStatus: SequenceStatus.CLOSED},
+    question: {
+      title: 'An other question',
+      statement: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>`,
+    }
+  },
+  {
+    id: Date.now(),
+    state: {sequenceStatus: SequenceStatus.NOT_STARTED},
+    question: {
+      title: 'The final question',
+      statement: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>`,
+    }
+  }]
+
 export const Default: Story = {
   args: {
-    questions: [
-      {
-        state: 'NOT_STARTED',
-        question: {
-          title: 'Question 1',
-          statement: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>`,
-          questionNumber: 1,
-        }
-      },
-      {
-        state: 'RESPONSE_PHASE',
-        question: {
-          title: 'Capitale de la France ?',
-          statement: `
-            <p>Quelle est la capitale de la France ?</p>
-            <p>A) Lille</p>
-            <p>B) Nantes</p>
-            <p>C) Lyon</p>
-            <p>D) La réponse D</p>
-            <p>E) Paris</p>
-            <p>F) Toulouse</p>
-            <p>G) Strasbourg</p>
-            <p>H) Marseille</p>
-            `,
-          questionNumber: 2,
-        }
-      },
-      {
-        state: 'CLOSED',
-        question: {
-          title: 'Capitale de la France ?',
-          statement: `
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>
-            <p>A) Lille</p>
-            <p>B) Nantes</p>
-            <p>C) Lyon</p>
-            <p>D) La réponse D</p>
-            <p>E) Paris</p>
-            <p>F) Toulouse</p>
-            <p>G) Strasbourg</p>
-            <p>H) Marseille</p>
-        `,
-          questionNumber: 3,
-        }
-      }
-    ]
-  },
-}
-export const HideStatements: Story = {
-  args: {
-    questions: [
-      {
-        state: 'NOT_STARTED',
-        question: {
-          title: 'Question 1',
-          statement: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>`,
-          questionNumber: 1,
-        }
-      },
-      {
-        state: 'RESPONSE_PHASE',
-        question: {
-          title: 'Capitale de la France ?',
-          statement: `
-            <p>Quelle est la capitale de la France ?</p>
-            <p>A) Lille</p>
-            <p>B) Nantes</p>
-            <p>C) Lyon</p>
-            <p>D) La réponse D</p>
-            <p>E) Paris</p>
-            <p>F) Toulouse</p>
-            <p>G) Strasbourg</p>
-            <p>H) Marseille</p>
-            `,
-          questionNumber: 2,
-        }
-      },
-      {
-        state: 'CLOSED',
-        question: {
-          title: 'Capitale de la France ?',
-          statement: `
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>
-            <p>A) Lille</p>
-            <p>B) Nantes</p>
-            <p>C) Lyon</p>
-            <p>D) La réponse D</p>
-            <p>E) Paris</p>
-            <p>F) Toulouse</p>
-            <p>G) Strasbourg</p>
-            <p>H) Marseille</p>
-        `,
-          questionNumber: 3,
-        }
-      }
-    ],
-    hideStatements: true
+    sequences: sequenceExamples,
   },
 }
 export const WidthRestricted: Story = {
@@ -129,51 +67,6 @@ export const WidthRestricted: Story = {
     `
   }),
   args: {
-    questions: [
-      {
-        state: 'NOT_STARTED',
-        question: {
-          title: 'Question 1',
-          statement: `<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>`,
-          questionNumber: 1,
-        }
-      },
-      {
-        state: 'RESPONSE_PHASE',
-        question: {
-          title: 'Capitale de la France ?',
-          statement: `
-            <p>Quelle est la capitale de la France ?</p>
-            <p>A) Lille</p>
-            <p>B) Nantes</p>
-            <p>C) Lyon</p>
-            <p>D) La réponse D</p>
-            <p>E) Paris</p>
-            <p>F) Toulouse</p>
-            <p>G) Strasbourg</p>
-            <p>H) Marseille</p>
-            `,
-          questionNumber: 2,
-        }
-      },
-      {
-        state: 'CLOSED',
-        question: {
-          title: 'Capitale de la France ?',
-          statement: `
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut. </p>
-            <p>A) Lille</p>
-            <p>B) Nantes</p>
-            <p>C) Lyon</p>
-            <p>D) La réponse D</p>
-            <p>E) Paris</p>
-            <p>F) Toulouse</p>
-            <p>G) Strasbourg</p>
-            <p>H) Marseille</p>
-        `,
-          questionNumber: 3,
-        }
-      }
-    ]
+    sequences: sequenceExamples,
   },
 }

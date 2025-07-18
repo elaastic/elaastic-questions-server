@@ -1,44 +1,40 @@
 <script setup lang="ts">
 
 import {type PropType, ref} from "vue";
-import SequenceQuestion, {type Question} from "@/components/sequence/SequenceQuestion.vue";
-import type {SequenceState} from "@/components/sequence/LogoSVG.vue";
+import SequenceOverview from "@/components/sequence/SequenceOverview.vue"
+import type {Sequence} from "@/components/sequence/Sequence.types";
 
 const props = defineProps({
   /**
-   * All the questions of a subject. It's an array of Object composed of 2 attributes : the state of the sequence related to the question so it can be 'NOT_STARTED' | 'RESPONSE_PHASE' | 'CONFRONTING_VIEWPOINT' | 'RESULTS_PHASE' | 'CLOSED' | 'DISTANT' | 'BLENDED'. The second attribute is a 3-uplet : the title, the statement, and the number of the question.,
+   * All the sequences of a subject. It's an array of Object composed of 3 attributes : the state of the sequence so it can be 'NOT_STARTED' | 'CLOSED' | 'IN_PROGRESS' . The second attribute is a 2-uplet : the title and the statement of the question. The third attribute is the id of the sequence.
    */
-  questions: {
-    type: Array as PropType<{ state: SequenceState, question: Question }[]>,
+  sequences: {
+    type: Array as PropType<Sequence[]>
   },
-  /**
-   * A boolean. True if statements are hidden. False if they are displayed.
-   */
-  hideStatements: {
-    type: Boolean,
-    default: false
-  }
 })
 
 const emits = defineEmits(["changeSelectedQuestion"])
 
-const selectedQuestion = ref<number>(1)
-const handleSelectedQuestion = (newValue : number) => {
-  selectedQuestion.value = newValue;
+const selectedSequenceIndex = ref<number | null>(null)
+
+const handleSelectedQuestion = (newValue: number) => {
+  selectedSequenceIndex.value = newValue
   emits("changeSelectedQuestion", newValue)
 }
 
 </script>
 
 <template>
-  <SequenceQuestion
-          v-for="q in questions"
-          :sequence-state="q.state"
-          :question="q.question"
-          :is-selected="q.question.questionNumber === selectedQuestion"
-          :hide-statement="hideStatements"
-          @click="handleSelectedQuestion(q.question.questionNumber)"
-  />
+  <v-list>
+    <SequenceOverview
+            v-for="(q, index) in sequences"
+            :key="selectedSequenceIndex === index ? `selected-${index}` : index"
+            :sequence="q"
+            :sequenceIndex="index+1"
+            :selected="index === selectedSequenceIndex"
+            @click="() => handleSelectedQuestion(index)"
+    />
+  </v-list>
 </template>
 
 <style scoped></style>
