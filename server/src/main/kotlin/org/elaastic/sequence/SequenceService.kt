@@ -134,7 +134,7 @@ class SequenceService(
         )
     }
 
-    fun start( // TODO the signature should (User, Sequence, SequenceConfig)
+    fun start(
         user: User,
         sequence: Sequence,
         sequenceConfig: SequenceConfig
