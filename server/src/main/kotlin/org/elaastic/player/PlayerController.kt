@@ -28,11 +28,11 @@ import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.assignment.LearnerAssignment
-import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.common.web.ControllerUtil
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.player.dashboard.DashboardModelFactory
+import org.elaastic.player.dashboard.DashboardPhaseState
 import org.elaastic.player.dashboard.SequenceMonitoringModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModelFactory
 import org.elaastic.player.results.learner.LearnerResultsModel
@@ -348,12 +348,7 @@ class PlayerController(
                 sequenceService.start(
                     user,
                     it,
-                    request.executionContext,
-                    request.studentsProvideExplanation ?: false,
-                    request.responseToEvaluateCount ?: 0,
-                    request.evaluationPhaseConfig,
-                    ElaasticFeatures.CHATGPT_EVALUATION.isActive() &&
-                            (request.evaluationByIA ?: false && request.studentsProvideExplanation ?: false)
+                    sequenceConfig = request
                 )
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)
@@ -699,8 +694,8 @@ class PlayerController(
 
         val sequenceMonitoringModel = SequenceMonitoringModel(
             sequence.executionContext,
-            learnerStepsModel.responseSubmissionState.getDashboardState(),
-            learnerStepsModel.evaluationState.getDashboardState(),
+            learnerStepsModel.responseSubmission?.state?.getDashboardState() ?: DashboardPhaseState.NONE,
+            learnerStepsModel.evaluation?.state?.getDashboardState() ?: DashboardPhaseState.NONE,
             sequenceId = sequence.id
         )
 

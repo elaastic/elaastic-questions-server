@@ -29,9 +29,8 @@ class AllAtOnceLearnerEvaluationPhase(
     override var learnerPhaseExecution: AllAtOnceLearnerEvaluationPhaseExecution? = null
 
     override fun loadPhaseExecution(learnerPhaseExecution: LearnerPhaseExecution) {
-        if (learnerPhaseExecution is AllAtOnceLearnerEvaluationPhaseExecution)
-            this.learnerPhaseExecution = learnerPhaseExecution
-        else throw IllegalArgumentException()
+        require(learnerPhaseExecution is AllAtOnceLearnerEvaluationPhaseExecution)
+        this.learnerPhaseExecution = learnerPhaseExecution
     }
 
     override fun getViewModel(): PhaseViewModel = run {

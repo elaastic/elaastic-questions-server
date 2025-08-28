@@ -49,9 +49,5 @@
             <div th:replace="|${phase.getPlayerTemplate().fileName}| :: ${phase.getPlayerTemplate().fragmentName}(${phase.viewModel})"></div>
         </th:block>
     </th:block>
-
-    <!--/* The auto-reload script */-->
-    <th:block
-            th:replace="player/assignment/sequence/components/_auto-reload.html :: auto-reload(${sequenceModel.sequenceId})"></th:block>
     </body>
 </html>

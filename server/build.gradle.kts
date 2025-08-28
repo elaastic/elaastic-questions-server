@@ -15,7 +15,7 @@ plugins {
 
 group = "org.elaastic.questions"
 version = "6.3.7"
-val uiComponentsVersion = "1.0.7"
+val uiComponentsVersion = "1.0.9"
 
 springBoot {
     buildInfo {
@@ -62,8 +62,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.hibernate:hibernate-jcache")
     implementation("org.ehcache:ehcache:3.6.3")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.security:spring-security-cas")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.security:spring-security-cas")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
@@ -104,7 +104,6 @@ dependencies {
     testImplementation("io.cucumber:cucumber-junit:7.14.1")
     testImplementation("io.cucumber:cucumber-junit-platform-engine:7.14.1")
     testImplementation("org.junit.platform:junit-platform-suite:1.10.1")
-
 }
 
 allOpen {

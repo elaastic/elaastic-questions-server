@@ -29,9 +29,8 @@ class DraxoLearnerEvaluationPhase(
     override var learnerPhaseExecution: DraxoLearnerEvaluationPhaseExecution? = null
 
     override fun loadPhaseExecution(learnerPhaseExecution: LearnerPhaseExecution) {
-        if (learnerPhaseExecution is DraxoLearnerEvaluationPhaseExecution)
-            this.learnerPhaseExecution = learnerPhaseExecution
-        else throw IllegalArgumentException()
+        require(learnerPhaseExecution is DraxoLearnerEvaluationPhaseExecution)
+        this.learnerPhaseExecution = learnerPhaseExecution
     }
 
     override fun getViewModel(): PhaseViewModel = run {

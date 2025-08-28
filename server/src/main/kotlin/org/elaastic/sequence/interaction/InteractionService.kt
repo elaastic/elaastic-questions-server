@@ -100,7 +100,7 @@ class InteractionService(
                         interaction.sequence
                     )
                 }
-                if (it.studentsProvideExplanation) {
+                if (it.studentsProvideExplanation && interaction.sequence.getEvaluationInteractionOrNull() != null) {
                     responseRepository.findAllByInteractionAndAttempt(
                         interaction,
                         1

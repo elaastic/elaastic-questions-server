@@ -43,7 +43,7 @@ import org.elaastic.player.command.CommandModel
 import org.elaastic.player.command.CommandModelFactory
 import org.elaastic.player.dashboard.DashboardPhaseState
 import org.elaastic.player.dashboard.LearnerMonitoringModel
-import org.elaastic.player.dashboard.LearnerStateOnPhase
+import org.elaastic.player.dashboard.LearnerPhaseState
 import org.elaastic.player.dashboard.SequenceMonitoringModel
 import org.elaastic.player.evaluation.EvaluationModel
 import org.elaastic.player.evaluation.chatgpt.ChatGptEvaluationModel
@@ -60,6 +60,7 @@ import org.elaastic.player.results.learner.LearnerResultsModel
 import org.elaastic.player.sequence.status.SequenceInfoModel
 import org.elaastic.player.sequence.status.SequenceInfoResolver
 import org.elaastic.player.statement.StatementInfoPanelModel
+import org.elaastic.player.steps.PhaseStep
 import org.elaastic.player.steps.SequenceStatistics
 import org.elaastic.player.steps.StepsModel
 import org.elaastic.sequence.ExecutionContext
@@ -129,9 +130,9 @@ class ComponentTestingController(
         model.addAttribute(
             "stepsModel",
             StepsModel(
-                responseSubmissionState = responseSubmissionState ?: StepsModel.PhaseState.COMPLETED,
-                evaluationState = evaluationState ?: StepsModel.PhaseState.ACTIVE,
-                readState = readState ?: StepsModel.PhaseState.DISABLED,
+                responseSubmission = PhaseStep(responseSubmissionState ?: StepsModel.PhaseState.COMPLETED, 1),
+                evaluation = PhaseStep(evaluationState ?: StepsModel.PhaseState.ACTIVE, 2),
+                read = PhaseStep(readState ?: StepsModel.PhaseState.DISABLED, 3),
                 showStatistics = showStatistics ?: false,
                 studentsProvideExplanation = studentsProvideExplanation ?: true
             )
@@ -2500,7 +2501,7 @@ class ComponentTestingController(
                 .map {
                     CommandSituation(
                         describeSequence(it),
-                        CommandModelFactory.build(user, it)
+                        CommandModelFactory.build(it)
                     )
                 }
         )
@@ -2982,25 +2983,25 @@ class ComponentTestingController(
                 LearnerMonitoringModel(
                     1,
                     "B - I've submitted my answer",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "A - John Doe",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "I didn't answer yet",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
             )
@@ -3019,9 +3020,9 @@ class ComponentTestingController(
                 LearnerMonitoringModel(
                     1,
                     "The sequence is not started",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
             )
@@ -3040,41 +3041,41 @@ class ComponentTestingController(
                 LearnerMonitoringModel(
                     4,
                     "B - I've finished this sequence",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     5,
                     "A - I've finished this sequence",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "C - I've submitted my response and my evaluation",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "D - I've submitted my response",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "B - I didn't start",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
             )
@@ -3095,42 +3096,42 @@ class ComponentTestingController(
                 LearnerMonitoringModel(
                     1,
                     "I've submitted my answer",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "B - I've not submitted my answer",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     5,
                     "A - I've not submitted my answer",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "I've finished both",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
                     "B - I've didn't submit but i've evaluate",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     6,
                     "A - I've didn't submit but i've evaluate",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -3152,49 +3153,49 @@ class ComponentTestingController(
                 LearnerMonitoringModel(
                     1,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Jean",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Ines",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
                     "Pierre",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
                     "Marc",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     learnersMonitoringModel
                 ),
             )
@@ -3216,33 +3217,33 @@ class ComponentTestingController(
                 LearnerMonitoringModel(
                     1,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Albert",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Charlie",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
                     "Pierre",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel
                 ),
             )

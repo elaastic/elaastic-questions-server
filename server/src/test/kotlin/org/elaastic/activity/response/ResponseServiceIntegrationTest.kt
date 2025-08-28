@@ -20,6 +20,7 @@ import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.FakeExplanationData
 import org.elaastic.sequence.SequenceRepository
 import org.elaastic.sequence.SequenceService
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tGiven
@@ -81,8 +82,8 @@ internal class ResponseServiceIntegrationTest(
                 sequenceService.initializeInteractionsForSequence(
                     it,
                     true,
-                    3,
-                    ExecutionContext.Blended
+                    ExecutionContext.Blended,
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -124,8 +125,8 @@ internal class ResponseServiceIntegrationTest(
                 sequenceService.initializeInteractionsForSequence(
                     it,
                     true,
-                    3,
-                    ExecutionContext.Blended
+                    ExecutionContext.Blended,
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -167,8 +168,8 @@ internal class ResponseServiceIntegrationTest(
                 sequenceService.initializeInteractionsForSequence(
                     it,
                     true,
-                    3,
-                    ExecutionContext.Blended
+                    ExecutionContext.Blended,
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -226,8 +227,8 @@ internal class ResponseServiceIntegrationTest(
                 sequenceService.initializeInteractionsForSequence(
                     it,
                     true,
-                    3,
-                    ExecutionContext.Blended
+                    ExecutionContext.Blended,
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)
@@ -289,8 +290,8 @@ internal class ResponseServiceIntegrationTest(
                 sequenceService.initializeInteractionsForSequence(
                     it,
                     true,
-                    3,
-                    ExecutionContext.FaceToFace
+                    ExecutionContext.FaceToFace,
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -357,8 +358,8 @@ internal class ResponseServiceIntegrationTest(
             sequenceService.initializeInteractionsForSequence(
                 it,
                 true,
-                3,
-                ExecutionContext.Blended
+                ExecutionContext.Blended,
+                EvaluationPhaseConfig(true, 3)
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.Blended
                 sequenceRepository.save(sequence)
@@ -428,8 +429,8 @@ internal class ResponseServiceIntegrationTest(
             sequenceService.initializeInteractionsForSequence(
                 it,
                 true,
-                3,
-                ExecutionContext.Blended
+                ExecutionContext.Blended,
+                EvaluationPhaseConfig(true, 3)
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.Blended
                 sequenceRepository.save(sequence)
@@ -505,8 +506,8 @@ internal class ResponseServiceIntegrationTest(
             sequenceService.initializeInteractionsForSequence(
                 it,
                 true,
-                3,
-                ExecutionContext.FaceToFace
+                ExecutionContext.FaceToFace,
+                EvaluationPhaseConfig(true, 3)
             ).let { sequence ->
                 sequence.executionContext = ExecutionContext.FaceToFace
                 sequenceRepository.save(sequence)
@@ -559,8 +560,8 @@ internal class ResponseServiceIntegrationTest(
                 sequenceService.initializeInteractionsForSequence(
                     it,
                     true,
-                    3,
-                    ExecutionContext.FaceToFace
+                    ExecutionContext.FaceToFace,
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -626,8 +627,8 @@ internal class ResponseServiceIntegrationTest(
                 sequenceService.initializeInteractionsForSequence(
                     it,
                     true,
-                    3,
-                    ExecutionContext.FaceToFace
+                    ExecutionContext.FaceToFace,
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.FaceToFace
                     sequenceRepository.save(sequence)
@@ -671,8 +672,8 @@ internal class ResponseServiceIntegrationTest(
                 sequenceService.initializeInteractionsForSequence(
                     it,
                     true,
-                    3,
-                    ExecutionContext.Blended
+                    ExecutionContext.Blended,
+                    EvaluationPhaseConfig(true, 3)
                 ).let { sequence ->
                     sequence.executionContext = ExecutionContext.Blended
                     sequenceRepository.save(sequence)

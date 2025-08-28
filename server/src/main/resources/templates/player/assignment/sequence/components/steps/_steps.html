@@ -16,83 +16,98 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<div
-  th:fragment="steps(stepsModel, sequenceStatistics)"
-  th:remove="tag"
-  xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<div th:fragment="steps(stepsModel, sequenceStatistics)"
+     th:if="${stepsModel.sequenceStarted}"
+     th:remove="tag"
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-  <div class="ui three top attached steps ob-start-sequence-3">
-    <div class="step"
-         th:classappend="|${stepsModel.responseSubmissionState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.responseSubmissionState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.responseSubmissionState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
-      <div th:if="${stepsModel.showStatistics == true && stepsModel.responseSubmissionState.name() != 'DISABLED'}"
-           class="floating ui grey label ob-play-sequence-4" style="left: 3em;" data-inverted=""
-           th:attr="data-tooltip=#{'player.sequence.interaction.responseCount'(1)}"
-           data-position="bottom left"><i
-        class="comment outline icon"></i>
-        <span th:text="${sequenceStatistics.nbResponsesAttempt1}"></span>
-      </div>
+    <!--/* Steps of the sequence */-->
+    <div class="ui three top attached steps ob-start-sequence-3">
+        <!--/* ResponseSubmission phase */-->
+        <div class="step"
+             th:if="${stepsModel.responseSubmission != null and stepsModel.responseSubmission.state.name() != 'NONE'}"
+             th:classappend="|${stepsModel.responseSubmission.state.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.responseSubmission.state.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.responseSubmission.state.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
+            <!--/* Statistics */-->
+            <div th:if="${stepsModel.showStatistics == true && stepsModel.responseSubmission.state.name() != 'DISABLED'}"
+                 class="floating ui grey label ob-play-sequence-4" style="left: 3em;" data-inverted=""
+                 th:attr="data-tooltip=#{'player.sequence.interaction.responseCount'(1)}"
+                 data-position="bottom left">
+                <i class="comment outline icon"></i>
+                <span th:text="${sequenceStatistics.nbResponsesAttempt1}"></span>
+            </div>
 
-      <i class="phase-icon comment outline icon"></i>
+            <!--/* Phase icon */-->
+            <i class="phase-icon comment outline icon"></i>
 
-      <div class="content">
-        <div class="title" th:text="#{sequence.phase.1}">
+            <!--/* Title and description */-->
+            <div class="content">
+                <div class="title" th:text="#{sequence.phase(${stepsModel.responseSubmission.rank})}"></div>
+
+                <div class="description" style="min-height: 2.5rem;">
+                    <span th:if="${stepsModel.studentsProvideExplanation == true}"
+                          th:text="#{sequence.phase.ResponseSubmission.arguedResponse}"></span>
+                    <span th:if="${stepsModel.studentsProvideExplanation == false}"
+                          th:text="#{sequence.phase.ResponseSubmission.firstResponse}"></span>
+                </div>
+            </div>
         </div>
 
-        <div class="description" style="min-height: 2.5rem;">
-          <span th:if="${stepsModel.studentsProvideExplanation == true}"
-                th:text="#{sequence.phase.ResponseSubmission.arguedResponse}"></span>
-          <span th:if="${stepsModel.studentsProvideExplanation == false}"
-                th:text="#{sequence.phase.ResponseSubmission.firstResponse}"></span>
+        <!--/* Evaluation phase */-->
+        <div class="step"
+             th:if="${stepsModel.evaluation != null and stepsModel.evaluation.state.name() != 'NONE'}"
+             th:classappend="|${stepsModel.evaluation.state.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.evaluation.state.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.evaluation.state.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
+
+            <!--/* Statistics */-->
+            <div th:if="${stepsModel.showStatistics == true && stepsModel.evaluation.state.name() != 'DISABLED'}">
+                <div class="floating ui grey label" style="left: 3em;" data-inverted=""
+                     th:attr="data-tooltip=#{player.sequence.interaction.peerEvaluationCount}"
+                     data-position="bottom left"><i class="comments outline icon"></i>
+                    <span th:text="${sequenceStatistics.nbEvaluations}"></span>
+                </div>
+
+                <div class="floating ui grey label" style="left: 9em;" data-inverted=""
+                     th:attr="data-tooltip=#{'player.sequence.interaction.responseCount'(2)}"
+                     data-position="bottom left"><i class="comment outline icon"></i>
+                    <span th:text="${sequenceStatistics.nbResponsesAttempt2}"></span>
+                </div>
+            </div>
+
+            <!--/* Phase icon */-->
+            <i class="phase-icon comments outline icon"></i>
+
+            <!--/* Title and description */-->
+            <div class="content">
+                <div class="title" th:if="${stepsModel.phase2Skipped}" th:text="#{sequence.phase.skipped(${stepsModel.evaluation.rank})}">
+                    Phase 2 (skipped)
+                </div>
+                <div class="title" th:unless="${stepsModel.phase2Skipped}" th:text="#{sequence.phase(${stepsModel.evaluation.rank})}">
+                    Phase 2
+                </div>
+
+                <div class="description" style="min-height: 2.5rem;" th:text="#{sequence.phase.Evaluation.description}">
+                    Comparing viewpoints
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!--/* Results phase */-->
+        <div class="step"
+             th:if="${stepsModel.read != null and stepsModel.read.state.name() != 'NONE'}"
+             th:classappend="|${stepsModel.read.state.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.read.state.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.read.state.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
+
+            <!--/* Phase icon */-->
+            <i class="phase-icon bar chart icon"></i>
+
+            <!--/* Title and description */-->
+            <div class="content">
+                <div class="title" th:text="#{sequence.phase(${stepsModel.read.rank})}">
+                    Phase 3
+                </div>
+
+                <div class="description" style="min-height: 2.5rem;" th:text="#{sequence.phase.Read.description}">
+                    Results
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="step"
-         th:classappend="|${stepsModel.evaluationState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.evaluationState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.evaluationState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
-
-      <div th:if="${stepsModel.showStatistics == true && stepsModel.evaluationState.name() != 'DISABLED'}">
-        <div class="floating ui grey label" style="left: 3em;" data-inverted=""
-             th:attr="data-tooltip=#{player.sequence.interaction.peerEvaluationCount}"
-             data-position="bottom left"><i class="comments outline icon"></i>
-          <span th:text="${sequenceStatistics.nbEvaluations}"></span>
-        </div>
-
-        <div class="floating ui grey label" style="left: 9em;" data-inverted=""
-             th:attr="data-tooltip=#{'player.sequence.interaction.responseCount'(2)}"
-             data-position="bottom left"><i class="comment outline icon"></i>
-          <span th:text="${sequenceStatistics.nbResponsesAttempt2}"></span>
-        </div>
-      </div>
-
-      <i class="phase-icon comments outline icon"></i>
-
-      <div class="content">
-        <div class="title" th:if="${stepsModel.phase2Skipped}" th:text="#{sequence.phase.2.skipped}">
-          Phase 2 (skipped)
-        </div>
-        <div class="title" th:unless="${stepsModel.phase2Skipped}" th:text="#{sequence.phase.2}">
-          Phase 2
-        </div>
-
-        <div class="description" style="min-height: 2.5rem;" th:text="#{sequence.phase.Evaluation.description}">
-          Comparing viewpoints
-        </div>
-      </div>
-    </div>
-
-    <div class="step"
-         th:classappend="|${stepsModel.readState.name() == 'DISABLED' ? 'disabled' : ''} ${stepsModel.readState.name() == 'ACTIVE' ? 'active-phase' : ''} ${stepsModel.readState.name() == 'COMPLETED' ? 'completed-phase' : ''}|">
-      <i class="phase-icon bar chart icon"></i>
-
-      <div class="content">
-        <div class="title" th:text="#{sequence.phase.3}">
-          Phase 3
-        </div>
-
-        <div class="description" style="min-height: 2.5rem;" th:text="#{sequence.phase.Read.description}">
-          Results
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

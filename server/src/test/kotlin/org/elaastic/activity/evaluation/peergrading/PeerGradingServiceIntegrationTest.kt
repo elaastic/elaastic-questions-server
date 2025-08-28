@@ -700,7 +700,7 @@ class PeerGradingServiceIntegrationTest(
                 "No peerGrading reported"
             )
             learnersAssignementList
-        }.tWhen("Two learner answer and report a peerGrading") { learnerAssignments ->
+        }.tWhen("Two learner answer and report a peerGrading") { _ ->
             val response = functionalTestingService.submitResponse(
                 Phase.PHASE_1,
                 learners[0],

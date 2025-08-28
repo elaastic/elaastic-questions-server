@@ -17,15 +17,18 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   ~
   -->
-
+<!--/*@thymesVar id="sequenceMonitoringModel" type="org.elaastic.player.dashboard.SequenceMonitoringModel"*/-->
 <th:block th:fragment="attendeesTable(sequenceMonitoringModel)">
 
     <table class="ui celled definition table">
         <thead>
         <tr>
             <th></th>
-            <th class="center aligned" th:text="#{attendee.phase(${1})}">first_phase_label</th>
-            <th class="center aligned" th:text="#{attendee.phase(${2})}">second_phase_label</th>
+            <th class="center aligned" th:text="#{attendee.phase(${1})}"
+                th:if="${sequenceMonitoringModel.phase1State.name() != 'NONE'}">first_phase_label</th>
+            <th class="center aligned" th:text="#{attendee.phase(${2})}"
+                th:if="${sequenceMonitoringModel.phase2State.name() != 'NONE'}">second_phase_label
+            </th>
         </tr>
         </thead>
 
@@ -34,17 +37,22 @@
             <!--/* Name of the learner */-->
             <td style="display: flex; align-items: center; justify-content: space-between" class="learner-name">
                 <div class="learnerName" th:text="${learner.learnerName}"></div>
-                <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.userId}" th:classappend="${sequenceMonitoringModel.isSequenceStarted() ? '' : 'disabled'}">
+                <button class="ui right icon button" id="see-detail" th:attr="learner-id=${learner.userId}"
+                        th:classappend="${sequenceMonitoringModel.isSequenceStarted() ? '' : 'disabled'}">
                     <span class="content" th:text="#{attendee.details}">Details</span>
                 </button>
             </td>
 
             <!--/* States of the learner */-->
-            <th:block
-                    th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInResponsePhase().name})">
+            <th:block th:if="${sequenceMonitoringModel.phase1State.name() != 'NONE'}">
+                <th:block
+                        th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInResponsePhase().name})">
+                </th:block>
             </th:block>
-            <th:block
-                    th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInEvaluationPhase().name})">
+            <th:block th:if="${sequenceMonitoringModel.phase2State.name() != 'NONE'}">
+                <th:block
+                        th:replace="player/assignment/sequence/components/dashboard/_state-cells.html :: stateCell(${learner.getStateCellInEvaluationPhase().name})">
+                </th:block>
             </th:block>
         </tr>
         </tbody>
@@ -55,7 +63,7 @@
             const sequenceId = [[${sequenceMonitoringModel.sequenceId}]];
 
             // We use the `[id=...]` syntaxe instead of `#...` so the eventListener is applied to all button that have this id
-            $('[id="see-detail"]').on("click",function () {
+            $('[id="see-detail"]').on("click", function () {
                 let $thisButton = $(this);
                 let userId = $thisButton.attr('learner-id');
 

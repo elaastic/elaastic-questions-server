@@ -32,7 +32,10 @@ import org.elaastic.moderation.UtilityGrade
 import org.elaastic.player.PlayerController
 import org.elaastic.sequence.*
 import org.elaastic.sequence.interaction.InteractionService
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.test.interpreter.command.*
 import org.elaastic.user.Role
 import org.elaastic.user.User
@@ -220,16 +223,22 @@ class FunctionalTestingService(
         sequence: Sequence,
         executionContext: ExecutionContext = ExecutionContext.FaceToFace,
         studentsProvideExplanation: Boolean = true,
-        nbResponseToEvaluate: Int = 3
+        evaluationPhaseConfig: EvaluationPhaseConfig =
+            EvaluationPhaseConfig(
+                true,
+                3,
+                sequence.evaluationMethod
+            ),
     ) =
         sequenceService.start(
             sequence.owner,
             sequence,
-            executionContext,
-            studentsProvideExplanation,
-            nbResponseToEvaluate,
-            sequence.evaluationPhaseConfig,
-            sequence.chatGptEvaluationEnabled
+            SequenceConfig(
+                executionContext,
+                ResponsePhaseConfig(studentsProvideExplanation),
+                evaluationPhaseConfig,
+                ResultPhaseConfig(sequence.chatGptEvaluationEnabled)
+            )
         )
 
     fun submitResponse(
@@ -452,7 +461,11 @@ class FunctionalTestingService(
                     sequence,
                     command.executionContext,
                     command.studentsProvideExplanation,
-                    command.nbResponseToEvaluate
+                    EvaluationPhaseConfig(
+                        true,
+                        command.nbResponseToEvaluate,
+                        sequence.evaluationMethod
+                    )
                 )
 
                 is SubmitResponse -> submitResponse(
@@ -626,13 +639,13 @@ class FunctionalTestingService(
      * The sequence is saved in the database
      *
      * @param teacher the teacher who owns the sequence
-     * @param evaluationPhaseConfig the evaluation phase config of the sequence
+     * @param evaluationMethod the evaluation phase config of the sequence
      * @param executionContext the execution context of the sequence
      * @param chatGptEvaluationEnabled the ChatGPT evaluation enabled status of the sequence
      */
     fun createSequence(
         teacher: User,
-        evaluationPhaseConfig: EvaluationPhaseConfig,
+        evaluationMethod: EvaluationMethod,
         executionContext: ExecutionContext = ExecutionContext.FaceToFace,
         chatGptEvaluationEnabled: Boolean = false
     ): Sequence {
@@ -651,7 +664,7 @@ class FunctionalTestingService(
             statement = subject.statements.first(),
             assignment = assignment,
             executionContext = executionContext,
-            evaluationPhaseConfig = evaluationPhaseConfig,
+            evaluationMethod = evaluationMethod,
             chatGptEvaluationEnabled = chatGptEvaluationEnabled,
         ).let {
             return sequenceRepository.save(it)
@@ -680,7 +693,10 @@ class FunctionalTestingService(
                     User(
                         firstName = "FirstName${LocalDate.now()}-$i",
                         lastName = "LastName${LocalDate.now()}-$i",
-                        username = userService.generateUsername("FirstName${LocalDate.now()}-$i", "LastName${LocalDate.now()}-$i"),
+                        username = userService.generateUsername(
+                            "FirstName${LocalDate.now()}-$i",
+                            "LastName${LocalDate.now()}-$i"
+                        ),
                         plainTextPassword = "1234",
                         email = "email@elaastic.org"
                     ).also {

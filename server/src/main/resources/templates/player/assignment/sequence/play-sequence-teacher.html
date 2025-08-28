@@ -45,9 +45,11 @@
     <div th:if="${sequenceModel.showResults and sequenceModel.resultsModel.recommendationModel != null}"
          th:insert="player/assignment/sequence/components/_recommendation.html :: recommendation(${sequenceModel.resultsModel},${sequenceModel.sequenceId})"></div>
 
+    <!--/* Space */-->
     <!--/* The statement of the sequence */-->
     <div th:replace="player/assignment/sequence/components/statement/_statement.html :: statement(${activeInteractionModel.statementInfoPanelModel})"></div>
 
+    <!--/* Spance */-->
     <!--/* The results of the sequence */-->
     <div th:if="${sequenceModel.showResults}" th:remove="tag">
         <div th:replace="player/assignment/sequence/components/results/_results.html :: results(${sequenceModel.resultsModel}, true)"></div>

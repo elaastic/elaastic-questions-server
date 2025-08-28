@@ -25,9 +25,8 @@
     <!--/* Sequence navigator */-->
     <div class="ui header attached block" style="display: flex; justify-content: space-between; column-gap: 10px;">
         <!--/* Previous sequence button */-->
-        <div>
-            <a th:href="|/player/assignment/${playerModel.assignmentOverviewModel.assignmentId}/${dashboardModel.previousSequence}?currentPane=attendees|"
-               th:if="${dashboardModel.previousSequence != null}">
+        <div th:if="${dashboardModel.previousSequence != null}">
+            <a th:href="|/player/assignment/${playerModel.assignmentOverviewModel.assignmentId}/${dashboardModel.previousSequence}?currentPane=attendees|">
 
                 <!--/* Button */-->
                 <button class="ui button" style="display: flex; column-gap: 5px; align-items: center; justify-content: center;
@@ -39,9 +38,8 @@
         </div>
 
         <!--/* Next sequence button */-->
-        <div>
-            <a th:href="|/player/assignment/${playerModel.assignmentOverviewModel.assignmentId}/${dashboardModel.nextSequence}?currentPane=attendees|"
-               th:if="${dashboardModel.nextSequence != null}">
+        <div th:if="${dashboardModel.nextSequence != null}">
+            <a th:href="|/player/assignment/${playerModel.assignmentOverviewModel.assignmentId}/${dashboardModel.nextSequence}?currentPane=attendees|">
 
                 <!--/* Button */-->
                 <button class="ui button" style="display: flex; column-gap: 5px; align-items: center; justify-content: center;

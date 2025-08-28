@@ -84,7 +84,7 @@ class Interaction(
     var lastUpdated: Date? = null
 
     @Transient
-    fun getStateForTeacher(user: User) =
+    fun getStateForTeacher() =
         when (sequence.executionContext) {
             ExecutionContext.Distance -> State.afterStop
             ExecutionContext.Blended ->
@@ -103,10 +103,6 @@ class Interaction(
     var peerEvaluationMapping: PeerEvaluationMapping? = null
 
     @Transient
-    fun hasAnyResult(): Boolean =
-        results?.hasAnyResult() ?: false
-
-    @Transient
     fun isRead() = interactionType == InteractionType.Read
 
     @Transient
@@ -120,7 +116,7 @@ class Interaction(
         isRead() && sequence.resultsArePublished -> State.show
 
         sequence.isStopped() ->
-            if (rank <= sequence.activeInteraction?.rank ?: 0)
+            if (rank <= (sequence.activeInteraction?.rank ?: 0))
                 state
             else State.beforeStart
 

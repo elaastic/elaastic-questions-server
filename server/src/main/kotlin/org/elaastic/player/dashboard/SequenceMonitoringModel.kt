@@ -2,15 +2,6 @@ package org.elaastic.player.dashboard
 
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.phase.LearnerPhaseType
-import org.elaastic.player.dashboard.DashboardPhaseState.IN_PROGRESS as Dashboard_State_IN_PROGRESS
-import org.elaastic.player.dashboard.DashboardPhaseState.NOT_STARTED as Dashboard_State_NOT_STARTED
-import org.elaastic.player.dashboard.DashboardPhaseState.STOPPED as Dashboard_State_STOPPED
-import org.elaastic.player.dashboard.LearnerMonitoringModel.StateCell.IN_PROGRESS as Learner_State_IN_PROGRESS
-import org.elaastic.player.dashboard.LearnerMonitoringModel.StateCell.NOT_TERMINATED as Learner_State_NOT_TERMINATED
-import org.elaastic.player.dashboard.LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED as ACTIVITY_NOT_TERMINATED
-import org.elaastic.sequence.phase.LearnerPhaseType.EVALUATION as Phase_EVALUATION
-import org.elaastic.sequence.phase.LearnerPhaseType.RESPONSE as Phase_RESPONSE
-import org.elaastic.sequence.phase.LearnerPhaseType.RESULT as Phase_RESULT
 
 /**
  * Model for the learners monitoring dashboard.
@@ -40,16 +31,23 @@ class SequenceMonitoringModel(
         // Check coherence of the model
         when (executionContext) {
             ExecutionContext.FaceToFace -> {
-                if (phase1State == Dashboard_State_IN_PROGRESS) require(phase2State == Dashboard_State_NOT_STARTED) { "In FaceToFace mode phase 2 must be not started when phase 1 is started" }
-                if (phase2State == Dashboard_State_IN_PROGRESS) require(phase1State == Dashboard_State_STOPPED) { "In FaceToFace mode phase 1 must be completed when phase 2 is started" }
+                if (phase1State == DashboardPhaseState.IN_PROGRESS) {
+                    require(phase2State == DashboardPhaseState.NOT_STARTED || phase2State == DashboardPhaseState.NONE) {
+                        "In FaceToFace mode phase 2 must be not started when phase 1 is started"
+                    }
+                }
+                if (phase2State == DashboardPhaseState.IN_PROGRESS) {
+                    require(phase1State == DashboardPhaseState.STOPPED) { "In FaceToFace mode phase 1 must be completed when phase 2 is started" }
+                }
             }
-
-            else -> require(phase1State == phase2State) { "In Remote mode phase 1 and 2 must have the same state" }
+            else -> require(phase1State == phase2State || phase2State == DashboardPhaseState.NONE) {
+                "In Blended or Remote mode, phase 1 and phase 2 must be in the same state or phase 2 must be NONE"
+            }
         }
     }
 
     fun isSequenceStarted(): Boolean {
-        return phase1State != Dashboard_State_NOT_STARTED
+        return phase1State != DashboardPhaseState.NOT_STARTED
     }
 
     /**
@@ -87,23 +85,23 @@ class SequenceMonitoringModel(
         newLearnersList: List<LearnerMonitoringModel>
     ): List<LearnerMonitoringModel> {
         val comparator = when {
-            this.phase1State == Dashboard_State_IN_PROGRESS -> {
+            this.phase1State == DashboardPhaseState.IN_PROGRESS -> {
                 compareByDescending {
-                    it.getLevelByStateCell(Learner_State_IN_PROGRESS)
+                    it.getLevelByStateCell(StateCell.IN_PROGRESS)
                 }
             }
 
-            this.phase2State == Dashboard_State_IN_PROGRESS -> {
+            this.phase2State == DashboardPhaseState.IN_PROGRESS -> {
                 compareByDescending<LearnerMonitoringModel> {
-                    it.getStateCell(Phase_EVALUATION) == Learner_State_IN_PROGRESS
-                }.thenByDescending { it.getLevelByStateCell(Learner_State_NOT_TERMINATED) }
-                    .thenByDescending { it.getLevelByStateCell(Learner_State_IN_PROGRESS) }
+                    it.getStateCell(LearnerPhaseType.EVALUATION) == StateCell.IN_PROGRESS
+                }.thenByDescending { it.getLevelByStateCell(StateCell.NOT_TERMINATED) }
+                    .thenByDescending { it.getLevelByStateCell(StateCell.IN_PROGRESS) }
             }
 
             else -> {
                 compareByDescending<LearnerMonitoringModel> {
-                    it.getStateCell(Phase_RESPONSE) == Learner_State_NOT_TERMINATED
-                }.thenByDescending { it.getLevelByStateCell(Learner_State_NOT_TERMINATED) }
+                    it.getStateCell(LearnerPhaseType.RESPONSE) == StateCell.NOT_TERMINATED
+                }.thenByDescending { it.getLevelByStateCell(StateCell.NOT_TERMINATED) }
             }
         }.thenBy { it.learnerName }
 
@@ -122,7 +120,7 @@ class SequenceMonitoringModel(
     ): List<LearnerMonitoringModel> {
         return newLearnersList.sortedWith(
             compareByDescending<LearnerMonitoringModel> {
-                it.getLevelByStateCell(Learner_State_IN_PROGRESS)
+                it.getLevelByStateCell(StateCell.IN_PROGRESS)
             }.thenBy {
                 it.learnerName
             }
@@ -136,21 +134,21 @@ class SequenceMonitoringModel(
  * Represents a learner's state in each phase, a line in the table. The model contains the following information:
  * - The id of the learner
  * - The name of the learner
- * - The [LearnerStateOnPhase] of the learner on phase 1
- * - The [LearnerStateOnPhase] of the learner on phase 2
+ * - The [LearnerPhaseState] of the learner on phase 1
+ * - The [LearnerPhaseState] of the learner on phase 2
  *
  * @property userId the user id of the learner
  * @property learnerName the learner's name
- * @property learnerStateOnPhase1 the learner's state on phase 1
- * @property learnerStateOnPhase2 the learner's state on phase 2
- * @property learnerStateOnPhase3 the learner's state on phase 3
+ * @property learnerPhaseState1 the learner's state on phase 1
+ * @property learnerPhaseState2 the learner's state on phase 2
+ * @property learnerPhaseState3 the learner's state on phase 3
  */
 class LearnerMonitoringModel(
     val userId: Long,
     val learnerName: String,
-    val learnerStateOnPhase1: LearnerStateOnPhase,
-    val learnerStateOnPhase2: LearnerStateOnPhase = ACTIVITY_NOT_TERMINATED,
-    private val learnerStateOnPhase3: LearnerStateOnPhase = ACTIVITY_NOT_TERMINATED,
+    val learnerPhaseState1: LearnerPhaseState,
+    val learnerPhaseState2: LearnerPhaseState = LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
+    private val learnerPhaseState3: LearnerPhaseState = LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
     val sequenceMonitoringModel: SequenceMonitoringModel
 ) {
 
@@ -161,36 +159,38 @@ class LearnerMonitoringModel(
      * @return the StateCell of the phase
      * @see StateCell
      * @see LearnerPhaseType
-     * @see LearnerStateOnPhase
+     * @see LearnerPhaseState
      */
     fun getStateCell(phase: LearnerPhaseType): StateCell {
         val phaseState: DashboardPhaseState = this.getPhaseStateByType(phase)
 
         return when (this.getLearnerPhaseStateByType(phase)) {
-            ACTIVITY_NOT_TERMINATED -> {
+            LearnerPhaseState.ACTIVITY_NOT_TERMINATED -> {
                 when (phaseState) {
-                    Dashboard_State_IN_PROGRESS -> {
-                        Learner_State_IN_PROGRESS
+                    DashboardPhaseState.IN_PROGRESS -> {
+                        StateCell.IN_PROGRESS
                     }
 
-                    Dashboard_State_NOT_STARTED -> {
+                    DashboardPhaseState.NOT_STARTED -> {
                         StateCell.LOCKED
                     }
 
                     else -> {
-                        Learner_State_NOT_TERMINATED
+                        StateCell.NOT_TERMINATED
                     }
                 }
             }
 
-            LearnerStateOnPhase.ACTIVITY_TERMINATED -> StateCell.TERMINATED
-            LearnerStateOnPhase.WAITING -> {
-                if (phaseState == Dashboard_State_IN_PROGRESS) {
-                    Learner_State_IN_PROGRESS
+            LearnerPhaseState.ACTIVITY_TERMINATED -> StateCell.TERMINATED
+            LearnerPhaseState.WAITING -> {
+                if (phaseState == DashboardPhaseState.IN_PROGRESS) {
+                    StateCell.IN_PROGRESS
                 } else {
                     StateCell.LOCKED
                 }
             }
+
+            LearnerPhaseState.NONE -> StateCell.NONE
         }
     }
 
@@ -203,7 +203,7 @@ class LearnerMonitoringModel(
      * @see StateCell
      */
     fun getStateCellInResponsePhase(): StateCell {
-        return getStateCell(Phase_RESPONSE)
+        return getStateCell(LearnerPhaseType.RESPONSE)
     }
 
     /**
@@ -215,7 +215,7 @@ class LearnerMonitoringModel(
      * @see StateCell
      */
     fun getStateCellInEvaluationPhase(): StateCell {
-        return getStateCell(Phase_EVALUATION)
+        return getStateCell(LearnerPhaseType.EVALUATION)
     }
 
     /**
@@ -224,11 +224,11 @@ class LearnerMonitoringModel(
      * @param phase The type of the phase
      * @see LearnerPhaseType
      */
-    private fun getLearnerPhaseStateByType(phase: LearnerPhaseType): LearnerStateOnPhase {
+    private fun getLearnerPhaseStateByType(phase: LearnerPhaseType): LearnerPhaseState {
         return when (phase) {
-            Phase_RESPONSE -> this.learnerStateOnPhase1
-            Phase_EVALUATION -> this.learnerStateOnPhase2
-            Phase_RESULT -> this.learnerStateOnPhase3
+            LearnerPhaseType.RESPONSE -> this.learnerPhaseState1
+            LearnerPhaseType.EVALUATION -> this.learnerPhaseState2
+            LearnerPhaseType.RESULT -> this.learnerPhaseState3
         }
     }
 
@@ -240,7 +240,7 @@ class LearnerMonitoringModel(
      */
     private fun getPhaseStateByType(phase: LearnerPhaseType): DashboardPhaseState {
         return when (phase) {
-            Phase_RESPONSE -> this.sequenceMonitoringModel.phase1State
+            LearnerPhaseType.RESPONSE -> this.sequenceMonitoringModel.phase1State
             else -> this.sequenceMonitoringModel.phase2State
         }
     }
@@ -252,87 +252,14 @@ class LearnerMonitoringModel(
      */
     fun getLevelByStateCell(stateCell: StateCell): Int {
         val states: List<StateCell> = listOf(
-            this.getStateCell(Phase_RESPONSE),
-            this.getStateCell(Phase_EVALUATION),
+            this.getStateCell(LearnerPhaseType.RESPONSE),
+            this.getStateCell(LearnerPhaseType.EVALUATION),
         )
 
         return states.count { it == stateCell }
     }
 
-    /**
-     * Enum defining states of a cell for a learner
-     *
-     * @property LOCKED the learner can't access the phase
-     * @property Learner_State_IN_PROGRESS the learner is currently working on the phase
-     * @property Learner_State_NOT_TERMINATED the learner has not terminated the phase
-     * @property TERMINATED the learner has terminated the phase
-     */
-    enum class StateCell {
-        LOCKED,
-        IN_PROGRESS,
-        NOT_TERMINATED,
-        TERMINATED
-    }
-
     fun hasAnswered(): Boolean {
-        return this.learnerStateOnPhase1 == LearnerStateOnPhase.ACTIVITY_TERMINATED
+        return this.learnerPhaseState1 == LearnerPhaseState.ACTIVITY_TERMINATED
     }
-}
-
-/**
- * Enum defining states of a phase
- *
- * @property Dashboard_State_NOT_STARTED the phase has not started
- * @property Dashboard_State_IN_PROGRESS the phase is in progress
- * @property Dashboard_State_STOPPED the phase has been stopped
- * @property COMPLETED the phase has been completed
- */
-enum class DashboardPhaseState {
-    /**
-     * The phase has not started
-     *
-     * Applicable to all phases. During phase 3 (evaluation), the phase is not started when the results are not
-     * displayed yet
-     */
-    NOT_STARTED,
-
-    /**
-     * The phase is in progress
-     *
-     * Applicable to all phases. During phase 3 (evaluation), the phase is in progress when the results are being
-     * displayed
-     */
-    IN_PROGRESS,
-
-    /**
-     * The phase has been stopped
-     *
-     * Only applicable to phase 1 and 2.
-     */
-    STOPPED,                                // UNUSED
-
-    /**
-     * The phase has been completed
-     *
-     * Applicable to all phases.
-     */
-    COMPLETED
-}
-
-/**
- * Enum defining states of a learner on a phase
- *
- * @property ACTIVITY_NOT_TERMINATED the learner has not terminated the activity
- * @property ACTIVITY_TERMINATED the learner has terminated the activity
- * @property WAITING the learner is waiting for the next phase
- */
-enum class LearnerStateOnPhase {
-    /** The learner has not terminated the activity. */
-    ACTIVITY_NOT_TERMINATED,
-
-    /** The learner has terminated the activity. */
-    ACTIVITY_TERMINATED,
-
-    /** The learner is waiting for the next phase. */
-    WAITING
 }

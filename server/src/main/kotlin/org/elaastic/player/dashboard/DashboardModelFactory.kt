@@ -61,16 +61,14 @@ class DashboardModelFactory(
 
         val sequenceMonitoringModel = SequenceMonitoringModel(
             sequence.executionContext,
-            learnerStepsModel.responseSubmissionState.getDashboardState(),
-            learnerStepsModel.evaluationState.getDashboardState(),
+            learnerStepsModel.responseSubmission?.state?.getDashboardState() ?: DashboardPhaseState.NONE,
+            learnerStepsModel.evaluation?.state?.getDashboardState() ?: DashboardPhaseState.NONE,
             sequenceId = sequence.id
         )
 
-        val learners: MutableList<LearnerMonitoringModel> = getLearnerMonitoringModels(
-            sequenceMonitoringModel,
-            sequence,
+        sequenceMonitoringModel.setLearners(
+            getLearnerMonitoringModels(sequenceMonitoringModel, sequence)
         )
-        sequenceMonitoringModel.setLearners(learners)
 
         val previousSequence: Sequence? = sequenceService.findPreviousSequence(sequence)
         val nextSequence: Sequence? = sequenceService.findNextSequence(sequence)
@@ -157,18 +155,16 @@ class DashboardModelFactory(
      * @param learnerHasAnswered if the learner has answered the question
      * @param responsePhaseState the state of the response phase
      * @return the state of the attendee on the response phase
-     * @see LearnerStateOnPhase
+     * @see LearnerPhaseState
      */
     private fun getAttendeeStateOnResponsePhase(
         learnerHasAnswered: Boolean,
         responsePhaseState: DashboardPhaseState
-    ): LearnerStateOnPhase {
-        return if (responsePhaseState == DashboardPhaseState.NOT_STARTED) {
-            LearnerStateOnPhase.WAITING
-        } else if (learnerHasAnswered) {
-            LearnerStateOnPhase.ACTIVITY_TERMINATED
-        } else {
-            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+    ): LearnerPhaseState {
+        return when {
+            responsePhaseState == DashboardPhaseState.NOT_STARTED || responsePhaseState == DashboardPhaseState.NONE -> LearnerPhaseState.WAITING
+            learnerHasAnswered -> LearnerPhaseState.ACTIVITY_TERMINATED
+            else -> LearnerPhaseState.ACTIVITY_NOT_TERMINATED
         }
     }
 
@@ -190,9 +186,9 @@ class DashboardModelFactory(
         nbEvaluationMade: Long,
         learnerHasAnswered: Boolean,
         countResponseGradable: Long
-    ): LearnerStateOnPhase {
+    ): LearnerPhaseState {
         return if (evaluationPhaseState == DashboardPhaseState.NOT_STARTED) {
-            LearnerStateOnPhase.WAITING
+            LearnerPhaseState.WAITING
         } else if (evaluationHaveBeenFinished(
                 sequence,
                 nbEvaluationMade,
@@ -200,9 +196,9 @@ class DashboardModelFactory(
                 countResponseGradable
             )
         ) {
-            LearnerStateOnPhase.ACTIVITY_TERMINATED
+            LearnerPhaseState.ACTIVITY_TERMINATED
         } else {
-            LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+            LearnerPhaseState.ACTIVITY_NOT_TERMINATED
         }
     }
 

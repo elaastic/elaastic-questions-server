@@ -42,7 +42,10 @@ import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.LearnerPhaseService
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
+import org.elaastic.sequence.phase.response.ResponsePhaseConfig
+import org.elaastic.sequence.phase.result.ResultPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.AnonymousUserService
@@ -201,10 +204,6 @@ internal class PlayerControllerTest(
                 eq(sequence.owner),
                 eq(sequence),
                 any(),
-                any(),
-                any(),
-                any(),
-                any()
             )
         ).thenReturn(sequence)
         whenever(userService.updateUserActiveSince(sequence.owner)).thenReturn(sequence.owner)
@@ -214,20 +213,46 @@ internal class PlayerControllerTest(
 
         val sequenceConfig = SequenceConfig(
             executionContext = ExecutionContext.FaceToFace,
-            studentsProvideExplanation = true,
-            responseToEvaluateCount = 0,
-            evaluationByIA = false,
-            evaluationPhaseConfig = EvaluationPhaseConfig.ALL_AT_ONCE
+            responsePhaseConfig = ResponsePhaseConfig(
+                studentGiveExplanation = true
+            ),
+            confrontingViewsPhaseConfig = EvaluationPhaseConfig(
+                phaseActive = true,
+                nbResponseToEvaluate = 0,
+                evaluationMethod = EvaluationMethod.ALL_AT_ONCE
+            ),
+            resultPhaseConfig = ResultPhaseConfig(
+                evaluationByIA = false
+            ),
         )
 
+        fun EvaluationPhaseConfig.json(): String {
+            return """
+                {
+                    "phaseActive": ${this.phaseActive},
+                    "nbResponseToEvaluate": ${this.nbResponseToEvaluate},
+                    "evaluationMethod": "${this.evaluationMethod.name}"
+                }
+            """.trimIndent()
+        }
+
+        fun ResponsePhaseConfig.json(): String {
+            return """{"studentGiveExplanation": ${this.studentGiveExplanation}}"""
+        }
+
+        fun ResultPhaseConfig.json(): String {
+            return """{"evaluationByIA": ${this.evaluationByIA}}"""
+        }
+
         fun SequenceConfig.json(): String {
-            return """{
-                "executionContext": "${this.executionContext}",
-                "studentsProvideExplanation": ${this.studentsProvideExplanation},
-                "responseToEvaluateCount": ${this.responseToEvaluateCount},
-                "chatGptEvaluation": ${this.evaluationByIA},
-                "evaluationPhaseConfig": "${this.evaluationPhaseConfig?.name}"
-            }"""
+            return """
+                {
+                    "executionContext": "${this.executionContext.name}",
+                    "responsePhaseConfig": ${this.responsePhaseConfig.json()},
+                    "confrontingViewsPhaseConfig": ${this.confrontingViewsPhaseConfig.json()},
+                    "resultPhaseConfig": ${this.resultPhaseConfig.json()}
+                }
+            """.trimIndent()
         }
 
         // sequence/{sequenceId}/start.json
@@ -243,11 +268,7 @@ internal class PlayerControllerTest(
         verify(sequenceService).start(
             eq(sequence.owner),
             eq(sequence),
-            eq(sequenceConfig.executionContext),
-            eq(sequenceConfig.studentsProvideExplanation ?: false),
-            eq(sequenceConfig.responseToEvaluateCount ?: 0),
-            eq(sequenceConfig.evaluationPhaseConfig),
-            eq(false) // chatGptEvaluation is false in this case
+            any<SequenceConfig>()
         )
     }
 

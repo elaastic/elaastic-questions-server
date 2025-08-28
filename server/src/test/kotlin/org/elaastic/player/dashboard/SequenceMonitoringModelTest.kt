@@ -243,7 +243,7 @@ class SequenceMonitoringModelTest(
                     LearnerMonitoringModel(
                         1,
                         it,
-                        LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                        LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                         sequenceMonitoringModel = learnersMonitoringModel
                     )
                 )
@@ -271,28 +271,28 @@ class SequenceMonitoringModelTest(
                 LearnerMonitoringModel(
                     1,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
+                    LearnerPhaseState.ACTIVITY_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 1 IN_PROGRESS
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED,
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // 1 IN_PROGRESS
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
                     "Claire",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 2 IN_PROGRESS
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // 2 IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -307,7 +307,7 @@ class SequenceMonitoringModelTest(
             )
             assertEquals(
                 listOf(2, 1, 0, 0),
-                learnersMonitoringModel.learners.map { it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS) },
+                learnersMonitoringModel.learners.map { it.getLevelByStateCell(StateCell.IN_PROGRESS) },
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
             )
         }
@@ -326,21 +326,21 @@ class SequenceMonitoringModelTest(
                 LearnerMonitoringModel(
                     1,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Claire",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     // IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
@@ -351,7 +351,7 @@ class SequenceMonitoringModelTest(
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             assertEquals(
                 listOf(2, 1, 0),
-                learnersMonitoringModel.learners.map {it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS)},
+                learnersMonitoringModel.learners.map {it.getLevelByStateCell(StateCell.IN_PROGRESS)},
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
             )
             assertEquals(
@@ -375,33 +375,33 @@ class SequenceMonitoringModelTest(
                 LearnerMonitoringModel(
                     4,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
-                    LearnerStateOnPhase.WAITING,
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
+                    LearnerPhaseState.WAITING,
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
-                    LearnerStateOnPhase.WAITING,
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // 0 IN_PROGRESS
+                    LearnerPhaseState.WAITING,
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "David",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 1 IN_PROGRESS
-                    LearnerStateOnPhase.WAITING,
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // 1 IN_PROGRESS
+                    LearnerPhaseState.WAITING,
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Charlie",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // 1 IN_PROGRESS
-                    LearnerStateOnPhase.WAITING,
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // 1 IN_PROGRESS
+                    LearnerPhaseState.WAITING,
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -410,7 +410,7 @@ class SequenceMonitoringModelTest(
             learnersMonitoringModel.setLearners(it)
         }.tThen("The learners should be sorted by the number of IN_PROGRESS state descending") {
             val learnersSorted = learnersMonitoringModel.learners.map {
-                it.getLevelByStateCell(LearnerMonitoringModel.StateCell.IN_PROGRESS)
+                it.getLevelByStateCell(StateCell.IN_PROGRESS)
             }
             assertEquals(
                 listOf(1, 1, 0, 0),
@@ -418,7 +418,7 @@ class SequenceMonitoringModelTest(
                 "The learners should be sorted by the number of IN_PROGRESS state descending"
             )
             val firstLearnerWhoHaveFinished = learnersMonitoringModel.learners.find {
-                it.learnerStateOnPhase1 == LearnerStateOnPhase.ACTIVITY_TERMINATED
+                it.learnerPhaseState1 == LearnerPhaseState.ACTIVITY_TERMINATED
             }
             assertEquals(
                 "Alice",
@@ -441,49 +441,49 @@ class SequenceMonitoringModelTest(
                 LearnerMonitoringModel(
                     6,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     5,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED,     // TERMINATED
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "David",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_TERMINATED,     // TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "David",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "Charlie",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
-                    LearnerStateOnPhase.WAITING,
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    LearnerPhaseState.WAITING,
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -500,8 +500,8 @@ class SequenceMonitoringModelTest(
             assertEquals(longList, learnersIdSorted)
 
             val firstLearnerWhoHaveFinished = learnersMonitoringModel.learners.find {
-                it.learnerStateOnPhase1 == LearnerStateOnPhase.ACTIVITY_TERMINATED
-                        && it.learnerStateOnPhase2 == LearnerStateOnPhase.ACTIVITY_TERMINATED
+                it.learnerPhaseState1 == LearnerPhaseState.ACTIVITY_TERMINATED
+                        && it.learnerPhaseState2 == LearnerPhaseState.ACTIVITY_TERMINATED
             }
             assertEquals(
                 "Alice",
@@ -511,8 +511,8 @@ class SequenceMonitoringModelTest(
 
             // Late mean that they didn't finish the first phase and still in progress in the second phase
             val firstLearnerWhoAreLate = learnersMonitoringModel.learners.find {
-                it.learnerStateOnPhase1 == LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
-                        && it.learnerStateOnPhase2 == LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+                it.learnerPhaseState1 == LearnerPhaseState.ACTIVITY_NOT_TERMINATED
+                        && it.learnerPhaseState2 == LearnerPhaseState.ACTIVITY_NOT_TERMINATED
             }
             assertEquals(
                 "Charlie",
@@ -535,50 +535,50 @@ class SequenceMonitoringModelTest(
                 LearnerMonitoringModel(
                     6,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     5,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED, // TERMINATED
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     4,
                     "David",
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED,     // TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     3,
                     "Bob",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED,     // TERMINATED
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     2,
                     "Alice",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_TERMINATED,     // TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerPhaseState.ACTIVITY_TERMINATED,     // TERMINATED
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     1,
                     "David",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
                 LearnerMonitoringModel(
                     0,
                     "Albert",
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
-                    LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // NOT_TERMINATED
+                    LearnerPhaseState.ACTIVITY_NOT_TERMINATED, // IN_PROGRESS
                     sequenceMonitoringModel = learnersMonitoringModel
                 ),
             )
@@ -596,8 +596,8 @@ class SequenceMonitoringModelTest(
 
             // Late mean that they didn't finish the first phase and still in progress in the second phase
             val firstLearnerWhoAreLate = learnersMonitoringModel.learners.find {
-                it.learnerStateOnPhase1 == LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
-                        && it.learnerStateOnPhase2 == LearnerStateOnPhase.ACTIVITY_NOT_TERMINATED
+                it.learnerPhaseState1 == LearnerPhaseState.ACTIVITY_NOT_TERMINATED
+                        && it.learnerPhaseState2 == LearnerPhaseState.ACTIVITY_NOT_TERMINATED
             }
             assertEquals(
                 "Albert",
@@ -606,7 +606,7 @@ class SequenceMonitoringModelTest(
             )
 
             val learnerWhoHaveJustFinishOnePhase = learnersMonitoringModel.learners.find {
-                it.getLevelByStateCell(LearnerMonitoringModel.StateCell.NOT_TERMINATED) == 1
+                it.getLevelByStateCell(StateCell.NOT_TERMINATED) == 1
             }
             assertEquals(
                 "Alice",

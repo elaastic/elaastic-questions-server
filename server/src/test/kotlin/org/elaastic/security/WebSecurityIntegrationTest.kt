@@ -18,10 +18,12 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.util.Base64
+import javax.transaction.Transactional
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Transactional
 internal class WebSecurityIntegrationTest(
     @Autowired val mockMvc: MockMvc,
     @LocalServerPort val port: Int,

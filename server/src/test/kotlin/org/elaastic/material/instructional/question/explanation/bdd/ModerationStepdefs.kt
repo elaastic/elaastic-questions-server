@@ -69,24 +69,24 @@ class ModerationStepdefs(
 
     @When("The teacher hide the peer grading")
     fun theTeacherHideThePeerGrading() {
-        peerGrading = entityManager.merge(peerGrading!!)
-        peerGradingService.markAsHidden(teacher, peerGrading!!)
+        peerGrading = entityManager.merge(peerGrading)
+        peerGradingService.markAsHidden(teacher, peerGrading)
     }
 
     @When("The teacher remove the peer grading")
     fun theTeacherRemoveThePeerGrading() {
-        peerGrading = entityManager.merge(peerGrading!!)
-        peerGradingService.markAsRemoved(teacher, peerGrading!!)
+        peerGrading = entityManager.merge(peerGrading)
+        peerGradingService.markAsRemoved(teacher, peerGrading)
     }
 
     @Then("the peer grading is mark as hidden")
     fun thePeerGradingIsMarkAsHidden() {
-        assertTrue(peerGrading!!.hiddenByTeacher)
+        assertTrue(peerGrading.hiddenByTeacher)
     }
 
     @Then("the peer grading is mark as removed")
     fun thePeerGradingIsMarkAsRemoved() {
-        assertTrue(peerGrading!!.removedByTeacher)
+        assertTrue(peerGrading.removedByTeacher)
     }
 
     @Given("the learner owner of the response the peer grading belongs to")

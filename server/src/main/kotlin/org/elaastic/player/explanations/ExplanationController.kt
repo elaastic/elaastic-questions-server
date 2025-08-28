@@ -3,9 +3,8 @@ package org.elaastic.player.explanations
 import org.elaastic.player.sequence.SequenceModelFactory
 import org.elaastic.sequence.LearnerSequenceService
 import org.elaastic.sequence.SequenceService
+import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.LearnerPhaseService
-import org.elaastic.sequence.phase.LearnerPhaseType
-import org.elaastic.sequence.phase.descriptor.SequenceDescriptor
 import org.elaastic.sequence.phase.result.LearnerResultPhaseViewModel
 import org.elaastic.user.PrincipalUserResolver
 import org.springframework.security.core.Authentication
@@ -21,7 +20,6 @@ class ExplanationController(
     private val sequenceModelFactory: SequenceModelFactory,
     private val learnerSequenceService: LearnerSequenceService,
     private val learnerPhaseService: LearnerPhaseService,
-    private val sequenceDescriptor: SequenceDescriptor
 ) {
     @GetMapping("/all-explanations/{sequenceId}/modal")
     fun allExplanations(
@@ -43,7 +41,7 @@ class ExplanationController(
 
             (learnerPhaseService.buildPhase(
                 learnerSequence,
-                sequenceDescriptor.phaseDescriptorList.find { it.type == LearnerPhaseType.RESULT }!!,
+                InteractionType.Read,
                 1,
                 active = true
             ).getViewModel() as LearnerResultPhaseViewModel).sequenceResultsModel.explanationViewerModel

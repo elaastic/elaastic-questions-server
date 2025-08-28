@@ -1,5 +1,6 @@
 package org.elaastic.player.dashboard
 
+import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.test.FunctionalTestingService
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.test.directive.tGiven
@@ -25,7 +26,7 @@ class DashboardModelFactoryIntegrationTest(
             functionalTestingService.createSequence(integrationTestingService.getTestTeacher())
         }.tThen("there is no response gradable") { sequence ->
             assertEquals(0, dashboardModelFactory.countGradableResponse(sequence), "No response gradable")
-            functionalTestingService.startSequence(sequence, nbResponseToEvaluate = 1)
+            functionalTestingService.startSequence(sequence, evaluationPhaseConfig = EvaluationPhaseConfig(true, 1))
             assertEquals(0, dashboardModelFactory.countGradableResponse(sequence), "No response gradable")
             sequence
         }.tWhen("we add a response gradable") { sequence ->
@@ -41,7 +42,7 @@ class DashboardModelFactoryIntegrationTest(
         tGiven("A sequence with a fake response") {
             val teacher = integrationTestingService.getTestTeacher()
             val sequence = functionalTestingService.createSequence(teacher, true)
-            functionalTestingService.startSequence(sequence, nbResponseToEvaluate = 1)
+            functionalTestingService.startSequence(sequence, evaluationPhaseConfig = EvaluationPhaseConfig(true, 1))
         }.tThen("there is one response gradable") { sequence ->
             assertEquals(1, dashboardModelFactory.countGradableResponse(sequence), "The fake response is gradable")
         }
