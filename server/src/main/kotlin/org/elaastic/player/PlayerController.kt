@@ -363,7 +363,11 @@ class PlayerController(
         sequenceService
             .get(user, sequenceId, true)
             .let {
-                sequenceService.start(user, it, request)
+                sequenceService.start(
+                    user,
+                    it,
+                    sequenceConfig = request
+                )
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)
             }

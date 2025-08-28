@@ -480,9 +480,13 @@ class BootstrapService(
                 it,
                 SequenceConfig(
                     mode,
-                    ResponsePhaseConfig(true),
-                    EvaluationPhaseConfig(true, 2, EvaluationMethod.ALL_AT_ONCE),
-                    ResultPhaseConfig(false)
+                    ResponsePhaseConfig(studentGiveExplanation = true),
+                    EvaluationPhaseConfig(
+                        phaseActive = true,
+                        nbResponseToEvaluate = 2,
+                        EvaluationMethod.ALL_AT_ONCE
+                    ),
+                    ResultPhaseConfig(evaluationByIa = false)
                 )
             )
         }
