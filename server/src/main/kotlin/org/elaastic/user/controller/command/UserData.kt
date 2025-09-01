@@ -39,30 +39,31 @@ data class UserData(
     val role: String,
 
     @field:NotBlank
-        @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
-        val username: String,
+    @field:Pattern(regexp = "^[a-zA-Z0-9_-]{1,15}$")
+    val username: String,
 
     @field:Email val email: String?,
     @field:NotNull val hasOwner: Boolean = false,
     override val password1: String? = null,
     override val password2: String? = null,
-    val language:String = "fr",
+
+    val language: String = "fr",
     private val source: UserSource = UserSource.ELAASTIC,
 
     @field:NotNull
-        var userHasGivenConsent: Boolean = false
+    var userHasGivenConsent: Boolean = false
 
 ) : HasEmailOrHasOwnerOrHasExternalSource, HasPasswords {
 
     constructor(user: User, userHasGivenConsent: Boolean) : this(
-            user.id,
-            user.firstName,
-            user.lastName,
-            user.roles.first().name,
-            user.username,
-            user.email,
-            user.hasOwner(),
-            userHasGivenConsent = userHasGivenConsent
+        user.id,
+        user.firstName,
+        user.lastName,
+        user.roles.first().name,
+        user.username,
+        user.email,
+        user.hasOwner(),
+        userHasGivenConsent = userHasGivenConsent
     )
 
     fun populateUser(user: User, roleService: RoleService): User {
@@ -76,11 +77,11 @@ data class UserData(
 
     fun populateNewUser(roleService: RoleService): User {
         User(
-                firstName,
-                lastName,
-                username,
-                password1,
-                email
+            firstName,
+            lastName,
+            username,
+            password1,
+            email
         ).addRole(roleService.roleForName(role, true)).let {
             return it
         }
@@ -103,5 +104,5 @@ data class UserData(
         return hasOwner
     }
 
-    override fun getSource(): UserSource =  source
+    override fun getSource(): UserSource = source
 }

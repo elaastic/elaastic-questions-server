@@ -18,6 +18,7 @@
 
 package org.elaastic.auth.oauth
 
+import org.elaastic.auth.UserLink
 import org.elaastic.auth.UserLinkService
 import org.elaastic.common.util.alsoThrowIf
 import org.elaastic.user.Role.RoleId
@@ -41,9 +42,8 @@ private const val ROLES_KEY = "roles"
 /**
  * Service dedicated to retrieve the Elaastic User bound to an OidcUser
  *
- * Implementation note: This service overrides OidcUserService, and, as
- * such, must return an OidcUser. The ElaasticOidcUser is an OidcUser bound
- * to its corresponding Elaastic User
+ * Implementation note: This service overrides OidcUserService, and, as such, must return an OidcUser. The
+ * ElaasticOidcUser is an OidcUser bound to its corresponding Elaastic User
  *
  * @author John Tranier
  */
@@ -66,9 +66,10 @@ class ElaasticOidcUserService(
                 userLinkService.oidcProvider,
                 oidcUser.name
             )?.alsoThrowIf({ !(it.user hasRole role) }, RoleException::class.java) {
-                "ElaasticUser ${it.user.username} does not have the role $role but the OIDC user ${oidcUser.name} has it. " +
-                        "ElaasticUser ${it.user.username} has the roles ${it.user.roles.joinToString(", ") { role -> role.name }}"
-            }?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
+                createMessageRoleMismap(it, role, oidcUser)
+            }?.user?.let {
+                userLinkService.updateUserWithOidcUser(it, oidcUser)
+            } ?: userLinkService.registerNewOidcUser(oidcUser, role)
 
             return ElaasticOidcUser(oidcUser, user)
         } catch (e: RoleException) {
@@ -80,11 +81,18 @@ class ElaasticOidcUserService(
         }
     }
 
+    private fun createMessageRoleMismap(
+        it: UserLink,
+        role: RoleId,
+        oidcUser: OidcUser
+    ) = "ElaasticUser ${it.user.username} does not have the role $role but the OIDC user ${oidcUser.name} has it. " +
+            "ElaasticUser ${it.user.username} has the roles ${it.user.roles.joinToString(", ") { role -> role.name }}"
+
     /**
      * Get the role from the OIDC user
      *
-     * We search the role in the realm access of the OIDC user. The realm
-     * access is a map containing the roles of the user.
+     * We search the role in the realm access of the OIDC user. The realm access is a map containing the roles of the
+     * user.
      *
      * We expected a claims like this :
      * ```json
@@ -106,8 +114,7 @@ class ElaasticOidcUserService(
      *
      * @param oidcUser the OIDC user
      * @return the role of the OIDC user
-     * @throws IllegalStateException if there is not exactly one role in the
-     *    realm access and the role is unknown
+     * @throws IllegalStateException if there is not exactly one role in the realm access and the role is unknown
      * @see REALM_ACCESS_KEY
      * @see ROLES_KEY
      */

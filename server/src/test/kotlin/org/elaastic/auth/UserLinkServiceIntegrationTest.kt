@@ -18,14 +18,22 @@
 
 package org.elaastic.auth
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import org.elaastic.auth.cas.SupportedCasProvider
+import org.elaastic.auth.oauth.createOidcUser
 import org.elaastic.test.IntegrationTestingService
+import org.elaastic.user.Role.RoleId
+import org.elaastic.user.User
 import org.elaastic.user.UserRepository
 import org.jasig.cas.client.authentication.AttributePrincipalImpl
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.context.annotation.Profile
 import javax.transaction.Transactional
 
@@ -36,8 +44,10 @@ class UserLinkServiceIntegrationTest(
     @Autowired val userLinkService: UserLinkService,
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val userLinkRepository: UserLinkRepository,
-    @Autowired val userRepository: UserRepository,
 ) {
+
+    @SpyBean
+    lateinit var userRepository: UserRepository
 
 
     @Test
@@ -127,5 +137,67 @@ class UserLinkServiceIntegrationTest(
         assertTrue(userLinkService.isNotLinked(user))
     }
 
+    @Test
+    fun `test updateUserWithOidcUser without change should't call save`() {
+        val user = integrationTestingService.getAnyUser()
+        val oidcUser = createOidcUser(user, listOf(RoleId.STUDENT.name))
 
+        val updatedUser = userLinkService.updateUserWithOidcUser(user, oidcUser)
+
+        assertEquals(oidcUser.givenName, updatedUser.firstName)
+        assertEquals(oidcUser.familyName, updatedUser.lastName)
+        assertEquals(oidcUser.email, updatedUser.email)
+
+        verify(userRepository, never()).save(any<User>())
+    }
+
+    @Test
+    fun `test updateUserWithOidcUser with change should update the user`() {
+        val user = integrationTestingService.getTestTeacher()
+        val anotherUser = User(
+            firstName = "${user.firstName}_another",
+            lastName = "${user.lastName}_another",
+            username = ("another_${user.username}" + "0".repeat(31)).subSequence(0, 31).toString(),
+            plainTextPassword = "1234",
+            email = "another_${user.email}",
+        )
+        assertNotEquals(user, anotherUser)
+        val oidcUser = createOidcUser(anotherUser, listOf(RoleId.STUDENT.name))
+        assertNotEquals(oidcUser.givenName, user.firstName)
+        assertNotEquals(oidcUser.familyName, user.lastName)
+        assertNotEquals(oidcUser.email, user.email)
+
+        val updatedUser = userLinkService.updateUserWithOidcUser(user, oidcUser)
+
+        assertEquals(oidcUser.givenName, updatedUser.firstName)
+        assertEquals(oidcUser.familyName, updatedUser.lastName)
+        assertEquals(oidcUser.email, updatedUser.email)
+
+        verify(userRepository, times(1)).save(any<User>())
+    }
+
+    @Test
+    fun `test updateUserWithOidcUser with 1 change should update the user`() {
+        val user = integrationTestingService.getTestTeacher()
+        val anotherUser = User(
+            firstName = user.firstName,
+            lastName = user.lastName,
+            username = ("another_${user.username}" + "0".repeat(31)).subSequence(0, 31).toString(),
+            plainTextPassword = "1234",
+            email = "another_${user.email}",
+        )
+        assertNotEquals(user, anotherUser)
+        val oidcUser = createOidcUser(anotherUser, listOf(RoleId.STUDENT.name))
+        assertEquals(oidcUser.givenName, user.firstName)
+        assertEquals(oidcUser.familyName, user.lastName)
+        assertNotEquals(oidcUser.email, user.email)
+
+        val updatedUser = userLinkService.updateUserWithOidcUser(user, oidcUser)
+
+        assertEquals(oidcUser.givenName, updatedUser.firstName)
+        assertEquals(oidcUser.familyName, updatedUser.lastName)
+        assertEquals(oidcUser.email, updatedUser.email)
+
+        verify(userRepository, times(1)).save(any<User>())
+    }
 }

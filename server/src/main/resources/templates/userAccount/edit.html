@@ -20,145 +20,135 @@
 <html lang="en"
       th:replace="layout/leftMenu :: leftMenuLayout(~{::title}, ~{::section})"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head>
-  <title th:text="|elaastic: #{useraccount.title}|"></title>
-</head>
+    <head>
+        <title th:text="|elaastic: #{useraccount.title}|"></title>
+    </head>
 
-<body>
-<section>
-  <div style="max-width: 800px; margin: auto;">
-    <h2 class="ui header">
-      <i class="user icon"></i>
+    <body>
+    <section>
+        <div style="max-width: 800px; margin: auto;">
+            <!--/* Title */-->
+            <h2 class="ui header">
+                <i class="user icon"></i>
+                <div class="content" th:text="#{useraccount.title}"></div>
+            </h2>
 
-      <div class="content">
-        [[#{useraccount.title}]]
-      </div>
-    </h2>
-
-
-    <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
-      Message
-    </div>
-
-    <div class="ui segment">
-
-      <form class="ui form"
-            th:object="${userData}"
-            th:classappend="${#fields.hasErrors('*')}? 'error'"
-            th:action="@{/userAccount/update(id=${userData.id})}" method="post">
-
-        <div th:replace="layout/components/form-messages :: formMessages('')"></div>
-        <input type="hidden" th:field="*{hasOwner}">
-        <input type="hidden" th:field="*{userHasGivenConsent}">
-
-        <div class="required field">
-          <label>
-            [[#{useraccount.form.name}]]
-          </label>
-
-          <div class="two fields">
-            <div class="required field">
-              <input type="text"
-                     id="firstName"
-                     name="firstName"
-                     th:field="*{firstName}"
-                     th:placeholder="#{useraccount.form.firstName.placeholder}">
+            <!--/* Message (error, warning, confirmation, etc) */-->
+            <div th:replace="layout/components/message :: message(${messageType}, ${messageContent})">
+                Message
             </div>
 
-            <div class="required field">
-              <input type="text"
-                     id="lastName"
-                     name="lastName"
-                     th:field="*{lastName}"
-                     th:placeholder="#{useraccount.form.lastName.placeholder}">
+            <!--/* User account form. An OIDC User shouldn't be able to update his account with Elaastic. */-->
+            <div class="ui segment" th:if="${source != T(org.elaastic.user.UserSource).OIDC}">
+
+                <!--/* User account form */-->
+                <form class="ui form" method="post"
+                      th:object="${userData}"
+                      th:classappend="${#fields.hasErrors('*')}? 'error'"
+                      th:action="@{/userAccount/update(id=${userData.id})}">
+
+                    <div th:replace="layout/components/form-messages :: formMessages('')"></div>
+                    <input type="hidden" th:field="*{hasOwner}">
+                    <input type="hidden" th:field="*{userHasGivenConsent}">
+
+                    <!--/* First and Last name field */-->
+                    <div class="required field">
+                        <label for="firstName" th:text="#{useraccount.form.name}">
+                        </label>
+
+                        <div class="two fields">
+                            <div class="required field">
+                                <input id="firstName" name="firstName" type="text"
+                                       th:field="*{firstName}"
+                                       th:placeholder="#{useraccount.form.firstName.placeholder}">
+                            </div>
+
+                            <div class="required field">
+                                <input id="lastName" name="lastName" type="text"
+                                       th:field="*{lastName}"
+                                       th:placeholder="#{useraccount.form.lastName.placeholder}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--/* Email field */-->
+                    <div class="required field">
+                        <label for="email" th:text="#{useraccount.form.email}">
+                        </label>
+
+                        <input id="email" name="email" type="text"
+                               th:placeholder="#{useraccount.form.email.placeholder}"
+                               th:field="*{email}">
+                    </div>
+
+                    <div class="ui hidden divider"></div>
+
+                    <!--/* Role field */-->
+                    <div class="inline fields">
+                        <label th:text="#{useraccount.profile.label}"></label>
+
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="role" value="STUDENT_ROLE" id="STUDENT_ROLE"
+                                       th:checked="${user.isLearner()}"/>
+                                <label for="STUDENT_ROLE" th:text="#{useraccount.form.learner.radio}"></label>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="role" value="TEACHER_ROLE" id="TEACHER_ROLE"
+                                       th:checked="${user.isTeacher()}"/>
+                                <label for="TEACHER_ROLE" th:text="#{useraccount.form.teacher.radio}"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--/* Username field */-->
+                    <div class="required field">
+                        <label for="username" th:text="#{useraccount.username.label}">
+                        </label>
+                        <input id="username" name="username" type="text"
+                               th:placeholder="#{useraccount.form.username.placeholder}"
+                               th:field="*{username}">
+                    </div>
+
+                    <button type="submit" class="ui primary button" th:text="#{useraccount.save.button} + '&raquo;'">
+                    </button>
+                </form>
             </div>
-          </div>
-        </div>
 
-        <div class="required field">
-          <label>
-            [[#{useraccount.form.email}]]
-          </label>
-          <input type="text"
-                 id="email"
-                 name="email"
-                 th:placeholder="#{useraccount.form.email.placeholder}"
-                  th:field="*{email}">
-        </div>
+            <!--/* Redirect to the OIDC provider account console */-->
+            <th:block th:if="${source == T(org.elaastic.user.UserSource).OIDC}">
+                <div class="ui message info icon">
+                    <i class="info icon"></i>
+                    <div class="content">
+                        <div class="header" th:text="#{useraccount.oidc.editAccount.message.header}"></div>
+                        <p th:utext="#{useraccount.oidc.editAccount.message}"></p>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <a target="_blank" th:href="${accountConsoleURL}" class="ui secondary button right labeled icon">
+                        <i class="external icon"></i>
+                        <span th:text="#{useraccount.oidc.editAccount.button}"></span>
+                    </a>
+                </div>
+            </th:block>
 
-        <div class="ui hidden divider"></div>
-
-        <div class="inline fields">
-          <label>[[#{useraccount.profile.label}]]</label>
-
-          <div class="field">
-            <div class="ui radio checkbox">
-              <input type="radio" name="role"
-                       value="STUDENT_ROLE"
-                       id="STUDENT_ROLE"
-                       th:checked="${user.isLearner()}"/>
-              <label for="STUDENT_ROLE">[[#{useraccount.form.learner.radio}]]</label>
+            <!--/* Change password button */-->
+            <div class="ui segment" th:if="${source != T(org.elaastic.user.UserSource).OIDC}">
+                <a th:href="@{/userAccount/editPassword}" class="ui warning button"
+                   th:text="#{useraccount.changePassword.button}">
+                </a>
             </div>
-          </div>
 
-          <div class="field">
-            <div class="ui radio checkbox">
-              <input type="radio" name="role" value="TEACHER_ROLE" id="TEACHER_ROLE"
-                       th:checked="${user.isTeacher()}"/>
-              <label for="TEACHER_ROLE">[[#{useraccount.form.teacher.radio}]]</label>
+            <!--/* Unsubscribe button */-->
+            <div class="ui segment">
+                <a th:href="@{/userAccount/unsubscribe}" class="ui negative button"
+                   th:text="#{useraccount.unsubscribe.button}">
+                </a>
             </div>
-          </div>
         </div>
-
-        <div class="required field">
-          <label>
-            [[#{useraccount.username.label}]]
-          </label>
-          <input type="text"
-                 id="username" th:placeholder="#{useraccount.form.username.placeholder}"
-          name="username"
-          th:field="*{username}">
-        </div>
-
-        <button type="submit"
-                class="ui primary button">
-          [[#{useraccount.save.button}]] &raquo;
-        </button>
-      </form>
-
-    </div>
-
-    <div class="ui segment">
-      <a th:href="@{/userAccount/editPassword}" class="ui warning button">
-        [[#{useraccount.changePassword.button}]]
-      </a>
-    </div>
-
-    <div class="ui segment">
-      <a th:href="@{/userAccount/unsubscribe}" class="ui negative button">
-        [[#{useraccount.unsubscribe.button}]]
-      </a>
-    </div>
-
-
-    <script>
-      $(document)
-      .ready(function () {
-
-      $('.message .close')
-      .on('click', function () {
-      $(this)
-      .closest('.message')
-      .transition('fade')
-      ;
-      });
-
-      });
-
-    </script>
-  </div>
-
-
-</section>
-</body>
+    </section>
+    </body>
 </html>

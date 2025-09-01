@@ -21,17 +21,28 @@ body > div:has(.login-container) {
 
     width: 100%;
     max-width: 480px;
-    padding: 1%;
 
     background: #fff;
     border-radius: 8px;
-}
 
-.login-container .logo {
-    width: 150px;
-    height: auto;
-    font-size: .92857143rem;
-    margin-bottom: 1em;
+    > :not(script) {
+        margin: 0 8%;
+    }
+
+    > :not(script):first-child {
+        margin-top: 5%;
+    }
+
+    > :not(script):last-child {
+        margin-bottom: 4%;
+    }
+
+    .logo {
+        width: 150px;
+        height: auto;
+        font-size: .92857143rem;
+        margin-bottom: 1em;
+    }
 }
 
 .login-pf-settings {
@@ -59,4 +70,14 @@ body > div:has(.login-container) {
 
 .required {
     color: #a30000;
+}
+
+#kc-registration-container {
+    font-size: 13px;
+    padding: 15px 35px;
+    background-color: #F0F0F0;
+
+    margin: 4% 0 0 0;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }

@@ -30,7 +30,9 @@
         <body>
         <div>
             <div class="login-container">
-                <img class="logo" src="${url.resourcesPath}/img/elaastic_logo_rvb.png" alt="Logo of elaastic">
+                <div>
+                    <img class="logo" src="${url.resourcesPath}/img/elaastic_logo_rvb.png" alt="Logo of elaastic">
+                </div>
                 <#nested "form">
                 <#nested "info">
             </div>
