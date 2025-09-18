@@ -24,7 +24,7 @@ import org.elaastic.auth.oauth.*
 import org.elaastic.user.Role
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -65,6 +65,7 @@ open class WebSecurityConfig(
     private val encoder: PasswordEncoder,
     private val elaasticOidcUserService: ElaasticOidcUserService,
     private val clientRegistrationRepository: ClientRegistrationRepository,
+    private val casSecurityConfigurerProvider: ObjectProvider<CasSecurityConfig.CasSecurityConfigurer>,
     private val oidcLoginSuccessHandler: OidcLoginSuccessHandler,
     @param:Value("\${elaastic.questions.url}") val elaasticUrl: String,
     @param:Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
@@ -76,13 +77,13 @@ open class WebSecurityConfig(
         const val LOGIN_URL = "/login"
     }
 
-    @Autowired
-    var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
-
     @Bean
     open fun webAuthenticationManager(): AuthenticationManager {
         val providers = mutableListOf<AuthenticationProvider>()
-        providers.addAll(casSecurityConfigurer?.getCasAuthenticationProviderBeanList() ?: listOf())
+        providers.addAll(
+            casSecurityConfigurerProvider.getIfAvailable()
+                ?.getCasAuthenticationProviderBeanList() ?: listOf()
+        )
         providers.add(daoAuthenticationProvider())
 
         return ProviderManager(providers)
@@ -149,7 +150,7 @@ open class WebSecurityConfig(
 
             val elaasticUrlLogoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
                 "/",
-                casSecurityConfigurer?.casKeyToServerUrl ?: mapOf(),
+                casSecurityConfigurerProvider.getIfAvailable()?.casKeyToServerUrl ?: mapOf(),
                 "/logout?service=${elaasticUrl}"
             )
 
@@ -214,7 +215,7 @@ open class WebSecurityConfig(
                         // If a request without authentication get a URL of the form /cas/<casKey>/** the corresponding
                         // CasAuthenticationEntryPoint will be triggered (resulting in a redirect on the corresponding
                         // CAS server)
-                        *casSecurityConfigurer?.getCasAuthenticationEntryPoints() ?: arrayOf(),
+                        *casSecurityConfigurerProvider.getIfAvailable()?.getCasAuthenticationEntryPoints() ?: arrayOf(),
 
                         // Any other secured URL is handled by the native elaastic authentication (the formLogin)
                         AnyRequestMatcher.INSTANCE to LoginUrlAuthenticationEntryPoint(LOGIN_URL)
