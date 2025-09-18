@@ -60,14 +60,14 @@ import java.nio.charset.StandardCharsets
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 @Order(3)
-class WebSecurityConfig(
-    @Autowired val userDetailsService: UserDetailsService,
-    @Autowired val encoder: PasswordEncoder,
-    @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
-    @Autowired val clientRegistrationRepository: ClientRegistrationRepository,
+open class WebSecurityConfig(
+    private val userDetailsService: UserDetailsService,
+    private val encoder: PasswordEncoder,
+    private val elaasticOidcUserService: ElaasticOidcUserService,
+    private val clientRegistrationRepository: ClientRegistrationRepository,
     private val oidcLoginSuccessHandler: OidcLoginSuccessHandler,
-    @Value("\${elaastic.questions.url}") val elaasticUrl: String,
-    @Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
+    @param:Value("\${elaastic.questions.url}") val elaasticUrl: String,
+    @param:Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -80,7 +80,7 @@ class WebSecurityConfig(
     var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
 
     @Bean
-    fun webAuthenticationManager(): AuthenticationManager {
+    open fun webAuthenticationManager(): AuthenticationManager {
         val providers = mutableListOf<AuthenticationProvider>()
         providers.addAll(casSecurityConfigurer?.getCasAuthenticationProviderBeanList() ?: listOf())
         providers.add(daoAuthenticationProvider())
@@ -89,7 +89,7 @@ class WebSecurityConfig(
     }
 
     @Bean
-    fun webSecurityCustomize() =
+    open fun webSecurityCustomize() =
         WebSecurityCustomizer { web ->
             web.ignoring().requestMatchers(HttpMethod.POST, "/launch", "/elaastic-questions/launch")
 
@@ -97,7 +97,7 @@ class WebSecurityConfig(
 
     @Bean
     @Order(0)
-    fun resourceFilterChain(http: HttpSecurity): SecurityFilterChain {
+    open fun resourceFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .securityMatcher("/images/**", "/css/**", "/js/**", "/semantic/**", "/ckeditor/**")
             .authorizeHttpRequests { authorize -> authorize.anyRequest().permitAll() }
@@ -109,7 +109,7 @@ class WebSecurityConfig(
     }
 
     @Bean
-    fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
+    open fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
 
             if (elaasticOidcEnabled) {
@@ -237,7 +237,7 @@ class WebSecurityConfig(
 
 
     @Bean
-    fun daoAuthenticationProvider(): DaoAuthenticationProvider {
+    open fun daoAuthenticationProvider(): DaoAuthenticationProvider {
         DaoAuthenticationProvider().let {
             it.setUserDetailsService(userDetailsService)
             it.setPasswordEncoder(encoder)
