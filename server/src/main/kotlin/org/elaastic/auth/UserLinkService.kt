@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
 
+// TODO This service should be generic and not specific to CAS and OIDC => Move the CAS and OIDC specific code to the respective calling service
 /**
  * Service to manage the link between Elaastic user and external authentication providers, like CAS or OIDC.
  *
@@ -44,7 +45,7 @@ class UserLinkService(
     @Autowired val roleService: RoleService,
 ) {
 
-    @Value("\${spring.security.oauth2.client.registration.keycloak.provider}")
+    @Value("\${spring.security.oauth2.client.registration.keycloak.provider:}")
     val oidcProvider: String = "oidcProvider default value"
 
     /**
@@ -58,7 +59,10 @@ class UserLinkService(
      */
     fun loadUserLinkByUsername(providerId: String, username: String): UserLink? {
         return userLinkRepository.findByProviderIdAndProviderUserId(providerId, username)
-            ?.also { it.user.casKey = providerId }
+            ?.also {
+                // TODO It is not consistent to inject providerId (which may designates an OIDC provider) into casKey
+                it.user.casKey = providerId
+            }
     }
 
     /**
@@ -110,7 +114,7 @@ class UserLinkService(
         )
 
         UserLink(
-            providerId = this.oidcProvider,
+            providerId = this.oidcProvider, // TODO I do not understand why getting statically the OIDC provider ; it should be extracted from the OIDC user
             providerUserId = oidcUser.name,
             user = user
         ).let(userLinkRepository::save)

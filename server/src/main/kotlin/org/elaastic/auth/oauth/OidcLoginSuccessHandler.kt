@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix = "elaastic.openid", name = ["enabled"], havingValue = "true")
 class OidcLoginSuccessHandler : AuthenticationSuccessHandler {
 
     override fun onAuthenticationSuccess(

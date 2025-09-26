@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse
 import kotlin.text.Charsets.UTF_8
 
 @Component
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix = "elaastic.openid", name = ["enabled"], havingValue = "true")
 class OidcHintFilter : OncePerRequestFilter() {
 
     companion object {
