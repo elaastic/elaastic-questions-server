@@ -44,7 +44,7 @@ class UserLinkService(
     @Autowired val roleService: RoleService,
 ) {
 
-    @Value("\${spring.security.oauth2.client.registration.keycloak.provider}")
+    @Value("\${spring.security.oauth2.client.registration.keycloak.provider:}")
     val oidcProvider: String = "oidcProvider default value"
 
     /**

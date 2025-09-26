@@ -63,10 +63,10 @@ import java.nio.charset.StandardCharsets
 open class WebSecurityConfig(
     private val userDetailsService: UserDetailsService,
     private val encoder: PasswordEncoder,
-    private val elaasticOidcUserService: ElaasticOidcUserService,
-    private val clientRegistrationRepository: ClientRegistrationRepository,
+    private val elaasticOidcUserServiceProvider: ObjectProvider<ElaasticOidcUserService>,
+    private val clientRegistrationRepositoryProvider: ObjectProvider<ClientRegistrationRepository>,
     private val casSecurityConfigurerProvider: ObjectProvider<CasSecurityConfig.CasSecurityConfigurer>,
-    private val oidcLoginSuccessHandler: OidcLoginSuccessHandler,
+    private val oidcLoginSuccessHandlerProvider: ObjectProvider<OidcLoginSuccessHandler>,
     @param:Value("\${elaastic.questions.url}") val elaasticUrl: String,
     @param:Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
@@ -117,9 +117,11 @@ open class WebSecurityConfig(
                 oauth2Login {
                     Customizer.withDefaults<OAuth2LoginConfigurer<HttpSecurity>>()
                     userInfoEndpoint {
-                        oidcUserService = elaasticOidcUserService
+                        oidcUserService = elaasticOidcUserServiceProvider.getIfAvailable()
+                            ?: throw IllegalStateException("OIDC is enabled but ElaasticOidcUserService bean is missing")
                     }
-                    authenticationSuccessHandler = oidcLoginSuccessHandler
+                    authenticationSuccessHandler = oidcLoginSuccessHandlerProvider.getIfAvailable()
+                        ?: OidcLoginSuccessHandler()
                     /**
                      * Handle authentication failure
                      *
@@ -155,10 +157,15 @@ open class WebSecurityConfig(
             )
 
             val oidcClientInitiatedLogoutSuccessHandler =
-                OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository)
-                    .also {
-                        it.setPostLogoutRedirectUri(elaasticUrl)
+                if (elaasticOidcEnabled) {
+                    clientRegistrationRepositoryProvider.getIfAvailable()?.let { clientRegistrationRepository ->
+                        OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository)
+                            .also {
+                                it.setPostLogoutRedirectUri(elaasticUrl)
+                            }
                     }
+                } else null
+
 
             logout {
                 logoutRequestMatcher = AntPathRequestMatcher("/logout")
