@@ -54,7 +54,7 @@ private const val ROLES_KEY = "roles"
  */
 @Service
 @org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix = "elaastic.openid", name = ["enabled"], havingValue = "true")
-class ElaasticOidcUserService(
+open class ElaasticOidcUserService(
     private val userLinkService: UserLinkService,
 ) : OidcUserService() {
 

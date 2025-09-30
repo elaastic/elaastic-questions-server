@@ -42,9 +42,9 @@ import javax.transaction.Transactional
 @Transactional
 @Profile("test")
 open class ElaasticOidcUserServiceIntegrationTest(
-    val elaasticOidcUserService: ElaasticOidcUserService,
-    val integrationTestingService: IntegrationTestingService,
-    val roleService: RoleService,
+    @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val roleService: RoleService,
 ) {
     @SpyBean
     lateinit var userLinkRepository: UserLinkRepository

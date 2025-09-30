@@ -36,10 +36,10 @@ import javax.transaction.Transactional
 @Transactional
 @Profile("test")
 open class UserLinkServiceIntegrationTest(
-    val userLinkService: UserLinkService,
-    val integrationTestingService: IntegrationTestingService,
-    val userLinkRepository: UserLinkRepository,
-    val userRepository: UserRepository,
+    @Autowired val userLinkService: UserLinkService,
+    @Autowired val integrationTestingService: IntegrationTestingService,
+    @Autowired val userLinkRepository: UserLinkRepository,
+    @Autowired val userRepository: UserRepository,
 ) {
 
 
