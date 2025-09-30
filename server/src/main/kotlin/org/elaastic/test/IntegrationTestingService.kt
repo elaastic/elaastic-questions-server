@@ -41,7 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class IntegrationTestingService(
+open class IntegrationTestingService(
     @Autowired val userRepository: UserRepository,
     @Autowired val statementRepository: StatementRepository,
     @Autowired val interactionRepository: InteractionRepository,

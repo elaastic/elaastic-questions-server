@@ -19,6 +19,9 @@
 package org.elaastic.auth.cas
 
 import org.elaastic.auth.UserLinkService
+import org.elaastic.user.UserCreateCommand
+import org.elaastic.user.UserSource
+import org.jasig.cas.client.authentication.AttributePrincipal
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
 import org.springframework.security.core.userdetails.UserDetails
@@ -38,10 +41,49 @@ class CasAuthenticationUserDetailService(
         }
 
         val username: String = token.name
-        return userLinkService.loadUserLinkByUsername(casKey, username)?.user ?: userLinkService.registerNewCasUser(
-            casKey, casProvider, token.assertion.principal
-        )
+        return userLinkService.loadUserLinkByUsername(casKey, username)?.user
+            ?: userLinkService.registerNewExternalUser(
+                casKey,
+                token.assertion.principal.name,
+                buildUserCreateCommand(token.assertion.principal)
+            )
     }
 
+    private fun buildUserCreateCommand(principal: AttributePrincipal): UserCreateCommand {
+        val casAttributeParser = getCasAttributeParser(casProvider)
 
+        val firstName = casAttributeParser.parseFirstName(principal)
+        val lastName = casAttributeParser.parseLastName(principal)
+        val email = casAttributeParser.parseEmail(principal)
+        val roleId = casAttributeParser.parseRoleId(principal)
+
+        return UserCreateCommand(firstName, lastName, email, roleId, UserSource.CAS, getLanguage(casProvider))
+    }
+
+    /**
+     * Return the [CasAttributeParser] for the given CAS provider.
+     *
+     * @throws IllegalArgumentException if the CAS provider is not supported
+     */
+    private fun getCasAttributeParser(casProvider: String): CasAttributeParser {
+        return when (casProvider) {
+            SupportedCasProvider.Kosmos.name -> CasAttributeParserForKosmos()
+            SupportedCasProvider.Edifice.name -> CasAttributeParserForEdifice()
+            else -> throw IllegalArgumentException("The CAS provider '$casProvider' is not supported")
+        }
+    }
+
+    /**
+     * Return the language of the CAS provider.
+     *
+     * As the user is managed by the CAS provider, we assume that his language and the Cas provider's language are the
+     * same.
+     */
+    private fun getLanguage(casProvider: String): String {
+        return when (casProvider) {
+            SupportedCasProvider.Kosmos.name -> "fr"
+            SupportedCasProvider.Edifice.name -> "fr"
+            else -> throw IllegalArgumentException("The CAS provider '$casProvider' is not supported")
+        }
+    }
 }
