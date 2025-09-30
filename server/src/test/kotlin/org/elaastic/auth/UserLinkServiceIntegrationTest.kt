@@ -20,7 +20,10 @@ package org.elaastic.auth
 
 import org.elaastic.auth.cas.SupportedCasProvider
 import org.elaastic.test.IntegrationTestingService
+import org.elaastic.user.Role
+import org.elaastic.user.UserCreateCommand
 import org.elaastic.user.UserRepository
+import org.elaastic.user.UserSource
 import org.jasig.cas.client.authentication.AttributePrincipalImpl
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -32,11 +35,11 @@ import javax.transaction.Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 @Profile("test")
-class UserLinkServiceIntegrationTest(
-    @Autowired val userLinkService: UserLinkService,
-    @Autowired val integrationTestingService: IntegrationTestingService,
-    @Autowired val userLinkRepository: UserLinkRepository,
-    @Autowired val userRepository: UserRepository,
+open class UserLinkServiceIntegrationTest(
+    val userLinkService: UserLinkService,
+    val integrationTestingService: IntegrationTestingService,
+    val userLinkRepository: UserLinkRepository,
+    val userRepository: UserRepository,
 ) {
 
 
@@ -60,50 +63,30 @@ class UserLinkServiceIntegrationTest(
     }
 
     @Test
-    fun `test registerNewCasUser`() {
-        val casProvider = SupportedCasProvider.Kosmos
+    fun `test registerNewExternalUser`() {
+        val providerId = "SomeProvider"
         val email = "john.doe@mail.com"
         val username = "johdoe"
-        val casKey = "casKey"
-        val userDetail = userLinkService.registerNewCasUser(
-            casKey,
-            casProvider.name,
-            AttributePrincipalImpl(
-                username,
-                buildAttribute("John", "Doe", email, false, casProvider)
+
+        val userDetail = userLinkService.registerNewExternalUser(
+            providerId,
+            username,
+            UserCreateCommand(
+                "John",
+                "Doe",
+                email,
+                Role.RoleId.TEACHER,
+                UserSource.CAS,
+                "fr"
             )
         )
 
         assertEquals(username, userDetail.username)
         val userFound = userRepository.findUsersByEmailLike(email).first()
         assertNotNull(userFound)
-        val userLinkFound = userLinkService.loadUserLinkByUsername(casKey, userFound.username)
+        val userLinkFound = userLinkService.loadUserLinkByUsername(providerId, userFound.username)
         assertNotNull(userLinkFound)
         assertEquals(userDetail, userLinkFound?.user)
-    }
-
-    /**
-     * Build the attribute for the [AttributePrincipalImpl] with the user information.
-     *
-     * The information depends on the CAS provider.
-     */
-    private fun buildAttribute(
-        firstName: String,
-        lastName: String,
-        email: String,
-        isTeacher: Boolean,
-        casProvider: SupportedCasProvider
-    ): Map<String, String> {
-        return when (casProvider) {
-            SupportedCasProvider.Kosmos -> mapOf(
-                "prenom" to firstName,
-                "nom" to lastName,
-                "mail" to email,
-                "profil" to if (isTeacher) "Professeur" else "Eleve"
-            )
-
-            SupportedCasProvider.Edifice -> TODO("Specify the map attribute for Edifice")
-        }
     }
 
     @Test
