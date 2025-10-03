@@ -29,10 +29,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Configure hosts file
-        run: |
-            sudo echo "127.0.0.1 iam.local idp.local" | sudo tee -a /etc/hosts
-
       -   name: Create .env file
           run: |
               echo "KEYCLOAK_ADMIN_PASSWORD=keycloak_admin_password" >> .env
