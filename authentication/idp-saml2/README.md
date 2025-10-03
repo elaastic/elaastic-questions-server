@@ -44,7 +44,7 @@ Roles in the reaml:
 
 A client:
 
-- clientId: `http://iam.local/realms/elaastic-keycloak` => For SAML2 Identity brokering from
+- clientId: `http://iam.localhost/realms/elaastic-keycloak` => For SAML2 Identity brokering from
   Elaastic IAM
 
 ## Common operations
