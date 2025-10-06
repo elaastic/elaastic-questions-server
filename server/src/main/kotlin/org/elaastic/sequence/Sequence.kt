@@ -94,6 +94,13 @@ class Sequence(
     @Column(name = "evaluation_phase_config")
     var evaluationMethod: EvaluationMethod = EvaluationMethod.ALL_AT_ONCE,
 
+    /**
+     * Instructions given by the teacher to complete the evaluation phase.
+     * Used when [evaluationMethod] is [EvaluationMethod.EXTERNAL].
+     * If null, a generic message should be shown instead.
+     */
+    var evaluationExternalInstructions: String? = null,
+
     activeInteraction: Interaction? = null,
 
     /**

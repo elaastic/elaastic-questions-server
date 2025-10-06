@@ -56,7 +56,8 @@ class ExternalLearnerEvaluationPhase(
             responseFormModel = LearnerResponseFormViewModelFactory.buildFor2ndAttempt(
                 learnerSequence,
                 learnerPhaseExecution.lastAttemptResponse
-            )
+            ),
+            evaluationExternalInstructions = sequence.evaluationExternalInstructions
         )
     }
 }

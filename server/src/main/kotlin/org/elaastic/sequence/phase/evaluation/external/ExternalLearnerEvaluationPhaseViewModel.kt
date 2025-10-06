@@ -10,6 +10,7 @@ class ExternalLearnerEvaluationPhaseViewModel(
     phaseState: State,
     choices: Boolean,
     responseFormModel: LearnerResponseFormViewModel,
+    val evaluationExternalInstructions: String?,
 ) : AbstractLearnerEvaluationPhaseViewModel(
     sequenceId,
     interactionId,

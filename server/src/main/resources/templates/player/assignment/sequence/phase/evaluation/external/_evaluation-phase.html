@@ -15,17 +15,16 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-<div th:fragment="evaluationPhase(externalLearnerEvaluationPhaseViewModel)"
+<div th:fragment="evaluationPhase(model)"
      th:remove="tag"
-     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
-     th:with="model=${externalLearnerEvaluationPhaseViewModel}">
+     xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <!--/* @thyemesVar id="model" type="org.elaastic.sequence.phase.evaluation.external.ExternalLearnerEvaluationPhaseViewModel" */-->
     <div class="ui segment">
         <!--/* Title */-->
         <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
             Comparing viewpoints
         </div>
-        <p>
+        <p th:text="${model.evaluationExternalInstructions} ?: #{player.sequence.interaction.evaluation.external.generic}">
             Follow the instructions given by the teacher to compare your viewpoint with others.
         </p>
     </div>
