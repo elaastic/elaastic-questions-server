@@ -24,7 +24,7 @@ import {ref, watch} from "vue";
 
 const {t} = useI18n();
 
-type EvaluationMethod = 'ALL_AT_ONCE' | 'DRAXO'
+type EvaluationMethod = 'ALL_AT_ONCE' | 'DRAXO' | 'EXTERNAL'
 
 export interface ConfrontingViewPhaseConfig {
   phaseActive: boolean;
@@ -62,7 +62,8 @@ const emit = defineEmits<ConfrontingViewPhaseEvent>();
 
 const EVALUATION_METHOD_OPTIONS: EvaluationMethod[] = [
   'ALL_AT_ONCE',
-  'DRAXO'
+  'DRAXO',
+  'EXTERNAL',
 ]
 
 const confrontingViewsPhaseActive = ref<boolean>(props.modelValue?.phaseActive ?? true);
@@ -191,6 +192,7 @@ configUpdated()
       "title": "Evaluation method:",
       "ALL_AT_ONCE": "Single evaluation criterion \"Degree of agreement\" without textual feedback",
       "DRAXO": "DRAXO criteria grid with textual feedback",
+      "EXTERNAL": "Evaluation outside Elaastic according to instructions given by the teacher",
       "draxoDocumentation": "More information on the DRAXO evaluation grid"
     },
     "active": "The phase is actived",
@@ -205,6 +207,7 @@ configUpdated()
       "title": "Méthode d'évaluation",
       "ALL_AT_ONCE": "Critère d'évaluation unique \"Degré d'accord\" sans feedback textuel",
       "DRAXO": "Grille de critères DRAXO avec feedback textuel possible",
+      "EXTERNAL": "Évaluation en dehors d'Elaastic selon des consignes données par l'enseignant",
       "draxoDocumentation": "Plus d'informations sur la grille d'évaluation DRAXO"
     },
     "active": "La phase est activée",
