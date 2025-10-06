@@ -5,8 +5,10 @@ import org.elaastic.sequence.State
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod.ALL_AT_ONCE
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod.DRAXO
+import org.elaastic.sequence.phase.evaluation.EvaluationMethod.EXTERNAL
 import org.elaastic.sequence.phase.evaluation.all_at_once.AllAtOnceLearnerEvaluationPhase
 import org.elaastic.sequence.phase.evaluation.draxo.DraxoLearnerEvaluationPhase
+import org.elaastic.sequence.phase.evaluation.external.ExternalLearnerEvaluationPhase
 import org.elaastic.sequence.phase.response.LearnerResponsePhase
 import org.elaastic.sequence.phase.result.LearnerResultPhase
 import org.springframework.stereotype.Service
@@ -27,6 +29,7 @@ class LearnerPhaseFactory {
             when (learnerSequence.sequence.evaluationMethod) {
                 ALL_AT_ONCE -> AllAtOnceLearnerEvaluationPhase(learnerSequence, phaseIndex, active, state)
                 DRAXO -> DraxoLearnerEvaluationPhase(learnerSequence, phaseIndex, active, state)
+                EXTERNAL -> ExternalLearnerEvaluationPhase(learnerSequence, phaseIndex, active, state)
             }
 
         InteractionType.Read -> LearnerResultPhase(learnerSequence, phaseIndex, active, state)
