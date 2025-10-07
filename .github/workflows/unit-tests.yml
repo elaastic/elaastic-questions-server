@@ -37,7 +37,7 @@ jobs:
         run: docker compose up -d traefik elaastic-questions-db-test-8 auth-iam
 
       - name: Build with Gradle
-        run: ./server/gradlew build
+        run: ./server/gradlew build -Dspring.profiles.active=oidc
 
       - name: Copying test reports
         if: success() || failure()    # run this step even if previous step failed
