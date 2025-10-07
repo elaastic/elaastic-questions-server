@@ -16,14 +16,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Profile
 import java.time.LocalDateTime
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
 internal class PracticeSubjectServiceIntegrationTest(
     @Autowired val practiceSubjectService: PracticeSubjectService,
     @Autowired val integrationTestingService: IntegrationTestingService,

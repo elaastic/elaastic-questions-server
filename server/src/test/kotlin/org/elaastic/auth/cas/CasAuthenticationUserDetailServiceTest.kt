@@ -34,7 +34,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Profile
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken
 import java.util.*
 import javax.persistence.EntityManager
@@ -51,7 +50,6 @@ import javax.persistence.EntityManager
         UserLinkService::class
     ]
 )
-@Profile("test")
 class CasAuthenticationUserDetailServiceTest(
     @Autowired val userLinkService: UserLinkService,
 ) {

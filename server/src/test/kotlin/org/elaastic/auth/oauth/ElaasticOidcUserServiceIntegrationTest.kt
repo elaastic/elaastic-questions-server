@@ -40,7 +40,6 @@ import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
 open class ElaasticOidcUserServiceIntegrationTest(
     @Autowired val elaasticOidcUserService: ElaasticOidcUserService,
     @Autowired val integrationTestingService: IntegrationTestingService,

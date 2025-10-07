@@ -18,23 +18,19 @@
 
 package org.elaastic.auth
 
-import org.elaastic.auth.cas.SupportedCasProvider
 import org.elaastic.test.IntegrationTestingService
 import org.elaastic.user.Role
 import org.elaastic.user.UserCreateCommand
 import org.elaastic.user.UserRepository
 import org.elaastic.user.UserSource
-import org.jasig.cas.client.authentication.AttributePrincipalImpl
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Profile
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
 open class UserLinkServiceIntegrationTest(
     @Autowired val userLinkService: UserLinkService,
     @Autowired val integrationTestingService: IntegrationTestingService,

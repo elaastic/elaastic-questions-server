@@ -11,14 +11,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Profile
 import org.springframework.security.access.AccessDeniedException
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
 internal class StatementServiceIntegrationTest(
     @Autowired val statementService: StatementService,
     @Autowired val statementRepository: StatementRepository,

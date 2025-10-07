@@ -10,14 +10,12 @@ import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Profile
 import java.io.File
 import java.util.*
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
 class SubjectExportIntegrationTest(
     @Autowired val subjectExporter: SubjectExporter,
     @Autowired val subjectService: SubjectService,
@@ -42,13 +40,13 @@ class SubjectExportIntegrationTest(
             subject,
             Statement.createDefaultStatement(teacher)
                 .title("Stmt n 1")
-                .content("Content 1 - Avec des caractères accentués")
+                .content("Content 1 - Avec des caractï¿½res accentuï¿½s")
                 .expectedExplanation("Expected 1")
         )
         val statement2 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°2")
+                .title("Stmt nï¿½2")
                 .content("Content 2")
         )
         val attachmentContent = "Attachement".toByteArray()
