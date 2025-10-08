@@ -25,15 +25,16 @@
             Comparing viewpoints
         </div>
 
+        <p th:utext="${model.evaluationExternalInstructions} ?: #{player.sequence.interaction.evaluation.external.generic}">
+            Follow the instructions given by the teacher to compare your viewpoint with others.
+        </p>
+
         <!--/* Form to submit the evaluation */-->
         <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
               th:action="@{/player/sequence/{sequenceId}/phase/evaluation/external/finalize(sequenceId=${model.sequenceId})}"
               class="ui form"
               method="post"
               id="evaluationForm">
-            <p th:text="${model.evaluationExternalInstructions} ?: #{player.sequence.interaction.evaluation.external.generic}">
-                Follow the instructions given by the teacher to compare your viewpoint with others.
-            </p>
 
             <!--/* If the sequence allows a second attempt */-->
             <div th:replace="player/assignment/sequence/phase/evaluation/_change-answer-form::

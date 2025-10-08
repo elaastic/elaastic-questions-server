@@ -9,15 +9,24 @@ class ExternalLearnerEvaluationPhaseViewModel(
     interactionId: Long,
     phaseState: State,
     choices: Boolean,
+    userHasCompletedPhase2: Boolean,
+    secondAttemptAllowed: Boolean,
+    secondAttemptAlreadySubmitted: Boolean,
     responseFormModel: LearnerResponseFormViewModel,
-    val evaluationExternalInstructions: String?,
+    evaluationExternalInstructions: String?,
 ) : AbstractLearnerEvaluationPhaseViewModel(
     sequenceId,
     interactionId,
     phaseState,
     choices,
-    userHasCompletedPhase2 = false,
-    secondAttemptAllowed = false,
-    secondAttemptAlreadySubmitted = false,
+    userHasCompletedPhase2,
+    secondAttemptAllowed,
+    secondAttemptAlreadySubmitted,
     responseFormModel
-)
+) {
+    val evaluationExternalInstructions = evaluationExternalInstructions
+        ?.replace(
+            "(https?://|www\\.)([^\\s()\\[\\]<>]+|\\([^\\s)]*\\)|\\[[^\\s\\]]*])+(?<![.,!?])".toRegex(),
+            "<a target=\"_blank\" rel=\"noreferrer\" href=\"$0\">$0</a>"
+        )
+}

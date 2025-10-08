@@ -6,18 +6,17 @@ import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ItemIndex
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
-import org.elaastic.assignment.Assignment
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController
 import org.elaastic.user.PrincipalUserResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import java.math.BigDecimal
 import java.util.*
 
 @Controller
@@ -42,11 +41,19 @@ class ExternalEvaluationPhaseExecutionController(
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         sequenceService.get(sequenceId, true).let { sequence ->
+            //region Phase completion workaround
+            // Very dirty implementation; since the only way to tell the phase is complete is through peer reviews:
+            // Insert a peer review of one's own answer so it can signal completion and let counters update as expected
+
+            @Suppress("DEPRECATION")
+            val anyResponse = responseService.findAny(sequence.getResponseSubmissionInteraction())
+            peerGradingService.createOrUpdateLikert(user, anyResponse, BigDecimal(3))
+            //endregion
+
+            val hasChangedAnswer = responseService.hasResponseForUser(user, sequence, 2)
+
             val lastResponse: Response? =
-                if (
-                    sequence.isSecondAttemptAllowed()
-                    && !responseService.hasResponseForUser(user, sequence, 2)
-                )
+                if (sequence.isSecondAttemptAllowed() && !hasChangedAnswer)
                     changeAnswer(
                         user,
                         sequence,

@@ -24,7 +24,7 @@ class ExternalLearnerEvaluationPhaseExecutionLoader(
         val secondAttemptAlreadySubmitted = responseService.hasResponseForUser(learner, sequence, 2)
 
         ExternalLearnerEvaluationPhaseExecution(
-            userHasCompletedPhase2 = false, // TODO: find a way to get this information right!
+            userHasCompletedPhase2 = peerGradingService.userHasPerformedEvaluation(learner, sequence),
             secondAttemptAlreadySubmitted = secondAttemptAlreadySubmitted,
             sequence = sequence,
             userActiveInteraction = learnerPhase.learnerSequence.activeInteraction,

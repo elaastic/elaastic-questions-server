@@ -57,6 +57,9 @@ class ExternalLearnerEvaluationPhase(
                 learnerSequence,
                 learnerPhaseExecution.lastAttemptResponse
             ),
+            userHasCompletedPhase2 = learnerPhaseExecution.userHasCompletedPhase2,
+            secondAttemptAllowed = sequence.isSecondAttemptAllowed(),
+            secondAttemptAlreadySubmitted = learnerPhaseExecution.secondAttemptAlreadySubmitted,
             evaluationExternalInstructions = sequence.evaluationExternalInstructions
         )
     }
