@@ -24,7 +24,7 @@ class EvaluationPhaseConfig(
     val phaseActive: Boolean,
     nbResponseToEvaluate: Int? = 0,
     evaluationMethod: EvaluationMethod? = null,
-    evaluationExternalInstructions: String?
+    evaluationExternalInstructions: String? = null
     ) : PhaseConfig {
     val nbResponseToEvaluate: Int = nbResponseToEvaluate ?: 0
     val evaluationMethod: EvaluationMethod = evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE
