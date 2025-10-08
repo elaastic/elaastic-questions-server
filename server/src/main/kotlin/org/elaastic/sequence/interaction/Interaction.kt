@@ -60,7 +60,6 @@ class Interaction(
     @field:ManyToOne
     override var owner: User,
 
-
     @field:OneToOne
     var sequence: Sequence,
 

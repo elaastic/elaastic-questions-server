@@ -24,8 +24,67 @@
         <div class="ui dividing header" th:text="#{sequence.phase.Evaluation.description}">
             Comparing viewpoints
         </div>
-        <p th:text="${model.evaluationExternalInstructions} ?: #{player.sequence.interaction.evaluation.external.generic}">
-            Follow the instructions given by the teacher to compare your viewpoint with others.
-        </p>
+
+        <!--/* Form to submit the evaluation */-->
+        <form th:unless="${model.userHasCompletedPhase2 || model.phaseState.name() == 'afterStop'}"
+              th:action="@{/player/sequence/{sequenceId}/phase/evaluation/external/finalize(sequenceId=${model.sequenceId})}"
+              class="ui form"
+              method="post"
+              id="evaluationForm">
+            <p th:text="${model.evaluationExternalInstructions} ?: #{player.sequence.interaction.evaluation.external.generic}">
+                Follow the instructions given by the teacher to compare your viewpoint with others.
+            </p>
+
+            <!--/* If the sequence allows a second attempt */-->
+            <div th:replace="player/assignment/sequence/phase/evaluation/_change-answer-form::
+                    changeAnswerForm(${model.secondAttemptAlreadySubmitted}, ${model.responseFormModel}, null)">
+            </div>
+
+            <!--/* Hacky workaround to show the answer form immediately */-->
+            <script>$('#change-answer-section').show()</script>
+
+            <!--/* Submit button */-->
+            <div class="ui basic segment" id="phase2-submit">
+                <input type="submit"
+                       class="ui primary button"
+                       onclick="onSubmitResponse()"
+                       th:value="#{player.sequence.interaction.submitResponse}"/>
+            </div>
+
+
+            <script th:inline="javascript">
+                $(function () {
+                    let $evaluationForm = $("#evaluationForm");
+
+                    // If the form exists
+                    if ($evaluationForm.length) {
+                        $evaluationForm.on('submit', function (event) {
+                            event.preventDefault();
+                            let $form = $(this);
+
+                            $.post($form.attr('action'), $form.serialize())
+                                    .done(function () {
+                                        window.location.reload();
+                                    })
+                                    .fail(function () {
+                                        console.log("An error occurred during the submission of the evaluation.");
+                                    });
+                        });
+                    }
+                });
+            </script>
+        </form>
+
+        <!--/* If the learner has made all the necessary evaluations */-->
+        <div th:if="${model.userHasCompletedPhase2}"
+             class="ui blue message"
+             th:text="#{player.sequence.phase.completedByUser(${2})}">
+        </div>
+
+        <!--/* If the learner has not completed the evaluation and the phase is over */-->
+        <div th:if="${!model.userHasCompletedPhase2 && model.phaseState.name() == 'afterStop'}"
+             class="ui blue message"
+             th:text="#{player.sequence.interaction.evaluation.tooLate}">
+        </div>
     </div>
 </div>
