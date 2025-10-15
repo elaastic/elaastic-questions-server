@@ -22,11 +22,9 @@ import org.elaastic.sequence.phase.descriptor.PhaseConfig
 
 class EvaluationPhaseConfig(
     val phaseActive: Boolean,
-    nbResponseToEvaluate: Int? = 0,
-    evaluationMethod: EvaluationMethod? = null,
+    val nbResponseToEvaluate: Int = 0,
+    val evaluationMethod: EvaluationMethod = EvaluationMethod.ALL_AT_ONCE,
     evaluationExternalInstructions: String? = null
     ) : PhaseConfig {
-    val nbResponseToEvaluate: Int = nbResponseToEvaluate ?: 0
-    val evaluationMethod: EvaluationMethod = evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE
     val evaluationExternalInstructions: String? = if (evaluationExternalInstructions.isNullOrBlank()) null else evaluationExternalInstructions
 }
