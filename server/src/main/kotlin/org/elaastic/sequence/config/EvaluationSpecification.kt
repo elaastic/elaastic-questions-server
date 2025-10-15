@@ -9,6 +9,7 @@ import javax.validation.constraints.Max
  *
  * @property responseToEvaluateCount The number of responses that the user has to evaluate.
  */
+// TODO(John Tranier): should be split in two classes : ElaasticEvaluationSpecification and ExternalEvaluationSpecification [#466]
 data class EvaluationSpecification(
     @field:Max(5) var responseToEvaluateCount: Int,
 ) : InteractionSpecification {
