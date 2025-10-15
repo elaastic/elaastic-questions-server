@@ -69,6 +69,10 @@ class ResponseService(
             else responseRepository.findAllByInteractionOrderByMeanGradeDesc(interaction)
         )
 
+    @Suppress("DEPRECATION")
+    @Deprecated("This is a helper for a workaround in phase completion logic. Do not use.")
+    fun findAny(interaction: Interaction): Response = responseRepository.findFirstByInteraction(interaction)
+
     fun findRecommendedByTeacherResponses(sequence: Sequence): List<Response> =
         responseRepository.findAllByInteractionAndRecommendedByTeacherIsTrue(
             sequence.getResponseSubmissionInteraction()

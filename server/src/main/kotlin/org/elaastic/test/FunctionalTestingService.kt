@@ -227,7 +227,8 @@ class FunctionalTestingService(
             EvaluationPhaseConfig(
                 true,
                 3,
-                sequence.evaluationMethod
+                sequence.evaluationMethod,
+                null
             ),
     ) =
         sequenceService.start(
@@ -464,7 +465,8 @@ class FunctionalTestingService(
                     EvaluationPhaseConfig(
                         true,
                         command.nbResponseToEvaluate,
-                        sequence.evaluationMethod
+                        sequence.evaluationMethod,
+                        null
                     )
                 )
 

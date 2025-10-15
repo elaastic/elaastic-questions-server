@@ -171,6 +171,7 @@ class SequenceService(
             it.executionContext = executionContext
             it.resultsArePublished = (executionContext == ExecutionContext.Distance)
             it.evaluationMethod = sequenceConfig.confrontingViewsPhaseConfig.evaluationMethod
+            it.evaluationExternalInstructions = sequenceConfig.confrontingViewsPhaseConfig.evaluationExternalInstructions
             it.chatGptEvaluationEnabled =
                 studentGiveExplanation && sequenceConfig.resultPhaseConfig.evaluationByIA
         }.let(sequenceRepository::save)

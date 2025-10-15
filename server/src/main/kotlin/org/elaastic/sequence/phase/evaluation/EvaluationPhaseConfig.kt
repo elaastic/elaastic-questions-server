@@ -18,14 +18,15 @@
 
 package org.elaastic.sequence.phase.evaluation
 
-import org.elaastic.common.abtesting.ElaasticFeatures
 import org.elaastic.sequence.phase.descriptor.PhaseConfig
 
+// TODO(John Tranier): should be split in two classes : ElaasticEvaluationPhaseConfig and ExternalEvaluationPhaseConfig [#466]
+// TODO(John Tranier): Could be unified with EvaluationSpecification (its sub-classes) [#466]
 class EvaluationPhaseConfig(
-    val phaseActive: Boolean,
-    nbResponseToEvaluate: Int? = 0,
-    evaluationMethod: EvaluationMethod? = null
-) : PhaseConfig {
-    val nbResponseToEvaluate: Int = nbResponseToEvaluate ?: 0
-    val evaluationMethod: EvaluationMethod = evaluationMethod ?: EvaluationMethod.ALL_AT_ONCE
+    val phaseActive: Boolean, // TODO(John Tranier) to be removed ; it is not related to the phase config [#467]
+    val nbResponseToEvaluate: Int = 0,
+    val evaluationMethod: EvaluationMethod = EvaluationMethod.ALL_AT_ONCE,
+    evaluationExternalInstructions: String? = null
+    ) : PhaseConfig {
+    val evaluationExternalInstructions: String? = if (evaluationExternalInstructions.isNullOrBlank()) null else evaluationExternalInstructions
 }

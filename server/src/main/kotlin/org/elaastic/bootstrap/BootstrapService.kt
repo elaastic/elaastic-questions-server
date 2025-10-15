@@ -484,7 +484,8 @@ class BootstrapService(
                     EvaluationPhaseConfig(
                         phaseActive = true,
                         nbResponseToEvaluate = 2,
-                        EvaluationMethod.ALL_AT_ONCE
+                        EvaluationMethod.ALL_AT_ONCE,
+                        null,
                     ),
                     ResultPhaseConfig(evaluationByIA = false)
                 )

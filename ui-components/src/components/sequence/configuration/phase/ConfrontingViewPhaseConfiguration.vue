@@ -20,16 +20,17 @@
 
 import Link from "@/components/util/Link.vue";
 import {useI18n} from "vue-i18n";
-import {ref, watch} from "vue";
+import {ref, useId, watch} from "vue";
 
 const {t} = useI18n();
 
-type EvaluationMethod = 'ALL_AT_ONCE' | 'DRAXO'
+type EvaluationMethod = 'ALL_AT_ONCE' | 'DRAXO' | 'EXTERNAL'
 
 export interface ConfrontingViewPhaseConfig {
   phaseActive: boolean;
   nbResponseToEvaluate: number;
   evaluationMethod: EvaluationMethod;
+  evaluationExternalInstructions: string;
 }
 
 export interface ConfrontingViewPhaseProps {
@@ -60,19 +61,24 @@ const props = withDefaults(defineProps<ConfrontingViewPhaseProps>(), {
 });
 const emit = defineEmits<ConfrontingViewPhaseEvent>();
 
+const evaluationExternalInstructionsId = useId();
+
 const EVALUATION_METHOD_OPTIONS: EvaluationMethod[] = [
   'ALL_AT_ONCE',
-  'DRAXO'
+  'DRAXO',
+  'EXTERNAL',
 ]
 
 const confrontingViewsPhaseActive = ref<boolean>(props.modelValue?.phaseActive ?? true);
 const nbResponseToEvaluate = ref<number>(props.modelValue?.nbResponseToEvaluate ?? props.maxResponseToEvaluate);
 const evaluationMethod = ref<EvaluationMethod>(props.modelValue?.evaluationMethod ?? EVALUATION_METHOD_OPTIONS[0]);
+const evaluationExternalInstructions = ref<string>(props.modelValue?.evaluationExternalInstructions ?? '');
 
 // Watchers pour émettre les changements
 watch(() => confrontingViewsPhaseActive.value, () => configUpdated());
 watch(() => nbResponseToEvaluate.value, () => configUpdated());
 watch(() => evaluationMethod.value, () => configUpdated());
+watch(() => evaluationExternalInstructions.value, () => configUpdated());
 
 watch(() => props.modelValue, (newValue) => {
   if (newValue) {
@@ -90,7 +96,8 @@ const configUpdated = () => {
   emit('update:modelValue', {
     phaseActive: confrontingViewsPhaseActive.value,
     nbResponseToEvaluate: nbResponseToEvaluate.value,
-    evaluationMethod: evaluationMethod.value
+    evaluationMethod: evaluationMethod.value,
+    evaluationExternalInstructions: evaluationExternalInstructions.value,
   });
 };
 
@@ -116,8 +123,30 @@ configUpdated()
         <div v-if="confrontingViewsPhaseActive">
           <v-expand-transition>
             <div v-if="studentGiveExplanation">
-              <!-- Number of Responses to Evaluate -->
-              <v-row align="center" justify="start">
+              <!-- Evaluation Method -->
+                <v-radio-group
+                        class="mt-4"
+                        :label="t('evaluationMethod.title')"
+                        v-model="evaluationMethod"
+                >
+                  <v-radio
+                          v-for="option in EVALUATION_METHOD_OPTIONS"
+                          :key="option"
+                          :label="labelForEM(option)"
+                          :value="option"></v-radio>
+                </v-radio-group>
+              <div class="d-flex flex-column align-start mt-n4 mb-4">
+                <v-alert type="info" variant="outlined" class="align-self-end " density="compact">
+                  <Link
+                          href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
+                          :text="t('evaluationMethod.draxoDocumentation')"
+                          target="_blank"
+                  />
+                </v-alert>
+              </div>
+
+              <!-- Number of Responses to Evaluate (if not using an external evaluation method) -->
+              <v-row v-if="evaluationMethod !== 'EXTERNAL'" align="center" justify="start">
                 <v-col cols="auto">
                   <p>
                     {{ t('studentsEvaluate') }}
@@ -137,27 +166,19 @@ configUpdated()
                 <v-col cols="auto"><p>{{ t('answers') }}</p></v-col>
               </v-row>
 
-              <!-- Evaluation Method -->
-              <div class="d-flex flex-column align-start">
-                <v-radio-group
-                        :label="t('evaluationMethod.title')"
-                        v-model="evaluationMethod"
-
-                >
-                  <v-radio
-                          v-for="option in EVALUATION_METHOD_OPTIONS"
-                          :key="option"
-                          :label="labelForEM(option)"
-                          :value="option"></v-radio>
-                </v-radio-group>
-                <v-alert type="info" variant="outlined" class="align-self-end " density="compact">
-                  <Link
-                          href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
-                          :text="t('evaluationMethod.draxoDocumentation')"
-                          target="_blank"
-                  />
-                </v-alert>
-              </div>
+              <!-- Instructions for the phase (if using an external evaluation method) -->
+              <template v-else>
+                <v-textarea
+                  v-model="evaluationExternalInstructions"
+                  variant="outlined"
+                  :id="evaluationExternalInstructionsId"
+                  :label="t('evaluationMethod.externalInstructions')"
+                  :placeholder="t('evaluationMethod.externalInstructionsPlaceholder')"
+                />
+                <v-row class="ma-0 mt-n3">
+                  <p>{{ t('evaluationMethod.externalInstructionsHelpText') }}</p>
+                </v-row>
+              </template>
             </div>
           </v-expand-transition>
 
@@ -191,7 +212,11 @@ configUpdated()
       "title": "Evaluation method:",
       "ALL_AT_ONCE": "Single evaluation criterion \"Degree of agreement\" without textual feedback",
       "DRAXO": "DRAXO criteria grid with textual feedback",
-      "draxoDocumentation": "More information on the DRAXO evaluation grid"
+      "EXTERNAL": "Evaluation outside Elaastic according to instructions given by the teacher",
+      "draxoDocumentation": "More information on the DRAXO evaluation grid",
+      "externalInstructions": "Instructions for students",
+      "externalInstructionsHelpText": "These instructions will be shown to students on Elaastic when the evaluation phase is ongoing.",
+      "externalInstructionsPlaceholder": "Follow the instructions given by the teacher to compare your viewpoint with others."
     },
     "active": "The phase is actived",
     "deactive": "The phase is deactived",
@@ -205,7 +230,11 @@ configUpdated()
       "title": "Méthode d'évaluation",
       "ALL_AT_ONCE": "Critère d'évaluation unique \"Degré d'accord\" sans feedback textuel",
       "DRAXO": "Grille de critères DRAXO avec feedback textuel possible",
-      "draxoDocumentation": "Plus d'informations sur la grille d'évaluation DRAXO"
+      "EXTERNAL": "Évaluation en dehors d'Elaastic selon des consignes données par l'enseignant",
+      "draxoDocumentation": "Plus d'informations sur la grille d'évaluation DRAXO",
+      "externalInstructions": "Instructions aux étudiants",
+      "externalInstructionsHelpText": "Ces instructions seront affichées aux étudiants sur Elaastic lorsque la phase d'évaluation sera en cours.",
+      "externalInstructionsPlaceholder": "Suivez les instructions de l'enseignant pour comparer vos points de vue avec les autres."
     },
     "active": "La phase est activée",
     "deactive": "La phase est désactivée",
