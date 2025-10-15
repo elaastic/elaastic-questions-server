@@ -1,5 +1,6 @@
 package org.elaastic.auth.oauth
 
+import org.springframework.context.annotation.Profile
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletResponse
 import kotlin.text.Charsets.UTF_8
 
 @Component
-@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix = "elaastic.openid", name = ["enabled"], havingValue = "true")
+@Profile("oidc")
 class OidcHintFilter : OncePerRequestFilter() {
 
     companion object {

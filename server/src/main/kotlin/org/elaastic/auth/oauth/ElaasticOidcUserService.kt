@@ -26,6 +26,7 @@ import org.elaastic.user.UserSource
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
@@ -53,7 +54,7 @@ private const val ROLES_KEY = "roles"
  * @author John Tranier
  */
 @Service
-@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix = "elaastic.openid", name = ["enabled"], havingValue = "true")
+@Profile("oidc")
 open class ElaasticOidcUserService(
     private val userLinkService: UserLinkService,
 ) : OidcUserService() {

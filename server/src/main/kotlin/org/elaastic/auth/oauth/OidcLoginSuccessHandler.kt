@@ -1,6 +1,7 @@
 package org.elaastic.auth.oauth
 
 import org.elaastic.auth.oauth.OidcHintFilter.Companion.TARGET_URL_SESSION_ATTR
+import org.springframework.context.annotation.Profile
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.savedrequest.SavedRequest
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(prefix = "elaastic.openid", name = ["enabled"], havingValue = "true")
+@Profile("oidc")
 class OidcLoginSuccessHandler : AuthenticationSuccessHandler {
 
     override fun onAuthenticationSuccess(

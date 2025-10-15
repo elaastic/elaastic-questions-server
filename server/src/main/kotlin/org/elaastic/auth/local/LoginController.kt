@@ -20,7 +20,7 @@ package org.elaastic.auth.local
 
 import org.elaastic.security.CasSecurityConfig
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -32,8 +32,11 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 class LoginController(
     @Autowired val casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer,
-    @Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
+    @Autowired val environment: Environment,
 ) {
+
+    val elaasticOidcEnabled: Boolean
+        get() = environment.activeProfiles.contains("oidc")
 
     @GetMapping("/login")
     fun displayLoginForm(model: Model, request: HttpServletRequest): String {
