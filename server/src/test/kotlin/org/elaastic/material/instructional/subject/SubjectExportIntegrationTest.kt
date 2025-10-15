@@ -39,14 +39,14 @@ class SubjectExportIntegrationTest(
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n 1")
-                .content("Content 1 - Avec des caract�res accentu�s")
+                .title("Stmt n°1")
+                .content("Content 1 - Avec des caractères accentués")
                 .expectedExplanation("Expected 1")
         )
         val statement2 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n�2")
+                .title("Stmt n°2")
                 .content("Content 2")
         )
         val attachmentContent = "Attachement".toByteArray()

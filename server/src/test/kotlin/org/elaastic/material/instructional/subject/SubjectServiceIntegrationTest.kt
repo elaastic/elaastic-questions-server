@@ -282,7 +282,7 @@ internal class SubjectServiceIntegrationTest(
             subjectService.addStatement(
                 subject,
                 Statement.createDefaultStatement(teacher)
-                    .title("Sequence n�1")
+                    .title("Sequence n°1")
                     .content("Content 1")
             )
         }.tThen {
@@ -302,7 +302,7 @@ internal class SubjectServiceIntegrationTest(
         val statement1 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(subject.owner)
-                .title("Statement n�1")
+                .title("Statement n°1")
                 .content("Content 1")
         )
 
@@ -394,17 +394,17 @@ internal class SubjectServiceIntegrationTest(
                 owner = teacher,
                 course = course
             )
-        )
-        subjectService.addStatement(
-            subject,
-            Statement.createDefaultStatement(teacher)
-                .title("Stmt n�1")
+    )
+    subjectService.addStatement(
+        subject,
+        Statement.createDefaultStatement(teacher)
+            .title("Stmt n°1")
                 .content("Content 1")
         )
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n�2")
+                .title("Stmt n°2")
                 .content("Content 2")
         )
 
@@ -458,13 +458,13 @@ internal class SubjectServiceIntegrationTest(
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n�1")
+                .title("Stmt n°1")
                 .content("Content 1")
         )
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n�2")
+                .title("Stmt n°2")
                 .content("Content 2")
         )
 
@@ -528,7 +528,7 @@ internal class SubjectServiceIntegrationTest(
         (1..n).forEach {
             subjectService.save(
                 Subject(
-                    title = "Subject n�$it",
+                    title = "Subject n°$it",
                     owner = owner
                 )
             )
