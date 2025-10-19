@@ -7,9 +7,9 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.web.savedrequest.SimpleSavedRequest
-import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit.jupiter.EnabledIf
 
-@ActiveProfiles("oidc")
+@EnabledIf(value = "#{environment.acceptsProfiles('oidc')}", loadContext = true)
 class OidcLoginSuccessHandlerTest {
 
     @Test
