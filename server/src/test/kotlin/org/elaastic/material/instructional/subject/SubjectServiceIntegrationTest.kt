@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
 import java.util.*
@@ -29,7 +28,6 @@ import javax.validation.ConstraintViolationException
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
 internal class SubjectServiceIntegrationTest(
     @Autowired val subjectService: SubjectService,
     @Autowired val courseService: CourseService,
@@ -284,7 +282,7 @@ internal class SubjectServiceIntegrationTest(
             subjectService.addStatement(
                 subject,
                 Statement.createDefaultStatement(teacher)
-                    .title("Sequence n°1")
+                    .title("Sequence nÂ°1")
                     .content("Content 1")
             )
         }.tThen {
@@ -304,7 +302,7 @@ internal class SubjectServiceIntegrationTest(
         val statement1 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(subject.owner)
-                .title("Statement n°1")
+                .title("Statement nÂ°1")
                 .content("Content 1")
         )
 
@@ -400,13 +398,13 @@ internal class SubjectServiceIntegrationTest(
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°1")
+                .title("Stmt nÂ°1")
                 .content("Content 1")
         )
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°2")
+                .title("Stmt nÂ°2")
                 .content("Content 2")
         )
 
@@ -460,13 +458,13 @@ internal class SubjectServiceIntegrationTest(
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°1")
+                .title("Stmt nÂ°1")
                 .content("Content 1")
         )
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°2")
+                .title("Stmt nÂ°2")
                 .content("Content 2")
         )
 
@@ -530,7 +528,7 @@ internal class SubjectServiceIntegrationTest(
         (1..n).forEach {
             subjectService.save(
                 Subject(
-                    title = "Subject n°$it",
+                    title = "Subject nÂ°$it",
                     owner = owner
                 )
             )

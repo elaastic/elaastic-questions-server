@@ -7,7 +7,9 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.web.savedrequest.SimpleSavedRequest
+import org.springframework.test.context.ActiveProfiles
 
+@ActiveProfiles("oidc")
 class OidcLoginSuccessHandlerTest {
 
     @Test

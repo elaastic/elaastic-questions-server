@@ -74,6 +74,8 @@ services:
           KC_HTTP_ENABLED: true
           KC_HEALTH_ENABLED: true
           KC_METRICS_ENABLED: true
+      depends_on:
+          - traefik
 
   auth-idp-saml2:
       image: quay.io/keycloak/keycloak:25.0.6
@@ -101,6 +103,8 @@ services:
           KC_HTTP_ENABLED: true
           KC_HEALTH_ENABLED: true
           KC_METRICS_ENABLED: true
+      depends_on:
+          -   traefik
 
   traefik:
       image: traefik:v3.4

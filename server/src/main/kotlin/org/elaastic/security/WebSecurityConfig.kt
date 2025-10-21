@@ -25,10 +25,12 @@ import org.elaastic.user.Role
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.ObjectProvider
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
@@ -68,10 +70,13 @@ open class WebSecurityConfig(
     private val casSecurityConfigurerProvider: ObjectProvider<CasSecurityConfig.CasSecurityConfigurer>,
     private val oidcLoginSuccessHandlerProvider: ObjectProvider<OidcLoginSuccessHandler>,
     @param:Value("\${elaastic.questions.url}") val elaasticUrl: String,
-    @param:Value("\${elaastic.openid.enabled:false}") val elaasticOidcEnabled: Boolean,
+    @Autowired val environment: Environment,
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
+    val elaasticOidcEnabled: Boolean
+        get() = environment.activeProfiles.contains("oidc")
 
     companion object {
         const val LOGIN_URL = "/login"
