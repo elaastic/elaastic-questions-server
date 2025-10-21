@@ -394,11 +394,11 @@ internal class SubjectServiceIntegrationTest(
                 owner = teacher,
                 course = course
             )
-    )
-    subjectService.addStatement(
-        subject,
-        Statement.createDefaultStatement(teacher)
-            .title("Stmt n°1")
+        )
+        subjectService.addStatement(
+            subject,
+            Statement.createDefaultStatement(teacher)
+                .title("Stmt n°1")
                 .content("Content 1")
         )
         subjectService.addStatement(
