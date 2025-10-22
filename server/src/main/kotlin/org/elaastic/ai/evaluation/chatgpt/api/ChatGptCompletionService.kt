@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.util.logging.Logger
 
+@Profile("chatgpt")
 @Service
 class ChatGptCompletionService(
     val restTemplate: RestTemplate,

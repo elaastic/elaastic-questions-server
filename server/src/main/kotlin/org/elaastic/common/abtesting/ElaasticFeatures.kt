@@ -1,6 +1,5 @@
 package org.elaastic.common.abtesting
 
-import org.togglz.core.Feature
 import org.togglz.core.annotation.ActivationParameter
 import org.togglz.core.annotation.DefaultActivationStrategy
 import org.togglz.core.annotation.EnabledByDefault
@@ -48,11 +47,13 @@ enum class ElaasticFeatures {
     @EnabledByDefault
     IMPORT_EXPORT,
 
-    @EnabledByDefault
+    /**
+     * Use Chat GPT for evaluating student responses.
+     */
     @DefaultActivationStrategy(
-        id = SomeTeachersAllStudentsActivationStrategy.ID,
+        id = SpringProfileActivationStrategy.ID,
         parameters = [
-            ActivationParameter(name = "users", value = "fsil")
+            ActivationParameter(name = "profiles", value = "chatgpt")
         ]
     )
     CHATGPT_EVALUATION,
