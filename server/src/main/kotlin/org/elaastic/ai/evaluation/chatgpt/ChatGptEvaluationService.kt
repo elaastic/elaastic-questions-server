@@ -15,7 +15,6 @@ import org.elaastic.moderation.UtilityGrade
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.user.User
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.scheduling.annotation.Async
@@ -36,10 +35,7 @@ class ChatGptEvaluationService(
     val reportCandidateService: ReportCandidateService,
     val responseService: ResponseService,
     val entityManager: EntityManager,
-    /**
-     * chatGptCompletionService will be injected only if the ChatGPT is configured (see `chatgpt` profile).
-     */
-    @Autowired(required = false) val chatGptCompletionService: ChatGptCompletionService?,
+    val chatGptCompletionService: ChatGptCompletionService,
     val messageSource: MessageSource,
 ) {
 
@@ -61,8 +57,6 @@ class ChatGptEvaluationService(
         language: String,
         chatGptExistingEvaluation: ChatGptEvaluation? = null
     ): ChatGptEvaluation {
-        val chatGptCompletionService = chatGptCompletionService ?: throw IllegalStateException("ChatGPT is not configured")
-
         // get the default prompt for the language
         val chatGptDefaultPrompt = chatGptPromptService.getPrompt(language)
         // Initialization of the evaluation

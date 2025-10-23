@@ -17,11 +17,17 @@
  */
 package org.elaastic.ai.evaluation.chatgpt.api
 
-interface ChatGptCompletionService {
-    /**
-     * Get the response from the ChatGPT API
-     * @param messages List of messages to send to the API
-     * @return ChatGptApiResponseData
-     */
-    fun getChatGptResponse(messages: List<ChatGptApiMessageData>, nParameter: Int = 1): ChatGptApiResponseData
+import org.springframework.context.annotation.Profile
+import org.springframework.stereotype.Service
+
+@Profile("!chatgpt")
+@Service
+class DisabledChatGptCompletionService : ChatGptCompletionService {
+
+    override fun getChatGptResponse(
+        messages: List<ChatGptApiMessageData>,
+        nParameter: Int
+    ): ChatGptApiResponseData {
+        throw IllegalStateException("ChatGPT is disabled")
+    }
 }

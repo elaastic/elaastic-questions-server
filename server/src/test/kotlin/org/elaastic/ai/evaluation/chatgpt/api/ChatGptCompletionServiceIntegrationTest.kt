@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 @EnabledIf(value = "#{environment.acceptsProfiles('chatgpt')}", loadContext = true)
 @Transactional
 class ChatGptCompletionServiceIntegrationTest(
-    @Autowired val chatGptCompletionService: ChatGptCompletionService
+    @Autowired val chatGptCompletionService: DefaultChatGptCompletionService
 ) {
 
     @Test
