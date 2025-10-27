@@ -4,7 +4,7 @@ package org.elaastic.ai.evaluation.chatgpt
  * Store the ids of responses that received a ChatGPT evaluation.
  *
  * @author John Tranier
- * @author François de Saint Palais
+ * @author FranÃ§ois de Saint Palais
  */
 class ChatGptEvaluationResponseStore(responseIds: Collection<Long> = emptyList()) {
 
