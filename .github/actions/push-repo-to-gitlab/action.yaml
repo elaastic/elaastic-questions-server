@@ -1,0 +1,37 @@
+name: Push to GitLab repository
+
+inputs:
+  GITLAB_HOST:
+    description: Hostname of the GitLab instance
+    required: true
+  GITLAB_HOST_PUBKEY:
+    description: Public SSH key of the GitLab instance
+    required: true
+  GITLAB_DEPLOY_KEY:
+    description: Deploy key used to push the repository
+    required: true
+  GITLAB_PROJECT_PATH:
+    description: Path to the GitLab project (excluding base url)
+    required: true
+  TARGET_BRANCH:
+    description: Branch on the GitLab repository to push on
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup SSH
+      shell: sh
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ inputs.GITLAB_DEPLOY_KEY }}" >> ~/.ssh/id_gitlab
+        echo "${{ inputs.GITLAB_HOST }} ${{ inputs.GITLAB_HOST_PUBKEY }}" >> ~/.ssh/known_hosts
+        git config core.sshCommand 'ssh -i ~/.ssh/id_gitlab -o IdentitiesOnly=yes'
+        chmod 600 ~/.ssh/id_gitlab
+
+    - name: Push repository
+      shell: sh
+      run: |
+        git remote add gitlab git@${{ inputs.GITLAB_HOST }}:${{ inputs.GITLAB_PROJECT_PATH }}
+        git checkout -b tmp/actions-branch
+        git push gitlab tmp/actions-branch:${{ inputs.TARGET_BRANCH }} --force
