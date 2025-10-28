@@ -48,27 +48,24 @@ jobs:
           GITLAB_PROJECT_PATH: ${{ vars.GITLAB_PROJECT_PATH }}
           TARGET_BRANCH: ${{ steps.branches.outputs.target-branch }}
 
+      - uses: actions/create-github-app-token@v2
+        id: gh-app-token
+        with:
+          app-id: ${{ vars.REMOTE_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REMOTE_CI_APP_PRIVATE_KEY }}
+
       - id: check-run
         name: Create check run
         run: |
           set -euo pipefail
           source .github/scripts/github.sh
 
-          echo "${{ secrets.REMOTE_CI_APP_PRIVATE_KEY }}" > /tmp/gh_rsa.pem
-
-          jwt=$(generate_gh_app_jwt "${{ vars.REMOTE_CI_APP_CLIENT_ID }}" /tmp/gh_rsa.pem)
-          echo "::add-mask::$jwt"
-
-          token=$(authenticate_gh_app "$jwt" "${{ vars.REMOTE_CI_APP_INSTALL_ID }}")
-          echo "::add-mask::$token"
-
           check_run_id=$(
-            create_check_run "$token" "$GITHUB_REPOSITORY" \
-            "Deployment via GitLab CI/CD" "$GITHUB_SHA" \
-            "https://${{ vars.GITLAB_HOST }}/${{ vars.GITLAB_PROJECT_PATH }}"
+            create_check_run "${{ steps.gh-app-token.outputs.token }}" "$GITHUB_REPOSITORY" \
+              "Deployment via GitLab CI/CD" "$GITHUB_SHA" \
+              "https://${{ vars.GITLAB_HOST }}/${{ vars.GITLAB_PROJECT_PATH }}"
           )
 
-          echo "token=$token" >> $GITHUB_OUTPUT
           echo "id=$check_run_id" >> $GITHUB_OUTPUT
 
       - id: trigger-gitlab
@@ -86,11 +83,11 @@ jobs:
         run: |
           source .github/scripts/github.sh
           update_check_run_details \
-            "${{ steps.check-run.outputs.token }}" "$GITHUB_REPOSITORY" "${{ steps.check-run.outputs.id }}" \
+            "${{ steps.gh-app-token.outputs.token }}" "$GITHUB_REPOSITORY" "${{ steps.check-run.outputs.id }}" \
             "https://${{ vars.GITLAB_HOST }}/${{ vars.GITLAB_PROJECT_PATH }}" "${{ steps.trigger-gitlab.outputs.pipeline-id }}"
 
       - name: Mark check run as failed to launch
         if: failure() && steps.check-run.outcome == 'success'
         run: |
           source .github/scripts/github.sh
-          finish_check_run ${{ steps.check-run.outputs.token }} $GITHUB_REPOSITORY ${{ steps.check-run.outputs.id }} failure
+          finish_check_run "${{ steps.gh-app-token.outputs.token }}" "$GITHUB_REPOSITORY" "${{ steps.check-run.outputs.id }}" failure
