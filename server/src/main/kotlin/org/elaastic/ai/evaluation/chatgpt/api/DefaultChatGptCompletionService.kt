@@ -28,7 +28,6 @@ import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationStatus
 import org.elaastic.ai.evaluation.chatgpt.PromptData
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPrompt
 import org.elaastic.ai.evaluation.chatgpt.prompt.ChatGptPromptService
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -44,16 +43,11 @@ import java.util.logging.Logger
 @Profile("chatgpt")
 @Service
 open class DefaultChatGptCompletionService(
+    val chatGptApiProperties: ChatGptApiProperties,
     val chatGptPromptService: ChatGptPromptService,
     val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     val restTemplate: RestTemplate,
     val objectMapper: ObjectMapper,
-    @Value("\${chatgptapi.token}")
-    val apiKey: String,
-    @Value("\${chatgptapi.model}")
-    val model: String,
-    @Value("\${chatgptapi.maxTokens}")
-    val maxTokens: Int
 ) : ChatGptCompletionService {
     companion object {
         const val apiUrl = "https://api.openai.com/v1/chat/completions"
@@ -134,14 +128,14 @@ open class DefaultChatGptCompletionService(
 
     private fun getHeaders() = HttpHeaders().apply {
         contentType = MediaType.APPLICATION_JSON
-        set("Authorization", "Bearer $apiKey")
+        set("Authorization", "Bearer ${chatGptApiProperties.token}")
     }
 
     private fun getRequestBody(messages: List<ChatGptApiMessageData>, nParameter: Int=1): String {
         val requestBody = mapOf(
-            "model" to model,
+            "model" to chatGptApiProperties.model,
             "messages" to messages,
-            "max_tokens" to maxTokens,
+            "max_tokens" to chatGptApiProperties.maxTokens,
             "n" to nParameter,
         )
         return objectMapper.writeValueAsString(requestBody)
