@@ -25,6 +25,7 @@ import io.mockk.unmockkAll
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
 import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
@@ -111,6 +112,9 @@ internal class PlayerControllerTest(
 
     @MockBean
     lateinit var chatGptEvaluationService: ChatGptEvaluationService
+
+    @MockBean
+    lateinit var chatGptCompletionService: ChatGptCompletionService
 
     @MockBean
     lateinit var eventLogService: EventLogService
