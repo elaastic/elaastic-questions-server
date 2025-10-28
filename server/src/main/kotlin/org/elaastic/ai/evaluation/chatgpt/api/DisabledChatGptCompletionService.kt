@@ -17,6 +17,8 @@
  */
 package org.elaastic.ai.evaluation.chatgpt.api
 
+import org.elaastic.activity.response.Response
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
@@ -24,10 +26,15 @@ import org.springframework.stereotype.Service
 @Service
 class DisabledChatGptCompletionService : ChatGptCompletionService {
 
+    override fun createEvaluation(
+        response: Response,
+        language: String,
+        chatGptExistingEvaluation: ChatGptEvaluation?
+    ): ChatGptEvaluation = throw IllegalStateException("ChatGPT is disabled")
+
     override fun getChatGptResponse(
         messages: List<ChatGptApiMessageData>,
         nParameter: Int
-    ): ChatGptApiResponseData {
+    ): ChatGptApiResponseData =
         throw IllegalStateException("ChatGPT is disabled")
-    }
 }

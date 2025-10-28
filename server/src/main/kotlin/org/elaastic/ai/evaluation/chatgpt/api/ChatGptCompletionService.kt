@@ -17,7 +17,25 @@
  */
 package org.elaastic.ai.evaluation.chatgpt.api
 
+import org.elaastic.activity.response.Response
+import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
+
 interface ChatGptCompletionService {
+
+    /**
+     * Create a ChatGPT evaluation for a response.
+     *
+     * @param response the response to evaluate
+     * @param language the language of the evaluation
+     * @param chatGptExistingEvaluation the existing evaluation if it exists
+     * @return the created evaluation
+     */
+    fun createEvaluation(
+        response: Response,
+        language: String,
+        chatGptExistingEvaluation: ChatGptEvaluation? = null
+    ): ChatGptEvaluation
+
     /**
      * Get the response from the ChatGPT API
      * @param messages List of messages to send to the API

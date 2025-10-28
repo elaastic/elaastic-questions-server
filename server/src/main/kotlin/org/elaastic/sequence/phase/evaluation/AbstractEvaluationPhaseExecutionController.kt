@@ -4,7 +4,7 @@ import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ItemIndex
-import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
 import org.elaastic.material.instructional.question.legacy.LearnerChoice
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService
@@ -14,7 +14,7 @@ import java.util.*
 abstract class AbstractEvaluationPhaseExecutionController(
     open val sequenceService: SequenceService,
     open val responseService: ResponseService,
-    open val chatGptEvaluationService: ChatGptEvaluationService
+    open val chatGptCompletionService: ChatGptCompletionService,
 ) {
 
     fun changeAnswer(user: User, sequence: Sequence, answer: Answer): Response {
@@ -68,7 +68,7 @@ abstract class AbstractEvaluationPhaseExecutionController(
         }
 
         if (sequence.chatGptEvaluationEnabled && lastResponse != null) {
-            chatGptEvaluationService.createEvaluation(lastResponse, locale.language)
+            chatGptCompletionService.createEvaluation(lastResponse, locale.language)
         }
 
         return "redirect:/player/assignment/${assignmentId}/play/sequence/${sequence.id}"
