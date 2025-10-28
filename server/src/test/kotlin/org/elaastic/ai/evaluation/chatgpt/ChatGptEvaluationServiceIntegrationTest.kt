@@ -14,17 +14,14 @@ import org.elaastic.test.directive.tWhen
 import org.elaastic.test.interpreter.command.Phase
 import org.elaastic.user.User
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.EnabledIf
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = ["no-async"])
-@EnabledIf(value = "#{environment.acceptsProfiles('chatgpt')}", loadContext = true)
 @Transactional
 internal open class ChatGptEvaluationServiceIntegrationTest(
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
