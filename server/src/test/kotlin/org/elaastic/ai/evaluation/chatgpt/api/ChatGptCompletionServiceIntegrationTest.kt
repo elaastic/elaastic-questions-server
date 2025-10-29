@@ -1,3 +1,4 @@
+
 package org.elaastic.ai.evaluation.chatgpt.api
 
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
@@ -17,13 +18,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.EnabledIf
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles(profiles = ["no-async"])
+/**
+ * This test requires the real OpenAI API, so it is disabled unless the "chatgpt" profile is active.
+ * We activate the "no-async" profile to avoid asynchronous methods in the test.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = ["spring.profiles.include=no-async"])
 @EnabledIf(value = "#{environment.acceptsProfiles('chatgpt')}", loadContext = true)
 @Transactional
 open class ChatGptCompletionServiceIntegrationTest(
