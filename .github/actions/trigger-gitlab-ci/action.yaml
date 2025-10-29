@@ -31,13 +31,12 @@ runs:
     - id: trigger
       name: Trigger GitLab CI/CD
       shell: sh
-      # FIXME: ditch env fallback
       run: |
         pipeline_id=$(
           curl -fsS --request POST \
             --form "ref=${{ inputs.TARGET_BRANCH }}" \
             --form "token=${{ inputs.GITLAB_TRIGGER_TOKEN }}" \
-            --form "inputs[environment]=${{ inputs.ENVIRONMENT || 'Staging' }}" \
+            --form "inputs[environment]=${{ inputs.ENVIRONMENT }}" \
             --form "inputs[check-run-id]=${{ inputs.CHECK_RUN_ID }}" \
             "https://${{ inputs.GITLAB_HOST }}/api/v4/projects/${{ inputs.GITLAB_PROJECT_ID }}/trigger/pipeline" \
           | jq -r .id

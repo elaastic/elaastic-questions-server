@@ -1,7 +1,6 @@
 name: Deployment trigger
 
 on:
-  pull_request: # FIXME: here for testing :)
   workflow_dispatch:
     inputs:
       pr-id:
