@@ -34,7 +34,6 @@ deploy:
     #region Installing system dependencies
     - section_start apk_add "Installing system dependencies"
     - apk add ansible openssh openssl jq curl
-      # TODO: ansible collections (will need the docker one at the very least)
     - section_end apk_add
     #endregion
 
@@ -59,15 +58,24 @@ deploy:
     - start_check_run "$GH_AUTH_TOKEN" "$GITHUB_REPOSITORY" "$[[ inputs.check-run-id ]]"
     - section_end gh_status_start
 
+    - echo "-----BEGIN OPENSSH PRIVATE KEY-----" > ~/.ssh/id_ed25519
+    - echo "$SSH_PRIVATE_KEY"                   >> ~/.ssh/id_ed25519
+    - echo "-----END OPENSSH PRIVATE KEY-----"  >> ~/.ssh/id_ed25519
+    - echo "$SSH_HOST $SSH_PINNED_HOST_KEY"      > ~/.ssh/known_hosts
+
+    - chmod 700 ~/.ssh
+    - chmod 600 ~/.ssh/id_ed25519
+
+    # TODO: ansible collections (will need the docker one at the very least)
+
   after_script:
     - source .github/scripts/gitlab.sh
     - source .github/scripts/github.sh
     - section_start gh_status_end "Completing check run on GitHub"
     - GH_AUTH_TOKEN=$(cat /tmp/auth_token)
     - if [ "$CI_JOB_STATUS" = "failed" ]; then conclusion="failure"; else conclusion="$CI_JOB_STATUS"; fi
-    - finish_check_run "$GH_AUTH_TOKEN" "$GITHUB_REPOSITORY" $[[ inputs.check-run-id ]] "$conclusion"
+    - finish_check_run "$GH_AUTH_TOKEN" "$GITHUB_REPOSITORY" "$[[ inputs.check-run-id ]]" "$conclusion"
     - section_end gh_status_end
 
   script:
-    # TODO: real deploy script :>
-    - echo 'Hello, CI!'
+    - ansible-playbook -i .config/ansible/hosts.yaml .config/ansible/tmp-update.yaml
