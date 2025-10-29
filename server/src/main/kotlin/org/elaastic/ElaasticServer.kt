@@ -18,13 +18,12 @@
 
 package org.elaastic
 
-import org.elaastic.ai.evaluation.chatgpt.api.ChatGptApiProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-@EnableConfigurationProperties(ChatGptApiProperties::class)
+@ConfigurationPropertiesScan("org.elaastic")
 open class ElaasticServer
 
 fun main(args: Array<String>) {
