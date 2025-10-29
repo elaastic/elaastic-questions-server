@@ -43,7 +43,7 @@ import java.util.logging.Logger
 @Profile("chatgpt")
 @Service
 open class DefaultChatGptCompletionService(
-    val chatGptApiProperties: ChatGptApiProperties,
+    val chatGptApiConfiguration: ChatGptApiConfiguration,
     val chatGptPromptService: ChatGptPromptService,
     val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     val restTemplate: RestTemplate,
@@ -128,14 +128,14 @@ open class DefaultChatGptCompletionService(
 
     private fun getHeaders() = HttpHeaders().apply {
         contentType = MediaType.APPLICATION_JSON
-        set("Authorization", "Bearer ${chatGptApiProperties.token}")
+        set("Authorization", "Bearer ${chatGptApiConfiguration.token}")
     }
 
     private fun getRequestBody(messages: List<ChatGptApiMessageData>, nParameter: Int=1): String {
         val requestBody = mapOf(
-            "model" to chatGptApiProperties.model,
+            "model" to chatGptApiConfiguration.model,
             "messages" to messages,
-            "max_tokens" to chatGptApiProperties.maxTokens,
+            "max_tokens" to chatGptApiConfiguration.maxTokens,
             "n" to nParameter,
         )
         return objectMapper.writeValueAsString(requestBody)
