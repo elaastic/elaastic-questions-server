@@ -1,0 +1,92 @@
+name: Deployment trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr-id:
+        type: number
+        description: Pull request ID to deploy, if deploying a PR. Leave blank to deploy the workflow target branch
+      pr-merge-result:
+        type: boolean
+        description: Deploy the result of the merge rather than the PR head. Will fail if there are unsolved conflicts
+        default: true
+      environment:
+        type: choice
+        required: true
+        description: The environment to deploy on
+        default: Staging
+        options:
+          - Production
+          - Staging
+
+jobs:
+  trigger-deployment:
+    name: Start GitLab CI/CD pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - id: branches
+        name: Prepare branch and ref names
+        env:
+          PR_BRANCH_NAME: ${{ format('pull/{0}/{1}', inputs.pr-id, inputs.pr-merge-result && 'merge' || 'head') }}
+          BRANCH_NAME: ${{ github.ref_type == 'tag' && format('release/{0}', github.ref_name) || github.ref_name }}
+        run: |
+          echo "source-ref=${{ inputs.pr-id == 0 && github.ref || env.PR_BRANCH_NAME }}" >> $GITHUB_OUTPUT
+          echo "target-branch=${{ inputs.pr-id == 0 && env.BRANCH_NAME || env.PR_BRANCH_NAME }}" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ steps.branches.outputs.source-ref }}
+
+      - name: Push repository to GitLab
+        uses: ./.github/actions/push-repo-to-gitlab
+        with:
+          GITLAB_DEPLOY_KEY: ${{ secrets.GITLAB_CI_DEPLOY_KEY }}
+          GITLAB_HOST: ${{ vars.GITLAB_HOST }}
+          GITLAB_HOST_PUBKEY: ${{ vars.GITLAB_HOST_PUBKEY }}
+          GITLAB_PROJECT_PATH: ${{ vars.GITLAB_PROJECT_PATH }}
+          TARGET_BRANCH: ${{ steps.branches.outputs.target-branch }}
+
+      - uses: actions/create-github-app-token@v2
+        id: gh-app-token
+        with:
+          app-id: ${{ vars.REMOTE_CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REMOTE_CI_APP_PRIVATE_KEY }}
+
+      - id: check-run
+        name: Create check run
+        run: |
+          set -euo pipefail
+          source .github/scripts/github.sh
+
+          check_run_id=$(
+            create_check_run "${{ steps.gh-app-token.outputs.token }}" "$GITHUB_REPOSITORY" \
+              "Deployment via GitLab CI/CD" "$GITHUB_SHA" \
+              "https://${{ vars.GITLAB_HOST }}/${{ vars.GITLAB_PROJECT_PATH }}"
+          )
+
+          echo "id=$check_run_id" >> $GITHUB_OUTPUT
+
+      - id: trigger-gitlab
+        name: Trigger GitLab CI/CD
+        uses: ./.github/actions/trigger-gitlab-ci
+        with:
+          GITLAB_TRIGGER_TOKEN: ${{ secrets.GITLAB_CI_TRIGGER_TOKEN }}
+          GITLAB_HOST: ${{ vars.GITLAB_HOST }}
+          GITLAB_PROJECT_ID: ${{ vars.GITLAB_PROJECT_ID }}
+          TARGET_BRANCH: ${{ steps.branches.outputs.target-branch }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          CHECK_RUN_ID: ${{ steps.check-run.outputs.id }}
+
+      - name: Update check run
+        run: |
+          source .github/scripts/github.sh
+          update_check_run_details \
+            "${{ steps.gh-app-token.outputs.token }}" "$GITHUB_REPOSITORY" "${{ steps.check-run.outputs.id }}" \
+            "https://${{ vars.GITLAB_HOST }}/${{ vars.GITLAB_PROJECT_PATH }}" "${{ steps.trigger-gitlab.outputs.pipeline-id }}"
+
+      - name: Mark check run as failed to launch
+        if: failure() && steps.check-run.outcome == 'success'
+        run: |
+          source .github/scripts/github.sh
+          finish_check_run "${{ steps.gh-app-token.outputs.token }}" "$GITHUB_REPOSITORY" "${{ steps.check-run.outputs.id }}" failure
