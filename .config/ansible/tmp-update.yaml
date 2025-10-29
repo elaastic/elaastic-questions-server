@@ -1,0 +1,19 @@
+# Temporary job that updates the environment based on existing status quo.
+# Will unconditionally pull the `dev` (or `master` in prod) tag, and restart compose services.
+
+---
+- name: Update docker images
+  hosts: all
+  tasks:
+    - name: Update Docker images
+      ansible.builtin.shell: docker compose -f /local/elaastic/docker-ressources/docker-compose.yml pull
+
+    - name: Stop Elaastic
+      ansible.builtin.shell: docker compose -f /local/elaastic/docker-ressources/docker-compose.yml down konsolidation-server konsolidation-client maestro
+
+    - name: Start Elaastic
+      ansible.builtin.shell: docker compose -f /local/elaastic/docker-ressources/docker-compose.yml up konsolidation-server konsolidation-client maestro -d
+
+    - name: Cleanup unused artifacts
+      ansible.builtin.shell: docker image prune -f
+...
