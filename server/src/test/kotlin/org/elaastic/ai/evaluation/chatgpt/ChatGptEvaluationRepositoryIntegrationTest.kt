@@ -14,7 +14,6 @@ import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@EnabledIf(value = "#{@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))}", loadContext = true)
 internal class ChatGptEvaluationRepositoryIntegrationTest(
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val integrationTestingService: IntegrationTestingService,

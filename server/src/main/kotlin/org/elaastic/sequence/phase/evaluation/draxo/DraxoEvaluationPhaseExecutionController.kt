@@ -5,7 +5,7 @@ import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.ItemIndex
-import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
 import org.elaastic.assignment.Assignment
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.phase.evaluation.AbstractEvaluationPhaseExecutionController
@@ -26,11 +26,11 @@ class DraxoEvaluationPhaseExecutionController(
     @Autowired override val sequenceService: SequenceService,
     @Autowired val peerGradingService: PeerGradingService,
     @Autowired override val responseService: ResponseService,
-    @Autowired override val chatGptEvaluationService: ChatGptEvaluationService,
+    @Autowired override val chatGptCompletionService: ChatGptCompletionService,
 ) : AbstractEvaluationPhaseExecutionController(
     sequenceService,
     responseService,
-    chatGptEvaluationService
+    chatGptCompletionService
 ) {
 
     @PostMapping("/close-evaluation")

@@ -19,27 +19,22 @@ package org.elaastic.ai.evaluation.chatgpt.api
 
 import org.elaastic.activity.response.Response
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluation
+import org.springframework.context.annotation.Profile
+import org.springframework.stereotype.Service
 
-interface ChatGptCompletionService {
+@Profile("!chatgpt")
+@Service
+class DisabledChatGptCompletionService : ChatGptCompletionService {
 
-    /**
-     * Create a ChatGPT evaluation for a response.
-     *
-     * @param response the response to evaluate
-     * @param language the language of the evaluation
-     * @param chatGptExistingEvaluation the existing evaluation if it exists
-     * @return the created evaluation
-     */
-    fun createEvaluation(
+    override fun createEvaluation(
         response: Response,
         language: String,
-        chatGptExistingEvaluation: ChatGptEvaluation? = null
-    ): ChatGptEvaluation
+        chatGptExistingEvaluation: ChatGptEvaluation?
+    ): ChatGptEvaluation = throw IllegalStateException("ChatGPT is disabled")
 
-    /**
-     * Get the response from the ChatGPT API
-     * @param messages List of messages to send to the API
-     * @return ChatGptApiResponseData
-     */
-    fun getChatGptResponse(messages: List<ChatGptApiMessageData>, nParameter: Int = 1): ChatGptApiResponseData
+    override fun getChatGptResponse(
+        messages: List<ChatGptApiMessageData>,
+        nParameter: Int
+    ): ChatGptApiResponseData =
+        throw IllegalStateException("ChatGPT is disabled")
 }
