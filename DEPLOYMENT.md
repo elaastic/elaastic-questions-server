@@ -256,15 +256,13 @@ script:
 [GitHub Apps]: https://github.com/organizations/elaastic/settings/apps
 [`GitHub Apps`]: https://github.com/organizations/elaastic/settings/apps
 
-[GitLab IRIT (Deploy keys)]: https://github.com/organizations/elaastic/settings/apps
-[`GitLab IRIT (Deploy keys)`]: https://github.com/organizations/elaastic/settings/ap
+[GitLab IRIT (Deploy keys)]: https://gitlab.irit.fr/talent/TALENT/around-elaastic/elasstic-questions-server/-/settings/repository#js-deploy-keys-settings
+[`GitLab IRIT (Deploy keys)`]: https://gitlab.irit.fr/talent/TALENT/around-elaastic/elasstic-questions-server/-/settings/repository#js-deploy-keys-settings
 
-[GitLab IRIT (Pipeline trigger token)]: https://github.com/organizations/elaastic/settings/apps
-[`GitLab IRIT (Pipeline trigger token)`]: https://github.com/organizations/elaastic/settings/ap
+[GitLab IRIT (Pipeline trigger token)]: https://gitlab.irit.fr/talent/TALENT/around-elaastic/elasstic-questions-server/-/settings/ci_cd#js-pipeline-triggers
+[`GitLab IRIT (Pipeline trigger token)`]: https://gitlab.irit.fr/talent/TALENT/around-elaastic/elasstic-questions-server/-/settings/ci_cd#js-pipeline-triggers
 
 [§ Appendix A]: #appendix-a-storing-pem-as-a-hidden-secret-in-gitlab
 [§ CI/CD bridge]: #cicd-bridge
 
-[gl-irit-dk]: https://gitlab.irit.fr/talent/TALENT/around-elaastic/elasstic-questions-server/-/settings/repository#js-deploy-keys-settings
-[gl-irit-ptt]: https://gitlab.irit.fr/talent/TALENT/around-elaastic/elasstic-questions-server/-/settings/ci_cd#js-pipeline-triggers
 [sec-event-irit-intranet]: https://intranet.irit.fr/wiki/doku.php?id=sinfo:utilisateur:index&s[]=cssi#signaler_un_incident_de_securite
