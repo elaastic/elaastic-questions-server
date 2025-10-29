@@ -106,6 +106,17 @@ services:
       depends_on:
           -   traefik
 
+  docs:
+    profiles: [gh-pages]
+    build:
+      context: user-docs
+      dockerfile: Dockerfile
+    volumes:
+      - ./user-docs:/app
+      - /app/.jekyll-cache
+    ports:
+      - "4000:4000"
+
   traefik:
       image: traefik:v3.4
       command:
