@@ -47,7 +47,7 @@ open class ChatGptCompletionServiceIntegrationTest(
                     + " pourquoi tu as donné cette note. Tu dois fournir la réponse sous la forme d'un objet Json ayant " +
                     "la structure suivante : { \"grade\": \"\", \"annotation\": \"\" } . " +
                     "Merci de ne pas encapsuler l'objet json dans une enveloppe markdown." +
-                    "La question est fournit dans le JSON suivant contenant la question et la réponse de l'élève et son score sur la base de ce qu'il a choisit comme item.",
+                    "La question est fournie dans le JSON suivant contenant la question et la réponse de l'élève et son score sur la base de ce qu'il a choisi comme item.",
             "fr"
         )
     }
