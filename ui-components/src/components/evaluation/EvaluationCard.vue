@@ -10,11 +10,11 @@ export interface EvaluationCardProps {
   /**
    * The evaluation value of this card
    */
-  modelValue: LikertValue,
+  modelValue: LikertValue
   /**
    * Evaluation number in the list of evaluations
    */
-  evaluationNum?: number | null,
+  evaluationNum?: number | null
   /**
    * The alternative response to evaluate
    */
@@ -22,12 +22,12 @@ export interface EvaluationCardProps {
 }
 
 const props = withDefaults(defineProps<EvaluationCardProps>(), {
-  evaluationNum: null
+  evaluationNum: null,
 })
 
 interface EvaluationCartEvents {
   /** Fires when the user changes its evaluation of this response */
-  (event: 'update:modelValue', value: LikertValue): void;
+  (event: 'update:modelValue', value: LikertValue): void
 }
 
 const emit = defineEmits<EvaluationCartEvents>()
@@ -35,9 +35,9 @@ const { t } = useI18n()
 
 const evaluationValue = computed({
   get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value)
+  set: value => emit('update:modelValue', value),
 })
-const explanationLabel = computed(() => props.response.questionType == 'OpenEnded' ? t('answer') : t('explanation'))
+const explanationLabel = computed(() => (props.response.questionType == 'OpenEnded' ? t('answer') : t('explanation')))
 const explanation = props.response.explanation
 
 const getChoices = (response: AnyResponse) => {
@@ -56,9 +56,7 @@ const choices = getChoices(props.response)
 </script>
 
 <template>
-  <v-card
-    class="fill-height mx-auto border-bottom d-flex flex-column"
-  >
+  <v-card class="fill-height mx-auto border-bottom d-flex flex-column">
     <v-card-item class="bg-surface-light">
       <div class="d-flex justify-space-between w-100 align-center">
         <div class="text-overline mb-1">
@@ -67,7 +65,6 @@ const choices = getChoices(props.response)
         <v-chip v-if="!evaluationValue" class="ml-auto" color="red">{{ t('require-evaluation') }}</v-chip>
         <v-icon v-else class="ml-auto" color="green">mdi-checkbox-marked</v-icon>
       </div>
-
     </v-card-item>
 
     <v-card-item>
@@ -88,19 +85,19 @@ const choices = getChoices(props.response)
       <v-label class="mb-2">{{ t('notice') }}</v-label>
       <div class="d-flex justify-center">
         <div>
-          <likert-scale v-model="evaluationValue"
-                        :min-label="t('min-label')"
-                        :max-label="t('max-label')"
-                        color="primary" />
+          <likert-scale
+            v-model="evaluationValue"
+            :min-label="t('min-label')"
+            :max-label="t('max-label')"
+            color="primary"
+          />
         </div>
       </div>
     </v-card-item>
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 
 <i18n>
 {

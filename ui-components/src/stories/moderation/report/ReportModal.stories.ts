@@ -16,8 +16,7 @@ const meta: any = {
   parameters: {
     docs: {
       description: {
-        story:
-          'ReportModal is a component that allows users to report content. It is used in the moderation process.',
+        story: 'ReportModal is a component that allows users to report content. It is used in the moderation process.',
       },
     },
   },

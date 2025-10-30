@@ -1,4 +1,4 @@
-export type Question = { title: string; statement: string;  }
+export type Question = { title: string; statement: string }
 
 export const SequenceStatus = {
   NOT_STARTED: 'NOT_STARTED',
@@ -17,12 +17,12 @@ export const Phase = {
 export type Phase = (typeof Phase)[keyof typeof Phase]
 
 export type SequenceState =
-        | { sequenceStatus: typeof SequenceStatus.NOT_STARTED }
-        | { sequenceStatus: typeof SequenceStatus.CLOSED }
-        | {
-  sequenceStatus: typeof SequenceStatus.IN_PROGRESS
-  phases: Phase[]
-}
+  | { sequenceStatus: typeof SequenceStatus.NOT_STARTED }
+  | { sequenceStatus: typeof SequenceStatus.CLOSED }
+  | {
+      sequenceStatus: typeof SequenceStatus.IN_PROGRESS
+      phases: Phase[]
+    }
 
 export type Sequence = {
   id: number

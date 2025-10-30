@@ -1,10 +1,9 @@
 <script setup lang="ts">
-
-import UtilityGrade from "@/components/moderation/UtilityGrade.vue";
-import {useI18n} from "vue-i18n";
+import UtilityGrade from '@/components/moderation/UtilityGrade.vue'
+import { useI18n } from 'vue-i18n'
 import ReportModal from '@/components/moderation/report/ReportModal.vue'
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 export interface EvaluationReactionProps {
   /**
@@ -14,7 +13,7 @@ export interface EvaluationReactionProps {
   /**
    * Whether the user is a teacher or not
    */
-  viewByTeacher: boolean,
+  viewByTeacher: boolean
   /**
    * The selected grade if any
    */
@@ -26,7 +25,7 @@ export interface EvaluationReactionProps {
 }
 
 export interface EvaluationReactionEvents {
-  (event: 'submitUtilityGrade', gradeSelected: string): void;
+  (event: 'submitUtilityGrade', gradeSelected: string): void
 
   (event: 'submitReport', reportReason: string[], reportDetail: string): void
 }
@@ -43,30 +42,30 @@ function submitReport(reportReason: string[], reportDetail: string) {
 }
 
 function contentCanBeReported(): boolean {
-  return props.contentToReport !== undefined &&
-         props.contentToReport !== null &&
-         props.contentToReport !== '';
+  return props.contentToReport !== undefined && props.contentToReport !== null && props.contentToReport !== ''
 }
-
-
 </script>
 
 <template>
   <v-row id="evaluation-reaction-container">
     <v-col>
-      <UtilityGrade :evaluation-from-chat-gpt="props.evaluationFromChatGpt" :view-by-teacher="props.viewByTeacher" :selected-grade="props.selectedGrade"
-                    @submitUtilityGrade="submitUtilityGrade"/>
+      <UtilityGrade
+        :evaluation-from-chat-gpt="props.evaluationFromChatGpt"
+        :view-by-teacher="props.viewByTeacher"
+        :selected-grade="props.selectedGrade"
+        @submitUtilityGrade="submitUtilityGrade"
+      />
     </v-col>
     <v-col v-if="!props.viewByTeacher && contentCanBeReported()">
-      <ReportModal :content-to-report="contentToReport" :display-as-dialog="false" @submitReport="submitReport"/>
+      <ReportModal :content-to-report="contentToReport" :display-as-dialog="false" @submitReport="submitReport" />
     </v-col>
   </v-row>
 </template>
 
 <style scoped>
-  #evaluation-reaction-container {
-    flex-direction: column;
-  }
+#evaluation-reaction-container {
+  flex-direction: column;
+}
 </style>
 
 <i18n>

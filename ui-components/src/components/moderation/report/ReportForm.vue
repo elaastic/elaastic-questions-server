@@ -1,23 +1,22 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 
-import {useI18n} from "vue-i18n";
-import {ref} from "vue";
-
-const {t} = useI18n()
+const { t } = useI18n()
 
 class ReportReason {
-  static FALSE_INFORMATION = new ReportReason('FALSE_INFORMATION');
-  static INCOHERENCE = new ReportReason('INCOHERENCE');
-  static PERSONAL_JUDGMENT = new ReportReason('PERSONAL_JUDGMENT');
-  static OTHER = new ReportReason('OTHER');
+  static FALSE_INFORMATION = new ReportReason('FALSE_INFORMATION')
+  static INCOHERENCE = new ReportReason('INCOHERENCE')
+  static PERSONAL_JUDGMENT = new ReportReason('PERSONAL_JUDGMENT')
+  static OTHER = new ReportReason('OTHER')
 
   private constructor(public readonly key: string) {}
 
   shortLabel(): string {
-    return t(`reportReason.${this.key}.short`);
+    return t(`reportReason.${this.key}.short`)
   }
   longLabel(): string {
-    return t(`reportReason.${this.key}.long`);
+    return t(`reportReason.${this.key}.long`)
   }
 
   static values(): ReportReason[] {
@@ -25,8 +24,8 @@ class ReportReason {
       ReportReason.FALSE_INFORMATION,
       ReportReason.INCOHERENCE,
       ReportReason.PERSONAL_JUDGMENT,
-      ReportReason.OTHER
-    ];
+      ReportReason.OTHER,
+    ]
   }
 }
 
@@ -76,36 +75,47 @@ const cancel = () => {
       <p>
         {{ props.contentToReport }}
       </p>
-      <br>
+      <br />
 
       <!-- Report reason -->
       <h4>{{ t('report-reason-title') }}</h4>
-      <v-checkbox-btn v-model="selectedReportReason" v-for="reason in reportReasonsAvailable" :key="reason.key"
-                      :value="reason.key" :label="reason.longLabel()"/>
-      <br>
+      <v-checkbox-btn
+        v-model="selectedReportReason"
+        v-for="reason in reportReasonsAvailable"
+        :key="reason.key"
+        :value="reason.key"
+        :label="reason.longLabel()"
+      />
+      <br />
 
       <!-- Report detail -->
       <h4>{{ t('report-detail') }}</h4>
-      <v-textarea v-model="reportDetail" variant="outlined" rows="2"
-                  :placeholder="t('report-detail-placeholder')"></v-textarea>
+      <v-textarea
+        v-model="reportDetail"
+        variant="outlined"
+        rows="2"
+        :placeholder="t('report-detail-placeholder')"
+      ></v-textarea>
     </v-card-text>
     <v-divider></v-divider>
 
     <v-card-actions>
       <v-spacer></v-spacer>
 
-      <v-btn :text="t('submit')" @click="submitReport" :disabled="!canSubmit()" variant="flat"
-             class="text-none text-white"
-             color="#95c155"></v-btn>
+      <v-btn
+        :text="t('submit')"
+        @click="submitReport"
+        :disabled="!canSubmit()"
+        variant="flat"
+        class="text-none text-white"
+        color="#95c155"
+      ></v-btn>
       <v-btn :text="t('cancel')" @click="cancel" variant="flat" class="text-none"></v-btn>
-
     </v-card-actions>
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 <i18n>
 {
   "en": {

@@ -17,44 +17,47 @@
   -->
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue'
 
-import {useI18n} from 'vue-i18n';
-import {ref, watch} from "vue";
-
-const {t} = useI18n();
+const { t } = useI18n()
 
 export interface ResponsePhaseConfig {
-  studentGiveExplanation: boolean;
+  studentGiveExplanation: boolean
 }
 
 export interface ResponsePhaseProps {
-  modelValue?: ResponsePhaseConfig,
+  modelValue?: ResponsePhaseConfig
   explanationMandatory?: boolean
 }
 
-export type ResponsePhaseEvent = (event: 'update:modelValue', value: ResponsePhaseConfig) => void;
+export type ResponsePhaseEvent = (event: 'update:modelValue', value: ResponsePhaseConfig) => void
 
 const props = withDefaults(defineProps<ResponsePhaseProps>(), {
-  explanationMandatory: false
-});
-const emit = defineEmits<ResponsePhaseEvent>();
+  explanationMandatory: false,
+})
+const emit = defineEmits<ResponsePhaseEvent>()
 
-const studentGiveExplanation = ref<boolean>(props.modelValue?.studentGiveExplanation ?? false);
+const studentGiveExplanation = ref<boolean>(props.modelValue?.studentGiveExplanation ?? false)
 
 const updateConfig = () => {
   emit('update:modelValue', {
-    "studentGiveExplanation": studentGiveExplanation.value || props.explanationMandatory
-  });
-};
+    studentGiveExplanation: studentGiveExplanation.value || props.explanationMandatory,
+  })
+}
 
 // Watchers
-watch(() => studentGiveExplanation.value, updateConfig);
-watch(() => props.explanationMandatory, updateConfig);
-watch(() => props.modelValue, (newValue) => {
-  if (newValue && newValue.studentGiveExplanation !== studentGiveExplanation.value) {
-    studentGiveExplanation.value = newValue.studentGiveExplanation;
-  }
-}, {deep: true});
+watch(() => studentGiveExplanation.value, updateConfig)
+watch(() => props.explanationMandatory, updateConfig)
+watch(
+  () => props.modelValue,
+  newValue => {
+    if (newValue && newValue.studentGiveExplanation !== studentGiveExplanation.value) {
+      studentGiveExplanation.value = newValue.studentGiveExplanation
+    }
+  },
+  { deep: true },
+)
 
 // Emit the initial value when the component is mounted
 updateConfig()
@@ -65,23 +68,21 @@ updateConfig()
     <template v-slot:text class="ps-2">
       <!-- Student give a textual explanation -->
       <v-checkbox
-              v-if="!explanationMandatory"
-              v-model="studentGiveExplanation"
-              :label="t('studentsProvideAtextualExplanation')"
+        v-if="!explanationMandatory"
+        v-model="studentGiveExplanation"
+        :label="t('studentsProvideAtextualExplanation')"
       />
       <v-checkbox
-              v-else
-              :model-value="true"
-              :disabled="explanationMandatory"
-              :label="t('studentsProvideAtextualExplanation')"
+        v-else
+        :model-value="true"
+        :disabled="explanationMandatory"
+        :label="t('studentsProvideAtextualExplanation')"
       />
     </template>
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 
 <i18n>
 {

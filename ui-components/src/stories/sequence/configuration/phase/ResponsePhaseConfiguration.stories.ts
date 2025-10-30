@@ -16,53 +16,51 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type {Meta, StoryObj} from '@storybook/vue3-vite';
-import ResponsePhaseConfiguration from "@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue";
-import {fn} from "storybook/test";
-
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import ResponsePhaseConfiguration from '@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue'
+import { fn } from 'storybook/test'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta: any = {
-    title: 'sequence/configuration/phase/ResponsePhaseConfiguration',
-    component: ResponsePhaseConfiguration,
-    args: {
-        "onUpdate:responsePhaseConfig": fn(),
-        studentGiveExplanation: false,
-        explanationMandatory: false
+  title: 'sequence/configuration/phase/ResponsePhaseConfiguration',
+  component: ResponsePhaseConfiguration,
+  args: {
+    'onUpdate:responsePhaseConfig': fn(),
+    studentGiveExplanation: false,
+    explanationMandatory: false,
+  },
+  tags: ['autodocs', 'organisms'],
+  parameters: {
+    docs: {
+      description: {
+        story: 'The configuration of the Response phase.',
+      },
     },
-    tags: ['autodocs', 'organisms'],
-    parameters: {
-        docs: {
-            description: {
-                story: 'The configuration of the Response phase.'
-            }
-        }
-    }
-} satisfies Meta<typeof ResponsePhaseConfiguration>;
+  },
+} satisfies Meta<typeof ResponsePhaseConfiguration>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
-
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Primary: Story = {
-    parameters: {
-        docs: {
-            description: {
-                story: 'Default configuration of the response phase.'
-            }
-        }
-    }
-};
+  parameters: {
+    docs: {
+      description: {
+        story: 'Default configuration of the response phase.',
+      },
+    },
+  },
+}
 
 export const ExplanationMandatory: Story = {
-    parameters: {
-        docs: {
-            description: {
-                story: 'The student must provide an explanation for their answer.'
-            }
-        }
+  parameters: {
+    docs: {
+      description: {
+        story: 'The student must provide an explanation for their answer.',
+      },
     },
-    args: {
-        explanationMandatory: true
-    }
-};
+  },
+  args: {
+    explanationMandatory: true,
+  },
+}
