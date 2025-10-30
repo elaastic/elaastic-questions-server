@@ -185,7 +185,6 @@
                                     .modal({
                                         closable: false,
                                         onDeny: function () {
-                                            console.log('cancel remove report');
                                         },
                                         onApprove: function () {
                                             $.get('/report-manager/remove-report/' + $(reportedCandidate).attr('reported-candidate-type') + '/' + idReportCandidate)

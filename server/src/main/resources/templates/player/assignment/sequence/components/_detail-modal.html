@@ -115,11 +115,7 @@
                             .fail(function () {
                                 segment.removeClass('loading')
                                 warning.show()
-                                console.log("An error occurred while fetching the results")
-                                console.log(userId)
-                                console.log(detailModal)
-                                console.log(segment)
-                                console.log(warning)
+                                console.error("An error occurred while fetching the results")
                             })
                     }
                 }
@@ -178,11 +174,7 @@
                             .fail(function () {
                                 segment.removeClass('loading')
                                 warning.show()
-                                console.log("An error occurred while fetching the results")
-                                console.log(userId)
-                                console.log(detailModal)
-                                console.log(segment)
-                                console.log(warning)
+                                console.error("An error occurred while fetching the results")
                             })
                     }
                 }
