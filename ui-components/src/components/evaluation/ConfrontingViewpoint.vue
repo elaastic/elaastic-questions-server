@@ -41,9 +41,6 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="text-h5">{{ t('title') }}</div>
-  <v-divider color="primary" class="my-4"></v-divider>
-
   <template v-if="!responses.length">
     <v-alert class="mb-4" :text="t('notice.no-alternative')" type="error" variant="tonal" />
   </template>
