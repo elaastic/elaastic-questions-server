@@ -15,7 +15,7 @@ plugins {
 
 group = "org.elaastic.questions"
 version = "6.3.7"
-val uiComponentsVersion = "1.1.1"
+val uiComponentsVersion = "1.1.2"
 
 springBoot {
     buildInfo {
