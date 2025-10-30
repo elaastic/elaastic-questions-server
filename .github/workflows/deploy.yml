@@ -40,7 +40,7 @@ jobs:
         if: inputs.pr-id != 0
         run: |
           git fetch origin ${{ steps.branches.outputs.source-ref }}:${{ steps.branches.outputs.source-ref }}
-          get checkout ${{ steps.branches.outputs.source-ref }}
+          git checkout ${{ steps.branches.outputs.source-ref }}
 
       - name: Push repository to GitLab
         uses: ./.github/actions/push-repo-to-gitlab
