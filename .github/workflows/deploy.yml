@@ -31,12 +31,16 @@ jobs:
           BRANCH_NAME: ${{ github.ref_type == 'tag' && format('release/{0}', github.ref_name) || github.ref_name }}
         run: |
           echo "source-ref=${{ inputs.pr-id == 0 && github.ref || env.PR_BRANCH_NAME }}" >> $GITHUB_OUTPUT
-          echo "target-branch=${{ inputs.pr-id == 0 && env.BRANCH_NAME || env.PR_BRANCH_NAME }}" >> $GITHUB_OUTPUT
+          echo "target-ref=${{ inputs.pr-id == 0 && env.BRANCH_NAME || env.PR_BRANCH_NAME }}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ steps.branches.outputs.source-ref }}
+        with: { fetch-depth: 0 }
+
+      - name: Checkout PR
+        if: inputs.pr-id != 0
+        run: |
+          git fetch origin ${{ steps.branches.outputs.source-ref }}:${{ steps.branches.outputs.source-ref }}
+          git checkout ${{ steps.branches.outputs.source-ref }}
 
       - name: Push repository to GitLab
         uses: ./.github/actions/push-repo-to-gitlab
@@ -45,7 +49,8 @@ jobs:
           GITLAB_HOST: ${{ vars.GITLAB_HOST }}
           GITLAB_HOST_PUBKEY: ${{ vars.GITLAB_HOST_PUBKEY }}
           GITLAB_PROJECT_PATH: ${{ vars.GITLAB_PROJECT_PATH }}
-          TARGET_BRANCH: ${{ steps.branches.outputs.target-branch }}
+          SOURCE_REF: ${{ steps.branches.outputs.source-ref }}
+          TARGET_REF: ${{ steps.branches.outputs.target-ref }}
 
       - uses: actions/create-github-app-token@v2
         id: gh-app-token
@@ -74,7 +79,7 @@ jobs:
           GITLAB_TRIGGER_TOKEN: ${{ secrets.GITLAB_CI_TRIGGER_TOKEN }}
           GITLAB_HOST: ${{ vars.GITLAB_HOST }}
           GITLAB_PROJECT_ID: ${{ vars.GITLAB_PROJECT_ID }}
-          TARGET_BRANCH: ${{ steps.branches.outputs.target-branch }}
+          TARGET_REF: ${{ steps.branches.outputs.target-ref }}
           ENVIRONMENT: ${{ inputs.environment }}
           CHECK_RUN_ID: ${{ steps.check-run.outputs.id }}
 
