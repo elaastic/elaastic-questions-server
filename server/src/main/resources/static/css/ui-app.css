@@ -1,5 +1,6 @@
 .ui-app {
     width: 100%;
+    overflow: hidden;
     padding: 1px;
 }
 
