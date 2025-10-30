@@ -38,14 +38,11 @@ import javax.transaction.Transactional
  * @see org.elaastic.auth.oauth.ElaasticOidcUserService
  */
 @Service
-class UserLinkService(
-    @Autowired val userLinkRepository: UserLinkRepository,
-    @Autowired val userService: UserService,
-    @Autowired val roleService: RoleService,
+open class UserLinkService(
+    private val userLinkRepository: UserLinkRepository,
+    private val userService: UserService,
+    private val roleService: RoleService,
 ) {
-
-    @Value("\${spring.security.oauth2.client.registration.keycloak.provider}")
-    val oidcProvider: String = "oidcProvider default value"
 
     /**
      * Fetch the userLink for the given providerId and username.
@@ -58,11 +55,14 @@ class UserLinkService(
      */
     fun loadUserLinkByUsername(providerId: String, username: String): UserLink? {
         return userLinkRepository.findByProviderIdAndProviderUserId(providerId, username)
-            ?.also { it.user.casKey = providerId }
+            ?.also {
+                // TODO It is not consistent to inject providerId (which may designates an OIDC provider) into casKey ; casKey should probably be renamed to providerId
+                it.user.casKey = providerId
+            }
     }
 
     /**
-     * Register a new user with the given CAS provider.
+     * Register a new external user (provided by a CAS, OID or another external authentication provider).
      *
      * Get the information about the user from the principal. Create the new user, save it and create the link between
      * the user and the CAS key.
@@ -72,103 +72,12 @@ class UserLinkService(
      * @see UserLink
      */
     @Transactional
-    fun registerNewCasUser(casKey: String, casProvider: String, principal: AttributePrincipal): User {
-        val casAttributeParser = getCasAttributeParser(casProvider)
-        val firstName = casAttributeParser.parseFirstName(principal)
-        val lastName = casAttributeParser.parseLastName(principal)
-        val email = casAttributeParser.parseEmail(principal)
-        val roleId = casAttributeParser.parseRoleId(principal)
+    open fun registerNewExternalUser(providerId: String, providerUserId: String, userCreateCommand: UserCreateCommand): User {
+        val user = createUser(userCreateCommand)
 
-        val user = createUser(
-            firstName,
-            lastName,
-            email,
-            roleId,
-            UserSource.CAS,
-            getLanguage(casProvider)
-        )
-
-        UserLink(
-            providerId = casKey,
-            providerUserId = principal.name,
-            user = user,
-        ).let(userLinkRepository::save)
+        UserLink(providerId, providerUserId, user,).let(userLinkRepository::save)
 
         return user
-    }
-
-    /** Register a new user with the given OIDC user and role */
-    @Transactional
-    fun registerNewOidcUser(oidcUser: OidcUser, role: Role.RoleId): User {
-        val user = createUser(
-            oidcUser.givenName,
-            oidcUser.familyName,
-            oidcUser.email,
-            role,
-            UserSource.OIDC,
-            getLanguage(oidcUser, "fr")
-        )
-
-        UserLink(
-            providerId = this.oidcProvider,
-            providerUserId = oidcUser.name,
-            user = user
-        ).let(userLinkRepository::save)
-
-        return user
-    }
-
-    /**
-     * Return the [CasAttributeParser] for the given CAS provider.
-     *
-     * @throws IllegalArgumentException if the CAS provider is not supported
-     */
-    private fun getCasAttributeParser(casProvider: String): CasAttributeParser {
-        return when (casProvider) {
-            SupportedCasProvider.Kosmos.name -> CasAttributeParserForKosmos()
-            SupportedCasProvider.Edifice.name -> CasAttributeParserForEdifice()
-            else -> throw IllegalArgumentException("The CAS provider '$casProvider' is not supported")
-        }
-    }
-
-    /**
-     * Return the language of the CAS provider.
-     *
-     * As the user is managed by the CAS provider, we assume that his language and the Cas provider's language are the
-     * same.
-     */
-    // TODO maybe store the language information of the CAS in another class
-    private fun getLanguage(casProvider: String): String {
-        return when (casProvider) {
-            SupportedCasProvider.Kosmos.name -> "fr"
-            SupportedCasProvider.Edifice.name -> "fr"
-            else -> throw IllegalArgumentException("The CAS provider '$casProvider' is not supported")
-        }
-    }
-
-    /**
-     * Return the language of the user.
-     *
-     * See [OIDC Standard claims documentation](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims)
-     * for more information about the locale.
-     *
-     * If no locale is found, the default is returned.
-     *
-     * The default is given in the parameter, or it's the JVM default locale.
-     *
-     * @param oidcUser The OIDC user to get the locale from
-     * @param default The default language to use if no locale is found
-     * @see OidcUser.getLocale
-     * @see Locale.getDefault
-     */
-    private fun getLanguage(oidcUser: OidcUser, default: String = Locale.getDefault().language): String {
-        val localeClaim = oidcUser.locale
-
-        return if (!localeClaim.isNullOrBlank()) {
-            Locale.forLanguageTag(localeClaim).language
-        } else {
-            default
-        }
     }
 
     /**
@@ -181,24 +90,17 @@ class UserLinkService(
      *
      * Then the user is saved and returned.
      */
-    private fun createUser(
-        firstName: String,
-        lastName: String,
-        email: String?,
-        roleId: Role.RoleId,
-        userSource: UserSource,
-        language: String
-    ) = User(
-        firstName = firstName,
-        lastName = lastName,
-        username = userService.generateUsername(firstName, lastName),
+    private fun createUser(command: UserCreateCommand) = User(
+        firstName = command.firstName,
+        lastName = command.lastName,
+        username = userService.generateUsername(command.firstName, command.lastName),
         plainTextPassword = userService.generatePassword(),
-        email = email,
-        source = userSource,
+        email = command.email,
+        source = command.userSource,
     ).let {
         userService.addUser(
-            it.addRole(roleService.roleForName(roleId.roleName, true)),
-            language,
+            it.addRole(roleService.roleForName(command.roleId.roleName, true)),
+            command.language,
             checkEmailAccount = false,
             enable = true,
             addUserConsent = true

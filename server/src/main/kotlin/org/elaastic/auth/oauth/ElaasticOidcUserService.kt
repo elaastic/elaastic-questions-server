@@ -21,12 +21,18 @@ package org.elaastic.auth.oauth
 import org.elaastic.auth.UserLinkService
 import org.elaastic.common.util.alsoThrowIf
 import org.elaastic.user.Role.RoleId
+import org.elaastic.user.UserCreateCommand
+import org.elaastic.user.UserSource
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
+import java.util.Locale
+import java.util.Locale.getDefault
 
 /** Key to get the realm access from the OIDC user's claims */
 private const val REALM_ACCESS_KEY = "realm_access"
@@ -48,11 +54,16 @@ private const val ROLES_KEY = "roles"
  * @author John Tranier
  */
 @Service
-class ElaasticOidcUserService(
+@Profile("oidc")
+open class ElaasticOidcUserService(
     private val userLinkService: UserLinkService,
 ) : OidcUserService() {
 
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
+    // TODO I do not understand why getting statically the OIDC provider ; it should be extracted from the OIDC user
+    @Value("\${spring.security.oauth2.client.registration.keycloak.provider:}")
+    val oidcProvider: String = "oidcProvider default value"
 
 
     override fun loadUser(userRequest: OidcUserRequest?): OidcUser {
@@ -63,12 +74,23 @@ class ElaasticOidcUserService(
         try {
             val role = getRoleFromOidcUser(oidcUser)
             val user = userLinkService.loadUserLinkByUsername(
-                userLinkService.oidcProvider,
+                oidcProvider,
                 oidcUser.name
             )?.alsoThrowIf({ !(it.user hasRole role) }, RoleException::class.java) {
                 "ElaasticUser ${it.user.username} does not have the role $role but the OIDC user ${oidcUser.name} has it. " +
                         "ElaasticUser ${it.user.username} has the roles ${it.user.roles.joinToString(", ") { role -> role.name }}"
-            }?.user ?: userLinkService.registerNewOidcUser(oidcUser, role)
+            }?.user ?: userLinkService.registerNewExternalUser(
+                oidcProvider,
+                oidcUser.name,
+                UserCreateCommand(
+                    oidcUser.givenName,
+                    oidcUser.familyName,
+                    oidcUser.email,
+                    role,
+                    UserSource.OIDC,
+                    getLanguage(oidcUser, "fr")
+                )
+            )
 
             return ElaasticOidcUser(oidcUser, user)
         } catch (e: RoleException) {
@@ -132,6 +154,31 @@ class ElaasticOidcUserService(
                 "There should be exactly one Elaastic role in the realm roles: $realmRoles. Found roles: $it"
             }
             .first()
+    }
+
+    /**
+     * Return the language of the user.
+     *
+     * See [OIDC Standard claims documentation](https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims)
+     * for more information about the locale.
+     *
+     * If no locale is found, the default is returned.
+     *
+     * The default is given in the parameter, or it's the JVM default locale.
+     *
+     * @param oidcUser The OIDC user to get the locale from
+     * @param default The default language to use if no locale is found
+     * @see OidcUser.getLocale
+     * @see Locale.getDefault
+     */
+    private fun getLanguage(oidcUser: OidcUser, default: String = Locale.getDefault().language): String {
+        val localeClaim = oidcUser.locale
+
+        return if (!localeClaim.isNullOrBlank()) {
+            Locale.forLanguageTag(localeClaim).language
+        } else {
+            default
+        }
     }
 }
 

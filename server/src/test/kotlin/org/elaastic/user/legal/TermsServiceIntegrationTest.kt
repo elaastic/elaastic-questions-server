@@ -30,7 +30,7 @@ internal class TermsServiceIntegrationTest(
             // valid terms and terms contents
             Terms().let {
                 TermsContent("Terms in english", it, "en")
-                TermsContent("Terms en français", it)
+                TermsContent("Terms en franÃ§ais", it)
                 it
             }.tWhen {
                 // saving the terms
@@ -48,7 +48,7 @@ internal class TermsServiceIntegrationTest(
                 // fetching terms contents by language as expected
                 it.termsContentsByLanguage["fr"].let { tc ->
                     MatcherAssert.assertThat(tc!!.id, CoreMatchers.notNullValue())
-                    MatcherAssert.assertThat(tc.content, CoreMatchers.equalTo("Terms en français"))
+                    MatcherAssert.assertThat(tc.content, CoreMatchers.equalTo("Terms en franÃ§ais"))
                 }
                 it.termsContentsByLanguage["en"].let { tc ->
                     MatcherAssert.assertThat(tc!!.id, CoreMatchers.notNullValue())
@@ -65,13 +65,13 @@ internal class TermsServiceIntegrationTest(
             listOf<Terms>(
                 Terms(startDate = Date(), isActive = false).let {
                     TermsContent("Terms in english", it, "en")
-                    TermsContent("Terms en français", it)
+                    TermsContent("Terms en franÃ§ais", it)
                     it
                 },
                 // and an active terms
                 Terms().let {
                     TermsContent("Active Terms in english", it, "en")
-                    TermsContent("Terms en français", it)
+                    TermsContent("Terms en franÃ§ais", it)
                     it
                 }
             ).forEach {
@@ -95,13 +95,13 @@ internal class TermsServiceIntegrationTest(
                 // a terms
                 Terms().let {
                     TermsContent("Terms in english", it, "en")
-                    TermsContent("Terms en français", it)
+                    TermsContent("Terms en franÃ§ais", it)
                     termsService.save(it)
                 },
                 // and a new one
                 Terms().let {
                     TermsContent("New Terms in english", it, "en")
-                    TermsContent("Nouveaux Terms en français", it)
+                    TermsContent("Nouveaux Terms en franÃ§ais", it)
                     termsService.save(it)
                 }.tWhen {
                     // updating now inactive terms

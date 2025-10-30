@@ -24,6 +24,7 @@ import org.elaastic.activity.response.ResponseService
 import org.elaastic.activity.results.AttemptNum
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationResponseStore
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
+import org.elaastic.ai.evaluation.chatgpt.api.ChatGptCompletionService
 import org.elaastic.analytics.lrs.EventLogService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentService
@@ -73,10 +74,11 @@ import javax.transaction.Transactional
 
 @Controller
 @RequestMapping("/player", "/elaastic-questions/player")
-class PlayerController(
+open class PlayerController(
     @Autowired val anonymousUserService: AnonymousUserService,
     @Autowired val assignmentService: AssignmentService,
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
+    @Autowired val chatGptCompletionService: ChatGptCompletionService,
     @Autowired val draxoPeerGradingService: DraxoPeerGradingService,
     @Autowired val eventLogService: EventLogService,
     @Autowired val interactionService: InteractionService,
@@ -171,7 +173,7 @@ class PlayerController(
      */
     @GetMapping("/start-anonymous-session")
     @Transactional
-    fun startAnonymousSession(
+    open fun startAnonymousSession(
         authentication: Authentication?,
         @RequestParam("nickname") nickname: String,
         @RequestParam("globalId") globalId: String,
@@ -541,7 +543,7 @@ class PlayerController(
         val response = sequenceService.submitResponse(user, sequence, responseSubmissionData)
         if (sequence.chatGptEvaluationEnabled && !sequence.isSecondAttemptAllowed()) {
             // Dead branch. `isSecondAttemptAllowed` is always true, so the whole condition is always false.
-            chatGptEvaluationService.createEvaluation(response, locale.language)
+            chatGptCompletionService.createEvaluation(response, locale.language)
         }
 
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${id}"
@@ -631,7 +633,7 @@ class PlayerController(
         val response = responseService.find(user, sequence, 2) ?: responseService.find(user, sequence, 1)
         if (response != null) {
             val chatGptEvaluation = chatGptEvaluationService.findEvaluationByResponse(response)
-            chatGptEvaluationService.createEvaluation(response, locale.language, chatGptEvaluation)
+            chatGptCompletionService.createEvaluation(response, locale.language, chatGptEvaluation)
         }
 
         return "redirect:/player/assignment/${sequence.assignment!!.id}/play/sequence/${sequenceId}"

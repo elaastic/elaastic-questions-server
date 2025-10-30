@@ -10,6 +10,9 @@ interface ResponseRepository : JpaRepository<Response, Long> {
 
     fun getAllByIdIn(ids: List<Long>): List<Response>
 
+    @Deprecated("This is a helper for a workaround in phase completion logic. Do not use.")
+    fun findFirstByInteraction(interaction: Interaction): Response
+
     fun findAllByInteractionOrderByMeanGradeDesc(interaction: Interaction): List<Response>
 
     fun findAllByInteractionAndFakeIsFalseOrderByMeanGradeDesc(interaction: Interaction): List<Response>

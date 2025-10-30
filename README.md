@@ -18,12 +18,6 @@ _elaastic_ is developed with the spring-boot framework and the Kotlin language.
 * Gradle
 * Docker
 
-### Update the `hosts` file
-The following rules must be added to your hosts file to use local dev hostnames : 
-```
-127.0.0.1   iam.local idp.local
-```
-
 ### Launch the services required by Elaastic
 
 Those services are containerized and can be launched with docker compose:

@@ -52,7 +52,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.access.AccessDeniedException
 import java.math.BigDecimal
@@ -66,7 +65,6 @@ import javax.validation.ConstraintViolationException
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@Profile("test")
 internal class AssignmentServiceIntegrationTest(
     @Autowired val assignmentService: AssignmentService,
     @Autowired val integrationTestingService: IntegrationTestingService,

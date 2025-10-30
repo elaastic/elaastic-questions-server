@@ -27,6 +27,7 @@ import org.elaastic.sequence.config.ResponseSubmissionSpecification
 import org.elaastic.sequence.interaction.Interaction
 import org.elaastic.sequence.interaction.InteractionType
 import org.elaastic.sequence.phase.evaluation.EvaluationMethod
+import org.elaastic.user.Ownable
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.sequence.phase.response.ResponsePhaseConfig
 import org.elaastic.sequence.phase.result.ResultPhaseConfig
@@ -59,7 +60,7 @@ import javax.validation.constraints.NotNull
 @EntityListeners(AuditingEntityListener::class)
 class Sequence(
     @field:ManyToOne(fetch = FetchType.LAZY)
-    var owner: User,
+    override var owner: User,
 
     @field:ManyToOne(fetch = FetchType.EAGER)
     var statement: Statement,
@@ -92,9 +93,18 @@ class Sequence(
      *
      * @see EvaluationMethod
      */
+    // TODO(John Tranier): should live in ElaasticEvaluationSpecification, subclass of EvaluationSpecification [#466]
     @field:Enumerated(EnumType.STRING)
     @Column(name = "evaluation_phase_config")
     var evaluationMethod: EvaluationMethod = EvaluationMethod.ALL_AT_ONCE,
+
+    /**
+     * Instructions given by the teacher to complete the evaluation phase.
+     * Used when [evaluationMethod] is [EvaluationMethod.EXTERNAL].
+     * If null, a generic message should be shown instead.
+     */
+    // TODO(John Tranier): should live in ExternalEvaluationSpecification, subclass of EvaluationSpecification [#466]
+    var evaluationExternalInstructions: String? = null,
 
     activeInteraction: Interaction? = null,
 
@@ -106,7 +116,9 @@ class Sequence(
     @field:Enumerated(EnumType.STRING)
     var activeInteractionType: InteractionType? = activeInteraction?.interactionType,
 
-    /** The state of the sequence. */
+    /**
+     * The state of the sequence.
+     */
     @field:Enumerated(EnumType.STRING)
     var state: State = beforeStart,
 
@@ -122,7 +134,7 @@ class Sequence(
 
 
 ) : AbstractJpaPersistable<Long>(),
-    Comparable<Sequence>, SequenceProgress {
+    Comparable<Sequence>, SequenceProgress, Ownable {
 
     @field:OneToOne
     @Access(AccessType.PROPERTY)

@@ -26,7 +26,7 @@ import javax.transaction.Transactional
 
 
 @Service
-class RoleService(
+open class RoleService(
     @Autowired val roleRepository: RoleRepository,
     @Autowired val entityManager: EntityManager
 ) {

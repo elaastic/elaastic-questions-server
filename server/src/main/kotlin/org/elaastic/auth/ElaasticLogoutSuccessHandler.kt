@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse
  */
 class ElaasticLogoutSuccessHandler(
     private val elaasticUrlLogoutSuccessHandler: LogoutSuccessHandler,
-    private val oidcClientInitiatedLogoutSuccessHandler: OidcClientInitiatedLogoutSuccessHandler,
+    private val oidcClientInitiatedLogoutSuccessHandler: OidcClientInitiatedLogoutSuccessHandler? = null,
 ) : LogoutSuccessHandler {
 
     override fun onLogoutSuccess(
@@ -43,7 +43,7 @@ class ElaasticLogoutSuccessHandler(
         response: HttpServletResponse?,
         authentication: Authentication?
     ) {
-        if (authentication?.principal is ElaasticOidcUser) {
+        if (authentication?.principal is ElaasticOidcUser && oidcClientInitiatedLogoutSuccessHandler != null) {
             oidcClientInitiatedLogoutSuccessHandler.onLogoutSuccess(request, response, authentication)
         } else if (authentication is UsernamePasswordAuthenticationToken || authentication is CasAuthenticationToken) {
             elaasticUrlLogoutSuccessHandler.onLogoutSuccess(request, response, authentication)

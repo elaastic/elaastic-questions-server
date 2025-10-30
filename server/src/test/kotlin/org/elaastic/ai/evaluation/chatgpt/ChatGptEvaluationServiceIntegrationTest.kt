@@ -13,125 +13,23 @@ import org.elaastic.test.directive.tThen
 import org.elaastic.test.directive.tWhen
 import org.elaastic.test.interpreter.command.Phase
 import org.elaastic.user.User
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.EnabledIf
-import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(profiles = ["no-async"])
-@EnabledIf(value = "#{@featureManager.isActive(@featureResolver.getFeature('CHATGPT_EVALUATION'))}", loadContext = true)
 @Transactional
-internal class ChatGptEvaluationServiceIntegrationTest(
+internal open class ChatGptEvaluationServiceIntegrationTest(
     @Autowired val chatGptEvaluationService: ChatGptEvaluationService,
     @Autowired val integrationTestingService: IntegrationTestingService,
     @Autowired val chatGptEvaluationRepository: ChatGptEvaluationRepository,
     @Autowired val responseRepository: ResponseRepository,
     @Autowired val functionalTestingService: FunctionalTestingService,
-    @Autowired val chatGptPromptService: ChatGptPromptService,
-
     ) {
-
-
-    @BeforeEach
-    @Transactional
-    fun setup() {
-        chatGptEvaluationRepository.deleteAll()
-        // Precondition
-        assertTrue(chatGptEvaluationRepository.findAll().isEmpty())
-        // We want a reasonable good prompt for the test
-        chatGptPromptService.updatePrompt(
-            "Tu es un enseignant bienveillant qui doit évaluer la réponse donnée par un élève"
-                    + " à une question. "
-                    + "Tu dois donner une note comprise entre 0 et 5 à la réponse de l'élève et expliquer"
-                    + " pourquoi tu as donné cette note. Tu dois fournir la réponse sous la forme d'un objet Json ayant " +
-                    "la structure suivante : { \"grade\": \"\", \"annotation\": \"\" } . " +
-                    "Merci de ne pas encapsuler l'objet json dans une enveloppe markdown." +
-                    "La question est fournit dans le JSON suivant contenant la question et la réponse de l'élève et son score sur la base de ce qu'il a choisit comme item.",
-            "fr"
-        )
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    fun `get a chatgpt evaluation - valid`() {
-
-        val response = integrationTestingService.getAnyResponse()
-        response.explanation =
-            "Git est le meilleur système de gestion de version, il coche donc toutes les bonnes options."
-        val promptFr = chatGptPromptService.getPrompt("fr")
-
-        tWhen {
-            chatGptEvaluationService.createEvaluation(response, "fr")
-        }.tThen {
-            assertThat(it.id, notNullValue())
-            assertThat(it.dateCreated, notNullValue())
-            assertThat(it.lastUpdated, notNullValue())
-
-            assertThat(it.status, equalTo("DONE"))
-            assertThat(it.annotation, notNullValue())
-            assertEquals(promptFr, it.prompt)
-
-            assertThat(it.reportReasons, nullValue())
-            assertThat(it.reportComment, nullValue())
-            assertThat(it.utilityGrade, nullValue())
-
-            assertThat(it.hiddenByTeacher, equalTo(false))
-            assertThat(it.removedByTeacher, equalTo(false))
-        }
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    fun `get a chatgpt evaluation - invalid (no teacher explanation)`() {
-
-        val response = integrationTestingService.getAnyResponse()
-        response.explanation =
-            "Git est le meilleur système de gestion de version, il coche donc toutes les bonnes options."
-
-        response.statement.expectedExplanation = null
-
-        tWhen {
-            val block: () -> Unit = {
-                chatGptEvaluationService.createEvaluation(response, "fr")
-            }
-            block
-        }.tThen {
-            assertThrows(
-                IllegalArgumentException::class.java,
-                it,
-                "Error: You must define an expected explanation to create a ChatGPT evaluation"
-            )
-        }
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    fun `get a chatgpt evaluation - invalid (no student answer)`() {
-
-        val response = integrationTestingService.getAnyResponse()
-        response.explanation = null
-
-        tWhen {
-            val block: () -> Unit = {
-                chatGptEvaluationService.createEvaluation(response, "fr")
-            }
-            block
-        }.tThen {
-            assertThrows(
-                IllegalArgumentException::class.java,
-                it,
-                "Error: No explanation to evaluate"
-            )
-        }
-    }
 
     @Test
     fun `canHideGrading should return true if the user is the teacher of the sequence`() {

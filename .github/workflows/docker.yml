@@ -1,0 +1,73 @@
+name: Docker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - develop
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - master
+      - develop
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+jobs:
+  push-images:
+    name: Push Docker images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 👀 https://github.com/docker/roadmap/issues/314
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Prepare Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: docker.io/elaastic/elaastic-questions-server
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        id: docker-push
+        with:
+          context: ./server
+          file: ./server/Dockerfile
+          platforms: linux/amd64 # Eclipse doesn't publish arm images for Alpine jdk17 -- ,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          push: true
+          sbom: true
+          provenance: mode=max
+
+      - name: Publish attestation to Sigstore
+        uses: actions/attest-build-provenance@v3
+        with:
+          # https://github.com/actions/attest-build-provenance#:~:text=When%20pushing%20to%20Docker%20Hub%2C%20please%20use%20%22index.docker.io%22%20as%20the%20registry%20portion%20of%20the%20image%20name
+          subject-name: index.docker.io/elaastic/elaastic-questions-server
+          subject-digest: ${{ steps.docker-push.outputs.digest }}
+          push-to-registry: true

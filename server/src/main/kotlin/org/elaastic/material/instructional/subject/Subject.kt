@@ -4,7 +4,9 @@ import org.elaastic.assignment.Assignment
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.material.instructional.course.Course
 import org.elaastic.material.instructional.statement.Statement
+import org.elaastic.user.Ownable
 import org.elaastic.user.User
+import org.elaastic.user.own
 import org.hibernate.annotations.SortNatural
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -42,7 +44,7 @@ class Subject (
         var title: String,
 
     @field:ManyToOne(fetch = FetchType.LAZY)
-        var owner: User,
+        override var owner: User,
 
     @field:ManyToOne(fetch = FetchType.LAZY)
         var parentSubject: Subject? = null,
@@ -50,7 +52,7 @@ class Subject (
     @field:ManyToOne(fetch = FetchType.EAGER)
         var course: Course? = null
 
-): AbstractJpaPersistable<Long>() {
+): AbstractJpaPersistable<Long>(), Ownable {
 
     @Version
     var version: Long? = null
@@ -118,7 +120,7 @@ class Subject (
      * @throws IllegalArgumentException if the owner of the statement is different from the owner of the subject
      */
     fun addStatement(statement: Statement): Statement {
-        require(statement.owner == owner) {
+        require(owner own statement) {
             "The owner of the statement cannot be different from the owner of subject"
         }
 
@@ -137,7 +139,7 @@ class Subject (
      * @throws IllegalArgumentException if the owner of the assignment is different from the owner of the subject
      */
     fun addAssignment(assignment: Assignment): Assignment {
-        require(assignment.owner == owner) {
+        require(owner own assignment) {
             "The owner of the assignment cannot be different from the owner of subject"
         }
 

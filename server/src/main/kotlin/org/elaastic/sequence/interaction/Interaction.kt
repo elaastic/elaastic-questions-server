@@ -27,7 +27,12 @@ import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceConfig
 import org.elaastic.sequence.State
-import org.elaastic.sequence.config.*
+import org.elaastic.sequence.config.EvaluationSpecification
+import org.elaastic.sequence.config.InteractionSpecification
+import org.elaastic.sequence.config.InteractionSpecificationConverter
+import org.elaastic.sequence.config.ReadSpecification
+import org.elaastic.sequence.config.ResponseSubmissionSpecification
+import org.elaastic.user.Ownable
 import org.elaastic.user.User
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -57,8 +62,7 @@ class Interaction(
     var specification: InteractionSpecification? = null,
 
     @field:ManyToOne
-    var owner: User,
-
+    override var owner: User,
 
     @field:OneToOne
     var sequence: Sequence,
@@ -66,7 +70,7 @@ class Interaction(
     /** The current state of the interaction. */
     @field:Enumerated(EnumType.STRING)
     var state: State = State.beforeStart
-) : AbstractJpaPersistable<Long>() {
+) : AbstractJpaPersistable<Long>(), Ownable {
 
     @Version
     var version: Long? = null
