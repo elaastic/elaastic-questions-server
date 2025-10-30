@@ -209,8 +209,6 @@
             function refreshAllResults(sequenceId) {
                 const url = "/player/sequence/" + sequenceId + "/refresh-results"
 
-                console.log(url)
-
                 $.get(url)
                     .done(function (data) {
                         window.location.reload()

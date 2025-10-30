@@ -27,7 +27,7 @@
   <script th:inline="javascript">
     let elaastic = {}
 
-    elaastic.updateNbRegisteredUsers = function () { console.log('Not ready yet...') }
+    elaastic.updateNbRegisteredUsers = function () { console.warn('Not ready yet...') }
     $(document).ready(function () {
       elaastic.updateNbRegisteredUsers = function () {
         $('#nbRegisteredUsers').load(/*[[@{/player/assignment/{id}/nbRegisteredUsers(id=${assignment.id})}]]*/)

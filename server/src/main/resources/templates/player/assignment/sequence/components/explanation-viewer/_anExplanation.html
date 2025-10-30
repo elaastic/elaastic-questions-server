@@ -243,8 +243,6 @@
             let baseURL = "/player/response/" + responseId
             let url = isVisible ? baseURL + "/unhide-response" : baseURL + "/hide-response"
 
-            console.log(url)
-
             $.get(url)
                 .done(function () {
                     window.location.reload()

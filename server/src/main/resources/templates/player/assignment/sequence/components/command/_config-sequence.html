@@ -44,9 +44,6 @@
                     const $loadingSegment = $('#loading-sequence_' + [[${commandModel.sequenceId}]]);
                     $loadingSegment.slideDown();
                     // TODO Step 2. Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation
-                    console.log($("meta[name='_csrf']").attr("content") || $("input[name='_csrf']").val())
-                    console.log(event.data);
-                    console.log(event.data.request);
                     $.ajax({
                         url: '/player/sequence/' + [[${sequenceId}]] + '/start.json',
                         type: 'POST',

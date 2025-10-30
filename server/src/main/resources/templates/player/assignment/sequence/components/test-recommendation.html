@@ -65,13 +65,9 @@
 
             window.addEventListener('message', (event) => {
                 if (event.data.command === recommendationModal) {
-                    console.log('Details modal');
-                    console.log(event.data);
-                    console.log('Recommendation modal');
                     $('#recommendation_explanation_for_' + event.data.sequenceId).modal('show');
                 } else {
-                    console.log('Unknown command: ' + event.data.command);
-                    console.log(event.data);
+                    console.error('Unknown command: ' + event.data.command);
                 }
             })
         });

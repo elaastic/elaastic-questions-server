@@ -283,14 +283,12 @@
                     updateAsideVisibility(true);
 
                     let currentPane = getCurrentPane();
-                    console.log("currentPane: " + currentPane);
                     if (currentPane === assignmentPaneKey) {
                         activeAssignmentPane();
                     } else if (currentPane === attendeesPaneKey) {
                         activeAttendeesPane();
                     }
                 } else {
-                    console.log("aside is hidden");
                     updateAsideVisibility(false);
                 }
             })
