@@ -25,8 +25,8 @@ const meta: any = {
   title: 'sequence/configuration/phase/ResponsePhaseConfiguration',
   component: ResponsePhaseConfiguration,
   args: {
-    'onUpdate:responsePhaseConfig': fn(),
-    studentGiveExplanation: false,
+    'onUpdate:modelValue': fn(),
+    modelValue: { studentGiveExplanation: false },
     explanationMandatory: false,
   },
   tags: ['autodocs', 'organisms'],
