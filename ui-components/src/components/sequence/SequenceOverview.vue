@@ -75,10 +75,7 @@ const selectedSequence = ref(props.selected ? [props.sequence.id] : false)
 
         <template v-slot:append>
           <v-list-item-action class="flex-column align-end">
-            <SequenceIcon v-for="icon in sequenceIcons"
-                          v-bind:key="icon"
-                          :iconId="icon"
-                          size="1.5em" />
+            <SequenceIcon v-for="icon in sequenceIcons" v-bind:key="icon" :iconId="icon" size="1.5em" />
           </v-list-item-action>
         </template>
       </v-list-item>

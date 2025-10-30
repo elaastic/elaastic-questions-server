@@ -17,76 +17,87 @@
   -->
 
 <script setup lang="ts">
+import Link from '@/components/util/Link.vue'
+import { useI18n } from 'vue-i18n'
+import { ref, useId, watch } from 'vue'
 
-import Link from "@/components/util/Link.vue";
-import {useI18n} from "vue-i18n";
-import {ref, useId, watch} from "vue";
-
-const {t} = useI18n();
+const { t } = useI18n()
 
 type EvaluationMethod = 'ALL_AT_ONCE' | 'DRAXO' | 'EXTERNAL'
 
 export interface ConfrontingViewPhaseConfig {
-  phaseActive: boolean;
-  nbResponseToEvaluate: number;
-  evaluationMethod: EvaluationMethod;
-  evaluationExternalInstructions: string;
+  phaseActive: boolean
+  nbResponseToEvaluate: number
+  evaluationMethod: EvaluationMethod
+  evaluationExternalInstructions: string
 }
 
 export interface ConfrontingViewPhaseProps {
   /**
    * Configuration de la phase
    */
-  modelValue?: ConfrontingViewPhaseConfig,
+  modelValue?: ConfrontingViewPhaseConfig
   /**
    * Maximal number of responses to evaluate
    */
-  maxResponseToEvaluate?: number;
+  maxResponseToEvaluate?: number
   /**
    * If the student must give an textual explanation of their response
    */
-  studentGiveExplanation?: boolean;
+  studentGiveExplanation?: boolean
   /**
    * Whether the explanation by AI feature is activated or not
    */
-  aiIsActivated?: boolean;
+  aiIsActivated?: boolean
 }
 
-export type ConfrontingViewPhaseEvent = (event: 'update:modelValue', value: ConfrontingViewPhaseConfig) => void;
+export type ConfrontingViewPhaseEvent = (event: 'update:modelValue', value: ConfrontingViewPhaseConfig) => void
 
 const props = withDefaults(defineProps<ConfrontingViewPhaseProps>(), {
   maxResponseToEvaluate: 5,
   studentGiveExplanation: false,
-  aiIsActivated: false
-});
-const emit = defineEmits<ConfrontingViewPhaseEvent>();
+  aiIsActivated: false,
+})
+const emit = defineEmits<ConfrontingViewPhaseEvent>()
 
-const evaluationExternalInstructionsId = useId();
+const evaluationExternalInstructionsId = useId()
 
-const EVALUATION_METHOD_OPTIONS: EvaluationMethod[] = [
-  'ALL_AT_ONCE',
-  'DRAXO',
-  'EXTERNAL',
-]
+const EVALUATION_METHOD_OPTIONS: EvaluationMethod[] = ['ALL_AT_ONCE', 'DRAXO', 'EXTERNAL']
 
-const confrontingViewsPhaseActive = ref<boolean>(props.modelValue?.phaseActive ?? true);
-const nbResponseToEvaluate = ref<number>(props.modelValue?.nbResponseToEvaluate ?? props.maxResponseToEvaluate);
-const evaluationMethod = ref<EvaluationMethod>(props.modelValue?.evaluationMethod ?? EVALUATION_METHOD_OPTIONS[0]);
-const evaluationExternalInstructions = ref<string>(props.modelValue?.evaluationExternalInstructions ?? '');
+const confrontingViewsPhaseActive = ref<boolean>(props.modelValue?.phaseActive ?? true)
+const nbResponseToEvaluate = ref<number>(props.modelValue?.nbResponseToEvaluate ?? props.maxResponseToEvaluate)
+const evaluationMethod = ref<EvaluationMethod>(props.modelValue?.evaluationMethod ?? EVALUATION_METHOD_OPTIONS[0])
+const evaluationExternalInstructions = ref<string>(props.modelValue?.evaluationExternalInstructions ?? '')
 
 // Watchers pour émettre les changements
-watch(() => confrontingViewsPhaseActive.value, () => configUpdated());
-watch(() => nbResponseToEvaluate.value, () => configUpdated());
-watch(() => evaluationMethod.value, () => configUpdated());
-watch(() => evaluationExternalInstructions.value, () => configUpdated());
+watch(
+  () => confrontingViewsPhaseActive.value,
+  () => configUpdated(),
+)
+watch(
+  () => nbResponseToEvaluate.value,
+  () => configUpdated(),
+)
+watch(
+  () => evaluationMethod.value,
+  () => configUpdated(),
+)
+watch(
+  () => evaluationExternalInstructions.value,
+  () => configUpdated(),
+)
 
-watch(() => props.modelValue, (newValue) => {
-  if (newValue) {
-    confrontingViewsPhaseActive.value = newValue.phaseActive;
-    nbResponseToEvaluate.value = newValue.nbResponseToEvaluate;
-    evaluationMethod.value = newValue.evaluationMethod;
-  }
-}, { deep: true });
+watch(
+  () => props.modelValue,
+  newValue => {
+    if (newValue) {
+      confrontingViewsPhaseActive.value = newValue.phaseActive
+      nbResponseToEvaluate.value = newValue.nbResponseToEvaluate
+      evaluationMethod.value = newValue.evaluationMethod
+    }
+  },
+  { deep: true },
+)
 
 const labelForEM = (evaluationMethodKey: EvaluationMethod) => {
   return t(`evaluationMethod.${evaluationMethodKey}`)
@@ -98,17 +109,15 @@ const configUpdated = () => {
     nbResponseToEvaluate: nbResponseToEvaluate.value,
     evaluationMethod: evaluationMethod.value,
     evaluationExternalInstructions: evaluationExternalInstructions.value,
-  });
-};
+  })
+}
 
 // Emit the initial configuration when the component is mounted
 configUpdated()
 </script>
 
 <template>
-  <v-card
-          elevation="0" :title="t('title')"
-          prepend-icon="mdi-comment-multiple">
+  <v-card elevation="0" :title="t('title')" prepend-icon="mdi-comment-multiple">
     <template v-slot:text class="ps-2">
       <v-switch v-model="confrontingViewsPhaseActive" class="mb-n4" color="primary">
         <template v-slot:label>
@@ -124,23 +133,20 @@ configUpdated()
           <v-expand-transition>
             <div v-if="studentGiveExplanation">
               <!-- Evaluation Method -->
-                <v-radio-group
-                        class="mt-4"
-                        :label="t('evaluationMethod.title')"
-                        v-model="evaluationMethod"
-                >
-                  <v-radio
-                          v-for="option in EVALUATION_METHOD_OPTIONS"
-                          :key="option"
-                          :label="labelForEM(option)"
-                          :value="option"></v-radio>
-                </v-radio-group>
+              <v-radio-group class="mt-4" :label="t('evaluationMethod.title')" v-model="evaluationMethod">
+                <v-radio
+                  v-for="option in EVALUATION_METHOD_OPTIONS"
+                  :key="option"
+                  :label="labelForEM(option)"
+                  :value="option"
+                ></v-radio>
+              </v-radio-group>
               <div class="d-flex flex-column align-start mt-n4 mb-4">
-                <v-alert type="info" variant="outlined" class="align-self-end " density="compact">
+                <v-alert type="info" variant="outlined" class="align-self-end" density="compact">
                   <Link
-                          href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
-                          :text="t('evaluationMethod.draxoDocumentation')"
-                          target="_blank"
+                    href="https://elaastic.github.io/elaastic-questions-server/en/key_concepts/DRAXO"
+                    :text="t('evaluationMethod.draxoDocumentation')"
+                    target="_blank"
                   />
                 </v-alert>
               </div>
@@ -154,16 +160,20 @@ configUpdated()
                 </v-col>
                 <v-col cols="auto">
                   <v-select
-                          variant="outlined"
-                          density="compact"
-                          v-model="nbResponseToEvaluate"
-                          :items="maxResponseToEvaluate > 0 ? Array.from({length: maxResponseToEvaluate}, (_, i) => i + 1) : [1]"
-                          class="mt-4"
-                          style="min-width: 50px;"
+                    variant="outlined"
+                    density="compact"
+                    v-model="nbResponseToEvaluate"
+                    :items="
+                      maxResponseToEvaluate > 0 ? Array.from({ length: maxResponseToEvaluate }, (_, i) => i + 1) : [1]
+                    "
+                    class="mt-4"
+                    style="min-width: 50px"
                   >
                   </v-select>
                 </v-col>
-                <v-col cols="auto"><p>{{ t('answers') }}</p></v-col>
+                <v-col cols="auto"
+                  ><p>{{ t('answers') }}</p></v-col
+                >
               </v-row>
 
               <!-- Instructions for the phase (if using an external evaluation method) -->
@@ -198,9 +208,7 @@ configUpdated()
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 
 <i18n>
 {

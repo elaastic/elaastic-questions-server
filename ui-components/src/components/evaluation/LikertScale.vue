@@ -8,43 +8,43 @@ export interface LikertScaleProps {
   /**
    * The selected value on the Likert scale
    */
-  modelValue: LikertValue,
+  modelValue: LikertValue
   /**
    * The number of value of the scale
    * @default 5
    */
-  nbValues?: number,
+  nbValues?: number
   /**
    * Label for the lowest value of the scale
    */
-  minLabel: string,
+  minLabel: string
   /**
    * Label for the highest value of the scale
    */
-  maxLabel: string,
+  maxLabel: string
   /**
    * Component color
    * @default 'default'
    */
-  color?: string;
+  color?: string
 }
 
 export interface LikertScaleEvents {
   /** Fired when the selected value changes */
-  (event: 'update:modelValue', value: LikertValue): void;
+  (event: 'update:modelValue', value: LikertValue): void
 }
 
 const props = withDefaults(defineProps<LikertScaleProps>(), {
   modelValue: null,
   nbValues: 5,
-  color: 'default'
+  color: 'default',
 })
 
 const emit = defineEmits<LikertScaleEvents>()
 
 const value = computed({
   get: () => props.modelValue,
-  set: newValue => emit('update:modelValue', newValue)
+  set: newValue => emit('update:modelValue', newValue),
 })
 const { xs } = useDisplay()
 const { t } = useI18n()
@@ -62,12 +62,9 @@ const { t } = useI18n()
     </v-row>
     <template v-if="xs">
       <p class="text-center">1 = {{ minLabel }}</p>
-      <p class="text-center">{{ nbValues}} = {{ maxLabel }}</p>
+      <p class="text-center">{{ nbValues }} = {{ maxLabel }}</p>
     </template>
-    <v-btn variant="plain"
-           :class="{'hidden': !value}"
-           @click="value = null"
-           class="align-self-end mt-2 mr-12">
+    <v-btn variant="plain" :class="{ hidden: !value }" @click="value = null" class="align-self-end mt-2 mr-12">
       {{ t('clear-selection') }}
     </v-btn>
   </v-radio-group>

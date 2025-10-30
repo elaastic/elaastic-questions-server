@@ -17,26 +17,26 @@
   -->
 
 <script setup lang="ts">
-import {useI18n} from 'vue-i18n'
-import {computed, ref} from 'vue'
+import { useI18n } from 'vue-i18n'
+import { computed, ref } from 'vue'
 import ResponsePhaseConfiguration, {
-  type ResponsePhaseConfig
-} from "@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue";
+  type ResponsePhaseConfig,
+} from '@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue'
 import ConfrontingViewPhaseConfiguration, {
-  type ConfrontingViewPhaseConfig
-} from "@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue";
+  type ConfrontingViewPhaseConfig,
+} from '@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue'
 import ResultPhaseConfiguration, {
-  type ResultPhaseConfig
-} from "@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue";
+  type ResultPhaseConfig,
+} from '@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue'
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 type ExecutionContext = 'FaceToFace' | 'Distance' | 'Blended'
 
 export interface SequenceConfiguration {
-  executionContext: ExecutionContext,
-  responsePhaseConfig?: ResponsePhaseConfig | undefined,
-  confrontingViewsPhaseConfig: ConfrontingViewPhaseConfig | undefined,
+  executionContext: ExecutionContext
+  responsePhaseConfig?: ResponsePhaseConfig | undefined
+  confrontingViewsPhaseConfig: ConfrontingViewPhaseConfig | undefined
   resultPhaseConfig?: ResultPhaseConfig | undefined
 }
 
@@ -44,44 +44,40 @@ export interface SequenceConfigurationProps {
   /**
    * Configuration of the sequence
    */
-  modelValue?: SequenceConfiguration,
+  modelValue?: SequenceConfiguration
   /**
    * Maximal number of responses to evaluate
    */
-  maxResponseToEvaluate: number,
+  maxResponseToEvaluate: number
   /**
    * Whether the explanation by AI feature is activated or not
    */
-  aiIsActivated: boolean,
+  aiIsActivated: boolean
   /**
    * The question is open or not.
    */
-  questionIsOpen: boolean,
+  questionIsOpen: boolean
 }
 
 export interface SequenceConfigurationEvents {
   /**
    * Fires when the user clicks on the submit button
    */
-  (event: 'submitSequenceConfiguration', request: SequenceConfiguration): void;
+  (event: 'submitSequenceConfiguration', request: SequenceConfiguration): void
 
   /**
    * Fires when the user clicks on the cancel button
    */
-  (event: 'cancelSequenceConfiguration'): void;
+  (event: 'cancelSequenceConfiguration'): void
 }
 
 const props = withDefaults(defineProps<SequenceConfigurationProps>(), {
   maxResponseToEvaluate: 5,
-  aiIsActivated: false
+  aiIsActivated: false,
 })
 const emit = defineEmits<SequenceConfigurationEvents>()
 
-const EXECUTION_CONTEXT_OPTIONS: ExecutionContext[] = [
-  'FaceToFace',
-  'Distance',
-  'Blended'
-]
+const EXECUTION_CONTEXT_OPTIONS: ExecutionContext[] = ['FaceToFace', 'Distance', 'Blended']
 const noticeForEC = (executionContextKey: ExecutionContext) => {
   return t(`sequenceConfiguration.executionContext.${executionContextKey}.notice`)
 }
@@ -90,18 +86,18 @@ const labelForEC = (executionContextKey: ExecutionContext) => {
 }
 
 const executionContext = ref<ExecutionContext>(props.modelValue?.executionContext ?? EXECUTION_CONTEXT_OPTIONS[0])
-const responsePhaseConfig = ref(props.modelValue?.responsePhaseConfig ?? {studentGiveExplanation: true});
-const confrontingViewConfig = ref(props.modelValue?.confrontingViewsPhaseConfig);
-const resultPhaseConfig = ref(props.modelValue?.resultPhaseConfig ?? {evaluationByIa: false});
+const responsePhaseConfig = ref(props.modelValue?.responsePhaseConfig ?? { studentGiveExplanation: true })
+const confrontingViewConfig = ref(props.modelValue?.confrontingViewsPhaseConfig)
+const resultPhaseConfig = ref(props.modelValue?.resultPhaseConfig ?? { evaluationByIa: false })
 
 const sequenceConfig = computed(() => {
   return {
     executionContext: executionContext.value,
     responsePhaseConfig: responsePhaseConfig.value,
     confrontingViewsPhaseConfig: confrontingViewConfig.value,
-    resultPhaseConfig: resultPhaseConfig.value
+    resultPhaseConfig: resultPhaseConfig.value,
   }
-});
+})
 
 const onSubmit = () => {
   emit('submitSequenceConfiguration', sequenceConfig.value)
@@ -112,32 +108,26 @@ const onCancel = () => {
 </script>
 
 <template>
-  <v-card
-          class="d-flex flex-column"
-          :title="t('sequenceConfiguration.title')"
-  >
+  <v-card class="d-flex flex-column" :title="t('sequenceConfiguration.title')">
     <v-card-text>
       <!-- Execution Context -->
       <div class="mb-4">
-        <v-radio-group
-                inline
-                :label="t('sequenceConfiguration.executionContext.title')"
-                v-model="executionContext"
-        >
+        <v-radio-group inline :label="t('sequenceConfiguration.executionContext.title')" v-model="executionContext">
           <v-radio
-                  v-for="option in EXECUTION_CONTEXT_OPTIONS"
-                  :key="option"
-                  :label="labelForEC(option)"
-                  :value="option"></v-radio>
+            v-for="option in EXECUTION_CONTEXT_OPTIONS"
+            :key="option"
+            :label="labelForEC(option)"
+            :value="option"
+          ></v-radio>
         </v-radio-group>
         <v-alert
-                v-if="executionContext !== undefined"
-                :text="noticeForEC(executionContext)"
-                variant="tonal"
-                icon="$info"
-                border="start"
-                border-color="info"
-                style="white-space: pre-line"
+          v-if="executionContext !== undefined"
+          :text="noticeForEC(executionContext)"
+          variant="tonal"
+          icon="$info"
+          border="start"
+          border-color="info"
+          style="white-space: pre-line"
         >
         </v-alert>
       </div>
@@ -147,52 +137,40 @@ const onCancel = () => {
       <!-- Response Phase -->
       <v-card :elevation="6" class="mt-4">
         <ResponsePhaseConfiguration
-                v-model="responsePhaseConfig"
-                :explanationMandatory="executionContext !== EXECUTION_CONTEXT_OPTIONS[0] || questionIsOpen"
+          v-model="responsePhaseConfig"
+          :explanationMandatory="executionContext !== EXECUTION_CONTEXT_OPTIONS[0] || questionIsOpen"
         ></ResponsePhaseConfiguration>
       </v-card>
 
       <!-- Confronting View Phase -->
       <v-card elevation="6" class="mt-4">
         <ConfrontingViewPhaseConfiguration
-                v-model="confrontingViewConfig"
-                :studentGiveExplanation="responsePhaseConfig.studentGiveExplanation"
-                :aiIsActivated
-                :maxResponseToEvaluate
+          v-model="confrontingViewConfig"
+          :studentGiveExplanation="responsePhaseConfig.studentGiveExplanation"
+          :aiIsActivated
+          :maxResponseToEvaluate
         ></ConfrontingViewPhaseConfiguration>
       </v-card>
 
       <!-- Result Phase -->
       <v-card elevation="6" class="mt-4">
         <ResultPhaseConfiguration
-                v-model="resultPhaseConfig"
-                :aiIsActivated="props.aiIsActivated"
+          v-model="resultPhaseConfig"
+          :aiIsActivated="props.aiIsActivated"
         ></ResultPhaseConfiguration>
       </v-card>
     </v-card-text>
 
     <v-card-actions class="justify-end">
-      <v-btn
-              class="text-none text-subtitle-1 text-white"
-              color="#95c155"
-              variant="flat"
-              @click="onSubmit"
-      >
+      <v-btn class="text-none text-subtitle-1 text-white" color="#95c155" variant="flat" @click="onSubmit">
         {{ t('submit') }}
       </v-btn>
-      <v-btn
-              class="text-none text-subtitle-1"
-              text="Cancel"
-              variant="outlined"
-              @click="onCancel"
-      ></v-btn>
+      <v-btn class="text-none text-subtitle-1" text="Cancel" variant="outlined" @click="onCancel"></v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 
 <i18n>
 {

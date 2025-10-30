@@ -6,77 +6,77 @@ import exampleImage from '@/stories/assets/statement/Survivorship-bias.png'
 const meta = {
   title: 'player/ElContentBlock',
   component: ElContentBlock,
-  tags: ['autodocs']
+  tags: ['autodocs'],
 } satisfies Meta<typeof ElContentBlock>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ElContentBlock },
     setup() {
       return {
-        args
+        args,
       }
     },
     template: `
       <ElContentBlock v-bind="args" v-model:open="args.open">
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eu nunc nisl. In tincidunt, ante et venenatis aliquam, leo nulla interdum mauris, at volutpat magna dui nec felis. Nam ac vestibulum nibh. Vivamus vitae risus neque. Duis ultrices dui ut.</p>
       </ElContentBlock>
-    `
+    `,
   }),
   args: {
     title: 'Mastering the Art of Productivity: Tips and Tricks for a More Efficient Life',
-    open: true
-  }
+    open: true,
+  },
 }
 
 export const NotCollapsible: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ElContentBlock },
     setup() {
       return {
-        args
+        args,
       }
     },
     template: `
       <ElContentBlock v-bind="args">
         <p>I'm a block of content that can't be folded.</p>
       </ElContentBlock>
-    `
+    `,
   }),
   args: {
     title: 'Not collapsible',
-    collapsible: false
-  }
+    collapsible: false,
+  },
 }
 export const Closed: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ElContentBlock },
     setup() {
       return {
-        args
+        args,
       }
     },
     template: `
       <ElContentBlock v-bind="args" v-model:open="args.open">
         <p>I'm a closed content block.</p>
       </ElContentBlock>
-    `
+    `,
   }),
   args: {
     title: 'Closed content block',
-    open: false
-  }
+    open: false,
+  },
 }
 
 export const WithSubtitle: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ElContentBlock },
     setup() {
       return {
-        args
+        args,
       }
     },
     template: `
@@ -86,18 +86,18 @@ export const WithSubtitle: Story = {
       >
         <p>This content block illustrates a title with a subtitle.</p>
       </ElContentBlock>
-    `
+    `,
   }),
   args: {
     title: 'I have a title',
     collapsible: true,
     open: true,
-    subtitle: 'and a subtitle'
-  }
+    subtitle: 'and a subtitle',
+  },
 }
 
 export const Results: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ElContentBlock },
     setup() {
       return { args }
@@ -120,22 +120,22 @@ export const Results: Story = {
           </v-card>
         </div>
       </ElContentBlock>
-    `
+    `,
   }),
   args: {
     title: 'Results',
     collapsible: false,
-    open: true
-  }
+    open: true,
+  },
 }
 
 export const Statement: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ElContentBlock, ElHtmlContent },
     setup() {
       return {
         args,
-        exampleImage
+        exampleImage,
       }
     },
     template: `
@@ -168,11 +168,11 @@ export const Statement: Story = {
           </div>
         </ElHtmlContent>
       </ElContentBlock>
-    `
+    `,
   }),
   args: {
     title: 'Renforcement de la carlingue des avions de la 2nde guerre mondiale',
     subtitle: 'Question à choix exclusif',
-    open: true
-  }
+    open: true,
+  },
 }

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-
-import {computed, ref} from "vue";
+import { computed, ref } from 'vue'
 
 export type Selection = {
-  label: string,
+  label: string
   value: string
 }
 
@@ -11,18 +10,18 @@ interface SelectorResponsivProps {
   /**
    * The list of selections to display
    */
-  selections: Selection[];
+  selections: Selection[]
   /**
    * The selected value in the list
    */
-  selected: string | null;
+  selected: string | null
 }
 interface SelectorResponsivEmit {
-  (event: 'changeSelection', newSelection: Selection): void;
+  (event: 'changeSelection', newSelection: Selection): void
 }
 
 const props = withDefaults(defineProps<SelectorResponsivProps>(), {
-  selected: null
+  selected: null,
 })
 const emit = defineEmits<SelectorResponsivEmit>()
 
@@ -55,24 +54,49 @@ const onChangeSelection = () => {
 }
 
 // Compute the button width based on the number of selections
-const buttonWidth =`${100 / props.selections.length}%`;
+const buttonWidth = `${100 / props.selections.length}%`
 </script>
 
 <template>
   <div id="horizontal-grade-selector-container">
-    <v-btn-toggle v-model="selected" variant="text" color="#0e6eb8" rounded="0" elevation="1"
-                  style="margin-top: 10px;" id="horizontal-grade-selector">
-      <v-btn v-for="(selection, index) in props.selections" :key="index" @click="setSelected(selection)"
-             :value="selection" class="text-none text-subtitle-1" :style="{ width: buttonWidth}">
+    <v-btn-toggle
+      v-model="selected"
+      variant="text"
+      color="#0e6eb8"
+      rounded="0"
+      elevation="1"
+      style="margin-top: 10px"
+      id="horizontal-grade-selector"
+    >
+      <v-btn
+        v-for="(selection, index) in props.selections"
+        :key="index"
+        @click="setSelected(selection)"
+        :value="selection"
+        class="text-none text-subtitle-1"
+        :style="{ width: buttonWidth }"
+      >
         {{ selection.label }}
       </v-btn>
     </v-btn-toggle>
   </div>
   <div id="vertical-grade-selector-container">
-    <v-btn-toggle v-model="selected" variant="text" color="#0e6eb8" rounded="0" elevation="1"
-                  style="margin-top: 10px;" id="vertical-grade-selector">
-      <v-btn v-for="(selection, index) in props.selections" :key="index" @click="setSelected(selection)"
-             :value="selection" class="text-none text-subtitle-1 btn-vertical-selector">
+    <v-btn-toggle
+      v-model="selected"
+      variant="text"
+      color="#0e6eb8"
+      rounded="0"
+      elevation="1"
+      style="margin-top: 10px"
+      id="vertical-grade-selector"
+    >
+      <v-btn
+        v-for="(selection, index) in props.selections"
+        :key="index"
+        @click="setSelected(selection)"
+        :value="selection"
+        class="text-none text-subtitle-1 btn-vertical-selector"
+      >
         {{ selection.label }}
       </v-btn>
     </v-btn-toggle>

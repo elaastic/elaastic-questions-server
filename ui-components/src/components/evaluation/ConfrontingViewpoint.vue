@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import EvaluationCard from '@/components/evaluation/EvaluationCard.vue'
 import { reactive } from 'vue'
 import type { AnyResponse } from '@/models/Response'
@@ -32,14 +31,13 @@ const evaluations = reactive(
   props.responses.reduce((acc: { [key: ResponseId]: LikertValue }, response: AnyResponse) => {
     acc[response.id] = null
     return acc
-  }, {})
+  }, {}),
 )
 
 const onEvaluationChange = (responseId: number, value: LikertValue): void =>
   emit('evaluation-changed', responseId, value)
 
 const { t } = useI18n()
-
 </script>
 
 <template>
@@ -47,42 +45,26 @@ const { t } = useI18n()
   <v-divider color="primary" class="my-4"></v-divider>
 
   <template v-if="!responses.length">
-    <v-alert
-      class="mb-4"
-      :text="t('notice.no-alternative')"
-      type="error"
-      variant="tonal"
-    />
+    <v-alert class="mb-4" :text="t('notice.no-alternative')" type="error" variant="tonal" />
   </template>
   <template v-else>
-    <v-alert
-      class="mb-4"
-      :text="t('notice.standard')"
-      type="info"
-      variant="tonal"
-    />
+    <v-alert class="mb-4" :text="t('notice.standard')" type="info" variant="tonal" />
 
     <v-row align="stretch" justify="center">
-      <v-col v-for="(response, index) in responses"
-             :key="response.id"
-             cols="12"
-             md="6"
-             xl="4"
-      >
-        <evaluation-card :evaluation-num="index+1"
-                         v-model="evaluations[response.id]"
-                         @update:model-value="onEvaluationChange(response.id, $event)"
-                         :response="response"
-                         :explanation="response.explanation" />
+      <v-col v-for="(response, index) in responses" :key="response.id" cols="12" md="6" xl="4">
+        <evaluation-card
+          :evaluation-num="index + 1"
+          v-model="evaluations[response.id]"
+          @update:model-value="onEvaluationChange(response.id, $event)"
+          :response="response"
+          :explanation="response.explanation"
+        />
       </v-col>
     </v-row>
   </template>
-
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 
 <i18n>
 {

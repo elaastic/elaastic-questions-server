@@ -16,10 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type {Meta, StoryObj} from '@storybook/vue3-vite';
-import SequenceConfiguration from "@/components/sequence/configuration/SequenceConfiguration.vue";
-import {fn} from "storybook/test";
-
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import SequenceConfiguration from '@/components/sequence/configuration/SequenceConfiguration.vue'
+import { fn } from 'storybook/test'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta: any = {
@@ -36,27 +35,25 @@ const meta: any = {
   parameters: {
     docs: {
       description: {
-        story: 'TODO'
-      }
-    }
-  }
-} satisfies Meta<typeof SequenceConfiguration >;
+        story: 'TODO',
+      },
+    },
+  },
+} satisfies Meta<typeof SequenceConfiguration>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
-
-export const Primary: Story = {
-};
+export const Primary: Story = {}
 
 export const WithoutAI: Story = {
   args: {
-    aiIsActivated: false
-  }
+    aiIsActivated: false,
+  },
 }
 
 export const QuestionIsOpen: Story = {
   args: {
-    questionIsOpen: true
-  }
+    questionIsOpen: true,
+  },
 }
