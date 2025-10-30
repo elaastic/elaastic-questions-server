@@ -73,7 +73,9 @@
 
                         /*[-  Observe messages sent by the iframe to keep the form input synchronized -]*/
                         window.addEventListener('message', (event) => {
-                            document.getElementById(`grades[${event.data.responseId}]`).value = event.data.value || -1
+                            if (event.data && event.data.responseId !== undefined) {
+                                document.getElementById(`grades[${event.data.responseId}]`).value = event.data.value || -1
+                            }
                         })
                     })
                 </script>
