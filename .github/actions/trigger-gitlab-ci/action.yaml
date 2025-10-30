@@ -10,7 +10,7 @@ inputs:
   GITLAB_TRIGGER_TOKEN:
     description: Pipeline trigger token to use to authenticate to the GitLab instance
     required: true
-  TARGET_BRANCH:
+  TARGET_REF:
     description: Branch on which the CI job should be started
     required: true
   ENVIRONMENT:
@@ -34,7 +34,7 @@ runs:
       run: |
         pipeline_id=$(
           curl -fsS --request POST \
-            --form "ref=${{ inputs.TARGET_BRANCH }}" \
+            --form "ref=${{ inputs.TARGET_REF }}" \
             --form "token=${{ inputs.GITLAB_TRIGGER_TOKEN }}" \
             --form "inputs[environment]=${{ inputs.ENVIRONMENT }}" \
             --form "inputs[check-run-id]=${{ inputs.CHECK_RUN_ID }}" \
