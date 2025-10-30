@@ -13,7 +13,10 @@ inputs:
   GITLAB_PROJECT_PATH:
     description: Path to the GitLab project (excluding base url)
     required: true
-  TARGET_BRANCH:
+  SOURCE_REF:
+    description: Branch on the repository to push to GitLab
+    required: true
+  TARGET_REF:
     description: Branch on the GitLab repository to push on
     required: true
 
@@ -33,5 +36,4 @@ runs:
       shell: sh
       run: |
         git remote add gitlab git@${{ inputs.GITLAB_HOST }}:${{ inputs.GITLAB_PROJECT_PATH }}
-        git checkout -b tmp/actions-branch
-        git push gitlab tmp/actions-branch:${{ inputs.TARGET_BRANCH }} --force
+        git push gitlab ${{ inputs.SOURCE_REF }}:${{ inputs.TARGET_REF }} --force
