@@ -45,9 +45,7 @@
             }
 
             window.addEventListener('message', (event) => {
-                console.log('Received message from iframe:', event.data);
-                console.log(event.data.request)
-                if (event.data.command === 'sequence-configuration-submitted') {
+                if (event.data.command === 'start-sequence') {
                     const $loadingSegment = $('#loading-sequence_' + [[${sequenceId}]]);
                     $loadingSegment.slideDown();
                     // TODO Step 2. Provide the X-CSRF-TOKEN to the UI component, so it will be able to directly communicate with the server without this Thymeleaf intermediation

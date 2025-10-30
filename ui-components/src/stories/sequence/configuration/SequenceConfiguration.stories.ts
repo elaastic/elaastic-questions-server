@@ -29,7 +29,7 @@ const meta: any = {
     aiIsActivated: true,
     questionIsOpen: false,
     onCancelSequenceConfiguration: fn(),
-    onSubmitSequenceConfiguration: fn(),
+    onStartSequence: fn(),
     onSaveSequenceConfiguration: fn(),
   },
   tags: ['autodocs', 'pages'],

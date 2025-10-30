@@ -47,9 +47,9 @@ export interface SequenceConfigurationProps {
 
 export interface SequenceConfigurationEvents {
   /**
-   * Fires when the user clicks on the submit button
+   * Fires when the user clicks on "start sequence" button
    */
-  (event: 'submitSequenceConfiguration', request: SequenceConfiguration): void
+  (event: 'startSequence', request: SequenceConfiguration): void
 
   /**
    * Fires when the user clicks on the save button. So he just wants to save the sequence configuration, not start it yet.
@@ -97,8 +97,8 @@ const sequenceConfig = computed(() => {
   }
 })
 
-const onSubmit = () => {
-  emit('submitSequenceConfiguration', sequenceConfig.value)
+const onStartSequence = () => {
+  emit('startSequence', sequenceConfig.value)
 }
 const onSave = () => {
   emit('saveSequenceConfiguration', sequenceConfig.value)
@@ -165,8 +165,8 @@ const onCancel = () => {
     </v-card-text>
 
     <v-card-actions class="justify-end">
-      <v-btn class="text-none text-subtitle-1 text-white" color="#95c155" variant="flat" @click="onSubmit">
-        {{ t('submit') }}
+      <v-btn class="text-none text-subtitle-1 text-white" color="#95c155" variant="flat" @click="onStartSequence">
+        {{ t('startSequence') }}
       </v-btn>
       <v-btn
         class="text-none text-subtitle-1"
@@ -195,7 +195,7 @@ const onCancel = () => {
 <i18n>
 {
   "en": {
-    "submit": "Start sequence",
+    "startSequence": "Start sequence",
     "save-sequence": "Save sequence",
     "cancel": "Cancel",
     "sequence-updated": "Sequence updated",
@@ -220,7 +220,7 @@ const onCancel = () => {
     }
   },
   "fr": {
-    "submit": "Démarrer la séquence",
+    "startSequence": "Démarrer la séquence",
     "save-sequence": "Enregistrer la séquence",
     "cancel": "Annuler",
     "sequence-updated": "Séquence mise à jour",

@@ -54,7 +54,7 @@
                             },
                             onStartSequence: (request) => {
                                 window.parent.postMessage({
-                                    command: 'sequence-configuration-submitted',
+                                    command: 'start-sequence',
                                     request: JSON.parse(JSON.stringify(request))
                                 }, '*')
                             },

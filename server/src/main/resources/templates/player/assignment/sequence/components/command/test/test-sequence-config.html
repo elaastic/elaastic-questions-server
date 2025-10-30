@@ -48,7 +48,7 @@
         window.addEventListener('message', (event) => {
             if (event.data.command === 'sequence-configuration-cancelled') {
                 console.log(event.data)
-            } else if (event.data.command === 'sequence-configuration-submitted') {
+            } else if (event.data.command === 'start-sequence') {
                 console.log(event.data)
             }
         })
