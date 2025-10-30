@@ -1,6 +1,5 @@
 <script lang="ts">
 import type { Course, Subject } from '@/components/assignment/Assignment.types'
-import type { InternalBreadcrumbItem } from 'vuetify/components'
 
 export interface AssignmentBreadcrumbProps {
   id: number
@@ -19,7 +18,7 @@ const emits = defineEmits(['goToCourse', 'goToSubject', 'goToDiffusionList', 'ed
 
 const { t } = useI18n()
 
-interface BreadcrumbItem extends InternalBreadcrumbItem {
+interface BreadcrumbItem {
   icon: string
   title: string
   action: () => void
@@ -75,7 +74,7 @@ const items = computed<BreadcrumbItem[]>(() => {
 
 <template>
   <v-breadcrumbs :items="items" density="compact">
-    <template #title="{ item }: { item: InternalBreadcrumbItem & BreadcrumbItem }">
+    <template #title="{ item }: { item: any }">
       <v-btn variant="text" size="small" class="text-none mx-0" @click.prevent="item.action()">
         <v-tooltip v-if="item.tooltip" activator="parent" location="top">{{ item.tooltip }}</v-tooltip>
         <v-icon class="">{{ item.icon }}</v-icon>
