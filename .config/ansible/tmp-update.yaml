@@ -9,10 +9,10 @@
       ansible.builtin.shell: docker compose -f /local/elaastic/docker-ressources/docker-compose.yml pull
 
     - name: Stop Elaastic
-      ansible.builtin.shell: docker compose -f /local/elaastic/docker-ressources/docker-compose.yml down konsolidation-server konsolidation-client maestro
+      ansible.builtin.shell: docker compose -f /local/elaastic/docker-ressources/docker-compose.yml down elaastic-questions-server
 
     - name: Start Elaastic
-      ansible.builtin.shell: docker compose -f /local/elaastic/docker-ressources/docker-compose.yml up konsolidation-server konsolidation-client maestro -d
+      ansible.builtin.shell: docker compose -f /local/elaastic/docker-ressources/docker-compose.yml up elaastic-questions-server -d
 
     - name: Cleanup unused artifacts
       ansible.builtin.shell: docker image prune -f
