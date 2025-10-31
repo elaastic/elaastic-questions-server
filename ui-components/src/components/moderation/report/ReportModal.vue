@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {useI18n} from 'vue-i18n'
-import {onMounted, onUnmounted, ref} from 'vue'
-import ReportForm from "@/components/moderation/report/ReportForm.vue";
+import { useI18n } from 'vue-i18n'
+import { onMounted, onUnmounted, ref } from 'vue'
+import ReportForm from '@/components/moderation/report/ReportForm.vue'
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 export interface ReportModalProps {
   /**
@@ -45,34 +45,49 @@ onUnmounted(() => {
     isSmallScreen.value = window.innerWidth < 600
   })
 })
-
 </script>
 
 <template>
   <!-- Dialog -->
   <v-dialog v-model="showForm" max-width="600" :fullscreen="isSmallScreen" v-if="props.displayAsDialog">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn class="text-none" variant="outlined" color="#b7446f" prepend-icon="mdi-alert" id="report-btn"
-             v-bind="activatorProps">
+      <v-btn
+        class="text-none"
+        variant="outlined"
+        color="#b7446f"
+        prepend-icon="mdi-alert"
+        id="report-btn"
+        v-bind="activatorProps"
+      >
         {{ t('report') }}
       </v-btn>
     </template>
-    <ReportForm content-to-report="props.contentToReport" @submitReport="submitReport" @cancel="showForm = false"/>
+    <ReportForm content-to-report="props.contentToReport" @submitReport="submitReport" @cancel="showForm = false" />
   </v-dialog>
 
   <!-- Not a dialog -->
   <div v-else>
     <v-expand-transition>
       <div v-if="!showForm">
-        <v-btn class="text-none" variant="outlined" color="#b7446f" prepend-icon="mdi-alert" id="report-btn"
-               @click="showForm = !showForm">
+        <v-btn
+          class="text-none"
+          variant="outlined"
+          color="#b7446f"
+          prepend-icon="mdi-alert"
+          id="report-btn"
+          @click="showForm = !showForm"
+        >
           {{ t('report') }}
         </v-btn>
       </div>
     </v-expand-transition>
     <v-expand-transition>
       <div v-if="showForm" id="report-form">
-        <ReportForm :content-to-report="props.contentToReport" @submitReport="submitReport" @cancel="showForm = false"/>
+        <ReportForm
+          :content-to-report="props.contentToReport"
+          @submitReport="submitReport"
+          @cancel="showForm = false"
+        />
       </div>
     </v-expand-transition>
   </div>
@@ -82,7 +97,6 @@ onUnmounted(() => {
 #report-btn {
   width: 100%;
 }
-
 </style>
 <i18n>
 {

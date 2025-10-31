@@ -25,9 +25,9 @@ const meta: any = {
   title: 'sequence/configuration/phase/ResultPhaseConfiguration',
   component: ResultPhaseConfiguration,
   args: {
-    "onUpdate:modelValue": fn(),
+    'onUpdate:modelValue': fn(),
     aiIsActivated: true,
-    modelValue: {evaluationByIa: false},
+    modelValue: { evaluationByIa: false },
   },
   tags: ['autodocs', 'organisms'],
   parameters: {
@@ -44,7 +44,7 @@ type Story = StoryObj<typeof meta>
 
 export const Primary: Story = {
   args: {
-    modelValue: {evaluationByIa: false},
+    modelValue: { evaluationByIa: false },
   },
 
   parameters: {

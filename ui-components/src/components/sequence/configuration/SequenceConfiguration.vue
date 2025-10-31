@@ -17,62 +17,58 @@
   -->
 
 <script setup lang="ts">
-import {useI18n} from 'vue-i18n'
-import {computed, ref, watch} from 'vue'
-import ResponsePhaseConfiguration from "@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue";
-import ConfrontingViewPhaseConfiguration from "@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue";
-import ResultPhaseConfiguration from "@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue";
-import type {ExecutionContext, SequenceConfiguration} from "@/models/SequenceConfiguration";
+import { useI18n } from 'vue-i18n'
+import { computed, ref, watch } from 'vue'
+import ResponsePhaseConfiguration from '@/components/sequence/configuration/phase/ResponsePhaseConfiguration.vue'
+import ConfrontingViewPhaseConfiguration from '@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue'
+import ResultPhaseConfiguration from '@/components/sequence/configuration/phase/ResultPhaseConfiguration.vue'
+import type { ExecutionContext, SequenceConfiguration } from '@/models/SequenceConfiguration'
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 export interface SequenceConfigurationProps {
   /**
    * Configuration of the sequence
    */
-  modelValue?: SequenceConfiguration,
+  modelValue?: SequenceConfiguration
   /**
    * Maximal number of responses to evaluate
    */
-  maxResponseToEvaluate: number,
+  maxResponseToEvaluate: number
   /**
    * Whether the explanation by AI feature is activated or not
    */
-  aiIsActivated: boolean,
+  aiIsActivated: boolean
   /**
    * The question is open or not.
    */
-  questionIsOpen: boolean,
+  questionIsOpen: boolean
 }
 
 export interface SequenceConfigurationEvents {
   /**
    * Fires when the user clicks on the submit button
    */
-  (event: 'submitSequenceConfiguration', request: SequenceConfiguration): void;
+  (event: 'submitSequenceConfiguration', request: SequenceConfiguration): void
 
   /**
    * Fires when the user clicks on the save button. So he just wants to save the sequence configuration, not start it yet.
    */
-  (event: 'saveSequenceConfiguration', request: SequenceConfiguration): void;
+  (event: 'saveSequenceConfiguration', request: SequenceConfiguration): void
 
   /**
    * Fires when the user clicks on the cancel button
    */
-  (event: 'cancelSequenceConfiguration'): void;
+  (event: 'cancelSequenceConfiguration'): void
 }
 
 const props = withDefaults(defineProps<SequenceConfigurationProps>(), {
   maxResponseToEvaluate: 5,
-  aiIsActivated: false
+  aiIsActivated: false,
 })
 const emit = defineEmits<SequenceConfigurationEvents>()
 
-const EXECUTION_CONTEXT_OPTIONS: ExecutionContext[] = [
-  'FaceToFace',
-  'Distance',
-  'Blended'
-]
+const EXECUTION_CONTEXT_OPTIONS: ExecutionContext[] = ['FaceToFace', 'Distance', 'Blended']
 const noticeForEC = (executionContextKey: ExecutionContext) => {
   return t(`sequenceConfiguration.executionContext.${executionContextKey}.notice`)
 }
@@ -81,33 +77,33 @@ const labelForEC = (executionContextKey: ExecutionContext) => {
 }
 
 const executionContext = ref<ExecutionContext>(props.modelValue?.executionContext ?? EXECUTION_CONTEXT_OPTIONS[0])
-const responsePhaseConfig = ref(props.modelValue?.responsePhaseConfig ?? {studentGiveExplanation: true});
-const confrontingViewConfig = ref(props.modelValue?.confrontingViewsPhaseConfig);
-const resultPhaseConfig = ref(props.modelValue?.resultPhaseConfig ?? {evaluationByIa: false});
+const responsePhaseConfig = ref(props.modelValue?.responsePhaseConfig ?? { studentGiveExplanation: true })
+const confrontingViewConfig = ref(props.modelValue?.confrontingViewsPhaseConfig)
+const resultPhaseConfig = ref(props.modelValue?.resultPhaseConfig ?? { evaluationByIa: false })
 const snackBar = ref<boolean>(false)
 const configSaved = ref(false)
 
-watch(executionContext, () => configSaved.value = false);
-watch(responsePhaseConfig, () => configSaved.value = false, {deep: true});
-watch(confrontingViewConfig, () => configSaved.value = false, {deep: true});
-watch(resultPhaseConfig, () => configSaved.value = false, {deep: true});
+watch(executionContext, () => (configSaved.value = false))
+watch(responsePhaseConfig, () => (configSaved.value = false), { deep: true })
+watch(confrontingViewConfig, () => (configSaved.value = false), { deep: true })
+watch(resultPhaseConfig, () => (configSaved.value = false), { deep: true })
 
 const sequenceConfig = computed(() => {
   return {
     executionContext: executionContext.value,
     responsePhaseConfig: responsePhaseConfig.value,
     confrontingViewsPhaseConfig: confrontingViewConfig.value,
-    resultPhaseConfig: resultPhaseConfig.value
+    resultPhaseConfig: resultPhaseConfig.value,
   }
-});
+})
 
 const onSubmit = () => {
   emit('submitSequenceConfiguration', sequenceConfig.value)
 }
 const onSave = () => {
-  emit('saveSequenceConfiguration', sequenceConfig.value);
-  snackBar.value = true;
-  configSaved.value = true;
+  emit('saveSequenceConfiguration', sequenceConfig.value)
+  snackBar.value = true
+  configSaved.value = true
 }
 const onCancel = () => {
   emit('cancelSequenceConfiguration')
@@ -115,23 +111,17 @@ const onCancel = () => {
 </script>
 
 <template>
-  <v-card
-    class="d-flex flex-column"
-    :title="t('sequenceConfiguration.title')"
-  >
+  <v-card class="d-flex flex-column" :title="t('sequenceConfiguration.title')">
     <v-card-text>
       <!-- Execution Context -->
       <div class="mb-4">
-        <v-radio-group
-          inline
-          :label="t('sequenceConfiguration.executionContext.title')"
-          v-model="executionContext"
-        >
+        <v-radio-group inline :label="t('sequenceConfiguration.executionContext.title')" v-model="executionContext">
           <v-radio
             v-for="option in EXECUTION_CONTEXT_OPTIONS"
             :key="option"
             :label="labelForEC(option)"
-            :value="option"></v-radio>
+            :value="option"
+          ></v-radio>
         </v-radio-group>
         <v-alert
           v-if="executionContext !== undefined"
@@ -175,12 +165,7 @@ const onCancel = () => {
     </v-card-text>
 
     <v-card-actions class="justify-end">
-      <v-btn
-        class="text-none text-subtitle-1 text-white"
-        color="#95c155"
-        variant="flat"
-        @click="onSubmit"
-      >
+      <v-btn class="text-none text-subtitle-1 text-white" color="#95c155" variant="flat" @click="onSubmit">
         {{ t('submit') }}
       </v-btn>
       <v-btn
@@ -189,35 +174,23 @@ const onCancel = () => {
         color="#263238"
         :variant="!configSaved ? 'flat' : 'outlined'"
         @click="onSave"
-        :disabled="configSaved">
+        :disabled="configSaved"
+      >
       </v-btn>
-      <v-snackbar
-        v-model="snackBar"
-        :location="'right'"
-        :timeout="2000">
+      <v-snackbar v-model="snackBar" :location="'right'" :timeout="2000">
         {{ t('sequence-updated') }}
         <template v-slot:actions>
-          <v-btn
-            @click="snackBar = false"
-            color="red"
-            variant="text">
+          <v-btn @click="snackBar = false" color="red" variant="text">
             {{ t('close') }}
           </v-btn>
         </template>
       </v-snackbar>
-      <v-btn
-        class="text-none text-subtitle-1"
-        :text="t('cancel')"
-        variant="outlined"
-        @click="onCancel"
-      ></v-btn>
+      <v-btn class="text-none text-subtitle-1" :text="t('cancel')" variant="outlined" @click="onCancel"></v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 
 <i18n>
 {

@@ -12,7 +12,7 @@ const meta = {
     color: { control: 'text' },
   },
   decorators: [
-    (story) => ({
+    story => ({
       components: { story },
       template: '<v-container class="d-flex justify-center"><div><story /></div></v-container>',
     }),
@@ -23,11 +23,11 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { LikertScale },
     setup() {
-      const value = ref<LikertValue>(args.modelValue || null);
-      return { ...args, value };
+      const value = ref<LikertValue>(args.modelValue || null)
+      return { ...args, value }
     },
     template: `
         <likert-scale v-model="value" :nb-values="nbValues" :min-label="minLabel" :max-label="maxLabel" :color="color" />
@@ -36,8 +36,8 @@ export const Default: Story = {
   args: {
     modelValue: null,
     nbValues: 5,
-    minLabel: "Strongly disagree",
-    maxLabel: "Strongly agree",
-    color: "primary",
+    minLabel: 'Strongly disagree',
+    maxLabel: 'Strongly agree',
+    color: 'primary',
   },
 }

@@ -17,43 +17,49 @@
   -->
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue'
 
-import {useI18n} from 'vue-i18n';
-import {ref, watch} from 'vue';
-
-const {t} = useI18n();
+const { t } = useI18n()
 
 export interface ResultPhaseConfig {
-  evaluationByIa: boolean;
+  evaluationByIa: boolean
 }
 
 export interface ResultPhaseProps {
-  modelValue?: ResultPhaseConfig,
-  aiIsActivated?: boolean;
+  modelValue?: ResultPhaseConfig
+  aiIsActivated?: boolean
 }
 
-export type ResultPhaseEvent = (event: 'update:modelValue', value: ResultPhaseConfig) => void;
+export type ResultPhaseEvent = (event: 'update:modelValue', value: ResultPhaseConfig) => void
 
 const props = withDefaults(defineProps<ResultPhaseProps>(), {
-  aiIsActivated: false
-});
-const emit = defineEmits<ResultPhaseEvent>();
+  aiIsActivated: false,
+})
+const emit = defineEmits<ResultPhaseEvent>()
 
-const evaluationByIa = ref<boolean>(props.modelValue?.evaluationByIa ?? false);
+const evaluationByIa = ref<boolean>(props.modelValue?.evaluationByIa ?? false)
 
-watch(() => evaluationByIa.value, () => configUpdate());
+watch(
+  () => evaluationByIa.value,
+  () => configUpdate(),
+)
 
-watch(() => props.modelValue, (newValue) => {
-  if (newValue && newValue.evaluationByIa !== evaluationByIa.value) {
-    evaluationByIa.value = newValue.evaluationByIa;
-  }
-}, { deep: true });
+watch(
+  () => props.modelValue,
+  newValue => {
+    if (newValue && newValue.evaluationByIa !== evaluationByIa.value) {
+      evaluationByIa.value = newValue.evaluationByIa
+    }
+  },
+  { deep: true },
+)
 
 const configUpdate = () => {
   emit('update:modelValue', {
-    "evaluationByIa": evaluationByIa.value
-  });
-};
+    evaluationByIa: evaluationByIa.value,
+  })
+}
 
 configUpdate()
 </script>
@@ -64,33 +70,21 @@ configUpdate()
       <!-- IA Evaluation -->
       <v-row align="center" justify="start" v-if="aiIsActivated">
         <v-col cols="auto">
-          <v-checkbox
-            v-model="evaluationByIa"
-            :label="t('IAEvaluation.label')"
-            class="mt-4"
-          >
-          </v-checkbox>
+          <v-checkbox v-model="evaluationByIa" :label="t('IAEvaluation.label')" class="mt-4"> </v-checkbox>
         </v-col>
         <v-col cols="auto">
-          <v-tooltip
-            :text="t('IAEvaluation.notice')"
-            location="top"
-          >
+          <v-tooltip :text="t('IAEvaluation.notice')" location="top">
             <template v-slot:activator="{ props }">
-              <v-icon v-bind="props" icon="mdi-help-circle">
-              </v-icon>
+              <v-icon v-bind="props" icon="mdi-help-circle"> </v-icon>
             </template>
           </v-tooltip>
-
         </v-col>
       </v-row>
     </template>
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 
 <i18n>
 {

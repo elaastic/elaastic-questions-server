@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type {Meta, StoryObj} from '@storybook/vue3-vite'
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import ConfrontingViewPhaseConfiguration from '@/components/sequence/configuration/phase/ConfrontingViewPhaseConfiguration.vue'
-import {fn} from "storybook/test";
+import { fn } from 'storybook/test'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta: any = {
   title: 'sequence/configuration/phase/ConfrontingViewPhaseConfiguration',
   component: ConfrontingViewPhaseConfiguration,
   args: {
-    "onUpdate:modelValue": fn(),
+    'onUpdate:modelValue': fn(),
     studentGiveExplanation: true,
   },
   tags: ['autodocs', 'organisms'],
@@ -61,12 +61,12 @@ export const WithPreviousConfig: Story = {
     },
   },
   args: {
-    "previousConfig": {
-      "phaseActive": true,
-      "nbResponseToEvaluate": 3,
-      "evaluationMethod": "DRAXO"
-    }
-  }
+    previousConfig: {
+      phaseActive: true,
+      nbResponseToEvaluate: 3,
+      evaluationMethod: 'DRAXO',
+    },
+  },
 }
 
 export const PhaseInactive: Story = {
@@ -78,8 +78,8 @@ export const PhaseInactive: Story = {
     },
   },
   args: {
-    "previousConfig": {
-      "phaseActive": false,
-    }
-  }
+    previousConfig: {
+      phaseActive: false,
+    },
+  },
 }

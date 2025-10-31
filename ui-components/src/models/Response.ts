@@ -10,7 +10,7 @@ export type ConfidenceDegree = 'NotConfidentAtAll' | 'NotReallyConfident' | 'Con
 export interface Response {
   id: number
   questionType: QuestionType
-  explanation: string,
+  explanation: string
   confidence: ConfidenceDegree
 }
 
@@ -29,4 +29,3 @@ export interface OpenEndedResponse extends Response {
 }
 
 export type AnyResponse = OpenEndedResponse | MultipleChoiceResponse | ExclusiveChoiceResponse
-

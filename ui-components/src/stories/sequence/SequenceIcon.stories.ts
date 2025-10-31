@@ -10,11 +10,10 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'This component is used to display icons representing the status of a sequence or a phase.'
+        component: 'This component is used to display icons representing the status of a sequence or a phase.',
       },
     },
   },
-
 } satisfies Meta<typeof SequenceIcon>
 
 export default meta
@@ -58,8 +57,8 @@ export const SizeVariation: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'The size of the icon can be changed by passing a size prop.'
-      }
-    }
-  }
+        story: 'The size of the icon can be changed by passing a size prop.',
+      },
+    },
+  },
 }

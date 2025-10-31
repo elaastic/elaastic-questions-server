@@ -32,7 +32,7 @@ interface BreadcrumbItem extends InternalBreadcrumbItem {
   }
 }
 
-const diffusionName = computed(() => ((props.audience ?? 'na') + (props.scholarYear ? ` (${props.scholarYear})` : '')))
+const diffusionName = computed(() => (props.audience ?? 'na') + (props.scholarYear ? ` (${props.scholarYear})` : ''))
 
 const items = computed<BreadcrumbItem[]>(() => {
   return [

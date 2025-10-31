@@ -1,4 +1,4 @@
-import {expect, fn, waitFor} from 'storybook/test'
+import { expect, fn, waitFor } from 'storybook/test'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
 import EvaluationReaction from '@/components/moderation/EvaluationReaction.vue'
@@ -11,7 +11,7 @@ const meta: any = {
     onSubmitReport: fn(),
     onSubmitUtilityGrade: fn(),
   },
-  tags: ['autodocs', "organisms"],
+  tags: ['autodocs', 'organisms'],
   parameters: {
     docs: {
       description: {
@@ -42,8 +42,7 @@ export const TeacherReact: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          'A teacher can give an Utility Grade to the evaluation. But the teacher cannot report the evaluation.',
+        story: 'A teacher can give an Utility Grade to the evaluation. But the teacher cannot report the evaluation.',
       },
     },
   },
@@ -53,7 +52,7 @@ export const TeacherReact: Story = {
     }
 
     await step('Must have 4 button, because the report button is hidden', async () => {
-        await expect(countBtn()).toBe(4)
+      await expect(countBtn()).toBe(4)
     })
 
     await step('Click on the first button', async () => {
@@ -61,10 +60,13 @@ export const TeacherReact: Story = {
       await canvas.getAllByRole('button')[0].click()
     })
 
-    await step('Must have 5 button, because the report button is hidden and the submit button should be visible', async () => {
+    await step(
+      'Must have 5 button, because the report button is hidden and the submit button should be visible',
+      async () => {
         await expect(countBtn()).toBe(5)
-    })
-  }
+      },
+    )
+  },
 }
 
 export const NoContentToReport: Story = {
@@ -75,9 +77,8 @@ export const NoContentToReport: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          'When there is no content to report, the report button should be hidden.',
+        story: 'When there is no content to report, the report button should be hidden.',
       },
     },
-  }
+  },
 }
