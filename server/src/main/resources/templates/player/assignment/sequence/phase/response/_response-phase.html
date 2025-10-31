@@ -63,7 +63,7 @@
                             })
                             .fail(function () {
                                 $submitButton.removeClass('loading disabled');
-                                console.log('Error while submitting the response');
+                                console.error('Error while submitting the response');
                             });
                 });
             });

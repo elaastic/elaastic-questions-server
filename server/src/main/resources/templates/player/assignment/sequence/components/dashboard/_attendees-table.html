@@ -82,7 +82,7 @@
                             })
                             .fail(function () {
                                 $thisButton.removeClass(["loading", "disabled"]);
-                                console.log("An error occurred while fetching the results")
+                                console.error("An error occurred while fetching the results")
                             })
                 }
             });
