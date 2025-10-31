@@ -54,6 +54,10 @@
                         data: JSON.stringify(event.data.request),
                     }).done(function () {
                         window.location.reload();
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        console.error('Failed to start sequence:', errorThrown);  // FIXME
+                        console.info({ jqXHR, textStatus, errorThrown })
+                        window.location.reload();
                     })
                 }
                 elaastic.closeSequenceConfig([[${sequenceId}]]);
