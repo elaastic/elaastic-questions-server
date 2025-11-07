@@ -342,7 +342,7 @@ open class PlayerController(
         authentication: Authentication,
         @PathVariable sequenceId: Long,
         @RequestBody request: SequenceConfig
-    ) {
+    ): Map<String, Any> {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         sequenceService.get(user, sequenceId, true)
@@ -355,6 +355,8 @@ open class PlayerController(
                 userService.updateUserActiveSince(user)
                 autoReloadSessionHandler.broadcastReload(sequenceId)
             }
+
+        return mapOf("success" to true)
     }
 
     @ResponseBody

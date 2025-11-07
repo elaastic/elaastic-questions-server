@@ -55,9 +55,8 @@
                     }).done(function () {
                         window.location.reload();
                     }).fail(function (jqXHR, textStatus, errorThrown) {
-                        console.error('Failed to start sequence:', errorThrown);  // FIXME
-                        console.info({ jqXHR, textStatus, errorThrown })
-                        window.location.reload();
+                        // Note: we should provide an error message to the user here but it will be much easier to implement it in the UI component once authentication is implemented
+                        console.error('Failed to start sequence:', errorThrown);
                     })
                 }
                 elaastic.closeSequenceConfig([[${sequenceId}]]);
