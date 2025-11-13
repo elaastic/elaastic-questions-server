@@ -1,6 +1,6 @@
 name: Deployment trigger
 
-run-name: "deploy: ${{ inputs.pr-id != 0 && format('PR#{0}', inputs.pr-id) || github.ref_name }} on ${{ inputs.environment }}"
+run-name: "Trigger Gitlab CI/CD deployment: ${{ inputs.pr-id != 0 && format('PR#{0}', inputs.pr-id) || github.ref_name }} on ${{ inputs.environment }}"
 
 on:
   workflow_dispatch:
