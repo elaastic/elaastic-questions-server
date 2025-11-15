@@ -20,6 +20,7 @@ package org.elaastic.user
 
 import org.elaastic.assignment.LearnerAssignment
 import org.elaastic.auth.UserLink
+import org.elaastic.common.onboarding.OnboardingState
 import org.elaastic.common.persistence.AbstractJpaPersistable
 import org.elaastic.user.validation.PlainTextPasswordIsTooShort
 import org.elaastic.user.validation.ValidateHasEmailOrHasOwnerOrHasExternalSource
@@ -32,9 +33,7 @@ import javax.persistence.*
 import javax.validation.constraints.*
 import kotlin.jvm.Transient
 
-/**
- * User entity
- */
+/** User entity */
 @Entity
 @NamedEntityGraph(name = "User.roles", attributeNodes = [NamedAttributeNode("roles")])
 @ValidateHasEmailOrHasOwnerOrHasExternalSource
@@ -46,8 +45,7 @@ class User(
     /**
      * The username.
      *
-     * Can only contain letters, numbers, underscores and dashes.
-     * It Must be between 1 and 31 characters long.
+     * Can only contain letters, numbers, underscores and dashes. It Must be between 1 and 31 characters long.
      */
     @field:NotBlank
     @field:Column(unique = true, length = 32)
@@ -63,6 +61,7 @@ class User(
 
     /**
      * The source of the user
+     *
      * @see UserSource
      */
     @field:Enumerated(EnumType.STRING)
@@ -74,7 +73,8 @@ class User(
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     val userLink: UserLink? = null
 
-) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource, PrincipalUserResolver {
+) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource,
+    PrincipalUserResolver {
 
     @Version
     var version: Long? = null
@@ -137,6 +137,7 @@ class User(
 
     /**
      * Replace the main role
+     *
      * @param role the new main role
      * @return the user
      */
@@ -146,32 +147,25 @@ class User(
         return this
     }
 
-    /**
-     * @see Settings
-     */
+    /** @see Settings */
     @OneToOne(mappedBy = "user")
     var settings: Settings? = null
 
-    /**
-     * @see OnboardingState
-     */
+    /** @see OnboardingState */
     @OneToOne(mappedBy = "user")
     var onboardingState: OnboardingState? = null
 
-    /**
-     * @see UnsubscribeKey
-     */
+    /** @see UnsubscribeKey */
     @OneToOne(mappedBy = "user")
     var unsubscribeKey: UnsubscribeKey? = null
 
-    /**
-     * @see ActivationKey
-     */
+    /** @see ActivationKey */
     @OneToOne(mappedBy = "user")
     var activationKey: ActivationKey? = null
 
     /**
      * A set of all assignments where the user is a learner
+     *
      * @see LearnerAssignment
      */
     @OneToMany(mappedBy = "learner")
@@ -229,8 +223,8 @@ class User(
     }
 
     /**
-     * This method implements how to get an Elaastic User from a Principal.
-     * When the Principal is an instance of User, it just returns itself.
+     * This method implements how to get an Elaastic User from a Principal. When the Principal is an instance of User,
+     * it just returns itself.
      */
     override val elaasticUser: User
         get() = this
