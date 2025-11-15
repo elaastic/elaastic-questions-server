@@ -26,6 +26,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -67,30 +68,27 @@ class SubjectController(
             user,
             PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         ).let {
-            model.addAttribute("user", user)
-            model.addAttribute("subjectPage", it)
-            model.addAttribute(
-                "pagination",
-                PaginationUtil.buildInfo(
-                    it.totalPages,
-                    page,
-                    size
-                )
+            model["user"] = user
+            model["subjectPage"] = it
+            model["pagination"] = PaginationUtil.buildInfo(
+                it.totalPages,
+                page,
+                size
             )
         }
 
         return "subject/index"
     }
 
-    @GetMapping("/{id}/download-json")
+    @GetMapping("/{subjectId}/download-json")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('IMPORT_EXPORT'))")
     fun downloadAsJson(
         authentication: Authentication,
-        @PathVariable id: Long,
+        @PathVariable subjectId: Long,
     ): ResponseEntity<ByteArray> {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
-        return subjectService.get(user, id).let { subject ->
+        return subjectService.get(user, subjectId).let { subject ->
             val bytes = subjectExporter.exportToJson(subject).toByteArray()
             val filename = subject.title
                 .replace("\\s".toRegex(), "_")
@@ -108,16 +106,16 @@ class SubjectController(
         }
     }
 
-    @GetMapping("/{id}/download-zip")
+    @GetMapping("/{subjectId}/download-zip")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('IMPORT_EXPORT'))")
     fun downloadAsZip(
         authentication: Authentication,
-        @PathVariable id: Long,
+        @PathVariable subjectId: Long,
         response: HttpServletResponse,
-    )  {
+    ) {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
-        return subjectService.get(user, id).let { subject ->
+        return subjectService.get(user, subjectId).let { subject ->
             val filename = subject.title
                 .replace("\\s".toRegex(), "_")
                 .replace("\\W+".toRegex(), "")
@@ -135,9 +133,7 @@ class SubjectController(
         }
     }
 
-    /**
-     * Show upload form to import a Subject from a JSON file
-     */
+    /** Show upload form to import a Subject from a JSON file */
     @GetMapping("/upload-form")
     @PreAuthorize("@featureManager.isActive(@featureResolver.getFeature('IMPORT_EXPORT'))")
     fun showUploadForm(
@@ -145,7 +141,7 @@ class SubjectController(
         model: Model,
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
-        model.addAttribute("user", user)
+        model["user"] = user
 
         return "subject/upload-form-zip"
     }
@@ -160,54 +156,57 @@ class SubjectController(
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
-        if(zipFile.isEmpty) {
-            model.addAttribute("user", user)
-            model.addAttribute(
-                "messageContent",
-                messageSource.getMessage("subject.file.mandatory", emptyArray(), locale)
-            )
-            model.addAttribute("messageType", "error")
-            return "/subject/upload-form-zip"
+        return if (zipFile.isEmpty) {
+            model["user"] = user
+            model["messageContent"] = messageSource.getMessage("subject.file.mandatory", emptyArray(), locale)
+            model["messageType"] = "error"
+
+            "/subject/upload-form-zip"
+        } else {
+            val subject = subjectExporter.importFromZip(user, zipFile.inputStream)
+
+            "redirect:/subject/${subject.id}"
         }
 
-        val subject = subjectExporter.importFromZip(user, zipFile.inputStream)
-
-        return "redirect:/subject/${subject.id}"
     }
 
-    @GetMapping(value = ["/{id}", "{id}/show"])
+    @GetMapping(value = ["/{subjectId}", "{subjectId}/show"])
     fun show(
-        authentication: Authentication, model: Model, @PathVariable id: Long,
+        authentication: Authentication,
+        model: Model,
+        @PathVariable subjectId: Long,
         httpServletRequest: HttpServletRequest,
         @RequestParam("activeTab", defaultValue = "questions") activeTab: String,
         @RequestParam("page") page: Int?,
         @RequestParam("size") size: Int?
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
-        model.addAttribute("user", user)
+        model["user"] = user
 
-        val subject: Subject = subjectService.get(user, id, fetchStatementsAndAssignments = true)
-        model.addAttribute("subject", subject)
+        val subject: Subject = subjectService.get(user, subjectId, fetchStatementsAndAssignments = true)
+        model["subject"] = subject
 
         val statements: MutableList<Statement> = ArrayList()
         for (statement: Statement in subject.statements) {
             if (!statements.contains(statement)) statements.add(statement)
         }
-        model.addAttribute("statements", statements)
-        model.addAttribute("listCourse", courseService.findAllByOwner(user))
-        model.addAttribute("alreadyImported", subjectService.isUsedAsParentSubject(user, subject))
-        model.addAttribute("subjectData", SubjectData(owner = user))
-        model.addAttribute("activeTab", activeTab)
-        model.addAttribute("serverBaseUrl", ControllerUtil.getServerBaseUrl(httpServletRequest))
+        model["statements"] = statements
+        model["listCourse"] = courseService.findAllByOwner(user)
+        model["alreadyImported"] = subjectService.isUsedAsParentSubject(user, subject)
+        model["subjectData"] = SubjectData(owner = user)
+        model["activeTab"] = activeTab
+        model["serverBaseUrl"] = ControllerUtil.getServerBaseUrl(httpServletRequest)
+
         subjectService.findAllByOwner(
             user,
             PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         ).let {
-            model.addAttribute("subjects", it.content)
+            model["subjects"] = it.content
             var firstSubject = Subject("NoSubject", user)
-            if (it.content.size != 0)
+            if (it.content.isNotEmpty())
                 firstSubject = it.content[0]
-            model.addAttribute("firstSubject", firstSubject)
+
+            model["firstSubject"] = firstSubject
         }
 
         return "subject/show"
@@ -218,10 +217,10 @@ class SubjectController(
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         if (!model.containsAttribute("subjectData")) {
-            model.addAttribute("subjectData", SubjectData(owner = user))
+            model["subjectData"] = SubjectData(owner = user)
         }
-        model.addAttribute("user", user)
-        model.addAttribute("listCourse", courseService.findAllByOwner(user))
+        model["user"] = user
+        model["listCourse"] = courseService.findAllByOwner(user)
 
         return "subject/create"
     }
@@ -239,13 +238,15 @@ class SubjectController(
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
-            model.addAttribute("user", user)
-            model.addAttribute("subject", subjectData)
+            model["user"] = user
+            model["subject"] = subjectData
+
             "/subject/create"
         } else {
             val subject = subjectData.toEntity()
             subjectService.save(subject)
             redirectAttributes.addAttribute("activeTab", "questions")
+
             "redirect:/subject/${subject.id}"
         }
     }
@@ -265,13 +266,15 @@ class SubjectController(
 
         val subject = subjectService.get(user, subjectId, fetchStatementsAndAssignments = true)
 
-        if (result.hasErrors()) {
+        return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
-            model.addAttribute("user", user)
-            model.addAttribute("subject", subject)
-            model.addAttribute("statement", statementData)
-            model.addAttribute("nbStatement", subject.statements.size)
-            return "subject/statement/create"
+
+            model["user"] = user
+            model["subject"] = subject
+            model["statement"] = statementData
+            model["nbStatement"] = subject.statements.size
+
+            "subject/statement/create"
         } else {
             val statementSaved = subjectService.addStatement(subject, statementData.toEntity(user))
             statementService.updateFakeExplanationList(
@@ -279,8 +282,10 @@ class SubjectController(
                 statementData.fakeExplanations
             )
             attachedFileIfAny(fileToAttached, statementSaved)
-            redirectAttributes.addAttribute("activeTab", "questions")
-            return "redirect:/subject/${subject.id}"
+
+            redirectAttributes["activeTab"] = "questions"
+
+            "redirect:/subject/${subject.id}"
         }
     }
 
@@ -300,19 +305,13 @@ class SubjectController(
         model: Model,
         @PathVariable subjectId: Long
     ): String {
-
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val subject = subjectService.get(user, subjectId)
 
-        model.addAttribute("user", user)
-        model.addAttribute("subject", subject)
-        model.addAttribute("nbStatement", subject.statements.size)
-        model.addAttribute(
-            "statementData",
-            StatementController.StatementData(
-                Statement.createDefaultStatement(user)
-            )
-        )
+        model["user"] = user
+        model["subject"] = subject
+        model["nbStatement"] = subject.statements.size
+        model["statementData"] = StatementController.StatementData(Statement.createDefaultStatement(user))
 
         return "subject/statement/create"
     }
@@ -330,13 +329,14 @@ class SubjectController(
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val subject = subjectService.get(user, subjectId)
 
-        model.addAttribute("user", user)
-        model.addAttribute("subject", subject)
+        model["user"] = user
+        model["subject"] = subject
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
-            model.addAttribute("user", user)
-            model.addAttribute("assignment", assignmentData)
+            model["user"] = user
+            model["assignment"] = assignmentData
+
             "redirect:/subject/${subject.id}/addAssignment"
         } else {
             val assignment = assignmentData.toEntity()
@@ -344,7 +344,9 @@ class SubjectController(
                 assignment.audience = "na"
             assignmentService.save(assignment)
             subjectService.addAssignment(subject, assignment)
+
             redirectAttributes.addAttribute("activeTab", "assignments")
+
             "redirect:/subject/${subject.id}"
         }
 
@@ -356,46 +358,44 @@ class SubjectController(
         model: Model,
         @PathVariable subjectId: Long
     ): String {
-
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val subject = subjectService.get(user, subjectId)
 
-        model.addAttribute("user", user)
-        model.addAttribute("nbAssignments", subject.assignments.size)
+        model["user"] = user
+        model["nbAssignments"] = subject.assignments.size
         if (!model.containsAttribute("assignment")) {
-            model.addAttribute(
-                "assignment", AssignmentController.AssignmentData(
-                    owner = user,
-                    subject = subject,
-                    title = subject.title
-                ).toEntity()
-            )
+            model["assignment"] = AssignmentController.AssignmentData(
+                owner = user,
+                subject = subject,
+                title = subject.title
+            ).toEntity()
         }
 
         return "assignment/create"
     }
 
-    @PostMapping("{id}/update")
+    @PostMapping("{subjectId}/update")
     fun update(
         authentication: Authentication,
         @Valid @ModelAttribute subjectData: SubjectData,
         result: BindingResult,
         model: Model,
-        @PathVariable id: Long,
+        @PathVariable subjectId: Long,
         response: HttpServletResponse,
         redirectAttributes: RedirectAttributes
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
-        model.addAttribute("user", user)
+        model["user"] = user
 
         return if (result.hasErrors()) {
             response.status = HttpStatus.BAD_REQUEST.value()
-            model.addAttribute("subject", subjectData)
+            model["subject"] = subjectData
             redirectAttributes.addAttribute("activeTab", "questions")
-            "redirect:/subject/$id"
+
+            "redirect:/subject/$subjectId"
         } else {
-            subjectService.get(user, id).let {
+            subjectService.get(user, subjectId).let {
                 it.updateFrom(subjectData.toEntity())
                 subjectService.save(it)
 
@@ -409,22 +409,23 @@ class SubjectController(
                         )
                     )
                 }
-                model.addAttribute("subject", it)
+                model["subject"] = it
                 redirectAttributes.addAttribute("activeTab", "questions")
-                "redirect:/subject/$id"
+
+                "redirect:/subject/$subjectId"
             }
         }
     }
 
-    @GetMapping("{id}/delete")
+    @GetMapping("{subjectId}/delete")
     fun delete(
         authentication: Authentication,
-        @PathVariable id: Long,
+        @PathVariable subjectId: Long,
         redirectAttributes: RedirectAttributes
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
-        val subject = subjectService.get(user, id)
+        val subject = subjectService.get(user, subjectId)
         courseService.removeSubject(user, subject)
 
         with(messageBuilder) {
@@ -450,10 +451,8 @@ class SubjectController(
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
-        if (globalId == null || globalId == "") {
-            throw IllegalArgumentException(
-                messageBuilder.message("subject.share.empty.globalId")
-            )
+        require(globalId.isNullOrBlank().not()) {
+            messageBuilder.message("subject.share.empty.globalId")
         }
 
         subjectService.findByGlobalId(UUID.fromString(globalId)).let {
@@ -465,13 +464,14 @@ class SubjectController(
 
             subjectService.sharedToTeacher(user, it)
             redirectAttributes.addAttribute("activeTab", "questions")
+
             return "redirect:/subject/${it.id}/show"
         }
     }
 
 
     @GetMapping(value = ["/shared_index"])
-    fun shared_index(
+    fun sharedIndex(
         authentication: Authentication,
         model: Model,
         @RequestParam("page") page: Int?,
@@ -483,34 +483,33 @@ class SubjectController(
             user,
             PageRequest.of((page ?: 1) - 1, size ?: 10, Sort.by(Sort.Direction.DESC, "lastUpdated"))
         ).let {
-            model.addAttribute("user", user)
+            model["user"] = user
             sharedSubjectPage = it
             model.addAttribute("sharedSubjectPage", sharedSubjectPage)
-            model.addAttribute(
-                "pagination",
-                PaginationUtil.buildInfo(
-                    it.totalPages,
-                    page,
-                    size
-                )
+            model["pagination"] = PaginationUtil.buildInfo(
+                it.totalPages,
+                page,
+                size
             )
         }
         val sharedInfos: MutableList<SharedSubject> = ArrayList()
         for (subject: Subject in sharedSubjectPage!!.content) {
             sharedInfos.add(sharedSubjectService.getSharedSubject(user, subject)!!)
         }
-        model.addAttribute("sharedInfos", sharedInfos)
+        model["sharedInfos"] = sharedInfos
 
         return "subject/shared_index"
     }
 
-    @GetMapping(value = ["{id}/importSubject"])
+    @GetMapping(value = ["{subjectId}/importSubject"])
     fun importSubject(
-        authentication: Authentication, model: Model, @PathVariable id: Long,
+        authentication: Authentication,
+        model: Model,
+        @PathVariable subjectId: Long,
         redirectAttributes: RedirectAttributes
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
-        val sharedSubject = subjectService.get(user, id)
+        val sharedSubject = subjectService.get(user, subjectId)
         val importedSubject = subjectService.import(user, sharedSubject)
         with(messageBuilder) {
             success(
@@ -523,12 +522,15 @@ class SubjectController(
             )
         }
         redirectAttributes.addAttribute("activeTab", "questions")
+
         return "redirect:/subject/${importedSubject.id}/show"
     }
 
     @GetMapping(value = ["{id}/duplicateSubject"])
     fun duplicateSubject(
-        authentication: Authentication, model: Model, @PathVariable id: Long,
+        authentication: Authentication,
+        model: Model,
+        @PathVariable id: Long,
         redirectAttributes: RedirectAttributes
     ): String {
         val user = (authentication.principal as PrincipalUserResolver).elaasticUser
@@ -545,6 +547,7 @@ class SubjectController(
             )
         }
         redirectAttributes.addAttribute("activeTab", "questions")
+
         return "redirect:/subject/${duplicatedSubject.id}/show"
     }
 
@@ -557,14 +560,9 @@ class SubjectController(
         var course: Course? = null
     ) {
         fun toEntity(): Subject {
-            return Subject(
-                title = title!!,
-                owner = owner!!,
-                course = course
-            ).let {
+            return Subject(title!!, owner!!, course = course).also {
                 it.id = id
                 it.version = version
-                it
             }
         }
     }
