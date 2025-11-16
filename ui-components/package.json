@@ -31,7 +31,7 @@
     "@mdi/font": "^7.4.47",
     "semantic-ui-icon": "^2.5.0",
     "vue": "^3.5.12",
-    "vue-i18n": "^10.0.5",
+    "vue-i18n": "^10.0.8",
     "vuetify": "^3.7.3"
   },
   "devDependencies": {
