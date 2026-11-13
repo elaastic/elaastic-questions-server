@@ -21,8 +21,36 @@
      xmlns:v-bind="http://www.w3.org/1999/xhtml"
      xmlns:v-on="http://www.w3.org/1999/xhtml">
 
+  <style>
+    .likert-scale-input {
+      container-type: inline-size;
+    }
+
+    .likert-scale-input .ui.pagination.menu {
+      max-width: 100%;
+      flex-wrap: wrap;
+    }
+
+    /* Stack according to the available space, including inside narrow page layouts. */
+    @container (max-width: 40em) {
+      .likert-scale-input .ui.pagination.menu {
+        flex-direction: column;
+      }
+
+      .likert-scale-input .ui.pagination.menu .item {
+        width: 100%;
+        overflow-wrap: anywhere;
+      }
+
+      .likert-scale-input .ui.pagination.menu .item:before {
+        width: 100%;
+        height: 0;
+      }
+    }
+  </style>
+
   <script type="text/x-template" id="likert-scale-input-template">
-    <div class="field grade">
+    <div class="field grade likert-scale-input">
       <input type="hidden" :id="'grades['+currentResponseId+']'" :name="'grades['+currentResponseId+']'"
              v-model="grade"/>
       <div class="ui stackable pagination menu">
