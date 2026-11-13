@@ -8,7 +8,6 @@ import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseSet
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.material.instructional.question.ChoiceItem
-import org.elaastic.material.instructional.question.ChoiceType
 import org.elaastic.material.instructional.question.ExclusiveChoiceSpecification
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.State
@@ -22,29 +21,25 @@ import java.math.BigDecimal
 
 internal class RecommendationResolverTest {
 
-    private val mockResponseSubmission = mock<ResponseSubmissionSpecification> {
-        on { studentsProvideExplanation }.doReturn(true)
-    }
+    private val responseSubmissionSpecification = ResponseSubmissionSpecification(
+        studentsProvideExplanation = true,
+        studentsProvideConfidenceDegree = false
+    )
 
-    private val mockExpectedChoice = mock<ChoiceItem> {
-        on { index }.doReturn(2)
-    }
-
-    private val mockChoiceSpecification = mock<ExclusiveChoiceSpecification> {
-        on { getChoiceType() }.doReturn(ChoiceType.EXCLUSIVE)
-        on { nbCandidateItem }.doReturn(4)
-        on { expectedChoice }.doReturn(mockExpectedChoice)
-    }
+    private val choiceSpecification = ExclusiveChoiceSpecification(
+        nbCandidateItem = 4,
+        expectedChoice = ChoiceItem(index = 2, score = 100f)
+    )
 
     private val mockStatement = mock<Statement> {
-        on { choiceSpecification }.doReturn(mockChoiceSpecification)
+        on { choiceSpecification }.doReturn(this@RecommendationResolverTest.choiceSpecification)
     }
 
     private val mockSequenceStateEndPhase1 = mock<Sequence> {
         on { recommendableAfterPhase1() }.doReturn(true)
         on { state }.doReturn(State.show)
         on { statement }.doReturn(mockStatement)
-        on { getResponseSubmissionSpecification() }.doReturn(mockResponseSubmission)
+        on { getResponseSubmissionSpecification() }.doReturn(responseSubmissionSpecification)
     }
 
     private val mockSequenceStateEndPhase2 = mock<Sequence> {
@@ -52,7 +47,7 @@ internal class RecommendationResolverTest {
         on { recommendableAfterPhase1() }.doReturn(false)
         on { statement }.doReturn(mockStatement)
         on { state }.doReturn(State.show)
-        on { getResponseSubmissionSpecification() }.doReturn(mockResponseSubmission)
+        on { getResponseSubmissionSpecification() }.doReturn(responseSubmissionSpecification)
     }
 
     private val mockMessageBuilder = mock<MessageBuilder> {
