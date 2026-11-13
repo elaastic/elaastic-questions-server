@@ -1,6 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 ext["spring-security.version"]="5.8.3"
+// Override Spring Boot 2.7's managed versions for Java 21 support.
+ext["mockito.version"] = "5.14.2"
+ext["byte-buddy.version"] = "1.15.4"
 
 plugins {
     id("org.springframework.boot") version "2.7.13"
@@ -83,7 +86,7 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-library")
     testImplementation("org.exparity:hamcrest-date:1.1.0")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
-    testImplementation("org.mockito:mockito-inline:2.13.0")
+    testImplementation("org.mockito:mockito-core")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     implementation("io.cucumber:cucumber-spring:7.14.1")
