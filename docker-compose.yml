@@ -33,3 +33,9 @@ services:
     build: docker-resources/cas
     ports:
       - "8444:8443"
+  mailHog:
+    container_name: elaastic-mailhog
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
