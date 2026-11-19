@@ -22,7 +22,7 @@ import org.elaastic.auth.UserLinkService
 import org.elaastic.user.Role.RoleId
 import org.elaastic.user.UserCreateCommand
 import org.elaastic.user.UserSource
-import org.springframework.context.annotation.Profile
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
@@ -49,7 +49,7 @@ private const val ROLES_KEY = "roles"
  * @author John Tranier
  */
 @Service
-@Profile("oidc")
+@ConditionalOnProperty(prefix = "elaastic.oidc", name = ["enabled"], havingValue = "true")
 open class ElaasticOidcUserService(
     private val userLinkService: UserLinkService,
 ) : OidcUserService() {

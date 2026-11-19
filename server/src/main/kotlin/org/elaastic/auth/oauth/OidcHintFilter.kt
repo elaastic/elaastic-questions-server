@@ -1,6 +1,5 @@
 package org.elaastic.auth.oauth
 
-import org.springframework.context.annotation.Profile
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import kotlin.text.Charsets.UTF_8
 
-@Profile("oidc")
 open class OidcHintFilter : OncePerRequestFilter() {
 
     companion object {

@@ -23,12 +23,10 @@ import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
 import org.elaastic.auth.oauth.*
 import org.elaastic.user.Role
 import org.springframework.beans.factory.ObjectProvider
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
-import org.springframework.core.env.Environment
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
@@ -64,11 +62,8 @@ open class WebSecurityConfig(
     private val casSecurityConfigurerProvider: ObjectProvider<CasSecurityConfig.CasSecurityConfigurer>,
     private val oidcLoginSuccessHandlerProvider: ObjectProvider<OidcLoginSuccessHandler>,
     @param:Value("\${elaastic.questions.url}") val elaasticUrl: String,
-    @Autowired val environment: Environment,
+    @param:Value("\${elaastic.oidc.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
-
-    val elaasticOidcEnabled: Boolean
-        get() = environment.activeProfiles.contains("oidc")
 
     companion object {
         const val LOGIN_URL = "/login"

@@ -19,6 +19,7 @@
 package org.elaastic.auth.oauth
 
 import org.springframework.context.MessageSource
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -32,6 +33,7 @@ const val USER_REQUEST_ATTRIBUTE = "userRequest"
 const val ERROR_ROLE_URL = "/error/oidc_role"
 
 @Controller
+@ConditionalOnProperty(prefix = "elaastic.oidc", name = ["enabled"], havingValue = "true")
 class RoleExceptionController(private val messageSource: MessageSource) {
     @GetMapping(ERROR_ROLE_URL)
     fun handleRoleException(model: Model, locale: Locale, request: HttpServletRequest): String {

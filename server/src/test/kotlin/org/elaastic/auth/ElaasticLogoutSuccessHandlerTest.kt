@@ -3,12 +3,15 @@ package org.elaastic.auth
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
 import org.elaastic.auth.oauth.ElaasticOidcUser
 import org.elaastic.user.User
+import org.jasig.cas.client.validation.AssertionImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.cas.authentication.CasAuthenticationToken
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
 import org.springframework.security.oauth2.client.registration.ClientRegistration
@@ -30,6 +33,21 @@ class ElaasticLogoutSuccessHandlerTest {
             MockHttpServletRequest(), response, UsernamePasswordAuthenticationToken(user, null)
         )
         assertEquals("https://cas.example/logout?service=http://localhost:8080/", response.redirectedUrl)
+    }
+
+    @Test
+    fun `real CAS token keeps provider logout with OIDC enabled or disabled`() {
+        val user = User("John", "Doe", "john", "password").also { it.casKey = "ENT_1" }
+        val authentication = CasAuthenticationToken(
+            "ENT_1", user, "ticket", user.authorities, user, AssertionImpl("john")
+        )
+        for (oidcLogout in listOf(null, mock(OidcClientInitiatedLogoutSuccessHandler::class.java))) {
+            val response = MockHttpServletResponse()
+            ElaasticLogoutSuccessHandler(nativeLogout, oidcLogout).onLogoutSuccess(
+                MockHttpServletRequest(), response, authentication
+            )
+            assertEquals("https://cas.example/logout?service=http://localhost:8080/", response.redirectedUrl)
+        }
     }
 
     @Test

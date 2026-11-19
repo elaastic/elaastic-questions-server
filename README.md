@@ -156,7 +156,16 @@ Enable the `oidc` Spring profile (for example with `SPRING_PROFILES_ACTIVE=oidc`
 `auth-iam` and its reverse proxy as described in [authentication](authentication/README.md).
 The default provider settings are in `server/src/main/resources/application-oidc.properties`;
 replace the issuer URI and client credentials for other environments. The identity provider must
-be available when the application starts. Without this profile, local and CAS login remain available.
+be available when the application starts.
+
+OIDC is disabled by default. Set `elaastic.oidc.enabled=true` (or `ELAASTIC_OIDC_ENABLED=true`)
+and supply the `spring.security.oauth2.client.*` provider settings to enable it without a profile.
+The `oidc` profile sets this property to `true` and provides the development settings above.
+Set `ELAASTIC_OIDC_ENABLED=false` to disable OIDC even with that profile active.
+Changing this setting requires restarting the application.
+When disabled, OIDC login, callbacks and `oidc_hint` redirects are inactive, the login button is hidden,
+and no OIDC configuration or available identity provider is required, even if provider settings remain
+in the configuration. Local and CAS login and logout remain available.
 
 The login page exposes a Keycloak button. Each external identity is associated with its Elaastic
 account through `UserLink`; first login creates the account. The Keycloak `realm_access.roles`

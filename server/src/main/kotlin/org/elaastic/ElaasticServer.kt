@@ -19,9 +19,11 @@
 package org.elaastic
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
 import org.springframework.boot.runApplication
 
-@SpringBootApplication
+// OidcConfiguration creates the client repository only when elaastic.oidc.enabled is true.
+@SpringBootApplication(exclude = [OAuth2ClientAutoConfiguration::class])
 class ElaasticServer
 
 fun main(args: Array<String>) {
