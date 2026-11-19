@@ -53,7 +53,7 @@
             </div>
 
             <h5 class="ui header" style="margin-top: 0; margin-bottom: 0;" th:if="${model.choices}" th:text="#{common.explanation}"></h5>
-            <p th:utext="${currentResponse.explanation}"></p>
+            <div class="response-content" th:utext="${currentResponse.explanation}"></div>
 
             <likert-scale-input th:attr="current-response-id=${currentResponse.id}"
                                 value="-1"></likert-scale-input>
