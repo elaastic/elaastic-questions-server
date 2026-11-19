@@ -18,8 +18,10 @@ _elaastic_ is developed with the spring-boot framework and the Kotlin language.
 * Gradle
 * Docker
 
-### Launching the database & cas servers
-The databases and cas servers can be run using docker compose :
+### Launch the services required by Elaastic
+
+Those services are containerized and can be launched with docker compose:
+
 ````
 docker-compose up -d [<service>]
 ````
@@ -31,6 +33,10 @@ docker-compose up -d [<service>]
 | cas                          | a CAS server just for testing CAS integration in dev mode       |
 | cas-2                        | another CAS server for testing multiple CAS servers integration |
 | elaastic-mailhog             | a mail server for testing email sending                         |
+| auth-iam                     | a keycloak server to connect with OpenID Connect                |
+| auth-idp-saml2               | identity provider using SAML2 protocole                         |
+
+### Set up the dockerized CAS servers in dev mode
 
 Running a database is mandatory.
 CAS servers is optional. It allows to test CAS authentication without to have to deploy a CAS server manually.
@@ -49,7 +55,7 @@ docker compose up -d elaastic-questions-db-8 elaastic-mailhog
 
 Then, you can run the application with the following command:
 
-````
+````shell
 gradle bootRun
 ````
 
@@ -57,20 +63,41 @@ The application is then accessible at `http://localhost:8080`.
 
 You can access the MailHog web interface at `http://localhost:8025` to check the emails sent by the application.
 
+To manage the authentification service Keycloak, you can access the web interface at `http://localhost:8081/`.
+To connect to the console as `admin`, use the password set in the [.env](.env) file
+(see [.env.template](.env.template)).
+More information about the Keycloak server can be found in the [README.md](authentication/elaastic-iam/README.md) file.
+
+### Test users
+
+| Login | Password | role    | 
+|:------|:---------|:--------| 
+| fsil  | 1234     | teacher |
+| tsil  | 1234     | student | 
+| jtra  | 1234     | student | 
+| admin | admin    | admin   |
+
+## Development guide
+
+The project _elaastic_ is composed of two modules:
+
+1. `server`: The Spring Boot webapp developed in Kotlin
+2. `ui-components`: A set of UI components developed in Vue 3
+
 ## Deploying the application
 
 _elaastic_ can be deployed in _stand-alone_ mode (with an embedded Tomcat server) or in a Tomcat server.
 
 ### Packaging the application in _stand-alone_ mode
 
-````
+````shell
 gradle bootJar
 ````
 
 Get the `elaastic-questions-server.jar` file from the `build/libs` folder.
 
 It is possible to test this packaged mode by running the services in the `docker-compose-standalone.yml` file.
-The application will be available at `http://localhost:8081/elaastic-questions`.
+The application will be available at `http://localhost:8080/elaastic-questions`.
 
 ### Packaging the application for Tomcat
 
@@ -120,6 +147,16 @@ npm run build
 The built bundles will be available at `./ui-components/dist`.
 Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
 in order to use it.
+
+## Authentication
+
+### Authenticate on Elaastic using the Keycloak OIDC Identity & Access Manager
+
+One can add to an Elaastic URL the `oidc_hint` parameter. When set to an OAuth2 server, it will be used for
+authentication.
+With the development config and the Keycloak test service, you can log into Elaastic using Keycloak with
+http://localhost:8080/home?oidc_hint=keycloak
+
 
 ## Licence
 
