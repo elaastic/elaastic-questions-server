@@ -1,5 +1,7 @@
 package org.elaastic.analytics
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.activity.evaluation.peergrading.PeerGrading
 import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
 import org.elaastic.activity.evaluation.peergrading.PeerGradingType
@@ -66,7 +68,7 @@ class StatUtilityGradeController(
         @RequestParam("type") type: EvaluationType? = null,
         @RequestParam("noNull") noNull: Boolean = false,
     ): List<UtilityGradeStat> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         requireAccess(user.isAdmin()) {
             "Only admin can access this endpoint"
@@ -129,7 +131,7 @@ class StatUtilityGradeController(
     fun getMean(
         authentication: Authentication,
     ): List<MeanUtilityGradeStat> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         requireAccess(user.isAdmin()) {
             "Only admin can access this endpoint"

@@ -1,5 +1,7 @@
 package org.elaastic.analytics.lrs
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.assignment.AssignmentService
 import org.elaastic.sequence.SequenceService
@@ -27,7 +29,7 @@ class EventLogController(
         @PathVariable action: String,
         @PathVariable obj: String
     ) {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(sequenceService.existsById(sequenceId)){
                     sequenceService.get(sequenceId, false).let {
                         eventLogService.create(sequence = it,

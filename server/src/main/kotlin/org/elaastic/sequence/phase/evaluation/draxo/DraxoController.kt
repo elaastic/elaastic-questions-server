@@ -1,5 +1,7 @@
 package org.elaastic.sequence.phase.evaluation.draxo
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.evaluation.peergrading.draxo.DraxoEvaluation
 import org.elaastic.activity.evaluation.peergrading.draxo.criteria.CriteriaEvaluation
@@ -27,7 +29,7 @@ class DraxoController(
         @RequestParam lastResponseToGrade: Boolean,
         @RequestBody criteriaEvaluationList: List<CriteriaEvaluation>,
     ): ResponseEntity<DraxoEvaluation> {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val evaluation = DraxoEvaluation().addEvaluationList(criteriaEvaluationList)
         val response = responseService.getReferenceById(responseId)

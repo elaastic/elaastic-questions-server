@@ -127,6 +127,12 @@
               <span th:text="#{springSecurity.login.button}"></span>
             </button>
 
+            <th:block th:if="${elaasticOidcEnabled}">
+              <div class="ui horizontal divider" th:text="#{common.or}">OR</div>
+              <a th:href="@{/oauth2/authorization/keycloak}" class="ui fluid secondary button"
+                 th:text="#{springSecurity.openidConnect.login}">SSO Login (OpenID)</a>
+            </th:block>
+
             <th:block th:if="${not #lists.isEmpty(casInfoList)}">
               <div class="ui horizontal divider">OU</div>
 

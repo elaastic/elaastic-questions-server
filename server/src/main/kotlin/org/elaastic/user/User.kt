@@ -75,7 +75,7 @@ class User(
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     val userLink: UserLink? = null
 
-) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource {
+) : AbstractJpaPersistable<Long>(), Serializable, UserDetails, HasEmailOrHasOwnerOrHasExternalSource, PrincipalUserResolver {
 
     @Version
     var version: Long? = null
@@ -233,4 +233,8 @@ class User(
         return username
     }
 
+    override val elaasticUser: User
+        get() = this
+
+    infix fun hasRole(roleId: Role.RoleId): Boolean = roles.any { it.name == roleId.roleName }
 }

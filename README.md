@@ -152,6 +152,17 @@ in order to use it.
 
 ### Authenticate on Elaastic using the Keycloak OIDC Identity & Access Manager
 
+Enable the `oidc` Spring profile (for example with `SPRING_PROFILES_ACTIVE=oidc`) and start
+`auth-iam` and its reverse proxy as described in [authentication](authentication/README.md).
+The default provider settings are in `server/src/main/resources/application-oidc.properties`;
+replace the issuer URI and client credentials for other environments. The identity provider must
+be available when the application starts. Without this profile, local and CAS login remain available.
+
+The login page exposes a Keycloak button. Each external identity is associated with its Elaastic
+account through `UserLink`; first login creates the account. The Keycloak `realm_access.roles`
+claim must contain exactly one of `student`, `teacher` or `admin` (other realm roles are ignored).
+A role mismatch with an existing Elaastic account rejects login. Logout also ends the OIDC session.
+
 One can add to an Elaastic URL the `oidc_hint` parameter. When set to an OAuth2 server, it will be used for
 authentication.
 With the development config and the Keycloak test service, you can log into Elaastic using Keycloak with

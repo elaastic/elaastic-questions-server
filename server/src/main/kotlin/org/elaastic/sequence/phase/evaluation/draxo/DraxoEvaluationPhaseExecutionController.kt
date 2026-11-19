@@ -1,5 +1,7 @@
 package org.elaastic.sequence.phase.evaluation.draxo
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
@@ -41,7 +43,7 @@ class DraxoEvaluationPhaseExecutionController(
         @ModelAttribute changeAnswerData: ChangeAnswerData,
         locale: Locale
     ): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         var assignment: Assignment
 
         sequenceService.get(sequenceId, true).let { sequence ->
