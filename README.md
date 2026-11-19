@@ -38,8 +38,9 @@ docker-compose up -d [<service>]
 
 ### Set up the dockerized CAS servers in dev mode
 
-Running a database is mandatory.
-CAS servers is optional. It allows to test CAS authentication without to have to deploy a CAS server manually.
+The optional `cas` and `cas-2` services allow local CAS authentication testing.
+Before starting them, follow the [CAS development setup](docker-resources/cas/README.md)
+to generate local TLS files and configure the JVM running elaastic.
 
 ### Launching the application
 
@@ -110,14 +111,6 @@ Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
 The application will be available at `http://localhost:8088`.
        
-### Setup the dockerized CAS servers in dev mode
- The generated autosigned certificate must be imported on the JDK used to launch elaastic.
-
-From `JAVA_HOME`, run the following command :
-``` 
-.\bin\keytool.exe -importcert -cacerts -alias "elaastic-cas" -file <elaastic-questions-server>\docker-resources\cas\etc\cas\config\elaastic-cas-certificate.cer
-```
-
 ## Development guide
 
 The project _elaastic_ is composed of two modules:

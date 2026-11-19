@@ -24,11 +24,25 @@ services:
   cas:
     container_name: elaastic-cas
     build: docker-resources/cas
+    volumes:
+      - type: bind
+        source: ./docker-resources/cas/generated/cas-keystore.p12
+        target: /etc/cas/tls/cas-keystore.p12
+        read_only: true
+        bind:
+          create_host_path: false
     ports:
       - "8443:8443"
   cas-2:
     container_name: elaastic-cas-2
     build: docker-resources/cas
+    volumes:
+      - type: bind
+        source: ./docker-resources/cas/generated/cas-keystore.p12
+        target: /etc/cas/tls/cas-keystore.p12
+        read_only: true
+        bind:
+          create_host_path: false
     ports:
       - "8444:8443"
   mailHog:
