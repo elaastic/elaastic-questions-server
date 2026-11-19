@@ -18,6 +18,8 @@
 
 package org.elaastic.test
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.user.User
 import org.elaastic.test.interpreter.FunctionalTestInterpreter
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +47,7 @@ class TestingScenarioBuilderController(
         authentication: Authentication,
     ): String {
 
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         val subject = functionalTestingService.generateSubjectWithQuestionsAndAssignments(user)
 
 

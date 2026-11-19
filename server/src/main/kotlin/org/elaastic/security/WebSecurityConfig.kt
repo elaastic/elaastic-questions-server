@@ -18,9 +18,11 @@
 
 package org.elaastic.security
 
+import org.elaastic.auth.ElaasticLogoutSuccessHandler
 import org.elaastic.auth.cas.ElaasticUrlLogoutSuccessHandler
+import org.elaastic.auth.oauth.*
 import org.elaastic.user.Role
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -37,9 +39,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
 
@@ -47,31 +53,36 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-@Order(2)
-class WebSecurityConfig(
-    @Autowired val userDetailsService: UserDetailsService,
-    @Autowired val encoder: PasswordEncoder,
-    @Value("\${elaastic.questions.url}") val elaasticUrl: String,
+@Order(3)
+open class WebSecurityConfig(
+    private val userDetailsService: UserDetailsService,
+    private val encoder: PasswordEncoder,
+    private val elaasticOidcUserServiceProvider: ObjectProvider<ElaasticOidcUserService>,
+    private val clientRegistrationRepositoryProvider: ObjectProvider<ClientRegistrationRepository>,
+    private val casSecurityConfigurerProvider: ObjectProvider<CasSecurityConfig.CasSecurityConfigurer>,
+    private val oidcLoginSuccessHandlerProvider: ObjectProvider<OidcLoginSuccessHandler>,
+    @param:Value("\${elaastic.questions.url}") val elaasticUrl: String,
+    @param:Value("\${elaastic.oidc.enabled:false}") val elaasticOidcEnabled: Boolean,
 ) {
 
     companion object {
         const val LOGIN_URL = "/login"
     }
 
-    @Autowired
-    var casSecurityConfigurer: CasSecurityConfig.CasSecurityConfigurer? = null
-
     @Bean
-    fun webAuthenticationManager(): AuthenticationManager {
+    open fun webAuthenticationManager(): AuthenticationManager {
         val providers = mutableListOf<AuthenticationProvider>()
-        providers.addAll(casSecurityConfigurer?.getCasAuthenticationProviderBeanList() ?: listOf())
+        providers.addAll(
+            casSecurityConfigurerProvider.getIfAvailable()
+                ?.getCasAuthenticationProviderBeanList() ?: listOf()
+        )
         providers.add(daoAuthenticationProvider())
 
         return ProviderManager(providers)
     }
 
     @Bean
-    fun webSecurityCustomize() =
+    open fun webSecurityCustomize() =
         WebSecurityCustomizer { web ->
             web.ignoring().requestMatchers(HttpMethod.POST, "/launch", "/elaastic-questions/launch")
 
@@ -79,7 +90,7 @@ class WebSecurityConfig(
 
     @Bean
     @Order(0)
-    fun resourceFilterChain(http: HttpSecurity): SecurityFilterChain {
+    open fun resourceFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .securityMatcher("/images/**", "/css/**", "/js/**", "/semantic/**", "/ckeditor/**")
             .authorizeHttpRequests { authorize -> authorize.anyRequest().permitAll() }
@@ -91,19 +102,65 @@ class WebSecurityConfig(
     }
 
     @Bean
-    fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
+    open fun webFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
+
+            if (elaasticOidcEnabled) {
+                oauth2Login {
+                    userInfoEndpoint {
+                        oidcUserService = elaasticOidcUserServiceProvider.getIfAvailable()
+                            ?: throw IllegalStateException("OIDC is enabled but ElaasticOidcUserService bean is missing")
+                    }
+                    authenticationSuccessHandler = oidcLoginSuccessHandlerProvider.getIfAvailable()
+                        ?: OidcLoginSuccessHandler()
+                    /**
+                     * Handle authentication failure
+                     *
+                     * @see ElaasticOidcUserService.loadUser
+                     * @see RoleExceptionController.handleRoleException
+                     */
+                    authenticationFailureHandler = AuthenticationFailureHandler { request, response, exception ->
+                        if (exception is RoleException) {
+                            request.session.setAttribute(USER_REQUEST_ATTRIBUTE, exception.userRequest)
+                            response.sendRedirect(request.contextPath + ERROR_ROLE_URL)
+                        } else {
+                            response.sendRedirect("/error")
+                        }
+                    }
+                }
+                http.addFilterBefore(
+                    OidcHintFilter(),
+                    UsernamePasswordAuthenticationFilter::class.java
+                )
+            }
+
+            val elaasticUrlLogoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
+                "/",
+                casSecurityConfigurerProvider.getIfAvailable()?.casKeyToServerUrl ?: mapOf(),
+                "/logout?service=${elaasticUrl}"
+            )
+
+            val oidcClientInitiatedLogoutSuccessHandler =
+                if (elaasticOidcEnabled) {
+                    clientRegistrationRepositoryProvider.getIfAvailable()?.let { clientRegistrationRepository ->
+                        OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository)
+                            .also {
+                                it.setPostLogoutRedirectUri(elaasticUrl)
+                            }
+                    }
+                } else null
+
 
             logout {
                 logoutRequestMatcher = AntPathRequestMatcher("/logout")
-                logoutSuccessHandler = ElaasticUrlLogoutSuccessHandler(
-                    "/",
-                    casSecurityConfigurer?.casKeyToServerUrl ?: mapOf(),
-                    "/logout?service=${elaasticUrl}"
+                logoutSuccessHandler = ElaasticLogoutSuccessHandler(
+                    elaasticUrlLogoutSuccessHandler,
+                    oidcClientInitiatedLogoutSuccessHandler,
                 )
                 clearAuthentication = true
                 deleteCookies("JSESSIONID")
                 invalidateHttpSession = true
+
             }
 
             authorizeRequests {
@@ -111,6 +168,7 @@ class WebSecurityConfig(
                 authorize("/demo", permitAll)
                 authorize("/register", permitAll)
                 authorize("/api/users", permitAll)
+                authorize("/error/**", permitAll)
                 authorize(LOGIN_URL, permitAll)
 
                 // Allow access to this URL on which the CAS filter are applied
@@ -147,7 +205,7 @@ class WebSecurityConfig(
                         // If a request without authentication get a URL of the form /cas/<casKey>/** the corresponding
                         // CasAuthenticationEntryPoint will be triggered (resulting in a redirect on the corresponding
                         // CAS server)
-                        *casSecurityConfigurer?.getCasAuthenticationEntryPoints() ?: arrayOf(),
+                        *casSecurityConfigurerProvider.getIfAvailable()?.getCasAuthenticationEntryPoints() ?: arrayOf(),
 
                         // Any other secured URL is handled by the native elaastic authentication (the formLogin)
                         AnyRequestMatcher.INSTANCE to LoginUrlAuthenticationEntryPoint(LOGIN_URL)
@@ -165,7 +223,7 @@ class WebSecurityConfig(
 
 
     @Bean
-    fun daoAuthenticationProvider(): DaoAuthenticationProvider {
+    open fun daoAuthenticationProvider(): DaoAuthenticationProvider {
         DaoAuthenticationProvider().let {
             it.setUserDetailsService(userDetailsService)
             it.setPasswordEncoder(encoder)

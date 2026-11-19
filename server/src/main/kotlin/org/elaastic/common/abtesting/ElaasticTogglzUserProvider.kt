@@ -1,6 +1,6 @@
 package org.elaastic.common.abtesting
 
-import org.elaastic.user.User
+import org.elaastic.user.PrincipalUserResolver
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder
@@ -41,7 +41,7 @@ class ElaasticTogglzUserProvider(private val featureAdminAuthority: String?) : S
     }
 
     private fun getUserName(authentication: Authentication): String? {
-        val principal = authentication.principal
+        val principal = (authentication.principal as? PrincipalUserResolver)?.elaasticUser ?: authentication.principal
         if (principal !is UserDetails) {
             return principal.toString()
         }
@@ -49,11 +49,6 @@ class ElaasticTogglzUserProvider(private val featureAdminAuthority: String?) : S
     }
 
     private fun getActiveSince(authentication: Authentication) : LocalDate? {
-        val principal = authentication.principal
-        return if (principal !is User) {
-            null
-        } else {
-            principal.activeSince
-        }
+        return (authentication.principal as? PrincipalUserResolver)?.elaasticUser?.activeSince
     }
 }

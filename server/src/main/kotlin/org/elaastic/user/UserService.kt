@@ -167,9 +167,7 @@ class UserService(
         if (user.plainTextPassword != null) {
             user.password = passwordEncoder.encode(user.plainTextPassword)
         }
-        userRepository.saveAndFlush(user).let {
-            return it
-        }
+        return userRepository.saveAndFlush(user)
     }
 
     /**
@@ -182,9 +180,7 @@ class UserService(
     fun changePasswordForUser(user: User, newPlainTextPassword: String): User {
         user.plainTextPassword = newPlainTextPassword // required to get validation
         user.password = passwordEncoder.encode(newPlainTextPassword)
-        userRepository.saveAndFlush(user).let {
-            return it
-        }
+        return userRepository.saveAndFlush(user)
     }
 
     /**
@@ -220,9 +216,7 @@ class UserService(
     fun initializeSettingsForUser(user: User, language: String): Settings {
         Settings(user = user, language = language).let {
             user.settings = it
-            settingsRepository.save(it).let {
-                return it
-            }
+            return settingsRepository.save(it)
         }
     }
 
@@ -345,9 +339,7 @@ class UserService(
                 passwordResetKey
             }
         }.let {
-            passwordResetKeyRepository.saveAndFlush(it)
-        }.let {
-            return it
+            return passwordResetKeyRepository.saveAndFlush(it)
         }
     }
 
@@ -359,9 +351,7 @@ class UserService(
      * @return the found user or null otherwise
      */
     fun findByPasswordResetKeyValue(passwordResetKeyValue: String): User? {
-        userRepository.findByPasswordResetKeyValue(passwordResetKeyValue).let {
-            return it
-        }
+        return userRepository.findByPasswordResetKeyValue(passwordResetKeyValue)
     }
 
     /**

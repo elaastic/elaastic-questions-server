@@ -1,5 +1,7 @@
 package org.elaastic.ai.evaluation.chatgpt
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.evaluation.peergrading.draxo.DraxoPeerGradingController.ResponseSubmissionAsynchronous
 import org.elaastic.activity.response.ResponseService
@@ -40,7 +42,7 @@ class ChatGptEvaluationController(
         model: Model,
         @PathVariable gradingId: Long,
     ): ResponseSubmissionAsynchronous {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(gradingId)
 
         val locale: Locale = LocaleContextHolder.getLocale()
@@ -76,7 +78,7 @@ class ChatGptEvaluationController(
         model: Model,
         @PathVariable gradingId: Long,
     ): ResponseSubmissionAsynchronous {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(gradingId)
 
         val locale: Locale = LocaleContextHolder.getLocale()
@@ -111,7 +113,7 @@ class ChatGptEvaluationController(
         model: Model,
         @PathVariable responseId: Long,
     ): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val evaluationModel = try {
             val response = responseService.findById(responseId)
@@ -180,7 +182,7 @@ class ChatGptEvaluationController(
         @RequestParam(required = false) isTeacher: Boolean = false,
         @PathVariable sequenceId: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(sequenceId, true)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
 
@@ -230,7 +232,7 @@ class ChatGptEvaluationController(
         @RequestParam(value = "other-reason-comment", required = false) otherReasonComment: String,
         @PathVariable id: Long
     ): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         val sequence = sequenceService.get(id, true)
         val chatGptEvaluation = chatGptEvaluationService.findEvaluationById(evaluationId)
         val reasonComment = otherReasonComment.ifEmpty { null }

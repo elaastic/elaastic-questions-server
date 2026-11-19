@@ -17,6 +17,8 @@
  */
 package org.elaastic.activity.evaluation.peergrading.draxo
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ResponseService
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationService
@@ -65,7 +67,7 @@ class DraxoPeerGradingController(
         @PathVariable responseId: Long,
         @RequestParam hideName: Boolean?
     ): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val response = responseService.findById(responseId)
         val assignment = response.interaction.sequence.assignment
@@ -143,7 +145,7 @@ class DraxoPeerGradingController(
         @RequestParam(required = true) evaluationId: Long,
         @RequestParam(required = true) utilityGrade: UtilityGrade
     ): ResponseSubmissionAsynchronous {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         val evaluation: DraxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(evaluationId)
         val locale: Locale = LocaleContextHolder.getLocale()
 
@@ -188,7 +190,7 @@ class DraxoPeerGradingController(
         @RequestParam(value = "reason", required = true) reasons: List<String>,
         @RequestParam(value = "other-reason-comment", required = false) otherReasonComment: String
     ): ResponseSubmissionAsynchronous {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         val evaluation: DraxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(evaluationId)
         val reasonComment = otherReasonComment.ifEmpty { null }
         val locale: Locale = LocaleContextHolder.getLocale()
@@ -230,7 +232,7 @@ class DraxoPeerGradingController(
         model: Model,
         @PathVariable id: Long
     ): ResponseSubmissionAsynchronous {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         val evaluation: DraxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(id)
         val locale: Locale = LocaleContextHolder.getLocale()
 
@@ -281,7 +283,7 @@ class DraxoPeerGradingController(
         model: Model,
         @PathVariable id: Long
     ): ResponseSubmissionAsynchronous {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         val evaluation: DraxoPeerGrading = draxoPeerGradingService.getDraxoPeerGrading(id)
         val locale: Locale = LocaleContextHolder.getLocale()
 

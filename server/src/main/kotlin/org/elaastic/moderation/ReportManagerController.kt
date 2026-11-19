@@ -1,5 +1,7 @@
 package org.elaastic.moderation
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.activity.evaluation.peergrading.PeerGradingRepository
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.ai.evaluation.chatgpt.ChatGptEvaluationRepository
@@ -40,7 +42,7 @@ class ReportManagerController(
         model: Model,
         @PathVariable idSequence: Long
     ): String {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         val sequence = sequenceService.get(user, idSequence, true)
 
@@ -155,7 +157,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {
@@ -176,7 +178,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {
@@ -199,7 +201,7 @@ class ReportManagerController(
         @PathVariable type: ReportedCandidateType,
         @PathVariable id: Long
     ): ResponseEntity<String> {
-        val user = authentication.principal as User
+        val user = (authentication.principal as PrincipalUserResolver).elaasticUser
 
         when (type) {
             ReportedCandidateType.PEER_GRADING -> {

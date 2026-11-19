@@ -18,6 +18,8 @@
 
 package org.elaastic.user.controller
 
+import org.elaastic.user.PrincipalUserResolver
+
 
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
@@ -64,7 +66,7 @@ class UserAccountController(
 
     @GetMapping("/userAccount/edit")
     fun edit(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
 
         val userToUpdate = userService.get(user.id!!)!!
@@ -82,7 +84,7 @@ class UserAccountController(
                response: HttpServletResponse,
                redirectAttributes: RedirectAttributes,
                locale: Locale): String {
-        val authUser: User = authentication.principal as User
+        val authUser: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         if (!result.hasErrors()) {
             val updatedUser = userService.get(userData.id!!)!!
@@ -109,7 +111,7 @@ class UserAccountController(
 
     @GetMapping("/userAccount/editPassword")
     fun editPassword(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(user.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         model.addAttribute("passwordData", PasswordData(user))
         model.addAttribute("user", user)
@@ -124,7 +126,7 @@ class UserAccountController(
                         response: HttpServletResponse,
                         redirectAttributes: RedirectAttributes,
                         locale: Locale): String {
-        val authUser: User = authentication.principal as User
+        val authUser: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
         if (!result.hasErrors()) {
             val updatedUser = userService.get(authUser, passwordData.id!!)
@@ -151,14 +153,14 @@ class UserAccountController(
     @ResponseBody
     @GetMapping("/userAccount/updateOnboardingChapter/{chapterToUpdate}")
     fun updateOnboardingChapter(authentication: Authentication, @PathVariable chapterToUpdate: String){
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         userService.updateOnboardingChapter(OnboardingChapter.from(chapterToUpdate), user)
     }
 
     @ResponseBody
     @GetMapping("/userAccount/getOnboardingChapter")
     fun getOnboardingChapter(authentication: Authentication): String? {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         return userService.getOnboardingState(user.id).toString()
     }
 
@@ -184,7 +186,7 @@ class UserAccountController(
 
     @GetMapping("/userAccount/unsubscribe")
     fun unsubscribe(authentication: Authentication, model: Model, locale: Locale):String {
-        val authUser: User = authentication.principal as User
+        val authUser: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
 
         model.addAttribute("user", authUser)
@@ -200,7 +202,7 @@ class UserAccountController(
         messageSource.getMessage("useraccount.unsubscribe.success", emptyArray(), locale).let {
             redirectAttributes.addFlashAttribute("message", it)
         }
-        val authUser: User = authentication.principal as User
+        val authUser: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         if(authUser.isAnonymous()) throw IllegalStateException("Not allowed to anonymous user")
 
         userService.disableUser(authUser)

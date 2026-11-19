@@ -52,9 +52,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.hibernate:hibernate-jcache")
     implementation("org.ehcache:ehcache:3.6.3")
-//	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.security:spring-security-cas")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.security:spring-security-cas")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
     implementation("com.fasterxml.jackson.core:jackson-databind")
@@ -75,7 +75,6 @@ dependencies {
     implementation("com.github.heneke.thymeleaf:thymeleaf-extras-togglz:1.0.1.RELEASE")
     implementation("com.toedter:spring-hateoas-jsonapi:1.6.0")
     implementation("org.jsoup:jsoup:1.16.1")
-    
 
     testImplementation("org.springframework.security:spring-security-test")
 
@@ -94,7 +93,6 @@ dependencies {
     testImplementation("io.cucumber:cucumber-junit:7.14.1")
     testImplementation("io.cucumber:cucumber-junit-platform-engine:7.14.1")
     testImplementation("org.junit.platform:junit-platform-suite:1.10.1")
-
 }
 
 allOpen {

@@ -1,5 +1,7 @@
 package org.elaastic.ai.evaluation.chatgpt.prompt
 
+import org.elaastic.user.PrincipalUserResolver
+
 import org.elaastic.common.web.MessageBuilder
 import org.elaastic.user.User
 import org.springframework.security.core.Authentication
@@ -27,7 +29,7 @@ class ChatGptPromptController(
 
     @GetMapping(value = ["/show"])
     fun show(authentication: Authentication, model: Model): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         model.addAttribute("user", user)
         updateModelWithActivePrompts(model)
         return "ai/evaluation/chatgpt/prompt/show"
@@ -38,7 +40,7 @@ class ChatGptPromptController(
         authentication: Authentication,
         model: Model
     ): String {
-        val user: User = authentication.principal as User
+        val user: User = (authentication.principal as PrincipalUserResolver).elaasticUser
         model.addAttribute("user", user)
         updateModelWithActivePrompts(model)
         return "ai/evaluation/chatgpt/prompt/edit"
