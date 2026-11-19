@@ -78,7 +78,7 @@ open class ElaasticOidcUserServiceIntegrationTest(
             verify(
                 userLinkService,
                 times(1)).registerNewExternalUser(
-                elaasticOidcUserService.oidcProvider,
+                ElaasticOidcUserService.OIDC_PROVIDER_ID,
                 user.username,
                 UserCreateCommand(user.firstName, user.lastName, user.email, RoleId.STUDENT, UserSource.OIDC, "fr")
                 )
@@ -103,7 +103,7 @@ open class ElaasticOidcUserServiceIntegrationTest(
             assertEquals(user.email, createdUser.email) { "Email should be the same" }
 
             val createdUserLink = userLinkRepository.findByProviderIdAndProviderUserId(
-                elaasticOidcUserService.oidcProvider,
+                ElaasticOidcUserService.OIDC_PROVIDER_ID,
                 elaasticOidcUser.name
             ).let {
                 assertNotNull(it)
@@ -111,7 +111,7 @@ open class ElaasticOidcUserServiceIntegrationTest(
             }
             assertEquals(createdUser, createdUserLink.user) { "User should be the same" }
             assertEquals(
-                elaasticOidcUserService.oidcProvider,
+                ElaasticOidcUserService.OIDC_PROVIDER_ID,
                 createdUserLink.providerId
             ) { "Provider id should be the same" }
             assertEquals(
@@ -136,7 +136,7 @@ open class ElaasticOidcUserServiceIntegrationTest(
             it.password = "1234"
         }.let(userRepository::save)
         UserLink(
-            providerId = elaasticOidcUserService.oidcProvider,
+            providerId = ElaasticOidcUserService.OIDC_PROVIDER_ID,
             providerUserId = user.username,
             user = user
         ).let(userLinkRepository::save)
@@ -150,7 +150,7 @@ open class ElaasticOidcUserServiceIntegrationTest(
             verify(userRepository, never()).save(any<User>())
             verify(userLinkRepository, never()).save(any<UserLink>())
             verify(userLinkRepository, times(1)).findByProviderIdAndProviderUserId(
-                elaasticOidcUserService.oidcProvider,
+                ElaasticOidcUserService.OIDC_PROVIDER_ID,
                 user.username
             )
             // And the user retrieve have the information we except
@@ -304,7 +304,7 @@ open class ElaasticOidcUserServiceIntegrationTest(
                     it.roles.add(Role(name = RoleId.STUDENT.roleName))
                 }
             UserLink(
-                providerId = elaasticOidcUserService.oidcProvider,
+                providerId = ElaasticOidcUserService.OIDC_PROVIDER_ID,
                 providerUserId = user.username,
                 user = user
             ).let(userLinkRepository::save)
@@ -326,7 +326,7 @@ open class ElaasticOidcUserServiceIntegrationTest(
         tGiven("a user with STUDENT Role") {
             val user = integrationTestingService.getTestStudent()
             val userLink = UserLink(
-                providerId = elaasticOidcUserService.oidcProvider,
+                providerId = ElaasticOidcUserService.OIDC_PROVIDER_ID,
                 providerUserId = user.username,
                 user = user
             ).let(userLinkRepository::save)
@@ -350,7 +350,7 @@ open class ElaasticOidcUserServiceIntegrationTest(
         tGiven("a user with TEACHER Role") {
             val user = integrationTestingService.getTestTeacher()
             val userLink = UserLink(
-                providerId = elaasticOidcUserService.oidcProvider,
+                providerId = ElaasticOidcUserService.OIDC_PROVIDER_ID,
                 providerUserId = user.username,
                 user = user
             ).let(userLinkRepository::save)

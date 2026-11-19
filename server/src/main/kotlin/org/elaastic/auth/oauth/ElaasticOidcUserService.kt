@@ -22,7 +22,6 @@ import org.elaastic.auth.UserLinkService
 import org.elaastic.user.Role.RoleId
 import org.elaastic.user.UserCreateCommand
 import org.elaastic.user.UserSource
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
@@ -55,9 +54,10 @@ open class ElaasticOidcUserService(
     private val userLinkService: UserLinkService,
 ) : OidcUserService() {
 
-    // Keep this identifier stable: it is persisted in UserLink.providerId.
-    @Value("\${spring.security.oauth2.client.registration.keycloak.provider:}")
-    val oidcProvider: String = "oidcProvider default value"
+    companion object {
+        // Keep this identifier stable: it is persisted in UserLink.providerId.
+        const val OIDC_PROVIDER_ID = "elaastic-keycloak"
+    }
 
 
     override fun loadUser(userRequest: OidcUserRequest?): OidcUser {
@@ -67,12 +67,12 @@ open class ElaasticOidcUserService(
 
         try {
             val role = getRoleFromOidcUser(oidcUser)
-            val link = userLinkService.loadUserLinkByUsername(oidcProvider, oidcUser.subject)
+            val link = userLinkService.loadUserLinkByUsername(OIDC_PROVIDER_ID, oidcUser.subject)
             if (link != null && !(link.user hasRole role)) {
                 throw RoleException("The external role does not match the Elaastic account role")
             }
             val user = link?.user ?: userLinkService.registerNewExternalUser(
-                oidcProvider,
+                OIDC_PROVIDER_ID,
                 oidcUser.subject,
                 UserCreateCommand(
                     oidcUser.givenName,
