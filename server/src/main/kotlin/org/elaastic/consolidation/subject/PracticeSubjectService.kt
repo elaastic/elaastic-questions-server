@@ -51,7 +51,7 @@ class PracticeSubjectService(
 
                 System.out.println("sequences: $sequences")
 
-                val learners = assignmentService.findAllLearnersRegisteredOnWithCasUser(assignment)
+                val learners = assignmentService.findAllLearnersRegisteredOnWithUserLink(assignment)
 
                 PracticeSubject(
                     assignment =  assignment,
