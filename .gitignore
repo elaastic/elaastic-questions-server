@@ -126,3 +126,6 @@ paper.pdf
 
 # Environment file
 .env
+# Local CAS development TLS material
+/docker-resources/cas/generated/
+/docker-resources/cas/.tls-*/
