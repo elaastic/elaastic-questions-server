@@ -91,17 +91,16 @@ internal class PracticeSubjectServiceIntegrationTest(
                 .also {
                     addQuestion(it, QuestionType.OpenEnded)
                     addQuestion(it, QuestionType.MultipleChoice)
-
+                }.let {
+                    createAssignmentReadyImmediatelyForPractice(it)
                 }
-                .let { createAssignmentReadyImmediatelyForPractice(it) }
         }
 
         tWhen {
             practiceSubjectService.findAllPracticeSubject(LocalDateTime.now().minusDays(1))
+        }.tExpect { result ->
+            assertThat(result.size, equalTo(1))
         }
-            .tExpect { result ->
-                assertThat(result.size, equalTo(1))
-            }
     }
 
     @Test

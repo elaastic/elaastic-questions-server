@@ -62,6 +62,28 @@ internal class LtiConsumerServiceIntegrationTest(
     }
 
     @Test
+    fun `generateLtiConsumerListFromCSVFile with null suffix`() {
+        // given an input stream reader on a CSV file
+        val fileReader = FileReader("src/test/resources/lti-samples.csv", Charset.forName("UTF-8"))
+        // and a suffix
+        val suffix = null
+        // when we trigger the list generation with a suffix
+        val ltiList = ltiConsumerService.generateLtiConsumerListFromCSVFile(fileReader, suffix)
+        //then the list contains 3 elements
+        assertEquals(3, ltiList.size)
+        assertEquals("0541357G", ltiList[0].key)
+        assertEquals("LPP  SAINT ÉTIENNE ; site de Méjanès", ltiList[0].consumerName)
+        assertEquals("0570100Z", ltiList[1].key)
+        assertEquals("LP Simon LAZARD", ltiList[1].consumerName)
+        assertEquals("0540015Y", ltiList[2].key)
+        assertEquals("LP ENTRE MEURTHE ET SANON", ltiList[2].consumerName)
+        ltiList.forEach {
+            assertNotNull(it.secret)
+            logger.severe("secret: ${it.secret}")
+        }
+    }
+
+    @Test
     fun generateLtiConsumerListFromCSVFileWithExistingLtiConsumer() {
         // given an input stream reader on a CSV file
         val fileReader = FileReader("src/test/resources/lti-samples.csv", Charset.forName("UTF-8"))

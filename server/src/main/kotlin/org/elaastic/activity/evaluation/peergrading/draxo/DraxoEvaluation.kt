@@ -46,11 +46,15 @@ class DraxoEvaluation {
     @JsonIgnore
     fun isValid() =
         // Criteria are evaluated in the proper order
+        // Valid :   D,  R  , A, null, null
+        // Invalid : D, null, A,  X  , null
         Criteria.values().map { criteriaValuation[it] }.dropWhile { it != null }.all { it == null } &&
 
                 // No criteria are evaluated after a non-positive evaluation
                 Criteria.values().map { criteria ->
                     criteriaValuation[criteria]?.optionId?.let(criteria::getOptionType)
                 }
+                    // Valid :   +, +, -, null, null
+                    // Invalid : +, -, +, null, null
                     .dropWhile { it == OptionType.POSITIVE }.drop(1).all { it == null }
 }

@@ -33,49 +33,44 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 /**
- * Simple file-based data store. Data records are stored as normal files
- * named using a message digest of the contained binary stream.
+ * Simple file-based data store.
+ * Data records are stored as normal files named using a message digest of the contained binary stream.
  *
+ * A three-level directory structure is used to avoid placing too many files in a single directory.
+ * The chosen structure
+ * is designed to scale up to billions of distinct records.
  *
- * A three level directory structure is used to avoid placing too many
- * files in a single directory. The chosen structure is designed to scale
- * up to billions of distinct records.
- *
- *
- * This implementation relies on the underlying file system to support
- * atomic O(1) move operations with [File.renameTo].
+ * This implementation relies on the underlying file system to support atomic O(1) move operations with [File.renameTo].
  */
 @Component
 class FileDataStore : DataStore {
 
     /**
-     * The minimum modified date. If a file is accessed (read or write) with a modified date
-     * older than this value, the modified date is updated to the current time.
+     * The minimum modified date.
+     * If a file is accessed (read or write) with a modified date older than this value,
+     * the modified date is updated to the current time.
      */
     private var minModifiedDate: Long = 0
 
     /**
-     * The directory that contains all the data record files. The structure
-     * of content within this directory is controlled by this class.
+     * The directory that contains all the data record files.
+     * This class controls the structure of content within this directory.
      */
     private var directory: File? = null
 
     /**
-     * The name of the directory that contains all the data record files. The structure
-     * of content within this directory is controlled by this class.
+     * The name of the directory that contains all the data record files.
+     * This class controls the structure of content within this directory.
      */
     @Value("\${elaastic.datastore.path}")
     lateinit var path: String
 
-    /**
-     * The minimum size of an object that should be stored in this data store.
-     */
+    /** The minimum size of an object that should be stored in this data store. */
     override var minRecordLength = DEFAULT_MIN_RECORD_LENGTH
 
-    /**
-     * All data identifiers that are currently in use are in this set until they are garbage collected.
-     */
-    protected var inUse: MutableMap<DataIdentifier, WeakReference<DataIdentifier>> = Collections.synchronizedMap(WeakHashMap())
+    /** All data identifiers that are currently in use are in this set until they are garbage collected. */
+    protected var inUse: MutableMap<DataIdentifier, WeakReference<DataIdentifier>> =
+        Collections.synchronizedMap(WeakHashMap())
 
     override val allIdentifiers: Iterator<DataIdentifier>
         get() {
@@ -96,10 +91,10 @@ class FileDataStore : DataStore {
      * Initialized the data store.
      * If the path is not set, an exception is thrown.
      * This directory is automatically created if it does not yet exist.
-     *
      */
     @PostConstruct
     override fun initDataStore() {
+        require(path.isNotBlank()) { "Data store path must be set" }
         directory = File(path)
         directory!!.mkdirs()
     }
@@ -115,7 +110,7 @@ class FileDataStore : DataStore {
      * If the verify flag is set and the file doesn't exist, the method returns null.
      *
      * @param identifier the identifier
-     * @param verify     whether to check if the file exists
+     * @param verify whether to check if the file exists
      * @return the data record or null
      */
     @Throws(DataStoreException::class)
@@ -135,10 +130,9 @@ class FileDataStore : DataStore {
     }
 
     /**
-     * Returns the record with the given identifier. Note that this method
-     * performs no sanity checks on the given identifier. It is up to the
-     * caller to ensure that only identifiers of previously created data
-     * records are used.
+     * Returns the record with the given identifier.
+     * Note that this method performs no sanity checks on the given identifier.
+     * It is up to the caller to ensure that only identifiers of previously created data records are used.
      *
      * @param identifier data identifier
      * @return identified data record
@@ -154,11 +148,10 @@ class FileDataStore : DataStore {
 
     /**
      * Creates a new data record.
-     * The stream is first consumed and the contents are saved in a temporary file
-     * and the SHA-1 message digest of the stream is calculated. If a
-     * record with the same SHA-1 digest (and length) is found then it is
-     * returned. Otherwise the temporary file is moved in place to become
-     * the new data record that gets returned.
+     * The stream is first consumed, and the contents are saved in a temporary file,
+     * and the SHA-1 message digest of the stream is calculated.
+     * If a record with the same SHA-1 digest (and length) is found, then it is returned.
+     * Otherwise, the temporary file is moved in place to become the new data record that gets returned.
      *
      * @param stream binary stream
      * @return data record that contains the given stream
@@ -176,11 +169,10 @@ class FileDataStore : DataStore {
             val length: Long
             val digest = MessageDigest.getInstance(DIGEST)
             val output = DigestOutputStream(
-                    FileOutputStream(temporary), digest)
-            try {
-                length = IOUtils.copyLarge(stream, output)
-            } finally {
-                output.close()
+                FileOutputStream(temporary), digest
+            )
+            output.use {
+                length = IOUtils.copyLarge(stream, it)
             }
             val identifier = DataIdentifier(digest.digest())
 
@@ -190,16 +182,12 @@ class FileDataStore : DataStore {
                 usesIdentifier(identifier)
                 val file = getFile(identifier)
                 if (!file.exists()) {
-                    val parent = file.parentFile
-                    parent.mkdirs()
+                    file.parentFile.mkdirs()
                     if (temporary!!.renameTo(file)) {
                         // no longer need to delete the temporary file
                         temporary = null
                     } else {
-                        throw IOException(
-                                "Can not rename " + temporary!!.absolutePath
-                                        + " to " + file.absolutePath
-                                        + " (media read only?)")
+                        throw IOException("Can not rename ${temporary!!.absolutePath} to ${file.absolutePath} (media read only?)")
                     }
                 } else {
                     val now = System.currentTimeMillis()
@@ -207,14 +195,7 @@ class FileDataStore : DataStore {
                         setLastModified(file, now + ACCESS_TIME_RESOLUTION)
                     }
                 }
-                if (file.length() != length) {
-                    // Sanity checks on the record file. These should never fail,
-                    // but better safe than sorry...
-                    if (!file.isFile) {
-                        throw IOException("Not a file: $file")
-                    }
-                    throw IOException("$DIGEST collision: $file")
-                }
+                checkSanity(length, file)
             }
             // this will also make sure that
             // tempId is not garbage collected until here
@@ -225,21 +206,32 @@ class FileDataStore : DataStore {
         } catch (e: IOException) {
             throw DataStoreException("Could not add record", e)
         } finally {
-            temporary?.let { it.delete() }
+            temporary?.delete()
+        }
+    }
+
+    /** Check if the given file has the expected length. */
+    private fun checkSanity(expectedLength: Long, actualFile: File) {
+        if (actualFile.length() != expectedLength) {
+            // Sanity checks on the record file.
+            // These should never fail, but better safe than sorry...
+            if (!actualFile.isFile) {
+                throw IOException("Not a file: $actualFile")
+            }
+            throw IOException("$DIGEST collision: $actualFile")
         }
     }
 
     /**
-     * Returns the identified file. This method implements the pattern
-     * used to avoid problems with too many files in a single directory.
-     *
+     * Returns the identified file.
+     * This method implements the pattern used to avoid problems with too many files in a single directory.
      *
      * No sanity checks are performed on the given identifier.
      *
      * @param identifier data identifier
      * @return identified file
      */
-     fun getFile(identifier: DataIdentifier): File {
+    fun getFile(identifier: DataIdentifier): File {
         usesIdentifier(identifier)
         val string = identifier.toString()
         var file = directory
@@ -250,8 +242,7 @@ class FileDataStore : DataStore {
     }
 
     /**
-     * Returns a unique temporary file to be used for creating a new
-     * data record.
+     * Returns a unique temporary file to be used for creating a new data record.
      *
      * @return temporary file
      * @throws IOException
@@ -271,48 +262,53 @@ class FileDataStore : DataStore {
     }
 
     private fun deleteOlderRecursive(file: File, min: Long): Int {
+        return when {
+            file.isFile && file.exists() && file.canWrite() -> {
+                deleteFile(file, min)
+            }
+
+            file.isDirectory -> deleteDirectory(file, min)
+            else -> 0
+        }
+    }
+
+    private fun deleteFile(file: File, min: Long): Int {
         var count = 0
-        if (file.isFile && file.exists() && file.canWrite()) {
-            synchronized(this) {
-                val lastModified: Long
-                lastModified = try {
-                    getLastModified(file)
-                } catch (e: DataStoreException) {
-                    log.warn("Failed to read modification date; file not deleted", e)
-                    // don't delete the file, since the lastModified date is uncertain
-                    min
-                }
-
-                if (lastModified < min) {
-                    val id = DataIdentifier(file.name)
-                    if (!inUse.containsKey(id)) {
-                        if (log.isInfoEnabled) {
-                            log.info(("Deleting old file " + file.absolutePath +
-                                    " modified: " + Timestamp(lastModified).toString() +
-                                    " length: " + file.length()))
-                        }
-                        if (!file.delete()) {
-                            log.warn("Failed to delete old file " + file.absolutePath)
-                        }
-                        count++
-                    }
-                }
-            }
-        } else if (file.isDirectory) {
-            var list = file.listFiles()
-            if (list != null) for (f in list) {
-                count += deleteOlderRecursive(f, min)
+        synchronized(this) {
+            val lastModified: Long = try {
+                getLastModified(file)
+            } catch (e: DataStoreException) {
+                log.warn("Failed to read modification date; file not deleted", e)
+                // don't delete the file, since the lastModified date is uncertain
+                min
             }
 
-            // JCR-1396: FileDataStore Garbage Collector and empty directories
-            // Automatic removal of empty directories (but not the root!)
-            synchronized(this) {
-                if (file !== this.directory) {
-                    list = file.listFiles()
-                    if (list != null && list.isEmpty()) {
-                        file.delete()
-                    }
+            if (lastModified < min && !inUse.containsKey(DataIdentifier(file.name))) {
+                if (log.isInfoEnabled) {
+                    log.info(
+                        ("Deleting old file ${file.absolutePath} modified: ${Timestamp(lastModified)} length: ${file.length()}")
+                    )
                 }
+                if (!file.delete()) {
+                    log.warn("Failed to delete old file ${file.absolutePath}")
+                }
+                count++
+            }
+        }
+        return count
+    }
+
+    private fun deleteDirectory(file: File, min: Long): Int {
+        var count = 0
+        file.listFiles()?.forEach {
+            count += deleteOlderRecursive(it, min)
+        }
+
+        // JCR-1396: FileDataStore Garbage Collector and empty directories
+        // Automatic removal of empty directories (but not the root!)
+        synchronized(this) {
+            if (file !== this.directory && file.listFiles()?.isEmpty() == true) {
+                file.delete()
             }
         }
         return count
@@ -341,30 +337,19 @@ class FileDataStore : DataStore {
 
     companion object {
 
-        /**
-         * Logger instance
-         */
+        /** Logger instance */
         private val log = LoggerFactory.getLogger(FileDataStore::class.java)
 
-        /**
-         * The digest algorithm used to uniquely identify records.
-         */
+        /** The digest algorithm used to uniquely identify records. */
         private const val DIGEST = "SHA-1"
 
-        /**
-         * The default value for the minimum object size.
-         */
+        /** The default value for the minimum object size. */
         private const val DEFAULT_MIN_RECORD_LENGTH = 100
 
-        /**
-         * The maximum last modified time resolution of the file system.
-         */
+        /** The maximum last modified time resolution of the file system. */
         private const val ACCESS_TIME_RESOLUTION = 2000
 
-        /**
-         * Name of the directory used for temporary files.
-         * Must be at least 3 characters.
-         */
+        /** Name of the directory used for temporary files. Must be at least three characters. */
         private const val TMP = "tmp"
 
         /**
@@ -378,7 +363,7 @@ class FileDataStore : DataStore {
         private fun getLastModified(file: File): Long {
             val lastModified = file.lastModified()
             if (lastModified == 0L) {
-                throw DataStoreException("Failed to read record modified date: " + file.absolutePath)
+                throw DataStoreException("Failed to read record modified date: ${file.absolutePath}")
             }
             return lastModified
         }
@@ -395,7 +380,7 @@ class FileDataStore : DataStore {
             if (!file.setLastModified(time)) {
                 if (!file.canWrite()) {
                     // if we can't write to the file, so garbage collection will also not delete it
-                    // (read only files or file systems)
+                    // (read-only files or file systems)
                     return
                 }
                 try {
@@ -407,7 +392,10 @@ class FileDataStore : DataStore {
                         it.setLength(it.length())
                     }
                 } catch (e: IOException) {
-                    throw DataStoreException("An IO Exception occurred while trying to set the last modified date: " + file.absolutePath, e)
+                    throw DataStoreException(
+                        "An IO Exception occurred while trying to set the last modified date: ${file.absolutePath}",
+                        e
+                    )
                 }
 
             }

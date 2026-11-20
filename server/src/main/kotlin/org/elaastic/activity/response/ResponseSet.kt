@@ -11,7 +11,7 @@ class ResponseSet(responses: List<Response>) {
     }
 
     fun isEmpty(): Boolean =
-        get(1).isEmpty() && get(2).isEmpty()
+        this[1].isEmpty() && this[2].isEmpty()
 
     /**
      * Get the responses of a given attempt.
@@ -24,10 +24,10 @@ class ResponseSet(responses: List<Response>) {
         else -> throw IllegalArgumentException("There is no attempt $i")
     }
 
-    fun getWithoutFake(attempt: AttemptNum) = get(attempt).filter { !it.fake }
+    fun getWithoutFake(attempt: AttemptNum) = this[attempt].filter { !it.fake }
 
     fun add(response: Response) = when (response.attempt) {
         1, 2 -> responsesByAttempt[response.attempt - 1].add(response)
-        else -> throw IllegalStateException("Invalid response ; attempt=${response.attempt}")
+        else -> error("Invalid response ; attempt=${response.attempt}")
     }
 }

@@ -21,6 +21,7 @@ import com.nhaarman.mockitokotlin2.*
 import org.elaastic.activity.evaluation.ResponseId
 import org.elaastic.activity.response.Response
 import org.elaastic.activity.response.ResponseRepository
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import javax.persistence.EntityManager
@@ -98,7 +99,7 @@ internal class ResponseRecommendationServiceTest {
             }
 
             nbSelectionMap.forEachIndexed() { i, nb ->
-                print(responseToString(responseMap[(i+1).toLong()]!!))
+                print(responseToString(responseMap[(i + 1).toLong()]!!))
                 print(" ==> ")
                 println(nb)
             }
@@ -109,46 +110,144 @@ internal class ResponseRecommendationServiceTest {
     @Test
     fun `test of computeRecommendations with incorrect answers only`() {
         val service = ResponseRecommendationService(
-                mock<EntityManager>(),
-                mock<ResponseRepository>()
+            mock<EntityManager>(),
+            mock<ResponseRepository>()
         )
 
         service.computeRecommendations(
-                listOf(
-                        mock<Response> {
-                            on { score }.doReturn(BigDecimal(50))
-                            on { id }.doReturn(1)
-                            on { explanation }.doReturn("Hello World, and Universe")
-                        },
-                        mock<Response> {
-                            on { score }.doReturn(BigDecimal(50))
-                            on { id }.doReturn(2)
-                            on { explanation }.doReturn("Hello World, and Universe")
-                        },
-                        mock<Response> {
-                            on { score }.doReturn(BigDecimal(50))
-                            on { id }.doReturn(3)
-                            on { explanation }.doReturn("Hello World, and Universe")
-                        },
-                        mock<Response> {
-                            on { score }.doReturn(BigDecimal(50))
-                            on { id }.doReturn(4)
-                            on { explanation }.doReturn("Hello World, and Universe")
-                        },
-                        mock<Response> {
-                            on { score }.doReturn(BigDecimal(50))
-                            on { id }.doReturn(5)
-                            on { explanation }.doReturn("Hello World, and Universe")
-                        },
-                        mock<Response> {
-                            on { score }.doReturn(BigDecimal(50))
-                            on { id }.doReturn(6)
-                            on { explanation }.doReturn("Hello World, and Universe")
-                        }
-                ),
-                3
+            listOf(
+                mock<Response> {
+                    on { score }.doReturn(BigDecimal(50))
+                    on { id }.doReturn(1)
+                    on { explanation }.doReturn("Hello World, and Universe")
+                },
+                mock<Response> {
+                    on { score }.doReturn(BigDecimal(50))
+                    on { id }.doReturn(2)
+                    on { explanation }.doReturn("Hello World, and Universe")
+                },
+                mock<Response> {
+                    on { score }.doReturn(BigDecimal(50))
+                    on { id }.doReturn(3)
+                    on { explanation }.doReturn("Hello World, and Universe")
+                },
+                mock<Response> {
+                    on { score }.doReturn(BigDecimal(50))
+                    on { id }.doReturn(4)
+                    on { explanation }.doReturn("Hello World, and Universe")
+                },
+                mock<Response> {
+                    on { score }.doReturn(BigDecimal(50))
+                    on { id }.doReturn(5)
+                    on { explanation }.doReturn("Hello World, and Universe")
+                },
+                mock<Response> {
+                    on { score }.doReturn(BigDecimal(50))
+                    on { id }.doReturn(6)
+                    on { explanation }.doReturn("Hello World, and Universe")
+                }
+            ),
+            3
         ).let {
             print(it)
         }
+    }
+
+    @Test
+    fun `test CORRECT_RESPONSE_FIRST`() {
+        // Same Object
+        val responseInfo1T0 = ResponseInfo(1, true, nbSelection = 0)
+        assertSame(responseInfo1T0, responseInfo1T0)
+        assertEquals(
+            0, CORRECT_RESPONSE_FIRST.compare(responseInfo1T0, responseInfo1T0),
+            "As the two objects are the same, CORRECT_RESPONSE_FIRST should return 0"
+        )
+        val another1T0 = ResponseInfo(1, true, nbSelection = 0)
+        assertEquals(
+            0, CORRECT_RESPONSE_FIRST.compare(another1T0, another1T0),
+            "As the two objects are the same, CORRECT_RESPONSE_FIRST should return 0"
+        )
+
+        // Different on the correctness
+        val responseInfo1F0 = ResponseInfo(1, false, nbSelection = 0)
+        assertEquals(
+            1, CORRECT_RESPONSE_FIRST.compare(responseInfo1T0, responseInfo1F0),
+            "CORRECT_RESPONSE_FIRST should sort responseInfo1T0 before responseInfo1F0"
+        )
+        assertEquals(
+            -1, CORRECT_RESPONSE_FIRST.compare(responseInfo1F0, responseInfo1T0),
+            "CORRECT_RESPONSE_FIRST should sort responseInfo1T0 before responseInfo1F0"
+        )
+
+        // Different on the nbSelection
+        val responseInfo1T1 = ResponseInfo(1, true, nbSelection = 1)
+        assertEquals(
+            1, CORRECT_RESPONSE_FIRST.compare(responseInfo1T0, responseInfo1T1),
+            "CORRECT_RESPONSE_FIRST should sort responseInfo1T0 before responseInfo1T1"
+        )
+        assertEquals(
+            -1, CORRECT_RESPONSE_FIRST.compare(responseInfo1T1, responseInfo1T0),
+            "CORRECT_RESPONSE_FIRST should sort responseInfo1T0 before responseInfo1T1"
+        )
+
+        // Different on the id
+        val responseInfo2T0 = ResponseInfo(2, true, nbSelection = 0)
+        assertEquals(
+            1, CORRECT_RESPONSE_FIRST.compare(responseInfo1T0, responseInfo2T0),
+            "CORRECT_RESPONSE_FIRST should sort responseInfo1T0 before responseInfo2T0"
+        )
+        assertEquals(
+            -1, CORRECT_RESPONSE_FIRST.compare(responseInfo2T0, responseInfo1T0),
+            "CORRECT_RESPONSE_FIRST should sort responseInfo1T0 before responseInfo2T0"
+        )
+    }
+
+    @Test
+    fun `test INCORRECT_RESPONSE_FIRST`() {
+        // Same Object
+        val responseInfo1T0 = ResponseInfo(1, true, nbSelection = 0)
+        assertSame(responseInfo1T0, responseInfo1T0)
+        assertEquals(
+            0, INCORRECT_RESPONSE_FIRST.compare(responseInfo1T0, responseInfo1T0),
+            "As the two objects are the same, INCORRECT_RESPONSE_FIRST should return 0"
+        )
+        val another1T0 = ResponseInfo(1, true, nbSelection = 0)
+        assertEquals(
+            0, INCORRECT_RESPONSE_FIRST.compare(another1T0, another1T0),
+            "As the two objects are the same, INCORRECT_RESPONSE_FIRST should return 0"
+        )
+
+        // Different on the correctness
+        val responseInfo1F0 = ResponseInfo(1, false, nbSelection = 0)
+        assertEquals(
+            -1, INCORRECT_RESPONSE_FIRST.compare(responseInfo1T0, responseInfo1F0),
+            "INCORRECT_RESPONSE_FIRST should sort responseInfo1F0 before responseInfo1T0"
+        )
+        assertEquals(
+            1, INCORRECT_RESPONSE_FIRST.compare(responseInfo1F0, responseInfo1T0),
+            "INCORRECT_RESPONSE_FIRST should sort responseInfo1F0 before responseInfo1T0"
+        )
+
+        // Different on the nbSelection
+        val responseInfo1T1 = ResponseInfo(1, true, nbSelection = 1)
+        assertEquals(
+            1, INCORRECT_RESPONSE_FIRST.compare(responseInfo1T0, responseInfo1T1),
+            "INCORRECT_RESPONSE_FIRST should sort responseInfo1T1 before responseInfo1T0"
+        )
+        assertEquals(
+            -1, INCORRECT_RESPONSE_FIRST.compare(responseInfo1T1, responseInfo1T0),
+            "INCORRECT_RESPONSE_FIRST should sort responseInfo1T1 before responseInfo1T0"
+        )
+
+        // Different on the id
+        val responseInfo2T0 = ResponseInfo(2, true, nbSelection = 0)
+        assertEquals(
+            1, INCORRECT_RESPONSE_FIRST.compare(responseInfo1T0, responseInfo2T0),
+            "INCORRECT_RESPONSE_FIRST should sort responseInfo2T0 before responseInfo1T0"
+        )
+        assertEquals(
+            -1, INCORRECT_RESPONSE_FIRST.compare(responseInfo2T0, responseInfo1T0),
+            "INCORRECT_RESPONSE_FIRST should sort responseInfo2T0 before responseInfo1T0"
+        )
     }
 }

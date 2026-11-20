@@ -32,7 +32,7 @@ class RecommendationResponsePool(responseList: List<ResponseInfo>,
         val refusedCandidates = mutableListOf<ResponseInfo>()
 
         var candidate: ResponseInfo? = null
-        while (candidate == null && !responseSet.isEmpty()) {
+        while (candidate == null && responseSet.isNotEmpty()) {
             candidate = responseSet.pollLast()
             if (candidate.id in except) {
                 refusedCandidates.add(candidate)
