@@ -86,7 +86,7 @@ More information about the Keycloak server can be found in the [README.md](authe
 .
 ├── .github/workflows/          # CI workflows for testing, analysis, docs, and image publishing
 ├── .env.template               # Example environment variables for local setup
-├── settings.gradle.kts         # Root Gradle settings and module declaration
+├── settings.gradle.kts         # Includes the server module and imports its version catalog
 ├── gradlew, gradlew.bat        # Gradle wrapper scripts for Unix and Windows
 ├── docker-compose.yml          # Services for local development
 ├── docker-compose.production_example.yml
@@ -96,6 +96,9 @@ More information about the Keycloak server can be found in the [README.md](authe
 ├── user-docs/                  # Jekyll source for the user documentation
 └── server/                     # Kotlin and Spring Boot web application
     ├── build.gradle.kts        # Dependencies, build tasks, and packaging
+    ├── gradle/
+    │   └── libs.versions.toml  # Dependency and plugin catalog shared by both Gradle builds
+    ├── settings.gradle.kts     # Settings for the standalone server build
     └── Dockerfile              # Builds the application container image
 ```
 

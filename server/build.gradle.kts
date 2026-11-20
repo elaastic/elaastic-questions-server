@@ -18,18 +18,18 @@
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-ext["spring-security.version"]="5.8.3"
+ext["spring-security.version"] = libs.versions.springSecurity.get()
 // Override Spring Boot 2.7's managed versions for Java 21 support.
-ext["mockito.version"] = "5.14.2"
-ext["byte-buddy.version"] = "1.15.4"
+ext["mockito.version"] = libs.versions.mockito.get()
+ext["byte-buddy.version"] = libs.versions.byteBuddy.get()
 
 plugins {
-    id("org.springframework.boot") version "2.7.13"
-    id("io.spring.dependency-management") version "1.0.15.RELEASE"
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
-    kotlin("plugin.jpa") version "1.6.21"
-    id("org.sonarqube") version "4.2.1.3168"
+    alias(libs.plugins.springBoot)
+    alias(libs.plugins.springDependencyManagement)
+    alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.kotlinSpring)
+    alias(libs.plugins.kotlinJpa)
+    alias(libs.plugins.sonarqube)
     jacoco
 }
 
@@ -53,64 +53,64 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.flywaydb:flyway-mysql")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    runtimeOnly("com.mysql:mysql-connector-j")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.mockk:mockk:1.13.9")
+    implementation(libs.springBootStarterDataJpa)
+    implementation(libs.springBootStarterWeb)
+    implementation(libs.jacksonModuleKotlin)
+    implementation(libs.flywayCore)
+    implementation(libs.flywayMysql)
+    implementation(libs.kotlinReflect)
 
-
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-data-rest")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
-    implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("org.hibernate:hibernate-jcache")
-    implementation("org.ehcache:ehcache:3.6.3")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.security:spring-security-cas")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlin:kotlin-allopen")
-    implementation("org.springframework.data:spring-data-rest-hal-explorer")
-    implementation("org.apache.commons:commons-lang3:3.9")
-    implementation("com.icegreen:greenmail:1.5.10")
+    implementation(libs.springBootStarterValidation)
+    implementation(libs.springBootStarterDataRest)
+    implementation(libs.springBootStarterMail)
+    implementation(libs.springBootStarterCache)
+    implementation(libs.hibernateJcache)
+    implementation(libs.ehcache)
+    implementation(libs.springBootStarterSecurity)
+    implementation(libs.springSecurityCas)
+    implementation(libs.springBootStarterOauth2Client)
+    implementation(libs.springBootStarterThymeleaf)
+    implementation(libs.thymeleafExtrasSpringsecurity5)
+    implementation(libs.jacksonDatabind)
+    implementation(libs.kotlinStdlibJdk8)
+    implementation(libs.kotlinAllopen)
+    implementation(libs.springDataRestHalExplorer)
+    implementation(libs.commonsLang3)
+    implementation(libs.greenmail)
     implementation(files("lib/ApacheJMeter_oauth-v2.jar"))
-    implementation("com.google.code.gson:gson:2.8.9")
-    implementation("commons-io:commons-io:2.7")
-    implementation("org.apache.commons:commons-csv:1.5")
-    implementation("org.springframework.boot:spring-boot-starter-websocket")
-    implementation("org.togglz:togglz-spring-boot-starter:3.0.0")
-    implementation("org.togglz:togglz-spring-security:3.0.0")
-    implementation("org.togglz:togglz-kotlin:3.0.0")
-    implementation("org.togglz:togglz-console:3.0.0")
-    implementation("com.github.heneke.thymeleaf:thymeleaf-extras-togglz:1.0.1.RELEASE")
-    implementation("com.toedter:spring-hateoas-jsonapi:1.6.0")
-    implementation("org.jsoup:jsoup:1.16.1")
+    implementation(libs.gson)
+    implementation(libs.commonsIo)
+    implementation(libs.commonsCsv)
+    implementation(libs.springBootStarterWebsocket)
+    implementation(libs.togglzSpringBootStarter)
+    implementation(libs.togglzSpringSecurity)
+    implementation(libs.togglzKotlin)
+    implementation(libs.togglzConsole)
+    implementation(libs.thymeleafExtrasTogglz)
+    implementation(libs.springHateoasJsonapi)
+    implementation(libs.jsoup)
+    implementation(libs.cucumberSpring)
 
-    testImplementation("org.springframework.security:spring-security-test")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+    testImplementation(libs.springBootStarterTest)
+    testImplementation(libs.mockk)
+    testImplementation(libs.springSecurityTest)
+    testImplementation(libs.springBootStarterTest) {
         exclude(module = "junit")
     }
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("org.hamcrest:hamcrest-library")
-    testImplementation("org.exparity:hamcrest-date:1.1.0")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
-    testImplementation("org.mockito:mockito-core")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation(libs.junitJupiterApi)
+    testImplementation(libs.hamcrestLibrary)
+    testImplementation(libs.hamcrestDate)
+    testImplementation(libs.mockitoKotlin)
+    testImplementation(libs.mockitoCore)
 
-    implementation("io.cucumber:cucumber-spring:7.14.1")
-    testImplementation("io.cucumber:cucumber-java:7.14.1")
-    testImplementation("io.cucumber:cucumber-junit:7.14.1")
-    testImplementation("io.cucumber:cucumber-junit-platform-engine:7.14.1")
-    testImplementation("org.junit.platform:junit-platform-suite:1.10.1")
+    testImplementation(libs.cucumberJava)
+    testImplementation(libs.cucumberJunit)
+    testImplementation(libs.cucumberJunitPlatformEngine)
+    testImplementation(libs.junitPlatformSuite)
+
+    runtimeOnly(libs.mysqlConnectorJ)
+
+    testRuntimeOnly(libs.junitJupiterEngine)
 }
 
 allOpen {
