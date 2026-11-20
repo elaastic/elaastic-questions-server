@@ -55,7 +55,8 @@
             <!--/* Display the number of Draxo evaluations and the link to see them */-->
             <span class="detail" th:if="${nbDraxoEvaluation > 0}">
                 (
-                <a class="detail-link" id="loadReview" href="#"
+                <a class="detail-link"
+                   href="#"
                    th:onclick="'elaastic.draxo.loadReviews(event, ' + ${explanationData.responseId}+')'">
                     <span th:text="${(nbDraxoEvaluation > 1)} ? #{draxo.see.reviews} : #{draxo.see.review}"
                           class="see-review">see reviews</span>
@@ -71,7 +72,8 @@
             <span togglz:active="'CHATGPT_EVALUATION'" class="detail"
                   th:if="${nbDraxoEvaluation == 0 && (isOwner || isTeacher) && !explanationData.fromTeacher && explanationData.explanationHasChatGPTEvaluation}">
                 (
-                <a class="detail-link" id="loadReview" href="#"
+                <a class="detail-link"
+                   href="#"
                    th:onclick="'elaastic.chatGPT.loadReview(event, ' + ${explanationData.responseId}+')'">
                     <span th:text="#{evaluation.see.chatGPT.review}" class="see-review">see ChatGPT review</span>
                     <span th:text="#{evaluation.hide.chatGPT.review}" class="hide-review" style="display: none">hide ChatGPT review</span>
@@ -168,8 +170,8 @@
     </b>
 
     <!--/* Content of the explanation */-->
-    <span th:if="${!explanationData.hiddenByTeacher or isOwner}"
-          th:utext="${explanationData.content}"></span>
+    <div class="response-content" th:if="${!explanationData.hiddenByTeacher or isOwner}"
+         th:utext="${explanationData.content}"></div>
 
     <!--/* Container for the reviews (DRAXO and/or ChatGPT) */-->
     <div class="reviews-container" style="margin-top: 20px"></div>

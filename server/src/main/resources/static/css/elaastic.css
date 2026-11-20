@@ -89,3 +89,8 @@ html.elaastic.three-columns, .elaastic.three-columns body {
 .detail a.detail-link:hover {
   color: yellow;
 }
+
+.response-content {
+  max-width: 100%;
+  overflow-x: auto;
+}
