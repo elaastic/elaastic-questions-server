@@ -1,3 +1,21 @@
+/*
+ * Elaastic - formative assessment system
+ * Copyright (C) 2019-2026. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package org.elaastic.user.legal
 
 import org.elaastic.test.directive.tExpect
@@ -30,7 +48,7 @@ internal class TermsServiceIntegrationTest(
             // valid terms and terms contents
             Terms().let {
                 TermsContent("Terms in english", it, "en")
-                TermsContent("Terms en français", it)
+                TermsContent("Terms en franï¿½ais", it)
                 it
             }.tWhen {
                 // saving the terms
@@ -48,7 +66,7 @@ internal class TermsServiceIntegrationTest(
                 // fetching terms contents by language as expected
                 it.termsContentsByLanguage["fr"].let { tc ->
                     MatcherAssert.assertThat(tc!!.id, CoreMatchers.notNullValue())
-                    MatcherAssert.assertThat(tc.content, CoreMatchers.equalTo("Terms en français"))
+                    MatcherAssert.assertThat(tc.content, CoreMatchers.equalTo("Terms en franï¿½ais"))
                 }
                 it.termsContentsByLanguage["en"].let { tc ->
                     MatcherAssert.assertThat(tc!!.id, CoreMatchers.notNullValue())
@@ -65,13 +83,13 @@ internal class TermsServiceIntegrationTest(
             listOf<Terms>(
                 Terms(startDate = Date(), isActive = false).let {
                     TermsContent("Terms in english", it, "en")
-                    TermsContent("Terms en français", it)
+                    TermsContent("Terms en franï¿½ais", it)
                     it
                 },
                 // and an active terms
                 Terms().let {
                     TermsContent("Active Terms in english", it, "en")
-                    TermsContent("Terms en français", it)
+                    TermsContent("Terms en franï¿½ais", it)
                     it
                 }
             ).forEach {
@@ -95,13 +113,13 @@ internal class TermsServiceIntegrationTest(
                 // a terms
                 Terms().let {
                     TermsContent("Terms in english", it, "en")
-                    TermsContent("Terms en français", it)
+                    TermsContent("Terms en franï¿½ais", it)
                     termsService.save(it)
                 },
                 // and a new one
                 Terms().let {
                     TermsContent("New Terms in english", it, "en")
-                    TermsContent("Nouveaux Terms en français", it)
+                    TermsContent("Nouveaux Terms en franï¿½ais", it)
                     termsService.save(it)
                 }.tWhen {
                     // updating now inactive terms
