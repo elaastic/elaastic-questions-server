@@ -78,12 +78,26 @@ More information about the Keycloak server can be found in the [README.md](authe
 | jtra  | 1234     | student | 
 | admin | admin    | admin   |
 
-## Development guide
+## Project structure
 
-The project _elaastic_ is composed of two modules:
+### Directory layout
 
-1. `server`: The Spring Boot webapp developed in Kotlin
-2. `ui-components`: A set of UI components developed in Vue 3
+```text
+.
+├── .github/workflows/          # CI workflows for testing, analysis, docs, and image publishing
+├── .env.template               # Example environment variables for local setup
+├── settings.gradle.kts         # Root Gradle settings and module declaration
+├── gradlew, gradlew.bat        # Gradle wrapper scripts for Unix and Windows
+├── docker-compose.yml          # Services for local development
+├── docker-compose.production_example.yml
+│                               # Example Docker Compose configuration for production
+├── docker-resources/           # Container configuration and supporting files
+├── authentication/             # Keycloak and SAML identity provider setup
+├── user-docs/                  # Jekyll source for the user documentation
+└── server/                     # Kotlin and Spring Boot web application
+    ├── build.gradle.kts        # Dependencies, build tasks, and packaging
+    └── Dockerfile              # Builds the application container image
+```
 
 ## Deploying the application
 
@@ -110,36 +124,6 @@ Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 
 It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
 The application will be available at `http://localhost:8088`.
-       
-## Development guide
-
-The project _elaastic_ is composed of two modules:
-1. `server`: The Spring Boot webapp developed in Kotlin
-2. `ui-components`: A set of UI components developed in Vue 3
-
-### `ui-components`
-
-#### Setup
-Install `Node v22.11.0` (recommendation: use `nvm` for installing Node).
-
-Then install the dependencies with :
-```shell
-npm install
-```
-
-#### Run storybook
-```shell
-npm run storybook
-```
-
-#### Build
-```shell
-npm run build
-```
-
-The built bundles will be available at `./ui-components/dist`.
-Temporarily, it is necessary to coy those bundles manually into the static resources of the Spring Boot application
-in order to use it.
 
 ## Authentication
 
