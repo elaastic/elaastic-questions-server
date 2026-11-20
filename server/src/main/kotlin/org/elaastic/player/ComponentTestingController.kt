@@ -3376,9 +3376,4 @@ class ComponentTestingController(
 
         return "test/get-test-user"
     }
-
-    @GetMapping("/ui-components")
-    fun testUiComponents() =
-        "uiComponents/test-ui-components"
-
 }
