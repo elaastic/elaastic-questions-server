@@ -1,3 +1,3 @@
 rootProject.name = "elaastic"
-include("server", "ui-components")
+include("server")
 
