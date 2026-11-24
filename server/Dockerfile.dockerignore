@@ -1,0 +1,11 @@
+*
+!settings.gradle.kts
+!gradlew
+!gradle/
+!gradle/**
+!server/
+!server/build.gradle.kts
+!server/src/
+!server/src/**
+!server/lib/
+!server/lib/**

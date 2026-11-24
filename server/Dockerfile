@@ -1,18 +1,19 @@
 # Build stage
 # ----------------
-FROM eclipse-temurin:17-jdk-alpine as build
+FROM eclipse-temurin:17-jdk-alpine AS build
 
 ENV REFRESHED_AT 2023-09-05
 
 WORKDIR /workspace/app
 
 COPY gradle gradle
-COPY build.gradle.kts settings.gradle.kts gradlew ./
-COPY src src
-COPY lib lib
+COPY settings.gradle.kts gradlew ./
+COPY server/build.gradle.kts server/build.gradle.kts
+COPY server/src server/src
+COPY server/lib server/lib
 
-RUN ./gradlew build -x test
-RUN mkdir -p build/libs/dependency && (cd build/libs/dependency; jar -xf ../*.jar)
+RUN ./gradlew --no-daemon :server:bootJar
+RUN mkdir -p server/build/libs/dependency && (cd server/build/libs/dependency; jar -xf ../*.jar)
 
 
 # Production stage
@@ -28,7 +29,7 @@ RUN mkdir -p /datastore && chown -R  elaastic:elaastic /datastore
 USER elaastic
 
 # Copy application ressources
-ARG DEPENDENCY=/workspace/app/build/libs/dependency
+ARG DEPENDENCY=/workspace/app/server/build/libs/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app

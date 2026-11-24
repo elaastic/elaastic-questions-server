@@ -147,16 +147,16 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
-tasks.register("dockerBuild") {
+val dockerImageVersion = version.toString()
+tasks.register<Exec>("dockerBuild") {
     group = "Docker"
     description = "Builds the Docker image aligned with the elaastic version"
-    doLast {
-        exec {
-            commandLine("docker", "build",
-                "-t", "elaastic/elaastic-questions-server:v$version",
-                "-t", "elaastic/elaastic-questions-server:latest",
-                ".")
-        }
-    }
+    workingDir(rootProject.projectDir)
+    commandLine(
+        "docker", "build", "-f", "server/Dockerfile",
+        "-t", "elaastic/elaastic-questions-server:v$dockerImageVersion",
+        "-t", "elaastic/elaastic-questions-server:latest",
+        "."
+    )
 }
 
