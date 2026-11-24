@@ -57,7 +57,7 @@ docker compose up -d elaastic-questions-db-8 elaastic-mailhog
 Then, you can run the application with the following command:
 
 ````shell
-gradle bootRun
+./gradlew :server:bootRun
 ````
 
 The application is then accessible at `http://localhost:8080`.
@@ -86,7 +86,9 @@ More information about the Keycloak server can be found in the [README.md](authe
 .
 ├── .github/workflows/          # CI workflows for testing, analysis, docs, and image publishing
 ├── .env.template               # Example environment variables for local setup
-├── settings.gradle.kts         # Root Gradle settings and module declaration
+├── settings.gradle.kts         # Includes the server module
+├── gradle/
+│   └── libs.versions.toml       # Dependency and plugin version catalog
 ├── gradlew, gradlew.bat        # Gradle wrapper scripts for Unix and Windows
 ├── docker-compose.yml          # Services for local development
 ├── docker-compose.production_example.yml
@@ -106,10 +108,16 @@ _elaastic_ can be deployed in _stand-alone_ mode (with an embedded Tomcat server
 ### Packaging the application in _stand-alone_ mode
 
 ````shell
-gradle bootJar
+./gradlew :server:bootJar
 ````
 
-Get the `elaastic-questions-server.jar` file from the `build/libs` folder.
+Get the `server-<version>.jar` file from the `server/build/libs` folder.
+
+To build the Docker image, run this command from the project root.
+
+```shell
+docker build -f server/Dockerfile .
+```
 
 It is possible to test this packaged mode by running the services in the `docker-compose-standalone.yml` file.
 The application will be available at `http://localhost:8080/elaastic-questions`.
