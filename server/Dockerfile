@@ -2,8 +2,6 @@
 # ----------------
 FROM eclipse-temurin:17-jdk-alpine AS build
 
-ENV REFRESHED_AT 2023-09-05
-
 WORKDIR /workspace/app
 
 COPY gradle gradle
@@ -21,10 +19,9 @@ RUN mkdir -p server/build/libs/dependency && (cd server/build/libs/dependency; j
 FROM eclipse-temurin:17-jdk-alpine
 
 # Create a non-root user
-RUN addgroup -S elaastic && adduser -S elaastic -G elaastic
-
-# Initialize datastore
-RUN mkdir -p /datastore && chown -R  elaastic:elaastic /datastore
+RUN addgroup -S elaastic && adduser -S elaastic -G elaastic \
+  # Initialize datastore \
+  && mkdir -p /datastore && chown -R  elaastic:elaastic /datastore
 
 USER elaastic
 
