@@ -133,6 +133,9 @@ Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
 The application will be available at `http://localhost:8088`.
 
+## Elaastic server
+See [server/README.md](server/README.md)
+
 ## Authentication
 
 ### Authenticate on Elaastic using the Keycloak OIDC Identity & Access Manager
