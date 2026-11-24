@@ -2,7 +2,7 @@
 byteBuddy = "1.15.4"
 commonsCsv = "1.5"
 commonsIo = "2.22.0"
-commonsLang3 = "3.9"
+commonsLang3 = "3.22.0"
 cucumber = "7.14.1"
 ehcache = "3.6.3"
 greenmail = "1.5.10"
