@@ -21,7 +21,7 @@
     <head>
         <meta charset="utf-8">
         <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
-        <meta content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no" name="viewport"/>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=2" name="viewport"/>
         <meta name="description"
               th:content="#{elaastic.description}">
         <meta name="author" content="University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier">
@@ -39,20 +39,20 @@
 
     <body>
 
-        <div id="page-content" class="ui container">
-            <div class="ui large top fixed inverted menu" style="background-color: #4f7691;">
-                <div class="header item">
-                    <a th:href="@{/home}"><img class="ui avatar bordered circular image logo"
-                                               th:src="@{/images/elaastic_picto_rvb.png}"></a>
-                </div>
+    <div id="page-content" class="ui container">
+        <div class="ui large top fixed inverted menu" style="background-color: #4f7691;">
+            <div class="header item">
+                <a th:href="@{/home}"><img class="ui avatar bordered circular image logo"
+                                           th:src="@{/images/elaastic_picto_rvb.png}"></a>
             </div>
-
-            <div class="ui container" style="padding-top: 6em;">
-                <div th:replace="${content}"></div>
-                <div th:replace="layout/components/footer :: footer"></div>
-            </div>
-
         </div>
+
+        <div class="ui container" style="padding-top: 6em;">
+            <div th:replace="${content}"></div>
+            <div th:replace="layout/components/footer :: footer"></div>
+        </div>
+
+    </div>
 
     </body>
 </html>
