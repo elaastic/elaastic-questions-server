@@ -94,3 +94,11 @@ html.elaastic.three-columns, .elaastic.three-columns body {
   max-width: 100%;
   overflow-x: auto;
 }
+
+.elaastic-footer {
+  text-align: center;
+}
+
+.elaastic-footer .ui.horizontal.celled.list > .item {
+  line-height: 1.4;
+}
