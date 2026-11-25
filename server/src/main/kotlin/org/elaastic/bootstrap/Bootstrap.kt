@@ -18,26 +18,28 @@
 
 package org.elaastic.bootstrap
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
 
+/**
+ * Bootstrap the application.
+ *
+ * @param bootstrapService the bootstrap service
+ */
 @Component
-class Bootstrap(
-    @Autowired val bootstrapService: BootstrapService,
-) {
+class Bootstrap(val bootstrapService: BootstrapService) {
 
-    val LOG: Logger = Logger.getLogger(Bootstrap::class.toString())
+    val logger: Logger = Logger.getLogger(Bootstrap::class.java.name)
 
     @PostConstruct
     fun init() {
-        LOG.info("Bootstrapping elaastic-questions in all modes...")
-        LOG.info("Migrate to 4.0.0...")
+        logger.info("Bootstrapping elaastic-questions in all modes...")
+        logger.info("Migrate to 4.0.0...")
         bootstrapService.migrateTowardVersion400()
-        LOG.info("End of Migration to 4.0.0")
-        LOG.info("End of the bootstrap")
+        logger.info("End of Migration to 4.0.0")
+        logger.info("End of the bootstrap")
     }
 
 }

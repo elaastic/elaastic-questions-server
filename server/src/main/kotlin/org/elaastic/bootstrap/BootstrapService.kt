@@ -51,28 +51,29 @@ import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.util.ResourceUtils
 import java.math.BigDecimal
 import java.util.*
 import javax.transaction.Transactional
 
-
+/**
+ * Provides methods to bootstrap the application.
+ */
 @Service
 class BootstrapService(
-    @Autowired val userService: UserService,
-    @Autowired val roleService: RoleService,
-    @Autowired val ltiConsumerRepository: LtiConsumerRepository,
-    @Autowired val subjectService: SubjectService,
-    @Autowired val courseService: CourseService,
-    @Autowired val statementService: StatementService,
-    @Autowired val attachmentService: AttachmentService,
-    @Autowired val assignmentService: AssignmentService,
-    @Autowired val sequenceService: SequenceService,
-    @Autowired val responseService: ResponseService,
-    @Autowired val interactionService: InteractionService,
-    @Autowired val peerGradingService: PeerGradingService
+    val userService: UserService,
+    val roleService: RoleService,
+    val ltiConsumerRepository: LtiConsumerRepository,
+    val subjectService: SubjectService,
+    val courseService: CourseService,
+    val statementService: StatementService,
+    val attachmentService: AttachmentService,
+    val assignmentService: AssignmentService,
+    val sequenceService: SequenceService,
+    val responseService: ResponseService,
+    val interactionService: InteractionService,
+    val peerGradingService: PeerGradingService
 ) {
 
     var mailServer: GreenMail? = null
@@ -136,7 +137,7 @@ class BootstrapService(
                 plainTextPassword = "1234",
                 email = "admin@elaastic.org"
             ).addRole(roleService.roleAdmin())
-        ).map {
+        ).forEach {
             userService.findByUsername(it.username) ?: userService.addUser(it)
         }
     }
@@ -189,9 +190,9 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun initializeStepByStep() {
+    fun initializeStepByStep() {
         // Initialize courses - Step 1
-        val demo = courseService.save(
+        courseService.save(
             Course(
                 title = "Demo",
                 owner = userService.findByUsername("aein")!!
@@ -276,7 +277,7 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun initializeStatementsAccords(accords: Subject) {
+    fun initializeStatementsAccords(accords: Subject) {
         val statements = listOf(
             // Statement Exclusive choice
             Statement(
@@ -312,7 +313,7 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun initializeStatementsFractions(fractions: Subject) {
+    fun initializeStatementsFractions(fractions: Subject) {
         val statements = listOf(
             // Statement Multiple Choice with Latek
             Statement(
@@ -378,8 +379,8 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun initializeAssignment(subject: Subject) {
-        var assignments = listOf(
+    fun initializeAssignment(subject: Subject) {
+        val assignments = listOf(
             Assignment(
                 owner = subject.owner,
                 title = subject.title + " - Face à face - Finished",
@@ -414,21 +415,21 @@ class BootstrapService(
             subjectService.addAssignment(subject, it)
         }
 
-        playAssignmentsWithLearners(assignments.get(0), ExecutionContext.FaceToFace)
-        onlyStartSequences(assignments.get(1), ExecutionContext.FaceToFace)
-        registerLearners(assignments.get(2))
-        registerLearners(assignments.get(3))
+        playAssignmentsWithLearners(assignments[0], ExecutionContext.FaceToFace)
+        onlyStartSequences(assignments[1], ExecutionContext.FaceToFace)
+        registerLearners(assignments[2])
+        registerLearners(assignments[3])
     }
 
     @Transactional
-    private fun playAssignmentsWithLearners(assignment: Assignment, mode: ExecutionContext) {
-        var learners = registerLearners(assignment)
+    fun playAssignmentsWithLearners(assignment: Assignment, mode: ExecutionContext) {
+        val learners = registerLearners(assignment)
         startSequences(assignment, mode)
-        var sequence0 = assignment.sequences.get(0)
-        var sequence1 = assignment.sequences.get(1)
+        val sequence0 = assignment.sequences[0]
+        val sequence1 = assignment.sequences[1]
 
-        var responses1 = firstAnswersForSequence(sequence0, learners)
-        var responses2 = firstAnswersForSequence(sequence1, learners)
+        val responses1 = firstAnswersForSequence(sequence0, learners)
+        val responses2 = firstAnswersForSequence(sequence1, learners)
 
         // Teacher action to change phase
         interactionService.startNext(assignment.owner, sequence0.activeInteraction!!)
@@ -447,13 +448,13 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun onlyStartSequences(assignment: Assignment, mode: ExecutionContext) {
+    fun onlyStartSequences(assignment: Assignment, mode: ExecutionContext) {
         registerLearners(assignment)
         startSequences(assignment, mode)
     }
 
     @Transactional
-    private fun registerLearners(assignment: Assignment): List<User> {
+    fun registerLearners(assignment: Assignment): List<User> {
         val learners = listOf(
             userService.findByUsername("msil")!!,
             userService.findByUsername("tsil")!!,
@@ -469,7 +470,7 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun startSequences(assignment: Assignment, mode: ExecutionContext) {
+    fun startSequences(assignment: Assignment, mode: ExecutionContext) {
         assignment.sequences.forEach {
             sequenceService.start(
                 assignment.owner,
@@ -484,7 +485,7 @@ class BootstrapService(
     }
 
     @Transactional
-    private fun firstAnswersForSequence(sequence: Sequence, learners: List<User>): List<Response> {
+    fun firstAnswersForSequence(sequence: Sequence, learners: List<User>): List<Response> {
 
         // Learner 0
 
@@ -495,10 +496,10 @@ class BootstrapService(
         }
 
         val response0 = responseService.save(
-            sequenceService.getActiveInteractionForLearner(sequence, learners.get(0))
+            sequenceService.getActiveInteractionForLearner(sequence, learners[0])
                 ?: error("No active interaction, cannot submit a response"),
             Response(
-                learner = learners.get(0),
+                learner = learners[0],
                 interaction = sequence.getResponseSubmissionInteraction(),
                 attempt = 1,
                 confidenceDegree = ConfidenceDegree.CONFIDENT,
@@ -516,7 +517,7 @@ class BootstrapService(
         )
 
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-            sequenceService.nextInteractionForLearner(sequence, learners.get(0))
+            sequenceService.nextInteractionForLearner(sequence, learners[0])
         }
 
         /// Learner 1
@@ -528,10 +529,10 @@ class BootstrapService(
         }
 
         val response1 = responseService.save(
-            sequenceService.getActiveInteractionForLearner(sequence, learners.get(1))
+            sequenceService.getActiveInteractionForLearner(sequence, learners[1])
                 ?: error("No active interaction, cannot submit a response"),
             Response(
-                learner = learners.get(1),
+                learner = learners[1],
                 interaction = sequence.getResponseSubmissionInteraction(),
                 attempt = 1,
                 confidenceDegree = ConfidenceDegree.TOTALLY_CONFIDENT,
@@ -549,7 +550,7 @@ class BootstrapService(
         )
 
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-            sequenceService.nextInteractionForLearner(sequence, learners.get(1))
+            sequenceService.nextInteractionForLearner(sequence, learners[1])
         }
 
         // Learner 2
@@ -561,10 +562,10 @@ class BootstrapService(
         }
 
         val response2 = responseService.save(
-            sequenceService.getActiveInteractionForLearner(sequence, learners.get(2))
+            sequenceService.getActiveInteractionForLearner(sequence, learners[2])
                 ?: error("No active interaction, cannot submit a response"),
             Response(
-                learner = learners.get(2),
+                learner = learners[2],
                 interaction = sequence.getResponseSubmissionInteraction(),
                 attempt = 1,
                 confidenceDegree = ConfidenceDegree.NOT_CONFIDENT_AT_ALL,
@@ -582,7 +583,7 @@ class BootstrapService(
         )
 
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-            sequenceService.nextInteractionForLearner(sequence, learners.get(2))
+            sequenceService.nextInteractionForLearner(sequence, learners[2])
         }
 
 
@@ -595,10 +596,10 @@ class BootstrapService(
         }
 
         val response3 = responseService.save(
-            sequenceService.getActiveInteractionForLearner(sequence, learners.get(3))
+            sequenceService.getActiveInteractionForLearner(sequence, learners[3])
                 ?: error("No active interaction, cannot submit a response"),
             Response(
-                learner = learners.get(3),
+                learner = learners[3],
                 interaction = sequence.getResponseSubmissionInteraction(),
                 attempt = 1,
                 confidenceDegree = ConfidenceDegree.NOT_REALLY_CONFIDENT,
@@ -616,32 +617,31 @@ class BootstrapService(
         )
 
         if (sequence.executionIsDistance() || sequence.executionIsBlended()) {
-            sequenceService.nextInteractionForLearner(sequence, learners.get(3))
+            sequenceService.nextInteractionForLearner(sequence, learners[3])
         }
 
         return listOf(response0, response1, response2, response3)
     }
 
     private fun feedbacksPhase2forSequence(sequence: Sequence, learners: List<User>, responses: List<Response>) {
-
-        var learner0Eval = peerGradingService.createOrUpdateLikert(
-            learners.get(0),
-            responses.get(1),
+        peerGradingService.createOrUpdateLikert(
+            learners[0],
+            responses[1],
             BigDecimal(5)
         )
-        var learner1Eval = peerGradingService.createOrUpdateLikert(
-            learners.get(1),
-            responses.get(2),
+        peerGradingService.createOrUpdateLikert(
+            learners[1],
+            responses[2],
             BigDecimal(1)
         )
-        var learner2Eval = peerGradingService.createOrUpdateLikert(
-            learners.get(2),
-            responses.get(3),
+        peerGradingService.createOrUpdateLikert(
+            learners[2],
+            responses[3],
             BigDecimal(2)
         )
-        var learner3Eval = peerGradingService.createOrUpdateLikert(
-            learners.get(3),
-            responses.get(0),
+        peerGradingService.createOrUpdateLikert(
+            learners[3],
+            responses[0],
             BigDecimal(4)
         )
     }
