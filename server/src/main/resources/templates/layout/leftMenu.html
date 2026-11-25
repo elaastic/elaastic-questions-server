@@ -182,17 +182,16 @@
 
 
 
-<div style="margin-left: 90px;">
+<div class="layout-with-footer" style="margin-left: 90px;">
   <div id="page-content" class="ui container">
 
     <div class="ui hidden divider"></div>
 
     <div class="ui container">
       <div th:replace="${content}"></div>
-      <div th:replace="layout/components/footer :: footer"></div>
-
     </div>
   </div>
+  <div th:replace="layout/components/footer :: footer"></div>
 </div>
 
 </body>

@@ -37,7 +37,7 @@
         }</style>
     </head>
 
-    <body>
+    <body class="layout-with-footer">
 
     <div id="page-content" class="ui container">
         <div class="ui large top fixed inverted menu" style="background-color: #4f7691;">
@@ -52,10 +52,11 @@
 
         <div class="ui container" style="padding-top: 6em;">
             <div th:replace="${content}"></div>
-            <div th:replace="layout/components/footer :: footer"></div>
         </div>
 
     </div>
+
+    <div th:replace="layout/components/footer :: footer"></div>
 
     </body>
 </html>
