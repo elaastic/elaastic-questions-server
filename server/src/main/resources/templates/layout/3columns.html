@@ -262,10 +262,9 @@
       <div th:replace="${pageSpecificMenu}"></div>
     </div>
 
-    <div class="wrap" style="margin-left: 90px;">
-      <main>
-        <aside id="layout-aside" th:replace="${aside}">
-        </aside>
+    <div class="wrap" style="margin-left: 90px; flex-direction: column;">
+      <main style="flex: 1; min-height: 0;">
+        <aside id="layout-aside" th:replace="${aside}"></aside>
 
         <article style="display: flex; column-gap: 30px;">
 
@@ -289,6 +288,9 @@
         </article>
       </main>
 
+      <div style="flex-shrink: 0;">
+        <div th:replace="layout/components/footer :: footer"></div>
+      </div>
     </div>
 
     <div id="layout-nav-modal" class="ui modal">
