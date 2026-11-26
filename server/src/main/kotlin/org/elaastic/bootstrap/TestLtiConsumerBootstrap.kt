@@ -20,27 +20,14 @@ package org.elaastic.bootstrap
 
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
-
-/**
- * Apply the bootstrap operations specific to development and test modes.
- */
 @Component
-@Profile("!prod")
-class DevBootstrap(
-    val devUserInitializationService: DevUserInitializationService,
-    val devLtiInitializationService: DevLtiInitializationService
-) {
-
-    private val logger : Logger = Logger.getLogger(DevBootstrap::class.java.name)
+@Profile("!prod & (dev | test)")
+class TestLtiConsumerBootstrap(private val initializationService: DevLtiInitializationService) {
 
     @PostConstruct
     fun init() {
-        logger.info("Elaastic bootstrap started (with development features)")
-        devUserInitializationService.initializeDevUsers()
-        devLtiInitializationService.initializeDevLtiObjects()
-        logger.info("Elaastic bootstrap completed")
+        initializationService.initializeDevLtiObjects()
     }
 }

@@ -25,11 +25,11 @@ import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
 /**
- * Initialize the demo content at bootstrap when demo profile is active and the devBootstrap is initialized.
+ * Initialize the demo content at bootstrap when demo profile is active after test users are initialized.
  */
 @Component
 @Profile("demo")
-@DependsOn("devBootstrap")
+@DependsOn("testUsersBootstrap")
 class DemoBootstrap(val demoInitializationService: DemoInitializationService) {
 
     private val logger: Logger = Logger.getLogger(DemoBootstrap::class.java.name)

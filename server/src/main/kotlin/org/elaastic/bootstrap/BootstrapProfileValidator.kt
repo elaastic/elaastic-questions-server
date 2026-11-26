@@ -28,5 +28,8 @@ class BootstrapProfileValidator : ApplicationContextInitializer<ConfigurableAppl
         check(!applicationContext.environment.acceptsProfiles(Profiles.of("prod & demo"))) {
             "The Spring profiles 'prod' and 'demo' cannot be active at the same time."
         }
+        check(!applicationContext.environment.acceptsProfiles(Profiles.of("prod & test-data"))) {
+            "The Spring profiles 'prod' and 'test-data' cannot be active at the same time."
+        }
     }
 }
