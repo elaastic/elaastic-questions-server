@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component
 import java.util.logging.Level
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 
 
 /**
@@ -59,6 +60,7 @@ class DevBootstrap(
         }
     }
 
+    @PreDestroy
     fun stopDevLocalSmtpServer() {
         try {
             mailServer?.stop()
