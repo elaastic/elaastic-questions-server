@@ -84,6 +84,8 @@ Use a comma-separated list to combine them, for example `SPRING_PROFILES_ACTIVE=
 | `oidc` | Allow users to sign in through OpenID Connect. |
 | `no-async` | Run asynchronous methods synchronously in tests. |
 
+The `dev`, `test`, and `demo` profiles automatically activate `test-data`.
+
 ### Test users
 
 | Login | Password | role    | 

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
 
 @Component
-@Profile("!prod & (dev | test | test-data | demo)")
+@Profile("!prod & test-data")
 class TestUsersBootstrap(private val initializationService: DevUserInitializationService) {
 
     @PostConstruct
