@@ -247,7 +247,7 @@ class DemoInitializationService(
         fractions.addStatement(statements[1])
 
         // Add attachment to the second statement
-        val file = ResourceUtils.getFile("classpath:static/images/demonstrationContent/CreateQuestion.png");
+        val file = ResourceUtils.getFile("classpath:static/images/demonstrationContent/CreateQuestion.png")
         val graphMaths = Attachment(
             name = "fileToAttached",
             originalFileName = "CreateQuestion.png",
@@ -348,7 +348,7 @@ class DemoInitializationService(
         )
 
         learners.forEach {
-            assignmentService.registerUser(it, assignment);
+            assignmentService.registerUser(it, assignment)
         }
 
         return learners
