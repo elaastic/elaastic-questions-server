@@ -20,7 +20,6 @@ package org.elaastic.bootstrap
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
-import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
@@ -32,7 +31,6 @@ import javax.annotation.PostConstruct
  */
 @Component
 @Profile("!prod")
-@DependsOn("bootstrap")
 class DevBootstrap(
     val devUserInitializationService: DevUserInitializationService,
     val devLtiInitializationService: DevLtiInitializationService
