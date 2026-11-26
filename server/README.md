@@ -2,13 +2,13 @@
 
 ## Spring profiles
 - `dev`: Enables configuration dedicated to the development environment.
-- `testing`: Enables the functional testing facilities (see [Testing facilities](#testing-facilities))
+- `test-tools`: Enables the functional testing facilities (see [Testing facilities](#testing-facilities))
 - `chatgpt`: Enables the use of ChatGPT for evaluating student responses.
 - `oidc`: Enables the use of OpenID Connect for authentication.
 
 ## Testing facilities
 > [!NOTE]
-> Those facilities are enabled by the `testing` profile.
+> Those facilities are enabled by the `test-tools` profile.
 
 ### Generating test suject
 For teachers, on the "My subjects" page, you can generate a test subject by clicking on the "Generate test subject".

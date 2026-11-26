@@ -72,12 +72,13 @@ More information about the Keycloak server can be found in the [README.md](authe
 The server loads its base configuration from
 [`application.properties`](server/src/main/resources/application.properties).
 Set `SPRING_PROFILES_ACTIVE` or pass `--spring.profiles.active` to select profiles.
-Use a comma-separated list to combine them, for example `SPRING_PROFILES_ACTIVE=dev,oidc`.
+Use a comma-separated list to combine them, for example `SPRING_PROFILES_ACTIVE=dev,test-tools`.
 
 | Profile | Purpose |
 |:--------|:--------|
 | `dev` | Run the server locally during development. |
 | `test` | Prepare the Spring context for automated tests. |
+| `test-tools` | Enable manual testing tools, including test subject generation and scripted learner behavior. See [Testing facilities](server/README.md#testing-facilities). |
 | `test-data` | Make sample accounts available for testing. |
 | `demo` | Populate an instance for demonstrations. |
 | `prod` | Run the server in a production environment. |
