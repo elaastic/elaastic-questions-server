@@ -18,7 +18,7 @@
 
 package org.elaastic.user.email
 
-import org.elaastic.bootstrap.BootstrapService
+import org.elaastic.bootstrap.DevBootstrap
 import org.elaastic.user.ActivationKeyRepository
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
@@ -45,7 +45,7 @@ internal class MailCheckingMailServiceIntegrationTest(
     @Autowired val mailCheckingMailService: MailCheckingMailService,
     @Autowired val roleService: RoleService,
     @Autowired val entityManager: EntityManager,
-    @Autowired val bootstrapService: BootstrapService
+    @Autowired val devBootstrap: DevBootstrap
 ) {
 
     lateinit var alPacino: User
@@ -53,7 +53,7 @@ internal class MailCheckingMailServiceIntegrationTest(
     lateinit var bobDeniro: User
 
     val logger = Logger.getLogger(MailCheckingMailServiceIntegrationTest::class.java.name)
-    val smtpServer = bootstrapService.mailServer!!
+    val smtpServer = devBootstrap.mailServer!!
 
     @BeforeEach
     fun initUsersWithEmailCheckingNeeded() {

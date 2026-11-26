@@ -18,8 +18,6 @@
 
 package org.elaastic.bootstrap
 
-import com.icegreen.greenmail.util.GreenMail
-import com.icegreen.greenmail.util.ServerSetup
 import org.elaastic.activity.evaluation.peergrading.PeerGradingService
 import org.elaastic.activity.response.ConfidenceDegree
 import org.elaastic.activity.response.Response
@@ -41,30 +39,21 @@ import org.elaastic.material.instructional.subject.SubjectService
 import org.elaastic.material.instructional.question.attachment.Attachment
 import org.elaastic.material.instructional.question.attachment.AttachmentService
 import org.elaastic.material.instructional.question.attachment.MimeType
-import org.elaastic.auth.lti.LtiConsumer
-import org.elaastic.auth.lti.LtiConsumerRepository
 import org.elaastic.sequence.ExecutionContext
 import org.elaastic.sequence.Sequence
 import org.elaastic.sequence.SequenceService
 import org.elaastic.sequence.interaction.InteractionService
 import org.elaastic.sequence.phase.evaluation.EvaluationPhaseConfig
-import org.elaastic.user.RoleService
 import org.elaastic.user.User
 import org.elaastic.user.UserService
 import org.springframework.stereotype.Service
 import org.springframework.util.ResourceUtils
 import java.math.BigDecimal
-import java.util.*
 import javax.transaction.Transactional
 
-/**
- * Provides methods to bootstrap the application.
- */
 @Service
-class BootstrapService(
+class DemoInitializationService(
     val userService: UserService,
-    val roleService: RoleService,
-    val ltiConsumerRepository: LtiConsumerRepository,
     val subjectService: SubjectService,
     val courseService: CourseService,
     val statementService: StatementService,
@@ -75,110 +64,6 @@ class BootstrapService(
     val interactionService: InteractionService,
     val peerGradingService: PeerGradingService
 ) {
-
-    var mailServer: GreenMail? = null
-
-    @Transactional
-    fun initializeDevUsers() {
-        listOf(
-            User(
-                firstName = "Franck",
-                lastName = "Sil",
-                username = "fsil",
-                plainTextPassword = "1234",
-                email = "fsil@elaastic.org"
-            ).addRole(roleService.roleTeacher()),
-            User(
-                firstName = "Rialy",
-                lastName = "Andria",
-                username = "rand",
-                plainTextPassword = "1234",
-                email = "rand@elaastic.org"
-            ).addRole(roleService.roleTeacher()),
-            User(
-                firstName = "Albert",
-                lastName = "Ein",
-                username = "aein",
-                plainTextPassword = "1234",
-                email = "aein@elaastic.org"
-            ).addRole(roleService.roleTeacher()),
-            User(
-                firstName = "Mary",
-                lastName = "Sil",
-                username = "msil",
-                plainTextPassword = "1234",
-                email = "msil@elaastic.org"
-            ).addRole(roleService.roleStudent()),
-            User(
-                firstName = "Thom",
-                lastName = "Sil",
-                username = "tsil",
-                plainTextPassword = "1234",
-                email = "tsil@elaastic.org"
-            ).addRole(roleService.roleStudent()),
-            User(
-                firstName = "John",
-                lastName = "Tra",
-                username = "jtra",
-                plainTextPassword = "1234",
-                email = "jtra@elaastic.org"
-            ).addRole(roleService.roleStudent()),
-            User(
-                firstName = "Erik",
-                lastName = "Erik",
-                username = "erik",
-                plainTextPassword = "1234",
-                email = "erik@elaastic.org"
-            ).addRole(roleService.roleStudent()),
-            User(
-                firstName = "admin",
-                lastName = "root",
-                username = "rootadmin",
-                plainTextPassword = "1234",
-                email = "admin@elaastic.org"
-            ).addRole(roleService.roleAdmin())
-        ).forEach {
-            userService.findByUsername(it.username) ?: userService.addUser(it)
-        }
-    }
-
-    fun startDevLocalSmtpServer() {
-        mailServer = GreenMail(ServerSetup(10025, "localhost", "smtp"))
-        try {
-            with(mailServer!!) {
-                setUser("elaastic", "elaastic")
-                start()
-            }
-        } catch (e: Exception) {
-        }
-    }
-
-    fun stopDevLocalSmtpServer() {
-        try {
-            mailServer?.stop()
-        } catch (e: Exception) {
-        }
-    }
-
-    fun initializeDevLtiObjects() {
-
-        LtiConsumer( // a lti consumer aka an LMS
-            consumerName = "Moodle",
-            secret = "secret pass",
-            key = "abcd1234"
-        ).let {
-            it.enableFrom = Date()
-            if (!ltiConsumerRepository.existsById(it.key)) {
-                ltiConsumerRepository.saveAndFlush(it)
-            }
-            it
-        }
-
-    }
-
-    fun migrateTowardVersion400() {
-        subjectService.migrateAssignmentsTowardSubjects()
-    }
 
     @Transactional
     fun initializeDemoContent() {

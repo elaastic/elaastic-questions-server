@@ -18,6 +18,8 @@
 
 package org.elaastic.bootstrap
 
+import com.icegreen.greenmail.util.GreenMail
+import com.icegreen.greenmail.util.ServerSetup
 import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -31,17 +33,40 @@ import javax.annotation.PostConstruct
 @Component
 @Profile("!prod")
 @DependsOn("bootstrap")
-class DevBootstrap(val bootstrapService: BootstrapService) {
+class DevBootstrap(
+    val devUserInitializationService: DevUserInitializationService,
+    val devLtiInitializationService: DevLtiInitializationService
+) {
 
     private val logger : Logger = Logger.getLogger(DevBootstrap::class.java.name)
+
+    var mailServer: GreenMail? = null
 
     @PostConstruct
     fun init() {
         logger.info("Bootstrapping elaastic-questions in development and test modes...")
-        bootstrapService.initializeDevUsers()
-        bootstrapService.initializeDevLtiObjects()
-        bootstrapService.startDevLocalSmtpServer()
+        devUserInitializationService.initializeDevUsers()
+        devLtiInitializationService.initializeDevLtiObjects()
+        startDevLocalSmtpServer()
         logger.info("End of the bootstrap")
+    }
+
+    fun startDevLocalSmtpServer() {
+        mailServer = GreenMail(ServerSetup(10025, "localhost", "smtp"))
+        try {
+            with(mailServer!!) {
+                setUser("elaastic", "elaastic")
+                start()
+            }
+        } catch (e: Exception) {
+        }
+    }
+
+    fun stopDevLocalSmtpServer() {
+        try {
+            mailServer?.stop()
+        } catch (e: Exception) {
+        }
     }
 
 }

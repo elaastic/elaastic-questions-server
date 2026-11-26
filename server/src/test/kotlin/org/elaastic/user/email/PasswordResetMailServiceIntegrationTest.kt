@@ -19,7 +19,7 @@
 package org.elaastic.user.email
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.bootstrap.BootstrapService
+import org.elaastic.bootstrap.DevBootstrap
 import org.elaastic.user.PasswordResetKeyRepository
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
@@ -46,7 +46,7 @@ internal class PasswordResetMailServiceIntegrationTest(
     @Autowired val passwordResetMailService: PasswordResetMailService,
     @Autowired val roleService: RoleService,
     @Autowired val entityManager: EntityManager,
-    @Autowired val bootstrapService: BootstrapService
+    @Autowired val devBootstrap: DevBootstrap
 ) {
 
     lateinit var alPacino: User
@@ -54,7 +54,7 @@ internal class PasswordResetMailServiceIntegrationTest(
     lateinit var bobDeniro: User
 
     val logger: Logger = Logger.getLogger(PasswordResetMailServiceIntegrationTest::class.java.name)
-    val smtpServer = bootstrapService.mailServer!!
+    val smtpServer = devBootstrap.mailServer!!
 
     @BeforeEach
     fun initUsersWithEmailCheckingNeeded() {

@@ -30,14 +30,14 @@ import javax.annotation.PostConstruct
 @Component
 @Profile("demo")
 @DependsOn("devBootstrap")
-class DemoBootstrap(val bootstrapService: BootstrapService) {
+class DemoBootstrap(val demoInitializationService: DemoInitializationService) {
 
     private val logger: Logger = Logger.getLogger(DemoBootstrap::class.java.name)
 
     @PostConstruct
     fun init() {
         logger.info("Bootstrapping elaastic-questions in demo and testing mode")
-        bootstrapService.initializeDemoContent()
+        demoInitializationService.initializeDemoContent()
         logger.info("End of the bootstrap")
     }
 

@@ -18,6 +18,7 @@
 
 package org.elaastic.bootstrap
 
+import org.elaastic.material.instructional.subject.SubjectService
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
@@ -26,20 +27,24 @@ import javax.annotation.PostConstruct
 /**
  * Bootstrap the application.
  *
- * @param bootstrapService the bootstrap service
+ * @param subjectService the service that migrates assignments to subjects
  */
 @Component
-class Bootstrap(val bootstrapService: BootstrapService) {
+class Bootstrap(val subjectService: SubjectService) {
 
     val logger: Logger = Logger.getLogger(Bootstrap::class.java.name)
 
     @PostConstruct
     fun init() {
         logger.info("Bootstrapping elaastic-questions in all modes...")
-        logger.info("Migrate to 4.0.0...")
-        bootstrapService.migrateTowardVersion400()
-        logger.info("End of Migration to 4.0.0")
+        applyDataMigrations()
         logger.info("End of the bootstrap")
+    }
+
+    private fun applyDataMigrations() {
+        logger.info("Migrate to 4.0.0...")
+        subjectService.migrateAssignmentsTowardSubjects()
+        logger.info("End of Migration to 4.0.0")
     }
 
 }
