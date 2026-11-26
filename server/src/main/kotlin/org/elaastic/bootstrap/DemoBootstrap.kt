@@ -18,14 +18,18 @@
 
 package org.elaastic.bootstrap
 
+import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
-
+/**
+ * Initialize the demo content at bootstrap when demo profile is active and the devBootstrap is initialized.
+ */
 @Component
 @Profile("demo")
+@DependsOn("devBootstrap")
 class DemoBootstrap(val bootstrapService: BootstrapService) {
 
     private val logger: Logger = Logger.getLogger(DemoBootstrap::class.java.name)
@@ -33,7 +37,6 @@ class DemoBootstrap(val bootstrapService: BootstrapService) {
     @PostConstruct
     fun init() {
         logger.info("Bootstrapping elaastic-questions in demo and testing mode")
-        bootstrapService.initializeDevUsers()
         bootstrapService.initializeDemoContent()
         logger.info("End of the bootstrap")
     }
