@@ -24,7 +24,7 @@ import javax.annotation.PostConstruct
 
 @Component
 @Profile("!prod & test-data")
-class TestUsersBootstrap(private val initializationService: DevUserInitializationService) {
+class TestUsersBootstrap(private val initializationService: TestUserSeederService) {
 
     @PostConstruct
     fun init() {
