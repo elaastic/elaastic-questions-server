@@ -19,7 +19,8 @@
 package org.elaastic.user.email
 
 import org.apache.commons.lang3.time.DateUtils
-import org.elaastic.bootstrap.DevBootstrap
+import com.icegreen.greenmail.util.GreenMail
+import org.springframework.context.annotation.Import
 import org.elaastic.user.PasswordResetKeyRepository
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
@@ -39,6 +40,7 @@ import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(MailIntegrationTestConfiguration::class)
 @Transactional
 internal class PasswordResetMailServiceIntegrationTest(
     @Autowired val passwordResetKeyRepository: PasswordResetKeyRepository,
@@ -46,7 +48,7 @@ internal class PasswordResetMailServiceIntegrationTest(
     @Autowired val passwordResetMailService: PasswordResetMailService,
     @Autowired val roleService: RoleService,
     @Autowired val entityManager: EntityManager,
-    @Autowired val devBootstrap: DevBootstrap
+    @Autowired val smtpServer: GreenMail
 ) {
 
     lateinit var alPacino: User
@@ -54,8 +56,6 @@ internal class PasswordResetMailServiceIntegrationTest(
     lateinit var bobDeniro: User
 
     val logger: Logger = Logger.getLogger(PasswordResetMailServiceIntegrationTest::class.java.name)
-    val smtpServer = devBootstrap.mailServer!!
-
     @BeforeEach
     fun initUsersWithEmailCheckingNeeded() {
         // given exactly 3 users with generated password reset key

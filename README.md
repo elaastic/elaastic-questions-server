@@ -46,23 +46,21 @@ to generate local TLS files and configure the JVM running elaastic.
 
 To launch the application in development mode:
 
-You have to launch at least these containers :
-- elaastic-questions-db-8
-- elaastic-mailhog
+Start the database, MailHog and Traefik. Traefik exposes MailHog’s SMTP port to the application.
 
 ````shell
-docker compose up -d elaastic-questions-db-8 elaastic-mailhog
+docker compose up -d elaastic-questions-db-8 mailHog traefik
 ````
 
 Then, you can run the application with the following command:
 
 ````shell
-./gradlew :server:bootRun
+./gradlew :server:bootRun --args='--spring.profiles.active=dev'
 ````
 
 The application is then accessible at `http://localhost:8080`.
 
-You can access the MailHog web interface at `http://localhost:8025` to check the emails sent by the application.
+You can access the MailHog web interface at `http://mailhog.localhost` to check the emails sent by the application.
 
 To manage the authentification service Keycloak, you can access the web interface at `http://localhost:8081/`.
 To connect to the console as `admin`, use the password set in the [.env](.env) file
@@ -132,6 +130,41 @@ Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 
 It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
 The application will be available at `http://localhost:8088`.
+
+### Configuring SMTP for deployment
+
+Set `spring.mail.host` to the SMTP relay reachable from the application. Spring Boot
+uses this setting to configure the mail sender at startup. The `dev` profile supplies
+`localhost:1025` for MailHog.
+
+For a deployed instance, add the SMTP settings to your external Spring Boot properties.
+Tomcat loads them from `/usr/local/tomcat/conf/elaastic-questions.properties`.
+The [Tomcat example](docker-resources/tomcat/elaastic-questions.properties) uses
+authenticated SMTP with required STARTTLS. Set the host and credentials in the
+application process environment.
+
+```properties
+spring.mail.host=${SPRING_MAIL_HOST}
+spring.mail.port=587
+spring.mail.username=${SPRING_MAIL_USERNAME}
+spring.mail.password=${SPRING_MAIL_PASSWORD}
+spring.mail.protocol=smtp
+spring.mail.default-encoding=UTF-8
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.starttls.required=true
+spring.mail.properties.mail.smtp.ssl.checkserveridentity=true
+```
+
+Use the port and TLS settings specified by your relay. For implicit TLS, typically
+on port 465, remove both STARTTLS properties and set
+`spring.mail.properties.mail.smtp.ssl.enable=true`. For a relay that accepts
+unauthenticated connections, set `spring.mail.properties.mail.smtp.auth=false`
+and omit `spring.mail.username` and `spring.mail.password`.
+
+Set `elaastic.questions.mail.activation.from` and
+`elaastic.questions.mail.password.from` to sender addresses authorized by the relay
+for account activation and password reset emails.
 
 ## Elaastic server
 See [server/README.md](server/README.md)
