@@ -78,10 +78,11 @@ Use a comma-separated list to combine them, for example `SPRING_PROFILES_ACTIVE=
 |:--------|:--------|
 | `dev` | Run the server locally during development. |
 | `test` | Prepare the Spring context for automated tests. |
-| `test-tools` | Enable manual testing tools, including test subject generation and scripted learner behavior. See [Testing facilities](server/README.md#testing-facilities). |
+| `test-tools` | Enable manual testing tools, including test subject generation and scripted learner behavior. See [Testing facilities](#testing-facilities). |
 | `test-data` | Make sample accounts available for testing. |
 | `demo` | Populate an instance for demonstrations. |
 | `prod` | Run the server in a production environment. |
+| `chatgpt` | Enable the use of ChatGPT for evaluating student responses. |
 | `oidc` | Allow users to sign in through OpenID Connect. |
 | `no-async` | Run asynchronous methods synchronously in tests. |
 
@@ -186,8 +187,48 @@ Set `elaastic.questions.mail.activation.from` and
 `elaastic.questions.mail.password.from` to sender addresses authorized by the relay
 for account activation and password reset emails.
 
-## Elaastic server
-See [server/README.md](server/README.md)
+## Testing facilities
+
+> [!NOTE]
+> Those facilities are enabled by the `test-tools` profile.
+
+### Generating a test subject
+For teachers, on the "My subjects" page, you can generate a test subject by clicking on the "Generate test subject".
+The generated subject is composed of:
+- one question per type (open, single choice, multiple choice)
+- three diffusions, allowing to easily test the 3 setup face to face, distant and hybrid.
+
+### Script simulated learners behavior
+A console "Functional Test Script" allows to simulate the behavior of learners, which is very convenient for testing.
+
+The script should respect this grammar:
+```
+start      <context>
+response   <phase> <username> <correctness> <confidence-degree> [<explanation>]
+eval       <username> <evaluation-strategy>
+publish
+next
+stop
+---
+<context>               ::= FaceToFace | Distance | Blended
+<phase>                 ::= 1 | 2
+<correctness>           ::= correct | *
+<confidence-degree>     ::= NOT_CONFIDENT_AT_ALL | NOT_REALLY_CONFIDENT | CONFIDENT | TOTALLY_CONFIDENT
+<evaluation-strategy>   ::= RANDOM | ALWAYS_MAX | ALWAYS_MIN | RELEVANT | IRRELEVANT
+```
+
+Example:
+```
+start FaceToFace
+response 1 jtra correct TOTALLY_CONFIDENT
+response 1 tsil correct CONFIDENT
+next
+eval jtra RANDOM
+eval tsil RELEVANT
+next
+publish
+stop
+```
 
 ## Authentication
 
