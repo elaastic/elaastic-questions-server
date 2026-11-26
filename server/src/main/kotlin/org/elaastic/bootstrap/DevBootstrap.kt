@@ -22,6 +22,7 @@ import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
+import java.util.logging.Level
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
@@ -37,33 +38,32 @@ class DevBootstrap(
 ) {
 
     private val logger : Logger = Logger.getLogger(DevBootstrap::class.java.name)
-
     var mailServer: GreenMail? = null
 
     @PostConstruct
     fun init() {
-        logger.info("Bootstrapping elaastic-questions in development and test modes...")
+        logger.info("Elaastic bootstrap started (with development features)")
         devUserInitializationService.initializeDevUsers()
         devLtiInitializationService.initializeDevLtiObjects()
         startDevLocalSmtpServer()
-        logger.info("End of the bootstrap")
-    }
+        logger.info("Elaastic bootstrap completed")    }
 
     fun startDevLocalSmtpServer() {
-        mailServer = GreenMail(ServerSetup(10025, "localhost", "smtp"))
+        val server = GreenMail(ServerSetup(10025, "localhost", "smtp"))
+        mailServer = server
         try {
-            with(mailServer!!) {
-                setUser("elaastic", "elaastic")
-                start()
-            }
-        } catch (e: Exception) {
+            server.setUser("elaastic", "elaastic")
+            server.start()
+        } catch (e: IllegalStateException) {
+            logger.log(Level.WARNING, "Failed to start the local SMTP server", e)
         }
     }
 
     fun stopDevLocalSmtpServer() {
         try {
             mailServer?.stop()
-        } catch (e: Exception) {
+        } catch (e: IllegalStateException) {
+            logger.log(Level.WARNING, "Failed to stop the local SMTP server", e)
         }
     }
 
