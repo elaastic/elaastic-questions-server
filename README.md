@@ -67,6 +67,23 @@ To connect to the console as `admin`, use the password set in the [.env](.env) f
 (see [.env.template](.env.template)).
 More information about the Keycloak server can be found in the [README.md](authentication/elaastic-iam/README.md) file.
 
+### Spring profiles
+
+The server loads its base configuration from
+[`application.properties`](server/src/main/resources/application.properties).
+Set `SPRING_PROFILES_ACTIVE` or pass `--spring.profiles.active` to select profiles.
+Use a comma-separated list to combine them, for example `SPRING_PROFILES_ACTIVE=dev,oidc`.
+
+| Profile | Purpose |
+|:--------|:--------|
+| `dev` | Run the server locally during development. |
+| `test` | Prepare the Spring context for automated tests. |
+| `test-data` | Make sample accounts available for testing. |
+| `demo` | Populate an instance for demonstrations. |
+| `prod` | Run the server in a production environment. |
+| `oidc` | Allow users to sign in through OpenID Connect. |
+| `no-async` | Run asynchronous methods synchronously in tests. |
+
 ### Test users
 
 | Login | Password | role    | 
