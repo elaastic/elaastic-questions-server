@@ -142,12 +142,12 @@ class AssignmentService(
 
         entityManager
             .createNativeQuery("""
-                UPDATE sequence SET `rank` = CASE 
+                UPDATE sequence SET `rank` = CASE
                 ${sequenceIds
                     .mapIndexed { index, id -> "WHEN id=$id THEN $index"}
                     .joinToString(" ")
-                } 
-                END 
+                }
+                END
                 WHERE id in (${sequenceIds.joinToString(",")})
                 """.trimIndent()
         ).executeUpdate()
