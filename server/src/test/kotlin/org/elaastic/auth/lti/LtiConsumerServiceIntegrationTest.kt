@@ -57,7 +57,6 @@ internal class LtiConsumerServiceIntegrationTest(
         assertEquals("LP ENTRE MEURTHE ET SANON", ltiList[2].consumerName)
         ltiList.forEach {
             assertNotNull(it.secret)
-            logger.severe("secret: ${it.secret}")
         }
     }
 
@@ -79,7 +78,6 @@ internal class LtiConsumerServiceIntegrationTest(
         assertEquals("LP ENTRE MEURTHE ET SANON", ltiList[2].consumerName)
         ltiList.forEach {
             assertNotNull(it.secret)
-            logger.severe("secret: ${it.secret}")
         }
     }
 
@@ -106,7 +104,6 @@ internal class LtiConsumerServiceIntegrationTest(
         assertEquals("LP ENTRE MEURTHE ET SANON", ltiList[2].consumerName)
         ltiList.forEach {
             assertNotNull(it.secret)
-            logger.severe("secret: ${it.secret}")
         }
     }
 
