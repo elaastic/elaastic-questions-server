@@ -21,6 +21,8 @@ import org.elaastic.activity.response.Response
 import org.junit.jupiter.api.Test
 import com.nhaarman.mockitokotlin2.*
 import org.elaastic.activity.evaluation.ResponseId
+import org.elaastic.activity.evaluation.peergrading.ResponseRecommendationService.Companion.CORRECT_RESPONSE_FIRST
+import org.elaastic.activity.evaluation.peergrading.ResponseRecommendationService.Companion.INCORRECT_RESPONSE_FIRST
 import org.elaastic.activity.response.ResponseRepository
 import org.junit.jupiter.api.Assertions.*
 import java.math.BigDecimal
