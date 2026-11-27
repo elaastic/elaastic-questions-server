@@ -211,7 +211,7 @@ class ResponseService(
                 """.trimIndent()
             )
             .setParameter("response", response)
-            .singleResult as? Double
+            .singleResult as Double?
 
         response.evaluationCount = res[0]?.let {( it as Long).toInt()} ?: 0
         response.draxoEvaluationCount = res[1]?.let {( it as Long).toInt()} ?: 0
