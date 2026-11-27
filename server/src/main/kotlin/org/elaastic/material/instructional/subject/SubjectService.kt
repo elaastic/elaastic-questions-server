@@ -56,7 +56,6 @@ class SubjectService(
 ) {
 
     fun get(id: Long, fetchStatementsAndAssignments: Boolean = false): Subject {
-        // TODO (+) i18n error message
         return when (fetchStatementsAndAssignments) {
             true -> subjectRepository.findOneWithStatementsAndAssignmentsById(id)
             false -> subjectRepository.findOneById(id)
