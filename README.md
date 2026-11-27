@@ -97,6 +97,18 @@ The `dev`, `test`, and `demo` profiles automatically activate `test-data`.
 | jtra  | 1234     | student | 
 | admin | admin    | admin   |
 
+## User documentation
+
+The user documentation is a Jekyll site in [`user-docs/`](user-docs/). To preview it locally, run this command from the repository root:
+
+```shell
+docker compose up --build docs
+```
+
+Docker Compose builds the image from [`user-docs/Dockerfile`](user-docs/Dockerfile) and starts Jekyll. Open
+<http://localhost:4000/elaastic-questions-server/> in your browser. Jekyll rebuilds the site as you edit files in `user-docs/`.
+Press `Ctrl+C` to stop the service.
+
 ## Project structure
 
 ### Directory layout
