@@ -1,0 +1,45 @@
+name: Trigger GitLab CI/CD
+
+inputs:
+  GITLAB_HOST:
+    description: Hostname of the GitLab instance
+    required: true
+  GITLAB_PROJECT_ID:
+    description: ID of the project on the GitLab instance
+    required: true
+  GITLAB_TRIGGER_TOKEN:
+    description: Pipeline trigger token to use to authenticate to the GitLab instance
+    required: true
+  TARGET_REF:
+    description: Branch on which the CI job should be started
+    required: true
+  ENVIRONMENT:
+    description: Target environment
+    required: true
+  CHECK_RUN_ID:
+    description: ID of the check run that was created
+    required: true
+
+outputs:
+  pipeline-id:
+    description: ID of the pipeline created on GitLab.
+    value: ${{ steps.trigger.outputs.id }}
+
+runs:
+  using: composite
+  steps:
+    - id: trigger
+      name: Trigger GitLab CI/CD
+      shell: sh
+      run: |
+        pipeline_id=$(
+          curl -fsS --request POST \
+            --form "ref=${{ inputs.TARGET_REF }}" \
+            --form "token=${{ inputs.GITLAB_TRIGGER_TOKEN }}" \
+            --form "inputs[environment]=${{ inputs.ENVIRONMENT }}" \
+            --form "inputs[check-run-id]=${{ inputs.CHECK_RUN_ID }}" \
+            "https://${{ inputs.GITLAB_HOST }}/api/v4/projects/${{ inputs.GITLAB_PROJECT_ID }}/trigger/pipeline" \
+          | jq -r .id
+        )
+
+        echo "id=$pipeline_id" >> $GITHUB_OUTPUT

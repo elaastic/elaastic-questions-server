@@ -1,6 +1,23 @@
+/*
+ * Elaastic - formative assessment system
+ * Copyright (C) 2019-2026. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package org.elaastic.material.instructional.subject
 
-import org.elaastic.activity.response.ResponseService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentRepository
 import org.elaastic.assignment.AssignmentService
@@ -36,7 +53,6 @@ class SubjectService(
     @Autowired val assignmentRepository: AssignmentRepository,
     @Autowired val entityManager: EntityManager,
     @Autowired val sequenceService: SequenceService,
-    @Autowired val responseService: ResponseService,
     @Autowired val sharedSubjectRepository: SharedSubjectRepository,
     @Autowired val attachmentService: AttachmentService,
 
@@ -428,38 +444,6 @@ class SubjectService(
             sequenceService.save(it)
         }
         return duplicatedStatement
-    }
-
-    fun migrateAssignmentsTowardSubjects() {
-        // get all assignments without subject
-        assignmentRepository.findAllBySubjectIsNull().forEach { assignment ->
-            // create a subject
-            Subject(
-                title = assignment.title,
-                owner = assignment.owner
-            ).let { subject ->
-                save(subject)
-                // for each sequence
-                assignment.sequences.forEach { sequence ->
-                    // add the corresponding statement to the subject
-                    addStatement(subject, sequence.statement)
-                    // for all responses (both 1 and 2 attempts) attach statement to response
-                    if (sequence.responseSubmissionInteractionIsInitialized()) {
-                        responseService.findAll(sequence, false)[1].forEach { response ->
-                            response.statement = sequence.statement
-                            responseService.responseRepository.save(response)
-                        }
-                        responseService.findAll(sequence, false)[2].forEach { response ->
-                            response.statement = sequence.statement
-                            responseService.responseRepository.save(response)
-                        }
-                    }
-                }
-                // finally, attach the subject to the assignment
-                assignment.subject = subject
-                assignmentService.save(assignment)
-            }
-        }
     }
 
     fun normalizeTitle(title: String): String {

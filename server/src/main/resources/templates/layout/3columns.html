@@ -25,7 +25,7 @@
   <head>
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no" name="viewport"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=2" name="viewport"/>
     <meta name="description"
           th:content="#{elaastic.description}">
     <meta name="author" content="University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier">
@@ -262,10 +262,9 @@
       <div th:replace="${pageSpecificMenu}"></div>
     </div>
 
-    <div class="wrap" style="margin-left: 90px;">
-      <main>
-        <aside id="layout-aside" th:replace="${aside}">
-        </aside>
+    <div class="wrap" style="margin-left: 90px; flex-direction: column;">
+      <main style="flex: 1; min-height: 0;">
+        <aside id="layout-aside" th:replace="${aside}"></aside>
 
         <article style="display: flex; column-gap: 30px;">
 
@@ -289,6 +288,9 @@
         </article>
       </main>
 
+      <div style="flex-shrink: 0;">
+        <div th:replace="layout/components/footer :: footer"></div>
+      </div>
     </div>
 
     <div id="layout-nav-modal" class="ui modal">

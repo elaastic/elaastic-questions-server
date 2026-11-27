@@ -1,0 +1,82 @@
+[versions]
+byteBuddy = "1.15.4"
+commonsCsv = "1.5"
+commonsIo = "2.22.0"
+commonsLang3 = "3.22.0"
+cucumber = "7.14.1"
+ehcache = "3.6.3"
+greenmail = "1.5.10"
+gson = "2.8.9"
+hamcrestDate = "1.1.0"
+jsoup = "1.24.1"
+junitPlatformSuite = "1.10.1"
+kotlin = "1.6.21"
+mockito = "5.14.2"
+mockitoKotlin = "2.1.0"
+mockk = "1.13.9"
+sonarqube = "4.2.1.3168"
+springBoot = "2.7.13"
+springDependencyManagement = "1.0.15.RELEASE"
+springHateoasJsonapi = "1.6.0"
+springSecurity = "5.8.3"
+thymeleafExtrasTogglz = "1.0.1.RELEASE"
+togglz = "3.0.0"
+
+[libraries]
+commonsCsv = { module = "org.apache.commons:commons-csv", version.ref = "commonsCsv" }
+commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIo" }
+commonsLang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3" }
+cucumberJava = { module = "io.cucumber:cucumber-java", version.ref = "cucumber" }
+cucumberJunit = { module = "io.cucumber:cucumber-junit", version.ref = "cucumber" }
+cucumberJunitPlatformEngine = { module = "io.cucumber:cucumber-junit-platform-engine", version.ref = "cucumber" }
+cucumberSpring = { module = "io.cucumber:cucumber-spring", version.ref = "cucumber" }
+ehcache = { module = "org.ehcache:ehcache", version.ref = "ehcache" }
+flywayCore = { module = "org.flywaydb:flyway-core" }
+flywayMysql = { module = "org.flywaydb:flyway-mysql" }
+greenmail = { module = "com.icegreen:greenmail", version.ref = "greenmail" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+hamcrestDate = { module = "org.exparity:hamcrest-date", version.ref = "hamcrestDate" }
+hamcrestLibrary = { module = "org.hamcrest:hamcrest-library" }
+hibernateJcache = { module = "org.hibernate:hibernate-jcache" }
+jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind" }
+jacksonModuleKotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+junitJupiterApi = { module = "org.junit.jupiter:junit-jupiter-api" }
+junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine" }
+junitPlatformSuite = { module = "org.junit.platform:junit-platform-suite", version.ref = "junitPlatformSuite" }
+kotlinAllopen = { module = "org.jetbrains.kotlin:kotlin-allopen" }
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+kotlinStdlibJdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8" }
+mockitoCore = { module = "org.mockito:mockito-core" }
+mockitoKotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mysqlConnectorJ = { module = "com.mysql:mysql-connector-j" }
+springBootStarterCache = { module = "org.springframework.boot:spring-boot-starter-cache" }
+springBootStarterDataJpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+springBootStarterDataRest = { module = "org.springframework.boot:spring-boot-starter-data-rest" }
+springBootStarterMail = { module = "org.springframework.boot:spring-boot-starter-mail" }
+springBootStarterOauth2Client = { module = "org.springframework.boot:spring-boot-starter-oauth2-client" }
+springBootStarterSecurity = { module = "org.springframework.boot:spring-boot-starter-security" }
+springBootStarterTest = { module = "org.springframework.boot:spring-boot-starter-test" }
+springBootStarterThymeleaf = { module = "org.springframework.boot:spring-boot-starter-thymeleaf" }
+springBootStarterValidation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+springBootStarterWeb = { module = "org.springframework.boot:spring-boot-starter-web" }
+springBootStarterWebsocket = { module = "org.springframework.boot:spring-boot-starter-websocket" }
+springDataRestHalExplorer = { module = "org.springframework.data:spring-data-rest-hal-explorer" }
+springHateoasJsonapi = { module = "com.toedter:spring-hateoas-jsonapi", version.ref = "springHateoasJsonapi" }
+springSecurityCas = { module = "org.springframework.security:spring-security-cas" }
+springSecurityTest = { module = "org.springframework.security:spring-security-test" }
+thymeleafExtrasSpringsecurity5 = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity5" }
+thymeleafExtrasTogglz = { module = "com.github.heneke.thymeleaf:thymeleaf-extras-togglz", version.ref = "thymeleafExtrasTogglz" }
+togglzConsole = { module = "org.togglz:togglz-console", version.ref = "togglz" }
+togglzKotlin = { module = "org.togglz:togglz-kotlin", version.ref = "togglz" }
+togglzSpringBootStarter = { module = "org.togglz:togglz-spring-boot-starter", version.ref = "togglz" }
+togglzSpringSecurity = { module = "org.togglz:togglz-spring-security", version.ref = "togglz" }
+
+[plugins]
+kotlinJpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+springBoot = { id = "org.springframework.boot", version.ref = "springBoot" }
+springDependencyManagement = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }

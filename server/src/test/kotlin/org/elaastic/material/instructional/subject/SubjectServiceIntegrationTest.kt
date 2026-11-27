@@ -1,3 +1,21 @@
+/*
+ * Elaastic - formative assessment system
+ * Copyright (C) 2019-2026. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package org.elaastic.material.instructional.subject
 
 import org.elaastic.assignment.Assignment
@@ -284,7 +302,7 @@ internal class SubjectServiceIntegrationTest(
             subjectService.addStatement(
                 subject,
                 Statement.createDefaultStatement(teacher)
-                    .title("Sequence n°1")
+                    .title("Sequence nï¿½1")
                     .content("Content 1")
             )
         }.tThen {
@@ -304,7 +322,7 @@ internal class SubjectServiceIntegrationTest(
         val statement1 = subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(subject.owner)
-                .title("Statement n°1")
+                .title("Statement nï¿½1")
                 .content("Content 1")
         )
 
@@ -400,13 +418,13 @@ internal class SubjectServiceIntegrationTest(
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°1")
+                .title("Stmt nï¿½1")
                 .content("Content 1")
         )
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°2")
+                .title("Stmt nï¿½2")
                 .content("Content 2")
         )
 
@@ -460,13 +478,13 @@ internal class SubjectServiceIntegrationTest(
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°1")
+                .title("Stmt nï¿½1")
                 .content("Content 1")
         )
         subjectService.addStatement(
             subject,
             Statement.createDefaultStatement(teacher)
-                .title("Stmt n°2")
+                .title("Stmt nï¿½2")
                 .content("Content 2")
         )
 
@@ -530,7 +548,7 @@ internal class SubjectServiceIntegrationTest(
         (1..n).forEach {
             subjectService.save(
                 Subject(
-                    title = "Subject n°$it",
+                    title = "Subject nï¿½$it",
                     owner = owner
                 )
             )

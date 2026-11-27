@@ -94,3 +94,22 @@ html.elaastic.three-columns, .elaastic.three-columns body {
   max-width: 100%;
   overflow-x: auto;
 }
+
+.layout-with-footer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.layout-with-footer > #page-content {
+  flex: 1 0 auto;
+}
+
+.elaastic-footer {
+  text-align: center;
+}
+
+.elaastic-footer .ui.horizontal.celled.list > .item {
+  line-height: 1.4;
+}
