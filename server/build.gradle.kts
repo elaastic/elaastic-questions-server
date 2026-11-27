@@ -76,7 +76,6 @@ dependencies {
     implementation(libs.kotlinAllopen)
     implementation(libs.springDataRestHalExplorer)
     implementation(libs.commonsLang3)
-    implementation(libs.greenmail)
     implementation(files("lib/ApacheJMeter_oauth-v2.jar"))
     implementation(libs.gson)
     implementation(libs.commonsIo)
@@ -107,6 +106,7 @@ dependencies {
     testImplementation(libs.cucumberJunit)
     testImplementation(libs.cucumberJunitPlatformEngine)
     testImplementation(libs.junitPlatformSuite)
+    testImplementation(libs.greenmail)
 
     runtimeOnly(libs.mysqlConnectorJ)
 

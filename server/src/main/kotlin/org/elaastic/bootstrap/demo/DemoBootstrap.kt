@@ -1,6 +1,6 @@
 /*
  * Elaastic - formative assessment system
- * Copyright (C) 2019. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
+ * Copyright (C) 2019-2026. University Toulouse 1 Capitole, University Toulouse 3 Paul Sabatier
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,28 +16,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.elaastic.bootstrap
+package org.elaastic.bootstrap.demo
 
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.DependsOn
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
-
+/**
+ * Initialize the demo content at bootstrap when demo profile is active.
+ * It requires test users to be initialized.
+ */
 @Component
-class Bootstrap(
-    @Autowired val bootstrapService: BootstrapService,
-) {
+@Profile("demo")
+@DependsOn("testUsersBootstrap")
+class DemoBootstrap(val demoSeederService: DemoSeederService) {
 
-    val LOG: Logger = Logger.getLogger(Bootstrap::class.toString())
+    private val logger: Logger = Logger.getLogger(DemoBootstrap::class.java.name)
 
     @PostConstruct
     fun init() {
-        LOG.info("Bootstrapping elaastic-questions in all modes...")
-        LOG.info("Migrate to 4.0.0...")
-        bootstrapService.migrateTowardVersion400()
-        LOG.info("End of Migration to 4.0.0")
-        LOG.info("End of the bootstrap")
+        logger.info("Start seeding the demo content")
+        demoSeederService.seedDemoContent()
+        logger.info("The demo content has been seeded")
     }
 
 }

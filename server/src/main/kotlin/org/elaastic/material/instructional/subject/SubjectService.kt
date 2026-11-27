@@ -18,7 +18,6 @@
 
 package org.elaastic.material.instructional.subject
 
-import org.elaastic.activity.response.ResponseService
 import org.elaastic.assignment.Assignment
 import org.elaastic.assignment.AssignmentRepository
 import org.elaastic.assignment.AssignmentService
@@ -54,7 +53,6 @@ class SubjectService(
     @Autowired val assignmentRepository: AssignmentRepository,
     @Autowired val entityManager: EntityManager,
     @Autowired val sequenceService: SequenceService,
-    @Autowired val responseService: ResponseService,
     @Autowired val sharedSubjectRepository: SharedSubjectRepository,
     @Autowired val attachmentService: AttachmentService,
 
@@ -446,38 +444,6 @@ class SubjectService(
             sequenceService.save(it)
         }
         return duplicatedStatement
-    }
-
-    fun migrateAssignmentsTowardSubjects() {
-        // get all assignments without subject
-        assignmentRepository.findAllBySubjectIsNull().forEach { assignment ->
-            // create a subject
-            Subject(
-                title = assignment.title,
-                owner = assignment.owner
-            ).let { subject ->
-                save(subject)
-                // for each sequence
-                assignment.sequences.forEach { sequence ->
-                    // add the corresponding statement to the subject
-                    addStatement(subject, sequence.statement)
-                    // for all responses (both 1 and 2 attempts) attach statement to response
-                    if (sequence.responseSubmissionInteractionIsInitialized()) {
-                        responseService.findAll(sequence, false)[1].forEach { response ->
-                            response.statement = sequence.statement
-                            responseService.responseRepository.save(response)
-                        }
-                        responseService.findAll(sequence, false)[2].forEach { response ->
-                            response.statement = sequence.statement
-                            responseService.responseRepository.save(response)
-                        }
-                    }
-                }
-                // finally, attach the subject to the assignment
-                assignment.subject = subject
-                assignmentService.save(assignment)
-            }
-        }
     }
 
     fun normalizeTitle(title: String): String {

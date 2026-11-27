@@ -18,7 +18,8 @@
 
 package org.elaastic.user.email
 
-import org.elaastic.bootstrap.BootstrapService
+import com.icegreen.greenmail.util.GreenMail
+import org.springframework.context.annotation.Import
 import org.elaastic.user.ActivationKeyRepository
 import org.elaastic.user.RoleService
 import org.elaastic.user.User
@@ -38,6 +39,7 @@ import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(MailIntegrationTestConfiguration::class)
 @Transactional
 internal class MailCheckingMailServiceIntegrationTest(
     @Autowired val activationKeyRepository: ActivationKeyRepository,
@@ -45,7 +47,7 @@ internal class MailCheckingMailServiceIntegrationTest(
     @Autowired val mailCheckingMailService: MailCheckingMailService,
     @Autowired val roleService: RoleService,
     @Autowired val entityManager: EntityManager,
-    @Autowired val bootstrapService: BootstrapService
+    @Autowired val smtpServer: GreenMail
 ) {
 
     lateinit var alPacino: User
@@ -53,8 +55,6 @@ internal class MailCheckingMailServiceIntegrationTest(
     lateinit var bobDeniro: User
 
     val logger = Logger.getLogger(MailCheckingMailServiceIntegrationTest::class.java.name)
-    val smtpServer = bootstrapService.mailServer!!
-
     @BeforeEach
     fun initUsersWithEmailCheckingNeeded() {
         // given exactly 3 users needed email checking

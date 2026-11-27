@@ -41,10 +41,6 @@ interface AssignmentRepository : JpaRepository<Assignment, Long> {
     @EntityGraph(value = "Assignment.sequences", type = EntityGraph.EntityGraphType.LOAD)
     fun findWithSequenceByGlobalId(globalId: UUID): Assignment?
 
-    @EntityGraph(value = "Assignment.sequences", type = EntityGraph.EntityGraphType.LOAD)
-    fun findAllBySubjectIsNull(): List<Assignment>
-
-
     @Query("SELECT DISTINCT a FROM Assignment a LEFT JOIN FETCH a.sequences s " +
             "WHERE a.lastUpdated > :since OR s.lastUpdated > :since")
     fun findAllAssignmentUpdatedSince(since: Date): List<Assignment>

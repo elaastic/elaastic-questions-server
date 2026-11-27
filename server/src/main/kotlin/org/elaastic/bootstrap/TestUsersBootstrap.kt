@@ -18,27 +18,16 @@
 
 package org.elaastic.bootstrap
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
-
 @Component
-@Profile("demo")
-class DemoBootstrap(
-        @Autowired val bootstrapService: BootstrapService
-) {
-
-    val LOG : Logger = Logger.getLogger(DemoBootstrap::class.toString())
+@Profile("!prod & test-data")
+class TestUsersBootstrap(private val initializationService: TestUserSeederService) {
 
     @PostConstruct
     fun init() {
-        LOG.info("Bootstrapping elaastic-questions in demo and testing mode")
-        bootstrapService.initializeDevUsers()
-        bootstrapService.initializeDemoContent()
-        LOG.info("End of the bootstrap")
+        initializationService.initializeDevUsers()
     }
-
 }

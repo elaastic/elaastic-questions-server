@@ -46,28 +46,47 @@ to generate local TLS files and configure the JVM running elaastic.
 
 To launch the application in development mode:
 
-You have to launch at least these containers :
-- elaastic-questions-db-8
-- elaastic-mailhog
+Start the database, MailHog and Traefik. Traefik exposes MailHog’s SMTP port to the application.
 
 ````shell
-docker compose up -d elaastic-questions-db-8 elaastic-mailhog
+docker compose up -d elaastic-questions-db-8 mailHog traefik
 ````
 
 Then, you can run the application with the following command:
 
 ````shell
-./gradlew :server:bootRun
+./gradlew :server:bootRun --args='--spring.profiles.active=dev'
 ````
 
 The application is then accessible at `http://localhost:8080`.
 
-You can access the MailHog web interface at `http://localhost:8025` to check the emails sent by the application.
+You can access the MailHog web interface at `http://mailhog.localhost` to check the emails sent by the application.
 
 To manage the authentification service Keycloak, you can access the web interface at `http://localhost:8081/`.
 To connect to the console as `admin`, use the password set in the [.env](.env) file
 (see [.env.template](.env.template)).
 More information about the Keycloak server can be found in the [README.md](authentication/elaastic-iam/README.md) file.
+
+### Spring profiles
+
+The server loads its base configuration from
+[`application.properties`](server/src/main/resources/application.properties).
+Set `SPRING_PROFILES_ACTIVE` or pass `--spring.profiles.active` to select profiles.
+Use a comma-separated list to combine them, for example `SPRING_PROFILES_ACTIVE=dev,test-tools`.
+
+| Profile | Purpose |
+|:--------|:--------|
+| `dev` | Run the server locally during development. |
+| `test` | Prepare the Spring context for automated tests. |
+| `test-tools` | Enable manual testing tools, including test subject generation and scripted learner behavior. See [Testing facilities](#testing-facilities). |
+| `test-data` | Make sample accounts available for testing. |
+| `demo` | Populate an instance for demonstrations. |
+| `prod` | Run the server in a production environment. |
+| `chatgpt` | Enable the use of ChatGPT for evaluating student responses. |
+| `oidc` | Allow users to sign in through OpenID Connect. |
+| `no-async` | Run asynchronous methods synchronously in tests. |
+
+The `dev`, `test`, and `demo` profiles automatically activate `test-data`.
 
 ### Test users
 
@@ -133,8 +152,83 @@ Get the `elaastic-questions-server.war` file from the `build/libs`folder.
 It is possible to test the package for Tomcat by running the services in the `docker-compose.tomcat.yml` file.
 The application will be available at `http://localhost:8088`.
 
-## Elaastic server
-See [server/README.md](server/README.md)
+### Configuring SMTP for deployment
+
+Set `spring.mail.host` to the SMTP relay reachable from the application. Spring Boot
+uses this setting to configure the mail sender at startup. The `dev` profile supplies
+`localhost:1025` for MailHog.
+
+For a deployed instance, add the SMTP settings to your external Spring Boot properties.
+Tomcat loads them from `/usr/local/tomcat/conf/elaastic-questions.properties`.
+The [Tomcat example](docker-resources/tomcat/elaastic-questions.properties) uses
+authenticated SMTP with required STARTTLS. Set the host and credentials in the
+application process environment.
+
+```properties
+spring.mail.host=${SPRING_MAIL_HOST}
+spring.mail.port=587
+spring.mail.username=${SPRING_MAIL_USERNAME}
+spring.mail.password=${SPRING_MAIL_PASSWORD}
+spring.mail.protocol=smtp
+spring.mail.default-encoding=UTF-8
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.starttls.required=true
+spring.mail.properties.mail.smtp.ssl.checkserveridentity=true
+```
+
+Use the port and TLS settings specified by your relay. For implicit TLS, typically
+on port 465, remove both STARTTLS properties and set
+`spring.mail.properties.mail.smtp.ssl.enable=true`. For a relay that accepts
+unauthenticated connections, set `spring.mail.properties.mail.smtp.auth=false`
+and omit `spring.mail.username` and `spring.mail.password`.
+
+Set `elaastic.questions.mail.activation.from` and
+`elaastic.questions.mail.password.from` to sender addresses authorized by the relay
+for account activation and password reset emails.
+
+## Testing facilities
+
+> [!NOTE]
+> Those facilities are enabled by the `test-tools` profile.
+
+### Generating a test subject
+For teachers, on the "My subjects" page, you can generate a test subject by clicking on the "Generate test subject".
+The generated subject is composed of:
+- one question per type (open, single choice, multiple choice)
+- three diffusions, allowing to easily test the 3 setup face to face, distant and hybrid.
+
+### Script simulated learners behavior
+A console "Functional Test Script" allows to simulate the behavior of learners, which is very convenient for testing.
+
+The script should respect this grammar:
+```
+start      <context>
+response   <phase> <username> <correctness> <confidence-degree> [<explanation>]
+eval       <username> <evaluation-strategy>
+publish
+next
+stop
+---
+<context>               ::= FaceToFace | Distance | Blended
+<phase>                 ::= 1 | 2
+<correctness>           ::= correct | *
+<confidence-degree>     ::= NOT_CONFIDENT_AT_ALL | NOT_REALLY_CONFIDENT | CONFIDENT | TOTALLY_CONFIDENT
+<evaluation-strategy>   ::= RANDOM | ALWAYS_MAX | ALWAYS_MIN | RELEVANT | IRRELEVANT
+```
+
+Example:
+```
+start FaceToFace
+response 1 jtra correct TOTALLY_CONFIDENT
+response 1 tsil correct CONFIDENT
+next
+eval jtra RANDOM
+eval tsil RELEVANT
+next
+publish
+stop
+```
 
 ## Authentication
 
